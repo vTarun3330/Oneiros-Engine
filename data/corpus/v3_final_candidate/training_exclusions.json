@@ -1,0 +1,300 @@
+[
+  {
+    "record_id": "official-repository::tqdm::2::tqdm/tests/tests_tqdm.py__test_format_meter",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1927
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::youtube-dl::14::test/test_youtube_chapters.py__TestYoutubeChapters__test_youtube_chapters",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      7089
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::youtube-dl::16::test/test_utils.py__TestUtil__test_dfxp2srt",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1776
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::youtube-dl::2::test/test_InfoExtractor.py__TestInfoExtractor__test_parse_mpd_formats",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2448
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::keras::13::tests/keras/engine/test_training.py__test_model_methods",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      5995
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::astropy__astropy-14539::51d15fb10bb1",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      512,
+      1710
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-11149::4b7b666577e0",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      75,
+      1948
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-11740::ec2ecf5eb021",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      7126
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-11815::3649b4b1c37e",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1809
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-12262::a242efc68893",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      81,
+      2924
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-12754::3f1d8d32d1b7",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      7287
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-13028::6561133b7a0b",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      115,
+      1695
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-13128::1ae47183623c",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1951
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-13344::bde03a7aee91",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1284,
+      882,
+      1678
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15022::7cdd89971ff2",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      109,
+      1755
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15104::6ff748d1d2f3",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      7263
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15252::b26e8d96c3c9",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1715,
+      360
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15268::4258e68d2989",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      7790
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15380::6078bfcf7b87",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      7247
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15973::50fcf69fe324",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      8761
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-16560::935034bd31af",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2718,
+      2615
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-16612::32586541320a",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1803
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-13031::390eb83626f5",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      6542
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-13372::a3f486369299",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1579
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-13798::808f5b175d1e",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2615
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-13878::a02c121a0b86",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2243
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-15599::39cda1dca552",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2912
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-15809::489bc8d7e71d",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2873
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-15976::2e555af952de",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1584
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-17655::0bd8a543efec",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      3988
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-18189::bbac5dd3f426",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2346
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-18199::6caee709a4b1",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      5537,
+      2799
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-21379::39cda1dca552",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2924
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-21847::ff17cc1cecf1",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      4082
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-21930::6b535ce764b7",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      3005
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-23534::cfb130c87e40",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1924
+    ],
+    "completion_token_limit": 1536
+  }
+]

@@ -1,0 +1,34 @@
+# Core dependencies
+torch>=2.0.0
+modal>=1.0,<2.0
+transformers==4.48.3
+peft==0.14.0
+trl==0.15.2
+accelerate==1.2.1
+bitsandbytes>=0.45.0
+
+# Vector search and embeddings
+faiss-cpu>=1.7.4
+sentence-transformers>=2.2.0
+
+# Mutation testing
+mutmut>=2.4.0
+
+# Fuzzing (optional - may need special installation)
+# atheris>=2.0.0
+
+# Code coverage
+coverage>=7.0.0
+
+# Dataset handling
+datasets>=2.14.0
+
+# Utilities
+numpy>=1.24.0
+pandas>=2.0.0
+tqdm>=4.65.0
+pyyaml>=6.0.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0

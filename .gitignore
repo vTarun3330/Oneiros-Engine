@@ -1,0 +1,72 @@
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+env/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+secrets*.json
+
+# IDE and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local scratch space
+.codex_tmp/
+tmp/
+temp/
+
+# Large/reproducible corpora. Retain only documentation and the canonical
+# manifest/exclusion ledger needed to identify the exact Phase 3 dataset.
+data/**
+!data/README.md
+!data/corpus/
+data/corpus/**
+!data/corpus/v3_final_candidate/
+data/corpus/v3_final_candidate/**
+!data/corpus/v3_final_candidate/manifest.json
+!data/corpus/v3_final_candidate/training_exclusions.json
+
+# Model weights and generated experiment artifacts
+checkpoints/**
+!checkpoints/README.md
+results/**
+!results/README.md
+logs/
+wandb/
+runs/
+mlruns/
+*.log
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+
+# Generated console captures and ad-hoc inspection files
+benchmark_output*.txt
+full_test_output.txt
+gen_output.txt
+inspect_output.txt
+mutation_check.txt
+validation_output.txt
+real_examples.txt
+real_ex.txt
+mutant_ex.txt

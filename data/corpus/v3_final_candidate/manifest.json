@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "corpus_id": "oneiros-corpus-v3-final-candidate",
+  "parent_corpus": {
+    "corpus_id": "oneiros-corpus-v2",
+    "records_sha256": "aa7f4f506552f282db9e27451bf6d46b99a2cdd1888dfd902f18ead8e573c8f8",
+    "splits_sha256": "11936d740ea35d65168e10439417a1c25aad86f22d1fa0e751f4dcdfef8c7c7c"
+  },
+  "quality_gate": {
+    "all_training_records_verified": true,
+    "reference_oracle_required": true,
+    "group_disjoint_splits": true,
+    "semantic_group_disjoint_splits": true,
+    "semantic_supervision_deduplicated": true,
+    "conflicting_supervision_rejected": true,
+    "official_real_bugs_require_fixed_pass_buggy_fail": true,
+    "repository_project_disjoint_splits": true,
+    "canonical_overlong_records_explicitly_excluded": true,
+    "locked_external_evaluation": true
+  },
+  "training_records": 8387,
+  "records_by_task": {
+    "fixed_bug_reproduction": 8,
+    "hidden_mutation_reproduction": 7786,
+    "official_repository_pytest_reproduction": 154,
+    "official_repository_swebench_reproduction": 324,
+    "official_repository_unittest_reproduction": 115
+  },
+  "splits": {
+    "train": {
+      "record_count": 6755,
+      "group_count": 764
+    },
+    "val": {
+      "record_count": 799,
+      "group_count": 84
+    },
+    "test": {
+      "record_count": 833,
+      "group_count": 95
+    }
+  },
+  "official_real_bug_ingestion": {
+    "total_materialized_record_count": 593,
+    "new_materialized_record_count": 465,
+    "new_materialized_task_count": 465,
+    "verified_repository_eval_only_task_count": 7,
+    "ingestion_manifest": "../../v3_recovered_staging_final/manifest.json"
+  },
+  "semantic_repairs": {
+    "semantic_duplicate_records_removed": 8,
+    "semantic_duplicate_map": {
+      "mutation::mbpp_388_mut_05170": "mutation::mbpp_199_mut_03500",
+      "mutation::mbpp_388_mut_05171": "mutation::mbpp_199_mut_03498",
+      "mutation::mbpp_388_mut_05173": "mutation::mbpp_199_mut_03501",
+      "mutation::mbpp_388_mut_05174": "mutation::mbpp_199_mut_03503",
+      "mutation::mbpp_388_mut_05175": "mutation::mbpp_199_mut_03493",
+      "mutation::mbpp_388_mut_05176": "mutation::mbpp_199_mut_03494",
+      "mutation::mbpp_388_mut_05177": "mutation::mbpp_199_mut_03499",
+      "mutation::mbpp_388_mut_05180": "mutation::mbpp_199_mut_03495"
+    },
+    "semantic_split_reassignments": 3,
+    "split_reassignment_map": {
+      "mutation::mbpp_779_mut_08476": {
+        "from": "val",
+        "to": "test"
+      },
+      "mutation::mbpp_779_mut_08477": {
+        "from": "val",
+        "to": "test"
+      },
+      "mutation::mbpp_930_mut_09886": {
+        "from": "train",
+        "to": "test"
+      }
+    }
+  },
+  "external_evaluation": {
+    "locked_bugsinpy_repository_tasks": 225,
+    "materialized_for_training": 269,
+    "verified_repository_eval_only": 7
+  },
+  "files": {
+    "records.json": {
+      "sha256": "b0271abf868622f13ce2d7d89dd89a29bb040b37fa94459a6df084262221b507"
+    },
+    "splits.json": {
+      "sha256": "ff28d90ab73a536f1f5eb2ef196f90b282fbf5f9bb30701193f862677336e2f2"
+    },
+    "external_eval_index.json": {
+      "sha256": "d5b0c3cccc0f237ad6ece45ff9fc2abc8dfd87b4daf6c3c10ceb338434acad76"
+    },
+    "training_exclusions.json": {
+      "sha256": "f75ab6101d035c34632528653aceb577625a35ea26c9aa3a37cde0f270d5417b"
+    }
+  },
+  "training_exclusions": {
+    "record_count": 36,
+    "reason": "canonical_retained_training_excluded"
+  }
+}

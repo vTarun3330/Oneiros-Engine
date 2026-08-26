@@ -1,0 +1,61 @@
+"""Configuration module for Oneiros Engine."""
+from .settings import (
+    PROJECT_ROOT,
+    DATA_DIR,
+    GOLDEN_DIR,
+    MUTANTS_DIR,
+    HUMANEVAL_DIR,
+    MBPP_DIR,
+    BUGSINPY_DIR,
+    CANONICAL_CORPUS_VERSION,
+    dataset_config,
+    model_config,
+    memory_config,
+    training_config,
+    benchmark_config,
+    DatasetConfig,
+    ModelConfig,
+    MemoryConfig,
+    TrainingConfig,
+    BenchmarkConfig,
+)
+
+# System-level functions configuration
+from .system_functions import (
+    SystemLevelFunction,
+    TRAINING_FUNCTIONS,
+    TESTING_FUNCTIONS,
+    get_training_functions,
+    get_testing_functions,
+    get_functions_by_library,
+    get_functions_by_complexity,
+)
+
+__all__ = [
+    "PROJECT_ROOT",
+    "DATA_DIR",
+    "GOLDEN_DIR",
+    "MUTANTS_DIR",
+    "HUMANEVAL_DIR",
+    "MBPP_DIR",
+    "BUGSINPY_DIR",
+    "CANONICAL_CORPUS_VERSION",
+    "dataset_config",
+    "model_config",
+    "memory_config",
+    "training_config",
+    "benchmark_config",
+    "DatasetConfig",
+    "ModelConfig",
+    "MemoryConfig",
+    "TrainingConfig",
+    "BenchmarkConfig",
+    # System-level
+    "SystemLevelFunction",
+    "TRAINING_FUNCTIONS",
+    "TESTING_FUNCTIONS",
+    "get_training_functions",
+    "get_testing_functions",
+    "get_functions_by_library",
+    "get_functions_by_complexity",
+]
