@@ -28,6 +28,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+# Modal imports this module from /root/modal_train.py while the complete
+# project tree is baked into /root/oneiros.  Make that tree importable before
+# resolving project modules such as config.
+REMOTE_PROJECT_ROOT = Path("/root/oneiros")
+if REMOTE_PROJECT_ROOT.is_dir() and str(REMOTE_PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(REMOTE_PROJECT_ROOT))
 
 import modal
 from config import CANONICAL_CORPUS_VERSION
@@ -207,6 +213,14 @@ def run_cloud_training(
 ):
     """Run the full Oneiros DPO training loop on a Modal GPU."""
     os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+    # Keep the pinned base-model download on the persistent Modal Volume.
+    # Repeated validation seeds must not spend GPU time downloading the same
+    # immutable Hugging Face shards into an ephemeral container cache.
+    hf_home = "/root/oneiros/storage/huggingface"
+    os.makedirs(hf_home, exist_ok=True)
+    os.environ["HF_HOME"] = hf_home
+    os.environ["HF_HUB_CACHE"] = os.path.join(hf_home, "hub")
+    os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
     import torch
     log.info("🚀 Container booted. Configuring remote workspace...")
     log.info(f"   CUDA available: {torch.cuda.is_available()}")
@@ -626,6 +640,14 @@ def training_main(
 # ═══════════════════════════════════════════════════════════════════
 
 if __name__ == "__main__":
+    # Windows can expose a legacy cp1252 stdout even when the child Modal
+    # process is configured for UTF-8.  Configure this launcher before its
+    # first status message so Unicode progress labels cannot abort the run.
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
     run_name = "v3_hardened_phase3"
     for index, argument in enumerate(sys.argv):
         if argument == "--run-name" and index + 1 < len(sys.argv):

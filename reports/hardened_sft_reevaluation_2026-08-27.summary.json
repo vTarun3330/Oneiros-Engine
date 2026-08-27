@@ -1,0 +1,78 @@
+{
+  "report_date": "2026-08-27",
+  "decision": "do_not_merge",
+  "acceptance_gate": {
+    "required_seeds": [42, 43, 44],
+    "required_function_kill_rate_each": 0.58,
+    "all_seeds_must_complete": true,
+    "passed": false
+  },
+  "identity": {
+    "baseline_tag": "phase3-hardened-v1",
+    "baseline_commit": "fb0baf7fd68a3150919507255e0a9244a6dca47e",
+    "experiment_branch": "experiment/hardened-sft-reeval-seeds-42-44",
+    "corpus_version": "v3_final_candidate",
+    "adapter_sha256": "41ea59c4d297bd2530d778f4e6582eb5d9c53d39573d2bc70bd43496be23e4cf",
+    "evaluation_scope_sha256": "cac7553b8e242437c22d30165c3064527b6cf12c2ca650349ef626a25d5775ba",
+    "source_tree_sha256": "59ad95e255a4dd1bfbd5728c4f4ed206525e60eb410a859ae1cc7e619d1298cd",
+    "evaluation_split": "val",
+    "final_test_measurement": false,
+    "function_records": 775,
+    "repository_records_held": 24,
+    "tests_per_function": 8
+  },
+  "seeds": [
+    {
+      "seed": 42,
+      "status": "complete",
+      "killed": 424,
+      "evaluated": 775,
+      "function_kill_rate": 0.547097,
+      "wilson_95": [0.511905, 0.581824],
+      "parse_success_rate": 0.921935,
+      "end_to_end_candidate_kill_rate": 0.234516,
+      "artifact_sha256": "22b087198d78e41802ccc42672c1feea444026a3af7a2d79efb6cb94ca47f4e8"
+    },
+    {
+      "seed": 43,
+      "status": "complete",
+      "killed": 439,
+      "evaluated": 775,
+      "function_kill_rate": 0.566452,
+      "wilson_95": [0.531319, 0.600929],
+      "parse_success_rate": 0.922258,
+      "end_to_end_candidate_kill_rate": 0.24871,
+      "artifact_sha256": "5e355114ac7d6c190f4f858d9ad468419894025bde6128a4812b4611633aecc0"
+    },
+    {
+      "seed": 44,
+      "status": "partial_workspace_spend_blocked",
+      "killed": 141,
+      "evaluated": 234,
+      "function_kill_rate_prefix_only": 0.602564,
+      "parse_success_rate_prefix_only": 0.909722,
+      "resume_from_function": 235,
+      "progress_artifact_sha256": "7829e3755216fd0a7beef6b5a87d1ff47bfce56463649c60b1084929196b4cbd"
+    }
+  ],
+  "complete_seed_aggregate": {
+    "seed_count": 2,
+    "mean_function_kill_rate": 0.5567745,
+    "minimum_function_kill_rate": 0.547097,
+    "maximum_function_kill_rate": 0.566452,
+    "mean_parse_success_rate": 0.9220965,
+    "mean_end_to_end_candidate_kill_rate": 0.241613
+  },
+  "benchmark_aggregate_over_complete_seeds": {
+    "HumanEval": {
+      "observations": 112,
+      "killed": 101,
+      "function_kill_rate": 0.901786
+    },
+    "MBPP": {
+      "observations": 1438,
+      "killed": 762,
+      "function_kill_rate": 0.529903
+    }
+  }
+}
