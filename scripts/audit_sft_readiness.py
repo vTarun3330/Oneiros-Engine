@@ -26,7 +26,7 @@ from scripts.train_on_dataset import (
     load_phase3_pairs,
     _filter_overlong_repository_completions,
     _repository_fragment_tests,
-    build_prompt,
+    build_pair_prompt,
     evaluate_pair,
     extract_dataset_tests,
 )
@@ -68,9 +68,7 @@ def main() -> None:
         pair = retained_pairs_by_id.get(source_pair["id"])
         count_pair = pair or source_pair
         mode = source_pair["execution_mode"]
-        prompt = build_prompt(
-            source_pair["mutant_code"], source_pair["entry_point"], source_pair["specification"], mode
-        )
+        prompt = build_pair_prompt(source_pair)
         report["records"] += 1
         if source_pair["golden_code"] and source_pair["golden_code"] in prompt:
             report["reference_prompt_leaks"] += 1

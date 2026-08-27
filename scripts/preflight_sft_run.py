@@ -1,4 +1,4 @@
-"""Exact, GPU-free preflight for a bounded Oneiros V3 SFT run.
+"""Exact, GPU-free preflight for a bounded Oneiros canonical SFT run.
 
 This script mirrors the production SFT data path through canonical-corpus
 verification, bounded selection, behavioral winner verification, the deployed
@@ -31,6 +31,7 @@ from engine.sft_trainer import (
     SFTDataPoint,
     plan_sft_optimizer_schedule,
     sft_completion_limit_for_execution_mode,
+    sft_prompt_limit_for_execution_mode,
 )
 from harness.corpus import verify_corpus
 from scripts.train_on_dataset import (
@@ -38,7 +39,7 @@ from scripts.train_on_dataset import (
     _filter_overlong_repository_completions,
     _repository_fragment_tests,
     balanced_repeat_examples,
-    build_prompt,
+    build_pair_prompt,
     deduplicate_sft_examples,
     evaluate_pair,
     extract_dataset_tests,
@@ -106,6 +107,7 @@ def build_preflight(
     synthetic_balance_fraction: float,
     max_synthetic_repeats: int,
     prompt_token_limit: int,
+    repository_prompt_token_limit: int,
     completion_token_limit: int,
     repository_completion_token_limit: int,
     warmup_steps: int,
@@ -125,6 +127,12 @@ def build_preflight(
     if not 0 < repository_completion_token_limit < MAX_SFT_SEQUENCE_LENGTH:
         raise ValueError(
             "repository_completion_token_limit must be between 1 and the sequence limit"
+        )
+    if not 0 < prompt_token_limit < MAX_SFT_SEQUENCE_LENGTH:
+        raise ValueError("prompt_token_limit must be between 1 and the sequence limit")
+    if not 0 < repository_prompt_token_limit < MAX_SFT_SEQUENCE_LENGTH:
+        raise ValueError(
+            "repository_prompt_token_limit must be between 1 and the sequence limit"
         )
     started = time.time()
     corpus_dir = ROOT / "data" / "corpus" / corpus_version
@@ -215,12 +223,7 @@ def build_preflight(
         if not winners:
             records_without_winners.append(pair["id"])
             continue
-        prompt = build_prompt(
-            pair["mutant_code"],
-            pair["entry_point"],
-            pair.get("specification", ""),
-            mode,
-        )
+        prompt = build_pair_prompt(pair)
         target = (
             repository_examples
             if is_repository_execution_mode(mode)
@@ -341,8 +344,13 @@ def build_preflight(
                     "reason": "mode_completion_limit_exceeded_after_sampling",
                 }
             )
-        allowed_prompt_tokens = min(
+        mode_prompt_limit = sft_prompt_limit_for_execution_mode(
+            example.execution_mode,
             prompt_token_limit,
+            repository_prompt_token_limit,
+        )
+        allowed_prompt_tokens = min(
+            mode_prompt_limit,
             MAX_SFT_SEQUENCE_LENGTH - len(completion_ids),
         )
         compacted_prompt_ids, was_compacted = compact_prompt_token_ids(
@@ -483,6 +491,7 @@ def build_preflight(
         "tokenization": {
             "model_name": model_config.model_name,
             "prompt_token_limit": prompt_token_limit,
+            "repository_prompt_token_limit": repository_prompt_token_limit,
             "completion_token_limit": completion_token_limit,
             "repository_completion_token_limit": repository_completion_token_limit,
             "sequence_token_limit": MAX_SFT_SEQUENCE_LENGTH,
@@ -543,6 +552,11 @@ def parse_args() -> argparse.Namespace:
         default=training_config.sft_completion_token_limit,
     )
     parser.add_argument(
+        "--repository-prompt-token-limit",
+        type=int,
+        default=training_config.sft_repository_prompt_token_limit,
+    )
+    parser.add_argument(
         "--repository-completion-token-limit",
         type=int,
         default=training_config.sft_repository_completion_token_limit,
@@ -571,7 +585,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=Path,
-        default=ROOT / "results" / "v3_hardened_sft_preflight.json",
+        default=ROOT / "results" / "v4_unified_prompt_sft_preflight.json",
     )
     return parser.parse_args()
 
@@ -590,6 +604,7 @@ def main() -> None:
         synthetic_balance_fraction=args.synthetic_balance_fraction,
         max_synthetic_repeats=args.max_synthetic_repeats,
         prompt_token_limit=args.prompt_token_limit,
+        repository_prompt_token_limit=args.repository_prompt_token_limit,
         completion_token_limit=args.completion_token_limit,
         repository_completion_token_limit=args.repository_completion_token_limit,
         warmup_steps=args.warmup_steps,

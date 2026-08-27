@@ -28,11 +28,13 @@ except ImportError:
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from config import model_config
+from config import model_config, training_config
 from engine.model_runtime import (
     build_4bit_quantization_config,
     runtime_profile,
 )
+from engine.prompt_budget import compact_prompt_texts
+from engine.test_generation_prompt import build_unified_user_prompt, format_chat_prompt
 from harness.candidate_policy import validate_function_assertion
 
 
@@ -84,7 +86,9 @@ class Phi3Generator:
         self.runtime_profile = None
 
         # Generation parameters
-        self.max_new_tokens = model_config.max_new_tokens
+        # Match the concise function completion contract used by SFT and live
+        # validation. Repository fragments use their separate pipeline.
+        self.max_new_tokens = training_config.sft_completion_token_limit
         self.temperature = model_config.temperature
         self.top_p = model_config.top_p
 
@@ -178,40 +182,31 @@ class Phi3Generator:
         docstring: str,
         edge_cases: List[str],
         memory_examples: List[str] = None,
-        library: str = "unknown"
+        library: str = "unknown",
+        entry_point: str = "",
     ) -> str:
-        """
-        Create a prompt for test generation.
-        """
-        memory_section = ""
+        """Create the canonical model-visible function prompt."""
+        context_sections = []
         if memory_examples:
             examples = "\n".join(f"- {ex}" for ex in memory_examples[:3])
-            memory_section = f"""
-Previous successful test inputs:
-{examples}
-"""
+            context_sections.append(f"Previous successful test inputs:\n{examples}")
 
-        edge_case_section = ""
         if edge_cases:
             cases = ", ".join(edge_cases[:5])
-            edge_case_section = f"Edge cases to consider: {cases}"
+            context_sections.append(f"Edge cases to consider: {cases}")
 
-        prompt = f"""You are a mutation testing expert. Generate a Python assert statement that tests this function thoroughly.
+        return build_unified_user_prompt(
+            code_under_test=function_signature,
+            execution_mode="function_assertion",
+            specification=docstring,
+            support_context="\n\n".join(context_sections),
+            target_symbols=[entry_point] if entry_point else [],
+            entry_point=entry_point,
+        )
 
-Function: {function_signature}
-Description: {docstring}
-{edge_case_section}
-{memory_section}
-Generate ONLY a single assert statement with concrete arguments and expected output.
-
-Example format:
-assert function_name(arg1, arg2) == expected_result
-
-Your assert statement:"""
-
-        return prompt
-
-    def _parse_output(self, output: str, function_id: str) -> GeneratedTest:
+    def _parse_output(
+        self, output: str, function_id: str, target_entry_point: str = "",
+    ) -> GeneratedTest:
         """Parse model output into a test case, prioritizing assert statements."""
         output = output.strip()
         lines = output.split('\n')
@@ -247,7 +242,9 @@ Your assert statement:"""
 
         # Fail closed: a compilable line is not sufficient. Generated output
         # must be one bounded assertion that actually calls the target.
-        policy = validate_function_assertion(test_code, function_id)
+        policy = validate_function_assertion(
+            test_code, target_entry_point or function_id
+        )
         is_valid = policy.valid
         parse_error = policy.reason
 
@@ -296,16 +293,30 @@ Your assert statement:"""
         if not self.is_loaded:
             self.load_model()
 
-        prompt = self._create_prompt(
+        match = re.search(r"\bdef\s+([A-Za-z_]\w*)\s*\(", function_signature)
+        target_entry_point = match.group(1) if match else function_id
+
+        user_prompt = self._create_prompt(
             function_signature=function_signature,
             docstring=docstring,
             edge_cases=edge_cases or [],
             memory_examples=memory_examples or [],
-            library=library
+            library=library,
+            entry_point=target_entry_point,
         )
+        prompt = format_chat_prompt(self.tokenizer, user_prompt)
 
-        # Tokenize
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
+        # Apply the same deterministic token gate used during function SFT.
+        bounded_prompts, _ = compact_prompt_texts(
+            self.tokenizer, [prompt], training_config.sft_prompt_token_limit
+        )
+        input_ids = torch.tensor(
+            bounded_prompts, dtype=torch.long, device=self.model.device
+        )
+        inputs = {
+            "input_ids": input_ids,
+            "attention_mask": torch.ones_like(input_ids),
+        }
 
         # Generate
         with torch.no_grad():
@@ -325,10 +336,10 @@ Your assert statement:"""
         generated_tests = []
         for output in outputs:
             # Get only the new tokens
-            new_tokens = output[inputs.input_ids.shape[1]:]
+            new_tokens = output[inputs["input_ids"].shape[1]:]
             text = self.tokenizer.decode(new_tokens, skip_special_tokens=True)
 
-            test = self._parse_output(text, function_id)
+            test = self._parse_output(text, function_id, target_entry_point)
             generated_tests.append(test)
 
         return generated_tests

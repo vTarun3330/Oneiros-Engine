@@ -45,9 +45,10 @@ from engine.model_runtime import (
     runtime_profile,
 )
 from engine.prompt_budget import compact_prompt_token_ids
+from engine.test_generation_prompt import format_chat_prompt
 
 
-MAX_SFT_SEQUENCE_LENGTH = 1536
+MAX_SFT_SEQUENCE_LENGTH = 2048
 SFT_GRADIENT_ACCUMULATION_STEPS = 16
 
 
@@ -60,6 +61,17 @@ def sft_completion_limit_for_execution_mode(
     if str(execution_mode).startswith("repository_"):
         return repository_completion_limit
     return function_completion_limit
+
+
+def sft_prompt_limit_for_execution_mode(
+    execution_mode: str,
+    function_prompt_limit: int,
+    repository_prompt_limit: int,
+) -> int:
+    """Return the mode-specific prompt budget inside one unified schema."""
+    if str(execution_mode).startswith("repository_"):
+        return repository_prompt_limit
+    return function_prompt_limit
 
 
 def plan_sft_optimizer_schedule(
@@ -224,6 +236,7 @@ class OneirosSFTTrainer:
         output_dir: Path = None,
         learning_rate: float = None,
         max_prompt_tokens: int = None,
+        max_repository_prompt_tokens: int = None,
         max_completion_tokens: int = None,
         max_repository_completion_tokens: int = None,
         warmup_steps: int = None,
@@ -241,6 +254,10 @@ class OneirosSFTTrainer:
         self.max_grad_norm = training_config.max_grad_norm
         self.max_prompt_tokens = (
             max_prompt_tokens or training_config.sft_prompt_token_limit
+        )
+        self.max_repository_prompt_tokens = (
+            max_repository_prompt_tokens
+            or training_config.sft_repository_prompt_token_limit
         )
         self.max_completion_tokens = (
             max_completion_tokens or training_config.sft_completion_token_limit
@@ -267,6 +284,7 @@ class OneirosSFTTrainer:
             )
         if (
             self.max_prompt_tokens <= 0
+            or self.max_repository_prompt_tokens <= 0
             or self.max_completion_tokens <= 0
             or self.max_repository_completion_tokens <= 0
         ):
@@ -365,11 +383,7 @@ class OneirosSFTTrainer:
 
     def _format_generation_prompt(self, prompt: str) -> str:
         """Render the same user turn used by inference, ending at assistant start."""
-        return self.tokenizer.apply_chat_template(
-            [{"role": "user", "content": prompt}],
-            tokenize=False,
-            add_generation_prompt=True,
-        )
+        return format_chat_prompt(self.tokenizer, prompt)
 
     def prepare_dataset(self, data_points: List[SFTDataPoint]) -> Dataset:
         """Pre-tokenize examples while retaining every completion token.
@@ -409,8 +423,13 @@ class OneirosSFTTrainer:
                     "limit_tokens": completion_limit,
                 })
                 continue
-            max_prompt_tokens = min(
+            mode_prompt_limit = sft_prompt_limit_for_execution_mode(
+                dp.execution_mode,
                 self.max_prompt_tokens,
+                self.max_repository_prompt_tokens,
+            )
+            max_prompt_tokens = min(
+                mode_prompt_limit,
                 MAX_SFT_SEQUENCE_LENGTH - len(completion_ids),
             )
             prompt_ids, was_compacted = compact_prompt_token_ids(
@@ -581,6 +600,7 @@ class OneirosSFTTrainer:
             "lr_scheduler_type": self.lr_scheduler_type,
             "model_runtime_profile": dict(self.runtime_profile),
             "max_prompt_tokens": self.max_prompt_tokens,
+            "max_repository_prompt_tokens": self.max_repository_prompt_tokens,
             "max_completion_tokens": self.max_completion_tokens,
             "planned_optimizer_steps": optimizer_steps,
             "completed_optimizer_steps": completed_optimizer_steps,

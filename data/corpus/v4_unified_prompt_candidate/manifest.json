@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "corpus_id": "oneiros-corpus-v4-unified-prompt-candidate",
+  "parent_corpus": {
+    "corpus_id": "oneiros-corpus-v3-final-candidate",
+    "records_sha256": "b0271abf868622f13ce2d7d89dd89a29bb040b37fa94459a6df084262221b507",
+    "splits_sha256": "ff28d90ab73a536f1f5eb2ef196f90b282fbf5f9bb30701193f862677336e2f2"
+  },
+  "prompt_schema_version": "oneiros_unified_test_generation_v1",
+  "quality_gate": {
+    "all_training_records_verified": true,
+    "reference_oracle_required": true,
+    "group_disjoint_splits": true,
+    "semantic_group_disjoint_splits": true,
+    "semantic_supervision_deduplicated": true,
+    "conflicting_supervision_rejected": true,
+    "official_real_bugs_require_fixed_pass_buggy_fail": true,
+    "repository_project_disjoint_splits": true,
+    "canonical_overlong_records_explicitly_excluded": true,
+    "locked_external_evaluation": true,
+    "unified_prompt_schema": true,
+    "mbpp_specifications_retained": true,
+    "behavioral_specifications_sanitized": true,
+    "support_context_first_class": true,
+    "repository_verified_test_symbols_declared": true,
+    "function_test_oracles_execution_derived": true,
+    "reference_fields_excluded_from_prompt_contract": true
+  },
+  "training_records": 8237,
+  "records_by_task": {
+    "fixed_bug_reproduction": 8,
+    "hidden_mutation_reproduction": 7636,
+    "official_repository_pytest_reproduction": 154,
+    "official_repository_swebench_reproduction": 324,
+    "official_repository_unittest_reproduction": 115
+  },
+  "records_by_mode": {
+    "function": 7644,
+    "repository": 593
+  },
+  "records_by_source": {
+    "BugsInPy": 269,
+    "SWE-bench Verified": 324,
+    "humaneval": 1252,
+    "manual_curated_examples": 8,
+    "mbpp": 6384
+  },
+  "splits": {
+    "train": {
+      "record_count": 6646,
+      "group_count": 746
+    },
+    "val": {
+      "record_count": 781,
+      "group_count": 82
+    },
+    "test": {
+      "record_count": 810,
+      "group_count": 94
+    }
+  },
+  "reverification": {
+    "retained_records": 8237,
+    "excluded_records": 150,
+    "exclusion_reason": "no_current-policy-reference-valid-mutation-killing-test"
+  },
+  "external_evaluation": {
+    "locked_bugsinpy_repository_tasks": 225,
+    "materialized_for_training": 269,
+    "verified_repository_eval_only": 7
+  },
+  "files": {
+    "records.json": {
+      "sha256": "c7ba54830005b19f7cf2511f0a7ebe0a43c61e1fceb2e5bd3222f32d8abe6ec1"
+    },
+    "splits.json": {
+      "sha256": "319470878c352c3587fc3294df2d3f47e6a75e1761a7227cc8f76c1b547e29f3"
+    },
+    "external_eval_index.json": {
+      "sha256": "d5b0c3cccc0f237ad6ece45ff9fc2abc8dfd87b4daf6c3c10ceb338434acad76"
+    },
+    "reverification_exclusions.json": {
+      "sha256": "2696153c3bc87062f39ffd162ab83bee307ad7389809bc4f2d6c865d0ca14fd0"
+    },
+    "training_exclusions.json": {
+      "sha256": "f75ab6101d035c34632528653aceb577625a35ea26c9aa3a37cde0f270d5417b"
+    }
+  },
+  "training_exclusions": {
+    "record_count": 36,
+    "reason": "canonical_retained_training_excluded"
+  }
+}

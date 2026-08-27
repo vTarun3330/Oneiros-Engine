@@ -78,9 +78,15 @@ def semantic_supervision_key(record: Dict[str, Any]) -> Tuple[str, str]:
     test_asts = sorted(semantic_python(test["code"]) for test in record["tests"])
     prompt_payload = {
         "execution_mode": mode,
-        "target_ast": semantic_python(record["code_under_test"]),
+        "target_ast": semantic_python(
+            record.get("prompt_code_under_test", record["code_under_test"])
+        ),
         "entry_point": record.get("entry_point", ""),
         "specification": normalize_text(record.get("specification", "")),
+        "task_mode": record.get("task_mode", ""),
+        "test_format": record.get("test_format", ""),
+        "target_symbols": list(record.get("target_symbols", [])),
+        "support_context": normalize_text(record.get("support_context", "")),
     }
     supervision_payload = {
         **prompt_payload,
@@ -202,6 +208,7 @@ def verify_corpus(corpus_dir: Path) -> Dict[str, Any]:
     semantic_gate = manifest.get("quality_gate", {}).get("semantic_group_disjoint_splits", False)
     dedup_gate = manifest.get("quality_gate", {}).get("semantic_supervision_deduplicated", False)
     conflict_gate = manifest.get("quality_gate", {}).get("conflicting_supervision_rejected", False)
+    unified_prompt_gate = manifest.get("quality_gate", {}).get("unified_prompt_schema", False)
     semantic_supervision_ids: Dict[str, str] = {}
     prompt_references: Dict[str, set[str]] = {}
     for record in records:
@@ -217,6 +224,31 @@ def verify_corpus(corpus_dir: Path) -> Dict[str, Any]:
         except SyntaxError as exc:
             raise RuntimeError(f"Canonical record {record['id']} has invalid Python.") from exc
         execution_mode = record.get("quality", {}).get("execution_mode", "function_assertion")
+        if unified_prompt_gate:
+            model_fields = {
+                "task_mode", "test_format", "target_symbols", "support_context",
+                "prompt_code_under_test",
+            }
+            if model_fields - record.keys():
+                raise RuntimeError(
+                    f"Canonical unified-prompt record {record['id']} is missing model fields."
+                )
+            if record.get("task_mode") not in {"function", "repository"}:
+                raise RuntimeError(f"Canonical record {record['id']} has an invalid task mode.")
+            if record.get("test_format") not in {
+                "assert_statement", "pytest_fragment", "unittest_fragment",
+            }:
+                raise RuntimeError(f"Canonical record {record['id']} has an invalid test format.")
+            if not isinstance(record.get("target_symbols"), list):
+                raise RuntimeError(f"Canonical record {record['id']} has malformed target symbols.")
+            if not isinstance(record.get("support_context"), str):
+                raise RuntimeError(f"Canonical record {record['id']} has malformed support context.")
+            try:
+                _parse_python(record["prompt_code_under_test"], "<model-visible-target>")
+            except SyntaxError as exc:
+                raise RuntimeError(
+                    f"Canonical record {record['id']} has invalid model-visible target code."
+                ) from exc
         if execution_mode in REPOSITORY_EXECUTION_MODES:
             expected_task_types, expected_test_format = REPOSITORY_EXECUTION_MODES[execution_mode]
             if record.get("task_type") not in expected_task_types:
@@ -225,6 +257,16 @@ def verify_corpus(corpus_dir: Path) -> Dict[str, Any]:
                 raise RuntimeError(f"Canonical repository record {record['id']} must not claim a standalone entry point.")
             if not record.get("quality", {}).get("official_targeted_test_fixed_pass_buggy_fail"):
                 raise RuntimeError(f"Canonical repository record {record['id']} lacks official F2P evidence.")
+            if unified_prompt_gate and (
+                record.get("task_mode") != "repository"
+                or record.get("test_format") != expected_test_format
+                or not record.get("quality", {}).get(
+                    "support_context_complete_for_verified_tests"
+                )
+            ):
+                raise RuntimeError(
+                    f"Canonical repository record {record['id']} lacks unified context evidence."
+                )
             if semantic_gate:
                 project = record.get("provenance", {}).get("project", "").lower()
                 if record.get("task_type") == "official_repository_swebench_reproduction":
@@ -247,6 +289,17 @@ def verify_corpus(corpus_dir: Path) -> Dict[str, Any]:
                 if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
             }:
                 raise RuntimeError(f"Canonical record {record['id']} lacks its entry point.")
+            if unified_prompt_gate and (
+                record.get("task_mode") != "function"
+                or record.get("test_format") != "assert_statement"
+                or record.get("target_symbols") != [record["entry_point"]]
+                or not record.get("quality", {}).get(
+                    "test_oracle_labels_execution_derived"
+                )
+            ):
+                raise RuntimeError(
+                    f"Canonical function record {record['id']} lacks executed oracle labels."
+                )
             if semantic_gate:
                 expected_group = function_group_id(record["reference_code"], record["entry_point"])
                 if record.get("group_id") != expected_group:
@@ -264,6 +317,15 @@ def verify_corpus(corpus_dir: Path) -> Dict[str, Any]:
                 _, expected_test_format = REPOSITORY_EXECUTION_MODES[execution_mode]
                 if test.get("format") != expected_test_format or test.get("oracle") != "fixed_passes_buggy_fails_repository":
                     raise RuntimeError(f"Canonical repository record {record['id']} has an invalid test oracle.")
+            elif unified_prompt_gate:
+                if test.get("oracle") not in {
+                    "passes_reference_fails_target",
+                    "passes_reference_passes_target",
+                    "fails_reference",
+                } or not isinstance(test.get("distinguishing"), bool):
+                    raise RuntimeError(
+                        f"Canonical function record {record['id']} has stale test oracle metadata."
+                    )
             _compile_test(test["code"])
         if semantic_gate or dedup_gate or conflict_gate:
             prompt_key, supervision_key = semantic_supervision_key(record)

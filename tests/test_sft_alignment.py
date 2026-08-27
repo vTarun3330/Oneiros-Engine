@@ -15,7 +15,8 @@ class _TokenLengthTokenizer:
     def apply_chat_template(self, messages, tokenize=False, add_generation_prompt=True):
         assert tokenize is False
         assert add_generation_prompt is True
-        return messages[0]["content"]
+        assert [message["role"] for message in messages] == ["system", "user"]
+        return messages[-1]["content"]
 
     def __call__(self, text, add_special_tokens=False):
         normalized = text.replace(self.eos_token, f" {self.eos_token}")
@@ -23,11 +24,13 @@ class _TokenLengthTokenizer:
 
 
 def _dataset_only_trainer(
-    prompt_limit=5, completion_limit=4, repository_completion_limit=8,
+    prompt_limit=5, repository_prompt_limit=7, completion_limit=4,
+    repository_completion_limit=8,
 ):
     trainer = object.__new__(OneirosSFTTrainer)
     trainer.tokenizer = _TokenLengthTokenizer()
     trainer.max_prompt_tokens = prompt_limit
+    trainer.max_repository_prompt_tokens = repository_prompt_limit
     trainer.max_completion_tokens = completion_limit
     trainer.max_repository_completion_tokens = repository_completion_limit
     trainer.dataset_stats = {}
@@ -93,6 +96,27 @@ def test_sft_repository_fragment_uses_its_separate_completion_budget(monkeypatch
     assert trainer.dataset_stats["max_observed_completion_tokens"] == 6
 
 
+def test_sft_repository_fragment_uses_its_larger_prompt_budget(monkeypatch):
+    monkeypatch.setattr(sft_module, "Dataset", _DatasetStub, raising=False)
+    trainer = _dataset_only_trainer(
+        prompt_limit=4,
+        repository_prompt_limit=7,
+        completion_limit=3,
+        repository_completion_limit=8,
+    )
+
+    dataset = trainer.prepare_dataset([
+        SFTDataPoint(
+            prompt="one two three four five six seven eight nine",
+            completion="assert works",
+            function_id="repository-record",
+            execution_mode="repository_pytest_fragment",
+        )
+    ])
+
+    assert dataset[0]["completion_start"] == 7
+
+
 def test_safer_v3_sft_defaults_bound_optimizer_drift():
     assert training_config.sft_learning_rate == 5e-5
     assert training_config.sft_epochs == 1
@@ -102,6 +126,7 @@ def test_safer_v3_sft_defaults_bound_optimizer_drift():
     assert training_config.sft_min_function_kill_rate == 0.50
     assert training_config.sft_min_monitor_checkpoints == 2
     assert training_config.sft_prompt_token_limit == 512
+    assert training_config.sft_repository_prompt_token_limit == 1024
     assert training_config.sft_completion_token_limit == 128
     assert training_config.sft_repository_completion_token_limit == 1024
 

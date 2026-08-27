@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import ast
 import json
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -68,6 +69,12 @@ def make_record(
 def mutation_records() -> tuple[List[Dict[str, Any]], Dict[str, List[str]]]:
     prepared_manifest = verify_prepared_dataset(DATA_DIR)
     pairs = json.loads((DATA_DIR / "mutation_pairs_clean.json").read_text(encoding="utf-8"))
+    mbpp_descriptions = {
+        int(item["task_id"]): str(item.get("text", "")).strip()
+        for item in json.loads(
+            (DATA_DIR / "mbpp" / "mbpp_cache.json").read_text(encoding="utf-8")
+        )
+    }
     split_pairs = {
         name: json.loads((DATA_DIR / "splits" / f"{name}_pairs.json").read_text(encoding="utf-8"))
         for name in ("train", "val", "test")
@@ -85,6 +92,12 @@ def mutation_records() -> tuple[List[Dict[str, Any]], Dict[str, List[str]]]:
         tests = extract_dataset_assertions(pair["test_cases"], pair["entry_point"])
         # The preparation gate has already proven that at least one of these
         # assertions passes the reference and fails the target.
+        specification = docstring_for(pair["golden_code"], pair["entry_point"])
+        if pair["source"] == "mbpp":
+            match = re.search(r"^mbpp_(\d+)_mut_", pair["id"])
+            if not match or not mbpp_descriptions.get(int(match.group(1))):
+                raise RuntimeError(f"MBPP specification missing for {pair['id']}")
+            specification = mbpp_descriptions[int(match.group(1))]
         record = make_record(
             record_id=f"mutation::{pair['id']}",
             task_type="hidden_mutation_reproduction",
@@ -93,7 +106,7 @@ def mutation_records() -> tuple[List[Dict[str, Any]], Dict[str, List[str]]]:
             code_under_test=pair["mutant_code"],
             reference_code=pair["golden_code"],
             entry_point=pair["entry_point"],
-            specification=docstring_for(pair["golden_code"], pair["entry_point"]),
+            specification=specification,
             tests=tests,
             provenance={
                 "upstream_record_id": pair["id"],

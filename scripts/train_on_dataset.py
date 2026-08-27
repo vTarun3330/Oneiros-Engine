@@ -36,11 +36,19 @@ from engine.prompt_budget import (
     PROMPT_COMPACTION_STRATEGY,
     compact_prompt_texts,
 )
+from engine.test_generation_prompt import (
+    PROMPT_SCHEMA_VERSION,
+    build_unified_user_prompt,
+    format_chat_prompt,
+    normalize_target_symbols,
+    task_mode_for_execution_mode,
+    test_format_for_execution_mode,
+)
 from utils.reproducibility import build_reproducibility_manifest
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 RESULTS_DIR = Path(__file__).parent.parent / "results"
-ADAPTER_DIR = Path(__file__).parent.parent / "checkpoints" / "v3_hardened_phase3"
+ADAPTER_DIR = Path(__file__).parent.parent / "checkpoints" / "v4_unified_prompt_sft"
 CORPUS_VERSION = CANONICAL_CORPUS_VERSION
 EXECUTION_MODE_FILTER = None
 TRAINING_PHASE = "sft"
@@ -89,8 +97,9 @@ SFT_BALANCED_SAMPLING_ENABLED = True
 SFT_SYNTHETIC_BALANCE_FRACTION = 0.0
 SFT_MAX_SYNTHETIC_REPEATS = 2
 MAX_NEW_TOKENS_OVERRIDE = 128
-PROMPT_TOKEN_LIMIT = 512
-MAX_SFT_COMPLETION_TOKENS = 1536
+PROMPT_TOKEN_LIMIT = training_config.sft_prompt_token_limit
+REPOSITORY_PROMPT_TOKEN_LIMIT = training_config.sft_repository_prompt_token_limit
+MAX_SFT_COMPLETION_TOKENS = 2048
 MAX_SFT_GENERATION_COMPATIBLE_TOKENS = MAX_NEW_TOKENS_OVERRIDE
 MAX_SFT_REPOSITORY_GENERATION_COMPATIBLE_TOKENS = (
     training_config.sft_repository_completion_token_limit
@@ -165,7 +174,9 @@ def sft_training_scope(
     if HOLDOUT_BUG_FAMILY:
         scope += f":holdout_bug_family={HOLDOUT_BUG_FAMILY}"
     scope += f":prompt_token_limit={PROMPT_TOKEN_LIMIT}"
+    scope += f":repository_prompt_token_limit={REPOSITORY_PROMPT_TOKEN_LIMIT}"
     scope += f":prompt_compaction={PROMPT_COMPACTION_STRATEGY}"
+    scope += f":prompt_schema={PROMPT_SCHEMA_VERSION}"
     scope += (
         ":generation_completion_limit="
         f"{MAX_SFT_GENERATION_COMPATIBLE_TOKENS}"
@@ -222,38 +233,33 @@ def _compact_code(code: str, limit: int = 1800) -> str:
 def build_prompt(
     code_under_test: str, entry_point: str, specification: str = "",
     execution_mode: str = FUNCTION_EXECUTION_MODE,
+    support_context: str = "", target_symbols: Optional[List[str]] = None,
 ) -> str:
-    """Build the inference-aligned, reference-free Phase 3 prompt.
+    """Build the one dataset-agnostic, reference-free Oneiros prompt.
 
-    The fixed implementation and mutation diff are deliberately oracle-only:
-    they verify supervision and DPO preferences, but are never shown to the
-    policy. This matches analysis of a future user-provided function.
+    The fixed implementation, mutation diff, dataset identity, oracle result,
+    and expected completion are deliberately absent from this API so callers
+    cannot accidentally leak them into the model-visible prompt.
     """
-    if is_repository_execution_mode(execution_mode):
-        framework = "pytest" if execution_mode == REPOSITORY_EXECUTION_MODE else "unittest"
-        return (
-            "You are a Python test engineer. Inspect the affected repository source excerpts "
-            f"below and write ONE {framework}-compatible test fragment that exposes a behavioral "
-            f"defect. Use only the shown repository context and normal {framework}-style assertions. "
-            "Output only Python test code.\n\n"
-            f"Affected repository source excerpts:\n```python\n{_compact_code(code_under_test)}\n```\n\n"
-            f"{framework.title()} test fragment:"
-        )
-    if execution_mode != FUNCTION_EXECUTION_MODE:
-        raise ValueError(f"Unsupported Phase 3 execution mode: {execution_mode}")
-    specification_block = (
-        f"Behavioral specification (may be empty):\n{specification.strip()}\n\n"
-        if specification.strip() else ""
+    return build_unified_user_prompt(
+        code_under_test=_compact_code(code_under_test),
+        execution_mode=execution_mode,
+        specification=specification,
+        support_context=_compact_code(support_context, limit=2400),
+        target_symbols=target_symbols,
+        entry_point=entry_point,
     )
-    return (
-        "You are a Python test engineer. Inspect the function below and write ONE "
-        "Python assert statement that exposes a behavioral defect, using its stated "
-        "contract when available. The assert must call the target entry point. "
-        "Output only that assertion.\n\n"
-        f"Target entry point: `{entry_point}`\n\n"
-        f"{specification_block}"
-        f"Code under test:\n```python\n{_compact_code(code_under_test)}\n```\n\n"
-        "Assertion:"
+
+
+def build_pair_prompt(pair: Dict) -> str:
+    """Build a unified prompt from an adapted canonical record."""
+    return build_prompt(
+        pair.get("prompt_code_under_test") or pair["mutant_code"],
+        pair.get("entry_point", ""),
+        pair.get("specification", ""),
+        pair.get("execution_mode", FUNCTION_EXECUTION_MODE),
+        pair.get("support_context", ""),
+        pair.get("target_symbols", []),
     )
 
 
@@ -261,12 +267,21 @@ def _record_to_pair(record: Dict) -> Dict:
     """Adapt a canonical record to the internal oracle evaluation shape."""
     provenance = record.get("provenance", {})
     source = record.get("source", {})
+    execution_mode = record.get("quality", {}).get("execution_mode", FUNCTION_EXECUTION_MODE)
+    target_symbols = normalize_target_symbols(
+        record.get("target_symbols"), record.get("entry_point", "")
+    )
     return {
         "id": record["id"],
         "task_type": record["task_type"],
         "source": record["source"],
         "entry_point": record["entry_point"],
-        "execution_mode": record.get("quality", {}).get("execution_mode", FUNCTION_EXECUTION_MODE),
+        "execution_mode": execution_mode,
+        "task_mode": record.get("task_mode", task_mode_for_execution_mode(execution_mode)),
+        "test_format": record.get("test_format", test_format_for_execution_mode(execution_mode)),
+        "target_symbols": target_symbols,
+        "support_context": record.get("support_context", ""),
+        "prompt_code_under_test": record.get("prompt_code_under_test", record["code_under_test"]),
         "specification": record["specification"],
         "mutant_code": record["code_under_test"],
         "golden_code": record["reference_code"],
@@ -610,12 +625,8 @@ def supervision_exclusion_summary(record_ids: List[str]) -> Dict:
 
 
 def format_generation_prompt(tokenizer, prompt: str) -> str:
-    """Render the Phi-3 chat prefix shared with SFT and DPO."""
-    return tokenizer.apply_chat_template(
-        [{"role": "user", "content": prompt}],
-        tokenize=False,
-        add_generation_prompt=True,
-    )
+    """Render the unified system/user prefix shared with SFT, DPO, and inference."""
+    return format_chat_prompt(tokenizer, prompt)
 
 
 def evaluate_pair(
@@ -678,10 +689,7 @@ def generate_tests_ai_batched(
     prompt_additions = prompt_additions or {}
     prompts = []
     for index, pair in enumerate(pairs_chunk):
-        prompt = build_prompt(
-                pair["mutant_code"], pair["entry_point"], pair.get("specification", ""),
-                pair.get("execution_mode", FUNCTION_EXECUTION_MODE),
-            )
+        prompt = build_pair_prompt(pair)
         addition = prompt_additions.get(index, "").strip()
         if addition:
             prompt = f"{prompt}\n\n{addition}"
@@ -770,10 +778,7 @@ def _append_preferences(buffer, dpo_trainer, pair: Dict, winners: List[str], los
     if not winners or not losers:
         return 0
     prompt = dpo_trainer.format_prompt(
-        build_prompt(
-            pair["mutant_code"], pair["entry_point"], pair.get("specification", ""),
-            pair.get("execution_mode", FUNCTION_EXECUTION_MODE),
-        )
+        build_pair_prompt(pair)
     )
     added = 0
     for winner in winners[:2]:
@@ -874,10 +879,7 @@ def _append_repository_preferences(buffer, dpo_trainer, pair: Dict, winners: Lis
     if not winners:
         return 0
     prompt = dpo_trainer.format_prompt(
-        build_prompt(
-            pair["mutant_code"], pair["entry_point"], pair.get("specification", ""),
-            pair.get("execution_mode", REPOSITORY_EXECUTION_MODE),
-        )
+        build_pair_prompt(pair)
     )
     for winner in winners[:2]:
         rejected = _length_matched_repository_loser(
@@ -2387,7 +2389,9 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         "seed": SEED,
         "max_sequence_length": MAX_SFT_COMPLETION_TOKENS,
         "prompt_token_limit": PROMPT_TOKEN_LIMIT,
+        "repository_prompt_token_limit": REPOSITORY_PROMPT_TOKEN_LIMIT,
         "prompt_compaction_strategy": PROMPT_COMPACTION_STRATEGY,
+        "prompt_schema_version": PROMPT_SCHEMA_VERSION,
         "generation_completion_token_limit": MAX_SFT_GENERATION_COMPATIBLE_TOKENS,
         "repository_generation_completion_token_limit": (
             SFT_REPOSITORY_COMPLETION_TOKEN_LIMIT_OVERRIDE
@@ -2432,6 +2436,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         or sft_hyperparameters["synthetic_balance_fraction"] < 0.0
         or sft_hyperparameters["max_synthetic_repeats"] < 1
         or sft_hyperparameters["prompt_token_limit"] <= 0
+        or sft_hyperparameters["repository_prompt_token_limit"] <= 0
         or sft_hyperparameters["generation_completion_token_limit"] <= 0
         or sft_hyperparameters[
             "repository_generation_completion_token_limit"
@@ -2573,10 +2578,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                     if not verified_winners:
                         sft_records_without_verified_winners.append(pair["id"])
                         continue
-                    prompt = build_prompt(
-                        pair["mutant_code"], pair["entry_point"], pair.get("specification", ""),
-                        pair.get("execution_mode", FUNCTION_EXECUTION_MODE),
-                    )
+                    prompt = build_pair_prompt(pair)
                     for test in verified_winners[:3]:
                         data_point = SFTDataPoint(
                             prompt=prompt,
@@ -2826,6 +2828,9 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                     output_dir=ADAPTER_DIR,
                     learning_rate=sft_hyperparameters["learning_rate"],
                     max_prompt_tokens=sft_hyperparameters["prompt_token_limit"],
+                    max_repository_prompt_tokens=sft_hyperparameters[
+                        "repository_prompt_token_limit"
+                    ],
                     max_completion_tokens=sft_hyperparameters[
                         "generation_completion_token_limit"
                     ],
@@ -2942,6 +2947,9 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                     "lr_scheduler_type": result["lr_scheduler_type"],
                     "model_runtime_profile": result["model_runtime_profile"],
                     "max_prompt_tokens": result["max_prompt_tokens"],
+                    "max_repository_prompt_tokens": result[
+                        "max_repository_prompt_tokens"
+                    ],
                     "max_completion_tokens": result["max_completion_tokens"],
                     "planned_optimizer_steps": result["planned_optimizer_steps"],
                     "completed_optimizer_steps": result["completed_optimizer_steps"],
@@ -3636,7 +3644,7 @@ if __name__ == "__main__":
         and not 0 < args.sft_repository_completion_token_limit < MAX_SFT_COMPLETION_TOKENS
     ):
         raise ValueError(
-            "--sft-repository-completion-token-limit must be between 1 and 1535"
+            "--sft-repository-completion-token-limit must be between 1 and 2047"
         )
     if args.sft_real_target_fraction is not None and not 0.0 <= args.sft_real_target_fraction < 1.0:
         raise ValueError("--sft-real-target-fraction must be in [0, 1)")

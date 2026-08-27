@@ -43,6 +43,11 @@ data/corpus/**
 data/corpus/v3_final_candidate/**
 !data/corpus/v3_final_candidate/manifest.json
 !data/corpus/v3_final_candidate/training_exclusions.json
+!data/corpus/v4_unified_prompt_candidate/
+data/corpus/v4_unified_prompt_candidate/**
+!data/corpus/v4_unified_prompt_candidate/manifest.json
+!data/corpus/v4_unified_prompt_candidate/training_exclusions.json
+!data/corpus/v4_unified_prompt_candidate/reverification_exclusions.json
 
 # Model weights and generated experiment artifacts
 checkpoints/**

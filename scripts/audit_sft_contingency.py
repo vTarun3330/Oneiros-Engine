@@ -17,7 +17,7 @@ from scripts.train_on_dataset import (
     _filter_overlong_repository_completions,
     _repository_fragment_tests,
     balanced_repeat_examples,
-    build_prompt,
+    build_pair_prompt,
     deduplicate_sft_examples,
     evaluate_pair,
     extract_dataset_tests,
@@ -70,12 +70,7 @@ def build_audit(
                 source_tests, pair["golden_code"], pair["mutant_code"],
                 pair["entry_point"],
             )
-        prompt = build_prompt(
-            pair["mutant_code"],
-            pair["entry_point"],
-            pair.get("specification", ""),
-            mode,
-        )
+        prompt = build_pair_prompt(pair)
         target = repository if is_repository_execution_mode(mode) else synthetic
         for completion in winners[:3]:
             target.append(

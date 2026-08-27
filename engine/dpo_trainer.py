@@ -49,9 +49,10 @@ from engine.model_runtime import (
     runtime_profile,
 )
 from engine.prompt_budget import PROMPT_COMPACTION_STRATEGY, compact_prompt_string
+from engine.test_generation_prompt import format_chat_prompt
 
-DPO_MAX_SEQUENCE_TOKENS = 1536
-DPO_MAX_PROMPT_TOKENS = 512
+DPO_MAX_SEQUENCE_TOKENS = 2048
+DPO_MAX_PROMPT_TOKENS = 1024
 DPO_MAX_COMPLETION_TOKENS = 1024
 
 
@@ -220,8 +221,8 @@ class DPOTrainer:
     def prepare_dataset(self, pairs: List[DPODataPoint]) -> 'Dataset':
         """Convert DPO pairs after a fail-closed completion context audit.
 
-        Prompt compaction intentionally matches Oneiros inference's 512-token
-        head/tail gate. Chosen and rejected completions must remain
+        Prompt compaction intentionally preserves the unified prompt's
+        specification head and target/output suffix. Chosen and rejected completions must remain
         whole: silently truncating a verified assertion can change whether it
         kills the mutant, so an overlong completion aborts before any update.
         """
@@ -287,11 +288,7 @@ class DPOTrainer:
 
     def format_prompt(self, prompt: str) -> str:
         """Render prompts identically for DPO and inference."""
-        return self.tokenizer.apply_chat_template(
-            [{"role": "user", "content": prompt}],
-            tokenize=False,
-            add_generation_prompt=True,
-        )
+        return format_chat_prompt(self.tokenizer, prompt)
     def create_prompt(
         self,
         function_signature: str,

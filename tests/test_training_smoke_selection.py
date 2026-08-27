@@ -89,14 +89,18 @@ def test_bounded_smoke_prefers_generation_compatible_repository_records():
 
 def test_bounded_dpo_smoke_preserves_full_sft_identity():
     assert sft_training_scope(100, False, None) == (
-        "full_train_split:execution_mode=all:repository_completion_limit=1536:"
-        "prompt_token_limit=512:prompt_compaction=head_tail_preserve_chat_suffix_v1:"
+        "full_train_split:execution_mode=all:repository_completion_limit=2048:"
+        "prompt_token_limit=512:repository_prompt_token_limit=1024:"
+        "prompt_compaction=priority_head_tail_preserve_spec_target_v2:"
+        "prompt_schema=oneiros_unified_test_generation_v1:"
         "generation_completion_limit=128:repository_generation_completion_limit=1024"
     )
     assert sft_training_scope(100, True, None) == (
         "first_100_train_records:bounded_selection=stratified_generation_compatible_v2:"
-        "execution_mode=all:repository_completion_limit=1536:prompt_token_limit=512:"
-        "prompt_compaction=head_tail_preserve_chat_suffix_v1:"
+        "execution_mode=all:repository_completion_limit=2048:prompt_token_limit=512:"
+        "repository_prompt_token_limit=1024:"
+        "prompt_compaction=priority_head_tail_preserve_spec_target_v2:"
+        "prompt_schema=oneiros_unified_test_generation_v1:"
         "generation_completion_limit=128:repository_generation_completion_limit=1024"
     )
 
@@ -116,7 +120,8 @@ class _GenerationTokenizerStub:
     eos_token_id = 0
 
     def apply_chat_template(self, messages, tokenize=False, add_generation_prompt=True):
-        return messages[0]["content"]
+        assert [message["role"] for message in messages] == ["system", "user"]
+        return messages[-1]["content"]
 
     def __call__(self, text, add_special_tokens=False):
         return {"input_ids": [11, 12, 13]}

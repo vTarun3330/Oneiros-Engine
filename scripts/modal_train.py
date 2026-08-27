@@ -133,7 +133,7 @@ def setup_local_to_volume_symlink(local_path: str, remote_path: str):
 
 
 def sync_results_from_volume(
-    run_name: str = "v3_hardened_phase3", results_filename: str = "training_results.json"
+    run_name: str = "v4_unified_prompt_sft", results_filename: str = "training_results.json"
 ):
     """Pull checkpoints and results back down from the Modal Volume."""
     print("\n📦 Syncing trained checkpoints and results from Modal Volume...")
@@ -196,7 +196,7 @@ def run_cloud_training(
     max_pairs: int = None,
     max_validation_functions: int = 0,
     corpus_version: str = CANONICAL_CORPUS_VERSION,
-    execution_mode: str = "", phase: str = "sft", run_name: str = "v3_hardened_phase3",
+    execution_mode: str = "", phase: str = "sft", run_name: str = "v4_unified_prompt_sft",
     seed: int = 42,
     eval_feedback_rounds: int = 0,
     eval_diversity_mode: str = "none",
@@ -274,8 +274,8 @@ def run_cloud_training(
         return {"error": "Maximum validation functions must be non-negative"}
     if sft_epochs < 0 or sft_learning_rate < 0 or sft_batch_size < 0:
         return {"error": "SFT overrides must be positive when supplied"}
-    if not 0 <= sft_repository_completion_token_limit < 1536:
-        return {"error": "SFT repository completion limit must be between 1 and 1535 when supplied"}
+    if not 0 <= sft_repository_completion_token_limit < 2048:
+        return {"error": "SFT repository completion limit must be between 1 and 2047 when supplied"}
     if sft_lr_scheduler_type not in {"", "cosine", "constant_with_warmup"}:
         return {"error": "Unsupported SFT LR scheduler"}
     if sft_real_target_fraction != -1.0 and not 0.0 <= sft_real_target_fraction < 1.0:
@@ -441,7 +441,7 @@ def training_main(
     max_pairs: int = 0,
     max_validation_functions: int = 0,
     corpus_version: str = CANONICAL_CORPUS_VERSION,
-    execution_mode: str = "", phase: str = "sft", run_name: str = "v3_hardened_phase3",
+    execution_mode: str = "", phase: str = "sft", run_name: str = "v4_unified_prompt_sft",
     seed: int = 42,
     eval_feedback_rounds: int = 0,
     eval_diversity_mode: str = "none",
@@ -487,9 +487,9 @@ def training_main(
     holdout_bug_family = sanitise_family_name(holdout_bug_family) or ""
     if sft_epochs < 0 or sft_learning_rate < 0 or sft_batch_size < 0:
         raise ValueError("SFT overrides must be positive when supplied")
-    if not 0 <= sft_repository_completion_token_limit < 1536:
+    if not 0 <= sft_repository_completion_token_limit < 2048:
         raise ValueError(
-            "SFT repository completion limit must be between 1 and 1535 when supplied"
+            "SFT repository completion limit must be between 1 and 2047 when supplied"
         )
     if sft_lr_scheduler_type not in {"", "cosine", "constant_with_warmup"}:
         raise ValueError("Unsupported SFT LR scheduler")
@@ -697,7 +697,7 @@ if __name__ == "__main__":
     if hasattr(sys.stderr, "reconfigure"):
         sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
-    run_name = "v3_hardened_phase3"
+    run_name = "v4_unified_prompt_sft"
     for index, argument in enumerate(sys.argv):
         if argument == "--run-name" and index + 1 < len(sys.argv):
             run_name = sys.argv[index + 1]

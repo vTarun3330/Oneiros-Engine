@@ -10,7 +10,7 @@ from __future__ import annotations
 from typing import Iterable, List, Sequence, Tuple
 
 
-PROMPT_COMPACTION_STRATEGY = "head_tail_preserve_chat_suffix_v1"
+PROMPT_COMPACTION_STRATEGY = "priority_head_tail_preserve_spec_target_v2"
 
 
 def compact_prompt_token_ids(

@@ -1,0 +1,752 @@
+[
+  {
+    "record_id": "mutation::humaneval_HumanEval_160_mut_01584",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::humaneval_HumanEval_160_mut_01585",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::humaneval_HumanEval_160_mut_01586",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::humaneval_HumanEval_160_mut_01587",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_100_mut_02534",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_100_mut_02535",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_100_mut_02536",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_100_mut_02537",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_100_mut_02538",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_100_mut_02539",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_100_mut_02540",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_100_mut_02541",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_124_mut_02748",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_137_mut_02862",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_137_mut_02863",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_137_mut_02864",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_137_mut_02865",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_137_mut_02866",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_137_mut_02867",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_173_mut_03237",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_210_mut_03585",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_210_mut_03586",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_210_mut_03587",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_210_mut_03588",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_303_mut_04340",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_303_mut_04341",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_303_mut_04342",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_303_mut_04344",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_303_mut_04348",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_303_mut_04349",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_303_mut_04352",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_303_mut_04353",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_303_mut_04354",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_303_mut_04355",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_303_mut_04356",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_403_mut_05257",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_403_mut_05259",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_403_mut_05263",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_403_mut_05264",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_403_mut_05265",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_403_mut_05266",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_403_mut_05268",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_403_mut_05271",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_403_mut_05275",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_403_mut_05276",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_403_mut_05280",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_403_mut_05284",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_442_mut_05586",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_442_mut_05587",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_442_mut_05588",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_442_mut_05589",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_442_mut_05590",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_442_mut_05591",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_530_mut_06493",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_530_mut_06494",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_530_mut_06495",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_530_mut_06496",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_530_mut_06497",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_530_mut_06498",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06499",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06500",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06501",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06502",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06503",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06504",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06505",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06506",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06507",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06508",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06509",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06511",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06512",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06514",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_531_mut_06515",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_644_mut_07378",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_644_mut_07379",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_644_mut_07380",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_644_mut_07381",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_644_mut_07382",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_644_mut_07383",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_644_mut_07384",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_644_mut_07385",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_663_mut_07519",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_663_mut_07521",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_663_mut_07522",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_663_mut_07523",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_663_mut_07524",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_663_mut_07525",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_663_mut_07526",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_663_mut_07528",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_676_mut_07598",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_717_mut_07907",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_717_mut_07909",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_717_mut_07910",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_717_mut_07911",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_717_mut_07913",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_717_mut_07914",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_717_mut_07918",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_717_mut_07919",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_717_mut_07921",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_717_mut_07922",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_717_mut_07924",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_829_mut_08791",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_829_mut_08792",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_829_mut_08793",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_829_mut_08794",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_832_mut_08808",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08874",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08876",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08877",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08878",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08879",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08881",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08882",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08884",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08886",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08888",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08891",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08893",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08896",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_836_mut_08897",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_900_mut_09494",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_900_mut_09496",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_913_mut_09665",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_913_mut_09666",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_913_mut_09668",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_913_mut_09670",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09939",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09940",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09941",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09942",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09943",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09944",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09945",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09946",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09947",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09948",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09949",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09950",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09951",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09954",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09956",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09957",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09959",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09960",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09961",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09962",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09964",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09965",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  },
+  {
+    "record_id": "mutation::mbpp_938_mut_09966",
+    "reason": "no_current-policy-reference-valid-mutation-killing-test",
+    "reference_invalid_tests_excluded": 3
+  }
+]

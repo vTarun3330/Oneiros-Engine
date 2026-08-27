@@ -18,6 +18,7 @@ from typing import Any, Dict, Iterable, List, Mapping, Sequence
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+from config import CANONICAL_CORPUS_VERSION
 from metrics.research_evaluation import (
     aggregate_seed_results,
     compare_policy_results,
@@ -79,7 +80,7 @@ def _modal_command(
 
 def build_ablation_plan(
     run_name: str,
-    corpus_version: str = "v3_final_candidate",
+    corpus_version: str = CANONICAL_CORPUS_VERSION,
     seeds: Sequence[int] = DEFAULT_SEEDS,
     holdout_families: Sequence[str] = DEFAULT_HOLDOUT_FAMILIES,
     smoke_functions: int = 32,
@@ -398,7 +399,7 @@ def main() -> int:
 
     plan_parser = subparsers.add_parser("plan", help="Write the predeclared Modal ablation plan")
     plan_parser.add_argument("--run-name", required=True)
-    plan_parser.add_argument("--corpus-version", default="v3_final_candidate")
+    plan_parser.add_argument("--corpus-version", default=CANONICAL_CORPUS_VERSION)
     plan_parser.add_argument("--output", type=Path, required=True)
 
     smoke_parser = subparsers.add_parser("smoke", help="Run CPU-only synthetic pipeline smoke")

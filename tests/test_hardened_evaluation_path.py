@@ -23,6 +23,33 @@ def test_generator_parser_applies_candidate_policy():
     assert invalid.parse_error == "target_entry_point_not_called"
 
 
+def test_legacy_generator_uses_unified_prompt_and_callable_entry_point():
+    generator = Phi3Generator.__new__(Phi3Generator)
+    generator.stats = {
+        "total_generated": 0,
+        "valid_generated": 0,
+        "invalid_generated": 0,
+    }
+    prompt = generator._create_prompt(
+        "def merge_wrapper(left, right)",
+        "Merge two values.",
+        ["empty values"],
+        ["assert merge_wrapper([], []) == []"],
+        entry_point="merge_wrapper",
+    )
+    parsed = generator._parse_output(
+        "assert merge_wrapper([], []) == []",
+        "sys_pandas_merge",
+        "merge_wrapper",
+    )
+
+    assert "### TEST GENERATION TASK" in prompt
+    assert "Task mode: function" in prompt
+    assert "Target symbol(s): `merge_wrapper`" in prompt
+    assert parsed.is_valid is True
+    assert parsed.function_id == "sys_pandas_merge"
+
+
 def test_evaluate_pair_counts_only_policy_and_reference_valid_candidates():
     winners, losers = evaluate_pair(
         [

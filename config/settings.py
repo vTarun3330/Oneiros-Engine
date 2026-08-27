@@ -19,7 +19,7 @@ BUGSINPY_DIR = DATA_DIR / "bugsinpy"
 # Immutable Phase 3 corpus used by the current SFT-first pipeline. Keep this
 # value centralized so local preflight, Modal training, evaluation, and audit
 # commands cannot silently select different corpora.
-CANONICAL_CORPUS_VERSION = "v3_final_candidate"
+CANONICAL_CORPUS_VERSION = "v4_unified_prompt_candidate"
 
 # Ensure directories exist
 for dir_path in [DATA_DIR, GOLDEN_DIR, MUTANTS_DIR, HUMANEVAL_DIR, MBPP_DIR, BUGSINPY_DIR]:
@@ -178,6 +178,10 @@ class TrainingConfig:
     # remain in the corpus when they exceed a training gate; they are recorded
     # as phase-specific exclusions rather than truncated into a different test.
     sft_prompt_token_limit: int = 512
+    # Repository records carry a behavioral specification plus native test
+    # context. Give them a larger understanding budget while preserving the
+    # compact function-level interface.
+    sft_repository_prompt_token_limit: int = 1024
     sft_completion_token_limit: int = 128
     # Repository fragments are executable test bodies rather than the single
     # concise assertion emitted for function-level inference.  Preserve the

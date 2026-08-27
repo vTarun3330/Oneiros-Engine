@@ -8,9 +8,11 @@ Oneiros is an SFT-first research engine that trains Phi-3-mini-4k-instruct to ge
 
 The active pipeline is:
 
-`canonical V3 corpus -> verified SFT -> locked validation -> optional DPO -> final sealed test evaluation`
+`canonical V4 unified-prompt corpus -> verified SFT -> locked validation -> optional DPO -> final sealed test evaluation`
 
-- The canonical corpus contains 8,387 records with group-disjoint train/validation/test splits.
+- The canonical corpus contains 8,237 records with group-disjoint train/validation/test splits and 150 fail-closed V3 exclusions.
+- HumanEval, MBPP, BugsInPy, and SWE-bench use one model-visible prompt schema. Dataset identity, reference code, mutation metadata, patches, and oracle labels remain hidden.
+- Function prompts use a 512-token budget; repository prompts use 1,024 tokens for specification, target code, and verified native execution context while keeping the same section order.
 - Generated function-level candidates must be exactly one bounded assertion that calls the target entry point.
 - Candidate execution uses a fresh restricted process, temporary working directory, hard parent timeout, and POSIX resource limits where available.
 - The base model is pinned to Hugging Face revision `f39ac1d28e925b323eae81227eaba4464caced4e`; new artifacts record source, dependency, runtime, model, corpus, adapter, and evaluation-panel fingerprints.
@@ -646,7 +648,7 @@ python -m pytest -q
 ```
 
 The canonical corpus is distributed separately. Before preflight or training,
-place it at `data/corpus/v3_final_candidate/` and verify that its hashes match
+place it at `data/corpus/v4_unified_prompt_candidate/` and verify that its hashes match
 the tracked manifest.
 
 ### Google Colab (for full AI training loop — requires T4 GPU or better)
@@ -714,7 +716,7 @@ Defined in `oneiros_loop.py` (`LoopConfig`) and `config/settings.py`:
 
 ## Future Work
 
-The current canonical V3 corpus already provides 8,387 behaviorally verified
+The current canonical V4 corpus provides 8,237 behaviorally verified
 records with group-disjoint train/validation/test splits. The next work is to:
 
 1. train a larger balanced SFT adapter on the eligible training split;

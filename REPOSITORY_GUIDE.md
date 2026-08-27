@@ -8,7 +8,7 @@ and credentials are deliberately excluded.
 ## Current pipeline
 
 ```text
-canonical V3 corpus
+canonical V4 unified-prompt corpus
   -> manifest/hash/leakage verification
   -> deterministic train selection
   -> verified supervised fine-tuning (SFT)
@@ -20,9 +20,13 @@ canonical V3 corpus
 
 The canonical corpus identifier is centralized as
 `config.CANONICAL_CORPUS_VERSION` and currently resolves to
-`v3_final_candidate` (8,387 records). Function-level candidates must be one
+`v4_unified_prompt_candidate` (8,237 records). Function-level candidates must be one
 bounded assertion that calls the target entry point. Candidate execution uses
 a restricted child process and a parent-enforced timeout.
+
+All four source families use the same prompt headings and hidden-oracle
+contract. Function records receive a 512-token prompt budget; repository
+records receive 1,024 tokens because they also carry native execution context.
 
 ## Folder responsibilities
 
@@ -58,8 +62,8 @@ or the configured Modal environment.
 ## Data preparation
 
 The repository does not download or publish the canonical corpus
-automatically. Obtain the authorized `v3_final_candidate` corpus, place it at
-`data/corpus/v3_final_candidate/`, and verify that its file hashes match the
+automatically. Obtain the authorized `v4_unified_prompt_candidate` corpus, place it at
+`data/corpus/v4_unified_prompt_candidate/`, and verify that its file hashes match the
 tracked manifest. For deliberate corpus reconstruction, follow
 `dataset_documentation.md`; never edit a released corpus in place.
 
@@ -69,7 +73,7 @@ schedule; a 32-record selection is only an integration smoke and is not
 expected to satisfy the performance-readiness gates.
 
 ```powershell
-python scripts/preflight_sft_run.py --corpus-version v3_final_candidate --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58
+python scripts/preflight_sft_run.py --corpus-version v4_unified_prompt_candidate --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-prompt-token-limit 1024 --repository-completion-token-limit 1024 --min-function-kill-rate 0.58
 ```
 
 ## Training and evaluation order
@@ -87,7 +91,8 @@ python scripts/preflight_sft_run.py --corpus-version v3_final_candidate --max-pa
    final evaluation.
 
 Exact commands and gates are in
-`HARDENING_AND_NEXT_STEPS_2026-08-27.md`.
+`V4_UNIFIED_PROMPT_NEXT_RUN_2026-08-27.md`. The earlier
+`HARDENING_AND_NEXT_STEPS_2026-08-27.md` remains the historical V3 audit.
 
 ## Artifact policy
 
