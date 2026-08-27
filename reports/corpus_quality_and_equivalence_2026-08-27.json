@@ -1,0 +1,38 @@
+{
+  "corpus_id": "oneiros-corpus-v3-final-candidate",
+  "canonical_records": 8387,
+  "behaviorally_verified_records": 8387,
+  "records_with_oracle_witness_tests": 8387,
+  "all_canonical_records_have_behavioral_witness": true,
+  "semantic_duplicate_records_removed": 8,
+  "training_exclusions": 36,
+  "external_task_inventory": 501,
+  "locked_external_tasks": 225,
+  "external_task_status_counts": {
+    "locked_external_eval_not_materialized": 225,
+    "materialized_for_training": 269,
+    "verified_repository_eval_only": 7
+  },
+  "execution_mode_counts": {
+    "repository_pytest_fragment": 478,
+    "repository_unittest_fragment": 115,
+    "unknown": 7794
+  },
+  "equivalent_mutant_treatment": {
+    "confirmed_equivalent_mutants_in_canonical_corpus": 0,
+    "basis": "Every accepted pair has at least one retained oracle witness that passes the reference and fails the code under test; a confirmed equivalent pair therefore cannot enter the canonical corpus.",
+    "limitation": "No claim is made about observational equivalence outside the retained oracle domain; excluded upstream candidates require separate provenance counts."
+  },
+  "quality_gates": {
+    "all_training_records_verified": true,
+    "reference_oracle_required": true,
+    "group_disjoint_splits": true,
+    "semantic_group_disjoint_splits": true,
+    "semantic_supervision_deduplicated": true,
+    "conflicting_supervision_rejected": true,
+    "official_real_bugs_require_fixed_pass_buggy_fail": true,
+    "repository_project_disjoint_splits": true,
+    "canonical_overlong_records_explicitly_excluded": true,
+    "locked_external_evaluation": true
+  }
+}

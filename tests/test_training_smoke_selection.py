@@ -171,12 +171,19 @@ def test_generation_accounting_reports_unparseable_candidates():
     )
 
     assert len(generated[0]) == 3
-    assert accounting[0] == {
+    assert {
+        key: value for key, value in accounting[0].items()
+        if key != "candidate_slots"
+    } == {
         "requested_candidates": 4,
         "raw_generated_sequences": 4,
         "parsed_candidates": 3,
         "generation_invalid_candidates": 1,
     }
+    slots = accounting[0]["candidate_slots"]
+    assert [slot["rank"] for slot in slots] == [1, 2, 3, 4]
+    assert [slot["parse_valid"] for slot in slots] == [True, False, True, True]
+    assert all(slot["raw_output_sha256"] for slot in slots)
 
 
 def test_optimizer_padding_preserves_the_final_accumulation_window():

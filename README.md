@@ -714,20 +714,31 @@ Defined in `oneiros_loop.py` (`LoopConfig`) and `config/settings.py`:
 
 ## Future Work
 
-To rigorously validate the Oneiros engine, a key future modification is to **train the AI directly on the Unified Dataset using proper splits**.
+The current canonical V3 corpus already provides 8,387 behaviorally verified
+records with group-disjoint train/validation/test splits. The next work is to:
 
-The `harness/dataloader.py` module already implements an 80/10/10 split mechanism. The planned workflow is:
-1. **Partition** the 10,000 mutation pairs into Train (~8k), Val (~1k), and Test (~1k) sets.
-2. **Run baselines (especially Static and Coverage)** on all the splits to establish a fair benchmark score for that specific subset.
-3. **Train the Phi-3 model** using DPO exclusively on the 8k Train split and also the 70 functions we have.
-4. **Evaluate the AI** on all the splits.
-5. **Compare values.**
+1. train a larger balanced SFT adapter on the eligible training split;
+2. run the predeclared five-seed base/SFT/feedback/diversity validation plan;
+3. run leave-one-mutation-family-out training and validation;
+4. start DPO only after SFT passes the repeated full-validation quality gate;
+5. compare SFT and DPO by unique function coverage, regressions, redundancy, and
+   Kill@1/2/4/8 rather than one aggregate smoke percentage;
+6. execute untouched BugsInPy/SWE-bench tasks in native isolated repository
+   environments; and
+7. open the sealed test split once, only after the policy and paper tables are
+   frozen.
 
-This approach ensures the AI is evaluated on structurally similar but previously unseen mutation pairs, yielding a scientifically airtight comparison of the AI's kill rate versus the established baselines.
+The exact evaluation protocol and Modal commands are maintained in the Phase 3
+research runbook linked below.
 
 ---
 
 ## References
+
+Phase 3 research evaluation is specified in
+[`RESEARCH_EVALUATION_AND_MODAL_RUNBOOK.md`](RESEARCH_EVALUATION_AND_MODAL_RUNBOOK.md).
+The defensible novelty claim and current related-work comparison are recorded in
+[`RELATED_WORK_AND_RESEARCH_GAP_2026.md`](RELATED_WORK_AND_RESEARCH_GAP_2026.md).
 
 - **DPO:** Rafailov et al., "Direct Preference Optimization: Your Language Model is Secretly a Reward Model" (2023)
 - **Phi-3:** Microsoft, "Phi-3 Technical Report" (2024)

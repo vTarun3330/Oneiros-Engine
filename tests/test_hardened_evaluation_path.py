@@ -51,8 +51,8 @@ def test_evaluate_pair_retains_reference_valid_survivor_as_loser():
 
 
 def test_validation_seed_results_do_not_overwrite_each_other():
-    assert sft_validation_results_filename(42) == "sft_validation_hardened_results_seed_42.json"
-    assert sft_validation_results_filename(43) == "sft_validation_hardened_results_seed_43.json"
+    assert sft_validation_results_filename(42) == "sft_validation_standard_seed_42.json"
+    assert sft_validation_results_filename(43) == "sft_validation_standard_seed_43.json"
 
 
 def test_final_test_phase_requires_explicit_confirmation(monkeypatch):

@@ -315,6 +315,28 @@ def execute_code(
     return bool(result["ok"]), result.get("result"), str(result.get("error", ""))
 
 
+def execute_assertions(
+    tests: Iterable[str],
+    function_code: str,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+) -> List[Dict[str, Any]]:
+    """Execute assertions against only the visible code under test.
+
+    Unlike :func:`classify_assertions`, this helper has no reference/mutant
+    comparison.  It is therefore safe to use for iterative inference feedback:
+    the policy can see compilation/runtime information from the supplied code,
+    but it cannot receive hidden oracle information from the fixed program.
+    """
+    rows = _invoke_worker(function_code, tests, None, timeout_seconds)
+    return [
+        {
+            "test": str(row.get("test", "")),
+            **dict(row.get("golden") or {}),
+        }
+        for row in rows
+    ]
+
+
 def classify_assertions(
     tests: Iterable[str],
     golden_code: str,

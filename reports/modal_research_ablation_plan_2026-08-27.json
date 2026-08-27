@@ -1,0 +1,381 @@
+{
+  "schema_version": 1,
+  "objective": "execution-verified bug-finding generalisation",
+  "final_test_sealed": true,
+  "plan_identity": {
+    "run_name": "v3_repo1024_aligned_constant_lr_smoke_800_20260821_1",
+    "corpus_version": "v3_final_candidate",
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "holdout_families": [
+      "index",
+      "negate_removal",
+      "logical",
+      "off_by_one",
+      "boundary",
+      "arithmetic"
+    ],
+    "candidate_budget": 8,
+    "split": "val"
+  },
+  "plan_sha256": "ebd388184c6ca21d1a510b3e712e43e1261decc15cb5c6649134359e013919e8",
+  "local_cpu_smoke_command": "py -3.12 scripts/research_ablations.py smoke",
+  "modal_smoke_commands": [
+    "py -3.12 scripts/modal_train.py --phase base_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 42 --max-validation-functions 32",
+    "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 42 --max-validation-functions 32",
+    "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 42 --max-validation-functions 32 --eval-feedback-rounds 1",
+    "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 42 --max-validation-functions 32 --eval-diversity-mode ast"
+  ],
+  "experiments": [
+    {
+      "id": "base_vs_sft_base",
+      "axis": "model_stage",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase base_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 42",
+        "py -3.12 scripts/modal_train.py --phase base_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 43",
+        "py -3.12 scripts/modal_train.py --phase base_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 44",
+        "py -3.12 scripts/modal_train.py --phase base_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 45",
+        "py -3.12 scripts/modal_train.py --phase base_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 46"
+      ],
+      "model": "pinned_base_phi3",
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "id": "base_vs_sft_sft",
+      "axis": "model_stage",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 42",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 43",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 44",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 45",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 46"
+      ],
+      "model": "frozen_sft_adapter",
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "id": "sft_feedback_1",
+      "axis": "execution_feedback",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 42 --eval-feedback-rounds 1",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 43 --eval-feedback-rounds 1",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 44 --eval-feedback-rounds 1",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 45 --eval-feedback-rounds 1",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 46 --eval-feedback-rounds 1"
+      ],
+      "feedback_rounds": 1,
+      "fixed_candidate_budget": 8,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "id": "sft_feedback_2",
+      "axis": "execution_feedback",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 42 --eval-feedback-rounds 2",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 43 --eval-feedback-rounds 2",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 44 --eval-feedback-rounds 2",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 45 --eval-feedback-rounds 2",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 46 --eval-feedback-rounds 2"
+      ],
+      "feedback_rounds": 2,
+      "fixed_candidate_budget": 8,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "id": "sft_diversity_ast",
+      "axis": "candidate_diversity",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 42 --eval-diversity-mode ast",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 43 --eval-diversity-mode ast",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 44 --eval-diversity-mode ast",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 45 --eval-diversity-mode ast",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 46 --eval-diversity-mode ast"
+      ],
+      "diversity_mode": "ast",
+      "fixed_candidate_budget": 8,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "id": "sft_diversity_input_shape",
+      "axis": "candidate_diversity",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 42 --eval-diversity-mode input_shape",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 43 --eval-diversity-mode input_shape",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 44 --eval-diversity-mode input_shape",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 45 --eval-diversity-mode input_shape",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 46 --eval-diversity-mode input_shape"
+      ],
+      "diversity_mode": "input_shape",
+      "fixed_candidate_budget": 8,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "id": "sft_feedback_1_plus_ast_diversity",
+      "axis": "combined_feedback_diversity",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 42 --eval-feedback-rounds 1 --eval-diversity-mode ast",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 43 --eval-feedback-rounds 1 --eval-diversity-mode ast",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 44 --eval-feedback-rounds 1 --eval-diversity-mode ast",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 45 --eval-feedback-rounds 1 --eval-diversity-mode ast",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1 --corpus-version v3_final_candidate --seed 46 --eval-feedback-rounds 1 --eval-diversity-mode ast"
+      ],
+      "feedback_rounds": 1,
+      "diversity_mode": "ast",
+      "fixed_candidate_budget": 8,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "id": "leave_one_family_out_index",
+      "axis": "mutation_family_generalisation",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase sft --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_index --corpus-version v3_final_candidate --seed 42 --holdout-bug-family index --fresh",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_index --corpus-version v3_final_candidate --seed 42 --holdout-bug-family index",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_index --corpus-version v3_final_candidate --seed 43 --holdout-bug-family index",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_index --corpus-version v3_final_candidate --seed 44 --holdout-bug-family index",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_index --corpus-version v3_final_candidate --seed 45 --holdout-bug-family index",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_index --corpus-version v3_final_candidate --seed 46 --holdout-bug-family index"
+      ],
+      "holdout_bug_family": "index",
+      "training_command_index": 0,
+      "evaluation_command_indexes": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "id": "leave_one_family_out_negate-removal",
+      "axis": "mutation_family_generalisation",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase sft --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_negate-removal --corpus-version v3_final_candidate --seed 42 --holdout-bug-family negate_removal --fresh",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_negate-removal --corpus-version v3_final_candidate --seed 42 --holdout-bug-family negate_removal",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_negate-removal --corpus-version v3_final_candidate --seed 43 --holdout-bug-family negate_removal",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_negate-removal --corpus-version v3_final_candidate --seed 44 --holdout-bug-family negate_removal",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_negate-removal --corpus-version v3_final_candidate --seed 45 --holdout-bug-family negate_removal",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_negate-removal --corpus-version v3_final_candidate --seed 46 --holdout-bug-family negate_removal"
+      ],
+      "holdout_bug_family": "negate_removal",
+      "training_command_index": 0,
+      "evaluation_command_indexes": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "id": "leave_one_family_out_logical",
+      "axis": "mutation_family_generalisation",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase sft --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_logical --corpus-version v3_final_candidate --seed 42 --holdout-bug-family logical --fresh",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_logical --corpus-version v3_final_candidate --seed 42 --holdout-bug-family logical",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_logical --corpus-version v3_final_candidate --seed 43 --holdout-bug-family logical",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_logical --corpus-version v3_final_candidate --seed 44 --holdout-bug-family logical",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_logical --corpus-version v3_final_candidate --seed 45 --holdout-bug-family logical",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_logical --corpus-version v3_final_candidate --seed 46 --holdout-bug-family logical"
+      ],
+      "holdout_bug_family": "logical",
+      "training_command_index": 0,
+      "evaluation_command_indexes": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "id": "leave_one_family_out_off-by-one",
+      "axis": "mutation_family_generalisation",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase sft --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_off-by-one --corpus-version v3_final_candidate --seed 42 --holdout-bug-family off_by_one --fresh",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_off-by-one --corpus-version v3_final_candidate --seed 42 --holdout-bug-family off_by_one",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_off-by-one --corpus-version v3_final_candidate --seed 43 --holdout-bug-family off_by_one",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_off-by-one --corpus-version v3_final_candidate --seed 44 --holdout-bug-family off_by_one",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_off-by-one --corpus-version v3_final_candidate --seed 45 --holdout-bug-family off_by_one",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_off-by-one --corpus-version v3_final_candidate --seed 46 --holdout-bug-family off_by_one"
+      ],
+      "holdout_bug_family": "off_by_one",
+      "training_command_index": 0,
+      "evaluation_command_indexes": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "id": "leave_one_family_out_boundary",
+      "axis": "mutation_family_generalisation",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase sft --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_boundary --corpus-version v3_final_candidate --seed 42 --holdout-bug-family boundary --fresh",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_boundary --corpus-version v3_final_candidate --seed 42 --holdout-bug-family boundary",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_boundary --corpus-version v3_final_candidate --seed 43 --holdout-bug-family boundary",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_boundary --corpus-version v3_final_candidate --seed 44 --holdout-bug-family boundary",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_boundary --corpus-version v3_final_candidate --seed 45 --holdout-bug-family boundary",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_boundary --corpus-version v3_final_candidate --seed 46 --holdout-bug-family boundary"
+      ],
+      "holdout_bug_family": "boundary",
+      "training_command_index": 0,
+      "evaluation_command_indexes": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    {
+      "id": "leave_one_family_out_arithmetic",
+      "axis": "mutation_family_generalisation",
+      "status": "planned_modal_not_run",
+      "uses_final_test": false,
+      "commands": [
+        "py -3.12 scripts/modal_train.py --phase sft --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_arithmetic --corpus-version v3_final_candidate --seed 42 --holdout-bug-family arithmetic --fresh",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_arithmetic --corpus-version v3_final_candidate --seed 42 --holdout-bug-family arithmetic",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_arithmetic --corpus-version v3_final_candidate --seed 43 --holdout-bug-family arithmetic",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_arithmetic --corpus-version v3_final_candidate --seed 44 --holdout-bug-family arithmetic",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_arithmetic --corpus-version v3_final_candidate --seed 45 --holdout-bug-family arithmetic",
+        "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v3_repo1024_aligned_constant_lr_smoke_800_20260821_1_lofo_arithmetic --corpus-version v3_final_candidate --seed 46 --holdout-bug-family arithmetic"
+      ],
+      "holdout_bug_family": "arithmetic",
+      "training_command_index": 0,
+      "evaluation_command_indexes": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    }
+  ],
+  "deferred_external_systems": [
+    {
+      "id": "modern_llm_baselines",
+      "reason": "requires generated candidate JSONL from explicitly selected external models",
+      "ready_component": "scripts/evaluate_external_generations.py"
+    },
+    {
+      "id": "native_repository_real_bug_evaluation",
+      "reason": "requires isolated project environments and generated repository tests",
+      "ready_component": "BugsInPy/SWE-bench ingestion and locked external task index"
+    }
+  ]
+}

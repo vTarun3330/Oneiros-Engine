@@ -194,9 +194,13 @@ def sync_results_from_volume(
 def run_cloud_training(
     fresh: bool = False,
     max_pairs: int = None,
+    max_validation_functions: int = 0,
     corpus_version: str = CANONICAL_CORPUS_VERSION,
     execution_mode: str = "", phase: str = "sft", run_name: str = "v3_hardened_phase3",
     seed: int = 42,
+    eval_feedback_rounds: int = 0,
+    eval_diversity_mode: str = "none",
+    holdout_bug_family: str = "",
     confirm_final_test: bool = False,
     expected_corpus_fingerprint: str = "", restart_dpo: bool = False,
     dpo_validation_interval_pairs: int = 500,
@@ -252,7 +256,7 @@ def run_cloud_training(
         return {"error": f"Invalid corpus version: {corpus_version}"}
     if not re.fullmatch(r"[A-Za-z0-9_.-]+", run_name):
         return {"error": f"Invalid run name: {run_name}"}
-    if phase not in {"sft", "sft_eval", "dpo", "dpo_eval", "sft_then_dpo"}:
+    if phase not in {"base_eval", "sft", "sft_eval", "dpo", "dpo_eval", "sft_then_dpo"}:
         return {"error": f"Invalid training phase: {phase}"}
     if phase == "dpo_eval" and not confirm_final_test:
         return {"error": "dpo_eval requires explicit --confirm-final-test authorization"}
@@ -262,6 +266,12 @@ def run_cloud_training(
         return {"error": "DPO validation interval must be positive"}
     if seed < 0:
         return {"error": "Seed must be non-negative"}
+    if eval_feedback_rounds < 0 or eval_feedback_rounds >= 8:
+        return {"error": "Evaluation feedback rounds must be between 0 and 7"}
+    if eval_diversity_mode not in {"none", "ast", "input_shape"}:
+        return {"error": "Unsupported evaluation diversity mode"}
+    if max_validation_functions < 0:
+        return {"error": "Maximum validation functions must be non-negative"}
     if sft_epochs < 0 or sft_learning_rate < 0 or sft_batch_size < 0:
         return {"error": "SFT overrides must be positive when supplied"}
     if not 0 <= sft_repository_completion_token_limit < 1536:
@@ -316,6 +326,10 @@ def run_cloud_training(
     trainer.EXECUTION_MODE_FILTER = execution_mode or None
     trainer.TRAINING_PHASE = phase
     trainer.SEED = seed
+    trainer.EVAL_FEEDBACK_ROUNDS = eval_feedback_rounds
+    trainer.EVAL_DIVERSITY_MODE = eval_diversity_mode
+    trainer.HOLDOUT_BUG_FAMILY = trainer.sanitise_family_name(holdout_bug_family)
+    trainer.MAX_VALIDATION_PAIRS = max_validation_functions or None
     trainer.CONFIRM_FINAL_TEST = confirm_final_test
     trainer.RESTART_DPO = restart_dpo
     trainer.DPO_VALIDATION_INTERVAL_PAIRS = dpo_validation_interval_pairs
@@ -351,6 +365,13 @@ def run_cloud_training(
     log.info(f"  Mode filter:  {execution_mode or 'all'}")
     log.info(f"  Training phase: {phase}")
     log.info(f"  Seed:          {seed}")
+    log.info(
+        "  Evaluation profile: feedback_rounds=%s diversity=%s holdout_family=%s max_functions=%s",
+        eval_feedback_rounds,
+        eval_diversity_mode,
+        holdout_bug_family or "none",
+        max_validation_functions or "all",
+    )
     log.info(f"  Restart DPO:   {restart_dpo}")
     log.info(f"  DPO validation interval (trained pairs): {dpo_validation_interval_pairs}")
     if sft_epochs or sft_learning_rate or sft_lr_scheduler_type or sft_batch_size or sft_repository_completion_token_limit or sft_real_target_fraction >= 0.0 or sft_max_real_repeats:
@@ -418,9 +439,13 @@ def run_cloud_training(
 def training_main(
     fresh: bool = False,
     max_pairs: int = 0,
+    max_validation_functions: int = 0,
     corpus_version: str = CANONICAL_CORPUS_VERSION,
     execution_mode: str = "", phase: str = "sft", run_name: str = "v3_hardened_phase3",
     seed: int = 42,
+    eval_feedback_rounds: int = 0,
+    eval_diversity_mode: str = "none",
+    holdout_bug_family: str = "",
     confirm_final_test: bool = False,
     restart_dpo: bool = False, dpo_validation_interval_pairs: int = 500,
     sft_epochs: int = 0, sft_learning_rate: float = 0.0,
@@ -442,7 +467,7 @@ def training_main(
         raise ValueError(f"Invalid corpus version: {corpus_version!r}")
     if not re.fullmatch(r"[A-Za-z0-9_.-]+", run_name):
         raise ValueError(f"Invalid run name: {run_name!r}")
-    if phase not in {"sft", "sft_eval", "dpo", "dpo_eval", "sft_then_dpo"}:
+    if phase not in {"base_eval", "sft", "sft_eval", "dpo", "dpo_eval", "sft_then_dpo"}:
         raise ValueError(f"Invalid training phase: {phase!r}")
     if phase == "dpo_eval" and not confirm_final_test:
         raise ValueError("dpo_eval requires explicit --confirm-final-test authorization")
@@ -452,6 +477,14 @@ def training_main(
         raise ValueError("DPO validation interval must be positive")
     if seed < 0:
         raise ValueError("Seed must be non-negative")
+    if eval_feedback_rounds < 0 or eval_feedback_rounds >= 8:
+        raise ValueError("Evaluation feedback rounds must be between 0 and 7")
+    if eval_diversity_mode not in {"none", "ast", "input_shape"}:
+        raise ValueError("Unsupported evaluation diversity mode")
+    if max_validation_functions < 0:
+        raise ValueError("Maximum validation functions must be non-negative")
+    from metrics.research_evaluation import sanitise_family_name
+    holdout_bug_family = sanitise_family_name(holdout_bug_family) or ""
     if sft_epochs < 0 or sft_learning_rate < 0 or sft_batch_size < 0:
         raise ValueError("SFT overrides must be positive when supplied")
     if not 0 <= sft_repository_completion_token_limit < 1536:
@@ -498,6 +531,12 @@ def training_main(
     print(f"   Fresh start: {fresh}")
     print(f"   Corpus: {corpus_version}")
     print(f"   Training phase: {phase}")
+    print(
+        "   Evaluation profile: "
+        f"feedback_rounds={eval_feedback_rounds} diversity={eval_diversity_mode} "
+        f"holdout_family={holdout_bug_family or 'none'} "
+        f"max_functions={max_validation_functions or 'all'}"
+    )
     print(f"   Restart DPO: {restart_dpo}")
     if phase == "dpo":
         print(f"   DPO validation interval: {dpo_validation_interval_pairs} trained preference pairs")
@@ -578,9 +617,15 @@ def training_main(
     print("✅ Upward sync complete.\n")
 
     # ── Trigger Cloud Execution ───────────────────────────────
+    from scripts import train_on_dataset as evaluation_names
+    evaluation_names.EVAL_FEEDBACK_ROUNDS = eval_feedback_rounds
+    evaluation_names.EVAL_DIVERSITY_MODE = eval_diversity_mode
+    evaluation_names.HOLDOUT_BUG_FAMILY = holdout_bug_family or None
+    evaluation_names.MAX_VALIDATION_PAIRS = max_validation_functions or None
     result_filename = {
+        "base_eval": evaluation_names.evaluation_results_filename("base", seed),
         "sft_eval": (
-            f"sft_validation_hardened_results_seed_{seed}.json"
+            evaluation_names.sft_validation_results_filename(seed)
         ),
         "dpo": "dpo_training_results.json",
         "dpo_eval": "dpo_test_results.json",
@@ -589,11 +634,15 @@ def training_main(
         result = run_cloud_training.remote(
             fresh=fresh,
             max_pairs=max_pairs if max_pairs > 0 else None,
+            max_validation_functions=max_validation_functions,
             corpus_version=corpus_version,
             execution_mode=execution_mode,
             phase=phase,
             run_name=run_name,
             seed=seed,
+            eval_feedback_rounds=eval_feedback_rounds,
+            eval_diversity_mode=eval_diversity_mode,
+            holdout_bug_family=holdout_bug_family,
             confirm_final_test=confirm_final_test,
             expected_corpus_fingerprint=expected_corpus_fingerprint,
             restart_dpo=restart_dpo,

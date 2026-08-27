@@ -14,7 +14,7 @@ import shutil
 import sys
 import time
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from config import CANONICAL_CORPUS_VERSION, model_config, training_config
@@ -22,6 +22,16 @@ from harness.candidate_policy import validate_function_assertion
 from harness.corpus import sha256_file, valid_corpus_version, verify_corpus
 from harness.safe_execution import classify_assertions
 from harness.training_data import extract_dataset_assertions
+from metrics.research_evaluation import (
+    DEFAULT_K_VALUES,
+    evaluate_candidate_slots,
+    evaluation_profile_sha256,
+    function_result as build_function_result,
+    prioritise_diverse_slots,
+    sanitise_family_name,
+    summarise_function_results,
+)
+from engine.execution_feedback import build_feedback_prompt, collect_execution_feedback
 from engine.prompt_budget import (
     PROMPT_COMPACTION_STRATEGY,
     compact_prompt_texts,
@@ -36,6 +46,9 @@ EXECUTION_MODE_FILTER = None
 TRAINING_PHASE = "sft"
 RESTART_DPO = False
 CONFIRM_FINAL_TEST = False
+EVAL_FEEDBACK_ROUNDS = 0
+EVAL_DIVERSITY_MODE = "none"
+HOLDOUT_BUG_FAMILY = None
 
 SEED = 42
 TESTS_PER_PAIR = 8
@@ -83,7 +96,7 @@ MAX_SFT_REPOSITORY_GENERATION_COMPATIBLE_TOKENS = (
     training_config.sft_repository_completion_token_limit
 )
 MAX_DPO_COMPLETION_TOKENS = 1024
-VALIDATION_ACCOUNTING_SCHEMA_VERSION = 2
+VALIDATION_ACCOUNTING_SCHEMA_VERSION = 3
 FUNCTION_EXECUTION_MODE = "function_assertion"
 REPOSITORY_EXECUTION_MODE = "repository_pytest_fragment"
 REPOSITORY_UNITTEST_EXECUTION_MODE = "repository_unittest_fragment"
@@ -94,9 +107,28 @@ REPOSITORY_EXECUTION_MODES = {
 REPOSITORY_EVALUATION_STATUS = "not_implemented_requires_native_project_environment"
 
 
+def _evaluation_profile_slug() -> str:
+    parts = []
+    if MAX_VALIDATION_PAIRS:
+        parts.append(f"smoke{MAX_VALIDATION_PAIRS}")
+    if EVAL_FEEDBACK_ROUNDS:
+        parts.append(f"feedback{EVAL_FEEDBACK_ROUNDS}")
+    if EVAL_DIVERSITY_MODE != "none":
+        parts.append(f"diversity-{EVAL_DIVERSITY_MODE}")
+    if HOLDOUT_BUG_FAMILY:
+        family = re.sub(r"[^a-z0-9]+", "-", HOLDOUT_BUG_FAMILY.lower()).strip("-")
+        parts.append(f"holdout-{family}")
+    return "_".join(parts) or "standard"
+
+
+def evaluation_results_filename(model_label: str, seed: int) -> str:
+    """Keep model/profile/seed evaluations separate and immutable."""
+    return f"{model_label}_validation_{_evaluation_profile_slug()}_seed_{seed}.json"
+
+
 def sft_validation_results_filename(seed: int) -> str:
-    """Keep hardened repeated validation seeds separate from legacy results."""
-    return f"sft_validation_hardened_results_seed_{seed}.json"
+    """Keep ordered research metrics separate from legacy aggregate results."""
+    return evaluation_results_filename("sft", seed)
 
 
 def normalized_sft_run_hyperparameters(hyperparameters: Dict) -> Dict:
@@ -130,6 +162,8 @@ def sft_training_scope(
         scope += ":bounded_selection=stratified_generation_compatible_v2"
     scope += f":execution_mode={execution_mode or 'all'}"
     scope += f":repository_completion_limit={MAX_SFT_COMPLETION_TOKENS}"
+    if HOLDOUT_BUG_FAMILY:
+        scope += f":holdout_bug_family={HOLDOUT_BUG_FAMILY}"
     scope += f":prompt_token_limit={PROMPT_TOKEN_LIMIT}"
     scope += f":prompt_compaction={PROMPT_COMPACTION_STRATEGY}"
     scope += (
@@ -627,6 +661,8 @@ def bootstrap_losers(pair: Dict) -> List[str]:
 def generate_tests_ai_batched(
     generator, pairs_chunk: List[Dict], num: int = 4,
     return_accounting: bool = False,
+    prompt_additions: Optional[Dict[int, str]] = None,
+    rank_offset: int = 0,
 ):
     """Generate multiple samples per pair using the same chat prompt as training."""
     # Keep corpus/audit imports lightweight.  CUDA/PyTorch is required only
@@ -639,16 +675,17 @@ def generate_tests_ai_batched(
         generator.load_model()
 
     tokenizer = generator.tokenizer
-    prompts = [
-        format_generation_prompt(
-            tokenizer,
-            build_prompt(
+    prompt_additions = prompt_additions or {}
+    prompts = []
+    for index, pair in enumerate(pairs_chunk):
+        prompt = build_prompt(
                 pair["mutant_code"], pair["entry_point"], pair.get("specification", ""),
                 pair.get("execution_mode", FUNCTION_EXECUTION_MODE),
-            ),
-        )
-        for pair in pairs_chunk
-    ]
+            )
+        addition = prompt_additions.get(index, "").strip()
+        if addition:
+            prompt = f"{prompt}\n\n{addition}"
+        prompts.append(format_generation_prompt(tokenizer, prompt))
 
     original_padding_side = tokenizer.padding_side
     tokenizer.padding_side = "left"
@@ -692,6 +729,15 @@ def generate_tests_ai_batched(
             "raw_generated_sequences": 0,
             "parsed_candidates": 0,
             "generation_invalid_candidates": num,
+            "candidate_slots": [
+                {
+                    "rank": rank_offset + rank + 1,
+                    "parse_valid": False,
+                    "code": None,
+                    "raw_output_sha256": None,
+                }
+                for rank in range(num)
+            ],
         }
         for index in range(len(pairs_chunk))
     }
@@ -701,10 +747,15 @@ def generate_tests_ai_batched(
             break
         accounting[pair_index]["raw_generated_sequences"] += 1
         text = tokenizer.decode(output[input_length:], skip_special_tokens=True)
+        local_rank = sequence_index % num
+        slot = accounting[pair_index]["candidate_slots"][local_rank]
+        slot["raw_output_sha256"] = hashlib.sha256(text.encode("utf-8")).hexdigest()
         parsed = generator._parse_output(text, pairs_chunk[pair_index]["entry_point"])
         if parsed.is_valid:
             results.setdefault(pair_index, []).append(parsed.input_code)
             accounting[pair_index]["parsed_candidates"] += 1
+            slot["parse_valid"] = True
+            slot["code"] = parsed.input_code
     for item in accounting.values():
         item["generation_invalid_candidates"] = max(
             0, item["requested_candidates"] - item["parsed_candidates"]
@@ -953,9 +1004,104 @@ def _evaluation_scope_pairs(corpus_dir: Path, evaluation_split: str) -> List[Dic
             pair for pair in pairs
             if pair.get("execution_mode", FUNCTION_EXECUTION_MODE) == EXECUTION_MODE_FILTER
         ]
+    if HOLDOUT_BUG_FAMILY:
+        pairs = [
+            pair for pair in pairs
+            if str(pair.get("bug_family", "unknown")).strip().lower()
+            == HOLDOUT_BUG_FAMILY
+        ]
     if MAX_VALIDATION_PAIRS:
-        pairs = pairs[:MAX_VALIDATION_PAIRS]
+        pairs = [
+            pair for pair in pairs
+            if pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
+            == FUNCTION_EXECUTION_MODE
+        ][:MAX_VALIDATION_PAIRS]
     return pairs
+
+
+def _candidate_round_sizes(total: int, feedback_rounds: int) -> List[int]:
+    """Allocate one fixed generation budget across initial and repair rounds."""
+    if total <= 0 or feedback_rounds < 0:
+        raise ValueError("Candidate budget must be positive and feedback rounds non-negative")
+    rounds = min(total, feedback_rounds + 1)
+    quotient, remainder = divmod(total, rounds)
+    return [quotient + int(index < remainder) for index in range(rounds)]
+
+
+def _generate_evaluation_candidates(generator, pairs_chunk: List[Dict]):
+    """Generate a fixed-budget batch with optional reference-free feedback."""
+    round_sizes = _candidate_round_sizes(TESTS_PER_PAIR, EVAL_FEEDBACK_ROUNDS)
+    combined: Dict[int, Dict[str, Any]] = {
+        index: {
+            "requested_candidates": 0,
+            "raw_generated_sequences": 0,
+            "parsed_candidates": 0,
+            "generation_invalid_candidates": 0,
+            "candidate_slots": [],
+            "feedback_rounds_completed": 0,
+        }
+        for index in range(len(pairs_chunk))
+    }
+    additions: Dict[int, str] = {}
+    prior_codes: Dict[int, List[str]] = {index: [] for index in combined}
+    rank_offset = 0
+    for round_index, round_size in enumerate(round_sizes):
+        if EVAL_DIVERSITY_MODE != "none" and round_index == 0:
+            additions = {
+                index: (
+                    "Prefer an unusual boundary or input structure and avoid a generic happy-path test."
+                )
+                for index in combined
+            }
+        generated, accounting = generate_tests_ai_batched(
+            generator,
+            pairs_chunk,
+            round_size,
+            return_accounting=True,
+            prompt_additions=additions,
+            rank_offset=rank_offset,
+        )
+        for index, pair in enumerate(pairs_chunk):
+            item = combined[index]
+            current = accounting[index]
+            for field in (
+                "requested_candidates",
+                "raw_generated_sequences",
+                "parsed_candidates",
+                "generation_invalid_candidates",
+            ):
+                item[field] += int(current[field])
+            item["candidate_slots"].extend(current["candidate_slots"])
+            prior_codes[index].extend(generated.get(index, []))
+            item["feedback_rounds_completed"] = round_index
+
+        rank_offset += round_size
+        if round_index + 1 >= len(round_sizes):
+            continue
+        additions = {}
+        for index, pair in enumerate(pairs_chunk):
+            feedback = collect_execution_feedback(
+                prior_codes[index], pair["mutant_code"]
+            )
+            additions[index] = build_feedback_prompt(
+                feedback,
+                require_novel_shape=EVAL_DIVERSITY_MODE != "none",
+            )
+
+    generated_results: Dict[int, List[str]] = {}
+    for index, pair in enumerate(pairs_chunk):
+        slots = prioritise_diverse_slots(
+            combined[index]["candidate_slots"],
+            pair["entry_point"],
+            EVAL_DIVERSITY_MODE,
+        )
+        combined[index]["candidate_slots"] = slots
+        generated_results[index] = [
+            str(slot["code"])
+            for slot in slots
+            if slot.get("parse_valid") and slot.get("code")
+        ]
+    return generated_results, combined
 
 
 def _adapter_evaluation_context(
@@ -973,12 +1119,21 @@ def _adapter_evaluation_context(
         model_config.model_name,
         model_config.model_revision,
     )
+    profile = {
+        "feedback_rounds": EVAL_FEEDBACK_ROUNDS,
+        "diversity_mode": EVAL_DIVERSITY_MODE,
+        "holdout_bug_family": HOLDOUT_BUG_FAMILY,
+        "candidate_budget": TESTS_PER_PAIR,
+        "max_validation_functions": MAX_VALIDATION_PAIRS,
+        "k_values": list(DEFAULT_K_VALUES),
+    }
     return {
-        "format_version": 2,
+        "format_version": 3,
         "validation_accounting_schema_version": VALIDATION_ACCOUNTING_SCHEMA_VERSION,
         "dataset_fingerprint": dataset_fingerprint,
         "adapter": adapter_label,
         "adapter_sha256": adapter_sha256,
+        "model_artifact_sha256": adapter_sha256,
         "evaluation_split": evaluation_split,
         "final_test_measurement": evaluation_split == "test",
         "checkpoint_pairs": checkpoint_pairs,
@@ -987,6 +1142,8 @@ def _adapter_evaluation_context(
         "batch_size": BATCH_GEN_SIZE,
         "evaluation_scope_sha256": evaluation_scope_sha256,
         "function_validation_records": function_count,
+        "evaluation_profile": profile,
+        "evaluation_profile_sha256": evaluation_profile_sha256(profile),
         "reproducibility": reproducibility,
     }
 
@@ -1097,7 +1254,7 @@ def _restore_adapter_evaluation_rng(progress: Dict) -> None:
 def _evaluate_adapter_kill_rate(
     corpus_dir: Path,
     dataset_fingerprint: str,
-    adapter_dir: Path,
+    adapter_dir: Optional[Path],
     adapter_label: str,
     results_filename: str,
     evaluation_split: str = "val",
@@ -1115,10 +1272,16 @@ def _evaluate_adapter_kill_rate(
 
     if evaluation_split not in {"val", "test"}:
         raise ValueError("Evaluation split must be 'val' or 'test'")
-    adapter_file = adapter_dir / "adapter_model.safetensors"
-    if not adapter_file.exists():
+    adapter_file = adapter_dir / "adapter_model.safetensors" if adapter_dir else None
+    if adapter_file is not None and not adapter_file.exists():
         raise RuntimeError(f"{adapter_label} validation requires its frozen adapter")
-    adapter_sha256 = sha256_file(adapter_file)
+    adapter_sha256 = (
+        sha256_file(adapter_file)
+        if adapter_file is not None
+        else hashlib.sha256(
+            f"{model_config.model_name}@{model_config.model_revision}".encode("utf-8")
+        ).hexdigest()
+    )
 
     torch.manual_seed(SEED)
     if torch.cuda.is_available():
@@ -1128,7 +1291,8 @@ def _evaluate_adapter_kill_rate(
     generator = Phi3Generator()
     try:
         generator.load_model()
-        generator.load_lora_adapter(adapter_dir)
+        if adapter_dir is not None:
+            generator.load_lora_adapter(adapter_dir)
         generator.max_new_tokens = MAX_NEW_TOKENS_OVERRIDE
 
         all_eval_pairs = _evaluation_scope_pairs(corpus_dir, evaluation_split)
@@ -1208,43 +1372,33 @@ def _evaluate_adapter_kill_rate(
 
         for start in range(start_index, len(function_pairs), BATCH_GEN_SIZE):
             chunk = function_pairs[start:start + BATCH_GEN_SIZE]
-            generated, generation_accounting = generate_tests_ai_batched(
-                generator, chunk, TESTS_PER_PAIR, return_accounting=True
+            _, generation_accounting = _generate_evaluation_candidates(
+                generator, chunk
             )
             for index, pair in enumerate(chunk):
-                tests = generated.get(index, [])
                 accounting = generation_accounting[index]
-                winners, losers = evaluate_pair(
-                    tests, pair["golden_code"], pair["mutant_code"], pair["entry_point"]
+                candidate_outcomes = evaluate_candidate_slots(
+                    accounting["candidate_slots"],
+                    pair["golden_code"],
+                    pair["mutant_code"],
+                    pair["entry_point"],
                 )
-                valid_candidates = len(winners) + len(losers)
-                execution_invalid = max(0, len(tests) - valid_candidates)
-                killed_functions += int(bool(winners))
-                mutation_killing_candidates += len(winners)
-                requested_candidates += accounting["requested_candidates"]
-                parsed_candidates += accounting["parsed_candidates"]
-                generation_invalid_candidates += accounting[
-                    "generation_invalid_candidates"
-                ]
-                execution_invalid_candidates += execution_invalid
-                generated_candidates += valid_candidates
-                function_results.append({
-                    "record_id": pair["id"],
-                    "bug_family": str(pair.get("bug_family", "unknown") or "unknown"),
-                    "requested_candidates": accounting["requested_candidates"],
-                    "parsed_candidates": accounting["parsed_candidates"],
-                    "generation_invalid_candidates": accounting[
-                        "generation_invalid_candidates"
-                    ],
-                    "execution_invalid_candidates": execution_invalid,
-                    "invalid_candidates": (
-                        accounting["generation_invalid_candidates"]
-                        + execution_invalid
-                    ),
-                    "valid_candidates": valid_candidates,
-                    "killing_candidates": len(winners),
-                    "killed": bool(winners),
-                })
+                item = build_function_result(
+                    pair["id"],
+                    str(pair.get("bug_family", "unknown") or "unknown"),
+                    pair["entry_point"],
+                    candidate_outcomes,
+                    source_name=str(pair.get("source_name", "unknown")),
+                    project=str(pair.get("project", "unknown")),
+                )
+                function_results.append(item)
+                killed_functions += int(item["killed"])
+                mutation_killing_candidates += item["killing_candidates"]
+                requested_candidates += item["requested_candidates"]
+                parsed_candidates += item["parsed_candidates"]
+                generation_invalid_candidates += item["generation_invalid_candidates"]
+                execution_invalid_candidates += item["execution_invalid_candidates"]
+                generated_candidates += item["valid_candidates"]
             completed = min(start + len(chunk), len(function_pairs))
             checkpoint_path = _save_adapter_evaluation_progress(
                 results_stem,
@@ -1267,33 +1421,12 @@ def _evaluate_adapter_kill_rate(
                 flush=True,
             )
 
+        research_summary = summarise_function_results(function_results)
         result = {
             "mode": f"{adapter_label}_validation_only",
             **context,
             "evaluation_split_records": len(all_eval_pairs),
-            "function_validation_killed": killed_functions,
-            "function_kill_rate": round(killed_functions / len(function_pairs), 6),
-            "function_kill_rate_wilson_95": _wilson_interval(
-                killed_functions, len(function_pairs)
-            ),
-            "requested_candidates": requested_candidates,
-            "parsed_candidates": parsed_candidates,
-            "generated_candidates": generated_candidates,
-            "mutation_killing_candidates": mutation_killing_candidates,
-            "generation_invalid_candidates": generation_invalid_candidates,
-            "execution_invalid_candidates": execution_invalid_candidates,
-            "invalid_candidates": (
-                generation_invalid_candidates + execution_invalid_candidates
-            ),
-            "candidate_kill_rate": round(
-                mutation_killing_candidates / max(generated_candidates, 1), 6
-            ),
-            "end_to_end_candidate_kill_rate": round(
-                mutation_killing_candidates / max(requested_candidates, 1), 6
-            ),
-            "parse_success_rate": round(
-                parsed_candidates / max(requested_candidates, 1), 6
-            ),
+            **research_summary,
             "function_results": function_results,
             "repository_validation_records_held": repository_validation_records,
             "repository_evaluation": {
@@ -1306,7 +1439,7 @@ def _evaluate_adapter_kill_rate(
             "resumed_from_completed_functions": start_index,
             "validation_checkpointing": "every_generation_batch",
         }
-        if sha256_file(adapter_file) != adapter_sha256:
+        if adapter_file is not None and sha256_file(adapter_file) != adapter_sha256:
             raise RuntimeError("Immutable adapter changed during validation; result was not saved")
         RESULTS_DIR.mkdir(parents=True, exist_ok=True)
         with open(RESULTS_DIR / results_filename, "w", encoding="utf-8") as handle:
@@ -1328,6 +1461,11 @@ def _locked_sft_monitor_pairs(
     validation_pairs = [
         pair for pair in load_phase3_pairs(corpus_dir, "val")
         if pair.get("execution_mode", FUNCTION_EXECUTION_MODE) == FUNCTION_EXECUTION_MODE
+        and (
+            not HOLDOUT_BUG_FAMILY
+            or str(pair.get("bug_family", "unknown")).strip().lower()
+            != HOLDOUT_BUG_FAMILY
+        )
     ]
     selected = _evenly_spaced(validation_pairs, min(limit, len(validation_pairs)))
     selected_ids = [pair["id"] for pair in selected]
@@ -1339,6 +1477,7 @@ def _locked_sft_monitor_pairs(
         "evaluation_split": "val",
         "final_test_measurement": False,
         "selection_method": "evenly_spaced_canonical_validation_functions",
+        "training_holdout_bug_family": HOLDOUT_BUG_FAMILY,
         "function_count": len(selected),
         "record_ids": selected_ids,
         "selection_sha256": selection_sha256,
@@ -2041,7 +2180,7 @@ def reset_dpo_from_frozen_sft(adapter_dir: Path, results_dir: Path) -> Dict:
 def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
     random.seed(SEED)
 
-    if TRAINING_PHASE not in {"sft", "sft_eval", "dpo", "dpo_eval", "sft_then_dpo"}:
+    if TRAINING_PHASE not in {"base_eval", "sft", "sft_eval", "dpo", "dpo_eval", "sft_then_dpo"}:
         raise RuntimeError(f"Invalid training phase: {TRAINING_PHASE!r}")
     if TRAINING_PHASE == "dpo_eval" and not CONFIRM_FINAL_TEST:
         raise RuntimeError(
@@ -2082,6 +2221,18 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
             pair for pair in train_pairs
             if pair.get("execution_mode", FUNCTION_EXECUTION_MODE) == EXECUTION_MODE_FILTER
         ]
+    if HOLDOUT_BUG_FAMILY:
+        before_holdout = len(train_pairs)
+        train_pairs = [
+            pair for pair in train_pairs
+            if str(pair.get("bug_family", "unknown")).strip().lower()
+            != HOLDOUT_BUG_FAMILY
+        ]
+        print(
+            "[FAMILY HOLDOUT] Excluded "
+            f"{before_holdout - len(train_pairs)} training record(s) from family "
+            f"{HOLDOUT_BUG_FAMILY!r}."
+        )
     train_pairs, overlong_repository_completions = _filter_overlong_repository_completions(
         train_pairs
     )
@@ -2298,6 +2449,18 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         raise RuntimeError(
             "SFT hyperparameters are invalid; epochs/LR/batch/limits/checkpoint steps "
             "must be positive and sampling fractions/repeats must be in range."
+        )
+
+    if TRAINING_PHASE == "base_eval":
+        if use_mock:
+            raise RuntimeError("Base-model validation requires real model inference")
+        return _evaluate_adapter_kill_rate(
+            corpus_dir,
+            dataset_fingerprint,
+            None,
+            "base_model",
+            evaluation_results_filename("base", SEED),
+            evaluation_split="val",
         )
 
     if not use_mock:
@@ -2836,6 +2999,13 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
     if TRAINING_PHASE == "sft_eval":
         if use_mock:
             raise RuntimeError("SFT validation must use the real immutable SFT adapter")
+        if HOLDOUT_BUG_FAMILY and (
+            f":holdout_bug_family={HOLDOUT_BUG_FAMILY}" not in dataset_fingerprint
+        ):
+            raise RuntimeError(
+                "Leave-one-family-out evaluation requires an adapter trained with the same "
+                "--holdout-bug-family setting."
+            )
         return _evaluate_adapter_kill_rate(
             corpus_dir, dataset_fingerprint, ADAPTER_DIR / "sft_adapter", "sft_adapter",
             sft_validation_results_filename(SEED), evaluation_split="val",
@@ -3325,7 +3495,23 @@ if __name__ == "__main__":
     parser.add_argument("--mock", action="store_true", help="Run static generation only; skip model training")
     parser.add_argument("--fresh", action="store_true", help="Delete Phase 3 checkpoints before SFT")
     parser.add_argument("--max-pairs", type=int, default=None, help="Limit training pairs for a smoke test")
+    parser.add_argument(
+        "--max-validation-functions", type=int, default=None,
+        help="Bound validation for an explicitly labelled smoke run; never changes training scope",
+    )
     parser.add_argument("--seed", type=int, default=SEED, help="Non-negative training and generation seed")
+    parser.add_argument(
+        "--eval-feedback-rounds", type=int, default=0,
+        help="Reference-free execution-repair rounds within the fixed eight-candidate budget",
+    )
+    parser.add_argument(
+        "--eval-diversity-mode", choices=["none", "ast", "input_shape"], default="none",
+        help="Equal-budget candidate prioritisation ablation",
+    )
+    parser.add_argument(
+        "--holdout-bug-family", default="",
+        help="Exclude one mutation family from training and evaluate only that family",
+    )
     parser.add_argument(
         "--dpo-validation-interval-pairs", type=int, default=DPO_VALIDATION_INTERVAL_PAIRS,
         help="Evaluate locked validation after this many trained DPO preference pairs (default: 500)",
@@ -3406,7 +3592,7 @@ if __name__ == "__main__":
         help="Canonical corpus version",
     )
     parser.add_argument(
-        "--phase", default="sft", choices=["sft", "sft_eval", "dpo", "dpo_eval", "sft_then_dpo"],
+        "--phase", default="sft", choices=["base_eval", "sft", "sft_eval", "dpo", "dpo_eval", "sft_then_dpo"],
         help="Run SFT, locked adapter validation, DPO from a verified SFT adapter, or the combined legacy flow",
     )
     parser.add_argument(
@@ -3426,8 +3612,17 @@ if __name__ == "__main__":
     if args.seed < 0:
         raise ValueError("--seed must be non-negative")
     SEED = args.seed
+    if args.eval_feedback_rounds < 0 or args.eval_feedback_rounds >= TESTS_PER_PAIR:
+        raise ValueError(f"--eval-feedback-rounds must be between 0 and {TESTS_PER_PAIR - 1}")
+    EVAL_FEEDBACK_ROUNDS = args.eval_feedback_rounds
+    EVAL_DIVERSITY_MODE = args.eval_diversity_mode
+    HOLDOUT_BUG_FAMILY = sanitise_family_name(args.holdout_bug_family)
     if args.max_pairs:
         MAX_TRAIN_PAIRS = args.max_pairs
+    if args.max_validation_functions:
+        if args.max_validation_functions <= 0:
+            raise ValueError("--max-validation-functions must be positive")
+        MAX_VALIDATION_PAIRS = args.max_validation_functions
     if args.dpo_validation_interval_pairs <= 0:
         raise ValueError("--dpo-validation-interval-pairs must be positive")
     if args.sft_epochs is not None and args.sft_epochs <= 0:
