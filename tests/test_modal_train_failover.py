@@ -113,3 +113,21 @@ def test_bounded_sft_upper_bound_allows_a_larger_diagnostic_smoke():
         batch_size=1,
         max_real_repeats=8,
     ) >= 100
+
+
+def test_terminal_only_integration_allows_one_declared_monitor_checkpoint():
+    assert failover.validate_bounded_sft_monitor_capacity(
+        max_pairs=32,
+        epochs=1,
+        batch_size=1,
+        max_real_repeats=8,
+        minimum_checkpoints=1,
+    ) == 48
+    with pytest.raises(ValueError, match="underpowered"):
+        failover.validate_bounded_sft_monitor_capacity(
+            max_pairs=32,
+            epochs=1,
+            batch_size=1,
+            max_real_repeats=8,
+            minimum_checkpoints=2,
+        )

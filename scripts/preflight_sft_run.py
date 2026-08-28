@@ -445,7 +445,9 @@ def build_preflight(
         warmup_steps,
         checkpoint_steps,
     )
-    required_optimizer_steps = checkpoint_steps * minimum_monitor_checkpoints
+    required_optimizer_steps = (
+        schedule["effective_checkpoint_steps"] * minimum_monitor_checkpoints
+    )
     schedule["minimum_monitor_checkpoints"] = minimum_monitor_checkpoints
     schedule["minimum_monitored_optimizer_steps"] = required_optimizer_steps
     checkpoints = list(range(checkpoint_steps, schedule["planned_optimizer_steps"] + 1, checkpoint_steps))

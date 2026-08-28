@@ -61,7 +61,7 @@ Native generated-test execution against reconstructed BugsInPy and SWE-bench bug
 py -3.12 scripts/build_corpus_v4_1.py --offline
 py -3.12 scripts/verify_v4_1_local.py
 py -3.12 scripts/audit_sft_readiness.py --corpus-version v4_1_research_hardened_candidate --split train --output results/v4_1_research_hardened_candidate_train_readiness.json
-py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 32 --minimum-monitor-checkpoints 0 --output results/v4_1_integration_32_preflight.json
+py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 32 --minimum-monitor-checkpoints 1 --output results/v4_1_integration_32_preflight.json
 ```
 
 The exact staged GPU commands and stop conditions are in `V4_1_NEXT_RUN.md`. Ablations are predeclared in `ABLATION_RESULTS.json`; unrun and negative results remain visible.

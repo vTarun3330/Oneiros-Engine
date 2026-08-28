@@ -92,6 +92,7 @@ SFT_CHECKPOINT_MONITOR_ENABLED = True
 SFT_MONITOR_VALIDATION_FUNCTIONS = 500
 SFT_MONITOR_PATIENCE = 5
 SFT_MONITOR_MIN_FUNCTION_KILL_RATE_OVERRIDE = None
+SFT_MIN_MONITOR_CHECKPOINTS_OVERRIDE = None
 # New SFT runs use deterministic project-balanced repetition and exact
 # supervision deduplication. Existing named runs retain their frozen run
 # configuration and cannot silently resume with this changed distribution.
@@ -2404,7 +2405,11 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         ),
         "warmup_steps": training_config.sft_warmup_steps,
         "checkpoint_save_steps": training_config.sft_checkpoint_steps,
-        "minimum_monitor_checkpoints": training_config.sft_min_monitor_checkpoints,
+        "minimum_monitor_checkpoints": (
+            SFT_MIN_MONITOR_CHECKPOINTS_OVERRIDE
+            if SFT_MIN_MONITOR_CHECKPOINTS_OVERRIDE is not None
+            else training_config.sft_min_monitor_checkpoints
+        ),
         "real_target_fraction": (
             SFT_REAL_TARGET_FRACTION_OVERRIDE
             if SFT_REAL_TARGET_FRACTION_OVERRIDE is not None else SFT_REAL_TARGET_FRACTION
@@ -2452,7 +2457,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         or sft_hyperparameters["lr_scheduler_type"]
         not in {"cosine", "constant_with_warmup"}
         or sft_hyperparameters["checkpoint_save_steps"] <= 0
-        or sft_hyperparameters["minimum_monitor_checkpoints"] < 2
+        or sft_hyperparameters["minimum_monitor_checkpoints"] < 1
         or not 0.0 <= sft_hyperparameters["min_function_kill_rate"] <= 1.0
     ):
         raise RuntimeError(
@@ -2799,14 +2804,14 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                     sft_hyperparameters["checkpoint_save_steps"],
                 )
                 minimum_monitored_steps = (
-                    sft_hyperparameters["checkpoint_save_steps"]
-                    * training_config.sft_min_monitor_checkpoints
+                    sft_optimizer_plan["effective_checkpoint_steps"]
+                    * sft_hyperparameters["minimum_monitor_checkpoints"]
                 )
                 sft_optimizer_plan["minimum_monitored_optimizer_steps"] = (
                     minimum_monitored_steps
                 )
                 sft_optimizer_plan["minimum_monitor_checkpoints"] = (
-                    training_config.sft_min_monitor_checkpoints
+                    sft_hyperparameters["minimum_monitor_checkpoints"]
                 )
                 sft_sampling_stats["optimizer_preflight"] = dict(sft_optimizer_plan)
                 if (
@@ -3607,6 +3612,15 @@ if __name__ == "__main__":
         help="Required best locked-panel function kill rate before SFT is promoted",
     )
     parser.add_argument(
+        "--sft-min-monitor-checkpoints",
+        type=int,
+        default=None,
+        help=(
+            "Minimum checkpoint evaluations required by preflight; use one only "
+            "for a declared terminal-monitor integration run"
+        ),
+    )
+    parser.add_argument(
         "--corpus-version",
         default=CANONICAL_CORPUS_VERSION,
         help="Canonical corpus version",
@@ -3676,6 +3690,11 @@ if __name__ == "__main__":
         and not 0.0 <= args.sft_monitor_min_function_kill_rate <= 1.0
     ):
         raise ValueError("--sft-monitor-min-function-kill-rate must be in [0, 1]")
+    if (
+        args.sft_min_monitor_checkpoints is not None
+        and args.sft_min_monitor_checkpoints < 1
+    ):
+        raise ValueError("--sft-min-monitor-checkpoints must be at least one")
     DPO_VALIDATION_INTERVAL_PAIRS = args.dpo_validation_interval_pairs
     SFT_EPOCHS_OVERRIDE = args.sft_epochs
     SFT_LEARNING_RATE_OVERRIDE = args.sft_learning_rate
@@ -3697,6 +3716,7 @@ if __name__ == "__main__":
     SFT_MONITOR_MIN_FUNCTION_KILL_RATE_OVERRIDE = (
         args.sft_monitor_min_function_kill_rate
     )
+    SFT_MIN_MONITOR_CHECKPOINTS_OVERRIDE = args.sft_min_monitor_checkpoints
     CORPUS_VERSION = args.corpus_version
     EXECUTION_MODE_FILTER = args.execution_mode or None
     TRAINING_PHASE = args.phase

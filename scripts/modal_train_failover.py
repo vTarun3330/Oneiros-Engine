@@ -120,11 +120,12 @@ def validate_bounded_sft_monitor_capacity(
     checkpoint_steps: int = 50,
     minimum_checkpoints: int = 2,
 ) -> int:
-    """Reject a smoke that cannot possibly reach two monitor checkpoints."""
+    """Reject a smoke that cannot reach its declared monitor checkpoints."""
     upper_bound = bounded_sft_optimizer_upper_bound(
         max_pairs, epochs, batch_size, max_real_repeats
     )
-    required_steps = checkpoint_steps * minimum_checkpoints
+    effective_checkpoint_steps = min(checkpoint_steps, upper_bound)
+    required_steps = effective_checkpoint_steps * minimum_checkpoints
     if upper_bound < required_steps:
         raise ValueError(
             "Bounded SFT smoke is underpowered even at its theoretical maximum: "
@@ -209,7 +210,10 @@ def main() -> int:
             int(_option_value(training_args, "--sft-batch-size") or training_config.sft_batch_size),
             int(_option_value(training_args, "--sft-max-real-repeats") or 8),
             checkpoint_steps=training_config.sft_checkpoint_steps,
-            minimum_checkpoints=training_config.sft_min_monitor_checkpoints,
+            minimum_checkpoints=int(
+                _option_value(training_args, "--sft-min-monitor-checkpoints")
+                or training_config.sft_min_monitor_checkpoints
+            ),
         )
     run_name = _option_value(training_args, "--run-name")
     if not run_name or not re.fullmatch(r"[A-Za-z0-9_.-]+", run_name):

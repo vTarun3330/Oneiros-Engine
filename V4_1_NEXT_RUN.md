@@ -29,22 +29,27 @@ All design experiments must pass `--evaluation-split ablation_dev`. Record their
 ## 3. Preflight the 32-pair integration
 
 ```powershell
-py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 32 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --real-target-fraction 0.20 --repository-prompt-token-limit 1024 --repository-completion-token-limit 1024 --minimum-monitor-checkpoints 0 --min-function-kill-rate 0.58 --output results/v4_1_integration_32_preflight.json
+py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 32 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --real-target-fraction 0.20 --repository-prompt-token-limit 1024 --repository-completion-token-limit 1024 --minimum-monitor-checkpoints 1 --min-function-kill-rate 0.58 --output results/v4_1_integration_32_preflight.json
 ```
 
-If `ready` is false, stop. Do not weaken a gate. The zero monitor-checkpoint
-requirement is specific to this format-only integration because its GPU command
-explicitly disables kill-rate monitoring; terminal checkpoint behavior remains
-covered by the local callback tests. Production and research runs retain the
+If `ready` is false, stop. Do not weaken a gate. This declared integration
+requires exactly one terminal monitor evaluation because it has only six
+planned optimizer steps. Production and research runs retain the default
 two-checkpoint minimum.
 
 ## 4. Run the 32-pair GPU integration
 
 ```powershell
-py -3.12 scripts/modal_train.py --fresh --phase sft --corpus-version v4_1_research_hardened_candidate --run-name v4_1_integration_32_seed42 --seed 42 --max-pairs 32 --evaluation-split ablation_dev --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --no-sft-monitor-kill-rate
+py -3.12 scripts/modal_train.py --fresh --phase sft --corpus-version v4_1_research_hardened_candidate --run-name v4_1_integration_32_seed42 --seed 42 --max-pairs 32 --evaluation-split ablation_dev --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-min-monitor-checkpoints 1 --sft-monitor-validation-functions 32 --sft-monitor-patience 1 --sft-monitor-min-function-kill-rate 0.58
 ```
 
-Resume an interrupted integration with the identical command without `--fresh`. The run is integration evidence only. Confirm finite loss, dataset load, section budgets, unique V4.1 namespace, save/resume, generation, evaluation artifacts, and terminal monitoring tests. Do not call it a research result.
+Resume an interrupted integration with the identical command without `--fresh`.
+The run is integration evidence only. Confirm finite loss, dataset load, section
+budgets, unique V4.1 namespace, save/resume, generation/evaluation artifacts,
+and a monitor-history entry for terminal step 6. A sub-58% integration metric
+is not a research conclusion and must not promote the adapter or be reported as
+a validation result; functional integration succeeds only if the terminal
+evaluation and artifacts complete. Do not call it a research result.
 
 ## 5. Preflight and run 800 only after integration succeeds
 

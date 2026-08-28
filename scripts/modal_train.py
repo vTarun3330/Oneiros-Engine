@@ -215,6 +215,7 @@ def run_cloud_training(
     sft_monitor_kill_rate: bool = True, sft_monitor_validation_functions: int = 500,
     sft_monitor_patience: int = 5,
     sft_monitor_min_function_kill_rate: float = -1.0,
+    sft_min_monitor_checkpoints: int = 0,
 ):
     """Run the full Oneiros DPO training loop on a Modal GPU."""
     os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
@@ -292,6 +293,8 @@ def run_cloud_training(
         and not 0.0 <= sft_monitor_min_function_kill_rate <= 1.0
     ):
         return {"error": "SFT monitor minimum function kill rate must be in [0, 1]"}
+    if sft_min_monitor_checkpoints < 0:
+        return {"error": "SFT minimum monitor checkpoints must be positive when supplied"}
     corpus_dir = os.path.join(project_root, "data", "corpus", corpus_version)
     if not os.path.exists(os.path.join(corpus_dir, "manifest.json")):
         log.error("❌ train_pairs.json not found in volume! Upload data first.")
@@ -355,6 +358,9 @@ def run_cloud_training(
     trainer.SFT_MONITOR_MIN_FUNCTION_KILL_RATE_OVERRIDE = (
         sft_monitor_min_function_kill_rate
         if sft_monitor_min_function_kill_rate >= 0.0 else None
+    )
+    trainer.SFT_MIN_MONITOR_CHECKPOINTS_OVERRIDE = (
+        sft_min_monitor_checkpoints or None
     )
 
     if max_pairs:
@@ -461,6 +467,7 @@ def training_main(
     sft_monitor_kill_rate: bool = True, sft_monitor_validation_functions: int = 500,
     sft_monitor_patience: int = 5,
     sft_monitor_min_function_kill_rate: float = -1.0,
+    sft_min_monitor_checkpoints: int = 0,
 ):
     """Entry point for `modal run scripts/modal_train.py`."""
     # Validate locally before uploading or reserving a GPU. The remote training
@@ -513,6 +520,10 @@ def training_main(
         and not 0.0 <= sft_monitor_min_function_kill_rate <= 1.0
     ):
         raise ValueError("SFT monitor minimum function kill rate must be in [0, 1]")
+    if sft_min_monitor_checkpoints < 0:
+        raise ValueError(
+            "SFT minimum monitor checkpoints must be positive when supplied"
+        )
     if phase == "sft" and sft_monitor_kill_rate and max_pairs > 0:
         from config import training_config
         from scripts.modal_train_failover import validate_bounded_sft_monitor_capacity
@@ -522,7 +533,10 @@ def training_main(
             sft_batch_size or training_config.sft_batch_size,
             sft_max_real_repeats or 8,
             checkpoint_steps=training_config.sft_checkpoint_steps,
-            minimum_checkpoints=training_config.sft_min_monitor_checkpoints,
+            minimum_checkpoints=(
+                sft_min_monitor_checkpoints
+                or training_config.sft_min_monitor_checkpoints
+            ),
         )
     from harness.corpus import verify_corpus
     manifest = verify_corpus(Path("data") / "corpus" / corpus_version)
@@ -563,7 +577,8 @@ def training_main(
             f"{sft_monitor_validation_functions} validation functions, "
             f"patience={sft_monitor_patience}, "
             f"minimum={sft_monitor_min_function_kill_rate if sft_monitor_min_function_kill_rate >= 0.0 else 'default'}, "
-            "interval=50 optimizer steps"
+            f"minimum_checkpoints={sft_min_monitor_checkpoints or 'default'}, "
+            "interval=50 optimizer steps plus terminal step"
         )
     if sft_balanced_sampling:
         print(
@@ -674,6 +689,7 @@ def training_main(
             sft_monitor_min_function_kill_rate=(
                 sft_monitor_min_function_kill_rate
             ),
+            sft_min_monitor_checkpoints=sft_min_monitor_checkpoints,
         )
 
         print("\n" + "=" * 60)
