@@ -1,0 +1,76 @@
+{
+  "record_type": "frozen_v4_baseline",
+  "frozen": true,
+  "source_commit": "1d2cca8b9a1b104ae267816acf59c8b607303a3d",
+  "branch": "experiment/research-eval-ablations",
+  "corpus": {
+    "version": "v4_unified_prompt_candidate",
+    "corpus_id": "oneiros-corpus-v4-unified-prompt-candidate",
+    "records": 8237,
+    "train_records": 6646,
+    "validation_records": 781,
+    "test_records": 810,
+    "context_eligible_train_records": 6626,
+    "records_sha256": "c7ba54830005b19f7cf2511f0a7ebe0a43c61e1fceb2e5bd3222f32d8abe6ec1",
+    "splits_sha256": "319470878c352c3587fc3294df2d3f47e6a75e1761a7227cc8f76c1b547e29f3",
+    "external_eval_index_sha256": "d5b0c3cccc0f237ad6ece45ff9fc2abc8dfd87b4daf6c3c10ceb338434acad76",
+    "reverification_exclusions_sha256": "2696153c3bc87062f39ffd162ab83bee307ad7389809bc4f2d6c865d0ca14fd0",
+    "training_exclusions_sha256": "f75ab6101d035c34632528653aceb577625a35ea26c9aa3a37cde0f270d5417b"
+  },
+  "prompt": {
+    "schema_version": "oneiros_unified_test_generation_v1",
+    "function_prompt_tokens": 512,
+    "repository_prompt_tokens": 1024,
+    "sequence_tokens": 2048,
+    "function_completion_tokens": 128,
+    "repository_completion_tokens": 1024,
+    "compaction_strategy": "priority_head_tail_preserve_spec_target_v2"
+  },
+  "training": {
+    "epochs": 1,
+    "batch_size": 1,
+    "learning_rate": 0.00005,
+    "scheduler_for_declared_v4_run": "constant_with_warmup",
+    "warmup_steps": 25,
+    "checkpoint_steps": 50,
+    "gradient_accumulation_steps": 16,
+    "repository_target_fraction": 0.2,
+    "maximum_repository_repeats": 8
+  },
+  "generation": {
+    "candidate_count": 8,
+    "candidate_order": "raw_generation_order",
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "max_new_tokens": 128,
+    "batch_size": 2,
+    "feedback_rounds": 0,
+    "diversity_mode": "none"
+  },
+  "evaluation": {
+    "validation_split": "val",
+    "locked_monitor_panel_functions": 500,
+    "locked_monitor_panel_sha256": "927dd7fab5d97e2e8c29ab362247e5bb9c10d022709b5840275cb54466c2efd4",
+    "validation_seeds": [42, 43, 44],
+    "declared_v4_run_gate": 0.58,
+    "code_default_gate_at_baseline": 0.5,
+    "final_test_split": "test",
+    "final_test_record_count": 810,
+    "final_test_opened": false,
+    "kill_at_k": [1, 2, 4, 8]
+  },
+  "model": {
+    "name": "microsoft/Phi-3-mini-4k-instruct",
+    "revision": "f39ac1d28e925b323eae81227eaba4464caced4e",
+    "v4_checkpoint_identity": "none_v4_not_trained"
+  },
+  "preflight": {
+    "ready": true,
+    "bounded_selection_sha256": "059c21494bc66058842aa1fd78eaa53e2b1e2b5121bfd12c73c0fac6c4e408ae",
+    "planned_monitor_steps": [50, 100, 143]
+  },
+  "baseline_test_suite": {
+    "passed": 103,
+    "failed": 0
+  }
+}
