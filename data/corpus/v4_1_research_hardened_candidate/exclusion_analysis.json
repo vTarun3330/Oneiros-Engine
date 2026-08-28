@@ -1,0 +1,1383 @@
+{
+  "schema_version": "oneiros_v4_1_exclusion_analysis_v1",
+  "excluded_records": 150,
+  "by_dataset": {
+    "humaneval": 4,
+    "mbpp": 146
+  },
+  "by_mutation_family": {
+    "arithmetic": 50,
+    "boolean": 7,
+    "boundary": 46,
+    "comparison": 25,
+    "index": 1,
+    "logical": 3,
+    "negate_removal": 1,
+    "off_by_one": 14,
+    "return": 3
+  },
+  "by_split": {
+    "test": 23,
+    "train": 109,
+    "val": 18
+  },
+  "by_reason": {
+    "no_current-policy-reference-valid-mutation-killing-test": 150
+  },
+  "by_execution_failure_type": {
+    "reference_invalid": 150
+  },
+  "bias_statement": "Exclusions are not assumed unbiased; dataset and mutation-family distributions must be interpreted using the counts in this artifact.",
+  "records": [
+    {
+      "record_id": "mutation::humaneval_HumanEval_160_mut_01584",
+      "dataset": "humaneval",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "humaneval_HumanEval_160_mut_01584",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::humaneval_HumanEval_160_mut_01585",
+      "dataset": "humaneval",
+      "mutation_family": "index",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "humaneval_HumanEval_160_mut_01585",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::humaneval_HumanEval_160_mut_01586",
+      "dataset": "humaneval",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "humaneval_HumanEval_160_mut_01586",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::humaneval_HumanEval_160_mut_01587",
+      "dataset": "humaneval",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "humaneval_HumanEval_160_mut_01587",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_100_mut_02534",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_100_mut_02534",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_100_mut_02535",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_100_mut_02535",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_100_mut_02536",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_100_mut_02536",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_100_mut_02537",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_100_mut_02537",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_100_mut_02538",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_100_mut_02538",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_100_mut_02539",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_100_mut_02539",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_100_mut_02540",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_100_mut_02540",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_100_mut_02541",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_100_mut_02541",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_124_mut_02748",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_124_mut_02748",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_137_mut_02862",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_137_mut_02862",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_137_mut_02863",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_137_mut_02863",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_137_mut_02864",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_137_mut_02864",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_137_mut_02865",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_137_mut_02865",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_137_mut_02866",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_137_mut_02866",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_137_mut_02867",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_137_mut_02867",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_173_mut_03237",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_173_mut_03237",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_210_mut_03585",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_210_mut_03585",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_210_mut_03586",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_210_mut_03586",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_210_mut_03587",
+      "dataset": "mbpp",
+      "mutation_family": "negate_removal",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_210_mut_03587",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_210_mut_03588",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_210_mut_03588",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_303_mut_04340",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_303_mut_04340",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_303_mut_04341",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_303_mut_04341",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_303_mut_04342",
+      "dataset": "mbpp",
+      "mutation_family": "boolean",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_303_mut_04342",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_303_mut_04344",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_303_mut_04344",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_303_mut_04348",
+      "dataset": "mbpp",
+      "mutation_family": "boolean",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_303_mut_04348",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_303_mut_04349",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_303_mut_04349",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_303_mut_04352",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_303_mut_04352",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_303_mut_04353",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_303_mut_04353",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_303_mut_04354",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_303_mut_04354",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_303_mut_04355",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_303_mut_04355",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_303_mut_04356",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_303_mut_04356",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_403_mut_05257",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_403_mut_05257",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_403_mut_05259",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_403_mut_05259",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_403_mut_05263",
+      "dataset": "mbpp",
+      "mutation_family": "boolean",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_403_mut_05263",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_403_mut_05264",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_403_mut_05264",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_403_mut_05265",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_403_mut_05265",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_403_mut_05266",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_403_mut_05266",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_403_mut_05268",
+      "dataset": "mbpp",
+      "mutation_family": "boolean",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_403_mut_05268",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_403_mut_05271",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_403_mut_05271",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_403_mut_05275",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_403_mut_05275",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_403_mut_05276",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_403_mut_05276",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_403_mut_05280",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_403_mut_05280",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_403_mut_05284",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_403_mut_05284",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_442_mut_05586",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_442_mut_05586",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_442_mut_05587",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_442_mut_05587",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_442_mut_05588",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_442_mut_05588",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_442_mut_05589",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_442_mut_05589",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_442_mut_05590",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_442_mut_05590",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_442_mut_05591",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_442_mut_05591",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_530_mut_06493",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_530_mut_06493",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_530_mut_06494",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_530_mut_06494",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_530_mut_06495",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_530_mut_06495",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_530_mut_06496",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_530_mut_06496",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_530_mut_06497",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_530_mut_06497",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_530_mut_06498",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_530_mut_06498",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06499",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06499",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06500",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06500",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06501",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06501",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06502",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06502",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06503",
+      "dataset": "mbpp",
+      "mutation_family": "return",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06503",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06504",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06504",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06505",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06505",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06506",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06506",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06507",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06507",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06508",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06508",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06509",
+      "dataset": "mbpp",
+      "mutation_family": "logical",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06509",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06511",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06511",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06512",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06512",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06514",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06514",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_531_mut_06515",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_531_mut_06515",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_644_mut_07378",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_644_mut_07378",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_644_mut_07379",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_644_mut_07379",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_644_mut_07380",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_644_mut_07380",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_644_mut_07381",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_644_mut_07381",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_644_mut_07382",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_644_mut_07382",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_644_mut_07383",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_644_mut_07383",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_644_mut_07384",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_644_mut_07384",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_644_mut_07385",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_644_mut_07385",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_663_mut_07519",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_663_mut_07519",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_663_mut_07521",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_663_mut_07521",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_663_mut_07522",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_663_mut_07522",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_663_mut_07523",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_663_mut_07523",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_663_mut_07524",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_663_mut_07524",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_663_mut_07525",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_663_mut_07525",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_663_mut_07526",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_663_mut_07526",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_663_mut_07528",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_663_mut_07528",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_676_mut_07598",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_676_mut_07598",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_717_mut_07907",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_717_mut_07907",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_717_mut_07909",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_717_mut_07909",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_717_mut_07910",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_717_mut_07910",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_717_mut_07911",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_717_mut_07911",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_717_mut_07913",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_717_mut_07913",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_717_mut_07914",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_717_mut_07914",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_717_mut_07918",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_717_mut_07918",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_717_mut_07919",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_717_mut_07919",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_717_mut_07921",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_717_mut_07921",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_717_mut_07922",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_717_mut_07922",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_717_mut_07924",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_717_mut_07924",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_829_mut_08791",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_829_mut_08791",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_829_mut_08792",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_829_mut_08792",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_829_mut_08793",
+      "dataset": "mbpp",
+      "mutation_family": "boolean",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_829_mut_08793",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_829_mut_08794",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_829_mut_08794",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_832_mut_08808",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_832_mut_08808",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08874",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08874",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08876",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08876",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08877",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08877",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08878",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08878",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08879",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08879",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08881",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08881",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08882",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08882",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08884",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08884",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08886",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08886",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08888",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08888",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08891",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08891",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08893",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08893",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08896",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08896",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_836_mut_08897",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "val",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_836_mut_08897",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_900_mut_09494",
+      "dataset": "mbpp",
+      "mutation_family": "return",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_900_mut_09494",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_900_mut_09496",
+      "dataset": "mbpp",
+      "mutation_family": "boolean",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_900_mut_09496",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_913_mut_09665",
+      "dataset": "mbpp",
+      "mutation_family": "boolean",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_913_mut_09665",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_913_mut_09666",
+      "dataset": "mbpp",
+      "mutation_family": "return",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_913_mut_09666",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_913_mut_09668",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_913_mut_09668",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_913_mut_09670",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "train",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_913_mut_09670",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09939",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09939",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09940",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09940",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09941",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09941",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09942",
+      "dataset": "mbpp",
+      "mutation_family": "logical",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09942",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09943",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09943",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09944",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09944",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09945",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09945",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09946",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09946",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09947",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09947",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09948",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09948",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09949",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09949",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09950",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09950",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09951",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09951",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09954",
+      "dataset": "mbpp",
+      "mutation_family": "logical",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09954",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09956",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09956",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09957",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09957",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09959",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09959",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09960",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09960",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09961",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09961",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09962",
+      "dataset": "mbpp",
+      "mutation_family": "comparison",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09962",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09964",
+      "dataset": "mbpp",
+      "mutation_family": "boundary",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09964",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09965",
+      "dataset": "mbpp",
+      "mutation_family": "arithmetic",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09965",
+      "execution_failure_type": "reference_invalid"
+    },
+    {
+      "record_id": "mutation::mbpp_938_mut_09966",
+      "dataset": "mbpp",
+      "mutation_family": "off_by_one",
+      "split": "test",
+      "reason": "no_current-policy-reference-valid-mutation-killing-test",
+      "source_task": "mbpp_938_mut_09966",
+      "execution_failure_type": "reference_invalid"
+    }
+  ]
+}

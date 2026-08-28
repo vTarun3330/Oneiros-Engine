@@ -1,0 +1,122 @@
+{
+  "audit_schema_version": "oneiros_prompt_leakage_audit_v4_1",
+  "records_scanned": 8237,
+  "schema_failures": 0,
+  "schema_failure_details": [],
+  "verbatim_reference_leaks": 0,
+  "verbatim_reference_leak_record_ids": [],
+  "partial_reference_overlap_flags": 14,
+  "pending_manual_review_flags": 0,
+  "reviewed_manual_flags": 14,
+  "gold_test_lineage_failures": 0,
+  "gold_patch_lineage_failures": 0,
+  "oracle_lineage_failures": 0,
+  "other_prohibited_lineage_failures": 0,
+  "lineage_failure_details": {
+    "gold_test": [],
+    "gold_patch": [],
+    "oracle": [],
+    "other": []
+  },
+  "manual_review_flags": [
+    {
+      "record_id": "official-repository::black::14::tests/test_black.py__BlackTestCase__test_get_future_imports",
+      "reference_only_fragment_sha256": "0a4416b562c96c77af092bcfc0da9c11d0a60abb9e4e332a1f442e2e10eb0cdd",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::black::8::tests/test_black.py__BlackTestCase__test_comments7",
+      "reference_only_fragment_sha256": "e256ee8e7aff6957a781d8328f0f68e26996564c81fa458da59fbca2305138ad",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::scrapy::16::tests/test_utils_url.py__CanonicalizeUrlTest__test_canonicalize_url_unicode_query_string",
+      "reference_only_fragment_sha256": "8f3a5a65ded8b5fb647ee889d819321aa631888e81dedffb104554f52409b845",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::swebench-verified::django__django-11815::3649b4b1c37e",
+      "reference_only_fragment_sha256": "fc4c1868f34cfb519e76be7307878b7254a939fea0a2f13fd8029482816af74d",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::swebench-verified::django__django-14011::a198ad695f79",
+      "reference_only_fragment_sha256": "0d5b29c6152d4fead197a2698e20cbd2ff9a49cc7855ab29c1bd7341622265a4",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::swebench-verified::django__django-14011::a198ad695f79",
+      "reference_only_fragment_sha256": "4a3ae5b7b911de442f3d0df886c722f40a349e6bc4cb249dfc46736e2b83f8fa",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::swebench-verified::django__django-14011::a198ad695f79",
+      "reference_only_fragment_sha256": "d1c5240add1891eb69664e94cef7d3253cd5ea8ab0a7595567d4d4fafce0a4cf",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::swebench-verified::django__django-14011::a198ad695f79",
+      "reference_only_fragment_sha256": "512169ffb0253b477de49cfb969c810910e71784e725d12114912558ee71241d",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::swebench-verified::django__django-14011::a198ad695f79",
+      "reference_only_fragment_sha256": "543eec1b68cce685cac416c195987798c91c19006c2dc2fc568bff8c6f7ed160",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::swebench-verified::django__django-15127::a570a5b315f1",
+      "reference_only_fragment_sha256": "da1d42fe450ea0d6fab4ba64151c7e4934c388757c878db45c0c65936a3edb83",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::swebench-verified::django__django-16938::052b49c860cd",
+      "reference_only_fragment_sha256": "fc4c1868f34cfb519e76be7307878b7254a939fea0a2f13fd8029482816af74d",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::swebench-verified::pydata__xarray-3095::3ad5c7839466",
+      "reference_only_fragment_sha256": "6405d953aebb74f853e22523b6e4c539ebd837403cdfe385d7399f937179dc2e",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::youtube-dl::31::test/test_utils.py__TestUtil__test_parse_duration",
+      "reference_only_fragment_sha256": "66e488b7f33a5a6879f26c6f049d9d26cd296330df29ba0cb6a746df18702671",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    },
+    {
+      "record_id": "official-repository::youtube-dl::32::test/test_utils.py__TestUtil__test_strip_jsonp",
+      "reference_only_fragment_sha256": "214cd1597a23653110cdb87d2b7a461f64f3f389b94e2ee8715463e417a8ea16",
+      "source_field": "other_model_visible_field",
+      "review_status": "reviewed_allowed_independent_buggy_context",
+      "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+    }
+  ],
+  "claim_zero_oracle_leakage_supported": true
+}

@@ -1,0 +1,1696 @@
+[
+  {
+    "record_id": "official-repository::PySnooper::1::tests/test_chinese.py__test_chinese",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "temp_file_tools"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::PySnooper::3::tests/test_pysnooper.py__test_file_output",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "temp_file_tools"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::ansible::15::test/units/modules/network/eos/test_eos_eapi.py__TestEosEapiModule__test_eos_eapi_vrf",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "args",
+      "kwargs"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::ansible::4::test/units/playbook/test_collectionsearch.py__test_collection_static_warning",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::ansible::5::test/units/module_utils/common/validation/test_check_required_arguments.py__test_check_required_arguments_missing_multiple",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::black::10::tests/test_black.py__BlackTestCase__test_comment_indentation",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::11::tests/test_black.py__BlackTestCase__test_comments6",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::12::tests/test_black.py__BlackTestCase__test_bracket_match",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::13::tests/test_black.py__BlackTestCase__test_python37",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::15::tests/test_black.py__BlackTestCase__test_fmtonoff2",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::16::tests/test_black.py__BlackTestCase__test_symlink_out_of_root_directory",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "MagicMock"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::17::tests/test_black.py__BlackTestCase__test_empty",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::19::tests/test_black.py__BlackTestCase__test_comment_in_decorator",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::22::tests/test_black.py__BlackTestCase__test_comments3",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::23::tests/test_black.py__BlackTestCase__test_python2",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::2::tests/test_black.py__BlackTestCase__test_fmtonoff4",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::4::tests/test_black.py__BlackTestCase__test_beginning_backslash",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::5::tests/test_black.py__BlackTestCase__test_function_trailing_comma",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::6::tests/test_black.py__BlackTestCase__test_async_as_identifier",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::7::tests/test_black.py__BlackTestCase__test_tuple_assign",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::8::tests/test_black.py__BlackTestCase__test_comments7",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::black::9::tests/test_black.py__BlackTestCase__test_python2_print_function",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ve"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::cookiecutter::4::tests/test_hooks.py__TestExternalHooks__test_run_failing_hook",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "exceptions"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::fastapi::10::tests/test_skip_defaults.py__test_return_defaults",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "client"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::fastapi::11::tests/test_union_inherited_body.py__test_post_item",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "client",
+      "skip_py36"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::fastapi::13::tests/test_additional_responses_router.py__test_openapi_schema",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "client",
+      "openapi_schema"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::fastapi::14::tests/test_additional_properties.py__test_additional_properties_schema",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "client",
+      "openapi_schema"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::fastapi::15::tests/test_ws_router.py__test_prefix_router",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "TestClient"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::fastapi::16::tests/test_jsonable_encoder.py__test_encode_model_with_config",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ModelWithConfig",
+      "RoleEnum"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::fastapi::1::tests/test_jsonable_encoder.py__test_encode_model_with_default",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ModelWithDefault"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::fastapi::2::tests/test_ws_router.py__test_router_ws_depends_with_override",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ws_dependency"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::fastapi::3::tests/test_serialize_response_model.py__test_validdict_exclude_unset",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "client"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::fastapi::4::tests/test_param_in_path_and_dependency.py__test_reused_param",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "client",
+      "openapi_schema"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::fastapi::5::tests/test_filter_pydantic_sub_model.py__test_filter_sub_model",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "client"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::fastapi::6::tests/test_forms_from_non_typing_sequences.py__test_python_list_param_as_form",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "client"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::fastapi::7::tests/test_multi_body_errors.py__test_jsonable_encoder_requiring_error",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "single_error"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::fastapi::8::tests/test_custom_route_class.py__test_route_classes",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::fastapi::9::tests/test_request_body_parameters_media_type.py__test_openapi_schema",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "client",
+      "create_product_request_body",
+      "create_shop_request_body"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::httpie::1::tests/test_downloads.py__TestDownloadUtils__test_unique_filename",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "mock"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::httpie::3::tests/test_sessions.py__TestSession__test_download_in_session",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "gettempdir"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::httpie::4::tests/test_regressions.py__test_Host_header_overwrite",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "HTTP_OK",
+      "http",
+      "socket"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::httpie::5::tests/tests.py__TestItemParsing__test_escape_longsep",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "BaseTest"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::keras::11::tests/integration_tests/test_image_data_tasks.py__test_image_data_generator_training",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ImageDataGenerator"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::keras::13::tests/keras/engine/test_training.py__test_model_methods",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      5995
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::keras::2::tests/keras/backend/backend_test.py__TestBackend__test_in_top_k",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "WITH_NP"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::keras::3::tests/keras/test_sequential_model.py__test_clone_functional_model_with_multi_outputs",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "shapes"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::keras::4::tests/keras/optimizers_test.py__test_tfoptimizer_pass_correct_named_params_to_native_tensorflow_optimizer",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "kwargs"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::keras::5::tests/keras/utils/data_utils_test.py__test_data_utils",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "reload_module"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::keras::6::tests/test_loss_masking.py__test_masking_is_all_zeros",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "create_masking_model"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::keras::7::tests/keras/wrappers/scikit_learn_test.py__test_regression_predict_shape_correct_num_test_1",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "assert_regression_predict_shape_correct"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::luigi::12::test/hdfs_client_test.py__HdfsClientTest__test_get_autoconfig_client_cached",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::luigi::1::test/server_test.py__MetricsHandlerTest__test_get",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "mock"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::luigi::21::test/interface_test.py__InterfaceTest__test_just_run_main_task_cls",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "LuigiTestCase",
+      "patch"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::luigi::23::test/worker_external_task_test.py__WorkerExternalTaskTest__test_external_dependency_completes_later",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "TestTask"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::luigi::24::test/contrib/spark_test.py__SparkSubmitTaskTest__test_defaults",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "TestDefaultSparkSubmitTask"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::luigi::25::test/contrib/redshift_test.py__TestS3CopyToTable__test_s3_copy_to_table",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "DummyS3CopyToTable",
+      "mock"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::luigi::26::test/contrib/hadoop_jar_test.py__HadoopJarJobTaskTest__test_missing_jar",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "TestMissingJarJob",
+      "patch"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::sanic::3::tests/test_url_for.py__test_routes_with_host",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::scrapy::11::tests/test_utils_gz.py__GunzipTest__test_gunzip_illegal_eof",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "html_to_unicode"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::scrapy::14::tests/test_utils_gz.py__GunzipTest__test_is_gzipped_case_insensitive",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "Headers",
+      "Response"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::scrapy::20::tests/test_spider.py__SitemapSpiderTest__test_get_sitemap_urls_from_robotstxt",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "SpiderTest"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::scrapy::25::tests/test_http_request.py__FormRequestTest__test_html_base_form_action",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "RequestTest"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::scrapy::28::tests/test_dupefilters.py__RFPDupeFilterTest__test_dupefilter_path",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "shutil",
+      "tempfile"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::scrapy::33::tests/test_pipeline_media.py__BaseMediaPipelineTestCase__test_default_item_completed",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "failure_to_exc_info"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::scrapy::35::tests/test_crawler.py__CrawlerRunnerTestCase__test_spidermanager_deprecation",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "CustomSpiderLoader"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::scrapy::38::tests/test_http_request.py__FormRequestTest__test_from_response_clickdata_does_not_ignore_image",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "RequestTest"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::scrapy::40::tests/test_exporters.py__PythonItemExporterTest__test_other_python_types_item",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "BaseItemExporterTest",
+      "kwargs"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::scrapy::4::tests/test_contracts.py__ContractsManagerTest__test_errback",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "HttpError",
+      "TestSpider"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::scrapy::8::tests/test_item.py__ItemMetaTest__test_new_method_propagates_classcell",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "PY36_PLUS",
+      "__class__",
+      "mock"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::scrapy::9::tests/test_mail.py__MailSenderTest__test_send_single_values_to_and_cc",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "kwargs"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::astropy__astropy-13579::f3ca8d2a0e2c",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "COUPLED_WCS_HEADER"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::astropy__astropy-14182::3732fcb2814a",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "QTable",
+      "np",
+      "u"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::astropy__astropy-14309::94e6ab281d9c",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "connect"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::astropy__astropy-14365::c86acfd29a97",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "lowercase_header"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::astropy__astropy-14539::51d15fb10bb1",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      512,
+      1710
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-11066::3b75f84052dc",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "TestRouter"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-11149::4b7b666577e0",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      75,
+      1948
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-11551::2c8daf55a027",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "CheckTestCase"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-11740::ec2ecf5eb021",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      7126
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-11790::506faf7f15e7",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "TestDataMixin"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-11815::3649b4b1c37e",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1809
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-11880::87a57951690b",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "kwargs"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-12193::2609a2e6fab2",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "SplitArrayWidget"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-12262::a242efc68893",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "TagTestCase"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-12754::3f1d8d32d1b7",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      7287
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-13028::6561133b7a0b",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      115,
+      1695
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-13109::5e5f1081aaf2",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "args",
+      "kwargs"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-13128::1ae47183623c",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1951
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-13344::bde03a7aee91",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "ALWAYS_INSTALLED_APPS",
+      "ALWAYS_MIDDLEWARE",
+      "CONTRIB_TESTS_TO_APPS",
+      "DEFAULT_LOGGING",
+      "TEMPLATE_DIR",
+      "TMPDIR",
+      "apps",
+      "default_test_processes",
+      "django",
+      "get_installed",
+      "get_test_modules"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-13363::fb472118e5f0",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "DateFunctionTests"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-13410::e661f7dc14f7",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "__file__"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-13449::6ea27365ca21",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "row"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-13513::8cab25c7d341",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "exc"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-13551::b21deb4cacca",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "CustomEmailFieldUserManager"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-14007::9dc44bd5b01f",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "args",
+      "kwargs"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-14011::a198ad695f79",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "LiveServerBase",
+      "TransactionTestCase",
+      "args",
+      "kwargs"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-14170::e630b1bce3c2",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "m"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-14608::474e304431c1",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "FavoriteDrinksFormSet"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-14672::9765a9875347",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "Person"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-14771::6766431129a4",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "__file__"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-14787::b104474a0976",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "args",
+      "kwargs"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-14792::5a761e5b8c02",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "zoneinfo"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-14855::951d200bedb0",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "AdminFieldExtractionMixin"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15022::7cdd89971ff2",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      109,
+      1755
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15104::6ff748d1d2f3",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      7263
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15252::b26e8d96c3c9",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1715,
+      360
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15268::4258e68d2989",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      7790
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15380::6078bfcf7b87",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      7247
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15525::4e90a265bc7b",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "Person"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15957::8db1120fdc16",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "TestDataMixin"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-15973::50fcf69fe324",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      8761
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-16139::e5a482397334",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "TestDataMixin"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-16333::b77af2b47758",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "TestDataMixin"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-16560::935034bd31af",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "RangeOperators"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-16612::32586541320a",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1803
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-16801::196fd67fae48",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "Image",
+      "ImageFieldTwoDimensionsTests",
+      "Person"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::django__django-16938::052b49c860cd",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "HAS_YAML",
+      "yaml"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::matplotlib__matplotlib-24637::79e666de477d",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "OffsetImage"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::mwaskom__seaborn-3187::036acd925e5d",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "Helpers",
+      "relplot"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::pydata__xarray-3677::b1aab256be10",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "assert_identical"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::pydata__xarray-6992::521e84543fa0",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "create_test_multiindex",
+      "x"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::pylint-dev__pylint-4551::a35b683573d7",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "__file__",
+      "infer_node",
+      "patch"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::pylint-dev__pylint-4661::6e1b663ec432",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "appdirs"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-12489::a17796cade71",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "test_Permutation"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-13031::390eb83626f5",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      6542
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-13372::a3f486369299",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1579
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-13798::808f5b175d1e",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2615
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-13877::8146955c26df",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "n"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-13878::a02c121a0b86",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2243
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-13974::ef6f8add6061",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "D"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-15599::39cda1dca552",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2912
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-15809::489bc8d7e71d",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2873
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-15976::2e555af952de",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1584
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-16766::8c92b730d040",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "p"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-17655::0bd8a543efec",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      3988
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-18189::bbac5dd3f426",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2346
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-18199::6caee709a4b1",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      5537,
+      2799
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-21379::39cda1dca552",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      2924
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-21847::ff17cc1cecf1",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      4082
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-21930::6b535ce764b7",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      3005
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-22080::a332d85e2019",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "SWE-bench Verified",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "p",
+      "y"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::swebench-verified::sympy__sympy-23534::cfb130c87e40",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1924
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::thefuck::28::tests/rules/test_fix_file.py__test_get_new_command_with_settings",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "Settings"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::thefuck::29::tests/test_utils.py__test_wrap_settings",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "settings"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::thefuck::2::tests/test_utils.py__test_get_all_executables_pathsep",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "call"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::thefuck::8::tests/rules/test_dnf_no_such_command.py__test_get_new_command",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "Command",
+      "get_new_command",
+      "help_text",
+      "invalid_command"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::tornado::10::tornado/test/websocket_test.py__WebSocketTest__test_render_message",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "DictLoader",
+      "RenderMessageHandler",
+      "WebSocketBaseTestCase"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tornado::12::tornado/test/auth_test.py__AuthTest__test_facebook_login",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "FacebookClientLoginHandler",
+      "FacebookServerAccessTokenHandler",
+      "FacebookServerMeHandler"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tornado::13::tornado/test/http1connection_test.py__HTTP1ConnectionTest__test_http10_no_content_length",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "AsyncTestCase",
+      "Event",
+      "HTTPMessageDelegate",
+      "IOStream",
+      "add_accept_handler",
+      "bind_unused_port",
+      "gen_test",
+      "socket"
+    ],
+    "test_environment_source": "unavailable"
+  },
+  {
+    "record_id": "official-repository::tornado::15::tornado/test/web_test.py__StaticFileTest__test_path_traversal_protection",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "WebTestCase",
+      "__file__"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tornado::1::tornado/test/websocket_test.py__WebSocketTest__test_nodelay",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "NoDelayHandler",
+      "WebSocketBaseTestCase"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tornado::4::tornado/test/web_test.py__StaticFileTest__test_static_with_range_neg_past_start",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "WebTestCase",
+      "__file__",
+      "args",
+      "kwargs"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tornado::7::tornado/test/ioloop_test.py__TestIOLoopFutures__test_run_in_executor_native",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "futures"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tornado::8::tornado/test/websocket_test.py__WebSocketTest__test_missing_websocket_key",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "WebSocketBaseTestCase"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tqdm::2::tqdm/tests/tests_tqdm.py__test_format_meter",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "unichr"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tqdm::3::tqdm/tests/tests_tqdm.py__test_bool",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "StringIO",
+      "args",
+      "closing",
+      "kwargs"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tqdm::4::tqdm/tests/tests_tqdm.py__test_nototal",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "StringIO",
+      "closing"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tqdm::5::tqdm/tests/tests_tqdm.py__test_bool",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "StringIO",
+      "closing"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tqdm::6::tqdm/tests/tests_synchronisation.py__test_imap",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "SkipTest",
+      "incr"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tqdm::7::tqdm/tests/tests_main.py__test_main",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "e"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tqdm::8::tqdm/tests/tests_tqdm.py__test_format_meter",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "unichr"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::tqdm::9::tqdm/tests/tests_tqdm.py__test_update",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "StringIO"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::youtube-dl::14::test/test_youtube_chapters.py__TestYoutubeChapters__test_youtube_chapters",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      7089
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::youtube-dl::16::test/test_utils.py__TestUtil__test_dfxp2srt",
+    "reason": "canonical_retained_training_excluded",
+    "completion_tokens": [
+      1776
+    ],
+    "completion_token_limit": 1536
+  },
+  {
+    "record_id": "official-repository::youtube-dl::2::test/test_InfoExtractor.py__TestInfoExtractor__test_parse_mpd_formats",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "TestIE"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::youtube-dl::38::test/test_utils.py__TestUtil__test_urlencode_postdata",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "urlencode_postdata"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::youtube-dl::39::test/test_utils.py__TestUtil__test_limit_length",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "limit_length"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::youtube-dl::40::test/test_utils.py__TestUtil__test_struct_unpack",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "struct_unpack"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  },
+  {
+    "record_id": "official-repository::youtube-dl::42::test/test_utils.py__TestUtil__test_fix_xml_ampersands",
+    "reason": "independent_repository_context_incomplete",
+    "dataset": "BugsInPy",
+    "mutation_family": "real_repository_defect",
+    "unresolved_symbols": [
+      "fix_xml_ampersands"
+    ],
+    "test_environment_source": "immutable_local_cache"
+  }
+]

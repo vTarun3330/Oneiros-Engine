@@ -1,0 +1,36 @@
+{
+  "schema_version": "oneiros_ablation_dev_v1",
+  "selection_policy": "training-groups-hash-sampled-10pct-with-dataset-minimum",
+  "selection_salt": "oneiros-v4.1-ablation-dev",
+  "source_split": "v4_train_only",
+  "target_fraction": 0.1,
+  "record_count": 594,
+  "semantic_group_count": 63,
+  "record_ids_sha256": "415f6ac27cbf17f3dd1cc289495e08d6844b57a6a689d265958b5aceed19034e",
+  "semantic_group_ids_sha256": "208cbcfa7f7e1f321ec67e9029cc6510d003298d8cb470456cb73780f4145771",
+  "records_by_dataset": {
+    "BugsInPy": 35,
+    "SWE-bench Verified": 17,
+    "humaneval": 112,
+    "manual_curated_examples": 1,
+    "mbpp": 429
+  },
+  "records_by_mutation_family": {
+    "arithmetic": 152,
+    "boolean": 10,
+    "boundary": 234,
+    "comparison": 73,
+    "identity": 1,
+    "index": 5,
+    "logical": 13,
+    "membership": 4,
+    "negate_removal": 3,
+    "off_by_one": 39,
+    "real_repository_defect": 52,
+    "return": 7,
+    "string_manipulation": 1
+  },
+  "validation_overlap": 0,
+  "test_overlap": 0,
+  "frozen_before_results": true
+}
