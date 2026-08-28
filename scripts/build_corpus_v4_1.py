@@ -29,7 +29,10 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from engine.prompt_provenance import build_repository_prompt_context
+from engine.prompt_provenance import (
+    build_repository_prompt_context,
+    extract_non_gold_test_environment,
+)
 from engine.test_generation_prompt import (
     PROMPT_SCHEMA_VERSION,
     sanitize_behavioral_specification,
@@ -270,7 +273,11 @@ def _normalise_record(
         record["field_lineage"] = {
             field: list(values) for field, values in context.field_lineage.items()
         }
-        available = _bound_names(record["code_under_test"]) | _bound_names(module_source)
+        non_gold_environment, _ = extract_non_gold_test_environment(module_source)
+        available = (
+            _bound_names(record["code_under_test"])
+            | _bound_names(non_gold_environment)
+        )
         available |= set(dir(builtins)) | {"self", "pytest", "unittest"}
         unresolved: set[str] = set()
         for test in record.get("tests", []):
