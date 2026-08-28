@@ -48,6 +48,15 @@ data/corpus/v4_unified_prompt_candidate/**
 !data/corpus/v4_unified_prompt_candidate/manifest.json
 !data/corpus/v4_unified_prompt_candidate/training_exclusions.json
 !data/corpus/v4_unified_prompt_candidate/reverification_exclusions.json
+!data/corpus/v4_1_research_hardened_candidate/
+data/corpus/v4_1_research_hardened_candidate/**
+!data/corpus/v4_1_research_hardened_candidate/manifest.json
+!data/corpus/v4_1_research_hardened_candidate/training_exclusions.json
+!data/corpus/v4_1_research_hardened_candidate/ablation_dev_manifest.json
+!data/corpus/v4_1_research_hardened_candidate/leakage_audit.json
+!data/corpus/v4_1_research_hardened_candidate/exclusion_analysis.json
+!data/corpus/v4_1_research_hardened_candidate/exclusion_analysis.csv
+!data/corpus/v4_1_research_hardened_candidate/EXCLUSION_ANALYSIS.md
 
 # Model weights and generated experiment artifacts
 checkpoints/**

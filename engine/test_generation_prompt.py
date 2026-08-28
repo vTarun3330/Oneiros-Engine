@@ -11,13 +11,15 @@ import re
 from typing import Iterable, Sequence
 
 
-PROMPT_SCHEMA_VERSION = "oneiros_unified_test_generation_v1"
+PROMPT_SCHEMA_VERSION = "oneiros_unified_test_generation_v2"
 
 SYSTEM_PROMPT = """You are an expert Python software test engineer.
 
 Inspect the supplied behavioral specification, available execution context,
-and code under test. Generate exactly ONE executable test that exposes an
-observable behavioral defect.
+and code under test. Generate one minimal, self-contained bug-revealing test
+case. The test case may contain any setup and assertions necessary to
+demonstrate one behavioral defect, but do not generate multiple independent
+test cases.
 
 The test must represent the intended behavior, pass when that behavior is
 correctly implemented, fail on the supplied code because of the defect, and
@@ -37,6 +39,9 @@ _PATCH_LINE_PATTERNS = (
 _FIX_DIRECTIVE = re.compile(
     r"\b(?:apply|use)\s+(?:this|the)\s+patch\b|"
     r"\b(?:replace|change)\s+.{0,120}\s+with\s+.{0,120}\b|"
+    r"\bchange\s+(?:the\s+)?line\b|"
+    r"\bthe\s+correct\s+(?:expression|line|implementation)\s+is\b|"
+    r"\binstead\s+of\s+.{0,80}\s+use\s+.{0,80}\b|"
     r"\b(?:gold|reference|fixed)\s+(?:patch|implementation|solution)\b",
     re.IGNORECASE,
 )
@@ -111,11 +116,20 @@ def build_unified_user_prompt(
         raise ValueError("Unified prompt requires non-empty code_under_test")
 
     if test_format == "assert_statement":
-        output_rule = "Return exactly one Python assert statement."
+        output_rule = (
+            "Prefer one minimal bounded Python assert statement when sufficient. "
+            "Return only one self-contained test case."
+        )
     elif test_format == "pytest_fragment":
-        output_rule = "Return one complete pytest-compatible test fragment."
+        output_rule = (
+            "Return one complete pytest-compatible test case. Multiple assertions "
+            "are allowed only when required to establish one behavioral defect."
+        )
     else:
-        output_rule = "Return one complete unittest-compatible test fragment."
+        output_rule = (
+            "Return one complete unittest-compatible test case. Multiple assertions "
+            "are allowed only when required to establish one behavioral defect."
+        )
 
     # Keep specification near the instruction-heavy head and the target code
     # near the output suffix. The shared head/tail token compactor therefore
@@ -141,8 +155,9 @@ Target symbol(s): {symbol_text}
 
 ### Task
 
-Generate exactly ONE executable Python test that demonstrates a behavioral
-defect in the code under test.
+Generate one minimal, self-contained bug-revealing Python test case. The test
+case may contain setup and assertions needed to demonstrate one behavioral
+defect, but it must not contain multiple independent test cases.
 
 {output_rule}
 Do not output prose, a diagnosis, a suggested fix, corrected code, hidden

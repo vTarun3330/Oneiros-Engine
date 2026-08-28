@@ -200,8 +200,20 @@ def verify_corpus(corpus_dir: Path) -> Dict[str, Any]:
 
     records = json.loads((corpus_dir / "records.json").read_text(encoding="utf-8"))
     split_ids = json.loads((corpus_dir / "splits.json").read_text(encoding="utf-8"))
-    if not isinstance(records, list) or set(split_ids) != {"train", "val", "test"}:
+    expected_splits = (
+        {"train", "ablation_dev", "val", "test"}
+        if manifest.get("quality_gate", {}).get("fixed_ablation_dev_split")
+        else {"train", "val", "test"}
+    )
+    if not isinstance(records, list) or set(split_ids) != expected_splits:
         raise RuntimeError("Canonical corpus records or split definitions are malformed.")
+    exclusions = []
+    excluded_ids: set[str] = set()
+    if exclusions_path.exists():
+        exclusions = json.loads(exclusions_path.read_text(encoding="utf-8"))
+        if not isinstance(exclusions, list) or not all(isinstance(item, dict) for item in exclusions):
+            raise RuntimeError("Canonical training exclusions are malformed.")
+        excluded_ids = {item.get("record_id") for item in exclusions}
     by_id: Dict[str, Dict[str, Any]] = {}
     groups: Dict[str, set[str]] = {name: set() for name in split_ids}
     repository_projects: Dict[str, set[str]] = {name: set() for name in split_ids}
@@ -257,12 +269,13 @@ def verify_corpus(corpus_dir: Path) -> Dict[str, Any]:
                 raise RuntimeError(f"Canonical repository record {record['id']} must not claim a standalone entry point.")
             if not record.get("quality", {}).get("official_targeted_test_fixed_pass_buggy_fail"):
                 raise RuntimeError(f"Canonical repository record {record['id']} lacks official F2P evidence.")
+            context_complete = record.get("quality", {}).get(
+                "support_context_complete_for_verified_tests"
+            )
             if unified_prompt_gate and (
                 record.get("task_mode") != "repository"
                 or record.get("test_format") != expected_test_format
-                or not record.get("quality", {}).get(
-                    "support_context_complete_for_verified_tests"
-                )
+                or (not context_complete and record["id"] not in excluded_ids)
             ):
                 raise RuntimeError(
                     f"Canonical repository record {record['id']} lacks unified context evidence."
@@ -360,20 +373,15 @@ def verify_corpus(corpus_dir: Path) -> Dict[str, Any]:
     if assigned_ids != set(by_id):
         raise RuntimeError("Canonical records are not assigned to exactly one split.")
     if exclusions_path.exists():
-        exclusions = json.loads(exclusions_path.read_text(encoding="utf-8"))
-        if not isinstance(exclusions, list) or not all(isinstance(item, dict) for item in exclusions):
-            raise RuntimeError("Canonical training exclusions are malformed.")
-        excluded_ids = {item.get("record_id") for item in exclusions}
         if None in excluded_ids or not excluded_ids.issubset(by_id):
             raise RuntimeError("Canonical training exclusions reference unknown records.")
-    if groups["train"] & groups["val"] or groups["train"] & groups["test"] or groups["val"] & groups["test"]:
-        raise RuntimeError("Canonical corpus has group leakage across splits.")
-    if (
-        repository_projects["train"] & repository_projects["val"]
-        or repository_projects["train"] & repository_projects["test"]
-        or repository_projects["val"] & repository_projects["test"]
-    ):
-        raise RuntimeError("Canonical corpus has repository-project leakage across splits.")
+    split_names = sorted(split_ids)
+    for index, left in enumerate(split_names):
+        for right in split_names[index + 1:]:
+            if groups[left] & groups[right]:
+                raise RuntimeError("Canonical corpus has group leakage across splits.")
+            if repository_projects[left] & repository_projects[right]:
+                raise RuntimeError("Canonical corpus has repository-project leakage across splits.")
 
     if manifest.get("quality_gate", {}).get("locked_external_evaluation"):
         external_index = json.loads((corpus_dir / "external_eval_index.json").read_text(encoding="utf-8"))
