@@ -22,7 +22,7 @@ from harness.candidate_policy import validate_function_assertion
 from harness.safe_execution import classify_assertions
 
 
-RESEARCH_METRICS_SCHEMA_VERSION = 1
+RESEARCH_METRICS_SCHEMA_VERSION = 2
 DEFAULT_K_VALUES: Tuple[int, ...] = (1, 2, 4, 8)
 
 
@@ -181,6 +181,7 @@ def evaluate_candidate_slots(
         code = outcome.get("code")
         outcome.setdefault("parse_valid", bool(code))
         outcome["policy_valid"] = False
+        outcome["execution_valid"] = False
         outcome["reference_valid"] = False
         outcome["killed"] = False
         if not outcome["parse_valid"] or not isinstance(code, str):
@@ -200,6 +201,9 @@ def evaluate_candidate_slots(
         outcome = outcomes[index]
         golden = row.get("golden") or {}
         mutant = row.get("mutant") or {}
+        outcome["execution_valid"] = str(golden.get("status", "unknown")) in {
+            "pass", "assertion_error"
+        }
         outcome["reference_valid"] = bool(row.get("valid"))
         outcome["killed"] = bool(row.get("killed"))
         outcome["reference_status"] = str(golden.get("status", "unknown"))
@@ -250,11 +254,12 @@ def function_result(
     """Build the canonical per-function research result."""
     ordered = sorted((deepcopy(dict(item)) for item in outcomes), key=lambda item: item["rank"])
     parsed = sum(bool(item.get("parse_valid")) for item in ordered)
+    execution_valid = sum(bool(item.get("execution_valid")) for item in ordered)
     valid = sum(bool(item.get("reference_valid")) for item in ordered)
     killed_candidates = sum(bool(item.get("killed")) for item in ordered)
     generation_invalid = sum(not bool(item.get("parse_valid")) for item in ordered)
     execution_invalid = sum(
-        bool(item.get("parse_valid")) and not bool(item.get("reference_valid"))
+        bool(item.get("parse_valid")) and not bool(item.get("execution_valid"))
         for item in ordered
     )
     return {
@@ -265,9 +270,10 @@ def function_result(
         "entry_point": entry_point,
         "requested_candidates": len(ordered),
         "parsed_candidates": parsed,
+        "execution_valid_candidates": execution_valid,
         "generation_invalid_candidates": generation_invalid,
         "execution_invalid_candidates": execution_invalid,
-        "invalid_candidates": generation_invalid + execution_invalid,
+        "invalid_candidates": len(ordered) - valid,
         "valid_candidates": valid,
         "killing_candidates": killed_candidates,
         "killed": bool(killed_candidates),
@@ -291,6 +297,9 @@ def summarise_function_results(
     total_functions = len(function_results)
     requested = sum(int(item.get("requested_candidates", 0)) for item in function_results)
     parsed = sum(int(item.get("parsed_candidates", 0)) for item in function_results)
+    execution_valid = sum(
+        int(item.get("execution_valid_candidates", 0)) for item in function_results
+    )
     valid = sum(int(item.get("valid_candidates", 0)) for item in function_results)
     killing = sum(int(item.get("killing_candidates", 0)) for item in function_results)
     generation_invalid = sum(
@@ -333,13 +342,37 @@ def summarise_function_results(
     def compact_group(items: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
         count = len(items)
         killed = sum(bool(item.get("killed")) for item in items)
+        group_requested = sum(int(item.get("requested_candidates", 0)) for item in items)
+        group_parsed = sum(int(item.get("parsed_candidates", 0)) for item in items)
+        group_executed = sum(int(item.get("execution_valid_candidates", 0)) for item in items)
+        group_valid = sum(int(item.get("valid_candidates", 0)) for item in items)
+        group_killing = sum(int(item.get("killing_candidates", 0)) for item in items)
+        group_kill_at_k = {}
+        for k in ks:
+            successes = sum(
+                _prefix_success(item.get("candidate_outcomes", []), k, "killed")
+                for item in items
+            )
+            group_kill_at_k[str(k)] = {
+                "functions": successes,
+                "rate": round(successes / max(count, 1), 6),
+                "wilson_95": wilson_interval(successes, count),
+            }
         return {
             "functions": count,
             "killed_functions": killed,
             "function_kill_rate": round(killed / max(count, 1), 6),
-            "requested_candidates": sum(int(item.get("requested_candidates", 0)) for item in items),
-            "valid_candidates": sum(int(item.get("valid_candidates", 0)) for item in items),
-            "killing_candidates": sum(int(item.get("killing_candidates", 0)) for item in items),
+            "function_kill_rate_wilson_95": wilson_interval(killed, count),
+            "requested_candidates": group_requested,
+            "parsed_candidates": group_parsed,
+            "execution_valid_candidates": group_executed,
+            "reference_valid_candidates": group_valid,
+            "killing_candidates": group_killing,
+            "parse_valid_rate": round(group_parsed / max(group_requested, 1), 6),
+            "execution_valid_rate": round(group_executed / max(group_requested, 1), 6),
+            "reference_valid_rate": round(group_valid / max(group_requested, 1), 6),
+            "bug_killing_candidate_rate": round(group_killing / max(group_requested, 1), 6),
+            "kill_at_k": group_kill_at_k,
         }
 
     diversity_fields = (
@@ -356,6 +389,29 @@ def summarise_function_results(
         for field in diversity_fields
     }
     redundant_killing_candidates = max(0, killing - killed_functions)
+    source_metrics = {
+        key: compact_group(items) for key, items in sorted(source_buckets.items())
+    }
+    macro_sources = [value for value in source_metrics.values() if value["functions"]]
+    equal_weight_source_macro = {
+        "source_count": len(macro_sources),
+        "function_kill_rate": round(statistics.fmean(
+            item["function_kill_rate"] for item in macro_sources
+        ), 6) if macro_sources else 0.0,
+        "reference_valid_rate": round(statistics.fmean(
+            item["reference_valid_rate"] for item in macro_sources
+        ), 6) if macro_sources else 0.0,
+        "execution_valid_rate": round(statistics.fmean(
+            item["execution_valid_rate"] for item in macro_sources
+        ), 6) if macro_sources else 0.0,
+        "kill_at_k": {
+            str(k): round(statistics.fmean(
+                item["kill_at_k"][str(k)]["rate"] for item in macro_sources
+            ), 6) if macro_sources else 0.0
+            for k in ks
+        },
+        "definition": "equal-weight mean across function benchmark sources",
+    }
     return {
         "research_metrics_schema_version": RESEARCH_METRICS_SCHEMA_VERSION,
         "function_validation_records": total_functions,
@@ -364,14 +420,17 @@ def summarise_function_results(
         "function_kill_rate_wilson_95": wilson_interval(killed_functions, total_functions),
         "requested_candidates": requested,
         "parsed_candidates": parsed,
+        "execution_valid_candidates": execution_valid,
+        "reference_valid_candidates": valid,
         "generated_candidates": valid,
         "mutation_killing_candidates": killing,
         "generation_invalid_candidates": generation_invalid,
         "execution_invalid_candidates": execution_invalid,
-        "invalid_candidates": generation_invalid + execution_invalid,
+        "invalid_candidates": requested - valid,
         "candidate_kill_rate": round(killing / max(valid, 1), 6),
         "end_to_end_candidate_kill_rate": round(killing / max(requested, 1), 6),
         "parse_success_rate": round(parsed / max(requested, 1), 6),
+        "execution_valid_rate": round(execution_valid / max(requested, 1), 6),
         "reference_valid_rate": round(valid / max(requested, 1), 6),
         "kill_at_k": kill_at_k,
         "pass_at_k": pass_at_k,
@@ -384,9 +443,8 @@ def summarise_function_results(
         "bug_family_metrics": {
             key: compact_group(items) for key, items in sorted(family_buckets.items())
         },
-        "source_metrics": {
-            key: compact_group(items) for key, items in sorted(source_buckets.items())
-        },
+        "source_metrics": source_metrics,
+        "equal_weight_source_macro": equal_weight_source_macro,
     }
 
 

@@ -34,7 +34,7 @@ from metrics.research_evaluation import (
 from engine.execution_feedback import build_feedback_prompt, collect_execution_feedback
 from engine.prompt_budget import (
     PROMPT_COMPACTION_STRATEGY,
-    compact_prompt_texts,
+    compact_unified_user_prompt,
 )
 from engine.test_generation_prompt import (
     PROMPT_SCHEMA_VERSION,
@@ -48,7 +48,7 @@ from utils.reproducibility import build_reproducibility_manifest
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 RESULTS_DIR = Path(__file__).parent.parent / "results"
-ADAPTER_DIR = Path(__file__).parent.parent / "checkpoints" / "v4_unified_prompt_sft"
+ADAPTER_DIR = Path(__file__).parent.parent / "checkpoints" / "v4_1_research_hardened_sft"
 CORPUS_VERSION = CANONICAL_CORPUS_VERSION
 EXECUTION_MODE_FILTER = None
 TRAINING_PHASE = "sft"
@@ -57,6 +57,7 @@ CONFIRM_FINAL_TEST = False
 EVAL_FEEDBACK_ROUNDS = 0
 EVAL_DIVERSITY_MODE = "none"
 HOLDOUT_BUG_FAMILY = None
+EVALUATION_SPLIT = "val"
 
 SEED = 42
 TESTS_PER_PAIR = 8
@@ -73,7 +74,7 @@ DPO_VALIDATION_SPLIT = "val"
 # Evaluate after this many *trained DPO preference pairs* (not merely source
 # records read from the corpus).
 DPO_VALIDATION_INTERVAL_PAIRS = 500
-MIN_SFT_FUNCTION_KILL_RATE_FOR_DPO = 0.50
+MIN_SFT_FUNCTION_KILL_RATE_FOR_DPO = 0.58
 SFT_EPOCHS_OVERRIDE = None
 SFT_LEARNING_RATE_OVERRIDE = None
 SFT_BATCH_SIZE_OVERRIDE = None
@@ -118,6 +119,8 @@ REPOSITORY_EVALUATION_STATUS = "not_implemented_requires_native_project_environm
 
 def _evaluation_profile_slug() -> str:
     parts = []
+    if EVALUATION_SPLIT != "val":
+        parts.append(EVALUATION_SPLIT.replace("_", "-"))
     if MAX_VALIDATION_PAIRS:
         parts.append(f"smoke{MAX_VALIDATION_PAIRS}")
     if EVAL_FEEDBACK_ROUNDS:
@@ -148,6 +151,8 @@ def normalized_sft_run_hyperparameters(hyperparameters: Dict) -> Dict:
     normalized.setdefault("max_synthetic_repeats", 2)
     # Runs created before this field existed always used cosine.
     normalized.setdefault("lr_scheduler_type", "cosine")
+    # Preserve the identity of historical V3/V4 runs that predate the field.
+    # New V4.1 runs always persist the explicit locked 0.58 value.
     normalized.setdefault("min_function_kill_rate", 0.50)
     return normalized
 
@@ -222,14 +227,6 @@ def extract_dataset_tests(test_cases: List[str], entry_point: str) -> List[str]:
     return extract_dataset_assertions(test_cases, entry_point)
 
 
-def _compact_code(code: str, limit: int = 1800) -> str:
-    """Bound prompt size while keeping the signature and final logic visible."""
-    if len(code) <= limit:
-        return code
-    head = int(limit * 0.7)
-    return f"{code[:head]}\n# ... omitted for context budget ...\n{code[-(limit - head):]}"
-
-
 def build_prompt(
     code_under_test: str, entry_point: str, specification: str = "",
     execution_mode: str = FUNCTION_EXECUTION_MODE,
@@ -242,10 +239,10 @@ def build_prompt(
     cannot accidentally leak them into the model-visible prompt.
     """
     return build_unified_user_prompt(
-        code_under_test=_compact_code(code_under_test),
+        code_under_test=code_under_test,
         execution_mode=execution_mode,
         specification=specification,
-        support_context=_compact_code(support_context, limit=2400),
+        support_context=support_context,
         target_symbols=target_symbols,
         entry_point=entry_point,
     )
@@ -305,6 +302,16 @@ def load_phase3_pairs(corpus_dir: Path, split: str) -> List[Dict]:
     """Load one already-verified canonical split without legacy fallbacks."""
     records = json.loads((corpus_dir / "records.json").read_text(encoding="utf-8"))
     split_ids = json.loads((corpus_dir / "splits.json").read_text(encoding="utf-8"))[split]
+    if split in {"train", "ablation_dev"}:
+        exclusions_path = corpus_dir / "training_exclusions.json"
+        excluded_ids = {
+            item["record_id"]
+            for item in (
+                json.loads(exclusions_path.read_text(encoding="utf-8"))
+                if exclusions_path.exists() else []
+            )
+        }
+        split_ids = [record_id for record_id in split_ids if record_id not in excluded_ids]
     by_id = {record["id"]: record for record in records}
     return [_record_to_pair(by_id[record_id]) for record_id in split_ids]
 
@@ -687,22 +694,26 @@ def generate_tests_ai_batched(
 
     tokenizer = generator.tokenizer
     prompt_additions = prompt_additions or {}
-    prompts = []
+    compacted_prompt_ids = []
     for index, pair in enumerate(pairs_chunk):
         prompt = build_pair_prompt(pair)
         addition = prompt_additions.get(index, "").strip()
         if addition:
             prompt = f"{prompt}\n\n{addition}"
-        prompts.append(format_generation_prompt(tokenizer, prompt))
+        compacted_prompt_ids.append(
+            compact_unified_user_prompt(
+                tokenizer,
+                prompt,
+                PROMPT_TOKEN_LIMIT,
+                format_chat_prompt,
+            ).token_ids
+        )
 
     original_padding_side = tokenizer.padding_side
     tokenizer.padding_side = "left"
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token_id = tokenizer.eos_token_id
     try:
-        compacted_prompt_ids, _ = compact_prompt_texts(
-            tokenizer, prompts, PROMPT_TOKEN_LIMIT
-        )
         inputs = tokenizer.pad(
             [
                 {
@@ -1272,8 +1283,8 @@ def _evaluate_adapter_kill_rate(
     import torch
     from engine.generator import Phi3Generator
 
-    if evaluation_split not in {"val", "test"}:
-        raise ValueError("Evaluation split must be 'val' or 'test'")
+    if evaluation_split not in {"ablation_dev", "val", "test"}:
+        raise ValueError("Evaluation split must be 'ablation_dev', 'val', or 'test'")
     adapter_file = adapter_dir / "adapter_model.safetensors" if adapter_dir else None
     if adapter_file is not None and not adapter_file.exists():
         raise RuntimeError(f"{adapter_label} validation requires its frozen adapter")
@@ -1461,7 +1472,7 @@ def _locked_sft_monitor_pairs(
 ) -> Tuple[List[Dict], str]:
     """Create or verify the fixed validation panel used for SFT early stopping."""
     validation_pairs = [
-        pair for pair in load_phase3_pairs(corpus_dir, "val")
+        pair for pair in load_phase3_pairs(corpus_dir, EVALUATION_SPLIT)
         if pair.get("execution_mode", FUNCTION_EXECUTION_MODE) == FUNCTION_EXECUTION_MODE
         and (
             not HOLDOUT_BUG_FAMILY
@@ -1476,7 +1487,7 @@ def _locked_sft_monitor_pairs(
     ).hexdigest()
     payload = {
         "dataset_fingerprint": dataset_fingerprint,
-        "evaluation_split": "val",
+        "evaluation_split": EVALUATION_SPLIT,
         "final_test_measurement": False,
         "selection_method": "evenly_spaced_canonical_validation_functions",
         "training_holdout_bug_family": HOLDOUT_BUG_FAMILY,
@@ -1529,115 +1540,38 @@ def _evaluate_loaded_sft_monitor(
         if original_use_cache is not None:
             model.config.use_cache = True
 
-        killed_functions = 0
-        requested_candidates = 0
-        parsed_candidates = 0
-        generated_candidates = 0
-        mutation_killing_candidates = 0
-        generation_invalid_candidates = 0
-        execution_invalid_candidates = 0
         function_results = []
-        bug_family_metrics: Dict[str, Dict[str, int]] = {}
         for start in range(0, len(function_pairs), BATCH_GEN_SIZE):
             chunk = function_pairs[start:start + BATCH_GEN_SIZE]
-            generated, generation_accounting = generate_tests_ai_batched(
+            _, generation_accounting = generate_tests_ai_batched(
                 generator, chunk, TESTS_PER_PAIR, return_accounting=True
             )
             for index, pair in enumerate(chunk):
-                tests = generated.get(index, [])
                 accounting = generation_accounting[index]
-                winners, losers = evaluate_pair(
-                    tests, pair["golden_code"], pair["mutant_code"], pair["entry_point"]
+                outcomes = evaluate_candidate_slots(
+                    accounting["candidate_slots"],
+                    pair["golden_code"],
+                    pair["mutant_code"],
+                    pair["entry_point"],
                 )
-                valid_candidates = len(winners) + len(losers)
-                execution_invalid = max(0, len(tests) - valid_candidates)
-                killed_functions += int(bool(winners))
-                mutation_killing_candidates += len(winners)
-                requested_candidates += accounting["requested_candidates"]
-                parsed_candidates += accounting["parsed_candidates"]
-                generated_candidates += valid_candidates
-                generation_invalid_candidates += accounting[
-                    "generation_invalid_candidates"
-                ]
-                execution_invalid_candidates += execution_invalid
-                function_results.append({
-                    "record_id": pair["id"],
-                    "bug_family": str(pair.get("bug_family", "unknown") or "unknown"),
-                    "requested_candidates": accounting["requested_candidates"],
-                    "parsed_candidates": accounting["parsed_candidates"],
-                    "generation_invalid_candidates": accounting[
-                        "generation_invalid_candidates"
-                    ],
-                    "execution_invalid_candidates": execution_invalid,
-                    "invalid_candidates": (
-                        accounting["generation_invalid_candidates"]
-                        + execution_invalid
-                    ),
-                    "valid_candidates": valid_candidates,
-                    "killing_candidates": len(winners),
-                    "killed": bool(winners),
-                })
-                family = str(pair.get("bug_family", "unknown") or "unknown")
-                family_totals = bug_family_metrics.setdefault(family, {
-                    "functions": 0,
-                    "killed_functions": 0,
-                    "requested_candidates": 0,
-                    "parsed_candidates": 0,
-                    "generation_invalid_candidates": 0,
-                    "execution_invalid_candidates": 0,
-                    "valid_candidates": 0,
-                    "killing_candidates": 0,
-                })
-                family_totals["functions"] += 1
-                family_totals["killed_functions"] += int(bool(winners))
-                family_totals["requested_candidates"] += accounting[
-                    "requested_candidates"
-                ]
-                family_totals["parsed_candidates"] += accounting["parsed_candidates"]
-                family_totals["generation_invalid_candidates"] += accounting[
-                    "generation_invalid_candidates"
-                ]
-                family_totals["execution_invalid_candidates"] += execution_invalid
-                family_totals["valid_candidates"] += valid_candidates
-                family_totals["killing_candidates"] += len(winners)
+                function_results.append(build_function_result(
+                    pair["id"],
+                    str(pair.get("bug_family", "unknown") or "unknown"),
+                    pair["entry_point"],
+                    outcomes,
+                    source_name=str(pair.get("source_name", "unknown")),
+                    project=str(pair.get("project", "unknown")),
+                ))
             completed = min(start + len(chunk), len(function_pairs))
             if completed % 50 == 0 or completed == len(function_pairs):
+                killed_so_far = sum(item["killed"] for item in function_results)
                 print(
                     f"SFT monitor step={checkpoint_step} progress={completed}/"
-                    f"{len(function_pairs)} killed={killed_functions}",
+                    f"{len(function_pairs)} killed={killed_so_far}",
                     flush=True,
                 )
-
-        family_results = {}
-        for family, totals in sorted(bug_family_metrics.items()):
-            family_results[family] = {
-                **totals,
-                "invalid_candidates": (
-                    totals["generation_invalid_candidates"]
-                    + totals["execution_invalid_candidates"]
-                ),
-                "function_kill_rate": round(
-                    totals["killed_functions"] / max(totals["functions"], 1), 6
-                ),
-                "candidate_kill_rate": round(
-                    totals["killing_candidates"]
-                    / max(totals["valid_candidates"], 1),
-                    6,
-                ),
-                "end_to_end_candidate_kill_rate": round(
-                    totals["killing_candidates"]
-                    / max(totals["requested_candidates"], 1),
-                    6,
-                ),
-                "parse_success_rate": round(
-                    totals["parsed_candidates"]
-                    / max(totals["requested_candidates"], 1),
-                    6,
-                ),
-            }
-
-        invalid_candidates = (
-            generation_invalid_candidates + execution_invalid_candidates
+        research_metrics = summarise_function_results(
+            function_results, DEFAULT_K_VALUES
         )
         function_outcomes_sha256 = hashlib.sha256(
             json.dumps(
@@ -1648,38 +1582,16 @@ def _evaluate_loaded_sft_monitor(
             "mode": "sft_checkpoint_validation",
             "validation_accounting_schema_version": VALIDATION_ACCOUNTING_SCHEMA_VERSION,
             "dataset_fingerprint": dataset_fingerprint,
-            "evaluation_split": "val",
+            "evaluation_split": EVALUATION_SPLIT,
             "final_test_measurement": False,
             "selection_sha256": selection_sha256,
             "checkpoint_step": checkpoint_step,
             "seed": SEED,
             "tests_per_function": TESTS_PER_PAIR,
-            "function_validation_records": len(function_pairs),
-            "function_validation_killed": killed_functions,
-            "function_kill_rate": round(killed_functions / len(function_pairs), 6),
-            "function_kill_rate_wilson_95": _wilson_interval(
-                killed_functions, len(function_pairs)
-            ),
-            "requested_candidates": requested_candidates,
-            "parsed_candidates": parsed_candidates,
-            "generated_candidates": generated_candidates,
-            "mutation_killing_candidates": mutation_killing_candidates,
-            "generation_invalid_candidates": generation_invalid_candidates,
-            "execution_invalid_candidates": execution_invalid_candidates,
-            "invalid_candidates": invalid_candidates,
-            "candidate_kill_rate": round(
-                mutation_killing_candidates / max(generated_candidates, 1), 6
-            ),
-            "end_to_end_candidate_kill_rate": round(
-                mutation_killing_candidates / max(requested_candidates, 1), 6
-            ),
-            "parse_success_rate": round(
-                parsed_candidates / max(requested_candidates, 1), 6
-            ),
+            **research_metrics,
             "model_runtime_profile": dict(generator.runtime_profile),
             "function_outcomes_sha256": function_outcomes_sha256,
             "function_results": function_results,
-            "bug_family_metrics": family_results,
             "wall_time": round(time.time() - started, 1),
         }
         filename = (
@@ -2194,7 +2106,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
     if TRAINING_PHASE == "sft_then_dpo":
         raise RuntimeError(
             "Combined SFT→DPO is disabled by the quality gate. Run SFT, validate it on val, "
-            "then start DPO only after the SFT kill rate reaches 50%."
+            "then start DPO only after the SFT kill rate reaches 58%."
         )
     run_sft = TRAINING_PHASE in {"sft", "sft_then_dpo"}
     run_dpo = TRAINING_PHASE in {"dpo", "sft_then_dpo"}
@@ -2465,7 +2377,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
             None,
             "base_model",
             evaluation_results_filename("base", SEED),
-            evaluation_split="val",
+            evaluation_split=EVALUATION_SPLIT,
         )
 
     if not use_mock:
@@ -3016,7 +2928,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
             )
         return _evaluate_adapter_kill_rate(
             corpus_dir, dataset_fingerprint, ADAPTER_DIR / "sft_adapter", "sft_adapter",
-            sft_validation_results_filename(SEED), evaluation_split="val",
+            sft_validation_results_filename(SEED), evaluation_split=EVALUATION_SPLIT,
         )
 
     if TRAINING_PHASE == "dpo_eval":
@@ -3517,6 +3429,10 @@ if __name__ == "__main__":
         help="Equal-budget candidate prioritisation ablation",
     )
     parser.add_argument(
+        "--evaluation-split", choices=["ablation_dev", "val"], default="val",
+        help="Use training-only ablation_dev for design experiments; val remains locked model selection",
+    )
+    parser.add_argument(
         "--holdout-bug-family", default="",
         help="Exclude one mutation family from training and evaluate only that family",
     )
@@ -3624,6 +3540,7 @@ if __name__ == "__main__":
         raise ValueError(f"--eval-feedback-rounds must be between 0 and {TESTS_PER_PAIR - 1}")
     EVAL_FEEDBACK_ROUNDS = args.eval_feedback_rounds
     EVAL_DIVERSITY_MODE = args.eval_diversity_mode
+    EVALUATION_SPLIT = args.evaluation_split
     HOLDOUT_BUG_FAMILY = sanitise_family_name(args.holdout_bug_family)
     if args.max_pairs:
         MAX_TRAIN_PAIRS = args.max_pairs
@@ -3687,6 +3604,8 @@ if __name__ == "__main__":
     CORPUS_VERSION = args.corpus_version
     EXECUTION_MODE_FILTER = args.execution_mode or None
     TRAINING_PHASE = args.phase
+    if TRAINING_PHASE in {"dpo", "dpo_eval", "sft_then_dpo"} and EVALUATION_SPLIT != "val":
+        raise ValueError("DPO gating and final comparison require the locked val split")
     RESTART_DPO = args.restart_dpo
     CONFIRM_FINAL_TEST = args.confirm_final_test
     run_training(use_mock=args.mock, fresh=args.fresh)

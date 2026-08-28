@@ -33,7 +33,7 @@ from engine.model_runtime import (
     build_4bit_quantization_config,
     runtime_profile,
 )
-from engine.prompt_budget import compact_prompt_texts
+from engine.prompt_budget import compact_unified_user_prompt
 from engine.test_generation_prompt import build_unified_user_prompt, format_chat_prompt
 from harness.candidate_policy import validate_function_assertion
 
@@ -304,14 +304,14 @@ class Phi3Generator:
             library=library,
             entry_point=target_entry_point,
         )
-        prompt = format_chat_prompt(self.tokenizer, user_prompt)
-
-        # Apply the same deterministic token gate used during function SFT.
-        bounded_prompts, _ = compact_prompt_texts(
-            self.tokenizer, [prompt], training_config.sft_prompt_token_limit
+        compaction = compact_unified_user_prompt(
+            self.tokenizer,
+            user_prompt,
+            training_config.sft_prompt_token_limit,
+            format_chat_prompt,
         )
         input_ids = torch.tensor(
-            bounded_prompts, dtype=torch.long, device=self.model.device
+            [compaction.token_ids], dtype=torch.long, device=self.model.device
         )
         inputs = {
             "input_ids": input_ids,

@@ -19,7 +19,7 @@ BUGSINPY_DIR = DATA_DIR / "bugsinpy"
 # Immutable Phase 3 corpus used by the current SFT-first pipeline. Keep this
 # value centralized so local preflight, Modal training, evaluation, and audit
 # commands cannot silently select different corpora.
-CANONICAL_CORPUS_VERSION = "v4_unified_prompt_candidate"
+CANONICAL_CORPUS_VERSION = "v4_1_research_hardened_candidate"
 
 # Ensure directories exist
 for dir_path in [DATA_DIR, GOLDEN_DIR, MUTANTS_DIR, HUMANEVAL_DIR, MBPP_DIR, BUGSINPY_DIR]:
@@ -170,7 +170,8 @@ class TrainingConfig:
     # Keep the legacy default explicit. Targeted experiments can select
     # constant_with_warmup without silently changing resumable older runs.
     sft_lr_scheduler_type: str = "cosine"
-    sft_min_function_kill_rate: float = 0.50
+    # Locked Phase-3 SFT gate. Do not tune this on validation results.
+    sft_min_function_kill_rate: float = 0.58
     # A monitored run must contain at least two scheduled validations so a
     # one-point terminal fluctuation cannot masquerade as a learning trend.
     sft_min_monitor_checkpoints: int = 2

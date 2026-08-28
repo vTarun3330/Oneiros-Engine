@@ -48,7 +48,11 @@ from engine.model_runtime import (
     build_4bit_quantization_config,
     runtime_profile,
 )
-from engine.prompt_budget import PROMPT_COMPACTION_STRATEGY, compact_prompt_string
+from engine.prompt_budget import (
+    PROMPT_COMPACTION_STRATEGY,
+    PromptBudgetError,
+    compact_unified_user_prompt,
+)
 from engine.test_generation_prompt import format_chat_prompt
 
 DPO_MAX_SEQUENCE_TOKENS = 2048
@@ -237,13 +241,15 @@ class DPOTrainer:
         compacted_prompt_lengths = []
         compacted_count = 0
         for pair in pairs:
-            compacted, changed, before, after = compact_prompt_string(
-                self.tokenizer, pair.prompt, DPO_MAX_PROMPT_TOKENS
-            )
-            compacted_prompts.append(compacted)
-            prompt_lengths.append(before)
-            compacted_prompt_lengths.append(after)
-            compacted_count += int(changed)
+            length = token_count(pair.prompt)
+            if length > DPO_MAX_PROMPT_TOKENS:
+                raise PromptBudgetError(
+                    "DPO received an over-budget rendered prompt. Prompts must be "
+                    "section-compacted before chat rendering."
+                )
+            compacted_prompts.append(pair.prompt)
+            prompt_lengths.append(length)
+            compacted_prompt_lengths.append(length)
         chosen_lengths = [token_count(pair.chosen.strip()) for pair in pairs]
         rejected_lengths = [token_count(pair.rejected.strip()) for pair in pairs]
         violations = []
@@ -287,8 +293,13 @@ class DPOTrainer:
 
 
     def format_prompt(self, prompt: str) -> str:
-        """Render prompts identically for DPO and inference."""
-        return format_chat_prompt(self.tokenizer, prompt)
+        """Section-compact and then render identically to inference."""
+        return compact_unified_user_prompt(
+            self.tokenizer,
+            prompt,
+            DPO_MAX_PROMPT_TOKENS,
+            format_chat_prompt,
+        ).rendered_prompt
     def create_prompt(
         self,
         function_signature: str,

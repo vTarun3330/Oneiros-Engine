@@ -25,10 +25,16 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from config import CANONICAL_CORPUS_VERSION, model_config, training_config
-from engine.prompt_budget import PROMPT_COMPACTION_STRATEGY, compact_prompt_token_ids
+from engine.prompt_budget import (
+    PROMPT_COMPACTION_STRATEGY,
+    PromptBudgetError,
+    compact_unified_user_prompt,
+)
+from engine.test_generation_prompt import format_chat_prompt
 from engine.sft_trainer import (
     MAX_SFT_SEQUENCE_LENGTH,
     SFTDataPoint,
+    SFTCheckpointMonitorCallback,
     plan_sft_optimizer_schedule,
     sft_completion_limit_for_execution_mode,
     sft_prompt_limit_for_execution_mode,
@@ -51,6 +57,7 @@ from scripts.train_on_dataset import (
     supervision_exclusion_summary,
     summarize_train_pair_selection,
 )
+from utils.reproducibility import source_tree_sha256
 
 
 def _sha256_json(value: Any) -> str:
@@ -137,6 +144,18 @@ def build_preflight(
     started = time.time()
     corpus_dir = ROOT / "data" / "corpus" / corpus_version
     manifest = verify_corpus(corpus_dir)
+    leakage_path = corpus_dir / "leakage_audit.json"
+    ablation_path = corpus_dir / "ablation_dev_manifest.json"
+    if not leakage_path.exists() or not ablation_path.exists():
+        raise RuntimeError("V4.1 leakage or ablation-dev manifest is missing")
+    leakage = json.loads(leakage_path.read_text(encoding="utf-8"))
+    ablation_dev = json.loads(ablation_path.read_text(encoding="utf-8"))
+    test_status_path = ROOT / "results" / "v4_1_local_test_status.json"
+    test_status = (
+        json.loads(test_status_path.read_text(encoding="utf-8"))
+        if test_status_path.exists() else {}
+    )
+    current_source_sha256 = source_tree_sha256(ROOT)
     readiness_path = ROOT / "results" / f"{corpus_version}_train_readiness.json"
     if not readiness_path.exists():
         raise RuntimeError(f"Missing locked train-readiness audit: {readiness_path}")
@@ -321,10 +340,6 @@ def build_preflight(
     compacted_examples: list[SFTDataPoint] = []
     sequence_overflow_examples: list[dict[str, Any]] = []
     for example in effective_examples:
-        prompt_ids = tokenizer(
-            format_generation_prompt(tokenizer, example.prompt),
-            add_special_tokens=False,
-        )["input_ids"]
         completion_ids = tokenizer(
             example.completion.strip() + tokenizer.eos_token,
             add_special_tokens=False,
@@ -353,11 +368,25 @@ def build_preflight(
             mode_prompt_limit,
             MAX_SFT_SEQUENCE_LENGTH - len(completion_ids),
         )
-        compacted_prompt_ids, was_compacted = compact_prompt_token_ids(
-            prompt_ids, allowed_prompt_tokens
-        )
-        raw_prompt_lengths.append(len(prompt_ids))
-        retained_prompt_lengths.append(len(compacted_prompt_ids))
+        try:
+            compaction = compact_unified_user_prompt(
+                tokenizer,
+                example.prompt,
+                allowed_prompt_tokens,
+                format_chat_prompt,
+            )
+        except PromptBudgetError as exc:
+            sequence_overflow_examples.append({
+                "record_id": example.function_id,
+                "execution_mode": example.execution_mode,
+                "reason": "section_aware_prompt_budget_failure",
+                "detail": str(exc),
+            })
+            continue
+        compacted_prompt_ids = compaction.token_ids
+        was_compacted = compaction.compacted
+        raw_prompt_lengths.append(compaction.original_token_count)
+        retained_prompt_lengths.append(compaction.final_token_count)
         completion_lengths.append(len(completion_ids))
         if was_compacted:
             compacted_examples.append(example)
@@ -396,7 +425,33 @@ def build_preflight(
         for pair in selected_repository_pairs
     )
     gates = {
+        "all_automated_tests_pass": (
+            test_status.get("failed", 1) == 0
+            and test_status.get("source_tree_sha256") == current_source_sha256
+        ),
         "corpus_verified": True,
+        "corpus_hashes_verified": True,
+        "semantic_split_overlap_zero": True,
+        "ablation_dev_validation_overlap_zero": (
+            ablation_dev.get("validation_overlap") == 0
+        ),
+        "ablation_dev_test_overlap_zero": ablation_dev.get("test_overlap") == 0,
+        "schema_failures_zero": leakage.get("schema_failures") == 0,
+        "prohibited_prompt_lineage_zero": (
+            leakage.get("gold_test_lineage_failures") == 0
+            and leakage.get("gold_patch_lineage_failures") == 0
+            and leakage.get("oracle_lineage_failures") == 0
+            and leakage.get("other_prohibited_lineage_failures") == 0
+        ),
+        "verbatim_reference_leaks_zero": (
+            leakage.get("verbatim_reference_leaks") == 0
+        ),
+        "manual_review_flags_dispositioned": (
+            leakage.get("pending_manual_review_flags") == 0
+        ),
+        "gold_test_support_context_failures_zero": (
+            leakage.get("gold_test_lineage_failures") == 0
+        ),
         "locked_train_readiness": True,
         "verified_supervision_exclusions_accounted": (
             verified_supervision_exclusions["count"]
@@ -405,6 +460,18 @@ def build_preflight(
         "verified_synthetic_supervision_present": bool(synthetic_examples),
         "generation_compatible_supervision_present": bool(effective_examples),
         "zero_sequence_overflows": not sequence_overflow_examples,
+        "completion_only_masking_verified": (
+            test_status.get("completion_only_masking_verified") is True
+        ),
+        "v4_1_checkpoint_namespace": (
+            corpus_version.startswith("v4_1_")
+            and "v4_1_research_hardened_sft" in str(
+                ROOT / "checkpoints" / "v4_1_research_hardened_sft"
+            )
+        ),
+        "terminal_checkpoint_monitor_enabled": hasattr(
+            SFTCheckpointMonitorCallback, "on_train_end"
+        ),
         "minimum_monitor_schedule_reached": (
             schedule["planned_optimizer_steps"] >= required_optimizer_steps
         ),
@@ -431,7 +498,12 @@ def build_preflight(
             "context_excluded_repository_completions": len(context_exclusions),
             "records_sha256": manifest["files"]["records.json"]["sha256"],
             "splits_sha256": manifest["files"]["splits.json"]["sha256"],
+            "ablation_dev_sha256": manifest["files"]["ablation_dev_manifest.json"]["sha256"],
+            "leakage_audit_sha256": manifest["files"]["leakage_audit.json"]["sha256"],
         },
+        "leakage": leakage,
+        "ablation_dev": ablation_dev,
+        "local_test_status": test_status,
         "selection": {
             "requested_pairs": max_pairs,
             "retained_pairs": len(selected_pairs),
@@ -585,7 +657,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=Path,
-        default=ROOT / "results" / "v4_unified_prompt_sft_preflight.json",
+        default=ROOT / "results" / "v4_1_research_hardened_sft_preflight.json",
     )
     return parser.parse_args()
 

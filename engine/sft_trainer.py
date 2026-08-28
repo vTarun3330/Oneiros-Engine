@@ -44,7 +44,11 @@ from engine.model_runtime import (
     build_4bit_quantization_config,
     runtime_profile,
 )
-from engine.prompt_budget import compact_prompt_token_ids
+from engine.prompt_budget import (
+    PROMPT_COMPACTION_STRATEGY,
+    PromptBudgetError,
+    compact_unified_user_prompt,
+)
 from engine.test_generation_prompt import format_chat_prompt
 
 
@@ -169,6 +173,8 @@ class SFTCheckpointMonitorCallback(TrainerCallback):
 
     def _monitor_checkpoint(self, args, state, control, model):
         step = int(state.global_step)
+        if step <= 0 or step in self.completed_checkpoint_metrics:
+            return control
         metrics = dict(self.monitor(step, model, self.tokenizer))
         metrics.setdefault("checkpoint_step", step)
         if metrics.get("improved", False):
@@ -220,6 +226,21 @@ class SFTCheckpointMonitorCallback(TrainerCallback):
         step = int(state.global_step)
         if step in self.completed_checkpoint_metrics:
             return control
+        return self._monitor_checkpoint(args, state, control, model)
+
+    def on_train_end(self, args, state, control, model=None, **kwargs):
+        """Evaluate the actual terminal optimizer step exactly once.
+
+        Hugging Face only emits ``on_save`` at the configured save interval.
+        Consequently, a run ending at step 143 with ``save_steps=50`` would
+        otherwise validate 50 and 100 but silently omit 143.  The completed
+        metrics map is also restored on resume, so a terminal checkpoint that
+        was already evaluated is never executed twice.
+        """
+        step = int(state.global_step)
+        if step <= 0 or step in self.completed_checkpoint_metrics:
+            return control
+        print(f"[SFT MONITOR] Evaluating terminal optimizer step {step}", flush=True)
         return self._monitor_checkpoint(args, state, control, model)
 
 class OneirosSFTTrainer:
@@ -305,6 +326,10 @@ class OneirosSFTTrainer:
             "prompt_truncated_examples": 0,
             "max_observed_prompt_tokens": 0,
             "max_observed_completion_tokens": 0,
+            "prompt_compaction_strategy": PROMPT_COMPACTION_STRATEGY,
+            "malformed_prompt_examples": 0,
+            "support_units_dropped": 0,
+            "code_units_dropped": 0,
         }
         self.resume_checkpoint = None
 
@@ -395,13 +420,12 @@ class OneirosSFTTrainer:
         input_ids, attention_masks, completion_starts = [], [], []
         prompt_truncated = 0
         incompatible = []
+        malformed_prompts = []
+        support_units_dropped = 0
+        code_units_dropped = 0
         max_observed_prompt = 0
         max_observed_completion = 0
         for dp in data_points:
-            prompt_text = self._format_generation_prompt(dp.prompt)
-            raw_prompt_ids = self.tokenizer(
-                prompt_text, add_special_tokens=False
-            )["input_ids"]
             completion_text = dp.completion.strip() + self.tokenizer.eos_token
             completion_ids = self.tokenizer(completion_text, add_special_tokens=False)["input_ids"]
             completion_limit = sft_completion_limit_for_execution_mode(
@@ -410,7 +434,6 @@ class OneirosSFTTrainer:
                 self.max_repository_completion_tokens,
             )
 
-            max_observed_prompt = max(max_observed_prompt, len(raw_prompt_ids))
             max_observed_completion = max(max_observed_completion, len(completion_ids))
             if (
                 len(completion_ids) > completion_limit
@@ -432,10 +455,27 @@ class OneirosSFTTrainer:
                 mode_prompt_limit,
                 MAX_SFT_SEQUENCE_LENGTH - len(completion_ids),
             )
-            prompt_ids, was_compacted = compact_prompt_token_ids(
-                raw_prompt_ids, max_prompt_tokens
+            try:
+                compaction = compact_unified_user_prompt(
+                    self.tokenizer,
+                    dp.prompt,
+                    max_prompt_tokens,
+                    format_chat_prompt,
+                )
+            except PromptBudgetError as exc:
+                malformed_prompts.append({
+                    "function_id": dp.function_id,
+                    "execution_mode": dp.execution_mode,
+                    "reason": str(exc),
+                })
+                continue
+            prompt_ids = compaction.token_ids
+            max_observed_prompt = max(
+                max_observed_prompt, compaction.original_token_count
             )
-            prompt_truncated += int(was_compacted)
+            prompt_truncated += int(compaction.compacted)
+            support_units_dropped += compaction.support_units_dropped
+            code_units_dropped += compaction.code_units_dropped
             token_ids = prompt_ids + completion_ids
             input_ids.append(token_ids)
             attention_masks.append([1] * len(token_ids))
@@ -448,6 +488,10 @@ class OneirosSFTTrainer:
             "prompt_truncated_examples": prompt_truncated,
             "max_observed_prompt_tokens": max_observed_prompt,
             "max_observed_completion_tokens": max_observed_completion,
+            "prompt_compaction_strategy": PROMPT_COMPACTION_STRATEGY,
+            "malformed_prompt_examples": len(malformed_prompts),
+            "support_units_dropped": support_units_dropped,
+            "code_units_dropped": code_units_dropped,
         }
         if incompatible:
             sample = ", ".join(
@@ -459,6 +503,15 @@ class OneirosSFTTrainer:
                 "SFT generation-compatibility preflight rejected "
                 f"{len(incompatible)} completion(s) above their mode-specific "
                 f"generation limit: {sample}"
+            )
+        if malformed_prompts:
+            sample = ", ".join(
+                f"{item['function_id']}: {item['reason']}"
+                for item in malformed_prompts[:3]
+            )
+            raise ValueError(
+                "SFT section-aware prompt preflight rejected "
+                f"{len(malformed_prompts)} malformed/over-budget prompt(s): {sample}"
             )
         if not input_ids:
             raise ValueError("SFT dataset contains no completions that fit the sequence limit")

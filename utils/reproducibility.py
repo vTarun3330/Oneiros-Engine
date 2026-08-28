@@ -6,6 +6,7 @@ import hashlib
 import importlib.metadata
 from pathlib import Path
 import platform
+import subprocess
 from typing import Dict, Iterable
 
 
@@ -69,8 +70,24 @@ def build_reproducibility_manifest(
             runtime_dependencies[package] = importlib.metadata.version(package)
         except importlib.metadata.PackageNotFoundError:
             runtime_dependencies[package] = "not-installed"
+    def git_output(*arguments: str) -> str:
+        try:
+            result = subprocess.run(
+                ["git", *arguments], cwd=project_root, text=True,
+                capture_output=True, check=True,
+            )
+            return result.stdout.strip()
+        except (OSError, subprocess.CalledProcessError):
+            return "unavailable"
+
+    status = git_output("status", "--porcelain")
     return {
         "schema_version": "1",
+        "git_commit": git_output("rev-parse", "HEAD"),
+        "git_dirty": status not in {"", "unavailable"},
+        "git_status_porcelain_sha256": hashlib.sha256(
+            status.encode("utf-8")
+        ).hexdigest() if status != "unavailable" else "unavailable",
         "source_tree_sha256": source_tree_sha256(project_root),
         "dependency_spec_sha256": file_sha256(requirements) if requirements.exists() else "missing",
         "model_name": model_name,

@@ -133,7 +133,7 @@ def setup_local_to_volume_symlink(local_path: str, remote_path: str):
 
 
 def sync_results_from_volume(
-    run_name: str = "v4_unified_prompt_sft", results_filename: str = "training_results.json"
+    run_name: str = "v4_1_research_hardened_sft", results_filename: str = "training_results.json"
 ):
     """Pull checkpoints and results back down from the Modal Volume."""
     print("\n📦 Syncing trained checkpoints and results from Modal Volume...")
@@ -196,10 +196,11 @@ def run_cloud_training(
     max_pairs: int = None,
     max_validation_functions: int = 0,
     corpus_version: str = CANONICAL_CORPUS_VERSION,
-    execution_mode: str = "", phase: str = "sft", run_name: str = "v4_unified_prompt_sft",
+    execution_mode: str = "", phase: str = "sft", run_name: str = "v4_1_research_hardened_sft",
     seed: int = 42,
     eval_feedback_rounds: int = 0,
     eval_diversity_mode: str = "none",
+    evaluation_split: str = "val",
     holdout_bug_family: str = "",
     confirm_final_test: bool = False,
     expected_corpus_fingerprint: str = "", restart_dpo: bool = False,
@@ -328,6 +329,7 @@ def run_cloud_training(
     trainer.SEED = seed
     trainer.EVAL_FEEDBACK_ROUNDS = eval_feedback_rounds
     trainer.EVAL_DIVERSITY_MODE = eval_diversity_mode
+    trainer.EVALUATION_SPLIT = evaluation_split
     trainer.HOLDOUT_BUG_FAMILY = trainer.sanitise_family_name(holdout_bug_family)
     trainer.MAX_VALIDATION_PAIRS = max_validation_functions or None
     trainer.CONFIRM_FINAL_TEST = confirm_final_test
@@ -441,10 +443,11 @@ def training_main(
     max_pairs: int = 0,
     max_validation_functions: int = 0,
     corpus_version: str = CANONICAL_CORPUS_VERSION,
-    execution_mode: str = "", phase: str = "sft", run_name: str = "v4_unified_prompt_sft",
+    execution_mode: str = "", phase: str = "sft", run_name: str = "v4_1_research_hardened_sft",
     seed: int = 42,
     eval_feedback_rounds: int = 0,
     eval_diversity_mode: str = "none",
+    evaluation_split: str = "val",
     holdout_bug_family: str = "",
     confirm_final_test: bool = False,
     restart_dpo: bool = False, dpo_validation_interval_pairs: int = 500,
@@ -471,6 +474,10 @@ def training_main(
         raise ValueError(f"Invalid training phase: {phase!r}")
     if phase == "dpo_eval" and not confirm_final_test:
         raise ValueError("dpo_eval requires explicit --confirm-final-test authorization")
+    if evaluation_split not in {"ablation_dev", "val"}:
+        raise ValueError("evaluation_split must be ablation_dev or val")
+    if phase in {"dpo", "dpo_eval", "sft_then_dpo"} and evaluation_split != "val":
+        raise ValueError("DPO runs require the locked val split")
     if restart_dpo and (phase != "dpo" or fresh):
         raise ValueError("--restart-dpo is valid only for a non-fresh DPO-only run")
     if dpo_validation_interval_pairs <= 0:
@@ -620,6 +627,7 @@ def training_main(
     from scripts import train_on_dataset as evaluation_names
     evaluation_names.EVAL_FEEDBACK_ROUNDS = eval_feedback_rounds
     evaluation_names.EVAL_DIVERSITY_MODE = eval_diversity_mode
+    evaluation_names.EVALUATION_SPLIT = evaluation_split
     evaluation_names.HOLDOUT_BUG_FAMILY = holdout_bug_family or None
     evaluation_names.MAX_VALIDATION_PAIRS = max_validation_functions or None
     result_filename = {
@@ -642,6 +650,7 @@ def training_main(
             seed=seed,
             eval_feedback_rounds=eval_feedback_rounds,
             eval_diversity_mode=eval_diversity_mode,
+            evaluation_split=evaluation_split,
             holdout_bug_family=holdout_bug_family,
             confirm_final_test=confirm_final_test,
             expected_corpus_fingerprint=expected_corpus_fingerprint,
@@ -697,7 +706,7 @@ if __name__ == "__main__":
     if hasattr(sys.stderr, "reconfigure"):
         sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
-    run_name = "v4_unified_prompt_sft"
+    run_name = "v4_1_research_hardened_sft"
     for index, argument in enumerate(sys.argv):
         if argument == "--run-name" and index + 1 < len(sys.argv):
             run_name = sys.argv[index + 1]
