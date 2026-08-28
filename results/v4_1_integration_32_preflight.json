@@ -5,7 +5,7 @@
   "gpu_model_loaded": false,
   "corpus_modified": false,
   "checkpoint_modified": false,
-  "elapsed_seconds": 330.511,
+  "elapsed_seconds": 325.156,
   "corpus": {
     "version": "v4_1_research_hardened_candidate",
     "corpus_id": "oneiros-corpus-v4.1-research-hardened-candidate",
@@ -178,7 +178,7 @@
   },
   "local_test_status": {
     "schema_version": "oneiros_v4_1_local_test_status_v1",
-    "timestamp_utc": "2026-08-28T14:00:55.374786+00:00",
+    "timestamp_utc": "2026-08-28T14:13:42.505085+00:00",
     "command": [
       "C:\\Program Files\\Python312\\python.exe",
       "-m",
@@ -186,12 +186,12 @@
       "-q"
     ],
     "returncode": 0,
-    "passed": 118,
+    "passed": 119,
     "failed": 0,
-    "source_tree_sha256": "e1fa102b8fc5affbaf927dbae9b8dd458f00076db0dd02ff9339fe020c5eaa7e",
+    "source_tree_sha256": "f44094fe24d250cd390a52649d6b7e540a0cbe2bb4257b62bb7835fb0d9bf36a",
     "completion_only_masking_verified": true,
     "sealed_final_test_accessed": false,
-    "output_tail": "........................................................................ [ 61%]\n..............................................                           [100%]\n118 passed in 74.99s (0:01:14)"
+    "output_tail": "........................................................................ [ 60%]\n...............................................                          [100%]\n119 passed in 23.93s"
   },
   "selection": {
     "requested_pairs": 32,
@@ -1584,7 +1584,7 @@
     "lr_scheduler_type": "constant_with_warmup",
     "warmup_steps_requested": 25,
     "checkpoint_steps": 50,
-    "monitor_schedule_required": false,
+    "monitor_schedule_required": true,
     "planned_validation_checkpoints": [
       6
     ],
@@ -1598,8 +1598,8 @@
       "planned_optimizer_steps": 6,
       "effective_checkpoint_steps": 6,
       "effective_warmup_steps": 5,
-      "minimum_monitor_checkpoints": 0,
-      "minimum_monitored_optimizer_steps": 0
+      "minimum_monitor_checkpoints": 1,
+      "minimum_monitored_optimizer_steps": 6
     }
   },
   "gates": {
