@@ -1,0 +1,147 @@
+{
+  "status": "passed",
+  "sealed_test_accessed": false,
+  "standard_summary": {
+    "function_kill_rate": 0.666667,
+    "kill_at_k": {
+      "1": {
+        "functions": 0,
+        "rate": 0.0,
+        "wilson_95": [
+          0.0,
+          0.561497
+        ]
+      },
+      "2": {
+        "functions": 0,
+        "rate": 0.0,
+        "wilson_95": [
+          0.0,
+          0.561497
+        ]
+      },
+      "4": {
+        "functions": 2,
+        "rate": 0.666667,
+        "wilson_95": [
+          0.20766,
+          0.938508
+        ]
+      },
+      "8": {
+        "functions": 2,
+        "rate": 0.666667,
+        "wilson_95": [
+          0.20766,
+          0.938508
+        ]
+      }
+    },
+    "pass_at_k": {
+      "1": {
+        "functions": 2,
+        "rate": 0.666667,
+        "wilson_95": [
+          0.20766,
+          0.938508
+        ],
+        "definition": "at least one reference-valid generated test in the first k raw slots"
+      },
+      "2": {
+        "functions": 3,
+        "rate": 1.0,
+        "wilson_95": [
+          0.438503,
+          1.0
+        ],
+        "definition": "at least one reference-valid generated test in the first k raw slots"
+      },
+      "4": {
+        "functions": 3,
+        "rate": 1.0,
+        "wilson_95": [
+          0.438503,
+          1.0
+        ],
+        "definition": "at least one reference-valid generated test in the first k raw slots"
+      },
+      "8": {
+        "functions": 3,
+        "rate": 1.0,
+        "wilson_95": [
+          0.438503,
+          1.0
+        ],
+        "definition": "at least one reference-valid generated test in the first k raw slots"
+      }
+    },
+    "candidate_redundancy": {
+      "redundant_killing_candidates": 4,
+      "redundancy_ratio": 0.666667,
+      "definition": "killing candidates beyond the first kill for each killed function"
+    },
+    "diversity_mean": {
+      "exact_unique_ratio": 0.952381,
+      "ast_shape_unique_ratio": 0.428571,
+      "input_shape_unique_ratio": 0.380952,
+      "outcome_mode_unique": 3.0
+    }
+  },
+  "diversity_ablation": {
+    "functions_compared": 3,
+    "newly_killed": [],
+    "regressions": [],
+    "retained_kills": [
+      "smoke_add",
+      "smoke_boundary"
+    ],
+    "net_unique_function_gain": 0,
+    "reference": {
+      "unique_functions_killed": 2,
+      "killing_candidates": 6,
+      "redundant_killing_candidates": 4,
+      "redundancy_ratio": 0.666667,
+      "mean_ast_diversity": 0.428571,
+      "mean_input_shape_diversity": 0.380952
+    },
+    "evaluation": {
+      "unique_functions_killed": 2,
+      "killing_candidates": 6,
+      "redundant_killing_candidates": 4,
+      "redundancy_ratio": 0.666667,
+      "mean_ast_diversity": 0.428571,
+      "mean_input_shape_diversity": 0.380952
+    },
+    "deltas": {
+      "unique_functions_killed": 0,
+      "killing_candidates": 0,
+      "redundant_killing_candidates": 0,
+      "redundancy_ratio": 0.0,
+      "mean_ast_diversity": 0.0,
+      "mean_input_shape_diversity": 0.0
+    }
+  },
+  "multi_seed_aggregation": {
+    "seed_count": 2,
+    "seeds": [
+      42,
+      43
+    ],
+    "function_kill_rate_mean": 0.666667,
+    "function_kill_rate_standard_deviation": 0.0,
+    "function_kill_rate_standard_error": 0.0,
+    "function_kill_rate_seed_mean_t_95": [
+      0.666667,
+      0.666667
+    ],
+    "function_kill_rate_min": 0.666667,
+    "function_kill_rate_max": 0.666667,
+    "identity": {
+      "evaluation_split": "synthetic_local_smoke",
+      "evaluation_scope_sha256": "local-smoke-v1",
+      "tests_per_function": 8,
+      "model_artifact_sha256": "deterministic-smoke-policy",
+      "evaluation_profile_sha256": "458656003f8d9c024d191761605e483d111f90dda14b1d79ebb8d0e002c51540"
+    }
+  }
+}

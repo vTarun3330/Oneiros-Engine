@@ -1,0 +1,17 @@
+{
+  "corpus_id": "oneiros-corpus-v4.1-research-hardened-candidate",
+  "corpus_version": "v4_1_research_hardened_candidate",
+  "split": "train",
+  "records": 6052,
+  "function_assertion_records": 5595,
+  "repository_pytest_fragment_records": 399,
+  "repository_unittest_fragment_records": 58,
+  "retained_training_records": 5941,
+  "verified_sft_examples_before_context_gate": 14641,
+  "verified_sft_examples": 14502,
+  "repository_overlong_completions_excluded": [],
+  "reference_prompt_leaks": 0,
+  "function_records_without_winner": [],
+  "repository_records_without_verified_fragment": [],
+  "ready": true
+}
