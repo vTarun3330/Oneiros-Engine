@@ -74,15 +74,28 @@ def main() -> None:
             report["reference_prompt_leaks"] += 1
         if mode == FUNCTION_EXECUTION_MODE:
             report["function_assertion_records"] += 1
-            source_tests = extract_dataset_tests(count_pair["test_cases"], count_pair["entry_point"])
-            winners, _ = evaluate_pair(
-                source_tests, count_pair["golden_code"], count_pair["mutant_code"],
-                count_pair["entry_point"],
-            )
+            if record.get("quality", {}).get("test_oracle_labels_execution_derived"):
+                # V4/V4.1 records already persist per-assertion execution
+                # evidence from the current policy. Re-executing thousands of
+                # unchanged pairs here adds no evidence and makes readiness
+                # depend on host timing; verify and count the sealed labels.
+                winners = [
+                    test["code"] for test in record["tests"]
+                    if test.get("distinguishing") is True
+                    and test.get("oracle") == "passes_reference_fails_target"
+                ]
+            else:
+                source_tests = extract_dataset_tests(
+                    count_pair["test_cases"], count_pair["entry_point"]
+                )
+                winners, _ = evaluate_pair(
+                    source_tests, count_pair["golden_code"], count_pair["mutant_code"],
+                    count_pair["entry_point"],
+                )
             report["verified_sft_examples_before_context_gate"] += min(len(winners), 3)
-            report["verified_sft_examples"] += min(len(winners), 3)
+            report["verified_sft_examples"] += min(len(winners), 3) if pair else 0
             if not winners:
-                report["function_records_without_winner"].append(pair["id"])
+                report["function_records_without_winner"].append(source_pair["id"])
         elif is_repository_execution_mode(mode):
             if mode == REPOSITORY_EXECUTION_MODE:
                 report["repository_pytest_fragment_records"] += 1

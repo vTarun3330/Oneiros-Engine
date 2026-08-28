@@ -120,7 +120,7 @@ def test_seed_aggregation_and_policy_comparison_require_matched_scope():
         aggregate_seed_results([seed_42, mismatched])
 
 
-def test_ablation_plan_uses_validation_only_and_five_seeds():
+def test_ablation_plan_uses_training_only_dev_and_locked_three_seeds():
     plan = build_ablation_plan("run_name")
     commands = [
         command
@@ -129,7 +129,9 @@ def test_ablation_plan_uses_validation_only_and_five_seeds():
     ]
 
     assert plan["final_test_sealed"] is True
-    assert plan["plan_identity"]["seeds"] == [42, 43, 44, 45, 46]
+    assert plan["plan_identity"]["seeds"] == [42, 43, 44]
+    assert plan["plan_identity"]["split"] == "ablation_dev"
+    assert all("--evaluation-split ablation_dev" in command for command in commands)
     assert all("dpo_eval" not in command for command in commands)
     assert all("confirm-final-test" not in command for command in commands)
     assert any("--phase base_eval" in command for command in commands)

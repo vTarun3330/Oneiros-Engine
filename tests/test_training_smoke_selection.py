@@ -87,20 +87,56 @@ def test_bounded_smoke_prefers_generation_compatible_repository_records():
     assert selected_repository_ids <= compatible
 
 
+def test_bounded_smoke_filters_incompatible_synthetic_and_repository_records():
+    pairs = [
+        *[_pair(i) for i in range(200)],
+        *[_pair(i + 200, True) for i in range(40)],
+    ]
+    compatible_synthetic = {f"pair-{index:04d}" for index in range(100)}
+    compatible_repository = {f"pair-{index:04d}" for index in range(200, 220)}
+
+    selected = select_bounded_train_pairs(
+        pairs,
+        64,
+        compatible_repository_ids=compatible_repository,
+        compatible_synthetic_ids=compatible_synthetic,
+    )
+
+    selected_ids = {pair["id"] for pair in selected}
+    assert len(selected) == 64
+    assert selected_ids <= compatible_synthetic | compatible_repository
+
+
+def test_bounded_smoke_never_falls_back_to_incompatible_records():
+    pairs = [
+        *[_pair(i) for i in range(20)],
+        *[_pair(i + 20, True) for i in range(5)],
+    ]
+
+    selected = select_bounded_train_pairs(
+        pairs,
+        10,
+        compatible_repository_ids=set(),
+        compatible_synthetic_ids={"pair-0000", "pair-0001"},
+    )
+
+    assert [pair["id"] for pair in selected] == ["pair-0000", "pair-0001"]
+
+
 def test_bounded_dpo_smoke_preserves_full_sft_identity():
     assert sft_training_scope(100, False, None) == (
         "full_train_split:execution_mode=all:repository_completion_limit=2048:"
         "prompt_token_limit=512:repository_prompt_token_limit=1024:"
-        "prompt_compaction=priority_head_tail_preserve_spec_target_v2:"
-        "prompt_schema=oneiros_unified_test_generation_v1:"
+        "prompt_compaction=section_aware_ast_units_before_chat_v4_1:"
+        "prompt_schema=oneiros_unified_test_generation_v2:"
         "generation_completion_limit=128:repository_generation_completion_limit=1024"
     )
     assert sft_training_scope(100, True, None) == (
-        "first_100_train_records:bounded_selection=stratified_generation_compatible_v2:"
+        "first_100_train_records:bounded_selection=stratified_generation_compatible_v3:"
         "execution_mode=all:repository_completion_limit=2048:prompt_token_limit=512:"
         "repository_prompt_token_limit=1024:"
-        "prompt_compaction=priority_head_tail_preserve_spec_target_v2:"
-        "prompt_schema=oneiros_unified_test_generation_v1:"
+        "prompt_compaction=section_aware_ast_units_before_chat_v4_1:"
+        "prompt_schema=oneiros_unified_test_generation_v2:"
         "generation_completion_limit=128:repository_generation_completion_limit=1024"
     )
 

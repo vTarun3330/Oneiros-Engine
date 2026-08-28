@@ -131,6 +131,8 @@ def build_preflight(
         raise ValueError("Unsupported SFT LR scheduler")
     if not 0.0 <= min_function_kill_rate <= 1.0:
         raise ValueError("min_function_kill_rate must be in [0, 1]")
+    if minimum_monitor_checkpoints < 0:
+        raise ValueError("minimum_monitor_checkpoints must be non-negative")
     if not 0 < repository_completion_token_limit < MAX_SFT_SEQUENCE_LENGTH:
         raise ValueError(
             "repository_completion_token_limit must be between 1 and the sequence limit"
@@ -191,12 +193,24 @@ def build_preflight(
         )
 
     compatible_repository_ids: set[str] = set()
+    compatible_synthetic_ids: set[str] = set()
     compatible_repository_completion_counts: Counter[str] = Counter()
+    repository_budget_incompatibilities: list[dict[str, Any]] = []
     context_eligible_repository_pairs = 0
     for pair in eligible_pairs:
-        if not is_repository_execution_mode(
-            pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
-        ):
+        mode = pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
+        pair_prompt = build_pair_prompt(pair)
+        if not is_repository_execution_mode(mode):
+            try:
+                compact_unified_user_prompt(
+                    tokenizer,
+                    pair_prompt,
+                    prompt_token_limit,
+                    format_chat_prompt,
+                )
+            except (PromptBudgetError, ValueError):
+                continue
+            compatible_synthetic_ids.add(pair["id"])
             continue
         context_eligible_repository_pairs += 1
         compatible = 0
@@ -207,9 +221,29 @@ def build_preflight(
                     add_special_tokens=False,
                 )["input_ids"]
             )
-            compatible += int(
-                completion_tokens <= repository_completion_token_limit
+            if completion_tokens > repository_completion_token_limit:
+                continue
+            allowed_prompt_tokens = min(
+                repository_prompt_token_limit,
+                MAX_SFT_SEQUENCE_LENGTH - completion_tokens,
             )
+            try:
+                compact_unified_user_prompt(
+                    tokenizer,
+                    pair_prompt,
+                    allowed_prompt_tokens,
+                    format_chat_prompt,
+                )
+            except (PromptBudgetError, ValueError) as exc:
+                repository_budget_incompatibilities.append({
+                    "record_id": pair["id"],
+                    "completion_tokens": completion_tokens,
+                    "prompt_limit_tokens": max(0, allowed_prompt_tokens),
+                    "reason": "required_prompt_sections_exceed_mode_budget",
+                    "detail": str(exc),
+                })
+                break
+            compatible += 1
         if compatible:
             compatible_repository_ids.add(pair["id"])
             compatible_repository_completion_counts[pair["id"]] = compatible
@@ -218,6 +252,7 @@ def build_preflight(
         eligible_pairs,
         max_pairs,
         compatible_repository_ids=compatible_repository_ids,
+        compatible_synthetic_ids=compatible_synthetic_ids,
         target_real_fraction=real_target_fraction,
         max_real_repeats=max_real_repeats,
     )
@@ -268,6 +303,8 @@ def build_preflight(
             tokenizer,
             completion_token_limit,
             repository_completion_token_limit,
+            prompt_token_limit,
+            repository_prompt_token_limit,
         )
     )
     repository_examples, repository_generation_exclusions = (
@@ -276,6 +313,8 @@ def build_preflight(
             tokenizer,
             completion_token_limit,
             repository_completion_token_limit,
+            prompt_token_limit,
+            repository_prompt_token_limit,
         )
     )
     synthetic_examples, synthetic_deduplication = deduplicate_sft_examples(
@@ -458,6 +497,7 @@ def build_preflight(
             == len(no_verified_winner_ids)
         ),
         "verified_synthetic_supervision_present": bool(synthetic_examples),
+        "requested_pair_count_reached": len(selected_pairs) == max_pairs,
         "generation_compatible_supervision_present": bool(effective_examples),
         "zero_sequence_overflows": not sequence_overflow_examples,
         "completion_only_masking_verified": (
@@ -510,6 +550,10 @@ def build_preflight(
             "selection_sha256": selection_sha256,
             "context_eligible_repository_pairs": context_eligible_repository_pairs,
             "generation_compatible_repository_pairs": len(compatible_repository_ids),
+            "prompt_compatible_synthetic_pairs": len(compatible_synthetic_ids),
+            "repository_budget_incompatibilities": (
+                repository_budget_incompatibilities
+            ),
             "selected_generation_compatible_repository_pairs": (
                 selected_generation_compatible_repository_pairs
             ),
@@ -587,6 +631,7 @@ def build_preflight(
             "lr_scheduler_type": lr_scheduler_type,
             "warmup_steps_requested": warmup_steps,
             "checkpoint_steps": checkpoint_steps,
+            "monitor_schedule_required": minimum_monitor_checkpoints > 0,
             "planned_validation_checkpoints": checkpoints,
             "min_function_kill_rate": min_function_kill_rate,
             "optimizer_schedule": schedule,

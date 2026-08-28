@@ -72,12 +72,13 @@ def test_prompt_contract_cannot_receive_oracle_only_fields():
         target_symbols=["f"],
     )
 
-    assert PROMPT_SCHEMA_VERSION in "oneiros_unified_test_generation_v1"
+    assert PROMPT_SCHEMA_VERSION == "oneiros_unified_test_generation_v2"
     assert "reference_code" not in prompt
     assert "mutation_type" not in prompt
     assert "gold_patch" not in prompt
     assert "dataset:" not in prompt.lower()
     assert "reference implementation is intentionally hidden" in SYSTEM_PROMPT
+    assert "one minimal, self-contained bug-revealing test" in SYSTEM_PROMPT
 
 
 def test_specification_sanitizer_removes_patch_leakage_but_keeps_behavior():

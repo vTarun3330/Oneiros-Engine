@@ -34,6 +34,7 @@ from metrics.research_evaluation import (
 from engine.execution_feedback import build_feedback_prompt, collect_execution_feedback
 from engine.prompt_budget import (
     PROMPT_COMPACTION_STRATEGY,
+    PromptBudgetError,
     compact_unified_user_prompt,
 )
 from engine.test_generation_prompt import (
@@ -173,7 +174,7 @@ def sft_training_scope(
         if bounded_sft_pairs else "full_train_split"
     )
     if bounded_sft_pairs:
-        scope += ":bounded_selection=stratified_generation_compatible_v2"
+        scope += ":bounded_selection=stratified_generation_compatible_v3"
     scope += f":execution_mode={execution_mode or 'all'}"
     scope += f":repository_completion_limit={MAX_SFT_COMPLETION_TOKENS}"
     if HOLDOUT_BUG_FAMILY:
@@ -361,6 +362,7 @@ def _stratified_subset(
 def select_bounded_train_pairs(
     pairs: List[Dict], limit: int,
     compatible_repository_ids: Optional[set] = None,
+    compatible_synthetic_ids: Optional[set] = None,
     target_real_fraction: float = SFT_REAL_TARGET_FRACTION,
     max_real_repeats: int = SFT_MAX_REAL_REPEATS,
 ) -> List[Dict]:
@@ -374,7 +376,7 @@ def select_bounded_train_pairs(
         raise ValueError("target_real_fraction must be in [0, 1)")
     if max_real_repeats < 1:
         raise ValueError("max_real_repeats must be at least one")
-    if limit <= 0 or limit >= len(pairs):
+    if limit <= 0:
         return list(pairs)
     repository = [
         pair for pair in pairs
@@ -383,19 +385,27 @@ def select_bounded_train_pairs(
         )
     ]
     if compatible_repository_ids is not None:
-        compatible_repository = [
+        repository = [
             pair for pair in repository if pair["id"] in compatible_repository_ids
         ]
-        if compatible_repository:
-            repository = compatible_repository
     synthetic = [
         pair for pair in pairs
         if not is_repository_execution_mode(
             pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
         )
     ]
+    if compatible_synthetic_ids is not None:
+        synthetic = [
+            pair for pair in synthetic if pair["id"] in compatible_synthetic_ids
+        ]
+    eligible_ids = {pair["id"] for pair in [*synthetic, *repository]}
+    eligible_in_original_order = [
+        pair for pair in pairs if pair["id"] in eligible_ids
+    ]
+    if limit >= len(eligible_in_original_order):
+        return eligible_in_original_order
     if not repository or not synthetic or limit < 2:
-        return list(pairs[:limit])
+        return eligible_in_original_order[:limit]
 
     # A synthetic record can contribute three retained winners while a
     # generation-compatible repository record is guaranteed only one. Reserve
@@ -569,6 +579,8 @@ def deduplicate_sft_examples(examples: List) -> Tuple[List, Dict]:
 def filter_generation_compatible_sft_examples(
     examples: List, tokenizer, max_completion_tokens: int,
     max_repository_completion_tokens: Optional[int] = None,
+    max_prompt_tokens: Optional[int] = None,
+    max_repository_prompt_tokens: Optional[int] = None,
 ) -> Tuple[List, List[Dict]]:
     """Exclude phase-incompatible targets without altering canonical records.
 
@@ -591,7 +603,11 @@ def filter_generation_compatible_sft_examples(
 
     retained = []
     excluded = []
-    from engine.sft_trainer import sft_completion_limit_for_execution_mode
+    from engine.sft_trainer import (
+        MAX_SFT_SEQUENCE_LENGTH,
+        sft_completion_limit_for_execution_mode,
+        sft_prompt_limit_for_execution_mode,
+    )
     for example in examples:
         completion_tokens = len(tokenizer(
             example.completion.strip() + tokenizer.eos_token,
@@ -602,18 +618,66 @@ def filter_generation_compatible_sft_examples(
             max_completion_tokens,
             repository_completion_limit,
         )
-        if completion_tokens <= completion_limit:
-            retained.append(example)
-            continue
-        excluded.append({
+        evidence = {
             "record_id": str(example.function_id),
             "execution_mode": str(example.execution_mode),
             "project": str(example.project),
             "bug_family": str(example.bug_family),
             "completion_tokens": completion_tokens,
-            "limit_tokens": completion_limit,
-            "reason": "completion_exceeds_live_generation_limit",
-        })
+        }
+        if completion_tokens > completion_limit:
+            excluded.append({
+                **evidence,
+                "limit_tokens": completion_limit,
+                "reason": "completion_exceeds_live_generation_limit",
+            })
+            continue
+
+        # A completion is not actually generation-compatible when its prompt
+        # cannot preserve the complete target and required semantic sections.
+        # The optional arguments retain backwards compatibility for callers
+        # performing only a completion audit; every production SFT path passes
+        # both prompt budgets.
+        if max_prompt_tokens is not None:
+            repository_prompt_limit = (
+                max_prompt_tokens
+                if max_repository_prompt_tokens is None
+                else max_repository_prompt_tokens
+            )
+            prompt_limit = sft_prompt_limit_for_execution_mode(
+                example.execution_mode,
+                max_prompt_tokens,
+                repository_prompt_limit,
+            )
+            allowed_prompt_tokens = min(
+                prompt_limit,
+                MAX_SFT_SEQUENCE_LENGTH - completion_tokens,
+            )
+            try:
+                compaction = compact_unified_user_prompt(
+                    tokenizer,
+                    example.prompt,
+                    allowed_prompt_tokens,
+                    format_chat_prompt,
+                )
+            except (PromptBudgetError, ValueError) as exc:
+                excluded.append({
+                    **evidence,
+                    "prompt_limit_tokens": max(0, allowed_prompt_tokens),
+                    "reason": "required_prompt_sections_exceed_mode_budget",
+                    "detail": str(exc),
+                })
+                continue
+            if compaction.final_token_count + completion_tokens > MAX_SFT_SEQUENCE_LENGTH:
+                excluded.append({
+                    **evidence,
+                    "prompt_tokens": compaction.final_token_count,
+                    "sequence_limit_tokens": MAX_SFT_SEQUENCE_LENGTH,
+                    "reason": "prompt_and_completion_exceed_sequence_budget",
+                })
+                continue
+
+        retained.append(example)
     return retained, excluded
 
 
@@ -2179,6 +2243,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
     available_train_pairs = len(train_pairs)
     sft_preflight_tokenizer = None
     compatible_repository_ids = None
+    compatible_synthetic_ids = None
     if MAX_TRAIN_PAIRS and run_sft and not use_mock:
         from transformers import AutoTokenizer
         sft_preflight_tokenizer = AutoTokenizer.from_pretrained(
@@ -2187,15 +2252,26 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
             trust_remote_code=True,
         )
         compatible_repository_ids = set()
+        compatible_synthetic_ids = set()
         repository_generation_limit = (
             SFT_REPOSITORY_COMPLETION_TOKEN_LIMIT_OVERRIDE
             if SFT_REPOSITORY_COMPLETION_TOKEN_LIMIT_OVERRIDE is not None
             else MAX_SFT_REPOSITORY_GENERATION_COMPATIBLE_TOKENS
         )
         for pair in train_pairs:
-            if not is_repository_execution_mode(
-                pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
-            ):
+            mode = pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
+            pair_prompt = build_pair_prompt(pair)
+            if not is_repository_execution_mode(mode):
+                try:
+                    compact_unified_user_prompt(
+                        sft_preflight_tokenizer,
+                        pair_prompt,
+                        PROMPT_TOKEN_LIMIT,
+                        format_chat_prompt,
+                    )
+                except (PromptBudgetError, ValueError):
+                    continue
+                compatible_synthetic_ids.add(pair["id"])
                 continue
             for completion in _repository_fragment_tests(
                 pair.get("test_cases", [])
@@ -2204,14 +2280,30 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                     completion.strip() + sft_preflight_tokenizer.eos_token,
                     add_special_tokens=False,
                 )["input_ids"])
-                if completion_tokens <= repository_generation_limit:
-                    compatible_repository_ids.add(pair["id"])
-                    break
+                if completion_tokens > repository_generation_limit:
+                    continue
+                from engine.sft_trainer import MAX_SFT_SEQUENCE_LENGTH
+                allowed_prompt_tokens = min(
+                    REPOSITORY_PROMPT_TOKEN_LIMIT,
+                    MAX_SFT_SEQUENCE_LENGTH - completion_tokens,
+                )
+                try:
+                    compact_unified_user_prompt(
+                        sft_preflight_tokenizer,
+                        pair_prompt,
+                        allowed_prompt_tokens,
+                        format_chat_prompt,
+                    )
+                except (PromptBudgetError, ValueError):
+                    continue
+                compatible_repository_ids.add(pair["id"])
+                break
     if MAX_TRAIN_PAIRS:
         train_pairs = select_bounded_train_pairs(
             train_pairs,
             MAX_TRAIN_PAIRS,
             compatible_repository_ids=compatible_repository_ids,
+            compatible_synthetic_ids=compatible_synthetic_ids,
             target_real_fraction=(
                 SFT_REAL_TARGET_FRACTION_OVERRIDE
                 if SFT_REAL_TARGET_FRACTION_OVERRIDE is not None
@@ -2543,6 +2635,8 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                         sft_hyperparameters[
                             "repository_generation_completion_token_limit"
                         ],
+                        sft_hyperparameters["prompt_token_limit"],
+                        sft_hyperparameters["repository_prompt_token_limit"],
                     )
                 )
                 repository_sft_data, repository_generation_exclusions = (
@@ -2553,6 +2647,8 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                         sft_hyperparameters[
                             "repository_generation_completion_token_limit"
                         ],
+                        sft_hyperparameters["prompt_token_limit"],
+                        sft_hyperparameters["repository_prompt_token_limit"],
                     )
                 )
                 sft_generation_incompatible_completions = [

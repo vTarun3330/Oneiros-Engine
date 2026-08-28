@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import ast
 import re
+import warnings
 from dataclasses import dataclass
 from typing import Callable, Iterable, List, Sequence, Tuple
 
@@ -28,6 +29,13 @@ _SECTION_ORDER = (
 
 class PromptBudgetError(RuntimeError):
     """Raised instead of producing a malformed or over-budget prompt."""
+
+
+def _parse_python_source(source: str) -> ast.Module:
+    """Parse stored source without surfacing irrelevant literal-escape warnings."""
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", SyntaxWarning)
+        return ast.parse(source)
 
 
 @dataclass(frozen=True)
@@ -81,7 +89,7 @@ def _top_level_source_units(source: str) -> list[str]:
     if not source:
         return []
     try:
-        tree = ast.parse(source)
+        tree = _parse_python_source(source)
     except SyntaxError:
         # Multi-file corpus excerpts contain ``# File:`` markers. Parse each
         # file payload independently so units still remain syntactically whole.
@@ -115,6 +123,33 @@ def _top_level_source_units(source: str) -> list[str]:
     return units or [source]
 
 
+def _support_context_units(context: str) -> list[str]:
+    """Split V4.1 repository context into prose plus complete code units."""
+    labels = (
+        "Non-gold test-module environment:",
+        "Buggy-source imports and non-target definitions:",
+        "Relevant imports, constants, and helper definitions:",
+    )
+    pattern = re.compile(
+        "(?m)^(" + "|".join(re.escape(label) for label in labels) + ")\\s*$"
+    )
+    matches = list(pattern.finditer(context))
+    if not matches:
+        return _top_level_source_units(context)
+    units: list[str] = []
+    header = context[:matches[0].start()].strip()
+    if header:
+        units.append(header)
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(context)
+        payload = context[match.end():end].strip()
+        source_units = _top_level_source_units(payload)
+        for unit_index, unit in enumerate(source_units):
+            prefix = match.group(1) if unit_index == 0 else ""
+            units.append(f"{prefix}\n{unit}".strip())
+    return units
+
+
 def _target_names(task_header: str) -> set[str]:
     match = re.search(r"(?m)^Target symbol\(s\):\s*(.+)$", task_header)
     if not match:
@@ -124,7 +159,7 @@ def _target_names(task_header: str) -> set[str]:
 
 def _defined_names(unit: str) -> set[str]:
     try:
-        tree = ast.parse(unit)
+        tree = _parse_python_source(unit)
     except SyntaxError:
         return set()
     return {
@@ -137,7 +172,7 @@ def _defined_names(unit: str) -> set[str]:
 def _without_docstrings(source: str) -> str:
     """Produce a complete AST rendering with comments/docstrings removed."""
     try:
-        tree = ast.parse(source)
+        tree = _parse_python_source(source)
     except SyntaxError:
         return source
     for node in ast.walk(tree):
@@ -190,7 +225,7 @@ def compact_unified_user_prompt(
     # Drop complete support-context units from lowest priority to highest.
     context_heading = "### Available execution context"
     context = sections[context_heading]
-    context_units = _top_level_source_units(context)
+    context_units = _support_context_units(context)
     if len(context_units) > 1:
         while len(context_units) > 1:
             context_units.pop()

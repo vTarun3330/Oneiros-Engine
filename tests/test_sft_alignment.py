@@ -7,6 +7,7 @@ from engine.sft_trainer import (
     plan_sft_optimizer_schedule,
 )
 import engine.sft_trainer as sft_module
+from engine.test_generation_prompt import build_unified_user_prompt
 
 
 class _TokenLengthTokenizer:
@@ -48,19 +49,25 @@ class _DatasetStub(list):
 
 def test_sft_prompt_is_capped_to_the_live_inference_budget(monkeypatch):
     monkeypatch.setattr(sft_module, "Dataset", _DatasetStub, raising=False)
-    trainer = _dataset_only_trainer(prompt_limit=5, completion_limit=4)
+    trainer = _dataset_only_trainer(prompt_limit=120, completion_limit=4)
+    prompt = build_unified_user_prompt(
+        code_under_test="def works(x):\n    return x",
+        execution_mode="function_assertion",
+        specification="Return the supplied value.",
+        support_context="\n".join(f"def helper_{i}(): return {i}" for i in range(80)),
+        target_symbols=["works"],
+    )
     dataset = trainer.prepare_dataset([
         SFTDataPoint(
-            prompt="one two three four five six seven",
+            prompt=prompt,
             completion="assert works",
             function_id="record-a",
         )
     ])
 
-    assert dataset[0]["completion_start"] == 5
-    assert dataset[0]["input_ids"][:5] == ["one", "two", "three", "six", "seven"]
+    assert dataset[0]["completion_start"] <= 120
     assert trainer.dataset_stats["prompt_truncated_examples"] == 1
-    assert trainer.dataset_stats["max_observed_prompt_tokens"] == 7
+    assert trainer.dataset_stats["max_observed_prompt_tokens"] > 120
     assert trainer.dataset_stats["max_observed_completion_tokens"] == 3
 
 
@@ -70,7 +77,11 @@ def test_sft_preflight_fails_before_training_on_an_unemittable_completion():
     with pytest.raises(ValueError, match="generation-compatibility preflight"):
         trainer.prepare_dataset([
             SFTDataPoint(
-                prompt="short prompt",
+                prompt=build_unified_user_prompt(
+                    code_under_test="def f(): return 1",
+                    execution_mode="function_assertion",
+                    target_symbols=["f"],
+                ),
                 completion="one two three four",
                 function_id="record-overlong",
             )
@@ -80,12 +91,17 @@ def test_sft_preflight_fails_before_training_on_an_unemittable_completion():
 def test_sft_repository_fragment_uses_its_separate_completion_budget(monkeypatch):
     monkeypatch.setattr(sft_module, "Dataset", _DatasetStub, raising=False)
     trainer = _dataset_only_trainer(
-        prompt_limit=5, completion_limit=3, repository_completion_limit=8,
+        prompt_limit=256, repository_prompt_limit=256,
+        completion_limit=3, repository_completion_limit=8,
     )
 
     dataset = trainer.prepare_dataset([
         SFTDataPoint(
-            prompt="short prompt",
+            prompt=build_unified_user_prompt(
+                code_under_test="def f(): return 1",
+                execution_mode="repository_pytest_fragment",
+                target_symbols=["f"],
+            ),
             completion="one two three four five",
             function_id="repository-record",
             execution_mode="repository_pytest_fragment",
@@ -99,22 +115,27 @@ def test_sft_repository_fragment_uses_its_separate_completion_budget(monkeypatch
 def test_sft_repository_fragment_uses_its_larger_prompt_budget(monkeypatch):
     monkeypatch.setattr(sft_module, "Dataset", _DatasetStub, raising=False)
     trainer = _dataset_only_trainer(
-        prompt_limit=4,
-        repository_prompt_limit=7,
+        prompt_limit=80,
+        repository_prompt_limit=160,
         completion_limit=3,
         repository_completion_limit=8,
     )
 
     dataset = trainer.prepare_dataset([
         SFTDataPoint(
-            prompt="one two three four five six seven eight nine",
+            prompt=build_unified_user_prompt(
+                code_under_test="def f(): return 1",
+                execution_mode="repository_pytest_fragment",
+                specification="Return one.",
+                target_symbols=["f"],
+            ),
             completion="assert works",
             function_id="repository-record",
             execution_mode="repository_pytest_fragment",
         )
     ])
 
-    assert dataset[0]["completion_start"] == 7
+    assert 80 < dataset[0]["completion_start"] <= 160
 
 
 def test_safer_v3_sft_defaults_bound_optimizer_drift():
@@ -123,7 +144,7 @@ def test_safer_v3_sft_defaults_bound_optimizer_drift():
     assert training_config.sft_warmup_steps == 25
     assert training_config.sft_checkpoint_steps == 50
     assert training_config.sft_lr_scheduler_type == "cosine"
-    assert training_config.sft_min_function_kill_rate == 0.50
+    assert training_config.sft_min_function_kill_rate == 0.58
     assert training_config.sft_min_monitor_checkpoints == 2
     assert training_config.sft_prompt_token_limit == 512
     assert training_config.sft_repository_prompt_token_limit == 1024

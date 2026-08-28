@@ -31,7 +31,7 @@ from metrics.research_evaluation import (
 )
 
 
-DEFAULT_SEEDS = (42, 43, 44, 45, 46)
+DEFAULT_SEEDS = (42, 43, 44)
 DEFAULT_HOLDOUT_FAMILIES = (
     "index",
     "negate removal",
@@ -56,6 +56,7 @@ def _modal_command(
     feedback_rounds: int = 0,
     diversity_mode: str = "none",
     holdout_family: str = "",
+    evaluation_split: str = "ablation_dev",
     fresh: bool = False,
 ) -> str:
     parts = [
@@ -64,6 +65,7 @@ def _modal_command(
         "--run-name", run_name,
         "--corpus-version", corpus_version,
         "--seed", str(seed),
+        "--evaluation-split", evaluation_split,
     ]
     if max_validation_functions:
         parts.extend(["--max-validation-functions", str(max_validation_functions)])
@@ -85,11 +87,11 @@ def build_ablation_plan(
     holdout_families: Sequence[str] = DEFAULT_HOLDOUT_FAMILIES,
     smoke_functions: int = 32,
 ) -> Dict[str, Any]:
-    """Build predeclared, validation-only commands for Modal execution."""
+    """Build predeclared training-only ablation-dev commands for Modal execution."""
     if not re.fullmatch(r"[A-Za-z0-9_.-]+", run_name):
         raise ValueError("Run name contains unsupported characters")
-    if len(set(seeds)) < 5 or any(int(seed) < 0 for seed in seeds):
-        raise ValueError("Research plan requires at least five distinct non-negative seeds")
+    if len(set(seeds)) < 3 or any(int(seed) < 0 for seed in seeds):
+        raise ValueError("Research plan requires at least three distinct non-negative seeds")
     families = [sanitise_family_name(family) for family in holdout_families]
     families = [family for family in families if family]
 
@@ -230,7 +232,7 @@ def build_ablation_plan(
         "seeds": list(seeds),
         "holdout_families": families,
         "candidate_budget": 8,
-        "split": "val",
+        "split": "ablation_dev",
     }
     return {
         "schema_version": 1,

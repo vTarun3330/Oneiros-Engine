@@ -6,7 +6,7 @@ from scripts import train_on_dataset
 
 
 def test_phase3_entry_points_share_the_canonical_corpus_default():
-    assert CANONICAL_CORPUS_VERSION == "v4_unified_prompt_candidate"
+    assert CANONICAL_CORPUS_VERSION == "v4_1_research_hardened_candidate"
     assert train_on_dataset.CORPUS_VERSION == CANONICAL_CORPUS_VERSION
     assert (
         inspect.signature(modal_train.run_cloud_training.get_raw_f())
