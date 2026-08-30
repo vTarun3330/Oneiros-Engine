@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_v4_1_local_test_status_v1",
-  "timestamp_utc": "2026-08-30T19:11:17.384311+00:00",
+  "timestamp_utc": "2026-08-30T22:45:50.744022+00:00",
   "command": [
     "C:\\Program Files\\Python312\\python.exe",
     "-m",
@@ -8,10 +8,10 @@
     "-q"
   ],
   "returncode": 0,
-  "passed": 140,
+  "passed": 145,
   "failed": 0,
-  "source_tree_sha256": "02430b5029ef8424cd00945d72711e80a7a230c1bbf6a55c9dbfb1764f085b3f",
+  "source_tree_sha256": "49687e75c57c4fa293a8b3e5009f8548f8cdb08d7191464346f5918d100eba14",
   "completion_only_masking_verified": true,
   "sealed_final_test_accessed": false,
-  "output_tail": "........................................................................ [ 51%]\n....................................................................     [100%]\n140 passed in 24.51s"
+  "output_tail": "........................................................................ [ 49%]\n........................................................................ [ 99%]\n.                                                                        [100%]\n145 passed in 47.46s"
 }

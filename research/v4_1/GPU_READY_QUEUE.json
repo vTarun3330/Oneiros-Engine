@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_v4_1_gpu_ready_queue_v1",
-  "generated_utc": "2026-08-30T18:33:22.461566+00:00",
+  "generated_utc": "2026-08-30T22:43:57.692732+00:00",
   "branch": "experiment/research-eval-ablations",
   "baseline_commit": "1d2cca8",
   "corpus_version": "v4_1_research_hardened_candidate",
@@ -71,7 +71,7 @@
           ]
         },
         "plan_sha256": "fa1bb1294badd0f8628e5c2da9d6e320a4bd25333ad8b1d056b2fdc8d9551331",
-        "experiment_matrix_sha256": "15be674b971561a96ab96cbfb02b7f6881562665c2912c1ed0d9647141b1c020",
+        "experiment_matrix_sha256": "4711c8d92521010021255ca7d1829edeaa9681704fa9c847034eaeec781d8bfb",
         "selection_rule": {
           "priority": [
             "reference_validity",
@@ -124,6 +124,7 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure the incremental value of specification and legitimate support context."
           },
           {
@@ -158,6 +159,7 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure the incremental value of specification and legitimate support context."
           },
           {
@@ -192,6 +194,7 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure the incremental value of specification and legitimate support context."
           },
           {
@@ -226,6 +229,7 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure whether revised one-test-case wording improves candidate validity."
           },
           {
@@ -260,6 +264,7 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure whether revised one-test-case wording improves candidate validity."
           },
           {
@@ -294,6 +299,7 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": "function_assertion",
+            "prompt_token_limit": null,
             "hypothesis": "Measure repository-supervision transfer without changing the evaluator."
           },
           {
@@ -328,6 +334,7 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure repository-supervision transfer without changing the evaluator."
           },
           {
@@ -362,6 +369,7 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure repository-supervision transfer without changing the evaluator."
           },
           {
@@ -396,6 +404,7 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure repository-supervision transfer without changing the evaluator."
           },
           {
@@ -430,6 +439,7 @@
             "synthetic_balance_fraction": 0.0,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure whether deterministic balancing reduces source/family dominance."
           },
           {
@@ -464,6 +474,7 @@
             "synthetic_balance_fraction": 1.0,
             "synthetic_balance_mode": "dataset",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure whether deterministic balancing reduces source/family dominance."
           },
           {
@@ -498,6 +509,7 @@
             "synthetic_balance_fraction": 1.0,
             "synthetic_balance_mode": "dataset_family",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure whether deterministic balancing reduces source/family dominance."
           },
           {
@@ -532,6 +544,7 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure whether the current policy is undertrained."
           },
           {
@@ -566,6 +579,7 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure whether the current policy is undertrained."
           },
           {
@@ -600,6 +614,7 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure whether the current policy is undertrained."
           },
           {
@@ -634,7 +649,116 @@
             "synthetic_balance_fraction": null,
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
+            "prompt_token_limit": null,
             "hypothesis": "Measure whether the current policy is undertrained."
+          },
+          {
+            "id": "J_prompt_budget_512",
+            "axis": "prompt_budget",
+            "status": "planned_modal_not_run",
+            "uses_final_test": false,
+            "commands": [
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_j_budget_512 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 512 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_512 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 512",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_512 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 512",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_512 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 512"
+            ],
+            "run_name": "v4_1_ablation_j_budget_512",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_j_budget_512_preflight.json --prompt-token-limit 512",
+            "training_size": 800,
+            "training_command_index": 0,
+            "evaluation_command_indexes": [
+              1,
+              2,
+              3
+            ],
+            "seeds": [
+              42,
+              43,
+              44
+            ],
+            "prompt_information_variant": "full",
+            "output_instruction_variant": "self_contained",
+            "real_target_fraction": null,
+            "balanced_sampling": null,
+            "synthetic_balance_fraction": null,
+            "synthetic_balance_mode": "none",
+            "training_execution_mode": null,
+            "prompt_token_limit": 512,
+            "hypothesis": "Measure whether a function prompt budget that actually fits the required sections improves reference-validity and Kill@k. The sequence budget is 2048 and function completions are capped at 128, so 768 and 1024 both fit without changing the evaluator.",
+            "note": "Changing the budget changes the evaluation scope hash. Results are not comparable with V4 numbers produced at 512 unless the V4 adapter is re-evaluated under the same budget."
+          },
+          {
+            "id": "J_prompt_budget_768",
+            "axis": "prompt_budget",
+            "status": "planned_modal_not_run",
+            "uses_final_test": false,
+            "commands": [
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_j_budget_768 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 768 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_768 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 768",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_768 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 768",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_768 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 768"
+            ],
+            "run_name": "v4_1_ablation_j_budget_768",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_j_budget_768_preflight.json --prompt-token-limit 768",
+            "training_size": 800,
+            "training_command_index": 0,
+            "evaluation_command_indexes": [
+              1,
+              2,
+              3
+            ],
+            "seeds": [
+              42,
+              43,
+              44
+            ],
+            "prompt_information_variant": "full",
+            "output_instruction_variant": "self_contained",
+            "real_target_fraction": null,
+            "balanced_sampling": null,
+            "synthetic_balance_fraction": null,
+            "synthetic_balance_mode": "none",
+            "training_execution_mode": null,
+            "prompt_token_limit": 768,
+            "hypothesis": "Measure whether a function prompt budget that actually fits the required sections improves reference-validity and Kill@k. The sequence budget is 2048 and function completions are capped at 128, so 768 and 1024 both fit without changing the evaluator.",
+            "note": "Changing the budget changes the evaluation scope hash. Results are not comparable with V4 numbers produced at 512 unless the V4 adapter is re-evaluated under the same budget."
+          },
+          {
+            "id": "J_prompt_budget_1024",
+            "axis": "prompt_budget",
+            "status": "planned_modal_not_run",
+            "uses_final_test": false,
+            "commands": [
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_j_budget_1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024"
+            ],
+            "run_name": "v4_1_ablation_j_budget_1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_j_budget_1024_preflight.json --prompt-token-limit 1024",
+            "training_size": 800,
+            "training_command_index": 0,
+            "evaluation_command_indexes": [
+              1,
+              2,
+              3
+            ],
+            "seeds": [
+              42,
+              43,
+              44
+            ],
+            "prompt_information_variant": "full",
+            "output_instruction_variant": "self_contained",
+            "real_target_fraction": null,
+            "balanced_sampling": null,
+            "synthetic_balance_fraction": null,
+            "synthetic_balance_mode": "none",
+            "training_execution_mode": null,
+            "prompt_token_limit": 1024,
+            "hypothesis": "Measure whether a function prompt budget that actually fits the required sections improves reference-validity and Kill@k. The sequence budget is 2048 and function completions are capped at 128, so 768 and 1024 both fit without changing the evaluator.",
+            "note": "Changing the budget changes the evaluation scope hash. Results are not comparable with V4 numbers produced at 512 unless the V4 adapter is re-evaluated under the same budget."
           },
           {
             "id": "B_legacy_vs_unified",
@@ -975,8 +1099,14 @@
     },
     {
       "id": "native_repository_evaluation",
-      "kind": "implementation_deferred",
-      "status": "NOT_IMPLEMENTED_DO_NOT_REPORT_REPOSITORY_KILL_RATE"
+      "kind": "cpu_evaluation",
+      "status": "HARNESS_IMPLEMENTED_NOT_VALIDATED_ON_REAL_PROJECTS",
+      "harness": "harness.native_repository_eval",
+      "commands": [
+        "py -3.12 scripts/evaluate_native_repository.py --generated results/<run>/repository_generations.json --bugsinpy-root data/bugsinpy_v2_ingestion/BugsInPy --repository-cache data/bugsinpy_v2_ingestion/repositories --output results/<run>/native_repository_eval.json"
+      ],
+      "prerequisite": "Provisioned BugsInPy checkouts and historical interpreters (scripts/provision_bugsinpy_runtimes.py). No GPU required.",
+      "reporting_constraint": "Report executed_candidates alongside inconclusive_candidates. Do not quote a real-repository kill rate until a real project run exists."
     },
     {
       "id": "realistic_mutation_transfer",

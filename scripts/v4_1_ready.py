@@ -146,8 +146,25 @@ def build_execution_queue() -> dict[str, Any]:
             },
             {
                 "id": "native_repository_evaluation",
-                "kind": "implementation_deferred",
-                "status": "NOT_IMPLEMENTED_DO_NOT_REPORT_REPOSITORY_KILL_RATE",
+                "kind": "cpu_evaluation",
+                "status": "HARNESS_IMPLEMENTED_NOT_VALIDATED_ON_REAL_PROJECTS",
+                "harness": "harness.native_repository_eval",
+                "commands": [
+                    "py -3.12 scripts/evaluate_native_repository.py"
+                    " --generated results/<run>/repository_generations.json"
+                    " --bugsinpy-root data/bugsinpy_v2_ingestion/BugsInPy"
+                    " --repository-cache data/bugsinpy_v2_ingestion/repositories"
+                    " --output results/<run>/native_repository_eval.json"
+                ],
+                "prerequisite": (
+                    "Provisioned BugsInPy checkouts and historical interpreters "
+                    "(scripts/provision_bugsinpy_runtimes.py). No GPU required."
+                ),
+                "reporting_constraint": (
+                    "Report executed_candidates alongside inconclusive_candidates. "
+                    "Do not quote a real-repository kill rate until a real project "
+                    "run exists."
+                ),
             },
             {
                 "id": "realistic_mutation_transfer",
