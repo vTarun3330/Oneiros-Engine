@@ -42,6 +42,8 @@ from engine.sft_trainer import (
 from harness.corpus import verify_corpus
 from scripts.train_on_dataset import (
     FUNCTION_EXECUTION_MODE,
+    REPOSITORY_EXECUTION_MODE,
+    REPOSITORY_UNITTEST_EXECUTION_MODE,
     _filter_overlong_repository_completions,
     _repository_fragment_tests,
     balanced_repeat_examples,
@@ -99,6 +101,11 @@ def _make_data_point(pair: dict, prompt: str, completion: str) -> SFTDataPoint:
         bug_family=pair.get("bug_family", "unknown"),
         semantic_group=pair.get("group_id", pair["id"]),
         execution_mode=pair.get("execution_mode", FUNCTION_EXECUTION_MODE),
+        dataset=pair.get("source_name", "unknown"),
+        dataset_family=(
+            f"{pair.get('source_name', 'unknown')}::"
+            f"{pair.get('bug_family', 'unknown')}"
+        ),
     )
 
 
@@ -112,7 +119,10 @@ def build_preflight(
     real_target_fraction: float,
     max_real_repeats: int,
     synthetic_balance_fraction: float,
+    synthetic_balance_mode: str,
+    balanced_sampling_enabled: bool,
     max_synthetic_repeats: int,
+    execution_mode: str,
     prompt_token_limit: int,
     repository_prompt_token_limit: int,
     completion_token_limit: int,
@@ -122,6 +132,8 @@ def build_preflight(
     minimum_monitor_checkpoints: int,
     min_function_kill_rate: float,
     local_files_only: bool,
+    prompt_information_variant: str = "full",
+    output_instruction_variant: str = "self_contained",
 ) -> dict[str, Any]:
     if max_pairs <= 0:
         raise ValueError("max_pairs must be positive")
@@ -133,6 +145,19 @@ def build_preflight(
         raise ValueError("min_function_kill_rate must be in [0, 1]")
     if minimum_monitor_checkpoints < 0:
         raise ValueError("minimum_monitor_checkpoints must be non-negative")
+    if prompt_information_variant not in {"code_only", "code_specification", "full"}:
+        raise ValueError("Unsupported prompt information variant")
+    if output_instruction_variant not in {"legacy_exactly_one", "self_contained"}:
+        raise ValueError("Unsupported output instruction variant")
+    if synthetic_balance_mode not in {"none", "dataset", "dataset_family"}:
+        raise ValueError("Unsupported synthetic balance mode")
+    if execution_mode not in {"", FUNCTION_EXECUTION_MODE, REPOSITORY_EXECUTION_MODE, REPOSITORY_UNITTEST_EXECUTION_MODE}:
+        raise ValueError("Unsupported execution mode")
+    if synthetic_balance_mode == "none" and synthetic_balance_fraction:
+        raise ValueError("Synthetic balance fraction requires a non-none balance mode")
+    from scripts import train_on_dataset as trainer
+    trainer.PROMPT_INFORMATION_VARIANT = prompt_information_variant
+    trainer.OUTPUT_INSTRUCTION_VARIANT = output_instruction_variant
     if not 0 < repository_completion_token_limit < MAX_SFT_SEQUENCE_LENGTH:
         raise ValueError(
             "repository_completion_token_limit must be between 1 and the sequence limit"
@@ -181,6 +206,11 @@ def build_preflight(
         raise RuntimeError("Tokenizer has no EOS token")
 
     source_pairs = load_phase3_pairs(corpus_dir, "train")
+    if execution_mode:
+        source_pairs = [
+            pair for pair in source_pairs
+            if pair.get("execution_mode", FUNCTION_EXECUTION_MODE) == execution_mode
+        ]
     eligible_pairs, context_exclusions = _filter_overlong_repository_completions(
         source_pairs
     )
@@ -317,12 +347,26 @@ def build_preflight(
             repository_prompt_token_limit,
         )
     )
-    synthetic_examples, synthetic_deduplication = deduplicate_sft_examples(
-        synthetic_examples
-    )
-    repository_examples, repository_deduplication = deduplicate_sft_examples(
-        repository_examples
-    )
+    if balanced_sampling_enabled:
+        synthetic_examples, synthetic_deduplication = deduplicate_sft_examples(
+            synthetic_examples
+        )
+        repository_examples, repository_deduplication = deduplicate_sft_examples(
+            repository_examples
+        )
+    else:
+        synthetic_deduplication = {
+            "input_examples": len(synthetic_examples),
+            "retained_examples": len(synthetic_examples),
+            "exact_duplicates_excluded": 0,
+            "disabled": True,
+        }
+        repository_deduplication = {
+            "input_examples": len(repository_examples),
+            "retained_examples": len(repository_examples),
+            "exact_duplicates_excluded": 0,
+            "disabled": True,
+        }
     verified_supervision_exclusions = supervision_exclusion_summary(
         records_without_winners
     )
@@ -343,12 +387,17 @@ def build_preflight(
 
     effective_synthetic = list(synthetic_examples)
     synthetic_sampling = None
-    if synthetic_examples and synthetic_balance_fraction:
+    if (
+        balanced_sampling_enabled
+        and synthetic_examples
+        and synthetic_balance_fraction
+        and synthetic_balance_mode != "none"
+    ):
         effective_synthetic, synthetic_sampling = balanced_repeat_examples(
             synthetic_examples,
             math.ceil(len(synthetic_examples) * (1.0 + synthetic_balance_fraction)),
             max_synthetic_repeats,
-            "semantic_group",
+            synthetic_balance_mode,
         )
 
     desired_repository_examples = (
@@ -360,12 +409,28 @@ def build_preflight(
         if real_target_fraction
         else len(repository_examples)
     )
-    effective_repository, repository_sampling = balanced_repeat_examples(
-        repository_examples,
-        desired_repository_examples,
-        max_real_repeats,
-        "project",
-    )
+    if balanced_sampling_enabled:
+        effective_repository, repository_sampling = balanced_repeat_examples(
+            repository_examples,
+            desired_repository_examples,
+            max_real_repeats,
+            "project",
+        )
+    else:
+        real_repeats = (
+            min(
+                max_real_repeats,
+                max(1, math.ceil(desired_repository_examples / len(repository_examples))),
+            )
+            if repository_examples else 1
+        )
+        effective_repository = repository_examples * real_repeats
+        repository_sampling = {
+            "mode": "uniform_legacy_repetition",
+            "raw_examples": len(repository_examples),
+            "effective_examples": len(effective_repository),
+            "repeat_count": real_repeats,
+        }
     effective_examples = [*effective_synthetic, *effective_repository]
     effective_real_fraction = (
         len(effective_repository) / len(effective_examples)
@@ -547,6 +612,7 @@ def build_preflight(
         "ablation_dev": ablation_dev,
         "local_test_status": test_status,
         "selection": {
+            "execution_mode_filter": execution_mode or None,
             "requested_pairs": max_pairs,
             "retained_pairs": len(selected_pairs),
             "selection_sha256": selection_sha256,
@@ -594,6 +660,7 @@ def build_preflight(
             ),
         },
         "sampling": {
+            "balanced_sampling_enabled": balanced_sampling_enabled,
             "target_real_fraction": real_target_fraction,
             "actual_real_fraction": round(effective_real_fraction, 6),
             "target_reached": effective_real_fraction + 1e-12 >= real_target_fraction,
@@ -604,10 +671,13 @@ def build_preflight(
             "max_real_repeats": max_real_repeats,
             "repository_project_balance": repository_sampling,
             "synthetic_balance_fraction": synthetic_balance_fraction,
+            "synthetic_balance_mode": synthetic_balance_mode,
             "synthetic_semantic_group_balance": synthetic_sampling,
         },
         "tokenization": {
             "model_name": model_config.model_name,
+            "prompt_information_variant": prompt_information_variant,
+            "output_instruction_variant": output_instruction_variant,
             "prompt_token_limit": prompt_token_limit,
             "repository_prompt_token_limit": repository_prompt_token_limit,
             "completion_token_limit": completion_token_limit,
@@ -659,7 +729,32 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--real-target-fraction", type=float, default=0.20)
     parser.add_argument("--max-real-repeats", type=int, default=8)
     parser.add_argument("--synthetic-balance-fraction", type=float, default=0.0)
+    parser.add_argument(
+        "--synthetic-balance-mode",
+        choices=["none", "dataset", "dataset_family"],
+        default="none",
+    )
+    parser.add_argument(
+        "--balanced-sampling",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+    )
     parser.add_argument("--max-synthetic-repeats", type=int, default=2)
+    parser.add_argument(
+        "--execution-mode",
+        choices=["", FUNCTION_EXECUTION_MODE, REPOSITORY_EXECUTION_MODE, REPOSITORY_UNITTEST_EXECUTION_MODE],
+        default="",
+    )
+    parser.add_argument(
+        "--prompt-information-variant",
+        choices=["code_only", "code_specification", "full"],
+        default="full",
+    )
+    parser.add_argument(
+        "--output-instruction-variant",
+        choices=["legacy_exactly_one", "self_contained"],
+        default="self_contained",
+    )
     parser.add_argument(
         "--prompt-token-limit",
         type=int,
@@ -721,7 +816,10 @@ def main() -> None:
         real_target_fraction=args.real_target_fraction,
         max_real_repeats=args.max_real_repeats,
         synthetic_balance_fraction=args.synthetic_balance_fraction,
+        synthetic_balance_mode=args.synthetic_balance_mode,
+        balanced_sampling_enabled=args.balanced_sampling,
         max_synthetic_repeats=args.max_synthetic_repeats,
+        execution_mode=args.execution_mode,
         prompt_token_limit=args.prompt_token_limit,
         repository_prompt_token_limit=args.repository_prompt_token_limit,
         completion_token_limit=args.completion_token_limit,
@@ -731,6 +829,8 @@ def main() -> None:
         minimum_monitor_checkpoints=args.minimum_monitor_checkpoints,
         min_function_kill_rate=args.min_function_kill_rate,
         local_files_only=not args.allow_tokenizer_download,
+        prompt_information_variant=args.prompt_information_variant,
+        output_instruction_variant=args.output_instruction_variant,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

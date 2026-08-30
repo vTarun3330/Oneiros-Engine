@@ -12,6 +12,15 @@ from typing import Iterable, Sequence
 
 
 PROMPT_SCHEMA_VERSION = "oneiros_unified_test_generation_v2"
+PROMPT_INFORMATION_VARIANTS = (
+    "code_only",
+    "code_specification",
+    "full",
+)
+OUTPUT_INSTRUCTION_VARIANTS = (
+    "legacy_exactly_one",
+    "self_contained",
+)
 
 SYSTEM_PROMPT = """You are an expert Python software test engineer.
 
@@ -99,18 +108,32 @@ def build_unified_user_prompt(
     support_context: str = "",
     target_symbols: Sequence[str] | str | None = None,
     entry_point: str = "",
+    information_variant: str = "full",
+    output_instruction_variant: str = "self_contained",
 ) -> str:
     """Build the same field layout for every dataset and execution mode."""
+    if information_variant not in PROMPT_INFORMATION_VARIANTS:
+        raise ValueError(f"Unsupported prompt information variant: {information_variant!r}")
+    if output_instruction_variant not in OUTPUT_INSTRUCTION_VARIANTS:
+        raise ValueError(
+            f"Unsupported output instruction variant: {output_instruction_variant!r}"
+        )
     task_mode = task_mode_for_execution_mode(execution_mode)
     test_format = test_format_for_execution_mode(execution_mode)
     symbols = normalize_target_symbols(target_symbols, entry_point)
     symbol_text = ", ".join(f"`{symbol}`" for symbol in symbols) or "(not separately identified)"
-    clean_specification = sanitize_behavioral_specification(specification)
+    clean_specification = (
+        sanitize_behavioral_specification(specification)
+        if information_variant != "code_only" else ""
+    )
     specification_text = clean_specification or (
         "No additional behavioral specification is available. Infer intended "
         "behavior conservatively from the supplied execution context and public interface."
     )
-    context_text = str(support_context or "").strip() or "(No additional execution context.)"
+    context_text = (
+        str(support_context or "").strip()
+        if information_variant == "full" else ""
+    ) or "(No additional execution context.)"
     source_text = str(code_under_test or "").strip()
     if not source_text:
         raise ValueError("Unified prompt requires non-empty code_under_test")
@@ -135,6 +158,18 @@ def build_unified_user_prompt(
     # near the output suffix. The shared head/tail token compactor therefore
     # preserves the two highest-priority sections when a repository prompt is
     # too long, while support context yields first.
+    if output_instruction_variant == "legacy_exactly_one":
+        task_instruction = (
+            "Generate exactly ONE executable Python test. Do not generate multiple "
+            "tests, explanations, patches, or corrected code."
+        )
+    else:
+        task_instruction = (
+            "Generate one minimal, self-contained bug-revealing Python test case. The test\n"
+            "case may contain setup and assertions needed to demonstrate one behavioral\n"
+            "defect, but it must not contain multiple independent test cases."
+        )
+
     return f"""### TEST GENERATION TASK
 
 Task mode: {task_mode}
@@ -155,9 +190,7 @@ Target symbol(s): {symbol_text}
 
 ### Task
 
-Generate one minimal, self-contained bug-revealing Python test case. The test
-case may contain setup and assertions needed to demonstrate one behavioral
-defect, but it must not contain multiple independent test cases.
+{task_instruction}
 
 {output_rule}
 Do not output prose, a diagnosis, a suggested fix, corrected code, hidden

@@ -2,6 +2,30 @@
 
 Run every command from the repository root on `experiment/research-eval-ablations`. Do not merge to `main`. Do not access `test` during development.
 
+## 0. Generate and audit the launch queue
+
+The queue command materializes every CPU, integration, ablation, selected-model,
+and conditional DPO stage without submitting a GPU job. The doctor fails when
+the branch, corpus, source-bound tests, leakage/readiness evidence, 32-pair
+preflight, or frozen evaluation protocol is stale.
+
+```powershell
+py -3.12 scripts/v4_1_ready.py plan --output research/v4_1/GPU_READY_QUEUE.json
+py -3.12 scripts/v4_1_ready.py doctor --check-modal --output results/v4_1_doctor.json
+py -3.12 scripts/v4_1_ready.py show-integration
+```
+
+`doctor --check-modal` proves that a Modal profile is authenticated; it does not
+invent or assume the account's spending allowance. Before a paid launch, use the
+actual account limit with the existing billing-aware dry run:
+
+```powershell
+py -3.12 scripts/modal_train_failover.py --profiles <profile> --credit-limit <actual-limit> --reserve 0.25 --estimated-cost <estimate> --dry-run -- --phase sft --run-name <run-name> --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev
+```
+
+Do not launch from the generated queue unless the doctor is green and this
+billing check leaves the declared reserve.
+
 ## 1. Rebuild and verify locally
 
 The first online build populates immutable buggy-revision context caches. Subsequent rebuilds are offline and deterministic.
@@ -25,6 +49,19 @@ py -3.12 scripts/research_ablations.py smoke --output results/v4_1_research_metr
 ```
 
 All design experiments must pass `--evaluation-split ablation_dev`. Record their JSON results in `ABLATION_RESULTS.json` without deleting negative runs. Only the accepted configuration may proceed to locked validation.
+
+The generated plan now contains executable, distinct run names for:
+
+- A0/A1/A2: code only, code + specification, and full legitimate context;
+- C0/C1: legacy exactly-one wording and V4.1 self-contained-test wording;
+- F: 0%, 10%, 20%, and 30% repository-supervision targets;
+- G: proportional, project-balanced, and project + synthetic-family-balanced sampling;
+- I: 800, 2,000, 4,000, and full eligible training scales.
+
+B, D, E, and H remain explicitly fail-closed in the plan where a clean paired
+control is not yet available. The queue emits no misleading GPU command for a
+leaky legacy prompt, malformed head/tail prompt, unmatched oracle-localization
+panel, or confounded old-supervision corpus.
 
 ## 3. Preflight the 32-pair integration
 

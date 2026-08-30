@@ -202,6 +202,8 @@ def run_cloud_training(
     eval_diversity_mode: str = "none",
     evaluation_split: str = "val",
     holdout_bug_family: str = "",
+    prompt_information_variant: str = "full",
+    output_instruction_variant: str = "self_contained",
     confirm_final_test: bool = False,
     expected_corpus_fingerprint: str = "", restart_dpo: bool = False,
     dpo_validation_interval_pairs: int = 500,
@@ -211,6 +213,7 @@ def run_cloud_training(
     sft_real_target_fraction: float = -1.0, sft_max_real_repeats: int = 0,
     sft_balanced_sampling: bool = True,
     sft_synthetic_balance_fraction: float = 0.0,
+    sft_synthetic_balance_mode: str = "none",
     sft_max_synthetic_repeats: int = 2,
     sft_monitor_kill_rate: bool = True, sft_monitor_validation_functions: int = 500,
     sft_monitor_patience: int = 5,
@@ -272,6 +275,10 @@ def run_cloud_training(
         return {"error": "Evaluation feedback rounds must be between 0 and 7"}
     if eval_diversity_mode not in {"none", "ast", "input_shape"}:
         return {"error": "Unsupported evaluation diversity mode"}
+    if prompt_information_variant not in {"code_only", "code_specification", "full"}:
+        return {"error": "Unsupported prompt information variant"}
+    if output_instruction_variant not in {"legacy_exactly_one", "self_contained"}:
+        return {"error": "Unsupported output instruction variant"}
     if max_validation_functions < 0:
         return {"error": "Maximum validation functions must be non-negative"}
     if sft_epochs < 0 or sft_learning_rate < 0 or sft_batch_size < 0:
@@ -286,6 +293,10 @@ def run_cloud_training(
         return {"error": "SFT max real repeats must be positive when supplied"}
     if sft_synthetic_balance_fraction < 0.0 or sft_max_synthetic_repeats < 1:
         return {"error": "SFT synthetic balance settings are invalid"}
+    if sft_synthetic_balance_mode not in {"none", "dataset", "dataset_family"}:
+        return {"error": "Unsupported SFT synthetic balance mode"}
+    if sft_synthetic_balance_mode == "none" and sft_synthetic_balance_fraction:
+        return {"error": "Synthetic balance fraction requires a non-none balance mode"}
     if sft_monitor_validation_functions <= 0 or sft_monitor_patience <= 0:
         return {"error": "SFT monitor validation functions and patience must be positive"}
     if (
@@ -334,6 +345,8 @@ def run_cloud_training(
     trainer.EVAL_DIVERSITY_MODE = eval_diversity_mode
     trainer.EVALUATION_SPLIT = evaluation_split
     trainer.HOLDOUT_BUG_FAMILY = trainer.sanitise_family_name(holdout_bug_family)
+    trainer.PROMPT_INFORMATION_VARIANT = prompt_information_variant
+    trainer.OUTPUT_INSTRUCTION_VARIANT = output_instruction_variant
     trainer.MAX_VALIDATION_PAIRS = max_validation_functions or None
     trainer.CONFIRM_FINAL_TEST = confirm_final_test
     trainer.RESTART_DPO = restart_dpo
@@ -351,6 +364,7 @@ def run_cloud_training(
     trainer.SFT_MAX_REAL_REPEATS_OVERRIDE = sft_max_real_repeats or None
     trainer.SFT_BALANCED_SAMPLING_ENABLED = sft_balanced_sampling
     trainer.SFT_SYNTHETIC_BALANCE_FRACTION = sft_synthetic_balance_fraction
+    trainer.SFT_SYNTHETIC_BALANCE_MODE = sft_synthetic_balance_mode
     trainer.SFT_MAX_SYNTHETIC_REPEATS = sft_max_synthetic_repeats
     trainer.SFT_CHECKPOINT_MONITOR_ENABLED = sft_monitor_kill_rate
     trainer.SFT_MONITOR_VALIDATION_FUNCTIONS = sft_monitor_validation_functions
@@ -380,6 +394,11 @@ def run_cloud_training(
         holdout_bug_family or "none",
         max_validation_functions or "all",
     )
+    log.info(
+        "  Prompt ablation: information=%s output_instruction=%s",
+        prompt_information_variant,
+        output_instruction_variant,
+    )
     log.info(f"  Restart DPO:   {restart_dpo}")
     log.info(f"  DPO validation interval (trained pairs): {dpo_validation_interval_pairs}")
     if sft_epochs or sft_learning_rate or sft_lr_scheduler_type or sft_batch_size or sft_repository_completion_token_limit or sft_real_target_fraction >= 0.0 or sft_max_real_repeats:
@@ -402,8 +421,9 @@ def run_cloud_training(
     if sft_balanced_sampling:
         log.info(
             "  SFT sampler: exact deduplication and project-balanced real repeats; "
-            "synthetic_balance_fraction=%s max_synthetic_repeats=%s",
+            "synthetic_balance_fraction=%s synthetic_balance_mode=%s max_synthetic_repeats=%s",
             sft_synthetic_balance_fraction,
+            sft_synthetic_balance_mode,
             sft_max_synthetic_repeats,
         )
     log.info(f"  Run name:     {run_name}")
@@ -455,6 +475,8 @@ def training_main(
     eval_diversity_mode: str = "none",
     evaluation_split: str = "val",
     holdout_bug_family: str = "",
+    prompt_information_variant: str = "full",
+    output_instruction_variant: str = "self_contained",
     confirm_final_test: bool = False,
     restart_dpo: bool = False, dpo_validation_interval_pairs: int = 500,
     sft_epochs: int = 0, sft_learning_rate: float = 0.0,
@@ -463,6 +485,7 @@ def training_main(
     sft_real_target_fraction: float = -1.0, sft_max_real_repeats: int = 0,
     sft_balanced_sampling: bool = True,
     sft_synthetic_balance_fraction: float = 0.0,
+    sft_synthetic_balance_mode: str = "none",
     sft_max_synthetic_repeats: int = 2,
     sft_monitor_kill_rate: bool = True, sft_monitor_validation_functions: int = 500,
     sft_monitor_patience: int = 5,
@@ -495,6 +518,10 @@ def training_main(
         raise ValueError("Evaluation feedback rounds must be between 0 and 7")
     if eval_diversity_mode not in {"none", "ast", "input_shape"}:
         raise ValueError("Unsupported evaluation diversity mode")
+    if prompt_information_variant not in {"code_only", "code_specification", "full"}:
+        raise ValueError("Unsupported prompt information variant")
+    if output_instruction_variant not in {"legacy_exactly_one", "self_contained"}:
+        raise ValueError("Unsupported output instruction variant")
     if max_validation_functions < 0:
         raise ValueError("Maximum validation functions must be non-negative")
     from metrics.research_evaluation import sanitise_family_name
@@ -513,6 +540,10 @@ def training_main(
         raise ValueError("SFT max real repeats must be positive when supplied")
     if sft_synthetic_balance_fraction < 0.0 or sft_max_synthetic_repeats < 1:
         raise ValueError("SFT synthetic balance settings are invalid")
+    if sft_synthetic_balance_mode not in {"none", "dataset", "dataset_family"}:
+        raise ValueError("Unsupported SFT synthetic balance mode")
+    if sft_synthetic_balance_mode == "none" and sft_synthetic_balance_fraction:
+        raise ValueError("Synthetic balance fraction requires a non-none balance mode")
     if sft_monitor_validation_functions <= 0 or sft_monitor_patience <= 0:
         raise ValueError("SFT monitor validation functions and patience must be positive")
     if (
@@ -558,6 +589,11 @@ def training_main(
         f"holdout_family={holdout_bug_family or 'none'} "
         f"max_functions={max_validation_functions or 'all'}"
     )
+    print(
+        "   Prompt ablation: "
+        f"information={prompt_information_variant} "
+        f"output_instruction={output_instruction_variant}"
+    )
     print(f"   Restart DPO: {restart_dpo}")
     if phase == "dpo":
         print(f"   DPO validation interval: {dpo_validation_interval_pairs} trained preference pairs")
@@ -584,6 +620,7 @@ def training_main(
         print(
             "   SFT sampler: exact deduplication and project-balanced real repeats; "
             f"synthetic_balance_fraction={sft_synthetic_balance_fraction} "
+            f"synthetic_balance_mode={sft_synthetic_balance_mode} "
             f"max_synthetic_repeats={sft_max_synthetic_repeats}"
         )
     if execution_mode:
@@ -644,6 +681,8 @@ def training_main(
     evaluation_names.EVAL_DIVERSITY_MODE = eval_diversity_mode
     evaluation_names.EVALUATION_SPLIT = evaluation_split
     evaluation_names.HOLDOUT_BUG_FAMILY = holdout_bug_family or None
+    evaluation_names.PROMPT_INFORMATION_VARIANT = prompt_information_variant
+    evaluation_names.OUTPUT_INSTRUCTION_VARIANT = output_instruction_variant
     evaluation_names.MAX_VALIDATION_PAIRS = max_validation_functions or None
     result_filename = {
         "base_eval": evaluation_names.evaluation_results_filename("base", seed),
@@ -667,6 +706,8 @@ def training_main(
             eval_diversity_mode=eval_diversity_mode,
             evaluation_split=evaluation_split,
             holdout_bug_family=holdout_bug_family,
+            prompt_information_variant=prompt_information_variant,
+            output_instruction_variant=output_instruction_variant,
             confirm_final_test=confirm_final_test,
             expected_corpus_fingerprint=expected_corpus_fingerprint,
             restart_dpo=restart_dpo,
@@ -682,6 +723,7 @@ def training_main(
             sft_max_real_repeats=sft_max_real_repeats,
             sft_balanced_sampling=sft_balanced_sampling,
             sft_synthetic_balance_fraction=sft_synthetic_balance_fraction,
+            sft_synthetic_balance_mode=sft_synthetic_balance_mode,
             sft_max_synthetic_repeats=sft_max_synthetic_repeats,
             sft_monitor_kill_rate=sft_monitor_kill_rate,
             sft_monitor_validation_functions=sft_monitor_validation_functions,

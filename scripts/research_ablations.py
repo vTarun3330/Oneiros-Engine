@@ -58,6 +58,14 @@ def _modal_command(
     holdout_family: str = "",
     evaluation_split: str = "ablation_dev",
     fresh: bool = False,
+    max_pairs: int = 0,
+    prompt_information_variant: str = "full",
+    output_instruction_variant: str = "self_contained",
+    real_target_fraction: float | None = None,
+    balanced_sampling: bool | None = None,
+    synthetic_balance_fraction: float | None = None,
+    synthetic_balance_mode: str = "none",
+    execution_mode: str = "",
 ) -> str:
     parts = [
         "py", "-3.12", "scripts/modal_train.py",
@@ -69,14 +77,72 @@ def _modal_command(
     ]
     if max_validation_functions:
         parts.extend(["--max-validation-functions", str(max_validation_functions)])
+    if max_pairs:
+        parts.extend(["--max-pairs", str(max_pairs)])
     if feedback_rounds:
         parts.extend(["--eval-feedback-rounds", str(feedback_rounds)])
     if diversity_mode != "none":
         parts.extend(["--eval-diversity-mode", diversity_mode])
     if holdout_family:
         parts.extend(["--holdout-bug-family", holdout_family])
+    if prompt_information_variant != "full":
+        parts.extend(["--prompt-information-variant", prompt_information_variant])
+    if output_instruction_variant != "self_contained":
+        parts.extend(["--output-instruction-variant", output_instruction_variant])
+    if real_target_fraction is not None:
+        parts.extend(["--sft-real-target-fraction", str(real_target_fraction)])
+    if balanced_sampling is not None:
+        parts.append("--sft-balanced-sampling" if balanced_sampling else "--no-sft-balanced-sampling")
+    if synthetic_balance_fraction is not None:
+        parts.extend(["--sft-synthetic-balance-fraction", str(synthetic_balance_fraction)])
+    if synthetic_balance_mode != "none":
+        parts.extend(["--sft-synthetic-balance-mode", synthetic_balance_mode])
+    if execution_mode:
+        parts.extend(["--execution-mode", execution_mode])
     if fresh:
         parts.append("--fresh")
+    return " ".join(_quote(part) for part in parts)
+
+
+def _preflight_command(
+    *,
+    run_name: str,
+    corpus_version: str,
+    max_pairs: int,
+    prompt_information_variant: str = "full",
+    output_instruction_variant: str = "self_contained",
+    real_target_fraction: float | None = None,
+    balanced_sampling: bool | None = None,
+    synthetic_balance_fraction: float | None = None,
+    synthetic_balance_mode: str = "none",
+    execution_mode: str = "",
+) -> str:
+    parts = [
+        "py", "-3.12", "scripts/preflight_sft_run.py",
+        "--corpus-version", corpus_version,
+        "--max-pairs", str(max_pairs),
+        "--epochs", "1",
+        "--batch-size", "1",
+        "--learning-rate", "0.00005",
+        "--lr-scheduler-type", "constant_with_warmup",
+        "--repository-completion-token-limit", "1024",
+        "--min-function-kill-rate", "0.58",
+        "--output", f"results/{run_name}_preflight.json",
+    ]
+    if prompt_information_variant != "full":
+        parts.extend(["--prompt-information-variant", prompt_information_variant])
+    if output_instruction_variant != "self_contained":
+        parts.extend(["--output-instruction-variant", output_instruction_variant])
+    if real_target_fraction is not None:
+        parts.extend(["--real-target-fraction", str(real_target_fraction)])
+    if balanced_sampling is not None:
+        parts.append("--balanced-sampling" if balanced_sampling else "--no-balanced-sampling")
+    if synthetic_balance_fraction is not None:
+        parts.extend(["--synthetic-balance-fraction", str(synthetic_balance_fraction)])
+    if synthetic_balance_mode != "none":
+        parts.extend(["--synthetic-balance-mode", synthetic_balance_mode])
+    if execution_mode:
+        parts.extend(["--execution-mode", execution_mode])
     return " ".join(_quote(part) for part in parts)
 
 
@@ -106,6 +172,191 @@ def build_ablation_plan(
             "commands": list(commands),
             **metadata,
         })
+
+    def controlled_sft_experiment(
+        experiment_id: str,
+        axis: str,
+        run_suffix: str,
+        *,
+        max_pairs: int = 800,
+        prompt_information_variant: str = "full",
+        output_instruction_variant: str = "self_contained",
+        real_target_fraction: float | None = None,
+        balanced_sampling: bool | None = None,
+        synthetic_balance_fraction: float | None = None,
+        synthetic_balance_mode: str = "none",
+        training_execution_mode: str = "",
+        **metadata: Any,
+    ) -> None:
+        treatment_run = f"{run_name}_{run_suffix}"
+        common = {
+            "run_name": treatment_run,
+            "corpus_version": corpus_version,
+            "prompt_information_variant": prompt_information_variant,
+            "output_instruction_variant": output_instruction_variant,
+            "real_target_fraction": real_target_fraction,
+            "balanced_sampling": balanced_sampling,
+            "synthetic_balance_fraction": synthetic_balance_fraction,
+            "synthetic_balance_mode": synthetic_balance_mode,
+        }
+        train = _modal_command(
+            phase="sft", seed=seeds[0], max_pairs=max_pairs, fresh=True,
+            execution_mode=training_execution_mode, **common
+        )
+        train += (
+            " --sft-epochs 1 --sft-learning-rate 0.00005"
+            " --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1"
+            " --sft-repository-completion-token-limit 1024"
+            " --sft-monitor-validation-functions 100 --sft-monitor-patience 3"
+            " --sft-monitor-min-function-kill-rate 0.58"
+        )
+        evaluations = [
+            _modal_command(phase="sft_eval", seed=seed, **common)
+            for seed in seeds
+        ]
+        add(
+            experiment_id,
+            axis,
+            [train, *evaluations],
+            run_name=treatment_run,
+            preflight_command=(
+                _preflight_command(
+                    run_name=treatment_run,
+                    corpus_version=corpus_version,
+                    max_pairs=max_pairs,
+                    prompt_information_variant=prompt_information_variant,
+                    output_instruction_variant=output_instruction_variant,
+                    real_target_fraction=real_target_fraction,
+                    balanced_sampling=balanced_sampling,
+                    synthetic_balance_fraction=synthetic_balance_fraction,
+                    synthetic_balance_mode=synthetic_balance_mode,
+                    execution_mode=training_execution_mode,
+                )
+                if max_pairs else None
+            ),
+            training_size=max_pairs or "full_eligible_train",
+            training_command_index=0,
+            evaluation_command_indexes=list(range(1, len(evaluations) + 1)),
+            seeds=list(seeds),
+            prompt_information_variant=prompt_information_variant,
+            output_instruction_variant=output_instruction_variant,
+            real_target_fraction=real_target_fraction,
+            balanced_sampling=balanced_sampling,
+            synthetic_balance_fraction=synthetic_balance_fraction,
+            synthetic_balance_mode=synthetic_balance_mode,
+            training_execution_mode=training_execution_mode or None,
+            **metadata,
+        )
+
+    # Primary V4.1 ablation matrix. Every runnable treatment trains only on
+    # train and selects only on the fixed training-derived ablation_dev split.
+    for variant, label in (
+        ("code_only", "A0"),
+        ("code_specification", "A1"),
+        ("full", "A2"),
+    ):
+        controlled_sft_experiment(
+            f"A_prompt_information_{label}",
+            "prompt_information",
+            f"{label.lower()}_{variant}",
+            prompt_information_variant=variant,
+            hypothesis="Measure the incremental value of specification and legitimate support context.",
+        )
+
+    for variant, label in (
+        ("legacy_exactly_one", "C0"),
+        ("self_contained", "C1"),
+    ):
+        controlled_sft_experiment(
+            f"C_output_instruction_{label}",
+            "output_instruction",
+            f"{label.lower()}_{variant}",
+            output_instruction_variant=variant,
+            hypothesis="Measure whether revised one-test-case wording improves candidate validity.",
+        )
+
+    for fraction in (0.0, 0.10, 0.20, 0.30):
+        label = int(round(fraction * 100))
+        controlled_sft_experiment(
+            f"F_repository_weight_{label}",
+            "training_composition",
+            f"f_repo_{label}",
+            real_target_fraction=fraction,
+            training_execution_mode=("function_assertion" if fraction == 0.0 else ""),
+            hypothesis="Measure repository-supervision transfer without changing the evaluator.",
+        )
+
+    for label, balanced, fraction, balance_mode in (
+        ("G0_proportional", False, 0.0, "none"),
+        ("G1_dataset_balanced", True, 1.0, "dataset"),
+        ("G2_dataset_family_balanced", True, 1.0, "dataset_family"),
+    ):
+        controlled_sft_experiment(
+            label,
+            "sampling_balance",
+            label.lower(),
+            balanced_sampling=balanced,
+            real_target_fraction=0.0 if not balanced else 0.20,
+            synthetic_balance_fraction=fraction,
+            synthetic_balance_mode=balance_mode,
+            hypothesis="Measure whether deterministic balancing reduces source/family dominance.",
+        )
+
+    for size in (800, 2000, 4000, 0):
+        label = str(size) if size else "full"
+        controlled_sft_experiment(
+            f"I_training_scale_{label}",
+            "training_scale",
+            f"i_scale_{label}",
+            max_pairs=size,
+            hypothesis="Measure whether the current policy is undertrained.",
+        )
+
+    add(
+        "B_legacy_vs_unified",
+        "prompt_schema",
+        [],
+        status="blocked_clean_control_unavailable",
+        decision="INCONCLUSIVE",
+        reason=(
+            "The historical dataset-specific repository prompt is not a clean control because "
+            "it can reintroduce gold-derived context. No GPU command is emitted until a leak-safe "
+            "legacy renderer has independent tests."
+        ),
+    )
+    add(
+        "D_head_tail_vs_section_compaction",
+        "prompt_compaction",
+        [],
+        status="local_safety_only",
+        decision="INCONCLUSIVE",
+        reason=(
+            "Both helpers exist, but production remains fail-closed on section-aware compaction; "
+            "head/tail is not emitted as a GPU treatment until malformed-prompt accounting is wired."
+        ),
+    )
+    add(
+        "E_localization_assumption",
+        "localization_source",
+        [],
+        status="blocked_paired_scope_unavailable",
+        decision="INCONCLUSIVE",
+        reason=(
+            "A paired public-vs-oracle localization panel is not yet materialized. Oracle-derived "
+            "localization cannot become the headline condition."
+        ),
+    )
+    add(
+        "H_supervision_policy",
+        "candidate_supervision_quality",
+        [],
+        status="strict_treatment_ready_control_rejected",
+        decision="INCONCLUSIVE",
+        reason=(
+            "V4.1 strict reference-pass/buggy-fail supervision is active. The older corpus is not "
+            "a clean control because data and leakage policy changed together."
+        ),
+    )
 
     add(
         "base_vs_sft_base",
@@ -233,13 +484,37 @@ def build_ablation_plan(
         "holdout_families": families,
         "candidate_budget": 8,
         "split": "ablation_dev",
+        "primary_groups": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
     }
+    matrix_identity = [
+        {
+            "id": item["id"],
+            "axis": item["axis"],
+            "commands": item["commands"],
+            "preflight_command": item.get("preflight_command"),
+            "status": item["status"],
+        }
+        for item in experiments
+    ]
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "objective": "execution-verified bug-finding generalisation",
         "final_test_sealed": True,
         "plan_identity": plan_identity,
         "plan_sha256": evaluation_profile_sha256(plan_identity),
+        "experiment_matrix_sha256": evaluation_profile_sha256({"experiments": matrix_identity}),
+        "selection_rule": {
+            "priority": [
+                "reference_validity",
+                "execution_validity",
+                "Kill@8",
+                "Kill@1_and_Kill@4",
+                "equal_weight_dataset_macro",
+                "mutation_family_robustness",
+            ],
+            "locked_validation_gate_is_separate": True,
+            "negative_results_are_retained": True,
+        },
         "local_cpu_smoke_command": "py -3.12 scripts/research_ablations.py smoke",
         "modal_smoke_commands": smoke_commands,
         "experiments": experiments,

@@ -119,6 +119,8 @@ class SFTDataPoint:
     bug_family: str = "unknown"
     semantic_group: str = "unknown"
     execution_mode: str = "function_assertion"
+    dataset: str = "unknown"
+    dataset_family: str = "unknown::unknown"
 
 
 

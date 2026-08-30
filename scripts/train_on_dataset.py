@@ -38,6 +38,8 @@ from engine.prompt_budget import (
     compact_unified_user_prompt,
 )
 from engine.test_generation_prompt import (
+    OUTPUT_INSTRUCTION_VARIANTS,
+    PROMPT_INFORMATION_VARIANTS,
     PROMPT_SCHEMA_VERSION,
     build_unified_user_prompt,
     format_chat_prompt,
@@ -59,6 +61,8 @@ EVAL_FEEDBACK_ROUNDS = 0
 EVAL_DIVERSITY_MODE = "none"
 HOLDOUT_BUG_FAMILY = None
 EVALUATION_SPLIT = "val"
+PROMPT_INFORMATION_VARIANT = "full"
+OUTPUT_INSTRUCTION_VARIANT = "self_contained"
 
 SEED = 42
 TESTS_PER_PAIR = 8
@@ -98,6 +102,7 @@ SFT_MIN_MONITOR_CHECKPOINTS_OVERRIDE = None
 # configuration and cannot silently resume with this changed distribution.
 SFT_BALANCED_SAMPLING_ENABLED = True
 SFT_SYNTHETIC_BALANCE_FRACTION = 0.0
+SFT_SYNTHETIC_BALANCE_MODE = "none"
 SFT_MAX_SYNTHETIC_REPEATS = 2
 MAX_NEW_TOKENS_OVERRIDE = 128
 PROMPT_TOKEN_LIMIT = training_config.sft_prompt_token_limit
@@ -132,6 +137,10 @@ def _evaluation_profile_slug() -> str:
     if HOLDOUT_BUG_FAMILY:
         family = re.sub(r"[^a-z0-9]+", "-", HOLDOUT_BUG_FAMILY.lower()).strip("-")
         parts.append(f"holdout-{family}")
+    if PROMPT_INFORMATION_VARIANT != "full":
+        parts.append(f"prompt-{PROMPT_INFORMATION_VARIANT.replace('_', '-')}")
+    if OUTPUT_INSTRUCTION_VARIANT != "self_contained":
+        parts.append(f"instruction-{OUTPUT_INSTRUCTION_VARIANT.replace('_', '-')}")
     return "_".join(parts) or "standard"
 
 
@@ -150,6 +159,7 @@ def normalized_sft_run_hyperparameters(hyperparameters: Dict) -> Dict:
     normalized = dict(hyperparameters)
     normalized.setdefault("balanced_sampling_enabled", False)
     normalized.setdefault("synthetic_balance_fraction", 0.0)
+    normalized.setdefault("synthetic_balance_mode", "none")
     normalized.setdefault("max_synthetic_repeats", 2)
     # Runs created before this field existed always used cosine.
     normalized.setdefault("lr_scheduler_type", "cosine")
@@ -184,6 +194,8 @@ def sft_training_scope(
     scope += f":repository_prompt_token_limit={REPOSITORY_PROMPT_TOKEN_LIMIT}"
     scope += f":prompt_compaction={PROMPT_COMPACTION_STRATEGY}"
     scope += f":prompt_schema={PROMPT_SCHEMA_VERSION}"
+    scope += f":prompt_information={PROMPT_INFORMATION_VARIANT}"
+    scope += f":output_instruction={OUTPUT_INSTRUCTION_VARIANT}"
     scope += (
         ":generation_completion_limit="
         f"{MAX_SFT_GENERATION_COMPATIBLE_TOKENS}"
@@ -247,6 +259,8 @@ def build_prompt(
         support_context=support_context,
         target_symbols=target_symbols,
         entry_point=entry_point,
+        information_variant=PROMPT_INFORMATION_VARIANT,
+        output_instruction_variant=OUTPUT_INSTRUCTION_VARIANT,
     )
 
 
@@ -2397,6 +2411,8 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         "repository_prompt_token_limit": REPOSITORY_PROMPT_TOKEN_LIMIT,
         "prompt_compaction_strategy": PROMPT_COMPACTION_STRATEGY,
         "prompt_schema_version": PROMPT_SCHEMA_VERSION,
+        "prompt_information_variant": PROMPT_INFORMATION_VARIANT,
+        "output_instruction_variant": OUTPUT_INSTRUCTION_VARIANT,
         "generation_completion_token_limit": MAX_SFT_GENERATION_COMPATIBLE_TOKENS,
         "repository_generation_completion_token_limit": (
             SFT_REPOSITORY_COMPLETION_TOKEN_LIMIT_OVERRIDE
@@ -2429,6 +2445,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         "monitor_interval_optimizer_steps": training_config.sft_checkpoint_steps,
         "balanced_sampling_enabled": SFT_BALANCED_SAMPLING_ENABLED,
         "synthetic_balance_fraction": SFT_SYNTHETIC_BALANCE_FRACTION,
+        "synthetic_balance_mode": SFT_SYNTHETIC_BALANCE_MODE,
         "max_synthetic_repeats": SFT_MAX_SYNTHETIC_REPEATS,
     }
     reproducibility = build_reproducibility_manifest(
@@ -2443,6 +2460,8 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         or not 0.0 <= sft_hyperparameters["real_target_fraction"] < 1.0
         or sft_hyperparameters["max_real_repeats"] < 1
         or sft_hyperparameters["synthetic_balance_fraction"] < 0.0
+        or sft_hyperparameters["synthetic_balance_mode"]
+        not in {"none", "dataset", "dataset_family"}
         or sft_hyperparameters["max_synthetic_repeats"] < 1
         or sft_hyperparameters["prompt_token_limit"] <= 0
         or sft_hyperparameters["repository_prompt_token_limit"] <= 0
@@ -2599,6 +2618,11 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                             execution_mode=pair.get(
                                 "execution_mode", FUNCTION_EXECUTION_MODE
                             ),
+                            dataset=pair.get("source_name", "unknown"),
+                            dataset_family=(
+                                f"{pair.get('source_name', 'unknown')}::"
+                                f"{pair.get('bug_family', 'unknown')}"
+                            ),
                         )
                         if is_repository_execution_mode(
                             pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
@@ -2714,6 +2738,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                     sft_hyperparameters["balanced_sampling_enabled"]
                     and synthetic_sft_data
                     and sft_hyperparameters["synthetic_balance_fraction"]
+                    and sft_hyperparameters["synthetic_balance_mode"] != "none"
                 ):
                     synthetic_target = math.ceil(
                         len(synthetic_sft_data)
@@ -2724,7 +2749,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                             synthetic_sft_data,
                             synthetic_target,
                             sft_hyperparameters["max_synthetic_repeats"],
-                            "semantic_group",
+                            sft_hyperparameters["synthetic_balance_mode"],
                         )
                     )
                     sft_sampling_stats["synthetic_semantic_group_balance"] = (
@@ -3538,6 +3563,18 @@ if __name__ == "__main__":
         help="Exclude one mutation family from training and evaluate only that family",
     )
     parser.add_argument(
+        "--prompt-information-variant",
+        choices=PROMPT_INFORMATION_VARIANTS,
+        default="full",
+        help="Ablation A: code only, code plus specification, or the full legitimate context",
+    )
+    parser.add_argument(
+        "--output-instruction-variant",
+        choices=OUTPUT_INSTRUCTION_VARIANTS,
+        default="self_contained",
+        help="Ablation C: legacy exactly-one wording or the V4.1 self-contained-test wording",
+    )
+    parser.add_argument(
         "--dpo-validation-interval-pairs", type=int, default=DPO_VALIDATION_INTERVAL_PAIRS,
         help="Evaluate locked validation after this many trained DPO preference pairs (default: 500)",
     )
@@ -3585,6 +3622,12 @@ if __name__ == "__main__":
         "--sft-synthetic-balance-fraction", type=float,
         default=SFT_SYNTHETIC_BALANCE_FRACTION,
         help="Optional additional rare-family SFT fraction for the balanced sampler",
+    )
+    parser.add_argument(
+        "--sft-synthetic-balance-mode",
+        choices=["none", "dataset", "dataset_family"],
+        default=SFT_SYNTHETIC_BALANCE_MODE,
+        help="Ablation G grouping used for deterministic synthetic balancing",
     )
     parser.add_argument(
         "--sft-max-synthetic-repeats", type=int,
@@ -3652,6 +3695,8 @@ if __name__ == "__main__":
     EVAL_DIVERSITY_MODE = args.eval_diversity_mode
     EVALUATION_SPLIT = args.evaluation_split
     HOLDOUT_BUG_FAMILY = sanitise_family_name(args.holdout_bug_family)
+    PROMPT_INFORMATION_VARIANT = args.prompt_information_variant
+    OUTPUT_INSTRUCTION_VARIANT = args.output_instruction_variant
     if args.max_pairs:
         MAX_TRAIN_PAIRS = args.max_pairs
     if args.max_validation_functions:
@@ -3679,6 +3724,10 @@ if __name__ == "__main__":
         raise ValueError("--sft-max-real-repeats must be at least one")
     if args.sft_synthetic_balance_fraction < 0.0:
         raise ValueError("--sft-synthetic-balance-fraction must be non-negative")
+    if args.sft_synthetic_balance_mode == "none" and args.sft_synthetic_balance_fraction:
+        raise ValueError(
+            "--sft-synthetic-balance-fraction requires dataset or dataset_family mode"
+        )
     if args.sft_max_synthetic_repeats < 1:
         raise ValueError("--sft-max-synthetic-repeats must be at least one")
     if args.sft_monitor_validation_functions <= 0:
@@ -3708,6 +3757,7 @@ if __name__ == "__main__":
     if args.sft_balanced_sampling is not None:
         SFT_BALANCED_SAMPLING_ENABLED = args.sft_balanced_sampling
     SFT_SYNTHETIC_BALANCE_FRACTION = args.sft_synthetic_balance_fraction
+    SFT_SYNTHETIC_BALANCE_MODE = args.sft_synthetic_balance_mode
     SFT_MAX_SYNTHETIC_REPEATS = args.sft_max_synthetic_repeats
     if args.sft_monitor_kill_rate is not None:
         SFT_CHECKPOINT_MONITOR_ENABLED = args.sft_monitor_kill_rate

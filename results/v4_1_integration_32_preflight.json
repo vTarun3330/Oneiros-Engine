@@ -5,7 +5,7 @@
   "gpu_model_loaded": false,
   "corpus_modified": false,
   "checkpoint_modified": false,
-  "elapsed_seconds": 325.156,
+  "elapsed_seconds": 322.581,
   "corpus": {
     "version": "v4_1_research_hardened_candidate",
     "corpus_id": "oneiros-corpus-v4.1-research-hardened-candidate",
@@ -178,7 +178,7 @@
   },
   "local_test_status": {
     "schema_version": "oneiros_v4_1_local_test_status_v1",
-    "timestamp_utc": "2026-08-28T14:13:42.505085+00:00",
+    "timestamp_utc": "2026-08-30T18:27:20.994567+00:00",
     "command": [
       "C:\\Program Files\\Python312\\python.exe",
       "-m",
@@ -186,14 +186,15 @@
       "-q"
     ],
     "returncode": 0,
-    "passed": 119,
+    "passed": 123,
     "failed": 0,
-    "source_tree_sha256": "f44094fe24d250cd390a52649d6b7e540a0cbe2bb4257b62bb7835fb0d9bf36a",
+    "source_tree_sha256": "c1855828b661f3fcb4da37dbd72a33dedfcfbb0b6b63b39892a7aed0e46b59e6",
     "completion_only_masking_verified": true,
     "sealed_final_test_accessed": false,
-    "output_tail": "........................................................................ [ 60%]\n...............................................                          [100%]\n119 passed in 23.93s"
+    "output_tail": "........................................................................ [ 58%]\n...................................................                      [100%]\n123 passed in 24.17s"
   },
   "selection": {
+    "execution_mode_filter": null,
     "requested_pairs": 32,
     "retained_pairs": 32,
     "selection_sha256": "f24ddefdfa952412e160086c5586b5f43b2f5a997712e8da1df8a0ef728cb861",
@@ -1509,6 +1510,7 @@
     }
   },
   "sampling": {
+    "balanced_sampling_enabled": true,
     "target_real_fraction": 0.2,
     "actual_real_fraction": 0.2,
     "target_reached": true,
@@ -1540,10 +1542,13 @@
       "target_reached": true
     },
     "synthetic_balance_fraction": 0.0,
+    "synthetic_balance_mode": "none",
     "synthetic_semantic_group_balance": null
   },
   "tokenization": {
     "model_name": "microsoft/Phi-3-mini-4k-instruct",
+    "prompt_information_variant": "full",
+    "output_instruction_variant": "self_contained",
     "prompt_token_limit": 512,
     "repository_prompt_token_limit": 1024,
     "completion_token_limit": 128,

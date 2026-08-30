@@ -66,4 +66,10 @@ py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_ca
 
 The exact staged GPU commands and stop conditions are in `V4_1_NEXT_RUN.md`. Ablations are predeclared in `ABLATION_RESULTS.json`; unrun and negative results remain visible.
 
+Generate the complete no-launch execution matrix and run its readiness doctor
+with `py -3.12 scripts/v4_1_ready.py plan` and
+`py -3.12 scripts/v4_1_ready.py doctor --check-modal`. The doctor checks Modal
+authentication but deliberately does not treat authentication as proof of GPU
+credit; the billing-aware failover dry run remains the spending gate.
+
 Historical Phase 2 material is archived under `docs/archive/phase2/` and is not the active architecture.

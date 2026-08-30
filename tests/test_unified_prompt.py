@@ -81,6 +81,53 @@ def test_prompt_contract_cannot_receive_oracle_only_fields():
     assert "one minimal, self-contained bug-revealing test" in SYSTEM_PROMPT
 
 
+def test_prompt_information_ablation_withholds_only_declared_visible_fields():
+    common = {
+        "code_under_test": "def f(x): return x",
+        "execution_mode": "function_assertion",
+        "specification": "Return the successor.",
+        "support_context": "HELPER = 1",
+        "target_symbols": ["f"],
+    }
+    code_only = build_unified_user_prompt(
+        **common, information_variant="code_only"
+    )
+    code_specification = build_unified_user_prompt(
+        **common, information_variant="code_specification"
+    )
+    full = build_unified_user_prompt(**common, information_variant="full")
+
+    assert "Return the successor." not in code_only
+    assert "HELPER = 1" not in code_only
+    assert "Return the successor." in code_specification
+    assert "HELPER = 1" not in code_specification
+    assert "Return the successor." in full
+    assert "HELPER = 1" in full
+    assert all("def f(x): return x" in prompt for prompt in (code_only, code_specification, full))
+
+
+def test_output_instruction_ablation_changes_wording_without_changing_fields():
+    legacy = build_unified_user_prompt(
+        code_under_test="def f(x): return x",
+        execution_mode="function_assertion",
+        specification="Return x.",
+        target_symbols=["f"],
+        output_instruction_variant="legacy_exactly_one",
+    )
+    revised = build_unified_user_prompt(
+        code_under_test="def f(x): return x",
+        execution_mode="function_assertion",
+        specification="Return x.",
+        target_symbols=["f"],
+        output_instruction_variant="self_contained",
+    )
+
+    assert "exactly ONE executable Python test" in legacy
+    assert "minimal, self-contained bug-revealing" not in legacy
+    assert "minimal, self-contained bug-revealing" in revised
+    assert "Return x." in legacy and "Return x." in revised
+
+
 def test_specification_sanitizer_removes_patch_leakage_but_keeps_behavior():
     raw = """Nested models produce an incorrect matrix.
 diff --git a/model.py b/model.py

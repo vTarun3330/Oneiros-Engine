@@ -129,6 +129,7 @@ def test_bounded_dpo_smoke_preserves_full_sft_identity():
         "prompt_token_limit=512:repository_prompt_token_limit=1024:"
         "prompt_compaction=section_aware_ast_units_before_chat_v4_1:"
         "prompt_schema=oneiros_unified_test_generation_v2:"
+        "prompt_information=full:output_instruction=self_contained:"
         "generation_completion_limit=128:repository_generation_completion_limit=1024"
     )
     assert sft_training_scope(100, True, None) == (
@@ -137,6 +138,7 @@ def test_bounded_dpo_smoke_preserves_full_sft_identity():
         "repository_prompt_token_limit=1024:"
         "prompt_compaction=section_aware_ast_units_before_chat_v4_1:"
         "prompt_schema=oneiros_unified_test_generation_v2:"
+        "prompt_information=full:output_instruction=self_contained:"
         "generation_completion_limit=128:repository_generation_completion_limit=1024"
     )
 
@@ -398,6 +400,7 @@ def test_old_run_config_gets_only_inactive_sampler_defaults():
         **older,
         "balanced_sampling_enabled": False,
         "synthetic_balance_fraction": 0.0,
+        "synthetic_balance_mode": "none",
         "max_synthetic_repeats": 2,
         "lr_scheduler_type": "cosine",
         "min_function_kill_rate": 0.50,
