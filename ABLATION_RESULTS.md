@@ -25,21 +25,36 @@ fail-closed section-aware compaction this is not a tuning knob but a
 prerequisite: at 512 tokens most records cannot be prompted at all, so they
 yield zero candidates regardless of the model.
 
-Measured locally on CPU, with no model loaded:
+Measured locally on CPU with no model loaded. Every function record on each
+panel was attempted, so these counts are exhaustive rather than sampled.
 
-| Panel | Function records | Unpromptable at 512 | Share |
-| --- | ---: | ---: | ---: |
-| `ablation_dev` | 542 | 388 | 71.6% |
-| `val` (locked) | 757 | 583 | 77.0% |
+Unpromptable function records by budget:
 
-Sampled over 400 synthetic training records, the share whose required sections
-fit is 34.5% at 512, 97.2% at 768, and 99.8% at 1024. The sequence budget is
-2,048 and function completions are capped at 128, so 768 and 1,024 both fit
-without touching evaluator semantics.
+| Panel | Records | 512 | 768 | 1024 | 1280 | 1536 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `ablation_dev` | 542 | 388 (71.6%) | 28 (5.2%) | 0 | 0 | 0 |
+| `val` (locked) | 757 | 583 (77.0%) | 0 | 0 | 0 | 0 |
 
-No GPU comparison has been run, so **no budget has been selected**. The prompt
-budget is part of the evaluation scope hash: results at a new budget are not
-comparable with V4 numbers produced at 512 unless the V4 adapter is
+Usable synthetic training records, from the real preflight runs:
+
+| Budget | Prompt-compatible synthetic train pairs (of 5,595) |
+| --- | ---: |
+| 512 | 1,930 |
+| 768 | 5,396 |
+
+**Gate conclusion.** Promptability is a hard prerequisite, not a performance
+result. 512 fails on both panels. 768 clears `val` but leaves 28 unpromptable
+`ablation_dev` records. **1024 is the smallest tested budget that clears
+`evaluation_panel_fully_promptable` on both panels**, and 1024 + 128 leaves ample
+room in the 2,048 sequence budget. Dropping the 28 records to make 768 pass would
+silently change the panel and is not permitted.
+
+This narrows the admissible budgets to 1024 and above. It does **not** select
+one: which admissible budget yields better Kill@k and reference-validity is
+still an open GPU question, and **no model has been trained at any budget**.
+
+The prompt budget is part of the evaluation scope hash. Results at a new budget
+are not comparable with V4 numbers produced at 512 unless the V4 adapter is
 re-evaluated under the same budget.
 
 Future rows must report requested, parse-valid, execution-valid, reference-valid, and killing candidates; Kill@1/2/4/8; Wilson intervals per seed; dataset and mutation-family slices; token use; unique/effective examples; and an ACCEPT, REJECT, or INCONCLUSIVE decision. Negative results must remain in both artifacts.

@@ -201,19 +201,39 @@
       "metrics": null,
       "result": "NOT_RUN",
       "decision": "INCONCLUSIVE",
-      "reason": "Local CPU evidence only. Under section-aware fail-closed compaction at 512 tokens, 388/542 ablation_dev and 583/757 val function records cannot be prompted at all, and only ~1,930 of 5,595 synthetic training records are usable. A sampled scan over the training split gives ~97.2% fit at 768 and ~99.8% at 1024. No GPU comparison has been run, so no budget has been selected.",
+      "reason": "CPU evidence narrows the admissible budgets to 1024 and above. It does not select one: which admissible budget yields better Kill@k and reference-validity is still an open GPU question. No budget has been selected and no model has been trained at any budget.",
       "local_cpu_evidence": {
-        "ablation_dev_unpromptable_at_512": 388,
-        "ablation_dev_function_records": 542,
-        "val_unpromptable_at_512": 583,
-        "val_function_records": 757,
-        "synthetic_train_fit_at_512": 0.345,
-        "synthetic_train_fit_at_768": 0.972,
-        "synthetic_train_fit_at_1024": 0.998,
-        "sampled_records": 400,
-        "method": "section-aware compaction attempted per record; no model loaded"
+        "method": "Section-aware compaction attempted for every function record on each panel. No model loaded, no GPU used. Exhaustive, not sampled.",
+        "unpromptable_function_records": {
+          "ablation_dev": {
+            "function_records": 542,
+            "512": 388,
+            "768": 28,
+            "1024": 0,
+            "1280": 0,
+            "1536": 0
+          },
+          "val": {
+            "function_records": 757,
+            "512": 583,
+            "768": 0,
+            "1024": 0,
+            "1280": 0,
+            "1536": 0
+          }
+        },
+        "prompt_compatible_synthetic_train_pairs": {
+          "total_synthetic_train_pairs": 5595,
+          "512": 1930,
+          "768": 5396
+        },
+        "preflight_artifacts": {
+          "512": "results/v4_1_integration_32_preflight.json",
+          "768": "results/v4_1_ablation_j_budget_768_preflight.json"
+        }
       },
-      "protocol_note": "The prompt budget is part of the evaluation scope hash. Results at a new budget are not comparable with V4 numbers produced at 512 unless the V4 adapter is re-evaluated under the same budget."
+      "protocol_note": "The prompt budget is part of the evaluation scope hash. Results at a new budget are not comparable with V4 numbers produced at 512 unless the V4 adapter is re-evaluated under the same budget.",
+      "gate_conclusion": "Promptability is a hard prerequisite, not a performance result. 512 fails on both panels. 768 clears val but leaves 28 unpromptable ablation_dev records. 1024 is the smallest tested budget that clears evaluation_panel_fully_promptable on both panels, and 1024+128 leaves ample room in the 2048 sequence budget. Excluding the 28 records to make 768 pass would silently change the panel and is not permitted."
     }
   ],
   "accepted_changes": [],

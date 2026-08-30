@@ -56,10 +56,18 @@ The generated plan now contains executable, distinct run names for:
 - C0/C1: legacy exactly-one wording and V4.1 self-contained-test wording;
 - F: 0%, 10%, 20%, and 30% repository-supervision targets;
 - G: proportional, project-balanced, and project + synthetic-family-balanced sampling;
-- I: 800, 2,000, 4,000, and full eligible training scales.
+- I: 800, 2,000, 4,000, and full eligible training scales;
+- J: 1024 and 1280 function prompt budgets.
+
+**Run group J first.** It is a prerequisite, not a preference: at the frozen 512
+budget the pipeline cannot prompt most of the evaluation panel, so every other
+ablation would be measured through a broken prompt. Once a budget is selected,
+add `--sft-prompt-token-limit <budget>` to every later training and evaluation
+command and re-run the preflight.
 
 B, D, E, and H remain explicitly fail-closed in the plan where a clean paired
-control is not yet available. The queue emits no misleading GPU command for a
+control is not yet available. J's 512 and 768 rows are recorded as gate
+failures with no GPU command. The queue emits no misleading GPU command for a
 leaky legacy prompt, malformed head/tail prompt, unmatched oracle-localization
 panel, or confounded old-supervision corpus.
 
@@ -76,15 +84,25 @@ section-aware compaction is fail-closed. `evaluation_panel_fully_promptable`
 therefore blocks any run whose panel cannot be prompted under the declared
 budget.
 
-**Current status: this gate fails.** At the frozen 512-token function prompt
-budget, 388 of 542 `ablation_dev` function records (71.6%) and 583 of 757 `val`
-function records (77.0%) cannot be prompted at all, because their required
-sections — system prompt, headings, specification, and the complete target
-function — already exceed 512 tokens before any support context is added. Those
-records would produce zero candidates. Raise the budget through a declared
-ablation on `ablation_dev` (the sequence budget is 2,048 and function completions
-are capped at 128, so 768 or 1,024 fits with room to spare) before launching. Do
-not disable this gate.
+**Current status: this gate fails at the frozen 512-token budget.** The panels
+were swept exhaustively on CPU:
+
+| Panel | Records | 512 | 768 | 1024 |
+| --- | ---: | ---: | ---: | ---: |
+| `ablation_dev` | 542 | 388 unpromptable | 28 | 0 |
+| `val` | 757 | 583 unpromptable | 0 | 0 |
+
+Their required sections — system prompt, headings, specification, and the
+complete target function — exceed 512 tokens before any support context is
+added, so those records produce zero candidates. Usable synthetic training
+records rise from 1,930 to 5,396 of 5,595 between 512 and 768.
+
+**1024 is the smallest budget that clears both panels**, and 1024 + 128 fits the
+2,048 sequence budget comfortably. Ablation group J therefore emits GPU commands
+only for 1024 and 1280; 512 and 768 are recorded as gate failures with no
+command, because buying GPU time for a budget that cannot prompt the panel buys
+a foregone conclusion. Do not disable this gate, and do not drop the failing
+records to make a smaller budget pass — that silently changes the panel.
 
 If `ready` is false, stop. Do not weaken a gate. This declared integration
 requires exactly one terminal monitor evaluation because it has only six

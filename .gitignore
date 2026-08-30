@@ -63,6 +63,9 @@ checkpoints/**
 !checkpoints/README.md
 results/**
 !results/README.md
+# V4.1 readiness/preflight evidence is small, structured, and must be
+# reproducible from the repository (specification section 47).
+!results/v4_1_*.json
 logs/
 wandb/
 runs/

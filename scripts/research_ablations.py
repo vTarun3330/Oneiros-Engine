@@ -325,17 +325,45 @@ def build_ablation_plan(
     # Group J screens the declared function prompt budget.  At 512 tokens the
     # fail-closed compaction cannot render a prompt for most of the corpus, so
     # this is a prerequisite for every other treatment rather than a tuning knob.
-    for budget in (512, 768, 1024):
+    # Exhaustive CPU evidence already settles which budgets are admissible: a
+    # budget that cannot prompt the whole evaluation panel yields zero candidates
+    # for those records no matter what the model learned.  Emitting a GPU command
+    # for such a budget would buy a foregone conclusion, so those rows carry the
+    # measured gate failure and no command.
+    for budget, unpromptable in ((512, {"ablation_dev": 388, "val": 583}),
+                                 (768, {"ablation_dev": 28, "val": 0})):
+        add(
+            f"J_prompt_budget_{budget}",
+            "prompt_budget",
+            [],
+            status="gate_failed_no_gpu_command_emitted",
+            decision="REJECT",
+            prompt_token_limit=budget,
+            unpromptable_function_records=unpromptable,
+            reason=(
+                f"At {budget} tokens the fail-closed section-aware compaction cannot "
+                "render a prompt for every evaluation-panel record "
+                f"({unpromptable['ablation_dev']} of 542 ablation_dev and "
+                f"{unpromptable['val']} of 757 val function records fail). Those "
+                "records would contribute zero candidates, so the preflight gate "
+                "evaluation_panel_fully_promptable rejects this budget before any "
+                "GPU work. Excluding the failing records to make it pass would "
+                "silently change the panel."
+            ),
+        )
+
+    for budget in (1024, 1280):
         controlled_sft_experiment(
             f"J_prompt_budget_{budget}",
             "prompt_budget",
             f"j_budget_{budget}",
             prompt_token_limit=budget,
             hypothesis=(
-                "Measure whether a function prompt budget that actually fits the "
-                "required sections improves reference-validity and Kill@k. The "
-                "sequence budget is 2048 and function completions are capped at "
-                "128, so 768 and 1024 both fit without changing the evaluator."
+                "Among budgets that can actually prompt the whole panel, measure "
+                "which yields better reference-validity and Kill@k. 1024 is the "
+                "smallest budget that clears the gate on both panels; 1280 tests "
+                "whether additional context helps further. Function completions are "
+                "capped at 128, so both fit the 2048 sequence budget."
             ),
             note=(
                 "Changing the budget changes the evaluation scope hash. Results "

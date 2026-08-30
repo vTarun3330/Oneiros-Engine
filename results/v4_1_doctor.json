@@ -1,0 +1,59 @@
+{
+  "schema_version": "oneiros_v4_1_doctor_v1",
+  "ready_for_32_pair_integration": false,
+  "tracked_changes_warning": true,
+  "modal_credit_balance_verified": false,
+  "modal_credit_note": "Modal has no universal free-credit gate in this script. Use scripts/modal_train_failover.py --dry-run with the account's actual credit limit.",
+  "sealed_final_test_accessed": false,
+  "checks": [
+    {
+      "name": "active_experiment_branch",
+      "passed": true,
+      "detail": "experiment/research-eval-ablations"
+    },
+    {
+      "name": "v4_baseline_is_ancestor",
+      "passed": true,
+      "detail": "1d2cca8"
+    },
+    {
+      "name": "tracked_worktree_clean",
+      "passed": false,
+      "detail": "M ABLATION_RESULTS.json\n M ABLATION_RESULTS.md\n M engine/generator.py\n M metrics/research_evaluation.py\n M results/v4_1_integration_32_preflight.json\n M results/v4_1_local_test_status.json\n M scripts/preflight_sft_run.py\n M scripts/train_on_dataset.py\n M tests/test_training_smoke_selection.py"
+    },
+    {
+      "name": "canonical_corpus_hashes",
+      "passed": true,
+      "detail": "04940ee92c7eeef3efb0808e577470cfb5415c13612ecb25bd11eb00c2adfd50"
+    },
+    {
+      "name": "source_bound_tests_current",
+      "passed": true,
+      "detail": {
+        "passed": 140,
+        "recorded_source_sha256": "02430b5029ef8424cd00945d72711e80a7a230c1bbf6a55c9dbfb1764f085b3f",
+        "current_source_sha256": "02430b5029ef8424cd00945d72711e80a7a230c1bbf6a55c9dbfb1764f085b3f"
+      }
+    },
+    {
+      "name": "locked_train_readiness",
+      "passed": true,
+      "detail": "C:/Users/saira/OneDrive/Desktop/Capstone/oneiros/results/v4_1_research_hardened_candidate_train_readiness.json"
+    },
+    {
+      "name": "integration_preflight_current",
+      "passed": false,
+      "detail": "C:/Users/saira/OneDrive/Desktop/Capstone/oneiros/results/v4_1_integration_32_preflight.json"
+    },
+    {
+      "name": "frozen_evaluation_protocol",
+      "passed": true,
+      "detail": "oneiros_v4_1_frozen_evaluation_v1"
+    },
+    {
+      "name": "sealed_final_test_unaccessed",
+      "passed": true,
+      "detail": "not_frozen_no_gpu_ablation_results_yet"
+    }
+  ]
+}
