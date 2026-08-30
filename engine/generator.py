@@ -33,7 +33,7 @@ from engine.model_runtime import (
     build_4bit_quantization_config,
     runtime_profile,
 )
-from engine.prompt_budget import compact_unified_user_prompt
+from engine.prompt_budget import PromptBudgetError, compact_unified_user_prompt
 from engine.test_generation_prompt import build_unified_user_prompt, format_chat_prompt
 from harness.candidate_policy import validate_function_assertion
 
@@ -304,12 +304,29 @@ class Phi3Generator:
             library=library,
             entry_point=target_entry_point,
         )
-        compaction = compact_unified_user_prompt(
-            self.tokenizer,
-            user_prompt,
-            training_config.sft_prompt_token_limit,
-            format_chat_prompt,
-        )
+        try:
+            compaction = compact_unified_user_prompt(
+                self.tokenizer,
+                user_prompt,
+                training_config.sft_prompt_token_limit,
+                format_chat_prompt,
+            )
+        except (PromptBudgetError, ValueError) as exc:
+            # Fail-closed compaction refuses to slice a target function.  Report
+            # the record as unpromptable instead of aborting the caller, so a
+            # budget defect stays visible and countable in the evaluation.
+            self.stats["invalid_generated"] += num_samples
+            return [
+                GeneratedTest(
+                    id=f"{function_id}_budget_{rank}",
+                    input_code="",
+                    function_id=function_id,
+                    raw_output="",
+                    is_valid=False,
+                    parse_error=f"prompt_budget_failure: {exc}",
+                )
+                for rank in range(num_samples)
+            ]
         input_ids = torch.tensor(
             [compaction.token_ids], dtype=torch.long, device=self.model.device
         )

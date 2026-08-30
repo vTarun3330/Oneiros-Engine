@@ -109,6 +109,60 @@ def _make_data_point(pair: dict, prompt: str, completion: str) -> SFTDataPoint:
     )
 
 
+def audit_evaluation_panel_prompts(
+    corpus_dir: Path,
+    evaluation_split: str,
+    tokenizer: Any,
+    prompt_token_limit: int,
+) -> dict[str, Any]:
+    """Prove every evaluation-panel record can actually be prompted.
+
+    Training selection only ever inspects the records it chose to train on.  The
+    generation phase renders a prompt for every record on the evaluation panel,
+    and section-aware compaction is fail-closed, so a record whose required
+    sections exceed the mode budget yields zero candidates.  Auditing the panel
+    here keeps that defect from being discovered as a silent block of unkilled
+    functions after the GPU is already paid for.
+    """
+    if evaluation_split not in {"ablation_dev", "val"}:
+        raise ValueError("Evaluation panel audit refuses any split other than ablation_dev or val")
+    panel = load_phase3_pairs(corpus_dir, evaluation_split)
+    function_pairs = [
+        pair
+        for pair in panel
+        if not is_repository_execution_mode(
+            pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
+        )
+    ]
+    failures: list[dict[str, Any]] = []
+    for pair in function_pairs:
+        try:
+            compact_unified_user_prompt(
+                tokenizer,
+                build_pair_prompt(pair),
+                prompt_token_limit,
+                format_chat_prompt,
+            )
+        except (PromptBudgetError, ValueError) as exc:
+            failures.append({
+                "record_id": pair["id"],
+                "source_name": str(pair.get("source_name", "unknown")),
+                "reason": "section_aware_prompt_budget_failure",
+                "detail": str(exc),
+            })
+    total = len(function_pairs)
+    return {
+        "evaluation_split": evaluation_split,
+        "function_records": total,
+        "promptable_function_records": total - len(failures),
+        "prompt_budget_failures": len(failures),
+        "prompt_budget_failure_rate": round(len(failures) / max(total, 1), 6),
+        "prompt_token_limit": prompt_token_limit,
+        "failure_sources": _counts(item["source_name"] for item in failures),
+        "examples": failures[:10],
+    }
+
+
 def build_preflight(
     corpus_version: str,
     max_pairs: int,
@@ -134,6 +188,7 @@ def build_preflight(
     local_files_only: bool,
     prompt_information_variant: str = "full",
     output_instruction_variant: str = "self_contained",
+    evaluation_split: str = "ablation_dev",
 ) -> dict[str, Any]:
     if max_pairs <= 0:
         raise ValueError("max_pairs must be positive")
@@ -519,6 +574,10 @@ def build_preflight(
     if schedule["planned_optimizer_steps"] not in checkpoints:
         checkpoints.append(schedule["planned_optimizer_steps"])
 
+    evaluation_panel = audit_evaluation_panel_prompts(
+        corpus_dir, evaluation_split, tokenizer, prompt_token_limit
+    )
+
     selected_repository_pairs = [
         pair
         for pair in selected_pairs
@@ -567,6 +626,9 @@ def build_preflight(
         "requested_pair_count_reached": len(selected_pairs) == max_pairs,
         "generation_compatible_supervision_present": bool(effective_examples),
         "zero_sequence_overflows": not sequence_overflow_examples,
+        "evaluation_panel_fully_promptable": (
+            evaluation_panel["prompt_budget_failures"] == 0
+        ),
         "completion_only_masking_verified": (
             test_status.get("completion_only_masking_verified") is True
         ),
@@ -610,6 +672,7 @@ def build_preflight(
         },
         "leakage": leakage,
         "ablation_dev": ablation_dev,
+        "evaluation_panel": evaluation_panel,
         "local_test_status": test_status,
         "selection": {
             "execution_mode_filter": execution_mode or None,
@@ -756,6 +819,12 @@ def parse_args() -> argparse.Namespace:
         default="self_contained",
     )
     parser.add_argument(
+        "--evaluation-split",
+        choices=["ablation_dev", "val"],
+        default="ablation_dev",
+        help="Panel whose generation prompts must all fit the declared budget",
+    )
+    parser.add_argument(
         "--prompt-token-limit",
         type=int,
         default=training_config.sft_prompt_token_limit,
@@ -831,6 +900,7 @@ def main() -> None:
         local_files_only=not args.allow_tokenizer_download,
         prompt_information_variant=args.prompt_information_variant,
         output_instruction_variant=args.output_instruction_variant,
+        evaluation_split=args.evaluation_split,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

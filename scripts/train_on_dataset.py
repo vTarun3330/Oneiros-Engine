@@ -774,51 +774,66 @@ def generate_tests_ai_batched(
     tokenizer = generator.tokenizer
     prompt_additions = prompt_additions or {}
     compacted_prompt_ids = []
+    # Section-aware compaction is fail-closed: it refuses to slice a target
+    # function in half.  A record whose required sections cannot fit the mode
+    # budget must therefore be recorded as an unusable evaluation prompt, not
+    # allowed to abort the whole batch.  Its candidate slots stay in the
+    # accounting so requested-candidate counts and Kill@k denominators remain
+    # exact.
+    generable_indexes: List[int] = []
+    prompt_budget_failures: Dict[int, str] = {}
     for index, pair in enumerate(pairs_chunk):
         prompt = build_pair_prompt(pair)
         addition = prompt_additions.get(index, "").strip()
         if addition:
             prompt = f"{prompt}\n\n{addition}"
-        compacted_prompt_ids.append(
-            compact_unified_user_prompt(
+        try:
+            compaction = compact_unified_user_prompt(
                 tokenizer,
                 prompt,
                 PROMPT_TOKEN_LIMIT,
                 format_chat_prompt,
-            ).token_ids
-        )
-
-    original_padding_side = tokenizer.padding_side
-    tokenizer.padding_side = "left"
-    if tokenizer.pad_token_id is None:
-        tokenizer.pad_token_id = tokenizer.eos_token_id
-    try:
-        inputs = tokenizer.pad(
-            [
-                {
-                    "input_ids": token_ids,
-                    "attention_mask": [1] * len(token_ids),
-                }
-                for token_ids in compacted_prompt_ids
-            ],
-            padding=True,
-            return_tensors="pt",
-        ).to(generator.model.device)
-        input_length = inputs.input_ids.shape[1]
-        generator.model.eval()
-        with torch.inference_mode():
-            outputs = generator.model.generate(
-                **inputs,
-                max_new_tokens=MAX_NEW_TOKENS_OVERRIDE,
-                temperature=generator.temperature,
-                top_p=generator.top_p,
-                do_sample=True,
-                num_return_sequences=num,
-                pad_token_id=tokenizer.pad_token_id,
-                use_cache=True,
             )
-    finally:
-        tokenizer.padding_side = original_padding_side
+        except (PromptBudgetError, ValueError) as exc:
+            prompt_budget_failures[index] = str(exc)
+            continue
+        compacted_prompt_ids.append(compaction.token_ids)
+        generable_indexes.append(index)
+
+    outputs: List[Any] = []
+    input_length = 0
+    if compacted_prompt_ids:
+        original_padding_side = tokenizer.padding_side
+        tokenizer.padding_side = "left"
+        if tokenizer.pad_token_id is None:
+            tokenizer.pad_token_id = tokenizer.eos_token_id
+        try:
+            inputs = tokenizer.pad(
+                [
+                    {
+                        "input_ids": token_ids,
+                        "attention_mask": [1] * len(token_ids),
+                    }
+                    for token_ids in compacted_prompt_ids
+                ],
+                padding=True,
+                return_tensors="pt",
+            ).to(generator.model.device)
+            input_length = inputs.input_ids.shape[1]
+            generator.model.eval()
+            with torch.inference_mode():
+                outputs = generator.model.generate(
+                    **inputs,
+                    max_new_tokens=MAX_NEW_TOKENS_OVERRIDE,
+                    temperature=generator.temperature,
+                    top_p=generator.top_p,
+                    do_sample=True,
+                    num_return_sequences=num,
+                    pad_token_id=tokenizer.pad_token_id,
+                    use_cache=True,
+                )
+        finally:
+            tokenizer.padding_side = original_padding_side
 
     results: Dict[int, List[str]] = {}
     accounting = {
@@ -836,13 +851,16 @@ def generate_tests_ai_batched(
                 }
                 for rank in range(num)
             ],
+            "prompt_budget_failure": index in prompt_budget_failures,
+            "prompt_budget_failure_reason": prompt_budget_failures.get(index),
         }
         for index in range(len(pairs_chunk))
     }
     for sequence_index, output in enumerate(outputs):
-        pair_index = sequence_index // num
-        if pair_index >= len(pairs_chunk):
+        generable_position = sequence_index // num
+        if generable_position >= len(generable_indexes):
             break
+        pair_index = generable_indexes[generable_position]
         accounting[pair_index]["raw_generated_sequences"] += 1
         text = tokenizer.decode(output[input_length:], skip_special_tokens=True)
         local_rank = sequence_index % num
@@ -1131,6 +1149,8 @@ def _generate_evaluation_candidates(generator, pairs_chunk: List[Dict]):
             "generation_invalid_candidates": 0,
             "candidate_slots": [],
             "feedback_rounds_completed": 0,
+            "prompt_budget_failure": False,
+            "prompt_budget_failure_reason": None,
         }
         for index in range(len(pairs_chunk))
     }
@@ -1166,6 +1186,11 @@ def _generate_evaluation_candidates(generator, pairs_chunk: List[Dict]):
             item["candidate_slots"].extend(current["candidate_slots"])
             prior_codes[index].extend(generated.get(index, []))
             item["feedback_rounds_completed"] = round_index
+            if current.get("prompt_budget_failure"):
+                item["prompt_budget_failure"] = True
+                item["prompt_budget_failure_reason"] = current.get(
+                    "prompt_budget_failure_reason"
+                )
 
         rank_offset += round_size
         if round_index + 1 >= len(round_sizes):
@@ -1482,6 +1507,12 @@ def _evaluate_adapter_kill_rate(
                     candidate_outcomes,
                     source_name=str(pair.get("source_name", "unknown")),
                     project=str(pair.get("project", "unknown")),
+                    prompt_budget_failure=bool(
+                        accounting.get("prompt_budget_failure")
+                    ),
+                    prompt_budget_failure_reason=accounting.get(
+                        "prompt_budget_failure_reason"
+                    ),
                 )
                 function_results.append(item)
                 killed_functions += int(item["killed"])
@@ -1640,6 +1671,12 @@ def _evaluate_loaded_sft_monitor(
                     outcomes,
                     source_name=str(pair.get("source_name", "unknown")),
                     project=str(pair.get("project", "unknown")),
+                    prompt_budget_failure=bool(
+                        accounting.get("prompt_budget_failure")
+                    ),
+                    prompt_budget_failure_reason=accounting.get(
+                        "prompt_budget_failure_reason"
+                    ),
                 ))
             completed = min(start + len(chunk), len(function_pairs))
             if completed % 50 == 0 or completed == len(function_pairs):
@@ -3594,6 +3631,17 @@ if __name__ == "__main__":
         help="Override SFT micro-batch size for this named run",
     )
     parser.add_argument(
+        "--sft-prompt-token-limit",
+        type=int,
+        default=None,
+        help=(
+            "Function-mode prompt budget for training and generation. It is part "
+            "of the evaluation scope hash, so changing it declares a different "
+            "protocol and must be run as a recorded ablation, never mixed into "
+            "an existing comparison."
+        ),
+    )
+    parser.add_argument(
         "--sft-repository-completion-token-limit",
         type=int,
         default=None,
@@ -3749,6 +3797,14 @@ if __name__ == "__main__":
     SFT_LEARNING_RATE_OVERRIDE = args.sft_learning_rate
     SFT_LR_SCHEDULER_TYPE_OVERRIDE = args.sft_lr_scheduler_type
     SFT_BATCH_SIZE_OVERRIDE = args.sft_batch_size
+    if args.sft_prompt_token_limit is not None:
+        from engine.sft_trainer import MAX_SFT_SEQUENCE_LENGTH
+
+        if not 0 < args.sft_prompt_token_limit < MAX_SFT_SEQUENCE_LENGTH:
+            raise ValueError(
+                "--sft-prompt-token-limit must be between 1 and the sequence limit"
+            )
+        PROMPT_TOKEN_LIMIT = args.sft_prompt_token_limit
     SFT_REPOSITORY_COMPLETION_TOKEN_LIMIT_OVERRIDE = (
         args.sft_repository_completion_token_limit
     )

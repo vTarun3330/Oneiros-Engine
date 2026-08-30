@@ -250,8 +250,16 @@ def function_result(
     outcomes: Sequence[Mapping[str, Any]],
     source_name: str = "unknown",
     project: str = "unknown",
+    prompt_budget_failure: bool = False,
+    prompt_budget_failure_reason: Optional[str] = None,
 ) -> Dict[str, Any]:
-    """Build the canonical per-function research result."""
+    """Build the canonical per-function research result.
+
+    ``prompt_budget_failure`` marks a record the generator could not prompt at
+    all because its required sections exceed the declared mode budget.  Such a
+    record still occupies its denominator slot; recording it separately keeps a
+    budget defect distinguishable from a model that generated nothing useful.
+    """
     ordered = sorted((deepcopy(dict(item)) for item in outcomes), key=lambda item: item["rank"])
     parsed = sum(bool(item.get("parse_valid")) for item in ordered)
     execution_valid = sum(bool(item.get("execution_valid")) for item in ordered)
@@ -277,6 +285,8 @@ def function_result(
         "valid_candidates": valid,
         "killing_candidates": killed_candidates,
         "killed": bool(killed_candidates),
+        "prompt_budget_failure": bool(prompt_budget_failure),
+        "prompt_budget_failure_reason": prompt_budget_failure_reason,
         "candidate_outcomes": ordered,
         "diversity": candidate_diversity(ordered, entry_point),
     }
@@ -309,6 +319,9 @@ def summarise_function_results(
         int(item.get("execution_invalid_candidates", 0)) for item in function_results
     )
     killed_functions = sum(bool(item.get("killed")) for item in function_results)
+    prompt_budget_failures = sum(
+        bool(item.get("prompt_budget_failure")) for item in function_results
+    )
 
     kill_at_k: Dict[str, Any] = {}
     pass_at_k: Dict[str, Any] = {}
@@ -416,6 +429,10 @@ def summarise_function_results(
         "research_metrics_schema_version": RESEARCH_METRICS_SCHEMA_VERSION,
         "function_validation_records": total_functions,
         "function_validation_killed": killed_functions,
+        "prompt_budget_failed_functions": prompt_budget_failures,
+        "prompt_budget_failure_rate": round(
+            prompt_budget_failures / total_functions, 6
+        ),
         "function_kill_rate": round(killed_functions / total_functions, 6),
         "function_kill_rate_wilson_95": wilson_interval(killed_functions, total_functions),
         "requested_candidates": requested,
@@ -571,6 +588,173 @@ def evaluation_profile_sha256(profile: Mapping[str, Any]) -> str:
     """Return a stable identity for an ablation/evaluation configuration."""
     payload = json.dumps(dict(profile), sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+FAILURE_TAXONOMY_SCHEMA_VERSION = 1
+
+#: Every category a candidate outcome can be assigned.  ``killed`` is the only
+#: success label; it is kept in the same vocabulary so per-slice totals always
+#: sum to the requested-candidate count.
+FAILURE_TAXONOMY_CATEGORIES: Tuple[str, ...] = (
+    "killed",
+    "syntax_invalid",
+    "wrong_target_api",
+    "undefined_symbol",
+    "environment_failure",
+    "fixture_missing",
+    "incorrect_exception_expectation",
+    "wrong_expected_value",
+    "reference_invalid",
+    "timeout",
+    "repository_context_hallucination",
+    "boundary_miss",
+    "off_by_one_miss",
+    "logical_condition_miss",
+    "indexing_miss",
+    "passes_both",
+    "not_generated",
+)
+
+_SURVIVED_FAMILY_CATEGORY = {
+    "boundary": "boundary_miss",
+    "off_by_one": "off_by_one_miss",
+    "logical": "logical_condition_miss",
+    "boolean": "logical_condition_miss",
+    "comparison": "logical_condition_miss",
+    "index": "indexing_miss",
+    "indexing": "indexing_miss",
+}
+
+
+def classify_candidate_failure(
+    outcome: Mapping[str, Any],
+    bug_family: str = "unknown",
+    execution_mode: str = "function_assertion",
+) -> str:
+    """Assign one ordered-candidate outcome to a single failure category.
+
+    Classification uses only post-hoc oracle evidence that already exists in the
+    recorded outcome.  It never re-executes anything and never consults the
+    reference implementation directly, so it is safe to run over any legitimately
+    produced evaluation artifact.
+    """
+    if outcome.get("prompt_budget_failure"):
+        return "not_generated"
+    if not outcome.get("parse_valid"):
+        return "syntax_invalid"
+    if not outcome.get("policy_valid"):
+        return "wrong_target_api"
+
+    reference_status = str(outcome.get("reference_status", "")).strip()
+    if not reference_status:
+        return "not_generated"
+
+    error = str(outcome.get("reference_error", "") or "")
+    exception = error.split(":", 1)[0].strip()
+    repository = str(execution_mode or "").startswith("repository")
+
+    if reference_status == "timeout":
+        return "timeout"
+    if reference_status in {"system_exit", "keyboard_interrupt", "worker_error"}:
+        return "environment_failure"
+    if reference_status == "source_policy_error":
+        return "environment_failure"
+
+    if reference_status == "error":
+        if exception in {"ImportError", "ModuleNotFoundError"}:
+            return (
+                "repository_context_hallucination" if repository
+                else "environment_failure"
+            )
+        if exception == "NameError":
+            return (
+                "repository_context_hallucination" if repository
+                else "undefined_symbol"
+            )
+        if exception in {"AttributeError", "TypeError"}:
+            return "wrong_target_api"
+        if "fixture" in error.lower():
+            return "fixture_missing"
+        if exception in {"Failed", "DidNotRaise"} or "raises" in error.lower():
+            return "incorrect_exception_expectation"
+        return "reference_invalid"
+
+    if reference_status == "assertion_error":
+        # The candidate is executable but asserts behaviour the reference does
+        # not exhibit, so its expected value is wrong rather than its syntax.
+        return "wrong_expected_value"
+
+    if not outcome.get("reference_valid"):
+        return "reference_invalid"
+    if outcome.get("killed"):
+        return "killed"
+
+    family = sanitise_family_name(bug_family) or "unknown"
+    return _SURVIVED_FAMILY_CATEGORY.get(family, "passes_both")
+
+
+def summarise_failure_taxonomy(
+    function_results: Sequence[Mapping[str, Any]],
+) -> Dict[str, Any]:
+    """Aggregate §43 failure categories overall and per dataset/mutation family.
+
+    Records that carry no ``candidate_outcomes`` (older artifact schemas) are
+    counted separately instead of being silently treated as zero failures.
+    """
+    overall: Counter[str] = Counter()
+    by_source: Dict[str, Counter[str]] = defaultdict(Counter)
+    by_family: Dict[str, Counter[str]] = defaultdict(Counter)
+    classified_functions = 0
+    unclassifiable_functions = 0
+    classified_candidates = 0
+
+    for item in function_results:
+        outcomes = item.get("candidate_outcomes")
+        if not outcomes:
+            unclassifiable_functions += 1
+            continue
+        classified_functions += 1
+        family = str(item.get("bug_family", "unknown") or "unknown")
+        source = str(item.get("source_name", "unknown") or "unknown")
+        execution_mode = str(item.get("execution_mode", "function_assertion"))
+        for outcome in outcomes:
+            merged = dict(outcome)
+            merged.setdefault(
+                "prompt_budget_failure", bool(item.get("prompt_budget_failure"))
+            )
+            category = classify_candidate_failure(merged, family, execution_mode)
+            overall[category] += 1
+            by_source[source][category] += 1
+            by_family[family][category] += 1
+            classified_candidates += 1
+
+    def _table(counter: Counter[str]) -> Dict[str, Any]:
+        total = sum(counter.values())
+        return {
+            "candidates": total,
+            "counts": {
+                category: counter.get(category, 0)
+                for category in FAILURE_TAXONOMY_CATEGORIES
+                if counter.get(category, 0)
+            },
+            "rates": {
+                category: round(counter[category] / total, 6)
+                for category in FAILURE_TAXONOMY_CATEGORIES
+                if counter.get(category, 0)
+            } if total else {},
+        }
+
+    return {
+        "failure_taxonomy_schema_version": FAILURE_TAXONOMY_SCHEMA_VERSION,
+        "classified_functions": classified_functions,
+        "unclassifiable_functions": unclassifiable_functions,
+        "classified_candidates": classified_candidates,
+        "overall": _table(overall),
+        "by_source": {key: _table(value) for key, value in sorted(by_source.items())},
+        "by_mutation_family": {
+            key: _table(value) for key, value in sorted(by_family.items())
+        },
+    }
 
 
 def sanitise_family_name(value: Optional[str]) -> Optional[str]:

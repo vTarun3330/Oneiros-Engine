@@ -222,6 +222,10 @@ def test_generation_accounting_reports_unparseable_candidates():
         "raw_generated_sequences": 4,
         "parsed_candidates": 3,
         "generation_invalid_candidates": 1,
+        # A promptable record must state that its prompt budget held, so a
+        # budget failure can never be confused with an absent field.
+        "prompt_budget_failure": False,
+        "prompt_budget_failure_reason": None,
     }
     slots = accounting[0]["candidate_slots"]
     assert [slot["rank"] for slot in slots] == [1, 2, 3, 4]
