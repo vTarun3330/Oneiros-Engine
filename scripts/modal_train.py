@@ -210,6 +210,7 @@ def run_cloud_training(
     sft_epochs: int = 0, sft_learning_rate: float = 0.0,
     sft_lr_scheduler_type: str = "", sft_batch_size: int = 0,
     sft_repository_completion_token_limit: int = 0,
+    sft_prompt_token_limit: int = 0,
     sft_real_target_fraction: float = -1.0, sft_max_real_repeats: int = 0,
     sft_balanced_sampling: bool = True,
     sft_synthetic_balance_fraction: float = 0.0,
@@ -285,6 +286,8 @@ def run_cloud_training(
         return {"error": "SFT overrides must be positive when supplied"}
     if not 0 <= sft_repository_completion_token_limit < 2048:
         return {"error": "SFT repository completion limit must be between 1 and 2047 when supplied"}
+    if not 0 <= sft_prompt_token_limit < 2048:
+        return {"error": "SFT prompt token limit must be between 1 and 2047 when supplied"}
     if sft_lr_scheduler_type not in {"", "cosine", "constant_with_warmup"}:
         return {"error": "Unsupported SFT LR scheduler"}
     if sft_real_target_fraction != -1.0 and not 0.0 <= sft_real_target_fraction < 1.0:
@@ -358,6 +361,10 @@ def run_cloud_training(
     trainer.SFT_REPOSITORY_COMPLETION_TOKEN_LIMIT_OVERRIDE = (
         sft_repository_completion_token_limit or None
     )
+    if sft_prompt_token_limit:
+        # Part of the evaluation scope hash: a changed budget is a declared
+        # protocol change, not a silent tweak inside an existing comparison.
+        trainer.PROMPT_TOKEN_LIMIT = sft_prompt_token_limit
     trainer.SFT_REAL_TARGET_FRACTION_OVERRIDE = (
         sft_real_target_fraction if sft_real_target_fraction >= 0.0 else None
     )
@@ -482,6 +489,7 @@ def training_main(
     sft_epochs: int = 0, sft_learning_rate: float = 0.0,
     sft_lr_scheduler_type: str = "", sft_batch_size: int = 0,
     sft_repository_completion_token_limit: int = 0,
+    sft_prompt_token_limit: int = 0,
     sft_real_target_fraction: float = -1.0, sft_max_real_repeats: int = 0,
     sft_balanced_sampling: bool = True,
     sft_synthetic_balance_fraction: float = 0.0,
@@ -528,6 +536,10 @@ def training_main(
     holdout_bug_family = sanitise_family_name(holdout_bug_family) or ""
     if sft_epochs < 0 or sft_learning_rate < 0 or sft_batch_size < 0:
         raise ValueError("SFT overrides must be positive when supplied")
+    if not 0 <= sft_prompt_token_limit < 2048:
+        raise ValueError(
+            "SFT prompt token limit must be between 1 and 2047 when supplied"
+        )
     if not 0 <= sft_repository_completion_token_limit < 2048:
         raise ValueError(
             "SFT repository completion limit must be between 1 and 2047 when supplied"
@@ -719,6 +731,7 @@ def training_main(
             sft_repository_completion_token_limit=(
                 sft_repository_completion_token_limit
             ),
+            sft_prompt_token_limit=sft_prompt_token_limit,
             sft_real_target_fraction=sft_real_target_fraction,
             sft_max_real_repeats=sft_max_real_repeats,
             sft_balanced_sampling=sft_balanced_sampling,

@@ -66,6 +66,7 @@ def _modal_command(
     synthetic_balance_fraction: float | None = None,
     synthetic_balance_mode: str = "none",
     execution_mode: str = "",
+    prompt_token_limit: int = 0,
 ) -> str:
     parts = [
         "py", "-3.12", "scripts/modal_train.py",
@@ -99,6 +100,8 @@ def _modal_command(
         parts.extend(["--sft-synthetic-balance-mode", synthetic_balance_mode])
     if execution_mode:
         parts.extend(["--execution-mode", execution_mode])
+    if prompt_token_limit:
+        parts.extend(["--sft-prompt-token-limit", str(prompt_token_limit)])
     if fresh:
         parts.append("--fresh")
     return " ".join(_quote(part) for part in parts)
@@ -116,6 +119,7 @@ def _preflight_command(
     synthetic_balance_fraction: float | None = None,
     synthetic_balance_mode: str = "none",
     execution_mode: str = "",
+    prompt_token_limit: int = 0,
 ) -> str:
     parts = [
         "py", "-3.12", "scripts/preflight_sft_run.py",
@@ -143,6 +147,8 @@ def _preflight_command(
         parts.extend(["--synthetic-balance-mode", synthetic_balance_mode])
     if execution_mode:
         parts.extend(["--execution-mode", execution_mode])
+    if prompt_token_limit:
+        parts.extend(["--prompt-token-limit", str(prompt_token_limit)])
     return " ".join(_quote(part) for part in parts)
 
 
@@ -186,6 +192,7 @@ def build_ablation_plan(
         synthetic_balance_fraction: float | None = None,
         synthetic_balance_mode: str = "none",
         training_execution_mode: str = "",
+        prompt_token_limit: int = 0,
         **metadata: Any,
     ) -> None:
         treatment_run = f"{run_name}_{run_suffix}"
@@ -198,6 +205,7 @@ def build_ablation_plan(
             "balanced_sampling": balanced_sampling,
             "synthetic_balance_fraction": synthetic_balance_fraction,
             "synthetic_balance_mode": synthetic_balance_mode,
+            "prompt_token_limit": prompt_token_limit,
         }
         train = _modal_command(
             phase="sft", seed=seeds[0], max_pairs=max_pairs, fresh=True,
@@ -231,6 +239,7 @@ def build_ablation_plan(
                     synthetic_balance_fraction=synthetic_balance_fraction,
                     synthetic_balance_mode=synthetic_balance_mode,
                     execution_mode=training_execution_mode,
+                    prompt_token_limit=prompt_token_limit,
                 )
                 if max_pairs else None
             ),
@@ -245,6 +254,7 @@ def build_ablation_plan(
             synthetic_balance_fraction=synthetic_balance_fraction,
             synthetic_balance_mode=synthetic_balance_mode,
             training_execution_mode=training_execution_mode or None,
+            prompt_token_limit=prompt_token_limit or None,
             **metadata,
         )
 
@@ -310,6 +320,28 @@ def build_ablation_plan(
             f"i_scale_{label}",
             max_pairs=size,
             hypothesis="Measure whether the current policy is undertrained.",
+        )
+
+    # Group J screens the declared function prompt budget.  At 512 tokens the
+    # fail-closed compaction cannot render a prompt for most of the corpus, so
+    # this is a prerequisite for every other treatment rather than a tuning knob.
+    for budget in (512, 768, 1024):
+        controlled_sft_experiment(
+            f"J_prompt_budget_{budget}",
+            "prompt_budget",
+            f"j_budget_{budget}",
+            prompt_token_limit=budget,
+            hypothesis=(
+                "Measure whether a function prompt budget that actually fits the "
+                "required sections improves reference-validity and Kill@k. The "
+                "sequence budget is 2048 and function completions are capped at "
+                "128, so 768 and 1024 both fit without changing the evaluator."
+            ),
+            note=(
+                "Changing the budget changes the evaluation scope hash. Results "
+                "are not comparable with V4 numbers produced at 512 unless the "
+                "V4 adapter is re-evaluated under the same budget."
+            ),
         )
 
     add(

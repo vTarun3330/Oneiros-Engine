@@ -66,8 +66,25 @@ panel, or confounded old-supervision corpus.
 ## 3. Preflight the 32-pair integration
 
 ```powershell
-py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 32 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --real-target-fraction 0.20 --repository-prompt-token-limit 1024 --repository-completion-token-limit 1024 --minimum-monitor-checkpoints 1 --min-function-kill-rate 0.58 --output results/v4_1_integration_32_preflight.json
+py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 32 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --real-target-fraction 0.20 --repository-prompt-token-limit 1024 --repository-completion-token-limit 1024 --minimum-monitor-checkpoints 1 --min-function-kill-rate 0.58 --evaluation-split ablation_dev --output results/v4_1_integration_32_preflight.json
 ```
+
+The preflight now also renders a generation prompt for every function record on
+the declared evaluation panel. Training selection only ever inspects the records
+it chose to train on, but the generation phase must prompt the whole panel, and
+section-aware compaction is fail-closed. `evaluation_panel_fully_promptable`
+therefore blocks any run whose panel cannot be prompted under the declared
+budget.
+
+**Current status: this gate fails.** At the frozen 512-token function prompt
+budget, 388 of 542 `ablation_dev` function records (71.6%) and 583 of 757 `val`
+function records (77.0%) cannot be prompted at all, because their required
+sections — system prompt, headings, specification, and the complete target
+function — already exceed 512 tokens before any support context is added. Those
+records would produce zero candidates. Raise the budget through a declared
+ablation on `ablation_dev` (the sequence budget is 2,048 and function completions
+are capped at 128, so 768 or 1,024 fits with room to spare) before launching. Do
+not disable this gate.
 
 If `ready` is false, stop. Do not weaken a gate. This declared integration
 requires exactly one terminal monitor evaluation because it has only six
@@ -91,7 +108,7 @@ evaluation and artifacts complete. Do not call it a research result.
 ## 5. Preflight and run 800 only after integration succeeds
 
 ```powershell
-py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --real-target-fraction 0.20 --repository-prompt-token-limit 1024 --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_smoke_800_preflight.json
+py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --real-target-fraction 0.20 --repository-prompt-token-limit 1024 --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --evaluation-split ablation_dev --output results/v4_1_smoke_800_preflight.json
 py -3.12 scripts/modal_train.py --fresh --phase sft --corpus-version v4_1_research_hardened_candidate --run-name v4_1_smoke_800_seed42 --seed 42 --max-pairs 800 --evaluation-split ablation_dev --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58
 ```
 
@@ -119,6 +136,19 @@ py -3.12 scripts/modal_train.py --phase sft_eval --corpus-version v4_1_research_
 
 Train the accepted combined configuration under the reserved `v4_1_selected_candidate` run name before these commands. Do not point that name at a different adapter. Each result already contains ordered Kill@1/2/4/8, candidate-quality layers, Wilson intervals, and dataset/family slices. A partial seed remains partial and must be resumed under the same identity.
 
+## 7b. Failure taxonomy
+
+Build the §43 diagnostic from any legitimately produced `ablation_dev` or locked
+validation artifact. The script refuses an artifact whose `final_test_measurement`
+is true or whose split is `test`.
+
+```powershell
+py -3.12 scripts/failure_taxonomy.py results/<run>/sft_validation_hardened_results_seed_42.json --output results/<run>/failure_taxonomy_seed_42.json --markdown results/<run>/FAILURE_TAXONOMY.md
+```
+
+Use the aggregate categories to decide what training data to improve. Do not
+hand-author training examples from individual locked validation failures.
+
 ## 8. DPO gate
 
 If any completed SFT seed is below 58%, do not start DPO. If all predeclared SFT conditions pass:
@@ -129,8 +159,33 @@ py -3.12 scripts/modal_train.py --phase dpo --corpus-version v4_1_research_harde
 
 Resume with the identical command. DPO must beat the frozen SFT under the unchanged protocol; otherwise retain SFT.
 
-## 9. Native repository and final test stop points
+## 9. Native repository evaluation
 
-The generated-test native BugsInPy/SWE-bench harness is not implemented yet. Do not run a substitute command or report official stored-test execution as generated-test kill rate. Implement and locally validate native injection into both buggy and fixed revisions before adding a run command.
+The generated-test native harness now exists. It creates worktrees of the buggy
+and fixed revisions, injects one generated test beside the project's official
+tests so `conftest` fixtures resolve, runs it in both revisions, and reports a
+candidate as `difference_exposing` only when the buggy revision fails and the
+fixed revision passes.
+
+```powershell
+py -3.12 scripts/evaluate_native_repository.py --generated results/<run>/repository_generations.json --bugsinpy-root data/bugsinpy_v2_ingestion/BugsInPy --repository-cache data/bugsinpy_v2_ingestion/repositories --output results/<run>/native_repository_eval.json
+```
+
+`--generated` is a JSON object mapping a repository record id to its ordered
+list of generated test sources. No model is loaded; this re-runs text that was
+already generated.
+
+**Validation status.** The harness is covered end to end by
+`tests/test_native_repository_eval.py`, which builds a real two-commit git
+repository and proves that a discriminating test, a non-discriminating test, a
+reference-invalid test, and a syntactically invalid test are each classified
+correctly, and that an unavailable environment is never scored as a success. It
+has **not** yet been validated against real BugsInPy projects, which need
+provisioned checkouts and the historical interpreters from
+`scripts/provision_bugsinpy_runtimes.py`. Until a real run exists, do not quote
+a real-repository kill rate; report `executed_candidates` alongside
+`inconclusive_candidates` so the coverage is visible.
+
+## 9b. Final test stop point
 
 The final test remains sealed because the current CLI exposes the explicit final DPO measurement only after model selection. Do not run `--phase dpo_eval --confirm-final-test` during development. Add the final command to the signed experiment record only after the selected adapter, evaluator, candidate count, generation configuration, and one-time-test policy are frozen.

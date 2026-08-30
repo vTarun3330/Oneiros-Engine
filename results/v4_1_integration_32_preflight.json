@@ -1,11 +1,11 @@
 {
-  "ready": true,
+  "ready": false,
   "mode": "exact_local_sft_preflight",
   "modal_used": false,
   "gpu_model_loaded": false,
   "corpus_modified": false,
   "checkpoint_modified": false,
-  "elapsed_seconds": 322.581,
+  "elapsed_seconds": 329.832,
   "corpus": {
     "version": "v4_1_research_hardened_candidate",
     "corpus_id": "oneiros-corpus-v4.1-research-hardened-candidate",
@@ -176,9 +176,82 @@
     "test_overlap": 0,
     "frozen_before_results": true
   },
+  "evaluation_panel": {
+    "evaluation_split": "ablation_dev",
+    "function_records": 542,
+    "promptable_function_records": 154,
+    "prompt_budget_failures": 388,
+    "prompt_budget_failure_rate": 0.715867,
+    "prompt_token_limit": 512,
+    "failure_sources": {
+      "oneiros_clean_mutations": 388
+    },
+    "examples": [
+      {
+        "record_id": "mutation::humaneval_HumanEval_103_mut_00820",
+        "source_name": "oneiros_clean_mutations",
+        "reason": "section_aware_prompt_budget_failure",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (635 > 512); refusing token slicing."
+      },
+      {
+        "record_id": "mutation::humaneval_HumanEval_103_mut_00821",
+        "source_name": "oneiros_clean_mutations",
+        "reason": "section_aware_prompt_budget_failure",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (635 > 512); refusing token slicing."
+      },
+      {
+        "record_id": "mutation::humaneval_HumanEval_103_mut_00822",
+        "source_name": "oneiros_clean_mutations",
+        "reason": "section_aware_prompt_budget_failure",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (635 > 512); refusing token slicing."
+      },
+      {
+        "record_id": "mutation::humaneval_HumanEval_103_mut_00823",
+        "source_name": "oneiros_clean_mutations",
+        "reason": "section_aware_prompt_budget_failure",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (635 > 512); refusing token slicing."
+      },
+      {
+        "record_id": "mutation::humaneval_HumanEval_103_mut_00824",
+        "source_name": "oneiros_clean_mutations",
+        "reason": "section_aware_prompt_budget_failure",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (632 > 512); refusing token slicing."
+      },
+      {
+        "record_id": "mutation::humaneval_HumanEval_103_mut_00825",
+        "source_name": "oneiros_clean_mutations",
+        "reason": "section_aware_prompt_budget_failure",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (632 > 512); refusing token slicing."
+      },
+      {
+        "record_id": "mutation::humaneval_HumanEval_103_mut_00826",
+        "source_name": "oneiros_clean_mutations",
+        "reason": "section_aware_prompt_budget_failure",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (635 > 512); refusing token slicing."
+      },
+      {
+        "record_id": "mutation::humaneval_HumanEval_103_mut_00827",
+        "source_name": "oneiros_clean_mutations",
+        "reason": "section_aware_prompt_budget_failure",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (635 > 512); refusing token slicing."
+      },
+      {
+        "record_id": "mutation::humaneval_HumanEval_103_mut_00828",
+        "source_name": "oneiros_clean_mutations",
+        "reason": "section_aware_prompt_budget_failure",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (635 > 512); refusing token slicing."
+      },
+      {
+        "record_id": "mutation::humaneval_HumanEval_103_mut_00829",
+        "source_name": "oneiros_clean_mutations",
+        "reason": "section_aware_prompt_budget_failure",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (635 > 512); refusing token slicing."
+      }
+    ]
+  },
   "local_test_status": {
     "schema_version": "oneiros_v4_1_local_test_status_v1",
-    "timestamp_utc": "2026-08-30T18:27:20.994567+00:00",
+    "timestamp_utc": "2026-08-30T19:11:17.384311+00:00",
     "command": [
       "C:\\Program Files\\Python312\\python.exe",
       "-m",
@@ -186,12 +259,12 @@
       "-q"
     ],
     "returncode": 0,
-    "passed": 123,
+    "passed": 140,
     "failed": 0,
-    "source_tree_sha256": "c1855828b661f3fcb4da37dbd72a33dedfcfbb0b6b63b39892a7aed0e46b59e6",
+    "source_tree_sha256": "02430b5029ef8424cd00945d72711e80a7a230c1bbf6a55c9dbfb1764f085b3f",
     "completion_only_masking_verified": true,
     "sealed_final_test_accessed": false,
-    "output_tail": "........................................................................ [ 58%]\n...................................................                      [100%]\n123 passed in 24.17s"
+    "output_tail": "........................................................................ [ 51%]\n....................................................................     [100%]\n140 passed in 24.51s"
   },
   "selection": {
     "execution_mode_filter": null,
@@ -1625,6 +1698,7 @@
     "requested_pair_count_reached": true,
     "generation_compatible_supervision_present": true,
     "zero_sequence_overflows": true,
+    "evaluation_panel_fully_promptable": false,
     "completion_only_masking_verified": true,
     "v4_1_checkpoint_namespace": true,
     "terminal_checkpoint_monitor_enabled": true,

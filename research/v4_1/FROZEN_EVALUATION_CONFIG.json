@@ -19,6 +19,8 @@
   "kill_at_k": [1, 2, 4, 8],
   "locked_validation_gate_per_completed_seed": 0.58,
   "partial_seed_is_complete": false,
-  "repository_generated_test_status": "not_implemented_requires_native_project_environment",
+  "repository_generated_test_status": "harness_implemented_not_yet_validated_on_real_projects",
+  "repository_generated_test_harness": "harness.native_repository_eval",
+  "repository_generated_test_note": "Covered end to end against a synthetic two-commit git repository. No real BugsInPy/SWE-bench project run exists yet, so no real-repository kill rate may be reported.",
   "final_test_requires_explicit_confirmation": true
 }

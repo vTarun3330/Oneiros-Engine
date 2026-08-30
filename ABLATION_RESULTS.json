@@ -2,21 +2,231 @@
   "schema_version": "oneiros_v4_1_ablation_results_v1",
   "corpus_version": "v4_1_research_hardened_candidate",
   "evaluation_set": "ablation_dev",
-  "evaluation_set_record_ids_sha256": "415f6ac27cbf17f3dd1cc289495e08d6844b57a6a689d265958bb5aceed19034e",
+  "evaluation_set_record_ids_sha256": "415f6ac27cbf17f3dd1cc289495e08d6844b57a6a689d265958b5aceed19034e",
   "final_test_accessed": false,
   "selection_status": "not_frozen_no_gpu_ablation_results_yet",
   "experiments": [
-    {"id":"A0_A1_A2","hypothesis":"Specification and legitimate context improve reference-valid bug discrimination.","changed_variable":"prompt information","control":"A0 code only","treatments":["A1 code + specification","A2 code + specification + non-gold context"],"training_size":null,"seeds":[42,43,44],"metrics":null,"result":"NOT_RUN","decision":"INCONCLUSIVE","reason":"Local harness and split are ready; no GPU evidence has been generated."},
-    {"id":"B0_B1","hypothesis":"Unified prompts improve generalization over safely reproducible legacy formatting.","changed_variable":"prompt schema","control":"B0 legacy format over V4.1 leak-safe fields","treatments":["B1 V4.1 unified schema"],"training_size":null,"seeds":[42,43,44],"metrics":null,"result":"NOT_RUN","decision":"INCONCLUSIVE","reason":"Do not use the historical leaked V4 repository context as a control."},
-    {"id":"C0_C1","hypothesis":"One self-contained test-case wording improves repository validity without reducing function Kill@k.","changed_variable":"output instruction","control":"C0 exactly one executable test wording","treatments":["C1 minimal self-contained bug-revealing test case"],"training_size":null,"seeds":[42,43,44],"metrics":null,"result":"NOT_RUN","decision":"INCONCLUSIVE","reason":"Safety wording is implemented; performance effect remains unmeasured."},
-    {"id":"D0_D1","hypothesis":"Section-aware compaction preserves schema and syntax better than token head/tail slicing.","changed_variable":"prompt compaction","control":"D0 legacy token head/tail diagnostic","treatments":["D1 semantic sections + complete AST units"],"training_size":null,"seeds":[42,43,44],"metrics":null,"result":"LOCAL_SAFETY_TESTS_ONLY","decision":"INCONCLUSIVE","reason":"D1 is required for prompt integrity; Kill@k effect remains unmeasured."},
-    {"id":"E0_E1","hypothesis":"Oracle localization overstates performance relative to public/buggy-side localization.","changed_variable":"localization source","control":"E0 oracle-patch localization diagnostic only","treatments":["E1 public/buggy-side localization with localized-region assumption"],"training_size":null,"seeds":[42,43,44],"metrics":null,"result":"NOT_RUN","decision":"INCONCLUSIVE","reason":"E0 can never become the headline condition."},
-    {"id":"F0_F1","hypothesis":"Repository supervision improves repository validity without severe function regression.","changed_variable":"training composition","control":"F0 synthetic only","treatments":["F1 synthetic + repository at 10%","F1 synthetic + repository at 20%","F1 synthetic + repository at 30%"],"training_size":null,"seeds":[42,43,44],"metrics":null,"result":"NOT_RUN","decision":"INCONCLUSIVE","reason":"Predeclared weights; no result discarded."},
-    {"id":"G0_G1_G2","hypothesis":"Balancing reduces MBPP dominance while preserving diversity.","changed_variable":"sampling balance","control":"G0 proportional","treatments":["G1 dataset balanced","G2 dataset + mutation-family balanced"],"training_size":null,"seeds":[42,43,44],"metrics":null,"result":"NOT_RUN","decision":"INCONCLUSIVE","reason":"Effective and unique example counts must accompany future results."},
-    {"id":"H0_H1","hypothesis":"Strict reference-pass/buggy-fail supervision raises candidate validity.","changed_variable":"supervision policy","control":"H0 previous verified policy","treatments":["H1 V4.1 strict policy"],"training_size":null,"seeds":[42,43,44],"metrics":null,"result":"NOT_RUN","decision":"INCONCLUSIVE","reason":"V4.1 counts are frozen; comparative training has not run."},
-    {"id":"I_SCALE","hypothesis":"The 800-pair run is undertrained relative to the verified corpus.","changed_variable":"training scale","control":"800","treatments":["approximately 2000","approximately 4000","full eligible train"],"training_size":null,"seeds":[42,43,44],"metrics":null,"result":"NOT_RUN","decision":"INCONCLUSIVE","reason":"Run only after 32-pair integration succeeds."}
+    {
+      "id": "A0_A1_A2",
+      "hypothesis": "Specification and legitimate context improve reference-valid bug discrimination.",
+      "changed_variable": "prompt information",
+      "control": "A0 code only",
+      "treatments": [
+        "A1 code + specification",
+        "A2 code + specification + non-gold context"
+      ],
+      "training_size": null,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "metrics": null,
+      "result": "NOT_RUN",
+      "decision": "INCONCLUSIVE",
+      "reason": "Local harness and split are ready; no GPU evidence has been generated."
+    },
+    {
+      "id": "B0_B1",
+      "hypothesis": "Unified prompts improve generalization over safely reproducible legacy formatting.",
+      "changed_variable": "prompt schema",
+      "control": "B0 legacy format over V4.1 leak-safe fields",
+      "treatments": [
+        "B1 V4.1 unified schema"
+      ],
+      "training_size": null,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "metrics": null,
+      "result": "NOT_RUN",
+      "decision": "INCONCLUSIVE",
+      "reason": "Do not use the historical leaked V4 repository context as a control."
+    },
+    {
+      "id": "C0_C1",
+      "hypothesis": "One self-contained test-case wording improves repository validity without reducing function Kill@k.",
+      "changed_variable": "output instruction",
+      "control": "C0 exactly one executable test wording",
+      "treatments": [
+        "C1 minimal self-contained bug-revealing test case"
+      ],
+      "training_size": null,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "metrics": null,
+      "result": "NOT_RUN",
+      "decision": "INCONCLUSIVE",
+      "reason": "Safety wording is implemented; performance effect remains unmeasured."
+    },
+    {
+      "id": "D0_D1",
+      "hypothesis": "Section-aware compaction preserves schema and syntax better than token head/tail slicing.",
+      "changed_variable": "prompt compaction",
+      "control": "D0 legacy token head/tail diagnostic",
+      "treatments": [
+        "D1 semantic sections + complete AST units"
+      ],
+      "training_size": null,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "metrics": null,
+      "result": "LOCAL_SAFETY_TESTS_ONLY",
+      "decision": "INCONCLUSIVE",
+      "reason": "D1 is required for prompt integrity; Kill@k effect remains unmeasured."
+    },
+    {
+      "id": "E0_E1",
+      "hypothesis": "Oracle localization overstates performance relative to public/buggy-side localization.",
+      "changed_variable": "localization source",
+      "control": "E0 oracle-patch localization diagnostic only",
+      "treatments": [
+        "E1 public/buggy-side localization with localized-region assumption"
+      ],
+      "training_size": null,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "metrics": null,
+      "result": "NOT_RUN",
+      "decision": "INCONCLUSIVE",
+      "reason": "E0 can never become the headline condition."
+    },
+    {
+      "id": "F0_F1",
+      "hypothesis": "Repository supervision improves repository validity without severe function regression.",
+      "changed_variable": "training composition",
+      "control": "F0 synthetic only",
+      "treatments": [
+        "F1 synthetic + repository at 10%",
+        "F1 synthetic + repository at 20%",
+        "F1 synthetic + repository at 30%"
+      ],
+      "training_size": null,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "metrics": null,
+      "result": "NOT_RUN",
+      "decision": "INCONCLUSIVE",
+      "reason": "Predeclared weights; no result discarded."
+    },
+    {
+      "id": "G0_G1_G2",
+      "hypothesis": "Balancing reduces MBPP dominance while preserving diversity.",
+      "changed_variable": "sampling balance",
+      "control": "G0 proportional",
+      "treatments": [
+        "G1 dataset balanced",
+        "G2 dataset + mutation-family balanced"
+      ],
+      "training_size": null,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "metrics": null,
+      "result": "NOT_RUN",
+      "decision": "INCONCLUSIVE",
+      "reason": "Effective and unique example counts must accompany future results."
+    },
+    {
+      "id": "H0_H1",
+      "hypothesis": "Strict reference-pass/buggy-fail supervision raises candidate validity.",
+      "changed_variable": "supervision policy",
+      "control": "H0 previous verified policy",
+      "treatments": [
+        "H1 V4.1 strict policy"
+      ],
+      "training_size": null,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "metrics": null,
+      "result": "NOT_RUN",
+      "decision": "INCONCLUSIVE",
+      "reason": "V4.1 counts are frozen; comparative training has not run."
+    },
+    {
+      "id": "I_SCALE",
+      "hypothesis": "The 800-pair run is undertrained relative to the verified corpus.",
+      "changed_variable": "training scale",
+      "control": "800",
+      "treatments": [
+        "approximately 2000",
+        "approximately 4000",
+        "full eligible train"
+      ],
+      "training_size": null,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "metrics": null,
+      "result": "NOT_RUN",
+      "decision": "INCONCLUSIVE",
+      "reason": "Run only after 32-pair integration succeeds."
+    },
+    {
+      "id": "J_prompt_budget",
+      "hypothesis": "The declared 512-token function prompt budget is below the size of the prompt's own required sections, so raising it should increase reference-validity and Kill@k without changing evaluator semantics.",
+      "changed_variable": "function prompt token budget",
+      "control": "J 512 (current frozen budget)",
+      "treatments": [
+        "J 768",
+        "J 1024"
+      ],
+      "training_size": 800,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "metrics": null,
+      "result": "NOT_RUN",
+      "decision": "INCONCLUSIVE",
+      "reason": "Local CPU evidence only. Under section-aware fail-closed compaction at 512 tokens, 388/542 ablation_dev and 583/757 val function records cannot be prompted at all, and only ~1,930 of 5,595 synthetic training records are usable. A sampled scan over the training split gives ~97.2% fit at 768 and ~99.8% at 1024. No GPU comparison has been run, so no budget has been selected.",
+      "local_cpu_evidence": {
+        "ablation_dev_unpromptable_at_512": 388,
+        "ablation_dev_function_records": 542,
+        "val_unpromptable_at_512": 583,
+        "val_function_records": 757,
+        "synthetic_train_fit_at_512": 0.345,
+        "synthetic_train_fit_at_768": 0.972,
+        "synthetic_train_fit_at_1024": 0.998,
+        "sampled_records": 400,
+        "method": "section-aware compaction attempted per record; no model loaded"
+      },
+      "protocol_note": "The prompt budget is part of the evaluation scope hash. Results at a new budget are not comparable with V4 numbers produced at 512 unless the V4 adapter is re-evaluated under the same budget."
+    }
   ],
   "accepted_changes": [],
   "rejected_changes": [],
-  "inconclusive_changes": ["A","B","C","D","E","F","G","H","I"]
+  "inconclusive_changes": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I"
+  ]
 }

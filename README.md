@@ -51,9 +51,31 @@ SFT uses completion-only loss masking. Prompts are compacted by semantic section
 
 DPO is not a rescue step for weak SFT. It starts only after the frozen SFT adapter passes the locked 58% per-seed gate, and SFT/DPO are then compared under the identical validation protocol.
 
+## Known blocking issue: the function prompt budget
+
+The frozen 512-token function prompt budget is smaller than the prompt's own
+required sections. Under fail-closed section-aware compaction this means most
+records cannot be prompted at all: 388 of 542 `ablation_dev` and 583 of 757
+`val` function records fail, and only about 1,930 of 5,595 synthetic training
+records are usable. The preflight gate `evaluation_panel_fully_promptable`
+blocks any run in this state.
+
+The budget is not a free parameter to change quietly — it is part of the
+evaluation scope hash. Ablation group J (512 vs 768 vs 1024) is predeclared in
+`research/v4_1/ablation_plan.json` and must be decided on `ablation_dev` before
+the pipeline is unblocked. See `ABLATION_RESULTS.md`.
+
 ## Current repository limitation
 
-Native generated-test execution against reconstructed BugsInPy and SWE-bench buggy/fixed environments is **not yet implemented as a production evaluation layer**. Repository examples currently provide verified supervision and context coverage; they must not be reported as generated-test repository kill rate. Native repository execution and a held-out realistic-mutation benchmark are the next scientific layers.
+Native generated-test execution against reconstructed BugsInPy and SWE-bench
+buggy/fixed environments is implemented in `harness/native_repository_eval.py`
+and driven by `scripts/evaluate_native_repository.py`. It is covered end to end
+against a synthetic two-commit git repository, but it has **not** been validated
+against real BugsInPy projects, which require provisioned checkouts and the
+historical interpreters. Until such a run exists, repository examples provide
+verified supervision and context coverage only and must not be reported as a
+generated-test repository kill rate. A held-out realistic-mutation benchmark
+(§37) is not implemented and remains the next scientific layer after that.
 
 ## Local verification
 
