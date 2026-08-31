@@ -32,6 +32,10 @@ from metrics.research_evaluation import (
 
 
 DEFAULT_SEEDS = (42, 43, 44)
+# Admissibility is CPU evidence, not a selected research winner. Defaults in
+# config remain frozen; every generated command declares this candidate budget.
+ADMISSIBLE_PROMPT_BUDGETS = (1024, 1280)
+INTEGRATION_PROMPT_BUDGET = 1024
 DEFAULT_HOLDOUT_FAMILIES = (
     "index",
     "negate removal",
@@ -124,6 +128,7 @@ def _preflight_command(
     parts = [
         "py", "-3.12", "scripts/preflight_sft_run.py",
         "--corpus-version", corpus_version,
+        "--evaluation-split", "ablation_dev",
         "--max-pairs", str(max_pairs),
         "--epochs", "1",
         "--batch-size", "1",
@@ -158,12 +163,15 @@ def build_ablation_plan(
     seeds: Sequence[int] = DEFAULT_SEEDS,
     holdout_families: Sequence[str] = DEFAULT_HOLDOUT_FAMILIES,
     smoke_functions: int = 32,
+    screening_prompt_token_limit: int = INTEGRATION_PROMPT_BUDGET,
 ) -> Dict[str, Any]:
     """Build predeclared training-only ablation-dev commands for Modal execution."""
     if not re.fullmatch(r"[A-Za-z0-9_.-]+", run_name):
         raise ValueError("Run name contains unsupported characters")
     if len(set(seeds)) < 3 or any(int(seed) < 0 for seed in seeds):
         raise ValueError("Research plan requires at least three distinct non-negative seeds")
+    if screening_prompt_token_limit not in ADMISSIBLE_PROMPT_BUDGETS:
+        raise ValueError("Screening prompt budget must be a predeclared admissible budget: 1024 or 1280")
     families = [sanitise_family_name(family) for family in holdout_families]
     families = [family for family in families if family]
 
@@ -192,10 +200,13 @@ def build_ablation_plan(
         synthetic_balance_fraction: float | None = None,
         synthetic_balance_mode: str = "none",
         training_execution_mode: str = "",
-        prompt_token_limit: int = 0,
+        prompt_token_limit: int | None = None,
         **metadata: Any,
     ) -> None:
-        treatment_run = f"{run_name}_{run_suffix}"
+        prompt_token_limit = (
+            screening_prompt_token_limit if prompt_token_limit is None else prompt_token_limit
+        )
+        treatment_run = f"{run_name}_{run_suffix}_p{prompt_token_limit}"
         common = {
             "run_name": treatment_run,
             "corpus_version": corpus_version,
@@ -418,13 +429,16 @@ def build_ablation_plan(
         ),
     )
 
+    # Supplementary policies must use the same explicit candidate budget too.
+    # A bare command would silently fall back to the rejected 512-token default.
+    policy_run = f"{run_name}_p{screening_prompt_token_limit}"
     add(
         "base_vs_sft_base",
         "model_stage",
         (
             _modal_command(
-                phase="base_eval", run_name=run_name, corpus_version=corpus_version,
-                seed=seed,
+                phase="base_eval", run_name=policy_run, corpus_version=corpus_version,
+                seed=seed, prompt_token_limit=screening_prompt_token_limit,
             )
             for seed in seeds
         ),
@@ -436,8 +450,8 @@ def build_ablation_plan(
         "model_stage",
         (
             _modal_command(
-                phase="sft_eval", run_name=run_name, corpus_version=corpus_version,
-                seed=seed,
+                phase="sft_eval", run_name=policy_run, corpus_version=corpus_version,
+                seed=seed, prompt_token_limit=screening_prompt_token_limit,
             )
             for seed in seeds
         ),
@@ -451,9 +465,10 @@ def build_ablation_plan(
             "execution_feedback",
             (
                 _modal_command(
-                    phase="sft_eval", run_name=run_name,
+                    phase="sft_eval", run_name=policy_run,
                     corpus_version=corpus_version, seed=seed,
                     feedback_rounds=feedback_rounds,
+                    prompt_token_limit=screening_prompt_token_limit,
                 )
                 for seed in seeds
             ),
@@ -468,9 +483,10 @@ def build_ablation_plan(
             "candidate_diversity",
             (
                 _modal_command(
-                    phase="sft_eval", run_name=run_name,
+                    phase="sft_eval", run_name=policy_run,
                     corpus_version=corpus_version, seed=seed,
                     diversity_mode=diversity_mode,
+                    prompt_token_limit=screening_prompt_token_limit,
                 )
                 for seed in seeds
             ),
@@ -484,8 +500,9 @@ def build_ablation_plan(
         "combined_feedback_diversity",
         (
             _modal_command(
-                phase="sft_eval", run_name=run_name, corpus_version=corpus_version,
+                phase="sft_eval", run_name=policy_run, corpus_version=corpus_version,
                 seed=seed, feedback_rounds=1, diversity_mode="ast",
+                prompt_token_limit=screening_prompt_token_limit,
             )
             for seed in seeds
         ),
@@ -497,16 +514,18 @@ def build_ablation_plan(
 
     for family in families:
         family_slug = re.sub(r"[^a-z0-9]+", "-", family).strip("-")
-        holdout_run = f"{run_name}_lofo_{family_slug}"
+        holdout_run = f"{policy_run}_lofo_{family_slug}"
         train_command = _modal_command(
             phase="sft", run_name=holdout_run, corpus_version=corpus_version,
             seed=seeds[0], holdout_family=family, fresh=True,
+            prompt_token_limit=screening_prompt_token_limit,
         )
         evaluation_commands = [
             _modal_command(
                 phase="sft_eval", run_name=holdout_run,
                 corpus_version=corpus_version, seed=seed,
                 holdout_family=family,
+                prompt_token_limit=screening_prompt_token_limit,
             )
             for seed in seeds
         ]
@@ -529,13 +548,27 @@ def build_ablation_plan(
     ):
         smoke_commands.append(_modal_command(
             phase=phase,
-            run_name=run_name,
+            run_name=policy_run,
             corpus_version=corpus_version,
             seed=seeds[0],
             max_validation_functions=smoke_functions,
             feedback_rounds=feedback,
             diversity_mode=diversity,
+            prompt_token_limit=screening_prompt_token_limit,
         ))
+
+    experiments.sort(key=lambda item: item["axis"] != "prompt_budget")
+    for item in experiments:
+        if item["commands"] and item["axis"] != "prompt_budget":
+            item["requires_before_execution"] = [
+                "successful_32_pair_integration",
+                "group_J_decision_frozen_at_this_exact_prompt_budget",
+                "matching_treatment_preflight",
+            ]
+        elif item["commands"]:
+            item["requires_before_execution"] = [
+                "successful_32_pair_integration", "matching_treatment_preflight",
+            ]
 
     plan_identity = {
         "run_name": run_name,
@@ -544,7 +577,9 @@ def build_ablation_plan(
         "holdout_families": families,
         "candidate_budget": 8,
         "split": "ablation_dev",
-        "primary_groups": ["A", "B", "C", "D", "E", "F", "G", "H", "I"],
+        "primary_groups": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
+        "screening_prompt_token_limit": screening_prompt_token_limit,
+        "prompt_budget_selection_status": "NOT_SELECTED_CANDIDATE_COMMANDS_ONLY",
     }
     matrix_identity = [
         {
@@ -553,6 +588,7 @@ def build_ablation_plan(
             "commands": item["commands"],
             "preflight_command": item.get("preflight_command"),
             "status": item["status"],
+            "requires_before_execution": item.get("requires_before_execution", []),
         }
         for item in experiments
     ]
@@ -737,6 +773,11 @@ def main() -> int:
     plan_parser = subparsers.add_parser("plan", help="Write the predeclared Modal ablation plan")
     plan_parser.add_argument("--run-name", required=True)
     plan_parser.add_argument("--corpus-version", default=CANONICAL_CORPUS_VERSION)
+    plan_parser.add_argument(
+        "--prompt-token-limit", type=int, choices=ADMISSIBLE_PROMPT_BUDGETS,
+        default=INTEGRATION_PROMPT_BUDGET,
+        help="Candidate budget for later groups; does not freeze a group-J winner",
+    )
     plan_parser.add_argument("--output", type=Path, required=True)
 
     smoke_parser = subparsers.add_parser("smoke", help="Run CPU-only synthetic pipeline smoke")
@@ -753,7 +794,10 @@ def main() -> int:
 
     args = parser.parse_args()
     if args.command == "plan":
-        payload = build_ablation_plan(args.run_name, args.corpus_version)
+        payload = build_ablation_plan(
+            args.run_name, args.corpus_version,
+            screening_prompt_token_limit=args.prompt_token_limit,
+        )
     elif args.command == "smoke":
         payload = run_local_smoke()
     elif args.command == "aggregate":

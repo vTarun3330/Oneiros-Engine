@@ -161,6 +161,30 @@ def test_local_research_smoke_covers_all_metric_layers():
     assert "diversity_ablation" in smoke
 
 
+def test_ablation_budget_is_explicit_in_identity_commands_and_preflight():
+    plan = build_ablation_plan("budget_test", screening_prompt_token_limit=1280)
+    default = build_ablation_plan("budget_test")
+    assert plan["plan_sha256"] != default["plan_sha256"]
+    assert plan["experiment_matrix_sha256"] != default["experiment_matrix_sha256"]
+    assert "J" in plan["plan_identity"]["primary_groups"]
+    assert plan["experiments"][0]["axis"] == "prompt_budget"
+    for item in plan["experiments"]:
+        if not item["commands"]:
+            continue
+        budget = item["prompt_token_limit"] if item["axis"] == "prompt_budget" else 1280
+        assert all(f"--sft-prompt-token-limit {budget}" in cmd for cmd in item["commands"])
+        if item.get("preflight_command"):
+            assert f"--prompt-token-limit {budget}" in item["preflight_command"]
+            assert "--evaluation-split ablation_dev" in item["preflight_command"]
+        if item["axis"] != "prompt_budget":
+            assert "group_J_decision_frozen_at_this_exact_prompt_budget" in item["requires_before_execution"]
+    assert all("--sft-prompt-token-limit 1280" in cmd for cmd in plan["modal_smoke_commands"])
+    for budget in (512, 768):
+        rejected = next(item for item in plan["experiments"] if item["id"] == f"J_prompt_budget_{budget}")
+        assert rejected["commands"] == []
+        assert rejected["decision"] == "REJECT"
+
+
 def test_evaluation_profiles_use_distinct_result_files(monkeypatch):
     monkeypatch.setattr(trainer, "MAX_VALIDATION_PAIRS", 32)
     monkeypatch.setattr(trainer, "EVAL_FEEDBACK_ROUNDS", 1)

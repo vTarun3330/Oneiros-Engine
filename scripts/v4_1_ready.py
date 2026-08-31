@@ -21,7 +21,9 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from harness.corpus import verify_corpus, write_json
-from scripts.research_ablations import build_ablation_plan
+from scripts.research_ablations import (
+    ADMISSIBLE_PROMPT_BUDGETS, INTEGRATION_PROMPT_BUDGET, build_ablation_plan,
+)
 from utils.reproducibility import source_tree_sha256
 
 
@@ -52,21 +54,46 @@ def _json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def local_commands() -> list[str]:
+def _validate_budget(prompt_token_limit: int) -> None:
+    if prompt_token_limit not in ADMISSIBLE_PROMPT_BUDGETS:
+        raise ValueError("Prompt budget must be a predeclared admissible budget: 1024 or 1280")
+
+
+def integration_preflight_path(prompt_token_limit: int) -> Path:
+    _validate_budget(prompt_token_limit)
+    return ROOT / "results" / f"v4_1_integration_32_p{prompt_token_limit}_preflight.json"
+
+
+def integration_preflight_command(prompt_token_limit: int = INTEGRATION_PROMPT_BUDGET) -> str:
+    output = integration_preflight_path(prompt_token_limit).relative_to(ROOT).as_posix()
+    return (
+        "py -3.12 scripts/preflight_sft_run.py"
+        f" --corpus-version {CORPUS_VERSION} --max-pairs 32 --epochs 1 --batch-size 1"
+        " --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup"
+        " --real-target-fraction 0.20 --repository-prompt-token-limit 1024"
+        " --repository-completion-token-limit 1024 --minimum-monitor-checkpoints 1"
+        " --min-function-kill-rate 0.58 --evaluation-split ablation_dev"
+        f" --prompt-token-limit {prompt_token_limit} --output {output}"
+    )
+
+
+def local_commands(prompt_token_limit: int = INTEGRATION_PROMPT_BUDGET) -> list[str]:
     return [
         "py -3.12 scripts/build_corpus_v4_1.py --workers 16 --offline",
         "py -3.12 scripts/audit_prompt_lineage.py --corpus-dir data/corpus/v4_1_research_hardened_candidate",
         "py -3.12 scripts/verify_v4_1_local.py",
         "py -3.12 scripts/audit_sft_readiness.py --corpus-version v4_1_research_hardened_candidate --split train --output results/v4_1_research_hardened_candidate_train_readiness.json",
         "py -3.12 scripts/research_ablations.py smoke --output results/v4_1_research_metrics_local_smoke.json",
-        "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 32 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --real-target-fraction 0.20 --repository-prompt-token-limit 1024 --repository-completion-token-limit 1024 --minimum-monitor-checkpoints 1 --min-function-kill-rate 0.58 --output results/v4_1_integration_32_preflight.json",
+        integration_preflight_command(prompt_token_limit),
     ]
 
 
-def integration_commands() -> dict[str, str]:
+def integration_commands(prompt_token_limit: int = INTEGRATION_PROMPT_BUDGET) -> dict[str, str]:
+    _validate_budget(prompt_token_limit)
     common = (
         "--phase sft --corpus-version v4_1_research_hardened_candidate "
-        "--run-name v4_1_integration_32_seed42 --seed 42 --max-pairs 32 "
+        f"--run-name {INTEGRATION_RUN}_p{prompt_token_limit} --seed 42 --max-pairs 32 "
+        f"--sft-prompt-token-limit {prompt_token_limit} --sft-real-target-fraction 0.20 "
         "--evaluation-split ablation_dev --sft-epochs 1 "
         "--sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup "
         "--sft-batch-size 1 --sft-repository-completion-token-limit 1024 "
@@ -79,22 +106,31 @@ def integration_commands() -> dict[str, str]:
     }
 
 
-def selected_model_commands() -> dict[str, Any]:
+def selected_model_commands(prompt_token_limit: int = INTEGRATION_PROMPT_BUDGET) -> dict[str, Any]:
+    _validate_budget(prompt_token_limit)
     validation = [
         _command(
             "py -3.12 scripts/modal_train.py --phase sft_eval",
             f"--corpus-version {CORPUS_VERSION}",
-            f"--run-name {SELECTED_RUN}",
+            f"--run-name {SELECTED_RUN}_p{prompt_token_limit}",
+            f"--sft-prompt-token-limit {prompt_token_limit}",
             f"--seed {seed} --evaluation-split val",
         )
         for seed in (42, 43, 44)
     ]
     return {
+        "status": "TEMPLATES_ONLY_NO_CONFIGURATION_SELECTED",
+        "requires_before_execution": (
+            "Frozen group-J budget decision and all other ablation decisions; "
+            "train and confirm the selected configuration on ablation_dev first. "
+            "Regenerate these templates if the accepted budget differs."
+        ),
         "locked_validation": validation,
         "dpo_if_all_completed_sft_seeds_pass_0_58": _command(
             "py -3.12 scripts/modal_train.py --phase dpo",
             f"--corpus-version {CORPUS_VERSION}",
-            f"--run-name {SELECTED_RUN} --seed 42 --evaluation-split val",
+            f"--run-name {SELECTED_RUN}_p{prompt_token_limit} --seed 42 --evaluation-split val",
+            f"--sft-prompt-token-limit {prompt_token_limit}",
         ),
         "final_test": {
             "status": "SEALED_NO_COMMAND_EMITTED",
@@ -106,14 +142,23 @@ def selected_model_commands() -> dict[str, Any]:
     }
 
 
-def build_execution_queue() -> dict[str, Any]:
-    ablations = build_ablation_plan("v4_1_ablation", CORPUS_VERSION)
+def build_execution_queue(prompt_token_limit: int = INTEGRATION_PROMPT_BUDGET) -> dict[str, Any]:
+    _validate_budget(prompt_token_limit)
+    ablations = build_ablation_plan(
+        "v4_1_ablation", CORPUS_VERSION, screening_prompt_token_limit=prompt_token_limit,
+    )
     return {
         "schema_version": "oneiros_v4_1_gpu_ready_queue_v1",
         "generated_utc": datetime.now(timezone.utc).isoformat(),
         "branch": BRANCH,
         "baseline_commit": BASELINE_COMMIT,
         "corpus_version": CORPUS_VERSION,
+        "prompt_budget": {
+            "integration_and_candidate_templates": prompt_token_limit,
+            "status": "NOT_A_SELECTED_RESEARCH_WINNER",
+            "frozen_runtime_defaults_modified": False,
+            "group_J_runs_before_other_ablation_groups": True,
+        },
         "safety": {
             "gpu_auto_launch": False,
             "final_test_command_emitted": False,
@@ -124,13 +169,14 @@ def build_execution_queue() -> dict[str, Any]:
             {
                 "id": "local_verification",
                 "kind": "cpu",
-                "commands": local_commands(),
+                "commands": local_commands(prompt_token_limit),
                 "must_pass_before_gpu": True,
             },
             {
                 "id": "integration_32",
                 "kind": "gpu_integration_not_research_result",
-                "commands": integration_commands(),
+                "commands": integration_commands(prompt_token_limit),
+                "preflight_command": integration_preflight_command(prompt_token_limit),
                 "promotion_gate": "terminal monitor and persisted artifacts complete",
             },
             {
@@ -142,7 +188,7 @@ def build_execution_queue() -> dict[str, Any]:
             {
                 "id": "selected_model",
                 "kind": "gpu_training_then_locked_validation",
-                "commands": selected_model_commands(),
+                "commands": selected_model_commands(prompt_token_limit),
             },
             {
                 "id": "native_repository_evaluation",
@@ -179,7 +225,78 @@ def _check(name: str, passed: bool, detail: Any) -> dict[str, Any]:
     return {"name": name, "passed": bool(passed), "detail": detail}
 
 
-def doctor(check_modal: bool = False) -> dict[str, Any]:
+def integration_preflight_mismatches(
+    preflight: dict[str, Any], current_hash: str, manifest: dict[str, Any],
+    prompt_token_limit: int,
+) -> list[str]:
+    """Reject green but wrong-scope/stale evidence, not just ready=false."""
+    _validate_budget(prompt_token_limit)
+    expected = {
+        "ready": True,
+        "local_test_status.source_tree_sha256": current_hash,
+        "local_test_status.returncode": 0,
+        "local_test_status.failed": 0,
+        "local_test_status.sealed_final_test_accessed": False,
+        "corpus.version": CORPUS_VERSION,
+        "corpus.corpus_id": manifest.get("corpus_id"),
+        "selection.requested_pairs": 32,
+        "selection.retained_pairs": 32,
+        "selection.execution_mode_filter": None,
+        "evaluation_panel.evaluation_split": "ablation_dev",
+        "evaluation_panel.prompt_token_limit": prompt_token_limit,
+        "evaluation_panel.prompt_budget_failures": 0,
+        "sampling.target_real_fraction": 0.20,
+        "sampling.balanced_sampling_enabled": True,
+        "sampling.synthetic_balance_fraction": 0.0,
+        "sampling.synthetic_balance_mode": "none",
+        "tokenization.prompt_token_limit": prompt_token_limit,
+        "tokenization.repository_prompt_token_limit": 1024,
+        "tokenization.completion_token_limit": 128,
+        "tokenization.repository_completion_token_limit": 1024,
+        "tokenization.sequence_token_limit": 2048,
+        "tokenization.prompt_information_variant": "full",
+        "tokenization.output_instruction_variant": "self_contained",
+        "training.epochs": 1,
+        "training.batch_size": 1,
+        "training.learning_rate": 0.00005,
+        "training.lr_scheduler_type": "constant_with_warmup",
+        "training.min_function_kill_rate": 0.58,
+        "training.optimizer_schedule.minimum_monitor_checkpoints": 1,
+        "gates.zero_sequence_overflows": True,
+        "gates.evaluation_panel_fully_promptable": True,
+        "gates.terminal_checkpoint_monitor_enabled": True,
+        "gates.minimum_monitor_schedule_reached": True,
+    }
+    for filename, field in (
+        ("records.json", "records_sha256"), ("splits.json", "splits_sha256"),
+        ("ablation_dev_manifest.json", "ablation_dev_sha256"),
+        ("leakage_audit.json", "leakage_audit_sha256"),
+    ):
+        expected[f"corpus.{field}"] = manifest.get("files", {}).get(filename, {}).get("sha256")
+    mismatches = []
+    missing = object()
+    for field, required in expected.items():
+        actual: Any = preflight
+        for key in field.split("."):
+            actual = actual.get(key, missing) if isinstance(actual, dict) else missing
+        if actual is missing or actual != required:
+            mismatches.append(field)
+    if any(not value for value in preflight.get("gates", {}).values()):
+        mismatches.append("gates_not_all_passed")
+    if not preflight.get("evaluation_panel", {}).get("function_records", 0):
+        mismatches.append("empty_evaluation_panel")
+    panel = preflight.get("evaluation_panel", {})
+    if panel.get("function_records") != panel.get("promptable_function_records"):
+        mismatches.append("evaluation_panel_count_mismatch")
+    if not preflight.get("training", {}).get("planned_validation_checkpoints"):
+        mismatches.append("missing_terminal_monitor_schedule")
+    return mismatches
+
+
+def doctor(
+    check_modal: bool = False, prompt_token_limit: int = INTEGRATION_PROMPT_BUDGET,
+) -> dict[str, Any]:
+    _validate_budget(prompt_token_limit)
     checks: list[dict[str, Any]] = []
     branch = _run(["git", "branch", "--show-current"])
     branch_name = branch.stdout.strip()
@@ -218,14 +335,14 @@ def doctor(check_modal: bool = False) -> dict[str, Any]:
     readiness = _json(readiness_path) if readiness_path.exists() else {}
     checks.append(_check("locked_train_readiness", readiness.get("ready") is True, readiness_path.as_posix()))
 
-    preflight_path = ROOT / "results" / "v4_1_integration_32_preflight.json"
+    preflight_path = integration_preflight_path(prompt_token_limit)
     preflight = _json(preflight_path) if preflight_path.exists() else {}
-    preflight_current = (
-        preflight.get("ready") is True
-        and preflight.get("local_test_status", {}).get("source_tree_sha256") == current_hash
-        and preflight.get("gates", {}).get("zero_sequence_overflows") is True
+    mismatches = integration_preflight_mismatches(
+        preflight, current_hash, manifest, prompt_token_limit,
     )
-    checks.append(_check("integration_preflight_current", preflight_current, preflight_path.as_posix()))
+    checks.append(_check("integration_preflight_current", not mismatches, {
+        "path": preflight_path.as_posix(), "scope_mismatches": mismatches,
+    }))
 
     frozen = _json(ROOT / "research" / "v4_1" / "FROZEN_EVALUATION_CONFIG.json")
     frozen_ok = (
@@ -249,6 +366,9 @@ def doctor(check_modal: bool = False) -> dict[str, Any]:
     return {
         "schema_version": "oneiros_v4_1_doctor_v1",
         "ready_for_32_pair_integration": ready,
+        "integration_prompt_token_limit": prompt_token_limit,
+        "integration_run_name": f"{INTEGRATION_RUN}_p{prompt_token_limit}",
+        "research_configuration_selected": False,
         "tracked_changes_warning": bool(tracked.stdout.strip()),
         "modal_credit_balance_verified": False,
         "modal_credit_note": (
@@ -276,27 +396,33 @@ def parse_args() -> argparse.Namespace:
     audit = sub.add_parser("doctor", help="Run read-only readiness checks")
     audit.add_argument("--check-modal", action="store_true")
     audit.add_argument("--output", type=Path)
-    sub.add_parser("run-local", help="Run every CPU-safe verification and preflight command")
-    sub.add_parser("show-integration", help="Print fresh and resume commands; never launch them")
+    local = sub.add_parser("run-local", help="Run every CPU-safe verification and preflight command")
+    show = sub.add_parser("show-integration", help="Print fresh and resume commands; never launch them")
+    for command_parser in (plan, audit, local, show):
+        command_parser.add_argument(
+            "--prompt-token-limit", type=int, choices=ADMISSIBLE_PROMPT_BUDGETS,
+            default=INTEGRATION_PROMPT_BUDGET,
+            help="Explicit integration/candidate budget, not a selected research winner",
+        )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     if args.command == "plan":
-        payload = build_execution_queue()
+        payload = build_execution_queue(args.prompt_token_limit)
         write_json(args.output, payload)
         print(json.dumps(payload, indent=2))
     elif args.command == "doctor":
-        payload = doctor(args.check_modal)
+        payload = doctor(args.check_modal, args.prompt_token_limit)
         if args.output:
             write_json(args.output, payload)
         print(json.dumps(payload, indent=2))
         return 0 if payload["ready_for_32_pair_integration"] else 1
     elif args.command == "run-local":
-        run_cpu_commands(local_commands())
+        run_cpu_commands(local_commands(args.prompt_token_limit))
     else:
-        print(json.dumps(integration_commands(), indent=2))
+        print(json.dumps(integration_commands(args.prompt_token_limit), indent=2))
     return 0
 
 

@@ -51,7 +51,7 @@ SFT uses completion-only loss masking. Prompts are compacted by semantic section
 
 DPO is not a rescue step for weak SFT. It starts only after the frozen SFT adapter passes the locked 58% per-seed gate, and SFT/DPO are then compared under the identical validation protocol.
 
-## Known blocking issue: the function prompt budget
+## Prompt-budget prerequisite
 
 The frozen 512-token function prompt budget is smaller than the prompt's own
 required sections. Under fail-closed section-aware compaction this means most
@@ -61,9 +61,13 @@ records are usable. The preflight gate `evaluation_panel_fully_promptable`
 blocks any run in this state.
 
 The budget is not a free parameter to change quietly — it is part of the
-evaluation scope hash. Ablation group J (512 vs 768 vs 1024) is predeclared in
-`research/v4_1/ablation_plan.json` and must be decided on `ablation_dev` before
-the pipeline is unblocked. See `ABLATION_RESULTS.md`.
+evaluation scope hash. CPU checks reject 512 and 768; group J predeclares the
+admissible 1024-vs-1280 comparison on `ablation_dev`. The integration queue
+explicitly uses 1024 (with a separate `_p1024` run name and preflight artifact)
+to test engineering readiness, not to select a research winner. All later
+commands carry their budget explicitly and remain conditional on the group-J
+decision. Runtime defaults remain unchanged; the failed 512-token evidence is
+preserved. See `ABLATION_RESULTS.md` and `V4_1_NEXT_RUN.md`.
 
 ## Current repository limitation
 
@@ -80,11 +84,13 @@ generated-test repository kill rate. A held-out realistic-mutation benchmark
 ## Local verification
 
 ```powershell
-py -3.12 scripts/build_corpus_v4_1.py --offline
-py -3.12 scripts/verify_v4_1_local.py
-py -3.12 scripts/audit_sft_readiness.py --corpus-version v4_1_research_hardened_candidate --split train --output results/v4_1_research_hardened_candidate_train_readiness.json
-py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 32 --minimum-monitor-checkpoints 1 --output results/v4_1_integration_32_preflight.json
+py -3.12 scripts/v4_1_ready.py run-local --prompt-token-limit 1024
 ```
+
+`run-local` performs the offline rebuild, lineage audit, complete test suite,
+training-readiness audit, synthetic smoke and budget-specific 32-pair preflight;
+it never launches a GPU. For just the preflight command, use
+the integration stage in the generated queue or section 3 of the runbook.
 
 The exact staged GPU commands and stop conditions are in `V4_1_NEXT_RUN.md`. Ablations are predeclared in `ABLATION_RESULTS.json`; unrun and negative results remain visible.
 

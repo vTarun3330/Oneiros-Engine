@@ -15,7 +15,7 @@ All design experiments use the fixed, training-only `ablation_dev` split (`415f6
 | G | proportional sampling | dataset and family balancing | not run | INCONCLUSIVE |
 | H | prior verified policy | strict reference-pass/buggy-fail supervision | not run | INCONCLUSIVE |
 | I | 800 examples | ~2k, ~4k, full eligible train | not run | INCONCLUSIVE |
-| J | 512-token function prompt budget | 768, 1024 | local CPU evidence only | INCONCLUSIVE |
+| J | 512/768 rejected by promptability gate | admissible 1024 vs 1280 | local CPU evidence only | INCONCLUSIVE |
 
 ## Group J — function prompt budget (prerequisite)
 
