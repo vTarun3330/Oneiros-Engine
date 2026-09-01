@@ -141,8 +141,6 @@ def test_ablation_plan_uses_training_only_dev_and_locked_three_seeds():
     assert any("--prompt-information-variant code_specification" in command for command in commands)
     assert any("--output-instruction-variant legacy_exactly_one" in command for command in commands)
     assert any("--sft-real-target-fraction 0.3" in command for command in commands)
-    assert any("--sft-synthetic-balance-mode dataset" in command for command in commands)
-    assert any("--sft-synthetic-balance-mode dataset_family" in command for command in commands)
     assert any("--execution-mode function_assertion" in command for command in commands)
     assert any("--max-pairs 4000" in command for command in commands)
 
@@ -150,6 +148,9 @@ def test_ablation_plan_uses_training_only_dev_and_locked_three_seeds():
     assert blocked["B_legacy_vs_unified"]["status"] == "blocked_clean_control_unavailable"
     assert blocked["D_head_tail_vs_section_compaction"]["status"] == "local_safety_only"
     assert blocked["E_localization_assumption"]["status"] == "blocked_paired_scope_unavailable"
+    for label in ("G0_proportional", "G1_dataset_balanced", "G2_dataset_family_balanced"):
+        assert blocked[label]["status"] == "blocked_unmatched_sampling_controls"
+        assert blocked[label]["decision"] == "INCONCLUSIVE"
 
 
 def test_local_research_smoke_covers_all_metric_layers():

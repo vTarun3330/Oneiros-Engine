@@ -25,6 +25,7 @@ from scripts.research_ablations import (
     ADMISSIBLE_PROMPT_BUDGETS, INTEGRATION_PROMPT_BUDGET, build_ablation_plan,
 )
 from utils.reproducibility import source_tree_sha256
+from utils.dataset_identity import DATASET_IDENTITY_POLICY
 
 
 BRANCH = "experiment/research-eval-ablations"
@@ -83,6 +84,7 @@ def local_commands(prompt_token_limit: int = INTEGRATION_PROMPT_BUDGET) -> list[
         "py -3.12 scripts/audit_prompt_lineage.py --corpus-dir data/corpus/v4_1_research_hardened_candidate",
         "py -3.12 scripts/verify_v4_1_local.py",
         "py -3.12 scripts/audit_sft_readiness.py --corpus-version v4_1_research_hardened_candidate --split train --output results/v4_1_research_hardened_candidate_train_readiness.json",
+        "py -3.12 scripts/audit_dataset_sampling.py",
         "py -3.12 scripts/research_ablations.py smoke --output results/v4_1_research_metrics_local_smoke.json",
         integration_preflight_command(prompt_token_limit),
     ]
@@ -249,6 +251,9 @@ def integration_preflight_mismatches(
         "sampling.balanced_sampling_enabled": True,
         "sampling.synthetic_balance_fraction": 0.0,
         "sampling.synthetic_balance_mode": "none",
+        "sampling.dataset_identity_policy": DATASET_IDENTITY_POLICY,
+        "sampling.example_weights.dataset_identity_policy": DATASET_IDENTITY_POLICY,
+        "sampling.example_weights.unknown_dataset_examples": 0,
         "tokenization.prompt_token_limit": prompt_token_limit,
         "tokenization.repository_prompt_token_limit": 1024,
         "tokenization.completion_token_limit": 128,

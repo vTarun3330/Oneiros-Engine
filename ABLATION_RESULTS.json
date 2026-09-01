@@ -141,7 +141,9 @@
       "metrics": null,
       "result": "NOT_RUN",
       "decision": "INCONCLUSIVE",
-      "reason": "Effective and unique example counts must accompany future results."
+      "gpu_command_status": "WITHHELD_UNMATCHED_SAMPLING_CONTROLS",
+      "local_evidence": "results/v4_1_dataset_sampling_audit.json",
+      "reason": "CPU audit fixed upstream dataset labels and weight reporting, but rejected the old GPU matrix. G0 changed deduplication and repository composition as well as balance. G1/G2 requested 2x examples with a 2x repetition cap, which repeats every example twice and leaves dataset weights unchanged. A shared verified pool and equal effective budget are required before GPU commands are emitted."
     },
     {
       "id": "H0_H1",

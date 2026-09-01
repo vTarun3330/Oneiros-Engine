@@ -13,6 +13,7 @@ import re
 import shutil
 import sys
 import time
+from collections import Counter
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -48,6 +49,8 @@ from engine.test_generation_prompt import (
     test_format_for_execution_mode,
 )
 from utils.reproducibility import build_reproducibility_manifest
+from utils.dataset_identity import DATASET_IDENTITY_POLICY, dataset_name_for_pair, dataset_name_from_source
+from utils.sampling_audit import summarize_sampling_weights
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 RESULTS_DIR = Path(__file__).parent.parent / "results"
@@ -196,6 +199,7 @@ def sft_training_scope(
     scope += f":prompt_schema={PROMPT_SCHEMA_VERSION}"
     scope += f":prompt_information={PROMPT_INFORMATION_VARIANT}"
     scope += f":output_instruction={OUTPUT_INSTRUCTION_VARIANT}"
+    scope += f":dataset_identity={DATASET_IDENTITY_POLICY}"
     scope += (
         ":generation_completion_limit="
         f"{MAX_SFT_GENERATION_COMPATIBLE_TOKENS}"
@@ -300,6 +304,8 @@ def _record_to_pair(record: Dict) -> Dict:
         "golden_code": record["reference_code"],
         "test_cases": [test["code"] for test in record["tests"]],
         "source_name": source.get("name", "unknown") if isinstance(source, dict) else str(source),
+        "dataset_name": dataset_name_from_source(source),
+        "dataset_identity_policy": DATASET_IDENTITY_POLICY,
         "project": (
             provenance.get("project")
             or provenance.get("repository")
@@ -312,6 +318,21 @@ def _record_to_pair(record: Dict) -> Dict:
             or record["task_type"]
         ),
     }
+
+
+def make_sft_data_point(pair: Dict, prompt: str, completion: str):
+    """One metadata adapter shared by training and exact CPU preflight."""
+    from engine.sft_trainer import SFTDataPoint
+
+    dataset = dataset_name_for_pair(pair)
+    family = pair.get("bug_family", "unknown") or "unknown"
+    return SFTDataPoint(
+        prompt=prompt, completion=completion, function_id=pair["id"],
+        project=pair.get("project", "synthetic"), bug_family=family,
+        semantic_group=pair.get("group_id", pair["id"]),
+        execution_mode=pair.get("execution_mode", FUNCTION_EXECUTION_MODE),
+        dataset=dataset, dataset_family=f"{dataset}::{family}",
+    )
 
 
 def load_phase3_pairs(corpus_dir: Path, split: str) -> List[Dict]:
@@ -480,6 +501,11 @@ def summarize_train_pair_selection(pairs: List[Dict]) -> Dict:
         "synthetic_pairs": len(pairs) - len(repository),
         "repository_pairs": len(repository),
         "bug_family_counts": counts("bug_family"),
+        "dataset_counts": dict(sorted(Counter(
+            dataset_name_for_pair(pair) for pair in pairs
+        ).items())),
+        "ingestion_source_counts": counts("source_name"),
+        "dataset_identity_policy": DATASET_IDENTITY_POLICY,
         "repository_project_counts": dict(sorted({
             project: sum(1 for pair in repository if str(pair.get("project", "unknown") or "unknown") == project)
             for project in {str(pair.get("project", "unknown") or "unknown") for pair in repository}
@@ -1243,6 +1269,7 @@ def _adapter_evaluation_context(
         "candidate_budget": TESTS_PER_PAIR,
         "max_validation_functions": MAX_VALIDATION_PAIRS,
         "k_values": list(DEFAULT_K_VALUES),
+        "dataset_identity_policy": DATASET_IDENTITY_POLICY,
     }
     return {
         "format_version": 3,
@@ -1506,6 +1533,7 @@ def _evaluate_adapter_kill_rate(
                     pair["entry_point"],
                     candidate_outcomes,
                     source_name=str(pair.get("source_name", "unknown")),
+                    dataset_name=dataset_name_for_pair(pair),
                     project=str(pair.get("project", "unknown")),
                     prompt_budget_failure=bool(
                         accounting.get("prompt_budget_failure")
@@ -1670,6 +1698,7 @@ def _evaluate_loaded_sft_monitor(
                     pair["entry_point"],
                     outcomes,
                     source_name=str(pair.get("source_name", "unknown")),
+                    dataset_name=dataset_name_for_pair(pair),
                     project=str(pair.get("project", "unknown")),
                     prompt_budget_failure=bool(
                         accounting.get("prompt_budget_failure")
@@ -2450,6 +2479,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         "prompt_schema_version": PROMPT_SCHEMA_VERSION,
         "prompt_information_variant": PROMPT_INFORMATION_VARIANT,
         "output_instruction_variant": OUTPUT_INSTRUCTION_VARIANT,
+        "dataset_identity_policy": DATASET_IDENTITY_POLICY,
         "generation_completion_token_limit": MAX_SFT_GENERATION_COMPATIBLE_TOKENS,
         "repository_generation_completion_token_limit": (
             SFT_REPOSITORY_COMPLETION_TOKEN_LIMIT_OVERRIDE
@@ -2593,7 +2623,6 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
             try:
                 from engine.sft_trainer import (
                     OneirosSFTTrainer,
-                    SFTDataPoint,
                     plan_sft_optimizer_schedule,
                 )
 
@@ -2645,22 +2674,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                         continue
                     prompt = build_pair_prompt(pair)
                     for test in verified_winners[:3]:
-                        data_point = SFTDataPoint(
-                            prompt=prompt,
-                            completion=test,
-                            function_id=pair["id"],
-                            project=pair.get("project", "synthetic"),
-                            bug_family=pair.get("bug_family", "unknown"),
-                            semantic_group=pair.get("group_id", pair["id"]),
-                            execution_mode=pair.get(
-                                "execution_mode", FUNCTION_EXECUTION_MODE
-                            ),
-                            dataset=pair.get("source_name", "unknown"),
-                            dataset_family=(
-                                f"{pair.get('source_name', 'unknown')}::"
-                                f"{pair.get('bug_family', 'unknown')}"
-                            ),
-                        )
+                        data_point = make_sft_data_point(pair, prompt, test)
                         if is_repository_execution_mode(
                             pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
                         ):
@@ -2768,6 +2782,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                         "synthetic": synthetic_dedup_stats,
                         "repository": repository_dedup_stats,
                     }
+                unresampled_sft_data = [*synthetic_sft_data, *repository_sft_data]
                 repository_sft_examples = len(repository_sft_data)
                 effective_repository_sft_examples = len(repository_sft_data)
                 effective_synthetic_sft_data = list(synthetic_sft_data)
@@ -2832,6 +2847,9 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                         else repository_sft_data * real_sampling_repeats
                     ),
                 ]
+                sft_sampling_stats["example_weights"] = summarize_sampling_weights(
+                    unresampled_sft_data, sft_data,
+                )
                 actual_real_fraction = (
                     effective_repository_sft_examples / len(sft_data)
                     if sft_data else 0.0

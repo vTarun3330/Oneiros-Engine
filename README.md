@@ -51,6 +51,12 @@ SFT uses completion-only loss masking. Prompts are compacted by semantic section
 
 DPO is not a rescue step for weak SFT. It starts only after the frozen SFT adapter passes the locked 58% per-seed gate, and SFT/DPO are then compared under the identical validation protocol.
 
+Dataset sampling and macro reporting use canonical `source.upstream` labels,
+falling back to `source.name` only when upstream is absent. Ingestion-source and
+upstream-dataset metrics are separate. Every SFT run records actual
+unique/effective examples, repetitions, and weights by dataset and mutation
+family. Dataset labels are metadata only and never enter model prompts.
+
 ## Prompt-budget prerequisite
 
 The frozen 512-token function prompt budget is smaller than the prompt's own
@@ -88,7 +94,8 @@ py -3.12 scripts/v4_1_ready.py run-local --prompt-token-limit 1024
 ```
 
 `run-local` performs the offline rebuild, lineage audit, complete test suite,
-training-readiness audit, synthetic smoke and budget-specific 32-pair preflight;
+training-readiness and dataset-label audits, synthetic smoke, and the
+budget-specific 32-pair preflight;
 it never launches a GPU. For just the preflight command, use
 the integration stage in the generated queue or section 3 of the runbook.
 

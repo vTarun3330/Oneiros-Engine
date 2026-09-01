@@ -19,6 +19,7 @@ from typing import Any, Dict, Iterable, List, Mapping, Sequence
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from config import CANONICAL_CORPUS_VERSION
+from utils.dataset_identity import DATASET_IDENTITY_POLICY
 from metrics.research_evaluation import (
     aggregate_seed_results,
     compare_policy_results,
@@ -307,20 +308,27 @@ def build_ablation_plan(
             hypothesis="Measure repository-supervision transfer without changing the evaluator.",
         )
 
-    for label, balanced, fraction, balance_mode in (
-        ("G0_proportional", False, 0.0, "none"),
-        ("G1_dataset_balanced", True, 1.0, "dataset"),
-        ("G2_dataset_family_balanced", True, 1.0, "dataset_family"),
+    for label, balance_mode in (
+        ("G0_proportional", "none"),
+        ("G1_dataset_balanced", "dataset"),
+        ("G2_dataset_family_balanced", "dataset_family"),
     ):
-        controlled_sft_experiment(
+        add(
             label,
             "sampling_balance",
-            label.lower(),
-            balanced_sampling=balanced,
-            real_target_fraction=0.0 if not balanced else 0.20,
-            synthetic_balance_fraction=fraction,
+            [],
+            status="blocked_unmatched_sampling_controls",
+            decision="INCONCLUSIVE",
             synthetic_balance_mode=balance_mode,
-            hypothesis="Measure whether deterministic balancing reduces source/family dominance.",
+            dataset_identity_policy=DATASET_IDENTITY_POLICY,
+            reason=(
+                "Upstream dataset labels and achieved-weight reporting are fixed, but the old "
+                "G commands were not clean controls: G0 changed deduplication and repository "
+                "selection/composition as well as balancing. G1/G2 requested 2x examples with "
+                "a 2x per-example cap, forcing every example to repeat twice and preserving "
+                "the original dataset proportions. Materialize a shared verified example pool "
+                "and equal-budget, non-saturated sampling controls before emitting GPU commands."
+            ),
         )
 
     for size in (800, 2000, 4000, 0):
@@ -580,6 +588,7 @@ def build_ablation_plan(
         "primary_groups": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
         "screening_prompt_token_limit": screening_prompt_token_limit,
         "prompt_budget_selection_status": "NOT_SELECTED_CANDIDATE_COMMANDS_ONLY",
+        "dataset_identity_policy": DATASET_IDENTITY_POLICY,
     }
     matrix_identity = [
         {
@@ -703,6 +712,7 @@ def _smoke_policy_results(diversity_mode: str = "none") -> Dict[str, Any]:
         results.append(function_result(
             example["id"], example["family"], example["entry"], outcomes,
             source_name="local_synthetic_smoke", project="oneiros_smoke",
+            dataset_name="local_synthetic_smoke",
         ))
     summary = summarise_function_results(results)
     profile = {

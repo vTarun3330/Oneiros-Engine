@@ -12,7 +12,7 @@ All design experiments use the fixed, training-only `ablation_dev` split (`415f6
 | D | diagnostic token head/tail | section-aware AST-unit compaction | local safety tests only | INCONCLUSIVE |
 | E | oracle localization, diagnostic only | public/buggy-side localization | not run | INCONCLUSIVE |
 | F | synthetic only | 10%, 20%, 30% repository supervision | not run | INCONCLUSIVE |
-| G | proportional sampling | dataset and family balancing | not run | INCONCLUSIVE |
+| G | proportional sampling | dataset and family balancing | CPU audit; unmatched GPU controls withheld | INCONCLUSIVE |
 | H | prior verified policy | strict reference-pass/buggy-fail supervision | not run | INCONCLUSIVE |
 | I | 800 examples | ~2k, ~4k, full eligible train | not run | INCONCLUSIVE |
 | J | 512/768 rejected by promptability gate | admissible 1024 vs 1280 | local CPU evidence only | INCONCLUSIVE |
@@ -56,5 +56,30 @@ still an open GPU question, and **no model has been trained at any budget**.
 The prompt budget is part of the evaluation scope hash. Results at a new budget
 are not comparable with V4 numbers produced at 512 unless the V4 adapter is
 re-evaluated under the same budget.
+
+## Group G — upstream datasets and achieved weights
+
+Sampling labels now follow `source.upstream_then_source.name_v1`, keeping an
+upstream dataset such as HumanEval or MBPP separate from the ingestion source
+`oneiros_clean_mutations`. Dataset identity is metadata only and is never added
+to a model prompt. Reports retain ingestion-source metrics and add distinct
+upstream `dataset_metrics` and `equal_weight_dataset_macro` fields; an unknown
+dataset makes the macro explicitly incomplete rather than dropping functions.
+
+Every SFT/preflight sampling report records raw, unique and effective examples,
+repeat histograms, and achieved weights per dataset, mutation family and
+dataset-family pair. `results/v4_1_dataset_sampling_audit.json` audits only the
+eligible training split and records sources that would have merged datasets.
+It finds 5,941 eligible training records: 4,650 MBPP, 938 HumanEval, 234
+SWE-bench Verified, 112 BugsInPy, and 7 manual examples, with zero unknown
+dataset labels. `oneiros_clean_mutations` is the ingestion source that would
+have collapsed multiple upstream datasets.
+
+The CPU diagnostic rejected the old proposed G matrix. G0 changed
+deduplication and repository composition in addition to sampling. G1/G2
+requested twice as many examples with a two-repeat cap, so every example was
+repeated twice and proportions did not change. No GPU result exists, and these
+commands are withheld. G remains INCONCLUSIVE until all treatments share one
+verified pool, effective budget, optimizer settings and repository composition.
 
 Future rows must report requested, parse-valid, execution-valid, reference-valid, and killing candidates; Kill@1/2/4/8; Wilson intervals per seed; dataset and mutation-family slices; token use; unique/effective examples; and an ACCEPT, REJECT, or INCONCLUSIVE decision. Negative results must remain in both artifacts.

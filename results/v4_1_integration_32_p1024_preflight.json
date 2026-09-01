@@ -5,7 +5,7 @@
   "gpu_model_loaded": false,
   "corpus_modified": false,
   "checkpoint_modified": false,
-  "elapsed_seconds": 445.708,
+  "elapsed_seconds": 463.756,
   "corpus": {
     "version": "v4_1_research_hardened_candidate",
     "corpus_id": "oneiros-corpus-v4.1-research-hardened-candidate",
@@ -188,7 +188,7 @@
   },
   "local_test_status": {
     "schema_version": "oneiros_v4_1_local_test_status_v1",
-    "timestamp_utc": "2026-08-31T08:19:13.572199+00:00",
+    "timestamp_utc": "2026-09-01T05:57:08.793860+00:00",
     "command": [
       "C:\\Program Files\\Python312\\python.exe",
       "-m",
@@ -196,12 +196,12 @@
       "-q"
     ],
     "returncode": 0,
-    "passed": 171,
+    "passed": 190,
     "failed": 0,
-    "source_tree_sha256": "0346614a48ee6bf25472c3d5839c8d98fdebad877f490ed940e828edd88f08f5",
+    "source_tree_sha256": "d961bd6eb3bdfae73f5a2057003780c65d4eeea814c4a08fc97dd74719c4cb46",
     "completion_only_masking_verified": true,
     "sealed_final_test_accessed": false,
-    "output_tail": "........................................................................ [ 42%]\n........................................................................ [ 84%]\n...........................                                              [100%]\n171 passed in 86.32s (0:01:26)"
+    "output_tail": "........................................................................ [ 37%]\n........................................................................ [ 75%]\n..............................................                           [100%]\n190 passed in 57.83s"
   },
   "selection": {
     "execution_mode_filter": null,
@@ -1459,6 +1459,18 @@
       "string": 1,
       "string_manipulation": 1
     },
+    "dataset_counts": {
+      "BugsInPy": 3,
+      "humaneval": 3,
+      "manual_curated_examples": 4,
+      "mbpp": 22
+    },
+    "ingestion_source_counts": {
+      "bugsinpy_official_repository_fragment": 3,
+      "curated_fixed_bug_seed": 4,
+      "oneiros_clean_mutations": 25
+    },
+    "dataset_identity_policy": "source.upstream_then_source.name_v1",
     "repository_project_counts": {
       "ansible": 1,
       "matplotlib": 1,
@@ -1530,6 +1542,431 @@
     }
   },
   "sampling": {
+    "dataset_identity_policy": "source.upstream_then_source.name_v1",
+    "example_weights": {
+      "schema_version": "oneiros_sampling_weights_v1",
+      "dataset_identity_policy": "source.upstream_then_source.name_v1",
+      "weight_scope": "post_budget_filter_and_dedup_before_optimizer_padding",
+      "raw_examples": 73,
+      "unique_examples": 73,
+      "effective_examples": 88,
+      "effective_unique_examples": 73,
+      "excluded_unique_examples": 0,
+      "extra_repetitions": 15,
+      "repeat_histogram": {
+        "1": 70,
+        "6": 3
+      },
+      "max_repeat_count": 6,
+      "unknown_dataset_examples": 0,
+      "per_dataset": {
+        "BugsInPy": {
+          "raw_examples": 3,
+          "unique_examples": 3,
+          "effective_unique_examples": 3,
+          "effective_examples": 18,
+          "extra_repetitions": 15,
+          "max_repeat_count": 6,
+          "raw_weight": 0.04109589,
+          "effective_weight": 0.20454545
+        },
+        "humaneval": {
+          "raw_examples": 8,
+          "unique_examples": 8,
+          "effective_unique_examples": 8,
+          "effective_examples": 8,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.10958904,
+          "effective_weight": 0.09090909
+        },
+        "manual_curated_examples": {
+          "raw_examples": 7,
+          "unique_examples": 7,
+          "effective_unique_examples": 7,
+          "effective_examples": 7,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.09589041,
+          "effective_weight": 0.07954545
+        },
+        "mbpp": {
+          "raw_examples": 55,
+          "unique_examples": 55,
+          "effective_unique_examples": 55,
+          "effective_examples": 55,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.75342466,
+          "effective_weight": 0.625
+        }
+      },
+      "per_mutation_family": {
+        "arithmetic": {
+          "raw_examples": 13,
+          "unique_examples": 13,
+          "effective_unique_examples": 13,
+          "effective_examples": 13,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.17808219,
+          "effective_weight": 0.14772727
+        },
+        "boolean": {
+          "raw_examples": 1,
+          "unique_examples": 1,
+          "effective_unique_examples": 1,
+          "effective_examples": 1,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.01369863,
+          "effective_weight": 0.01136364
+        },
+        "boundary": {
+          "raw_examples": 14,
+          "unique_examples": 14,
+          "effective_unique_examples": 14,
+          "effective_examples": 14,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.19178082,
+          "effective_weight": 0.15909091
+        },
+        "comparison": {
+          "raw_examples": 6,
+          "unique_examples": 6,
+          "effective_unique_examples": 6,
+          "effective_examples": 6,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.08219178,
+          "effective_weight": 0.06818182
+        },
+        "data_validation": {
+          "raw_examples": 3,
+          "unique_examples": 3,
+          "effective_unique_examples": 3,
+          "effective_examples": 3,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.04109589,
+          "effective_weight": 0.03409091
+        },
+        "identity": {
+          "raw_examples": 1,
+          "unique_examples": 1,
+          "effective_unique_examples": 1,
+          "effective_examples": 1,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.01369863,
+          "effective_weight": 0.01136364
+        },
+        "index": {
+          "raw_examples": 1,
+          "unique_examples": 1,
+          "effective_unique_examples": 1,
+          "effective_examples": 1,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.01369863,
+          "effective_weight": 0.01136364
+        },
+        "list_operations": {
+          "raw_examples": 2,
+          "unique_examples": 2,
+          "effective_unique_examples": 2,
+          "effective_examples": 2,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.02739726,
+          "effective_weight": 0.02272727
+        },
+        "logical": {
+          "raw_examples": 6,
+          "unique_examples": 6,
+          "effective_unique_examples": 6,
+          "effective_examples": 6,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.08219178,
+          "effective_weight": 0.06818182
+        },
+        "membership": {
+          "raw_examples": 3,
+          "unique_examples": 3,
+          "effective_unique_examples": 3,
+          "effective_examples": 3,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.04109589,
+          "effective_weight": 0.03409091
+        },
+        "negate_removal": {
+          "raw_examples": 5,
+          "unique_examples": 5,
+          "effective_unique_examples": 5,
+          "effective_examples": 5,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.06849315,
+          "effective_weight": 0.05681818
+        },
+        "off_by_one": {
+          "raw_examples": 9,
+          "unique_examples": 9,
+          "effective_unique_examples": 9,
+          "effective_examples": 9,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.12328767,
+          "effective_weight": 0.10227273
+        },
+        "official_repository_pytest_reproduction": {
+          "raw_examples": 2,
+          "unique_examples": 2,
+          "effective_unique_examples": 2,
+          "effective_examples": 12,
+          "extra_repetitions": 10,
+          "max_repeat_count": 6,
+          "raw_weight": 0.02739726,
+          "effective_weight": 0.13636364
+        },
+        "official_repository_unittest_reproduction": {
+          "raw_examples": 1,
+          "unique_examples": 1,
+          "effective_unique_examples": 1,
+          "effective_examples": 6,
+          "extra_repetitions": 5,
+          "max_repeat_count": 6,
+          "raw_weight": 0.01369863,
+          "effective_weight": 0.06818182
+        },
+        "return": {
+          "raw_examples": 1,
+          "unique_examples": 1,
+          "effective_unique_examples": 1,
+          "effective_examples": 1,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.01369863,
+          "effective_weight": 0.01136364
+        },
+        "string": {
+          "raw_examples": 3,
+          "unique_examples": 3,
+          "effective_unique_examples": 3,
+          "effective_examples": 3,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.04109589,
+          "effective_weight": 0.03409091
+        },
+        "string_manipulation": {
+          "raw_examples": 2,
+          "unique_examples": 2,
+          "effective_unique_examples": 2,
+          "effective_examples": 2,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.02739726,
+          "effective_weight": 0.02272727
+        }
+      },
+      "per_dataset_family": {
+        "BugsInPy::official_repository_pytest_reproduction": {
+          "raw_examples": 2,
+          "unique_examples": 2,
+          "effective_unique_examples": 2,
+          "effective_examples": 12,
+          "extra_repetitions": 10,
+          "max_repeat_count": 6,
+          "raw_weight": 0.02739726,
+          "effective_weight": 0.13636364
+        },
+        "BugsInPy::official_repository_unittest_reproduction": {
+          "raw_examples": 1,
+          "unique_examples": 1,
+          "effective_unique_examples": 1,
+          "effective_examples": 6,
+          "extra_repetitions": 5,
+          "max_repeat_count": 6,
+          "raw_weight": 0.01369863,
+          "effective_weight": 0.06818182
+        },
+        "humaneval::arithmetic": {
+          "raw_examples": 2,
+          "unique_examples": 2,
+          "effective_unique_examples": 2,
+          "effective_examples": 2,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.02739726,
+          "effective_weight": 0.02272727
+        },
+        "humaneval::boundary": {
+          "raw_examples": 3,
+          "unique_examples": 3,
+          "effective_unique_examples": 3,
+          "effective_examples": 3,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.04109589,
+          "effective_weight": 0.03409091
+        },
+        "humaneval::string": {
+          "raw_examples": 3,
+          "unique_examples": 3,
+          "effective_unique_examples": 3,
+          "effective_examples": 3,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.04109589,
+          "effective_weight": 0.03409091
+        },
+        "manual_curated_examples::data_validation": {
+          "raw_examples": 3,
+          "unique_examples": 3,
+          "effective_unique_examples": 3,
+          "effective_examples": 3,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.04109589,
+          "effective_weight": 0.03409091
+        },
+        "manual_curated_examples::list_operations": {
+          "raw_examples": 2,
+          "unique_examples": 2,
+          "effective_unique_examples": 2,
+          "effective_examples": 2,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.02739726,
+          "effective_weight": 0.02272727
+        },
+        "manual_curated_examples::string_manipulation": {
+          "raw_examples": 2,
+          "unique_examples": 2,
+          "effective_unique_examples": 2,
+          "effective_examples": 2,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.02739726,
+          "effective_weight": 0.02272727
+        },
+        "mbpp::arithmetic": {
+          "raw_examples": 11,
+          "unique_examples": 11,
+          "effective_unique_examples": 11,
+          "effective_examples": 11,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.15068493,
+          "effective_weight": 0.125
+        },
+        "mbpp::boolean": {
+          "raw_examples": 1,
+          "unique_examples": 1,
+          "effective_unique_examples": 1,
+          "effective_examples": 1,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.01369863,
+          "effective_weight": 0.01136364
+        },
+        "mbpp::boundary": {
+          "raw_examples": 11,
+          "unique_examples": 11,
+          "effective_unique_examples": 11,
+          "effective_examples": 11,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.15068493,
+          "effective_weight": 0.125
+        },
+        "mbpp::comparison": {
+          "raw_examples": 6,
+          "unique_examples": 6,
+          "effective_unique_examples": 6,
+          "effective_examples": 6,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.08219178,
+          "effective_weight": 0.06818182
+        },
+        "mbpp::identity": {
+          "raw_examples": 1,
+          "unique_examples": 1,
+          "effective_unique_examples": 1,
+          "effective_examples": 1,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.01369863,
+          "effective_weight": 0.01136364
+        },
+        "mbpp::index": {
+          "raw_examples": 1,
+          "unique_examples": 1,
+          "effective_unique_examples": 1,
+          "effective_examples": 1,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.01369863,
+          "effective_weight": 0.01136364
+        },
+        "mbpp::logical": {
+          "raw_examples": 6,
+          "unique_examples": 6,
+          "effective_unique_examples": 6,
+          "effective_examples": 6,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.08219178,
+          "effective_weight": 0.06818182
+        },
+        "mbpp::membership": {
+          "raw_examples": 3,
+          "unique_examples": 3,
+          "effective_unique_examples": 3,
+          "effective_examples": 3,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.04109589,
+          "effective_weight": 0.03409091
+        },
+        "mbpp::negate_removal": {
+          "raw_examples": 5,
+          "unique_examples": 5,
+          "effective_unique_examples": 5,
+          "effective_examples": 5,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.06849315,
+          "effective_weight": 0.05681818
+        },
+        "mbpp::off_by_one": {
+          "raw_examples": 9,
+          "unique_examples": 9,
+          "effective_unique_examples": 9,
+          "effective_examples": 9,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.12328767,
+          "effective_weight": 0.10227273
+        },
+        "mbpp::return": {
+          "raw_examples": 1,
+          "unique_examples": 1,
+          "effective_unique_examples": 1,
+          "effective_examples": 1,
+          "extra_repetitions": 0,
+          "max_repeat_count": 1,
+          "raw_weight": 0.01369863,
+          "effective_weight": 0.01136364
+        }
+      },
+      "dataset_weights_changed": true
+    },
     "balanced_sampling_enabled": true,
     "target_real_fraction": 0.2,
     "actual_real_fraction": 0.204545,

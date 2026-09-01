@@ -130,6 +130,7 @@ def test_bounded_dpo_smoke_preserves_full_sft_identity():
         "prompt_compaction=section_aware_ast_units_before_chat_v4_1:"
         "prompt_schema=oneiros_unified_test_generation_v2:"
         "prompt_information=full:output_instruction=self_contained:"
+        "dataset_identity=source.upstream_then_source.name_v1:"
         "generation_completion_limit=128:repository_generation_completion_limit=1024"
     )
     assert sft_training_scope(100, True, None) == (
@@ -139,6 +140,7 @@ def test_bounded_dpo_smoke_preserves_full_sft_identity():
         "prompt_compaction=section_aware_ast_units_before_chat_v4_1:"
         "prompt_schema=oneiros_unified_test_generation_v2:"
         "prompt_information=full:output_instruction=self_contained:"
+        "dataset_identity=source.upstream_then_source.name_v1:"
         "generation_completion_limit=128:repository_generation_completion_limit=1024"
     )
 

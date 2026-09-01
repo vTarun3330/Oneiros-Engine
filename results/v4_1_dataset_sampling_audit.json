@@ -1,0 +1,306 @@
+{
+  "schema_version": "oneiros_dataset_sampling_audit_v1",
+  "scope": "eligible_training_records_only",
+  "corpus_id": "oneiros-corpus-v4.1-research-hardened-candidate",
+  "records_sha256": "04940ee92c7eeef3efb0808e577470cfb5415c13612ecb25bd11eb00c2adfd50",
+  "source_tree_sha256": "d961bd6eb3bdfae73f5a2057003780c65d4eeea814c4a08fc97dd74719c4cb46",
+  "dataset_identity_policy": "source.upstream_then_source.name_v1",
+  "training_records": 5941,
+  "records_by_ingestion_source": {
+    "bugsinpy_official_repository_fragment": 112,
+    "curated_fixed_bug_seed": 7,
+    "oneiros_clean_mutations": 5588,
+    "swebench_verified_official_repository_fragment": 234
+  },
+  "records_by_upstream_dataset": {
+    "BugsInPy": 112,
+    "SWE-bench Verified": 234,
+    "humaneval": 938,
+    "manual_curated_examples": 7,
+    "mbpp": 4650
+  },
+  "upstream_datasets_within_each_source": {
+    "bugsinpy_official_repository_fragment": {
+      "BugsInPy": 112
+    },
+    "curated_fixed_bug_seed": {
+      "manual_curated_examples": 7
+    },
+    "oneiros_clean_mutations": {
+      "humaneval": 938,
+      "mbpp": 4650
+    },
+    "swebench_verified_official_repository_fragment": {
+      "SWE-bench Verified": 234
+    }
+  },
+  "sources_that_would_collapse_multiple_datasets": [
+    "oneiros_clean_mutations"
+  ],
+  "unknown_dataset_records": 0,
+  "labels_complete": true,
+  "sampling_diagnostic": {
+    "scope": "deterministic_10_example_fixture_not_model_performance",
+    "treatments": {
+      "dataset": {
+        "sampler": {
+          "raw_examples": 10,
+          "target_examples": 20,
+          "effective_examples": 20,
+          "max_repeats": 2,
+          "group_attribute": "dataset",
+          "raw_group_counts": {
+            "humaneval": 2,
+            "mbpp": 8
+          },
+          "effective_group_counts": {
+            "humaneval": 4,
+            "mbpp": 16
+          },
+          "repeat_histogram": {
+            "2": 10
+          },
+          "achievable_max_examples": 20,
+          "target_reached": true
+        },
+        "weights": {
+          "schema_version": "oneiros_sampling_weights_v1",
+          "dataset_identity_policy": "source.upstream_then_source.name_v1",
+          "weight_scope": "post_budget_filter_and_dedup_before_optimizer_padding",
+          "raw_examples": 10,
+          "unique_examples": 10,
+          "effective_examples": 20,
+          "effective_unique_examples": 10,
+          "excluded_unique_examples": 0,
+          "extra_repetitions": 10,
+          "repeat_histogram": {
+            "2": 10
+          },
+          "max_repeat_count": 2,
+          "unknown_dataset_examples": 0,
+          "per_dataset": {
+            "humaneval": {
+              "raw_examples": 2,
+              "unique_examples": 2,
+              "effective_unique_examples": 2,
+              "effective_examples": 4,
+              "extra_repetitions": 2,
+              "max_repeat_count": 2,
+              "raw_weight": 0.2,
+              "effective_weight": 0.2
+            },
+            "mbpp": {
+              "raw_examples": 8,
+              "unique_examples": 8,
+              "effective_unique_examples": 8,
+              "effective_examples": 16,
+              "extra_repetitions": 8,
+              "max_repeat_count": 2,
+              "raw_weight": 0.8,
+              "effective_weight": 0.8
+            }
+          },
+          "per_mutation_family": {
+            "arithmetic": {
+              "raw_examples": 5,
+              "unique_examples": 5,
+              "effective_unique_examples": 5,
+              "effective_examples": 10,
+              "extra_repetitions": 5,
+              "max_repeat_count": 2,
+              "raw_weight": 0.5,
+              "effective_weight": 0.5
+            },
+            "boundary": {
+              "raw_examples": 5,
+              "unique_examples": 5,
+              "effective_unique_examples": 5,
+              "effective_examples": 10,
+              "extra_repetitions": 5,
+              "max_repeat_count": 2,
+              "raw_weight": 0.5,
+              "effective_weight": 0.5
+            }
+          },
+          "per_dataset_family": {
+            "humaneval::arithmetic": {
+              "raw_examples": 1,
+              "unique_examples": 1,
+              "effective_unique_examples": 1,
+              "effective_examples": 2,
+              "extra_repetitions": 1,
+              "max_repeat_count": 2,
+              "raw_weight": 0.1,
+              "effective_weight": 0.1
+            },
+            "humaneval::boundary": {
+              "raw_examples": 1,
+              "unique_examples": 1,
+              "effective_unique_examples": 1,
+              "effective_examples": 2,
+              "extra_repetitions": 1,
+              "max_repeat_count": 2,
+              "raw_weight": 0.1,
+              "effective_weight": 0.1
+            },
+            "mbpp::arithmetic": {
+              "raw_examples": 4,
+              "unique_examples": 4,
+              "effective_unique_examples": 4,
+              "effective_examples": 8,
+              "extra_repetitions": 4,
+              "max_repeat_count": 2,
+              "raw_weight": 0.4,
+              "effective_weight": 0.4
+            },
+            "mbpp::boundary": {
+              "raw_examples": 4,
+              "unique_examples": 4,
+              "effective_unique_examples": 4,
+              "effective_examples": 8,
+              "extra_repetitions": 4,
+              "max_repeat_count": 2,
+              "raw_weight": 0.4,
+              "effective_weight": 0.4
+            }
+          },
+          "dataset_weights_changed": false
+        }
+      },
+      "dataset_family": {
+        "sampler": {
+          "raw_examples": 10,
+          "target_examples": 20,
+          "effective_examples": 20,
+          "max_repeats": 2,
+          "group_attribute": "dataset_family",
+          "raw_group_counts": {
+            "humaneval::arithmetic": 1,
+            "humaneval::boundary": 1,
+            "mbpp::arithmetic": 4,
+            "mbpp::boundary": 4
+          },
+          "effective_group_counts": {
+            "humaneval::arithmetic": 2,
+            "humaneval::boundary": 2,
+            "mbpp::arithmetic": 8,
+            "mbpp::boundary": 8
+          },
+          "repeat_histogram": {
+            "2": 10
+          },
+          "achievable_max_examples": 20,
+          "target_reached": true
+        },
+        "weights": {
+          "schema_version": "oneiros_sampling_weights_v1",
+          "dataset_identity_policy": "source.upstream_then_source.name_v1",
+          "weight_scope": "post_budget_filter_and_dedup_before_optimizer_padding",
+          "raw_examples": 10,
+          "unique_examples": 10,
+          "effective_examples": 20,
+          "effective_unique_examples": 10,
+          "excluded_unique_examples": 0,
+          "extra_repetitions": 10,
+          "repeat_histogram": {
+            "2": 10
+          },
+          "max_repeat_count": 2,
+          "unknown_dataset_examples": 0,
+          "per_dataset": {
+            "humaneval": {
+              "raw_examples": 2,
+              "unique_examples": 2,
+              "effective_unique_examples": 2,
+              "effective_examples": 4,
+              "extra_repetitions": 2,
+              "max_repeat_count": 2,
+              "raw_weight": 0.2,
+              "effective_weight": 0.2
+            },
+            "mbpp": {
+              "raw_examples": 8,
+              "unique_examples": 8,
+              "effective_unique_examples": 8,
+              "effective_examples": 16,
+              "extra_repetitions": 8,
+              "max_repeat_count": 2,
+              "raw_weight": 0.8,
+              "effective_weight": 0.8
+            }
+          },
+          "per_mutation_family": {
+            "arithmetic": {
+              "raw_examples": 5,
+              "unique_examples": 5,
+              "effective_unique_examples": 5,
+              "effective_examples": 10,
+              "extra_repetitions": 5,
+              "max_repeat_count": 2,
+              "raw_weight": 0.5,
+              "effective_weight": 0.5
+            },
+            "boundary": {
+              "raw_examples": 5,
+              "unique_examples": 5,
+              "effective_unique_examples": 5,
+              "effective_examples": 10,
+              "extra_repetitions": 5,
+              "max_repeat_count": 2,
+              "raw_weight": 0.5,
+              "effective_weight": 0.5
+            }
+          },
+          "per_dataset_family": {
+            "humaneval::arithmetic": {
+              "raw_examples": 1,
+              "unique_examples": 1,
+              "effective_unique_examples": 1,
+              "effective_examples": 2,
+              "extra_repetitions": 1,
+              "max_repeat_count": 2,
+              "raw_weight": 0.1,
+              "effective_weight": 0.1
+            },
+            "humaneval::boundary": {
+              "raw_examples": 1,
+              "unique_examples": 1,
+              "effective_unique_examples": 1,
+              "effective_examples": 2,
+              "extra_repetitions": 1,
+              "max_repeat_count": 2,
+              "raw_weight": 0.1,
+              "effective_weight": 0.1
+            },
+            "mbpp::arithmetic": {
+              "raw_examples": 4,
+              "unique_examples": 4,
+              "effective_unique_examples": 4,
+              "effective_examples": 8,
+              "extra_repetitions": 4,
+              "max_repeat_count": 2,
+              "raw_weight": 0.4,
+              "effective_weight": 0.4
+            },
+            "mbpp::boundary": {
+              "raw_examples": 4,
+              "unique_examples": 4,
+              "effective_unique_examples": 4,
+              "effective_examples": 8,
+              "extra_repetitions": 4,
+              "max_repeat_count": 2,
+              "raw_weight": 0.4,
+              "effective_weight": 0.4
+            }
+          },
+          "dataset_weights_changed": false
+        }
+      }
+    }
+  },
+  "G_group_status": "blocked_unmatched_sampling_controls",
+  "modal_used": false,
+  "gpu_model_loaded": false,
+  "final_test_evaluated": false,
+  "corpus_modified": false
+}

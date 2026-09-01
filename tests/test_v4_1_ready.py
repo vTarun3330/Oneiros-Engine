@@ -2,6 +2,7 @@ import copy
 import shlex
 
 import pytest
+from utils.dataset_identity import DATASET_IDENTITY_POLICY
 
 from scripts.v4_1_ready import (
     CORPUS_VERSION, build_execution_queue, integration_commands,
@@ -94,6 +95,10 @@ def _matching_preflight():
         "sampling": {
             "target_real_fraction": 0.20, "balanced_sampling_enabled": True,
             "synthetic_balance_fraction": 0.0, "synthetic_balance_mode": "none",
+            "dataset_identity_policy": DATASET_IDENTITY_POLICY,
+            "example_weights": {
+                "dataset_identity_policy": DATASET_IDENTITY_POLICY, "unknown_dataset_examples": 0,
+            },
         },
         "tokenization": {
             "prompt_token_limit": 1024, "repository_prompt_token_limit": 1024,
@@ -140,6 +145,8 @@ def test_doctor_accepts_matching_integration_evidence():
     ("training.optimizer_schedule.minimum_monitor_checkpoints", 0),
     ("training.planned_validation_checkpoints", []),
     ("sampling.target_real_fraction", 0.3),
+    ("sampling.dataset_identity_policy", "ingestion_source_only"),
+    ("sampling.example_weights.unknown_dataset_examples", 1),
     ("gates.zero_sequence_overflows", False),
 ])
 def test_doctor_rejects_ready_but_wrong_scope_evidence(field, value):

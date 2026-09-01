@@ -20,9 +20,10 @@ from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 from harness.candidate_policy import validate_function_assertion
 from harness.safe_execution import classify_assertions
+from utils.dataset_identity import DATASET_IDENTITY_POLICY
 
 
-RESEARCH_METRICS_SCHEMA_VERSION = 2
+RESEARCH_METRICS_SCHEMA_VERSION = 3
 DEFAULT_K_VALUES: Tuple[int, ...] = (1, 2, 4, 8)
 
 
@@ -252,6 +253,7 @@ def function_result(
     project: str = "unknown",
     prompt_budget_failure: bool = False,
     prompt_budget_failure_reason: Optional[str] = None,
+    dataset_name: Optional[str] = None,
 ) -> Dict[str, Any]:
     """Build the canonical per-function research result.
 
@@ -274,6 +276,7 @@ def function_result(
         "record_id": record_id,
         "bug_family": bug_family or "unknown",
         "source_name": source_name or "unknown",
+        "dataset_name": dataset_name or "unknown",
         "project": project or "unknown",
         "entry_point": entry_point,
         "requested_candidates": len(ordered),
@@ -348,9 +351,11 @@ def summarise_function_results(
 
     family_buckets: Dict[str, List[Mapping[str, Any]]] = defaultdict(list)
     source_buckets: Dict[str, List[Mapping[str, Any]]] = defaultdict(list)
+    dataset_buckets: Dict[str, List[Mapping[str, Any]]] = defaultdict(list)
     for item in function_results:
         family_buckets[str(item.get("bug_family", "unknown"))].append(item)
         source_buckets[str(item.get("source_name", "unknown"))].append(item)
+        dataset_buckets[str(item.get("dataset_name") or "unknown")].append(item)
 
     def compact_group(items: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
         count = len(items)
@@ -423,10 +428,34 @@ def summarise_function_results(
             ), 6) if macro_sources else 0.0
             for k in ks
         },
-        "definition": "equal-weight mean across function benchmark sources",
+        "definition": "equal-weight mean across ingestion sources; not an upstream-dataset macro",
+    }
+    dataset_metrics = {
+        key: compact_group(items) for key, items in sorted(dataset_buckets.items())
+    }
+    unlabeled = len(dataset_buckets.get("unknown", []))
+    known_datasets = [value for key, value in dataset_metrics.items() if key != "unknown"]
+    labels_complete = not unlabeled and bool(known_datasets)
+    dataset_macro = {
+        "status": "complete" if labels_complete else "incomplete_dataset_labels",
+        "dataset_count": len(known_datasets),
+        "unlabeled_functions": unlabeled,
+        "definition": "equal-weight mean across explicitly labeled upstream datasets",
+        **{
+            field: round(statistics.fmean(item[field] for item in known_datasets), 6)
+            if labels_complete else None
+            for field in ("function_kill_rate", "reference_valid_rate", "execution_valid_rate")
+        },
+        "kill_at_k": {
+            str(k): round(statistics.fmean(
+                item["kill_at_k"][str(k)]["rate"] for item in known_datasets
+            ), 6) if labels_complete else None
+            for k in ks
+        },
     }
     return {
         "research_metrics_schema_version": RESEARCH_METRICS_SCHEMA_VERSION,
+        "dataset_identity_policy": DATASET_IDENTITY_POLICY,
         "function_validation_records": total_functions,
         "function_validation_killed": killed_functions,
         "prompt_budget_failed_functions": prompt_budget_failures,
@@ -462,6 +491,8 @@ def summarise_function_results(
         },
         "source_metrics": source_metrics,
         "equal_weight_source_macro": equal_weight_source_macro,
+        "dataset_metrics": dataset_metrics,
+        "equal_weight_dataset_macro": dataset_macro,
     }
 
 

@@ -22,7 +22,7 @@
     {
       "name": "tracked_worktree_clean",
       "passed": false,
-      "detail": "M ABLATION_RESULTS.md\n M README.md\n M V4_1_NEXT_RUN.md\n M research/v4_1/GPU_READY_QUEUE.json\n M research/v4_1/ablation_plan.json\n M results/v4_1_local_test_status.json\n M scripts/research_ablations.py\n M scripts/v4_1_ready.py\n M tests/test_research_evaluation.py\n M tests/test_v4_1_ready.py"
+      "detail": "M ABLATION_RESULTS.json\n M ABLATION_RESULTS.md\n M README.md\n M V4_1_NEXT_RUN.md\n M metrics/research_evaluation.py\n M research/v4_1/GPU_READY_QUEUE.json\n M research/v4_1/ablation_plan.json\n M results/v4_1_integration_32_p1024_preflight.json\n M results/v4_1_local_test_status.json\n M scripts/evaluate_external_generations.py\n M scripts/preflight_sft_run.py\n M scripts/research_ablations.py\n M scripts/train_on_dataset.py\n M scripts/v4_1_ready.py\n M tests/test_research_evaluation.py\n M tests/test_training_smoke_selection.py\n M tests/test_v4_1_ready.py"
     },
     {
       "name": "canonical_corpus_hashes",
@@ -33,9 +33,9 @@
       "name": "source_bound_tests_current",
       "passed": true,
       "detail": {
-        "passed": 171,
-        "recorded_source_sha256": "0346614a48ee6bf25472c3d5839c8d98fdebad877f490ed940e828edd88f08f5",
-        "current_source_sha256": "0346614a48ee6bf25472c3d5839c8d98fdebad877f490ed940e828edd88f08f5"
+        "passed": 190,
+        "recorded_source_sha256": "d961bd6eb3bdfae73f5a2057003780c65d4eeea814c4a08fc97dd74719c4cb46",
+        "current_source_sha256": "d961bd6eb3bdfae73f5a2057003780c65d4eeea814c4a08fc97dd74719c4cb46"
       }
     },
     {

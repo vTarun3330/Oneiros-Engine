@@ -22,6 +22,7 @@ from typing import Any, Dict, List
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from harness.corpus import sha256_file, verify_corpus
+from utils.dataset_identity import DATASET_IDENTITY_POLICY, dataset_name_for_pair
 from metrics.research_evaluation import (
     evaluate_candidate_slots,
     evaluation_profile_sha256,
@@ -120,6 +121,7 @@ def evaluate_external_generations(
             pair["entry_point"],
             outcomes,
             source_name=str(pair.get("source_name", "unknown")),
+            dataset_name=dataset_name_for_pair(pair),
             project=str(pair.get("project", "unknown")),
         ))
 
@@ -129,6 +131,7 @@ def evaluate_external_generations(
         "candidate_budget": candidate_budget,
         "partial_smoke": allow_partial_smoke,
         "k_values": [1, 2, 4, 8],
+        "dataset_identity_policy": DATASET_IDENTITY_POLICY,
     }
     return {
         "mode": "external_llm_validation_only",

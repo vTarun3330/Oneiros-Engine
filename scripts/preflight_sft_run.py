@@ -55,11 +55,14 @@ from scripts.train_on_dataset import (
     format_generation_prompt,
     is_repository_execution_mode,
     load_phase3_pairs,
+    make_sft_data_point as _make_data_point,
     select_bounded_train_pairs,
     supervision_exclusion_summary,
     summarize_train_pair_selection,
 )
 from utils.reproducibility import source_tree_sha256
+from utils.dataset_identity import DATASET_IDENTITY_POLICY
+from utils.sampling_audit import summarize_sampling_weights
 
 
 def _sha256_json(value: Any) -> str:
@@ -90,23 +93,6 @@ def _token_summary(lengths: list[int]) -> dict[str, int]:
         "p95": percentile(0.95),
         "maximum": ordered[-1],
     }
-
-
-def _make_data_point(pair: dict, prompt: str, completion: str) -> SFTDataPoint:
-    return SFTDataPoint(
-        prompt=prompt,
-        completion=completion,
-        function_id=pair["id"],
-        project=pair.get("project", "synthetic"),
-        bug_family=pair.get("bug_family", "unknown"),
-        semantic_group=pair.get("group_id", pair["id"]),
-        execution_mode=pair.get("execution_mode", FUNCTION_EXECUTION_MODE),
-        dataset=pair.get("source_name", "unknown"),
-        dataset_family=(
-            f"{pair.get('source_name', 'unknown')}::"
-            f"{pair.get('bug_family', 'unknown')}"
-        ),
-    )
 
 
 def audit_evaluation_panel_prompts(
@@ -723,6 +709,10 @@ def build_preflight(
             ),
         },
         "sampling": {
+            "dataset_identity_policy": DATASET_IDENTITY_POLICY,
+            "example_weights": summarize_sampling_weights(
+                [*synthetic_examples, *repository_examples], effective_examples,
+            ),
             "balanced_sampling_enabled": balanced_sampling_enabled,
             "target_real_fraction": real_target_fraction,
             "actual_real_fraction": round(effective_real_fraction, 6),

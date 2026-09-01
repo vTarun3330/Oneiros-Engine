@@ -46,6 +46,7 @@ py -3.12 -c "from pathlib import Path; from harness.corpus import verify_corpus;
 py -3.12 scripts/audit_prompt_lineage.py --corpus-dir data/corpus/v4_1_research_hardened_candidate
 py -3.12 scripts/verify_v4_1_local.py
 py -3.12 scripts/audit_sft_readiness.py --corpus-version v4_1_research_hardened_candidate --split train --output results/v4_1_research_hardened_candidate_train_readiness.json
+py -3.12 scripts/audit_dataset_sampling.py
 ```
 
 Do not continue unless tests have zero failures; all corpus hashes verify; split overlaps, schema failures, prohibited lineage, verbatim reference leaks, pending manual reviews, and sequence overflows are zero.
@@ -64,7 +65,6 @@ The generated plan now contains executable, distinct run names for:
 - A0/A1/A2: code only, code + specification, and full legitimate context;
 - C0/C1: legacy exactly-one wording and V4.1 self-contained-test wording;
 - F: 0%, 10%, 20%, and 30% repository-supervision targets;
-- G: proportional, dataset-balanced, and dataset + synthetic-family-balanced sampling;
 - I: 800, 2,000, 4,000, and full eligible training scales;
 - J: 1024 and 1280 function prompt budgets.
 
@@ -75,11 +75,14 @@ regenerate the plan and queue with `--prompt-token-limit <accepted-budget>` and
 re-run each treatment's preflight. This propagates the budget into both training
 and evaluation commands and their namespaces without hand-editing each command.
 
-B, D, E, and H remain explicitly fail-closed in the plan where a clean paired
+B, D, E, G, and H remain explicitly fail-closed in the plan where a clean paired
 control is not yet available. J's 512 and 768 rows are recorded as gate
 failures with no GPU command. The queue emits no misleading GPU command for a
 leaky legacy prompt, malformed head/tail prompt, unmatched oracle-localization
 panel, or confounded old-supervision corpus.
+G is withheld because its previous treatments changed multiple variables and
+its 2x target/2x cap did not alter dataset weights. The CPU audit and achieved-
+weight report remain runnable; do not recreate the rejected GPU commands.
 
 ## 3. Preflight the 32-pair integration
 
@@ -243,10 +246,10 @@ later research stages can be called fully prepared:
 
 - Materialize an exact full-eligible-training preflight; the I-full command is
   still a conditional template without one.
-- Audit the G-group dataset labels end to end: `source_name` currently uses
-  `source.name`, which may be an ingestion-source name rather than the upstream
-  HumanEval/MBPP dataset. Do not claim dataset balancing until the groups are
-  checked and their achieved weights reported.
+- Materialize matched G-group controls using one shared verified pool,
+  effective budget, repository composition and optimizer setup. Dataset labels
+  and achieved-weight reporting are ready, but the rejected controls must not
+  be launched.
 - Finish clean B/D/E/H controls or retain their INCONCLUSIVE/blocked status.
 - Add result-ingestion and frozen-selection receipts so later stages can verify
   decisions mechanically, including every accepted flag, not only the budget.
