@@ -1,0 +1,4752 @@
+{
+  "mode": "smoke_backend_comparison",
+  "final_test_measurement": false,
+  "backend": "phi3_eager",
+  "backend_label": "Phi-3-mini-4k-instruct (eager)",
+  "model_name": "microsoft/Phi-3-mini-4k-instruct",
+  "requested_model_revision": null,
+  "resolved_model_revision": "f39ac1d28e925b323eae81227eaba4464caced4e",
+  "attention_implementation": "eager",
+  "model_runtime_profile": {
+    "profile_version": "oneiros_phi3_4bit_nf4_aligned_v1",
+    "compute_dtype": "bf16",
+    "load_in_4bit": true,
+    "quant_type": "nf4",
+    "double_quant": false,
+    "attention_implementation": "eager",
+    "model_name": "microsoft/Phi-3-mini-4k-instruct",
+    "model_revision": "f39ac1d28e925b323eae81227eaba4464caced4e"
+  },
+  "panel_source": "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\local_j1024_integration_32_seed42_v5\\sft_monitor_selection.json",
+  "panel_dataset_fingerprint": "oneiros-corpus-v4.1-research-hardened-candidate:1:04940ee92c7eeef3efb0808e577470cfb5415c13612ecb25bd11eb00c2adfd50:4baaa7a6eb4069203691d5453d50d58a189eeee63feb0c3dfe236c139947ba2a:sft_scope=first_32_train_records:bounded_selection=stratified_generation_compatible_complex_v5:execution_mode=all:repository_completion_limit=2048:prompt_token_limit=1024:selection_prompt_token_limit=1024:repository_prompt_token_limit=1024:prompt_compaction=section_aware_ast_units_before_chat_v4_1:prompt_schema=oneiros_unified_test_generation_v2:prompt_information=full:output_instruction=self_contained:complex_target_fraction=0.6:generation_completion_limit=128:repository_generation_completion_limit=1024",
+  "panel_selection_sha256": "0ed8b64f30df20bab19c1afc755b199c7f424d9d227f5a2e01c588144fafe907",
+  "evaluation_split": "ablation_dev",
+  "seed": 42,
+  "tests_per_function": 8,
+  "prompt_token_limit": 1024,
+  "function_validation_records": 32,
+  "wall_time_seconds": 208.8,
+  "seconds_per_function": 6.53,
+  "research_metrics_schema_version": 2,
+  "function_validation_killed": 19,
+  "prompt_budget_failed_functions": 0,
+  "prompt_budget_failure_rate": 0.0,
+  "function_kill_rate": 0.59375,
+  "function_kill_rate_wilson_95": [
+    0.4226,
+    0.744804
+  ],
+  "requested_candidates": 256,
+  "parsed_candidates": 130,
+  "execution_valid_candidates": 105,
+  "reference_valid_candidates": 69,
+  "generated_candidates": 69,
+  "mutation_killing_candidates": 37,
+  "generation_invalid_candidates": 126,
+  "execution_invalid_candidates": 25,
+  "invalid_candidates": 187,
+  "candidate_kill_rate": 0.536232,
+  "end_to_end_candidate_kill_rate": 0.144531,
+  "parse_success_rate": 0.507812,
+  "execution_valid_rate": 0.410156,
+  "reference_valid_rate": 0.269531,
+  "kill_at_k": {
+    "1": {
+      "functions": 5,
+      "rate": 0.15625,
+      "wilson_95": [
+        0.068644,
+        0.317541
+      ]
+    },
+    "2": {
+      "functions": 9,
+      "rate": 0.28125,
+      "wilson_95": [
+        0.155646,
+        0.453745
+      ]
+    },
+    "4": {
+      "functions": 12,
+      "rate": 0.375,
+      "wilson_95": [
+        0.229339,
+        0.547456
+      ]
+    },
+    "8": {
+      "functions": 19,
+      "rate": 0.59375,
+      "wilson_95": [
+        0.4226,
+        0.744804
+      ]
+    }
+  },
+  "pass_at_k": {
+    "1": {
+      "functions": 8,
+      "rate": 0.25,
+      "wilson_95": [
+        0.132524,
+        0.421066
+      ],
+      "definition": "at least one reference-valid generated test in the first k raw slots"
+    },
+    "2": {
+      "functions": 12,
+      "rate": 0.375,
+      "wilson_95": [
+        0.229339,
+        0.547456
+      ],
+      "definition": "at least one reference-valid generated test in the first k raw slots"
+    },
+    "4": {
+      "functions": 17,
+      "rate": 0.53125,
+      "wilson_95": [
+        0.364495,
+        0.691306
+      ],
+      "definition": "at least one reference-valid generated test in the first k raw slots"
+    },
+    "8": {
+      "functions": 24,
+      "rate": 0.75,
+      "wilson_95": [
+        0.578934,
+        0.867476
+      ],
+      "definition": "at least one reference-valid generated test in the first k raw slots"
+    }
+  },
+  "candidate_redundancy": {
+    "redundant_killing_candidates": 18,
+    "redundancy_ratio": 0.486486,
+    "definition": "killing candidates beyond the first kill for each killed function"
+  },
+  "diversity_mean": {
+    "exact_unique_ratio": 0.928571,
+    "ast_shape_unique_ratio": 0.620722,
+    "input_shape_unique_ratio": 0.415141,
+    "outcome_mode_unique": 2.8125
+  },
+  "bug_family_metrics": {
+    "arithmetic": {
+      "functions": 11,
+      "killed_functions": 7,
+      "function_kill_rate": 0.636364,
+      "function_kill_rate_wilson_95": [
+        0.353801,
+        0.848335
+      ],
+      "requested_candidates": 88,
+      "parsed_candidates": 35,
+      "execution_valid_candidates": 24,
+      "reference_valid_candidates": 13,
+      "killing_candidates": 11,
+      "parse_valid_rate": 0.397727,
+      "execution_valid_rate": 0.272727,
+      "reference_valid_rate": 0.147727,
+      "bug_killing_candidate_rate": 0.125,
+      "kill_at_k": {
+        "1": {
+          "functions": 1,
+          "rate": 0.090909,
+          "wilson_95": [
+            0.016232,
+            0.377358
+          ]
+        },
+        "2": {
+          "functions": 3,
+          "rate": 0.272727,
+          "wilson_95": [
+            0.097461,
+            0.565645
+          ]
+        },
+        "4": {
+          "functions": 3,
+          "rate": 0.272727,
+          "wilson_95": [
+            0.097461,
+            0.565645
+          ]
+        },
+        "8": {
+          "functions": 7,
+          "rate": 0.636364,
+          "wilson_95": [
+            0.353801,
+            0.848335
+          ]
+        }
+      }
+    },
+    "boundary": {
+      "functions": 13,
+      "killed_functions": 8,
+      "function_kill_rate": 0.615385,
+      "function_kill_rate_wilson_95": [
+        0.355229,
+        0.822903
+      ],
+      "requested_candidates": 104,
+      "parsed_candidates": 51,
+      "execution_valid_candidates": 41,
+      "reference_valid_candidates": 33,
+      "killing_candidates": 22,
+      "parse_valid_rate": 0.490385,
+      "execution_valid_rate": 0.394231,
+      "reference_valid_rate": 0.317308,
+      "bug_killing_candidate_rate": 0.211538,
+      "kill_at_k": {
+        "1": {
+          "functions": 4,
+          "rate": 0.307692,
+          "wilson_95": [
+            0.126807,
+            0.576307
+          ]
+        },
+        "2": {
+          "functions": 5,
+          "rate": 0.384615,
+          "wilson_95": [
+            0.177097,
+            0.644771
+          ]
+        },
+        "4": {
+          "functions": 7,
+          "rate": 0.538462,
+          "wilson_95": [
+            0.291438,
+            0.767939
+          ]
+        },
+        "8": {
+          "functions": 8,
+          "rate": 0.615385,
+          "wilson_95": [
+            0.355229,
+            0.822903
+          ]
+        }
+      }
+    },
+    "comparison": {
+      "functions": 2,
+      "killed_functions": 2,
+      "function_kill_rate": 1.0,
+      "function_kill_rate_wilson_95": [
+        0.34238,
+        1.0
+      ],
+      "requested_candidates": 16,
+      "parsed_candidates": 9,
+      "execution_valid_candidates": 9,
+      "reference_valid_candidates": 2,
+      "killing_candidates": 2,
+      "parse_valid_rate": 0.5625,
+      "execution_valid_rate": 0.5625,
+      "reference_valid_rate": 0.125,
+      "bug_killing_candidate_rate": 0.125,
+      "kill_at_k": {
+        "1": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.65762
+          ]
+        },
+        "2": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.65762
+          ]
+        },
+        "4": {
+          "functions": 1,
+          "rate": 0.5,
+          "wilson_95": [
+            0.094531,
+            0.905469
+          ]
+        },
+        "8": {
+          "functions": 2,
+          "rate": 1.0,
+          "wilson_95": [
+            0.34238,
+            1.0
+          ]
+        }
+      }
+    },
+    "logical": {
+      "functions": 1,
+      "killed_functions": 1,
+      "function_kill_rate": 1.0,
+      "function_kill_rate_wilson_95": [
+        0.206549,
+        1.0
+      ],
+      "requested_candidates": 8,
+      "parsed_candidates": 7,
+      "execution_valid_candidates": 7,
+      "reference_valid_candidates": 5,
+      "killing_candidates": 1,
+      "parse_valid_rate": 0.875,
+      "execution_valid_rate": 0.875,
+      "reference_valid_rate": 0.625,
+      "bug_killing_candidate_rate": 0.125,
+      "kill_at_k": {
+        "1": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.793451
+          ]
+        },
+        "2": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.793451
+          ]
+        },
+        "4": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.793451
+          ]
+        },
+        "8": {
+          "functions": 1,
+          "rate": 1.0,
+          "wilson_95": [
+            0.206549,
+            1.0
+          ]
+        }
+      }
+    },
+    "negate_removal": {
+      "functions": 1,
+      "killed_functions": 1,
+      "function_kill_rate": 1.0,
+      "function_kill_rate_wilson_95": [
+        0.206549,
+        1.0
+      ],
+      "requested_candidates": 8,
+      "parsed_candidates": 7,
+      "execution_valid_candidates": 5,
+      "reference_valid_candidates": 4,
+      "killing_candidates": 1,
+      "parse_valid_rate": 0.875,
+      "execution_valid_rate": 0.625,
+      "reference_valid_rate": 0.5,
+      "bug_killing_candidate_rate": 0.125,
+      "kill_at_k": {
+        "1": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.793451
+          ]
+        },
+        "2": {
+          "functions": 1,
+          "rate": 1.0,
+          "wilson_95": [
+            0.206549,
+            1.0
+          ]
+        },
+        "4": {
+          "functions": 1,
+          "rate": 1.0,
+          "wilson_95": [
+            0.206549,
+            1.0
+          ]
+        },
+        "8": {
+          "functions": 1,
+          "rate": 1.0,
+          "wilson_95": [
+            0.206549,
+            1.0
+          ]
+        }
+      }
+    },
+    "off_by_one": {
+      "functions": 3,
+      "killed_functions": 0,
+      "function_kill_rate": 0.0,
+      "function_kill_rate_wilson_95": [
+        0.0,
+        0.561497
+      ],
+      "requested_candidates": 24,
+      "parsed_candidates": 15,
+      "execution_valid_candidates": 13,
+      "reference_valid_candidates": 6,
+      "killing_candidates": 0,
+      "parse_valid_rate": 0.625,
+      "execution_valid_rate": 0.541667,
+      "reference_valid_rate": 0.25,
+      "bug_killing_candidate_rate": 0.0,
+      "kill_at_k": {
+        "1": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.561497
+          ]
+        },
+        "2": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.561497
+          ]
+        },
+        "4": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.561497
+          ]
+        },
+        "8": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.561497
+          ]
+        }
+      }
+    },
+    "string_manipulation": {
+      "functions": 1,
+      "killed_functions": 0,
+      "function_kill_rate": 0.0,
+      "function_kill_rate_wilson_95": [
+        0.0,
+        0.793451
+      ],
+      "requested_candidates": 8,
+      "parsed_candidates": 6,
+      "execution_valid_candidates": 6,
+      "reference_valid_candidates": 6,
+      "killing_candidates": 0,
+      "parse_valid_rate": 0.75,
+      "execution_valid_rate": 0.75,
+      "reference_valid_rate": 0.75,
+      "bug_killing_candidate_rate": 0.0,
+      "kill_at_k": {
+        "1": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.793451
+          ]
+        },
+        "2": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.793451
+          ]
+        },
+        "4": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.793451
+          ]
+        },
+        "8": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.793451
+          ]
+        }
+      }
+    }
+  },
+  "source_metrics": {
+    "curated_fixed_bug_seed": {
+      "functions": 1,
+      "killed_functions": 0,
+      "function_kill_rate": 0.0,
+      "function_kill_rate_wilson_95": [
+        0.0,
+        0.793451
+      ],
+      "requested_candidates": 8,
+      "parsed_candidates": 6,
+      "execution_valid_candidates": 6,
+      "reference_valid_candidates": 6,
+      "killing_candidates": 0,
+      "parse_valid_rate": 0.75,
+      "execution_valid_rate": 0.75,
+      "reference_valid_rate": 0.75,
+      "bug_killing_candidate_rate": 0.0,
+      "kill_at_k": {
+        "1": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.793451
+          ]
+        },
+        "2": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.793451
+          ]
+        },
+        "4": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.793451
+          ]
+        },
+        "8": {
+          "functions": 0,
+          "rate": 0.0,
+          "wilson_95": [
+            0.0,
+            0.793451
+          ]
+        }
+      }
+    },
+    "oneiros_clean_mutations": {
+      "functions": 31,
+      "killed_functions": 19,
+      "function_kill_rate": 0.612903,
+      "function_kill_rate_wilson_95": [
+        0.438241,
+        0.762669
+      ],
+      "requested_candidates": 248,
+      "parsed_candidates": 124,
+      "execution_valid_candidates": 99,
+      "reference_valid_candidates": 63,
+      "killing_candidates": 37,
+      "parse_valid_rate": 0.5,
+      "execution_valid_rate": 0.399194,
+      "reference_valid_rate": 0.254032,
+      "bug_killing_candidate_rate": 0.149194,
+      "kill_at_k": {
+        "1": {
+          "functions": 5,
+          "rate": 0.16129,
+          "wilson_95": [
+            0.070926,
+            0.326344
+          ]
+        },
+        "2": {
+          "functions": 9,
+          "rate": 0.290323,
+          "wilson_95": [
+            0.160958,
+            0.465923
+          ]
+        },
+        "4": {
+          "functions": 12,
+          "rate": 0.387097,
+          "wilson_95": [
+            0.237331,
+            0.561759
+          ]
+        },
+        "8": {
+          "functions": 19,
+          "rate": 0.612903,
+          "wilson_95": [
+            0.438241,
+            0.762669
+          ]
+        }
+      }
+    }
+  },
+  "equal_weight_source_macro": {
+    "source_count": 2,
+    "function_kill_rate": 0.306451,
+    "reference_valid_rate": 0.502016,
+    "execution_valid_rate": 0.574597,
+    "kill_at_k": {
+      "1": 0.080645,
+      "2": 0.145161,
+      "4": 0.193549,
+      "8": 0.306451
+    },
+    "definition": "equal-weight mean across function benchmark sources"
+  },
+  "function_results": [
+    {
+      "record_id": "curated::bugsinpy_black_1",
+      "bug_family": "string_manipulation",
+      "source_name": "curated_fixed_bug_seed",
+      "project": "black",
+      "entry_point": "format_string",
+      "requested_candidates": 8,
+      "parsed_candidates": 6,
+      "execution_valid_candidates": 6,
+      "generation_invalid_candidates": 2,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 2,
+      "valid_candidates": 6,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert format_string(\"Hello,\") == \"Hello\", \"Test case failed: trailing comma not removed.\"",
+          "raw_output_sha256": "c0193e016f54281253acd7f6e106603684aae45e6cf0aa32c2b459b5adb7f0d6",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert format_string(\"test,\") == \"test\", \"Should remove trailing comma\"",
+          "raw_output_sha256": "28e00a84668e1149c65db8c09316409926bba1bfecf294a4d8d8ac87425adc74",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert format_string(\"test,\") == \"test\", \"The function should remove the trailing comma\"",
+          "raw_output_sha256": "f38403ddaa5b1feac6e1b735571430337fd8baf912f4679f86962db99ce03878",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert format_string(\"example,\") == \"example\"",
+          "raw_output_sha256": "83cec8aeed33f19dd14e16c732e8f0d5b111a6537c34f620501c7e4eeda7625a",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "c200310b4074f7f4eff909995d962bdd5765123e4b15fc300466f66b425211cf",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "bbfd72e35ee5618de6403d3268551912a3a3554861ea93466a2b55f8ff950de1",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert format_string(\"apple,\") == \"apple\"",
+          "raw_output_sha256": "85957d295e86c5218f5a2fed492a4da918e60070b543adf749eb9cf097e02ba0",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert format_string(\"hello,\") == \"hello\"",
+          "raw_output_sha256": "2a0ea25e8b99fc6d588c9512a0813b608c63b47c0a1b9a42573e0fd9ddc6a99b",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 6,
+        "reference_valid_candidates": 6,
+        "exact_unique": 6,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 2,
+        "ast_shape_unique_ratio": 0.333333,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.166667,
+        "outcome_mode_unique": 2
+      }
+    },
+    {
+      "record_id": "mutation::humaneval_HumanEval_126_mut_01115",
+      "bug_family": "off_by_one",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "is_sorted",
+      "requested_candidates": 8,
+      "parsed_candidates": 8,
+      "execution_valid_candidates": 8,
+      "generation_invalid_candidates": 0,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 2,
+      "valid_candidates": 6,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert not is_sorted([1, 2, 3, 4, 5, 5])",
+          "raw_output_sha256": "7f26e9b9d1bacd71c3f8a7ae1eaa312fd4780bd00988274e3583450e2fb679dd",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: ",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert is_sorted([1, 2, 3, 4, 5]) == False",
+          "raw_output_sha256": "d4e999bfc6ff66920ce7d5470df8c1bf6008e180c7353f44056e2a8e71d41fba",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: ",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert is_sorted([1, 2, 2, 2, 3, 4]) == False, \"The function should return False when there are more than one duplicate of the same number.\"",
+          "raw_output_sha256": "6eda963226d63cd940779fc3629ffab5f2b24d068539a29e9100cd0dfcaed909",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert is_sorted([1, 2, 3, 4, 5, 6, 7]) == True",
+          "raw_output_sha256": "68ca66e81088c774fbd9c8127e985a53a129fec8e4dff6639c47100c6debe4ff",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert is_sorted([1, 2, 3, 4, 5]) == True, \"Test case 1 failed: Expected True for a sorted list\"",
+          "raw_output_sha256": "c538b09978a3d3575542871b80faaf7d37522ea04eb95268a3981aea3ffe4743",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert is_sorted([1, 2, 3, 4, 5]) == True, \"The function failed to recognize a correctly sorted list.\"",
+          "raw_output_sha256": "7b46f5c353074a7aa1793d9abb6cb2ab784488683e64d8a7a6f9866e32062d3f",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert is_sorted([1, 2, 3, 4, 5]) == True, \"Test case failed: List should be sorted in ascending order.\"",
+          "raw_output_sha256": "8ad479a9ef7f3afbe3e3cc0794ab3423a71b6d715541e6a325d5d2dffaefe323",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert is_sorted([1, 2, 2, 2, 3, 4]) == False",
+          "raw_output_sha256": "bced70a50f3274f9752e26cf5f5aee9215849784a3814e1e06a5c066fe9f1b6d",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 8,
+        "reference_valid_candidates": 6,
+        "exact_unique": 8,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 6,
+        "ast_shape_unique_ratio": 0.75,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.125,
+        "outcome_mode_unique": 2
+      }
+    },
+    {
+      "record_id": "mutation::humaneval_HumanEval_25_mut_00116",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "factorize",
+      "requested_candidates": 8,
+      "parsed_candidates": 7,
+      "execution_valid_candidates": 6,
+      "generation_invalid_candidates": 1,
+      "execution_invalid_candidates": 1,
+      "invalid_candidates": 4,
+      "valid_candidates": 4,
+      "killing_candidates": 1,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert factorize(1) == [1], \"The factorization of 1 should be [1]\"",
+          "raw_output_sha256": "71417dcfcc8da9a9ac79766def29f0b665144aff733a6227f53055dd6b22cd5a",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The factorization of 1 should be [1]",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "503f585f21ff5faff2581100c20abad689defc10cffa9d93b4538f6381eb4664",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert factorize(18) == [2, 3, 3], \"factorize function failed to return the correct prime factors for 18\"",
+          "raw_output_sha256": "1dd253c353b3c14347792089f84af14218462ed85c8cdd7231ecf2e13f3980a6",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert factorize(8) == [2, 2, 2], \"Error: factorize(8) should return [2, 2, 2]\"",
+          "raw_output_sha256": "894ad8f9ee63ab1718e1af60731ea6f7c70b95809691d1430b2a5cff8db9c441",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert factorize(1) == [1], \"The factorize function should return [1] for the input 1, but it returned an unexpected result.\"",
+          "raw_output_sha256": "0ef945c0feb8d6fcc354e3415e7bf03998b245852aca0228aa80d4c2603f04c2",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The factorize function should return [1] for the input 1, but it returned an unexpected result.",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert factorize(8) == [2, 2, 2], \"The factorization of 8 should be [2, 2, 2]\"",
+          "raw_output_sha256": "4851d67c489c1675bc6e4d9bb1a282fd1072804a3120426a1c08f1dbd22fee9d",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert factorize(test_value) == expected",
+          "raw_output_sha256": "2edb376a54084b4d12729136258e97aff68b60f666d1166853fb0ed3aaa34e9c",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'test_value' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert factorize(12) == [2, 2, 3], \"Factorization of 12 should be [2, 2, 3]\"",
+          "raw_output_sha256": "4710cf17b3a723379e3869c57a31116d219eb0a534334f93bf1bfb70a22b1d1e",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 7,
+        "reference_valid_candidates": 4,
+        "exact_unique": 7,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 3,
+        "ast_shape_unique_ratio": 0.428571,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 0.285714,
+        "outcome_mode_unique": 5
+      }
+    },
+    {
+      "record_id": "mutation::humaneval_HumanEval_57_mut_00385",
+      "bug_family": "comparison",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "monotonic",
+      "requested_candidates": 8,
+      "parsed_candidates": 7,
+      "execution_valid_candidates": 7,
+      "generation_invalid_candidates": 1,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 7,
+      "valid_candidates": 1,
+      "killing_candidates": 1,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert monotonic([4, 1, 0, -10]) == False, \"The list [4, 1, 0, -10] should not be considered monotonic as it is not strictly increasing or decreasing.\"",
+          "raw_output_sha256": "d8135707b6b810933b507112f68d0a87b8972dc8ab5911aeb3c29923179ce1b1",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The list [4, 1, 0, -10] should not be considered monotonic as it is not strictly increasing or decreasing.",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert monotonic([4, 1, 0, -10]) is False, \"The list [4, 1, 0, -10] should not be considered monotonically increasing or decreasing.\"",
+          "raw_output_sha256": "bdb40b4cea70f7c1c29e0ca84ef465bdb07a2603652b20a8be41cf2f37d68ef1",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The list [4, 1, 0, -10] should not be considered monotonically increasing or decreasing.",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert monotonic([4, 1, 0, -10]) == False",
+          "raw_output_sha256": "6dffc998f18b519d5e689fec5856fbe37429a81b309937929d9ffb6e067bc632",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: ",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert monotonic([1, 2, 4, 20]) == True, \"Test failed: List should be monotonically increasing\"",
+          "raw_output_sha256": "33f50aec71954af7350032a44ba89716cd90674c9f62424294e4cc346bc5a8e3",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "506a0c40ab35fca4d3535411c4707d24991b998e722e88ca01773d47d3a688e8",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert monotonic([4, 1, 0, -10]) == False, \"The function should return False for non-monotonic lists.\"",
+          "raw_output_sha256": "f8c13e30dea871091af74881e58de7e1e07298458281b6635cd98a81010a92dc",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The function should return False for non-monotonic lists.",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert monotonic([4, 1, 0, -10]) == False",
+          "raw_output_sha256": "2861a38ce0243464467ad75d250430574bfaffc70ee60bb5bbb489d5365ee65a",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: ",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert monotonic([4, 1, 0, -10]) == False, \"The function should return False for non-monotonic lists.\"",
+          "raw_output_sha256": "f8c13e30dea871091af74881e58de7e1e07298458281b6635cd98a81010a92dc",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The function should return False for non-monotonic lists.",
+          "failure_mode": "reference_assertion_error"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 7,
+        "reference_valid_candidates": 1,
+        "exact_unique": 5,
+        "exact_unique_ratio": 0.714286,
+        "ast_shape_unique": 4,
+        "ast_shape_unique_ratio": 0.571429,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.142857,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::humaneval_HumanEval_64_mut_00462",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "vowels_count",
+      "requested_candidates": 8,
+      "parsed_candidates": 8,
+      "execution_valid_candidates": 8,
+      "generation_invalid_candidates": 0,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 0,
+      "valid_candidates": 8,
+      "killing_candidates": 3,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert vowels_count(\"xy\") == 1, \"The function should count 'y' as a vowel when it's at the end of the word.\"",
+          "raw_output_sha256": "f57af821e284c6f242c7570e0943401179e31aff4be118b86426b58ee3f739ee",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert vowels_count(\"abcde\") == 2, \"Test failed for 'abcde', expected 2 vowels, got 0\"",
+          "raw_output_sha256": "ed13682c7754caffed88017b07be09390df5ec2bd2c01410fede6e9c58e6564d",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert vowels_count(\"xyz\") == 0, \"The function should return 0 for strings with no vowels.\"",
+          "raw_output_sha256": "641ddd246e7b4d404c3bd57a6a70a0a3795e08e8cb7defc9daee22c8ebf6ee3c",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert vowels_count(\"xy\") == 1, \"The function should count 'y' as a vowel when it is the last character.\"",
+          "raw_output_sha256": "52034fec6b4dbee186bd7b7bdc138940e15b7d470145d501750cad21930e185c",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert vowels_count(\"hello\") == 2, \"The function should count 'e' and 'o' as vowels.\"",
+          "raw_output_sha256": "921660b8c2244428dbc243a802f6e463092610a69c9ceaa36ec156cc450cd848",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert vowels_count(\"hello\") == 2, \"Should count 'e' and 'o' as vowels\"",
+          "raw_output_sha256": "66ece37529330e01b39e2fd70108b698dae076b4fd45e2f7fb96ac9dea2db1ce",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert vowels_count(\"abcde\") == 2, \"Test case failed: 'abcde' should contain 2 vowels\"",
+          "raw_output_sha256": "8995b906ddc59f7fefe2624b263cfca9a6716ea0e9d7094943d56937f8c4b152",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert vowels_count(\"xy\") == 1, \"The function should count 'y' as a vowel only when it's at the end.\"",
+          "raw_output_sha256": "82aed75c4ad7f3ac44ce7ccd4625e27323488195cdefc299ffc00cea17d90736",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 8,
+        "reference_valid_candidates": 8,
+        "exact_unique": 8,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 1,
+        "ast_shape_unique_ratio": 0.125,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.125,
+        "outcome_mode_unique": 2
+      }
+    },
+    {
+      "record_id": "mutation::humaneval_HumanEval_80_mut_00614",
+      "bug_family": "logical",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "is_happy",
+      "requested_candidates": 8,
+      "parsed_candidates": 7,
+      "execution_valid_candidates": 7,
+      "generation_invalid_candidates": 1,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 3,
+      "valid_candidates": 5,
+      "killing_candidates": 1,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert not is_happy('a'), \"Test failed: 'a' should not be happy\"",
+          "raw_output_sha256": "f8a771715d27804295b4ef8f834c36ca59055951ff66ff96b88671ef328ad159",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert not is_happy(\"a\") == False, \"The string 'a' should not be happy as it's length is less than 3.\"",
+          "raw_output_sha256": "f9c9eda1df7957011b6c2db0c33aa437ee17fc6fdf013f93f984b16071ae29f6",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The string 'a' should not be happy as it's length is less than 3.",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert not is_happy(\"abab\"), \"The string 'abab' should return False because the last three characters are not distinct.\"",
+          "raw_output_sha256": "499404b16928e71b29dad9168fd5226d1885d671035eeba9d5eeedcc0be6788e",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert not is_happy(\"a\") == False, \"The string 'a' should return False\"",
+          "raw_output_sha256": "9692e6124dc6c5b108f0fc2ea8937b839623269a2b976c0fa78d9263178e1f0e",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The string 'a' should return False",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "f5e88d55b9f1982b202e5ff55487b7a4420e37db86253e14d3ad83414bb36e7a",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert is_happy(\"aab\") == False, \"Test case failed: 'aab' should not be happy\"",
+          "raw_output_sha256": "e5c082d545b11ffedbe3ffe949fc21d46518592007877d221a2b092ce3823469",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert not is_happy(\"a\"), \"The string 'a' should not be happy because it does not have at least 3 distinct characters.\"",
+          "raw_output_sha256": "ff1a92ab2aa7b470a1fd04d088dd057567c56bea9b3745d44a1b65fd20c4ea78",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert is_happy(\"adb\") == True, \"The string 'adb' should be considered happy according to the specification.\"",
+          "raw_output_sha256": "5fa619405023a507508d198fbfb87b4c565511638022825170c03f3895de8813",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 7,
+        "reference_valid_candidates": 5,
+        "exact_unique": 7,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 4,
+        "ast_shape_unique_ratio": 0.571429,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 0.285714,
+        "outcome_mode_unique": 4
+      }
+    },
+    {
+      "record_id": "mutation::humaneval_HumanEval_95_mut_00755",
+      "bug_family": "negate_removal",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "check_dict_case",
+      "requested_candidates": 8,
+      "parsed_candidates": 7,
+      "execution_valid_candidates": 5,
+      "generation_invalid_candidates": 1,
+      "execution_invalid_candidates": 2,
+      "invalid_candidates": 4,
+      "valid_candidates": 4,
+      "killing_candidates": 1,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert check_dict_case(test_dict) == expected_result",
+          "raw_output_sha256": "292e0a8444d5c0704052377331e47376b1a713623334d3d206f4da1184345890",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'test_dict' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert check_dict_case({\"A\": \"B\", \"a\": \"b\"}) == False, \"Mixed case keys should return False\"",
+          "raw_output_sha256": "6565060f328c12c46e3f53b066368dbb784d11d790d16490b65b54d8df754680",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert check_dict_case({\"a\":\"apple\", \"b\":\"banana\"}) == True, \"Test Case 1 failed\"",
+          "raw_output_sha256": "1d189aae1c5c4a474937c44757526adb12090ba9bab1a3c28521aa2163970631",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert check_dict_case({\"a\": 1, \"b\": 2}) == False, \"Dictionary with mixed types should return False\"",
+          "raw_output_sha256": "781fd9b499e21c732c2a318437a658421c451e1a3bc9a98f370fcbebf79ad574",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: Dictionary with mixed types should return False",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert check_dict_case({\"a\": \"apple\", \"B\": \"banana\"}) is False, \"Test failed: Mixed case keys\"",
+          "raw_output_sha256": "18b5f22330faeae1ff3f037f966872147a9ced61c2c6ccb3c164615f499f496a",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert check_dict_case({}) == False",
+          "raw_output_sha256": "b067a19dce578036b0ad44f1862107f2af6b55ffe9dc5f771ab10a0872dab24c",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "785c62aa14b5b950ec4459918eee34aa215a535e14f136ca1d2bb0a1c5033461",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert check_dict_case(test_dict) == expected, \"Test failed: Mixed case keys should return False.\"",
+          "raw_output_sha256": "c2c7c39fb6d3dc8898fc9d04d5c5c5475d4677bc1957eeec38dac91f5cae1b5f",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'test_dict' is not defined",
+          "failure_mode": "reference_error"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 7,
+        "reference_valid_candidates": 4,
+        "exact_unique": 7,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 7,
+        "ast_shape_unique_ratio": 1.0,
+        "input_shape_unique": 3,
+        "input_shape_unique_ratio": 0.428571,
+        "outcome_mode_unique": 5
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_11_mut_01756",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "remove_Occ",
+      "requested_candidates": 8,
+      "parsed_candidates": 3,
+      "execution_valid_candidates": 2,
+      "generation_invalid_candidates": 5,
+      "execution_invalid_candidates": 1,
+      "invalid_candidates": 6,
+      "valid_candidates": 2,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert remove_Occ(\"abcabc\", \"a\") == \"bcbc\"",
+          "raw_output_sha256": "8dc291a114a1a67591ac75b1031ecd10c8d69d8fa31e532da02e1b3b03d325a3",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert remove_Occ(input_string, target_char) == expected_result",
+          "raw_output_sha256": "b722a506033b46e5738f9ae12f9643519e1d5fa7cac16239107e1d21651fb6ff",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'input_string' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert remove_Occ('aabbaa', 'a') == 'abba', \"The first and last occurrence of 'a' should be removed\"",
+          "raw_output_sha256": "63cd26fbfbb22425b4a95c7da2bc41eb209f2943f1cbe1c213005404b5fe6619",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "634860dd92dc9adae1ccef61346647493d8e66bb4623d64155f2a26710220e4e",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "a0bb3b7f4a736e497efd39447efb65523aead9f912011ecb77ea3eebe372ff8f",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "f2901000d65fc85b55a9a0bce653624e414d8e7540c38a0c74f58f8195317729",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "f5b08b58ddab7f2c2b5adf0137def659d7b4f767a469383b14b82c2030bf7405",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "4e649728f7c2d1cca80e6d46e916ac3b0780743b3aa11c7417d911e6f4735c7b",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 3,
+        "reference_valid_candidates": 2,
+        "exact_unique": 3,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 3,
+        "ast_shape_unique_ratio": 1.0,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 0.666667,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_127_mut_02783",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "multiply_int",
+      "requested_candidates": 8,
+      "parsed_candidates": 8,
+      "execution_valid_candidates": 8,
+      "generation_invalid_candidates": 0,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 0,
+      "valid_candidates": 8,
+      "killing_candidates": 8,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert multiply_int(3, 5) == 15, \"Test failed: Expected 15, got {}\".format(multiply_int(3, 5))",
+          "raw_output_sha256": "06a0556d8f0f8bad1f98a0facf1ee1d24134e3c7a9e369a1bb41b5eec9051be6",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert multiply_int(10, 10) == 100, \"The function should correctly multiply 10 by 10\"",
+          "raw_output_sha256": "09cdd66f45e69d0d94614b9622fe5f331679e2dc49abc60f5ad33ce6e837a161",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert multiply_int(5, 3) == 15, \"Multiplying 5 by 3 should equal 15\"",
+          "raw_output_sha256": "3a8702f664d5a7a35b6dd445f494dcd3e419213adcbe289e2426f39a1125d9f6",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert multiply_int(3, 4) == 12, \"Test case for multiplying 3 by 4 failed.\"",
+          "raw_output_sha256": "e49653d884d39a9cdbb4f218680ebd8b08397943f70f3bc87d064f2207b92060",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert multiply_int(3, 5) == 15, \"Multiplying 3 by 5 should give 15\"",
+          "raw_output_sha256": "da2269e62cd21dc6e325f13314b93faa6ea3dce4ed2173173de1e6501554e973",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert multiply_int(2, 3) == 6, \"The function should correctly multiply 2 and 3\"",
+          "raw_output_sha256": "d30907bd553274f97f8c2d92675e12d86f8b50b47ed09ef5c68fa6ca2c4ea55e",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert multiply_int(3, 4) == 12, \"Test case failed: 3 * 4 should equal 12\"",
+          "raw_output_sha256": "ee35486e005e9af2d5387822b932f8d196843733e23fd67cd21803f44aaa69d6",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert multiply_int(2, 3) == 6, \"Test case failed: 2 * 3 should equal 6\"",
+          "raw_output_sha256": "a3b5d3a7dc12aac278387aba52991efe183b7155ab4445dca52a55cf0854384f",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 8,
+        "reference_valid_candidates": 8,
+        "exact_unique": 8,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 2,
+        "ast_shape_unique_ratio": 0.25,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.125,
+        "outcome_mode_unique": 1
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_141_mut_02893",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "pancake_sort",
+      "requested_candidates": 8,
+      "parsed_candidates": 3,
+      "execution_valid_candidates": 1,
+      "generation_invalid_candidates": 5,
+      "execution_invalid_candidates": 2,
+      "invalid_candidates": 7,
+      "valid_candidates": 1,
+      "killing_candidates": 1,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert pancake_sort([3, 2, 1, 5, 4]) == [1, 2, 3, 4, 5], \"The pancake sort function does not correctly sort the list in ascending order.\"",
+          "raw_output_sha256": "275471063f4255ef3840bbc3ac6e70a65dc32deffe827047ea5335c89e8f91db",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert pancake_sort(nums) == expected, \"Pancake sort failed to sort the list correctly.\"",
+          "raw_output_sha256": "daa1869bda921c160b5ed81322a0a3761e74e17afbea9988fea9e5c29701d84b",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'nums' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "c81de2869fe5f4dec53fdf8016f4508f7729c001ca6731b29934cb07963838ba",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "a6302b802e116b06ecb8dadfdcfe924a9612054ffb09967b9c84f4a99ab47dd7",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "80754bb1e1c58c1f7abd1ddf99398d982de33cde3f9bc770c08e5000608d98a3",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert pancake_sort(test_case) == expected_result, \"Pancake sort failed to sort the list correctly.\"",
+          "raw_output_sha256": "9b0ae5e493af33f722526d2c5f5e9aa6ee15238612a01ff6db765a7ec57ac332",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'test_case' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "5711dba224226d74eff49b452ba2425cd90da90a8c4dc04b29eae3cc6a60d3b8",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "05326385b016c52a3868a7ca7dba135183a643327d3bf5c2e242877a80d69a86",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 3,
+        "reference_valid_candidates": 1,
+        "exact_unique": 3,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 3,
+        "ast_shape_unique_ratio": 1.0,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 0.666667,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_148_mut_02985",
+      "bug_family": "arithmetic",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "sum_digits_twoparts",
+      "requested_candidates": 8,
+      "parsed_candidates": 5,
+      "execution_valid_candidates": 5,
+      "generation_invalid_candidates": 3,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 7,
+      "valid_candidates": 1,
+      "killing_candidates": 1,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "041aa8f0eb23056a01628eb1740564ef16d61b9aa8feede902fdca958e16f7b4",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "fd30a75ba33c2dd7826397326ac891eb2661da29ae9168c2ba18a18b22caaaf4",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert sum_digits_twoparts(199) == 27, \"The sum of digits should be maximized when split\"",
+          "raw_output_sha256": "4cfc061593f49fd8cd09f0e7e8c8bbe3ba09119298caf393f770a4fffaac0686",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The sum of digits should be maximized when split",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "57e2c811956b1a082a23efef88966f51497184d92ede2f0cdf69834531347392",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert sum_digits_twoparts(1234) == 10, \"The function did not return the correct sum of digits.\"",
+          "raw_output_sha256": "7bedd72cfe94b962794fcbdbb7e1f801f0ed9f209e90b39e2b8b34b17e2fba75",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The function did not return the correct sum of digits.",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert sum_digits_twoparts(199) != sum_digits_twoparts(200), \"The function does not maximize the sum of digits\"",
+          "raw_output_sha256": "6db00b9f2db7efead2b48f4966992b3ce044f290489ed6d4e49b00b93317cb94",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "timeout",
+          "failure_mode": "killed_timeout"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert sum_digits_twoparts(1234) == 10, \"The sum of digits should be maximum when divided into two parts.\"",
+          "raw_output_sha256": "4bac2feb41a40a9f6bc39b569fb47afff2cddbe6c8092129710cfd08e9e17f73",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The sum of digits should be maximum when divided into two parts.",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert sum_digits_twoparts(1234) == 10, \"Should sum digits of 1234 as 1+2+3+4 = 10\"",
+          "raw_output_sha256": "bc589d7c7fe4b52c06b2890ad5586d9fd487f8848ca2df07aebfee33625c3e60",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: Should sum digits of 1234 as 1+2+3+4 = 10",
+          "failure_mode": "reference_assertion_error"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 5,
+        "reference_valid_candidates": 1,
+        "exact_unique": 5,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 2,
+        "ast_shape_unique_ratio": 0.4,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.2,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_16_mut_01777",
+      "bug_family": "arithmetic",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "text_lowercase_underscore",
+      "requested_candidates": 8,
+      "parsed_candidates": 3,
+      "execution_valid_candidates": 3,
+      "generation_invalid_candidates": 5,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 5,
+      "valid_candidates": 3,
+      "killing_candidates": 3,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "39d96a0fd9b53ecad2f8af9e9520f50c5283159500a44f5af75d74bb1c4e2cfa",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert text_lowercase_underscore(\"lowercase_example\") == 'Found a match!', \"Test case failed: Expected 'Found a match!' for a valid sequence\"",
+          "raw_output_sha256": "8cc501bfe85e144bcff346fedd492e7cdff97455c22a3cfcfd63e313050fe732",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert text_lowercase_underscore(\"hello_world\") == 'Found a match!'",
+          "raw_output_sha256": "a75e0f34b0a6802208fc0756ac4570d8e7f4c4e34b187feffeb38eaef0eb14e4",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "74bf2c2a7d76d815159e0976c6365eec619c2ca80f50fb6c73dc71862a4297d5",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "0cf03ca0d558731ac9059de6b8a626087f8084ef280b47968f354f0c75936603",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "35a7fb373cd966eda59feaadaf9e66b930133c60d6dfe5fa0197650746892489",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert text_lowercase_underscore('lowercase_example') == 'Found a match!', \"Should match 'lowercase_example'\"",
+          "raw_output_sha256": "01a8a8f6f8c802755743c4cfd7f310c610712cae3e5a0de0ec3eecf216465e23",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "6f0b02cbde99750ce0ee5b2ba14ab7ba552671a8bd76654c6475b995cac6cdf5",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 3,
+        "reference_valid_candidates": 3,
+        "exact_unique": 3,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 2,
+        "ast_shape_unique_ratio": 0.666667,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.333333,
+        "outcome_mode_unique": 2
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_183_mut_03307",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "count_pairs",
+      "requested_candidates": 8,
+      "parsed_candidates": 1,
+      "execution_valid_candidates": 0,
+      "generation_invalid_candidates": 7,
+      "execution_invalid_candidates": 1,
+      "invalid_candidates": 8,
+      "valid_candidates": 0,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "a77bac0da72c891457259e24d376ee6ffc137df907110260d9994d250806cc36",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "c4f7bcd2aab6dbaf0939ec01d4a62cc41abe268512e4d343b39ef1d6091344d6",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "392b13d22a67a1527799155d6bbd1fcdb2456174a203b12a3faa654fac3c2931",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "1b15e4763a543fba9accbaadca42c590830d171f4c8cd2656080ee7940cbd216",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "fb12d8ad6c27b7d6b170617aad8ce0b333179e03127f0a873f56871b4b881e0a",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "2a0222e67ed9d6a7c942911c2c4cacbd07ce35bb6c39ee71a9f0690a2345c5bf",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "fb12d8ad6c27b7d6b170617aad8ce0b333179e03127f0a873f56871b4b881e0a",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert count_pairs(arr, n, k) == expected_count",
+          "raw_output_sha256": "3817c4bda563659aa27bac098899d82af36dc4725fffe9703d26ac021551dbc5",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'arr' is not defined",
+          "failure_mode": "reference_error"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 1,
+        "reference_valid_candidates": 0,
+        "exact_unique": 1,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 1,
+        "ast_shape_unique_ratio": 1.0,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 1.0,
+        "outcome_mode_unique": 2
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_212_mut_03604",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "fourth_Power_Sum",
+      "requested_candidates": 8,
+      "parsed_candidates": 6,
+      "execution_valid_candidates": 6,
+      "generation_invalid_candidates": 2,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 6,
+      "valid_candidates": 2,
+      "killing_candidates": 2,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert fourth_Power_Sum(2) == 32, \"The function did not return the correct sum of fourth powers.\"",
+          "raw_output_sha256": "73846ddf04d41076537c249e34caa324f41757aa7fee8579934c1aaf6c0adccb",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The function did not return the correct sum of fourth powers.",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "4d6854add3cc14ad40da7fae4413305ea841b7e18cf2463e20fef793ea090567",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert fourth_Power_Sum(5) == 225, \"Test failed for n=5, expected 225\"",
+          "raw_output_sha256": "ff6e9322a15a7702a34abbe87c014c4ef586f0267d60b20731a81e25e1a208cd",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: Test failed for n=5, expected 225",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert fourth_Power_Sum(3) == 98, \"The sum of the fourth powers from 2 to 3 is incorrect\"",
+          "raw_output_sha256": "0ccdd33d24df9e627d6db14d4ed329cd94c1372af9bce38819e15053f32c196d",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert fourth_Power_Sum(2) == 14, \"Sum of fourth powers from 2 to 2 should be 14\"",
+          "raw_output_sha256": "9e2e280ef1ed708433d65b5220201ca8445071362f180d586b347eab2f03cccd",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: Sum of fourth powers from 2 to 2 should be 14",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "4c027837902883f71b0c20e8de26d5e56cb38709f51370c470f334ff9d609252",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert fourth_Power_Sum(1) == 1, \"The sum of the fourth power of 1 should be 1\"",
+          "raw_output_sha256": "6f5c2913bf9fa830938a3f25a46d9c3c62afd246eb7bfe7868a96195b67f1dad",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert fourth_Power_Sum(5) == 225, \"Sum of fourth powers should be 225 for n=5\"",
+          "raw_output_sha256": "b6c2e9ebf6cdf8992c302af876feec0914c32d4a70a83a817dcab0cb0d7e78b1",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: Sum of fourth powers should be 225 for n=5",
+          "failure_mode": "reference_assertion_error"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 6,
+        "reference_valid_candidates": 2,
+        "exact_unique": 6,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 1,
+        "ast_shape_unique_ratio": 0.166667,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.166667,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_256_mut_04068",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "count_Primes_nums",
+      "requested_candidates": 8,
+      "parsed_candidates": 4,
+      "execution_valid_candidates": 3,
+      "generation_invalid_candidates": 4,
+      "execution_invalid_candidates": 1,
+      "invalid_candidates": 5,
+      "valid_candidates": 3,
+      "killing_candidates": 3,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert count_Primes_nums(10) == 4, \"Test case failed: There are 4 prime numbers less than 10 (2, 3, 5, 7).\"",
+          "raw_output_sha256": "82dfec502fe1eabf5dee47875e00dbdc4652e09cf454ed12614fd07d35b74557",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert count_Primes_nums(10) == 4, \"Count of primes less than 10 should be 4.\"",
+          "raw_output_sha256": "3ed83ddb46cc088d3babfb87dca51b89232c64b5b2dbdf6345b6507e2845309e",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert count_Primes_nums(10) == 4, \"Expected 4 primes less than 10 (2, 3, 5, 7)\"",
+          "raw_output_sha256": "dd819c54369ed8e5431f8840a9cf5fbea0a6d5fd906d5c11db05a4d9abab0e1a",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "e1b560390ccf952afb4c7b9f6a2e88f4e7dd768b44183e5a04b720a00857c614",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "6e5ab85f29530a5467dfa75bd40cb7b7165c06d258ce560e7b1f734fe0a04957",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "d9e505360e576df2620b42afd9cac3128151abd454280f3ed0aa004f43f37b7c",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert count_Primes_nums(n) == expected_count, \"Count of primes less than n should be 4.\"",
+          "raw_output_sha256": "6fec2d432b45dc096dcc4f08e208570fe859c7113a14c030ed5d7665182254e9",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'n' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "e8344cdc6a18881cf505a3173f988d9d3f076bb849c6eee67ae4ccedb4881dea",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 4,
+        "reference_valid_candidates": 3,
+        "exact_unique": 4,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 2,
+        "ast_shape_unique_ratio": 0.5,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 0.5,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_296_mut_04291",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "get_Inv_Count",
+      "requested_candidates": 8,
+      "parsed_candidates": 4,
+      "execution_valid_candidates": 2,
+      "generation_invalid_candidates": 4,
+      "execution_invalid_candidates": 2,
+      "invalid_candidates": 6,
+      "valid_candidates": 2,
+      "killing_candidates": 2,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "078b6a94b77029eed9985ca39f4656ada86f3b1d0414a4c8baae964688687e4f",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "21343518b8c2e7278a7b9a9dc89818ef417a4ce83e01243fadb14f8b88ce24f2",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "48bfbe4a69e0bc3db7c7f1d1d2e4d5e5cea57e04a1f783dceb434cc21d8a08fd",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert get_Inv_Count(arr, len(arr)) == expected_inv_count, \"Inversions count mismatch\"",
+          "raw_output_sha256": "5ca113e6f6969d99968ecb1dc51e99cc685a851696d0931c24c4441335128130",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'arr' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert get_Inv_Count([1, 3, 2, 3, 1], 5) == 4, \"Inversions are not counted correctly\"",
+          "raw_output_sha256": "b141154f2ce293daa449f10182683b51fac3941130a99e2c3854689451476df7",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert get_Inv_Count([1, 3, 2], 3) == 1, \"The test should pass, as there is one inversion between 3 and 2.\"",
+          "raw_output_sha256": "58b7037dbf33a2c1309d3eb92531076d08b6db9fdf5da4d5082ba354d8aa9a05",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert get_Inv_Count(arr, len(arr)) == expected_inv_count, \"Inversions count is incorrect\"",
+          "raw_output_sha256": "4720cd216c20e15ebb39609bfd11a73a20dc90607cc8d4a927f1cef17df9d344",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'arr' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "a7e3fea44b17c7bf865114943988b24f176ae5b07003c74e1e1496d447c1071e",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 4,
+        "reference_valid_candidates": 2,
+        "exact_unique": 4,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 3,
+        "ast_shape_unique_ratio": 0.75,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 0.5,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_300_mut_04315",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "count_binary_seq",
+      "requested_candidates": 8,
+      "parsed_candidates": 4,
+      "execution_valid_candidates": 4,
+      "generation_invalid_candidates": 4,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 6,
+      "valid_candidates": 2,
+      "killing_candidates": 2,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "bc76e5b2b2760a51cd2c33506973f657b220670ca7df7c7061d4212843cd01f4",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert count_binary_seq(2) == 6, \"Expected count for length 2n=4 should be 6\"",
+          "raw_output_sha256": "b7c92c2b52dd86d0baea66c354e5ececf6e4fc752adcb124a5aa795327693fc3",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "error",
+          "failure_mode": "killed_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "0a46a28dda70fda992d74fa306b83f2d61572b1192887d89b16ef5c0eea1dfac",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert count_binary_seq(2) == 2, \"Test case failed: Expected 2, got {}\".format(count_binary_seq(2))",
+          "raw_output_sha256": "cbb8c60f14f42acfceb3fb7d12fa023e4a3b5d09270b6d11a2bab9ac7c8d3086",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: Test case failed: Expected 2, got 6.0",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert count_binary_seq(0) == 1, \"Test case failed for n=0, expected 1\"",
+          "raw_output_sha256": "9c2e3c0389339a6790ca82cb2ee0338a09c8b0708b22f1d03f2726c9ac1883d7",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "error",
+          "failure_mode": "killed_error"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert count_binary_seq(2) == 10, \"Test case failed for n=2\"",
+          "raw_output_sha256": "cd3658856ff3e8874cb88b6d274bcdd38f7cfc1d7d1d32f37784cb89118e4477",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: Test case failed for n=2",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "066402316805db83474f7d3cb14f1aa473befca4c4d70870a6a8d5ff49d79812",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "2c59ee1033e669001ce8104831e3b6320b4e6a3b6ff896ea74c9768ffe90c448",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 4,
+        "reference_valid_candidates": 2,
+        "exact_unique": 4,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 2,
+        "ast_shape_unique_ratio": 0.5,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.25,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_315_mut_04485",
+      "bug_family": "arithmetic",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "find_Max_Len_Even",
+      "requested_candidates": 8,
+      "parsed_candidates": 3,
+      "execution_valid_candidates": 0,
+      "generation_invalid_candidates": 5,
+      "execution_invalid_candidates": 3,
+      "invalid_candidates": 8,
+      "valid_candidates": 0,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert find_Max_Len_Even(test_str) == expected_output, \"The function did not return the expected output.\"",
+          "raw_output_sha256": "679b3cc3bee788c63c117ce60e42656ff2e76cabc067f75915cf3d0c61aa6cdb",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'test_str' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "9b34e367d0b1527f513a55467ae77b14a7aefd8fead4028f67533307d9af86d3",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "5f71d1df5a7ce0d41212389654e0b56f7ec9811ea0c2522ef8aa2b7c0a85d307",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "d0d2d2de09a508f032d8e44ac85517f6301b37a9a43530a8a766cd160419f64b",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert find_Max_Len_Even(input_string) == expected_result, \"Test failed: The function did not return the first maximum length even word.\"",
+          "raw_output_sha256": "3f2274409a6a1c07fa8447b670a3da393c7bee04303e0995b89bc000cdac0488",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'input_string' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert find_Max_Len_Even(test_string) == expected_result, \"Function fails to return the first maximum length of even word.\"",
+          "raw_output_sha256": "a79bc6a4dd0b72eda6743e9a50b35d639a8f89b2520fd952974932321d2de4dc",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'test_string' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "5355ffea85e693d1fd24484e3e3bf014c3e78d3f3b34efb40077edabefe51654",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "f769a74f5a57a7093436a5a06a0def9c6c316cb76ad2183ac7c2aeae2206729d",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 3,
+        "reference_valid_candidates": 0,
+        "exact_unique": 3,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 3,
+        "ast_shape_unique_ratio": 1.0,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.333333,
+        "outcome_mode_unique": 2
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_31_mut_01920",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "func",
+      "requested_candidates": 8,
+      "parsed_candidates": 1,
+      "execution_valid_candidates": 0,
+      "generation_invalid_candidates": 7,
+      "execution_invalid_candidates": 1,
+      "invalid_candidates": 8,
+      "valid_candidates": 0,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert func(nums, k) == expected, \"The function should return the top k most frequent integers.\"",
+          "raw_output_sha256": "82ac357d94bf75ec4dbf5bad896f928691b305bb23ec3af5c615956be910bb30",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'nums' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "07da23b0444845e4a5794f065d02e8f1cf6b027e9df9a71edc2b17c561b2eb90",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "6b299abdf8ea9270e89cf5eb478e1c249e9b4ebf0fad10b8da53bc749f1f2576",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "eadeaab254496831cf1410b0c846766adc0171586994cb741099a986c560b8df",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "95d5cfdf5294bc81d19d7d928e2353e39b28d53e79ee9293e914161ab5c89e89",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "21c5cc81259e928e5cdbff3ec0dcb42aa59aef2317051604d24b3668f7769767",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "daba9b5f42ffd92db9135911b85728a868e47bc9d8c9ba1ba4518faf57a921be",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "4f31e9d0b68af7feafc1a9e4e6ed66a1a6e7f42f9d2ad8d665401fc9af381bb9",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 1,
+        "reference_valid_candidates": 0,
+        "exact_unique": 1,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 1,
+        "ast_shape_unique_ratio": 1.0,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 1.0,
+        "outcome_mode_unique": 2
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_402_mut_05232",
+      "bug_family": "arithmetic",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "ncr_modp",
+      "requested_candidates": 8,
+      "parsed_candidates": 2,
+      "execution_valid_candidates": 2,
+      "generation_invalid_candidates": 6,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 7,
+      "valid_candidates": 1,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "f6384a4816934c0682bdc3cb19a2e04ddb718faf80748bd2d461fb448d83856e",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "eb19a7f68a19f6da923ae8d5011c724cc085bd7e4a4793059d0d855019522a47",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "48d7eafdac8f9018d66e27e4f7a59356f855c4a58521d83be6d83533f3b9da54",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "813fc747ccb83179211145aecd24a8760e6b0bcc28cf49020ca9b495eaf9b77b",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "989aab1f8c4eec45ada39e09391c8241255d071f50c7c88c20ab8314da1e7c46",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "c73dd5fdd20e78fe9330dbbb6fe53539e75abdf39009a18adbce045c33d0045b",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert ncr_modp(5, 2, 3) == 0, \"The function should return 0 for n=5, r=2, p=3\"",
+          "raw_output_sha256": "53e7a7beaac1a9600193cdddb68c08075c80ad6f222de09c6a3e99fa067c41b4",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The function should return 0 for n=5, r=2, p=3",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert ncr_modp(5, 2, 2) == 0, \"The function should return 0 for ncr_modp(5, 2, 2)\"",
+          "raw_output_sha256": "9f848a99d6ee9b5c27c9e1bea851c863f9aada5e9419390acd559113393a0117",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 2,
+        "reference_valid_candidates": 1,
+        "exact_unique": 2,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 1,
+        "ast_shape_unique_ratio": 0.5,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.5,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_402_mut_05251",
+      "bug_family": "off_by_one",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "ncr_modp",
+      "requested_candidates": 8,
+      "parsed_candidates": 4,
+      "execution_valid_candidates": 4,
+      "generation_invalid_candidates": 4,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 8,
+      "valid_candidates": 0,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "f95f43a5221d8c1b1a1ab9aad4d002116a7e562495e9f4fa712035e4c871ce34",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert ncr_modp(4, 2, 5) == 2",
+          "raw_output_sha256": "636453dbdcab0483121bfcbd4c562e6c0208ae8d4551a2760ce55a98ac793cfb",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: ",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "87fcc6fe2bc78e4a5d263e7e5f6af83c37449f422714ec2e70122f90c08b315f",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert ncr_modp(5, 2, 10) == 25, \"The value of ncr%p for n=5, r=2, p=10 should be 25\"",
+          "raw_output_sha256": "6ae8e8d3abb38b9bd43486f66d45e2299b39a5579477d39b68209ce1bcd7c672",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The value of ncr%p for n=5, r=2, p=10 should be 25",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "e056e2e192607ee8783f54614c5970ace9fd9e294e5195a156fab7e7436f960d",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "cab70193a5400a2776273a44493eaff55194eb556cb8523e9f9a0676c9a1dd89",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert ncr_modp(5, 2, 2) == 1, \"The nCr%p function should return 1 when nCr is 2 and p is 2\"",
+          "raw_output_sha256": "4c6114ddeb4aa5622fa9fc8c51ab500d39efb9434e805007cb1559119f0491a5",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The nCr%p function should return 1 when nCr is 2 and p is 2",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert ncr_modp(5, 2, 2) == 1, \"The ncr_modp function should return 1 for n=5, r=2, p=2\"",
+          "raw_output_sha256": "909e9f063d89b2e21eae94eb9412bb27c9df6e22f3509aa96c68fb84919adf97",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The ncr_modp function should return 1 for n=5, r=2, p=2",
+          "failure_mode": "reference_assertion_error"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 4,
+        "reference_valid_candidates": 0,
+        "exact_unique": 4,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 2,
+        "ast_shape_unique_ratio": 0.5,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.25,
+        "outcome_mode_unique": 2
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_41_mut_02053",
+      "bug_family": "arithmetic",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "filter_evennumbers",
+      "requested_candidates": 8,
+      "parsed_candidates": 4,
+      "execution_valid_candidates": 2,
+      "generation_invalid_candidates": 4,
+      "execution_invalid_candidates": 2,
+      "invalid_candidates": 6,
+      "valid_candidates": 2,
+      "killing_candidates": 2,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "f4ff4326dc41a9776d21ab3800739feb1a025e020b3e98a548ded21500e9c667",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert filter_evennumbers([1, 2, 3, 4, 5]) == [2, 4], \"Should only filter even numbers\"",
+          "raw_output_sha256": "c79c0140d8963a45095605f7a5cf112814314d6ffb75174fea79599981485344",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "585fbd9de3c51e0d6e729e992fde380078d888ff619fe39be91d9be408b137ea",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert filter_evennumbers([1, 2, 3, 4, 5]) == [2, 4], \"Filtering even numbers did not produce expected result\"",
+          "raw_output_sha256": "9094be3e67c4d32e2a7abaee7adc19a030ba75c987a62e0a2c78f94ab2cdc872",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert filter_evennumbers(nums) == expected, \"The function did not filter even numbers correctly\"",
+          "raw_output_sha256": "d2e726bf5957c93f461e0f07fb7de63e9a3b0cc0942ade52761a57485125946e",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'nums' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert filter_evennumbers(test_nums) == expected_result, \"The function did not filter even numbers correctly.\"",
+          "raw_output_sha256": "aed7aa467342e28ea671e317ac532b3b67c3367c10292b6c1cb19e427401ab11",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'test_nums' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "5f784438d976fc386973e03e56ac2eff43e0cb1a7336bd5fd5e5792b1ab000ab",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "cfbdb7905d003e79d73cf4e721dae76861bcb8842b063818e74912f2da956290",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 4,
+        "reference_valid_candidates": 2,
+        "exact_unique": 4,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 3,
+        "ast_shape_unique_ratio": 0.75,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 0.5,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_486_mut_05952",
+      "bug_family": "arithmetic",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "binomial_probability",
+      "requested_candidates": 8,
+      "parsed_candidates": 3,
+      "execution_valid_candidates": 2,
+      "generation_invalid_candidates": 5,
+      "execution_invalid_candidates": 1,
+      "invalid_candidates": 7,
+      "valid_candidates": 1,
+      "killing_candidates": 1,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "d3eeedd20b57dd7650ab072ebbab8338cf879073729f138113900dc01bc92ec7",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "06b005d83892ebf2bbc8dc793773cc97a9efd248f30f93ba617da428746d1e9f",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": true,
+          "code": "assert binomial_probability(n, k, p) == expected_result, \"Binomial probability calculation may cause division by zero.\"",
+          "raw_output_sha256": "81b44f139276f35d185b8d6d1efcc638450331ee423e84d7f703e73df5202b09",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'n' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "cd92710fd976f72e57a51779fb62c7bf2504758cbec377dda198164accf61c05",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert binomial_probability(5, 2, 0.5) == 10.0, \"Binomial probability calculation is incorrect.\"",
+          "raw_output_sha256": "63b392de1169b10a0eb457d96d169f5f8c04ce19fa324badd257fd7534e8f7f2",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: Binomial probability calculation is incorrect.",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "6ca78c8c83e833c6ffd3c63ffa8ba1bcb39f2038e329f5583ca4fc2a4dfd7166",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "7455ff064fa6609cfa5dc79e08bf99afc8f70f4df9fa81024d08f5a758773bf0",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert binomial_probability(5, 2, 0.5) == 0.3125, \"Test failed: binomial_probability(5, 2, 0.5) should return 0.3125\"",
+          "raw_output_sha256": "c1ecbff47adfb519111611f7b7f918cf56551d01b1a284bc7b188a6e58bcd0cd",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 3,
+        "reference_valid_candidates": 1,
+        "exact_unique": 3,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 2,
+        "ast_shape_unique_ratio": 0.666667,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 0.666667,
+        "outcome_mode_unique": 4
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_486_mut_05971",
+      "bug_family": "arithmetic",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "binomial_probability",
+      "requested_candidates": 8,
+      "parsed_candidates": 3,
+      "execution_valid_candidates": 1,
+      "generation_invalid_candidates": 5,
+      "execution_invalid_candidates": 2,
+      "invalid_candidates": 7,
+      "valid_candidates": 1,
+      "killing_candidates": 1,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert binomial_probability(10, 5, 0.5) == 0.24609375, \"Binomial probability calculation is incorrect\"",
+          "raw_output_sha256": "96241dc202ed37abde897b5b6746a073788f87bbe45af77dc67093eb2ddfb00d",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert binomial_probability(5, 2, 0.5) == expected_result, \"Binomial probability function failed for input (5, 2, 0\u25e6)\"",
+          "raw_output_sha256": "d02f7af3dbf3aa7467c8d41322aec539c76116ea8c42d913eb1d55ae445eb71b",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'expected_result' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "d58461ea653fe85d0b576fc96175ed78c43cdfc3f04935509bfda84a66695d14",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert binomial_probability(n, k, p) == expected, \"The binomial probability function failed to return the correct result.\"",
+          "raw_output_sha256": "abe7fe7c8b805445a60688c8a3a3f535db03c8232fd77dbc5f134ba1506ddb5c",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'n' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "c40e92c05281735b2aac44872c4c4fbbf154a0708df125ad11e8152b11c2cac6",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "fa75968e3ea78155331f492622f65adb654f0d498f5f2d63979546b40ca67999",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "e8ee983b032f2e17789eed20be00aa0fe8765e6c3ea318e073a96190b63959c7",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "91e839c7b4cd7840b6acfc32ba1e1d9f21ecbab8d276123ef8dfb98bebe268bc",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 3,
+        "reference_valid_candidates": 1,
+        "exact_unique": 3,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 3,
+        "ast_shape_unique_ratio": 1.0,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 0.666667,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_506_mut_06185",
+      "bug_family": "comparison",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "permutation_coefficient",
+      "requested_candidates": 8,
+      "parsed_candidates": 2,
+      "execution_valid_candidates": 2,
+      "generation_invalid_candidates": 6,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 7,
+      "valid_candidates": 1,
+      "killing_candidates": 1,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert permutation_coefficient(3, 2) == 3, \"Should return the correct permutation coefficient for n=3, k=2\"",
+          "raw_output_sha256": "5ba59ad89da12d562751db64e2dcf442c3ad3a5d0bfc0c5c767e34bf76590ccc",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: Should return the correct permutation coefficient for n=3, k=2",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "308669f87c181faad53831c6c9ee622cb41efcd4a7296f3353a6df5ad8ab570f",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "5784f495d523696ea4f5bfd4843a3d72a09ccb8d54703614964000e71c29516c",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "9c6670a84db9bb01e2310569fdb5b9e026f14c8f9af1cd008c600bf03fa35322",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "8bd9bbf4470604e96e2820bb7d3e821a93ac9d904076036d79a84ccc332b1cf3",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "e988070a4232fe70a9c42d9e10b470e0cd5bfa099e7f9cc8dc5923360d05b9cd",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert permutation_coefficient(0, 0) == 1, \"Base case for permutation coefficient is incorrect.\"",
+          "raw_output_sha256": "4d73ab3997589151d7e776575eb6cadb8df962f489cad57f8787cfe0d467d664",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "0916b61e3a7f53a473254b587148f076c6a7b3b37839c0cd1d998a9897529f3a",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 2,
+        "reference_valid_candidates": 1,
+        "exact_unique": 2,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 1,
+        "ast_shape_unique_ratio": 0.5,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.5,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_506_mut_06203",
+      "bug_family": "arithmetic",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "permutation_coefficient",
+      "requested_candidates": 8,
+      "parsed_candidates": 3,
+      "execution_valid_candidates": 3,
+      "generation_invalid_candidates": 5,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 6,
+      "valid_candidates": 2,
+      "killing_candidates": 2,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert permutation_coefficient(3, 2) == 3, \"Test case failed: permutation_coefficient(3, 2) should return 3\"",
+          "raw_output_sha256": "30d45895616caf8936cdd4e46d44ac488eb8ab9363d4f6f8c7b5fa0f54f511fb",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: Test case failed: permutation_coefficient(3, 2) should return 3",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "6ea583026db069b06d2638574402dbc799d2791644ab610d0213750654383337",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "951221b70701935518b31606397c30231429db0fb0297c8ee93c2c77ab645c37",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "850cc221df342efd18b19828aa205da34e0a6db5e4cfe0feac67b4ad7cd7218c",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert permutation_coefficient(1, 1) == 1, \"Test case failed: permutation_coefficient(1, 1) should be 1\"",
+          "raw_output_sha256": "4f6459f6fc078fcd21de43fb45dd4fd461dd5682023c20d7755ca5c4bdefa411",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "error",
+          "failure_mode": "killed_error"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "a8d5b0a2eda8e9f2a2acc6a79a69efbade17c41856ff2d8aafccf80b2149cb6b",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert permutation_coefficient(3, 2) == 6, \"The permutation coefficient for n=3, k=2 should be 6.\"",
+          "raw_output_sha256": "c7b3b469c612d51aff2c4cde702b6b566bc30bdaafbb834460179213099f3dab",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "error",
+          "failure_mode": "killed_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "446aad2266d9cd8803ff2b21a9483ba1e8eccbf1a0571f782de2d08476f42838",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 3,
+        "reference_valid_candidates": 2,
+        "exact_unique": 3,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 1,
+        "ast_shape_unique_ratio": 0.333333,
+        "input_shape_unique": 1,
+        "input_shape_unique_ratio": 0.333333,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_571_mut_06782",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "max_sum_pair_diff_lessthan_K",
+      "requested_candidates": 8,
+      "parsed_candidates": 0,
+      "execution_valid_candidates": 0,
+      "generation_invalid_candidates": 8,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 8,
+      "valid_candidates": 0,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "7edfb1e244be2c2ab9a665345ad7d29403ecf86ee15bcd09d9e41be9d63e080e",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "30c113f333277562714940dc7e231f5436f6e143d268e9853dab40e595739018",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "ee438ccbccb100311839810a65d8f87c15cd0963325bca14c0857fd54d77dc92",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "11444752eb2c79a8d53129f998c3e34a7fcc4b8c6a8b6f1dc2d9281f785bcc35",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "6397b7e6eec6f7d4574a9181f0303ae3948a208442d4e3703ae1ae50cb8556a1",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "04e0a5e0a0b6a45283d693045fe258c04b9d39c17aa392855d5d099ebf56f554",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "1307b9ffc8a0c3f79c0c594f42ca32150074f2ce878910a0da3a28efd5c2ee9d",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "efd5bc11ce4e9184d3e8ae8df11b0923491fddf26d83db8b5be6e34005daa2f4",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 0,
+        "reference_valid_candidates": 0,
+        "exact_unique": 0,
+        "exact_unique_ratio": 0.0,
+        "ast_shape_unique": 0,
+        "ast_shape_unique_ratio": 0.0,
+        "input_shape_unique": 0,
+        "input_shape_unique_ratio": 0.0,
+        "outcome_mode_unique": 1
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_675_mut_07595",
+      "bug_family": "arithmetic",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "sum_nums",
+      "requested_candidates": 8,
+      "parsed_candidates": 5,
+      "execution_valid_candidates": 4,
+      "generation_invalid_candidates": 3,
+      "execution_invalid_candidates": 1,
+      "invalid_candidates": 6,
+      "valid_candidates": 2,
+      "killing_candidates": 1,
+      "killed": true,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert sum_nums(15, 5, 10, 20) == 10, \"The sum within the specified range should return 20.\"",
+          "raw_output_sha256": "a67423380d7638a82eade4c28960b009ccb05ea222d36f1039102334e62cd0ea",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The sum within the specified range should return 20.",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "e76ad0c58a499080df11b8710c50fcb1dbfdbb8789c9986bc5857def97278cda",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "1043263a4f40cdaa994a51e9ba5dfff905342abbc05781c1659664edeb3143ee",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert sum_nums(5, 5, 0, 20) != 0, \"The sum of two integers 5 and 5 should not be 0\"",
+          "raw_output_sha256": "446c36e123639ab471efe51f64af75aaba3802c1bc2434be4342af415cdea6c0",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "4230582aa984787e85918e8e6679450f87b0dab0d0a2851acad9e5ecc9209343",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert sum_nums(10, 10, 1, 20) == 20, \"Sum should be within the range and return 20\"",
+          "raw_output_sha256": "76fc6d144a0cf703c8a10b842f984896c57bbb972efee9ee5cdb837abfd00fbd",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": true,
+          "reference_status": "pass",
+          "mutant_status": "assertion_error",
+          "failure_mode": "killed_assertion_error"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert sum_nums(1, 2, 3, 4) == 1, \"sum_nums did not return 1 as expected\"",
+          "raw_output_sha256": "e1b11766ab864b5d6eb1248769615b6b57ed765160b9cd113b638723feb21af0",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: sum_nums did not return 1 as expected",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": true,
+          "code": "assert sum_nums(x, y, m, n) == 20, \"The function did not return the expected value when the sum is within the range (m, n).\"",
+          "raw_output_sha256": "9a0b2b99ec764bc41bba6ff8ac9699326a0345169c078f6e6803e9499311f75c",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'x' is not defined",
+          "failure_mode": "reference_error"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 5,
+        "reference_valid_candidates": 2,
+        "exact_unique": 5,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 3,
+        "ast_shape_unique_ratio": 0.6,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 0.4,
+        "outcome_mode_unique": 5
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_818_mut_08708",
+      "bug_family": "off_by_one",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "lower_ctr",
+      "requested_candidates": 8,
+      "parsed_candidates": 3,
+      "execution_valid_candidates": 1,
+      "generation_invalid_candidates": 5,
+      "execution_invalid_candidates": 2,
+      "invalid_candidates": 8,
+      "valid_candidates": 0,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": true,
+          "code": "assert lower_ctr(input_str) == expected_result, \"lower_ctr function does not count lower case letters correctly.\"",
+          "raw_output_sha256": "1e8da46e3cfc5c8c51822f03a84b922d0596fe20c3055542fd8be7374a8b8bac",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'input_str' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 2,
+          "parse_valid": true,
+          "code": "assert lower_ctr(\"Hello World!\") == 2, \"Lower case letters should be counted correctly\"",
+          "raw_output_sha256": "13982078dd18eaa3d76ffb8e1d993e95dd444105514e099e48a47a527cf7b507",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: Lower case letters should be counted correctly",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "0260d7a1eef4c7ebdc4082f004f992657c5de492b800b37d8e2f812958f873ff",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "0aa392f3ef9ac4a60c64476369930b59544da056f0aa6f393d734c2b8eb1bc94",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert lower_ctr(test_string) == expected_count, \"Lower case letter count should be 2 for 'Hello, World!'\"",
+          "raw_output_sha256": "ee8d2496a3fb3a87f286f2233d6b1b84efe238030d0e131b1ca10c4ce54aafee",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'test_string' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "18f0d6b00a7c560c1277d7a59eb8b4da5267d869b7b8d9eebd176ad013b24cc4",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "673cefa9676dfe1258a37cb798bee84a8186c5c735248e95f12b9c3baa025d7c",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "a4dfc22594655d34096043a00457219a8d058bc76d2b2537506adda8a09230b6",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 3,
+        "reference_valid_candidates": 0,
+        "exact_unique": 3,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 3,
+        "ast_shape_unique_ratio": 1.0,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 0.666667,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_835_mut_08871",
+      "bug_family": "arithmetic",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "slope",
+      "requested_candidates": 8,
+      "parsed_candidates": 4,
+      "execution_valid_candidates": 2,
+      "generation_invalid_candidates": 4,
+      "execution_invalid_candidates": 2,
+      "invalid_candidates": 8,
+      "valid_candidates": 0,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "4ee20f7c6d88d25714dea47185d2bd532992a826d63b19385768d58df94a5315",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "1e58db254f230823ae65751f2a2b13343546bdf2b7b8dbb6ef18b8996953cb7e",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "004bcbfac0137a2ead064f2b3b046384d0dfb65045928d2fd60b1a5f816fa1d3",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert slope(2, 3, 2, 5) == 1, \"Slope calculation should return the difference in y divided by the difference in x\"",
+          "raw_output_sha256": "dd42584a512de197e55f3ca822d0a2dd1b088f50674d8f0834fa2013641716a8",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "ZeroDivisionError: float division by zero",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert slope(x1, y1, x2, y2)",
+          "raw_output_sha256": "d80b2e713ab1857f7611488f479a15543e80903d0982f746e767ba76874b035c",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'x1' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 6,
+          "parse_valid": true,
+          "code": "assert slope(1, 2, 3, 4) == 2.0, \"Test case failed, expected slope of 2.0, got {}\".format(slope(1, 2, 3, 4))",
+          "raw_output_sha256": "25fe09d96040e171430ab477827d96593d9374dcbdbcb20399f1c5890cd6bd79",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: Test case failed, expected slope of 2.0, got 1.0",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 7,
+          "parse_valid": true,
+          "code": "assert slope(1, 2, 3, 4) == 2.0, \"The slope of the line with points (1, 2) and (3, 4) should be 2.0\"",
+          "raw_output_sha256": "1c3fe35dedf5ca7a36c9a0d67c686b9ea7f186a55c46f287c3675b602ebfbfa7",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "assertion_error",
+          "mutant_status": "unknown",
+          "reference_error": "AssertionError: The slope of the line with points (1, 2) and (3, 4) should be 2.0",
+          "failure_mode": "reference_assertion_error"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "3030e174b5e427f3ff3a23ca77d7a2f2081c74f6dc703fd2bd3505084fb03d7e",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 4,
+        "reference_valid_candidates": 0,
+        "exact_unique": 4,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 4,
+        "ast_shape_unique_ratio": 1.0,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 0.5,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_911_mut_09607",
+      "bug_family": "boundary",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "maximum_product",
+      "requested_candidates": 8,
+      "parsed_candidates": 2,
+      "execution_valid_candidates": 1,
+      "generation_invalid_candidates": 6,
+      "execution_invalid_candidates": 1,
+      "invalid_candidates": 7,
+      "valid_candidates": 1,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "ad29b8d350b35251f8a3cffe50e7d391465a8a999ae4baaa0023a14d0a83897a",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "cd2dc094af44ff08ad27aa7420dee80120ac4aae1f319035e30a9fd2f4eb8910",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "901f016ab6cbe76be46b69ef2d691450e17d8d5df83c48129ec28a5f8470987d",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": true,
+          "code": "assert maximum_product(nums) == expected_result, \"Test failed: maximum_product does not return the correct result.\"",
+          "raw_output_sha256": "0f97417b3c11985fdbb6e6d5c4077f5363da24d0f49df0179aa5be2c391ba177",
+          "policy_valid": true,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "reference_status": "error",
+          "mutant_status": "unknown",
+          "reference_error": "NameError: name 'nums' is not defined",
+          "failure_mode": "reference_error"
+        },
+        {
+          "rank": 5,
+          "parse_valid": true,
+          "code": "assert maximum_product([-10, -10, 5, 2]) == 500, \"Maximum product should be 500\"",
+          "raw_output_sha256": "0e4345bfe1fa7f8956f0f7498ba7df3e94879172590551708786c50e02c25f81",
+          "policy_valid": true,
+          "execution_valid": true,
+          "reference_valid": true,
+          "killed": false,
+          "reference_status": "pass",
+          "mutant_status": "pass",
+          "failure_mode": "survived"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "76f0380288d4e6c667e9e635687eeba176f7d20f720a94ae4c86c6d77c22e506",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "8040be6c46dd2d4b593ca5c5161cd50919f6489669e0dcc8244e013f4b3ca35a",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "c85e8e3c5095d155c95b0b34749d0a7aa7957c8f826a35b9146ba510900ca1af",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 2,
+        "reference_valid_candidates": 1,
+        "exact_unique": 2,
+        "exact_unique_ratio": 1.0,
+        "ast_shape_unique": 2,
+        "ast_shape_unique_ratio": 1.0,
+        "input_shape_unique": 2,
+        "input_shape_unique_ratio": 1.0,
+        "outcome_mode_unique": 3
+      }
+    },
+    {
+      "record_id": "mutation::mbpp_928_mut_09885",
+      "bug_family": "arithmetic",
+      "source_name": "oneiros_clean_mutations",
+      "project": "synthetic",
+      "entry_point": "change_date_format",
+      "requested_candidates": 8,
+      "parsed_candidates": 0,
+      "execution_valid_candidates": 0,
+      "generation_invalid_candidates": 8,
+      "execution_invalid_candidates": 0,
+      "invalid_candidates": 8,
+      "valid_candidates": 0,
+      "killing_candidates": 0,
+      "killed": false,
+      "prompt_budget_failure": false,
+      "prompt_budget_failure_reason": null,
+      "candidate_outcomes": [
+        {
+          "rank": 1,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "ff1d061fe4dc85a0fa2acc3ca6a1749e3eb49f4058d63496fa0743958cc8bd87",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 2,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "06b2a320a0f0a5afa89bf820ae21d0a4ca841bfb20c10e4dd1d3410583244638",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 3,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "cb330e6ac5b005988dca175078984ee1aa6b879a5e049b2d47ef8f9f1a838099",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 4,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "12c3b91ea4eedf2cf614d1c3f468cfcfb12a03ca2caf90b1abeb42db945ebd5e",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 5,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "bb87b6c52467b1e2a6648e40437da9bd89cb330e6722204c7b1c51e463b148a6",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 6,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "fcfc748cc30f1b572f4eeb5949736b24c64b5952b70bff032f90849a00f528d0",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 7,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "65d33e0b91a2fe4def711ca400873599a12ab7e2d99304fe787fbe71bf410bd2",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        },
+        {
+          "rank": 8,
+          "parse_valid": false,
+          "code": null,
+          "raw_output_sha256": "a2a9abf73a8ba3acb3c4418782fb8210cc31a4b58b1a4a7be1fa22e67e990b14",
+          "policy_valid": false,
+          "execution_valid": false,
+          "reference_valid": false,
+          "killed": false,
+          "failure_mode": "generation_invalid"
+        }
+      ],
+      "diversity": {
+        "parsed_candidates": 0,
+        "reference_valid_candidates": 0,
+        "exact_unique": 0,
+        "exact_unique_ratio": 0.0,
+        "ast_shape_unique": 0,
+        "ast_shape_unique_ratio": 0.0,
+        "input_shape_unique": 0,
+        "input_shape_unique_ratio": 0.0,
+        "outcome_mode_unique": 1
+      }
+    }
+  ]
+}

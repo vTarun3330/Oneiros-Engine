@@ -1,0 +1,11 @@
+{
+  "mode": "smoke_backend_comparison",
+  "final_test_measurement": false,
+  "backend": "phi3_sdpa",
+  "backend_label": "Phi-3-mini-4k-instruct (SDPA)",
+  "status": "infeasible",
+  "reason": "transformers 4.48.3's built-in Phi3ForCausalLM raises ValueError: 'Phi3ForCausalLM does not support an attention implementation through torch.nn.functional.scaled_dot_product_attention yet' (modeling_utils.py _check_and_enable_sdpa). flash_attention_2 is also unavailable in this environment (flash_attn not installed; and the installed flash-attn does not support the sliding-window attention Phi-3 requires). Only eager attention is supported for this pinned Phi-3 revision/transformers version.",
+  "seed": 42,
+  "attempted_attention_implementation": "sdpa",
+  "model_name": "microsoft/Phi-3-mini-4k-instruct"
+}
