@@ -1,0 +1,212 @@
+ONEIROS PANEL DEMO - COMMANDS ONLY  (cmd.exe)
+Run everything from:  C:\Users\saira\OneDrive\Desktop\Capstone\oneiros
+Verified in cmd on 29 August 2026.
+
+
+###############################################################
+###  THE DEMO - BROWSER UI  (recommended for a mixed panel)  ##
+###############################################################
+
+=== SETUP - two lines, in every new cmd window ===
+
+cd /d C:\Users\saira\OneDrive\Desktop\Capstone\oneiros
+
+scripts\setpy.bat
+
+
+=== START THE UI - opens your browser automatically ===
+
+"%PY%" scripts\demo_ui.py
+
+  Runs at http://127.0.0.1:8765 - local only, no internet, nothing installed.
+  Leave this cmd window open. Press Ctrl+C in it to stop.
+
+  In the page:
+    - pick one of six real examples from the corpus, or choose "my own code"
+    - the difference band shows the defect line immediately (- correct, + defective)
+    - edit either version, or paste your own pair
+    - "Run the test on both"    -> CAUGHT / NOT CAUGHT / INVALID
+    - "Find inputs that differ" -> a table of inputs where the defect shows,
+                                   and a table where it stays hidden (about 6s)
+
+  START IT BEFORE THE PANEL WALKS IN. The first load reads a 48 MB corpus file.
+
+
+=== THEN, FOR THE TRAINED ARTIFACT ===
+     Use a second cmd window, or stop the UI first with Ctrl+C.
+
+"%PY%" scripts\demo_adapter_info.py
+
+
+###############################################################
+###  IF ASKED TO WRITE CODE LIVE - rehearsed pairs           ##
+###############################################################
+
+HOW TO TYPE IT FAST
+  1. Choose "-- my own code --" in the picker.
+  2. Type the CORRECT version in the left box only.
+  3. Select all of it, copy, paste into the right box.
+  4. Change ONE thing on the right. Never type the function twice.
+  5. The difference band updates as you type - use it to show the change.
+
+
+--- PAIR 1: average   (recommended - best tables) ---
+
+CORRECT (left box):
+
+def average(nums):
+    if len(nums) == 0:
+        return 0
+    return sum(nums) / len(nums)
+
+DEFECT (right box): change the last line to
+
+    return sum(nums) / (len(nums) - 1)
+
+  catches it:      assert average([2, 4]) == 3        -> CAUGHT   3.0 vs 6.0
+  passes on both:  assert average([0, 0]) == 0        -> NOT CAUGHT
+  broken test:     assert average([2, 4]) == 99       -> INVALID
+  Find inputs that differ: 4 clear rows each side.
+  Story: "dividing by n-1 instead of n - the classic off-by-one."
+
+
+--- PAIR 2: apply_discount   (most intuitive for non-CS professors) ---
+
+CORRECT (left box):
+
+def apply_discount(price, percent):
+    return price - (price * percent / 100)
+
+DEFECT (right box): delete the "/ 100"
+
+    return price - (price * percent)
+
+  catches it:      assert apply_discount(100, 10) == 90   -> CAUGHT   90.0 vs -900
+  passes on both:  assert apply_discount(0, 10) == 0      -> NOT CAUGHT
+  Story: "a 10% discount became 1000%. But test it with a price of zero
+          and both versions look fine."
+
+
+--- PAIR 3: count_vowels   (best story, thinner search table) ---
+
+CORRECT (left box):
+
+def count_vowels(s):
+    return sum(1 for c in s.lower() if c in "aeiou")
+
+DEFECT (right box): delete the "u" from the vowel string
+
+    return sum(1 for c in s.lower() if c in "aeio")
+
+  catches it:      assert count_vowels("blue") == 2    -> CAUGHT   2 vs 1
+  passes on both:  assert count_vowels("hello") == 2   -> NOT CAUGHT
+  Story: "any test word without a 'u' in it misses this completely."
+  NOTE: "Find inputs that differ" returns only one differing row here.
+        Use the two tests above rather than the search for this pair.
+
+
+AVOID bugs that only one exact input can expose, for example
+changing 13 <= age to 13 < age. The search finds nothing to show,
+because that single value is not in the input pool.
+
+
+###############################################################
+###  TERMINAL VERSION - fallback if the browser misbehaves   ##
+###############################################################
+
+=== COMMAND 1 - the whole story on one screen ===
+
+"%PY%" scripts\demo_panel.py
+
+  Prints: the program, the defect (>> marks the changed line), the test,
+  both executions, DEFECT CAUGHT, and 429/775 = 55.35% across the full set.
+
+  -- swap the example if asked for another:
+
+"%PY%" scripts\demo_panel.py curated::bugsinpy_black_1
+
+  NOTE: the default record is a real mutation from the 7,786-record bulk of
+  the corpus - reach for it if anyone suspects a hand-picked example.
+  Do NOT use curated::bugsinpy_pandas_1 in front of the panel: its buggy line
+  carries the comment "# Bug: should return default", which looks planted.
+
+
+=== COMMAND 2 - the trained model artifact ===
+
+"%PY%" scripts\demo_adapter_info.py
+
+  Prints: 12.0 MB LoRA adapter, status complete, 600 steps, gate True,
+  checkpoint-100, 280/500 = 56.00%.
+
+
+=== EXPECTED OUTPUT - check against these ===
+
+Command 1   VERDICT: DEFECT CAUGHT  ...  429 of 775  =  55.35%
+Command 2   complete / 600 steps / gate True / 280/500 / 56.00%
+
+
+=== IF SOMETHING BREAKS ===
+
+'$PY' is not recognized       -> that is PowerShell syntax. In cmd it is "%PY%".
+'"%PY%"' is not recognized    -> PY is not set. Run scripts\setpy.bat again.
+ModuleNotFoundError: torch    -> wrong interpreter. Run scripts\setpy.bat again.
+No corpus record with id ...  -> mistyped id. It lists the three valid ones.
+Out of time                   -> command 1 alone tells the whole story.
+
+
+=== NEVER RUN DURING THE PANEL ===
+
+Any Modal command, any SFT/DPO training, any full 775-function evaluation,
+any pip install.
+
+
+###############################################################
+###  RESERVE - only if a professor probes for more detail    ##
+###############################################################
+
+Do not run these as part of the demo. Run one only if asked for that evidence.
+
+
+--- corpus integrity (25 to 45s, silent until done) ---
+
+"%PY%" scripts\demo_check_artifacts.py
+
+"%PY%" -c "from pathlib import Path; from harness.corpus import verify_corpus; m=verify_corpus(Path('data/corpus/v3_final_candidate')); print('Corpus:',m['corpus_id']); print('Records:',m['training_records']); print('Splits:',{k:v['record_count'] for k,v in m['splits'].items()}); print('All quality gates:',all(m['quality_gate'].values()))"
+
+  Expect: Records 8387, splits 6755 / 799 / 833, all gates True.
+
+
+--- the oracle on its own, without the framing ---
+
+"%PY%" scripts\demo_oracle_replay.py
+
+
+--- focused regression suite (17 to 90s, expect 42 passed) ---
+
+"%PY%" -m pytest -q tests\test_model_runtime_alignment.py tests\test_sft_best_checkpoint.py tests\test_sft_monitor_comparison.py tests\test_preflight_sft_run.py tests\test_training_smoke_selection.py
+
+
+--- the FULL suite (about 2 minutes, 119 passed) ---
+    Only if asked "is that your whole test suite?"
+
+"%PY%" -m pytest tests -q
+
+
+--- the four-experiment result table ---
+
+"%PY%" scripts\demo_results_table.py
+
+  Expect: 777-287-36.94% | 775-429-55.35% | 775-429-55.35% | 100-67-67.00%
+
+
+--- rehearsal: run everything with timings (about 90s) ---
+
+scripts\demo_preflight.bat
+
+
+=== IF YOU END UP IN POWERSHELL INSTEAD OF CMD ===
+
+Same commands, but set the variable this way and write $PY instead of "%PY%":
+
+$PY = "C:\Users\saira\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe"
+& $PY scripts\demo_panel.py
