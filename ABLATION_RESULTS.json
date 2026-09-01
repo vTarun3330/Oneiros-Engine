@@ -236,10 +236,134 @@
       },
       "protocol_note": "The prompt budget is part of the evaluation scope hash. Results at a new budget are not comparable with V4 numbers produced at 512 unless the V4 adapter is re-evaluated under the same budget.",
       "gate_conclusion": "Promptability is a hard prerequisite, not a performance result. 512 fails on both panels. 768 clears val but leaves 28 unpromptable ablation_dev records. 1024 is the smallest tested budget that clears evaluation_panel_fully_promptable on both panels, and 1024+128 leaves ample room in the 2048 sequence budget. Excluding the 28 records to make 768 pass would silently change the panel and is not permitted."
+    },
+    {
+      "id": "L_base_model",
+      "hypothesis": "A smaller code-specialised base model with an available fused-attention backend can raise reference-valid, execution-valid generation and cut generation cost without any change to the evaluation protocol.",
+      "changed_variable": "base model and attention backend",
+      "control": "L0 microsoft/Phi-3-mini-4k-instruct @f39ac1d2, eager attention",
+      "treatments": [
+        "L1 microsoft/Phi-3-mini-4k-instruct, SDPA attention",
+        "L2 Qwen/Qwen2.5-Coder-1.5B-Instruct @2e1fd397, SDPA attention"
+      ],
+      "training_size": "zero-shot screen (no training); plus one 32-pair integration run for L2",
+      "seeds": [
+        42
+      ],
+      "evaluation_set": "fixed 32-function ablation_dev monitor panel",
+      "evaluation_set_selection_sha256": "0ed8b64f30df20bab19c1afc755b199c7f424d9d227f5a2e01c588144fafe907",
+      "protocol": {
+        "candidate_count": 8,
+        "temperature": 0.7,
+        "top_p": 0.9,
+        "max_new_tokens": 128,
+        "prompt_token_limit": 1024,
+        "unchanged_from": "research/v4_1/FROZEN_EVALUATION_CONFIG.json"
+      },
+      "metrics": {
+        "L0_phi3_eager": {
+          "function_kill_rate": 0.59375,
+          "function_kill_rate_wilson_95": [
+            0.4226,
+            0.744804
+          ],
+          "function_validation_killed": 19,
+          "function_validation_records": 32,
+          "kill_at_k": {
+            "1": 0.15625,
+            "2": 0.21875,
+            "4": 0.4375,
+            "8": 0.59375
+          },
+          "parse_success_rate": 0.507813,
+          "execution_valid_rate": 0.410156,
+          "reference_valid_rate": 0.269531,
+          "wall_time_seconds": 208.8,
+          "seconds_per_function": 6.53
+        },
+        "L1_phi3_sdpa": null,
+        "L2_qwen_sdpa": {
+          "function_kill_rate": 0.71875,
+          "function_kill_rate_wilson_95": [
+            0.546255,
+            0.844354
+          ],
+          "function_validation_killed": 23,
+          "function_validation_records": 32,
+          "kill_at_k": {
+            "1": 0.375,
+            "2": 0.46875,
+            "4": 0.6875,
+            "8": 0.71875
+          },
+          "parse_success_rate": 0.980469,
+          "execution_valid_rate": 0.980469,
+          "reference_valid_rate": 0.566406,
+          "wall_time_seconds": 40.9,
+          "seconds_per_function": 1.28
+        }
+      },
+      "integration_evidence_L2": {
+        "run_name": "local_j1024_integration_32_seed42_qwen_v1",
+        "baseline_function_kill_rate": 0.65625,
+        "terminal_function_kill_rate": 0.71875,
+        "planned_checkpoints": [
+          6
+        ],
+        "evaluated_checkpoints": [
+          6
+        ],
+        "sft_loss": 0.7749310334523519,
+        "wall_time_seconds": 215.5,
+        "phi3_equivalent_run_wall_time_seconds": 1710.5,
+        "monitor_gate_passed": false,
+        "monitor_gate_reason": "end_to_end_candidate_kill_rate fell 0.277344 -> 0.253906, outside the monitor's 0.01 candidate-health tolerance, so the checkpoint was correctly not promoted. Function kill rate rose 21 -> 23 and McNemar exact p = 0.7266, so this 6-optimizer-step run carries no training signal either way."
+      },
+      "result": "L1 is impossible in the pinned environment. L2 beats L0 on every candidate-validity layer measured over 256 candidates per arm (parse 0.980 vs 0.508, execution 0.980 vs 0.410, reference 0.566 vs 0.270) and is 5.1x faster per function, while zero-shot function kill rate is higher (0.719 vs 0.594) with overlapping Wilson intervals on n=32.",
+      "decision": "ACCEPT_FOR_SCREENING_ONLY",
+      "reason": "Accepted as the base model for subsequent experiments because the decision hierarchy ranks reference- and execution-validity above the headline kill rate, and those gaps are large and measured over 256 candidates per arm. The kill-rate gap alone would be inconclusive at n=32. This is not a trained-model result: no research-scale SFT comparison between the two base models exists. A base-model swap also changes the tokenizer, so the prompt-budget admissibility sweep and every V4 comparison must be re-derived before any headline claim.",
+      "negative_results_retained": [
+        "L1 Phi-3 + SDPA: transformers 4.48.3 refuses SDPA for Phi3ForCausalLM; flash_attention_2 also unavailable for its sliding-window attention. Eager is the only admissible Phi-3 backend in this environment.",
+        "L2 32-pair integration did not pass the checkpoint-promotion gate; the candidate-health dip is retained rather than reported as a success.",
+        "Repeated identical-configuration runs did not reproduce bit-exactly: L0 Kill@1 moved 7/32 -> 5/32 and L2 baseline moved 23/32 -> 21/32 across processes at fixed seed, so single-run deltas below roughly two functions on this panel are not evidence."
+      ]
+    },
+    {
+      "id": "K_complex_function_mix",
+      "hypothesis": "Guaranteeing execution-verified complex functions in bounded SFT improves reference-validity and Kill@k.",
+      "changed_variable": "minimum complex-function share in bounded synthetic selection",
+      "control": "K0 natural mix (complex_target_fraction = 0.0)",
+      "treatments": [
+        "K1 complex_target_fraction = 0.60"
+      ],
+      "training_size": 800,
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "complexity_lineage": "buggy_revision_ast_only",
+      "corpus_evidence": {
+        "train_split_records": 5941,
+        "train_complex_records": 2754,
+        "train_moderate_records": 1999,
+        "train_simple_records": 842,
+        "train_repository_records_without_function_ast": 346,
+        "enforced_floor": 0.6,
+        "observed_share_in_32_pair_selection": 0.62069
+      },
+      "metrics": null,
+      "result": "NOT_RUN",
+      "decision": "INCONCLUSIVE",
+      "reason": "Complex functions are present and the 0.60 floor is enforced and audited in preflight, but no GPU evidence exists yet that the floor improves the objective. The share is a design input, not a result."
     }
   ],
-  "accepted_changes": [],
-  "rejected_changes": [],
+  "accepted_changes": [
+    "L2 base model -> Qwen/Qwen2.5-Coder-1.5B-Instruct + SDPA (screening-only: zero-shot candidate-validity and cost evidence; no trained-model comparison exists yet)"
+  ],
+  "rejected_changes": [
+    "L1 Phi-3 + SDPA (infeasible in the pinned transformers/model environment)"
+  ],
   "inconclusive_changes": [
     "A",
     "B",
@@ -249,6 +373,8 @@
     "F",
     "G",
     "H",
-    "I"
+    "I",
+    "J",
+    "K"
   ]
 }

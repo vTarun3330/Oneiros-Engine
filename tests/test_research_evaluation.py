@@ -144,6 +144,20 @@ def test_ablation_plan_uses_training_only_dev_and_locked_three_seeds():
     assert any("--execution-mode function_assertion" in command for command in commands)
     assert any("--max-pairs 4000" in command for command in commands)
 
+    prompt_budget_arms = {
+        item["prompt_token_limit"]: item
+        for item in plan["experiments"]
+        if item["id"] in {"J_prompt_budget_1024", "J_prompt_budget_1280"}
+    }
+    assert set(prompt_budget_arms) == {1024, 1280}
+    for arm in prompt_budget_arms.values():
+        assert arm["selection_prompt_token_limit"] == 1024
+        assert "--selection-prompt-token-limit 1024" in arm["preflight_command"]
+        assert all(
+            "--sft-selection-prompt-token-limit 1024" in command
+            for command in arm["commands"]
+        )
+
     blocked = {item["id"]: item for item in plan["experiments"] if not item["commands"]}
     assert blocked["B_legacy_vs_unified"]["status"] == "blocked_clean_control_unavailable"
     assert blocked["D_head_tail_vs_section_compaction"]["status"] == "local_safety_only"
@@ -290,3 +304,49 @@ def test_feedback_ablation_preserves_eight_candidate_generation_budget(monkeypat
     assert calls[1]["prompt_additions"][0]
     assert accounting[0]["requested_candidates"] == 8
     assert [slot["rank"] for slot in accounting[0]["candidate_slots"]] == list(range(1, 9))
+
+
+def test_base_model_ablation_is_declared_without_emitting_modal_gpu_commands():
+    """Group L is a local screen, so it must never enter the Modal command set.
+
+    The plan-wide invariant is that every entry in ``commands`` evaluates on
+    ablation_dev. A local base-model screen has no such flag, so it is recorded
+    under ``local_screen_commands`` instead of being allowed to weaken that
+    invariant.
+    """
+    plan = build_ablation_plan("run_name")
+    group_l = [
+        experiment for experiment in plan["experiments"]
+        if experiment["id"].startswith("L_base_model")
+    ]
+
+    assert {experiment["id"] for experiment in group_l} == {
+        "L_base_model_L0_phi3_eager",
+        "L_base_model_L1_phi3_sdpa",
+        "L_base_model_L2_qwen25_coder_sdpa",
+    }
+    assert all(experiment["commands"] == [] for experiment in group_l)
+    assert all(experiment["uses_final_test"] is False for experiment in group_l)
+
+    by_id = {experiment["id"]: experiment for experiment in group_l}
+
+    # The infeasible arm keeps its negative result instead of disappearing.
+    infeasible = by_id["L_base_model_L1_phi3_sdpa"]
+    assert infeasible["decision"] == "REJECT"
+    assert "scaled_dot_product_attention" in infeasible["reason"]
+    assert "local_screen_commands" not in infeasible
+
+    # A non-canonical base model must be requested explicitly everywhere it is
+    # loaded or tokenized, never inherited from a silently changed default.
+    treatment = by_id["L_base_model_L2_qwen25_coder_sdpa"]
+    screen = treatment["local_screen_commands"]
+    assert treatment["command_kind"] == "local_not_modal"
+    assert all(
+        command.startswith("python scripts/") for command in screen
+    )
+    assert any("--base-model-name Qwen/Qwen2.5-Coder-1.5B-Instruct" in command
+               for command in screen if "preflight_sft_run.py" in command)
+    assert any("--attention-implementation sdpa" in command
+               for command in screen if "train_on_dataset.py" in command)
+    assert all("--evaluation-split val" not in command for command in screen)
+    assert all("confirm-final-test" not in command for command in screen)

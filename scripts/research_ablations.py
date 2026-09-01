@@ -72,6 +72,8 @@ def _modal_command(
     synthetic_balance_mode: str = "none",
     execution_mode: str = "",
     prompt_token_limit: int = 0,
+    selection_prompt_token_limit: int = 0,
+    complex_target_fraction: float | None = None,
 ) -> str:
     parts = [
         "py", "-3.12", "scripts/modal_train.py",
@@ -107,6 +109,15 @@ def _modal_command(
         parts.extend(["--execution-mode", execution_mode])
     if prompt_token_limit:
         parts.extend(["--sft-prompt-token-limit", str(prompt_token_limit)])
+    if selection_prompt_token_limit:
+        parts.extend([
+            "--sft-selection-prompt-token-limit",
+            str(selection_prompt_token_limit),
+        ])
+    if complex_target_fraction is not None:
+        parts.extend([
+            "--sft-complex-target-fraction", str(complex_target_fraction)
+        ])
     if fresh:
         parts.append("--fresh")
     return " ".join(_quote(part) for part in parts)
@@ -125,6 +136,8 @@ def _preflight_command(
     synthetic_balance_mode: str = "none",
     execution_mode: str = "",
     prompt_token_limit: int = 0,
+    selection_prompt_token_limit: int = 0,
+    complex_target_fraction: float | None = None,
 ) -> str:
     parts = [
         "py", "-3.12", "scripts/preflight_sft_run.py",
@@ -155,6 +168,15 @@ def _preflight_command(
         parts.extend(["--execution-mode", execution_mode])
     if prompt_token_limit:
         parts.extend(["--prompt-token-limit", str(prompt_token_limit)])
+    if selection_prompt_token_limit:
+        parts.extend([
+            "--selection-prompt-token-limit",
+            str(selection_prompt_token_limit),
+        ])
+    if complex_target_fraction is not None:
+        parts.extend([
+            "--complex-target-fraction", str(complex_target_fraction)
+        ])
     return " ".join(_quote(part) for part in parts)
 
 
@@ -202,6 +224,8 @@ def build_ablation_plan(
         synthetic_balance_mode: str = "none",
         training_execution_mode: str = "",
         prompt_token_limit: int | None = None,
+        selection_prompt_token_limit: int = 0,
+        complex_target_fraction: float = 0.60,
         **metadata: Any,
     ) -> None:
         prompt_token_limit = (
@@ -218,6 +242,8 @@ def build_ablation_plan(
             "synthetic_balance_fraction": synthetic_balance_fraction,
             "synthetic_balance_mode": synthetic_balance_mode,
             "prompt_token_limit": prompt_token_limit,
+            "selection_prompt_token_limit": selection_prompt_token_limit,
+            "complex_target_fraction": complex_target_fraction,
         }
         train = _modal_command(
             phase="sft", seed=seeds[0], max_pairs=max_pairs, fresh=True,
@@ -252,6 +278,8 @@ def build_ablation_plan(
                     synthetic_balance_mode=synthetic_balance_mode,
                     execution_mode=training_execution_mode,
                     prompt_token_limit=prompt_token_limit,
+                    selection_prompt_token_limit=selection_prompt_token_limit,
+                    complex_target_fraction=complex_target_fraction,
                 )
                 if max_pairs else None
             ),
@@ -267,6 +295,8 @@ def build_ablation_plan(
             synthetic_balance_mode=synthetic_balance_mode,
             training_execution_mode=training_execution_mode or None,
             prompt_token_limit=prompt_token_limit or None,
+            selection_prompt_token_limit=selection_prompt_token_limit or None,
+            complex_target_fraction=complex_target_fraction,
             **metadata,
         )
 
@@ -377,6 +407,7 @@ def build_ablation_plan(
             "prompt_budget",
             f"j_budget_{budget}",
             prompt_token_limit=budget,
+            selection_prompt_token_limit=1024,
             hypothesis=(
                 "Among budgets that can actually prompt the whole panel, measure "
                 "which yields better reference-validity and Kill@k. 1024 is the "
@@ -390,6 +421,123 @@ def build_ablation_plan(
                 "V4 adapter is re-evaluated under the same budget."
             ),
         )
+
+    # Group K answers the review request for more complex functions without
+    # treating an intuition as a result. Complexity is derived solely from the
+    # buggy-side localized AST, and both treatments retain the same fixed
+    # evaluation panel and candidate protocol.
+    for fraction, label in ((0.0, "K0_natural_mix"), (0.60, "K1_complex_60")):
+        controlled_sft_experiment(
+            f"K_complex_function_mix_{label}",
+            "complex_function_mix",
+            label.lower(),
+            complex_target_fraction=fraction,
+            hypothesis=(
+                "Measure whether guaranteeing execution-verified complex functions "
+                "in bounded SFT improves reference-validity and Kill@k."
+            ),
+            complexity_lineage="buggy_revision_ast_only",
+        )
+
+    # Group L records the base-model/attention-backend screen that was actually
+    # executed locally. It is a zero-shot screen on the fixed 32-function
+    # ablation_dev monitor panel plus one 32-pair integration run - not a
+    # research-scale trained comparison - and the status strings say so. A base
+    # model swap changes the tokenizer, so no L result is comparable with a V4
+    # number produced under the Phi-3 tokenizer.
+    add(
+        "L_base_model_L0_phi3_eager",
+        "base_model",
+        [],
+        local_screen_commands=[
+            "python scripts/smoke_backend_compare.py --backend phi3_eager"
+            " --seed 42 --prompt-token-limit 1024"
+        ],
+        command_kind="local_not_modal",
+        status="completed_local_zero_shot_screen",
+        role="control",
+        model="microsoft/Phi-3-mini-4k-instruct",
+        model_revision="f39ac1d28e925b323eae81227eaba4464caced4e",
+        attention_implementation="eager",
+        evaluation_panel="fixed_32_function_ablation_dev_monitor_panel",
+        panel_selection_sha256=(
+            "0ed8b64f30df20bab19c1afc755b199c7f424d9d227f5a2e01c588144fafe907"
+        ),
+        seeds=[42],
+        hypothesis=(
+            "Establish the incumbent base model's zero-shot candidate validity "
+            "and generation cost under the frozen evaluation protocol."
+        ),
+    )
+    add(
+        "L_base_model_L1_phi3_sdpa",
+        "base_model",
+        [],
+        status="infeasible_in_pinned_environment",
+        decision="REJECT",
+        role="treatment",
+        model="microsoft/Phi-3-mini-4k-instruct",
+        attention_implementation="sdpa",
+        reason=(
+            "transformers 4.48.3 raises ValueError: Phi3ForCausalLM does not "
+            "support an attention implementation through "
+            "torch.nn.functional.scaled_dot_product_attention. flash_attention_2 "
+            "is also unavailable for Phi-3's sliding-window attention in this "
+            "environment, so eager is the only admissible Phi-3 backend."
+        ),
+    )
+    add(
+        "L_base_model_L2_qwen25_coder_sdpa",
+        "base_model",
+        [],
+        command_kind="local_not_modal",
+        local_screen_commands=[
+            "python scripts/smoke_backend_compare.py --backend qwen_sdpa"
+            " --seed 42 --prompt-token-limit 1024",
+            "python scripts/preflight_sft_run.py --corpus-version"
+            f" {corpus_version} --max-pairs 32 --epochs 1 --batch-size 1"
+            " --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup"
+            " --real-target-fraction 0.20 --repository-prompt-token-limit 1024"
+            " --repository-completion-token-limit 1024 --prompt-token-limit 1024"
+            " --minimum-monitor-checkpoints 1 --min-function-kill-rate 0.58"
+            " --base-model-name Qwen/Qwen2.5-Coder-1.5B-Instruct"
+            " --output results/v4_1_integration_32_qwen_seed42_preflight.json",
+            "python scripts/train_on_dataset.py --fresh --phase sft"
+            f" --corpus-version {corpus_version}"
+            " --run-name local_j1024_integration_32_seed42_qwen_v1 --seed 42"
+            " --max-pairs 32 --evaluation-split ablation_dev --sft-epochs 1"
+            " --sft-learning-rate 0.00005"
+            " --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1"
+            " --sft-prompt-token-limit 1024"
+            " --sft-selection-prompt-token-limit 1024"
+            " --sft-repository-completion-token-limit 1024"
+            " --sft-complex-target-fraction 0.6 --sft-min-monitor-checkpoints 1"
+            " --sft-monitor-validation-functions 32 --sft-monitor-patience 1"
+            " --sft-monitor-min-function-kill-rate 0.58"
+            " --base-model-name Qwen/Qwen2.5-Coder-1.5B-Instruct"
+            " --attention-implementation sdpa",
+        ],
+        status="completed_local_zero_shot_screen_plus_integration",
+        role="treatment",
+        model="Qwen/Qwen2.5-Coder-1.5B-Instruct",
+        model_revision="2e1fd397ee46e1388853d2af2c993145b0f1098a",
+        attention_implementation="sdpa",
+        evaluation_panel="fixed_32_function_ablation_dev_monitor_panel",
+        panel_selection_sha256=(
+            "0ed8b64f30df20bab19c1afc755b199c7f424d9d227f5a2e01c588144fafe907"
+        ),
+        seeds=[42],
+        hypothesis=(
+            "Measure whether a smaller code-specialised base model with an "
+            "available fused-attention backend improves reference-validity and "
+            "generation cost without weakening the evaluation protocol."
+        ),
+        note=(
+            "Screening evidence only. A base-model swap changes the tokenizer, "
+            "so the prompt-budget admissibility sweep and every V4 comparison "
+            "must be re-derived before any headline claim."
+        ),
+    )
 
     add(
         "B_legacy_vs_unified",
@@ -585,7 +733,7 @@ def build_ablation_plan(
         "holdout_families": families,
         "candidate_budget": 8,
         "split": "ablation_dev",
-        "primary_groups": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"],
+        "primary_groups": ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"],
         "screening_prompt_token_limit": screening_prompt_token_limit,
         "prompt_budget_selection_status": "NOT_SELECTED_CANDIDATE_COMMANDS_ONLY",
         "dataset_identity_policy": DATASET_IDENTITY_POLICY,

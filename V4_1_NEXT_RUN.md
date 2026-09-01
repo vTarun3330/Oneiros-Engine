@@ -84,6 +84,48 @@ G is withheld because its previous treatments changed multiple variables and
 its 2x target/2x cap did not alter dataset weights. The CPU audit and achieved-
 weight report remain runnable; do not recreate the rejected GPU commands.
 
+## 2b. Base model and attention backend (Group L)
+
+The base model is a **declared ablation**, not a silent default. `config/settings.py`
+still pins Phi-3/eager as canonical; a different base model must be requested
+explicitly on every command that loads or tokenizes a model, and the choice is
+recorded in each run's reproducibility manifest.
+
+Screen a candidate backend on the fixed 32-function panel (no training):
+
+```bash
+python scripts/smoke_backend_compare.py --backend phi3_eager --seed 42 --prompt-token-limit 1024
+python scripts/smoke_backend_compare.py --backend qwen_sdpa  --seed 42 --prompt-token-limit 1024
+python scripts/smoke_backend_report.py
+```
+
+Results land in `results/v4_1_smoke_backend_<backend>_seed<seed>.json`.
+`phi3_sdpa` is recorded as infeasible in this environment and emits no run.
+
+To use a non-canonical base model in preflight and training, pass it explicitly.
+Preflight needs the tokenizer identity (token budgets depend on it); training
+additionally needs the attention backend:
+
+```bash
+python scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate   --max-pairs 32 --epochs 1 --batch-size 1 --learning-rate 0.00005   --lr-scheduler-type constant_with_warmup --real-target-fraction 0.20   --repository-prompt-token-limit 1024 --repository-completion-token-limit 1024   --prompt-token-limit 1024 --minimum-monitor-checkpoints 1 --min-function-kill-rate 0.58   --base-model-name Qwen/Qwen2.5-Coder-1.5B-Instruct   --output results/v4_1_integration_32_qwen_seed42_preflight.json
+
+python scripts/train_on_dataset.py --fresh --phase sft   --corpus-version v4_1_research_hardened_candidate   --run-name local_j1024_integration_32_seed42_qwen_v1 --seed 42 --max-pairs 32   --evaluation-split ablation_dev --sft-epochs 1 --sft-learning-rate 0.00005   --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1   --sft-prompt-token-limit 1024 --sft-selection-prompt-token-limit 1024   --sft-repository-completion-token-limit 1024 --sft-complex-target-fraction 0.6   --sft-min-monitor-checkpoints 1 --sft-monitor-validation-functions 32   --sft-monitor-patience 1 --sft-monitor-min-function-kill-rate 0.58   --base-model-name Qwen/Qwen2.5-Coder-1.5B-Instruct --attention-implementation sdpa
+```
+
+Two constraints follow from a base-model swap and must be honoured before any
+headline claim:
+
+1. **The tokenizer changes**, so the Group J prompt-budget admissibility sweep
+   must be re-derived under the new tokenizer. The 1024 floor was established
+   under the Phi-3 tokenizer.
+2. **Adapters are base-model specific.** A LoRA adapter trained on one base model
+   must never be evaluated against another. `--run-name` isolates checkpoints and
+   results; keep one run name per base model.
+
+Scope note: only the local path (`scripts/train_on_dataset.py`,
+`scripts/preflight_sft_run.py`) accepts these flags today. The Modal cloud
+entrypoint does **not** yet forward them.
+
 ## 3. Preflight the 32-pair integration
 
 ```powershell
