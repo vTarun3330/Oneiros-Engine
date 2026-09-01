@@ -63,7 +63,9 @@ class Phi3Generator:
         self,
         model_name: str = None,
         load_in_4bit: bool = True,
-        device_map: str = "auto"
+        device_map: str = "auto",
+        attention_implementation: str = None,
+        model_revision: str = None,
     ):
         """
         Initialize the Phi-3 generator.
@@ -72,11 +74,31 @@ class Phi3Generator:
             model_name: HuggingFace model name
             load_in_4bit: Whether to use 4-bit quantization (fits on smaller GPUs)
             device_map: Device mapping strategy
+            attention_implementation: Override the canonical attention backend
+                (e.g. "sdpa") for a diagnostic speed comparison. Defaults to
+                the pinned production value (``model_config.attention_implementation``)
+                so every existing caller is unaffected.
+            model_revision: Override the pinned base-model snapshot. Only
+                meaningful together with a non-default ``model_name`` in a
+                diagnostic backend comparison; production callers must keep
+                the pinned Phi-3 revision.
         """
         if not TRANSFORMERS_AVAILABLE:
             raise ImportError("transformers is required. Install with: pip install transformers")
 
         self.model_name = model_name or model_config.model_name
+        if model_revision is not None:
+            self.model_revision = model_revision
+        elif self.model_name == model_config.model_name:
+            self.model_revision = model_config.model_revision
+        else:
+            # A non-canonical model_name with no explicit revision has no
+            # pinned snapshot to fall back to; resolve "main" and record the
+            # actual snapshot hash after loading for diagnostic reproducibility.
+            self.model_revision = "main"
+        self.attention_implementation = (
+            attention_implementation or model_config.attention_implementation
+        )
         self.load_in_4bit = load_in_4bit
         self.device_map = device_map
 
@@ -120,11 +142,14 @@ class Phi3Generator:
             )
         self.runtime_profile = runtime_profile(dtype_name)
         self.runtime_profile["load_in_4bit"] = bool(self.load_in_4bit)
+        self.runtime_profile["attention_implementation"] = self.attention_implementation
+        self.runtime_profile["model_name"] = self.model_name
+        self.runtime_profile["model_revision"] = self.model_revision
 
         # Load tokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.model_name,
-            revision=model_config.model_revision,
+            revision=self.model_revision,
             trust_remote_code=True
         )
 
@@ -136,7 +161,7 @@ class Phi3Generator:
         from transformers import AutoConfig
         config = AutoConfig.from_pretrained(
             self.model_name,
-            revision=model_config.model_revision,
+            revision=self.model_revision,
             trust_remote_code=True,
         )
 
@@ -152,13 +177,13 @@ class Phi3Generator:
 
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
-            revision=model_config.model_revision,
+            revision=self.model_revision,
             config=config,
             quantization_config=quantization_config,
             device_map=self.device_map,
             trust_remote_code=True,
             torch_dtype=compute_dtype,
-            attn_implementation=model_config.attention_implementation,
+            attn_implementation=self.attention_implementation,
         )
 
         self.is_loaded = True

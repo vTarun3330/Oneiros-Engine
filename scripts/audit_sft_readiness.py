@@ -15,8 +15,9 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from harness.corpus import (
-    load_corpus_split, official_evidence_verifies_pair, verify_corpus, write_json,
+    official_evidence_verifies_pair, write_json,
 )
+from harness.corpus_view import load_development_split, verify_development_view
 from scripts.train_on_dataset import (
     FUNCTION_EXECUTION_MODE,
     REPOSITORY_EXECUTION_MODE,
@@ -35,12 +36,17 @@ from scripts.train_on_dataset import (
 def main() -> None:
     parser = argparse.ArgumentParser(description="Audit Oneiros SFT data without training")
     parser.add_argument("--corpus-version", default="v2")
-    parser.add_argument("--split", default="train", choices=["train", "val", "test"])
+    parser.add_argument(
+        "--split", default="train", choices=["train", "ablation_dev", "val"]
+    )
     parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args()
 
     corpus_dir = ROOT / "data" / "corpus" / args.corpus_version
-    manifest = verify_corpus(corpus_dir)
+    verify_development_view(corpus_dir, [args.split])
+    manifest = json.loads((corpus_dir / "manifest.json").read_text(encoding="utf-8"))
+    from scripts import train_on_dataset as trainer
+    trainer.REQUIRE_SPLIT_ISOLATION = True
     report = {
         "corpus_id": manifest["corpus_id"],
         "corpus_version": args.corpus_version,
@@ -63,7 +69,9 @@ def main() -> None:
     report["retained_training_records"] = len(retained_pairs)
     report["repository_overlong_completions_excluded"] = excluded_completions
 
-    for record in load_corpus_split(corpus_dir, args.split):
+    for record in load_development_split(
+        corpus_dir, args.split, include_excluded=True
+    ):
         source_pair = _record_to_pair(record)
         pair = retained_pairs_by_id.get(source_pair["id"])
         count_pair = pair or source_pair

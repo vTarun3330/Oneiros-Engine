@@ -39,7 +39,7 @@ from engine.sft_trainer import (
     sft_completion_limit_for_execution_mode,
     sft_prompt_limit_for_execution_mode,
 )
-from harness.corpus import verify_corpus
+from harness.corpus_view import verify_development_view
 from scripts.train_on_dataset import (
     FUNCTION_EXECUTION_MODE,
     REPOSITORY_EXECUTION_MODE,
@@ -162,8 +162,10 @@ def build_preflight(
     synthetic_balance_mode: str,
     balanced_sampling_enabled: bool,
     max_synthetic_repeats: int,
+    complex_target_fraction: float,
     execution_mode: str,
     prompt_token_limit: int,
+    selection_prompt_token_limit: int | None,
     repository_prompt_token_limit: int,
     completion_token_limit: int,
     repository_completion_token_limit: int,
@@ -175,6 +177,8 @@ def build_preflight(
     prompt_information_variant: str = "full",
     output_instruction_variant: str = "self_contained",
     evaluation_split: str = "ablation_dev",
+    base_model_name: str | None = None,
+    base_model_revision: str | None = None,
 ) -> dict[str, Any]:
     if max_pairs <= 0:
         raise ValueError("max_pairs must be positive")
@@ -196,22 +200,32 @@ def build_preflight(
         raise ValueError("Unsupported execution mode")
     if synthetic_balance_mode == "none" and synthetic_balance_fraction:
         raise ValueError("Synthetic balance fraction requires a non-none balance mode")
+    if not 0.0 <= complex_target_fraction <= 1.0:
+        raise ValueError("complex_target_fraction must be in [0, 1]")
     from scripts import train_on_dataset as trainer
     trainer.PROMPT_INFORMATION_VARIANT = prompt_information_variant
     trainer.OUTPUT_INSTRUCTION_VARIANT = output_instruction_variant
+    trainer.REQUIRE_SPLIT_ISOLATION = True
     if not 0 < repository_completion_token_limit < MAX_SFT_SEQUENCE_LENGTH:
         raise ValueError(
             "repository_completion_token_limit must be between 1 and the sequence limit"
         )
     if not 0 < prompt_token_limit < MAX_SFT_SEQUENCE_LENGTH:
         raise ValueError("prompt_token_limit must be between 1 and the sequence limit")
+    if selection_prompt_token_limit is None:
+        selection_prompt_token_limit = prompt_token_limit
+    if not 0 < selection_prompt_token_limit < MAX_SFT_SEQUENCE_LENGTH:
+        raise ValueError(
+            "selection_prompt_token_limit must be between 1 and the sequence limit"
+        )
     if not 0 < repository_prompt_token_limit < MAX_SFT_SEQUENCE_LENGTH:
         raise ValueError(
             "repository_prompt_token_limit must be between 1 and the sequence limit"
         )
     started = time.time()
     corpus_dir = ROOT / "data" / "corpus" / corpus_version
-    manifest = verify_corpus(corpus_dir)
+    verify_development_view(corpus_dir, ["train", evaluation_split])
+    manifest = json.loads((corpus_dir / "manifest.json").read_text(encoding="utf-8"))
     leakage_path = corpus_dir / "leakage_audit.json"
     ablation_path = corpus_dir / "ablation_dev_manifest.json"
     if not leakage_path.exists() or not ablation_path.exists():
@@ -235,9 +249,19 @@ def build_preflight(
 
     from transformers import AutoTokenizer
 
+    resolved_base_model_name = base_model_name or model_config.model_name
+    resolved_base_model_revision = (
+        base_model_revision
+        if base_model_revision is not None
+        else (
+            model_config.model_revision
+            if resolved_base_model_name == model_config.model_name
+            else "main"
+        )
+    )
     tokenizer = AutoTokenizer.from_pretrained(
-        model_config.model_name,
-        revision=model_config.model_revision,
+        resolved_base_model_name,
+        revision=resolved_base_model_revision,
         trust_remote_code=True,
         local_files_only=local_files_only,
     )
@@ -276,7 +300,7 @@ def build_preflight(
                 compact_unified_user_prompt(
                     tokenizer,
                     pair_prompt,
-                    prompt_token_limit,
+                    selection_prompt_token_limit,
                     format_chat_prompt,
                 )
             except (PromptBudgetError, ValueError):
@@ -326,6 +350,7 @@ def build_preflight(
         compatible_synthetic_ids=compatible_synthetic_ids,
         target_real_fraction=real_target_fraction,
         max_real_repeats=max_real_repeats,
+        target_complex_fraction=complex_target_fraction,
     )
     selection_stats = summarize_train_pair_selection(selected_pairs)
     selection_sha256 = _sha256_json([pair["id"] for pair in selected_pairs])
@@ -665,6 +690,7 @@ def build_preflight(
             "requested_pairs": max_pairs,
             "retained_pairs": len(selected_pairs),
             "selection_sha256": selection_sha256,
+            "selection_prompt_token_limit": selection_prompt_token_limit,
             "context_eligible_repository_pairs": context_eligible_repository_pairs,
             "generation_compatible_repository_pairs": len(compatible_repository_ids),
             "prompt_compatible_synthetic_pairs": len(compatible_synthetic_ids),
@@ -715,6 +741,7 @@ def build_preflight(
             ),
             "balanced_sampling_enabled": balanced_sampling_enabled,
             "target_real_fraction": real_target_fraction,
+            "target_complex_function_fraction": complex_target_fraction,
             "actual_real_fraction": round(effective_real_fraction, 6),
             "target_reached": effective_real_fraction + 1e-12 >= real_target_fraction,
             "effective_synthetic_examples": len(effective_synthetic),
@@ -728,7 +755,8 @@ def build_preflight(
             "synthetic_semantic_group_balance": synthetic_sampling,
         },
         "tokenization": {
-            "model_name": model_config.model_name,
+            "model_name": resolved_base_model_name,
+            "model_revision": resolved_base_model_revision,
             "prompt_information_variant": prompt_information_variant,
             "output_instruction_variant": output_instruction_variant,
             "prompt_token_limit": prompt_token_limit,
@@ -794,6 +822,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--max-synthetic-repeats", type=int, default=2)
     parser.add_argument(
+        "--complex-target-fraction",
+        type=float,
+        default=0.60,
+        help="Minimum buggy-AST complex-function share in bounded synthetic selection",
+    )
+    parser.add_argument(
         "--execution-mode",
         choices=["", FUNCTION_EXECUTION_MODE, REPOSITORY_EXECUTION_MODE, REPOSITORY_UNITTEST_EXECUTION_MODE],
         default="",
@@ -818,6 +852,15 @@ def parse_args() -> argparse.Namespace:
         "--prompt-token-limit",
         type=int,
         default=training_config.sft_prompt_token_limit,
+    )
+    parser.add_argument(
+        "--selection-prompt-token-limit",
+        type=int,
+        default=None,
+        help=(
+            "Budget used only for bounded-selection eligibility; prompt-budget "
+            "ablations should pin every arm to one common admissible floor."
+        ),
     )
     parser.add_argument(
         "--completion-token-limit",
@@ -856,6 +899,14 @@ def parse_args() -> argparse.Namespace:
         help="Allow Hugging Face network access if the tokenizer is not cached.",
     )
     parser.add_argument(
+        "--base-model-name", default=None,
+        help="Override the canonical Phi-3 base model for a declared base-model ablation",
+    )
+    parser.add_argument(
+        "--base-model-revision", default=None,
+        help="Pin an exact snapshot for --base-model-name (defaults to 'main' if unset)",
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=ROOT / "results" / "v4_1_research_hardened_sft_preflight.json",
@@ -878,8 +929,10 @@ def main() -> None:
         synthetic_balance_mode=args.synthetic_balance_mode,
         balanced_sampling_enabled=args.balanced_sampling,
         max_synthetic_repeats=args.max_synthetic_repeats,
+        complex_target_fraction=args.complex_target_fraction,
         execution_mode=args.execution_mode,
         prompt_token_limit=args.prompt_token_limit,
+        selection_prompt_token_limit=args.selection_prompt_token_limit,
         repository_prompt_token_limit=args.repository_prompt_token_limit,
         completion_token_limit=args.completion_token_limit,
         repository_completion_token_limit=args.repository_completion_token_limit,
@@ -891,6 +944,8 @@ def main() -> None:
         prompt_information_variant=args.prompt_information_variant,
         output_instruction_variant=args.output_instruction_variant,
         evaluation_split=args.evaluation_split,
+        base_model_name=args.base_model_name,
+        base_model_revision=args.base_model_revision,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

@@ -211,11 +211,13 @@ def run_cloud_training(
     sft_lr_scheduler_type: str = "", sft_batch_size: int = 0,
     sft_repository_completion_token_limit: int = 0,
     sft_prompt_token_limit: int = 0,
+    sft_selection_prompt_token_limit: int = 0,
     sft_real_target_fraction: float = -1.0, sft_max_real_repeats: int = 0,
     sft_balanced_sampling: bool = True,
     sft_synthetic_balance_fraction: float = 0.0,
     sft_synthetic_balance_mode: str = "none",
     sft_max_synthetic_repeats: int = 2,
+    sft_complex_target_fraction: float = 0.60,
     sft_monitor_kill_rate: bool = True, sft_monitor_validation_functions: int = 500,
     sft_monitor_patience: int = 5,
     sft_monitor_min_function_kill_rate: float = -1.0,
@@ -288,6 +290,8 @@ def run_cloud_training(
         return {"error": "SFT repository completion limit must be between 1 and 2047 when supplied"}
     if not 0 <= sft_prompt_token_limit < 2048:
         return {"error": "SFT prompt token limit must be between 1 and 2047 when supplied"}
+    if not 0 <= sft_selection_prompt_token_limit < 2048:
+        return {"error": "SFT selection prompt token limit must be between 1 and 2047 when supplied"}
     if sft_lr_scheduler_type not in {"", "cosine", "constant_with_warmup"}:
         return {"error": "Unsupported SFT LR scheduler"}
     if sft_real_target_fraction != -1.0 and not 0.0 <= sft_real_target_fraction < 1.0:
@@ -300,6 +304,8 @@ def run_cloud_training(
         return {"error": "Unsupported SFT synthetic balance mode"}
     if sft_synthetic_balance_mode == "none" and sft_synthetic_balance_fraction:
         return {"error": "Synthetic balance fraction requires a non-none balance mode"}
+    if not 0.0 <= sft_complex_target_fraction <= 1.0:
+        return {"error": "SFT complex target fraction must be in [0, 1]"}
     if sft_monitor_validation_functions <= 0 or sft_monitor_patience <= 0:
         return {"error": "SFT monitor validation functions and patience must be positive"}
     if (
@@ -365,6 +371,9 @@ def run_cloud_training(
         # Part of the evaluation scope hash: a changed budget is a declared
         # protocol change, not a silent tweak inside an existing comparison.
         trainer.PROMPT_TOKEN_LIMIT = sft_prompt_token_limit
+    trainer.SFT_SELECTION_PROMPT_TOKEN_LIMIT_OVERRIDE = (
+        sft_selection_prompt_token_limit or None
+    )
     trainer.SFT_REAL_TARGET_FRACTION_OVERRIDE = (
         sft_real_target_fraction if sft_real_target_fraction >= 0.0 else None
     )
@@ -373,6 +382,7 @@ def run_cloud_training(
     trainer.SFT_SYNTHETIC_BALANCE_FRACTION = sft_synthetic_balance_fraction
     trainer.SFT_SYNTHETIC_BALANCE_MODE = sft_synthetic_balance_mode
     trainer.SFT_MAX_SYNTHETIC_REPEATS = sft_max_synthetic_repeats
+    trainer.SFT_COMPLEX_TARGET_FRACTION_OVERRIDE = sft_complex_target_fraction
     trainer.SFT_CHECKPOINT_MONITOR_ENABLED = sft_monitor_kill_rate
     trainer.SFT_MONITOR_VALIDATION_FUNCTIONS = sft_monitor_validation_functions
     trainer.SFT_MONITOR_PATIENCE = sft_monitor_patience
@@ -490,11 +500,13 @@ def training_main(
     sft_lr_scheduler_type: str = "", sft_batch_size: int = 0,
     sft_repository_completion_token_limit: int = 0,
     sft_prompt_token_limit: int = 0,
+    sft_selection_prompt_token_limit: int = 0,
     sft_real_target_fraction: float = -1.0, sft_max_real_repeats: int = 0,
     sft_balanced_sampling: bool = True,
     sft_synthetic_balance_fraction: float = 0.0,
     sft_synthetic_balance_mode: str = "none",
     sft_max_synthetic_repeats: int = 2,
+    sft_complex_target_fraction: float = 0.60,
     sft_monitor_kill_rate: bool = True, sft_monitor_validation_functions: int = 500,
     sft_monitor_patience: int = 5,
     sft_monitor_min_function_kill_rate: float = -1.0,
@@ -540,6 +552,10 @@ def training_main(
         raise ValueError(
             "SFT prompt token limit must be between 1 and 2047 when supplied"
         )
+    if not 0 <= sft_selection_prompt_token_limit < 2048:
+        raise ValueError(
+            "SFT selection prompt token limit must be between 1 and 2047 when supplied"
+        )
     if not 0 <= sft_repository_completion_token_limit < 2048:
         raise ValueError(
             "SFT repository completion limit must be between 1 and 2047 when supplied"
@@ -556,6 +572,8 @@ def training_main(
         raise ValueError("Unsupported SFT synthetic balance mode")
     if sft_synthetic_balance_mode == "none" and sft_synthetic_balance_fraction:
         raise ValueError("Synthetic balance fraction requires a non-none balance mode")
+    if not 0.0 <= sft_complex_target_fraction <= 1.0:
+        raise ValueError("SFT complex target fraction must be in [0, 1]")
     if sft_monitor_validation_functions <= 0 or sft_monitor_patience <= 0:
         raise ValueError("SFT monitor validation functions and patience must be positive")
     if (
@@ -732,12 +750,14 @@ def training_main(
                 sft_repository_completion_token_limit
             ),
             sft_prompt_token_limit=sft_prompt_token_limit,
+            sft_selection_prompt_token_limit=sft_selection_prompt_token_limit,
             sft_real_target_fraction=sft_real_target_fraction,
             sft_max_real_repeats=sft_max_real_repeats,
             sft_balanced_sampling=sft_balanced_sampling,
             sft_synthetic_balance_fraction=sft_synthetic_balance_fraction,
             sft_synthetic_balance_mode=sft_synthetic_balance_mode,
             sft_max_synthetic_repeats=sft_max_synthetic_repeats,
+            sft_complex_target_fraction=sft_complex_target_fraction,
             sft_monitor_kill_rate=sft_monitor_kill_rate,
             sft_monitor_validation_functions=sft_monitor_validation_functions,
             sft_monitor_patience=sft_monitor_patience,

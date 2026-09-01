@@ -265,6 +265,8 @@ class OneirosSFTTrainer:
         warmup_steps: int = None,
         checkpoint_steps: int = None,
         lr_scheduler_type: str = None,
+        model_revision: str = None,
+        attention_implementation: str = None,
     ):
         if not SFT_AVAILABLE:
             raise ImportError("trl SFTTrainer required. Install with: pip install trl")
@@ -272,6 +274,18 @@ class OneirosSFTTrainer:
             raise ImportError("peft required. Install with: pip install peft")
 
         self.model_name = model_name or model_config.model_name
+        if model_revision is not None:
+            self.model_revision = model_revision
+        elif self.model_name == model_config.model_name:
+            self.model_revision = model_config.model_revision
+        else:
+            # A non-canonical base model with no explicit pin has no frozen
+            # snapshot to fall back to; resolve "main" and let the caller
+            # record the actual downloaded snapshot hash for provenance.
+            self.model_revision = "main"
+        self.attention_implementation = (
+            attention_implementation or model_config.attention_implementation
+        )
         self.output_dir = Path(output_dir or training_config.checkpoint_dir)
         self.learning_rate = learning_rate or training_config.sft_learning_rate
         self.max_grad_norm = training_config.max_grad_norm
@@ -354,7 +368,7 @@ class OneirosSFTTrainer:
 
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.model_name,
-            revision=model_config.model_revision,
+            revision=self.model_revision,
             trust_remote_code=True,
         )
         if self.tokenizer.pad_token is None:
@@ -365,16 +379,19 @@ class OneirosSFTTrainer:
         )
         self.use_bf16 = dtype_name == "bf16"
         self.runtime_profile = runtime_profile(dtype_name)
+        self.runtime_profile["attention_implementation"] = self.attention_implementation
+        self.runtime_profile["model_name"] = self.model_name
+        self.runtime_profile["model_revision"] = self.model_revision
         print(f"  SFT numerical precision: {dtype_name}")
 
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
-            revision=model_config.model_revision,
+            revision=self.model_revision,
             quantization_config=bnb_config,
             device_map="auto",
             trust_remote_code=True,
             torch_dtype=compute_dtype,
-            attn_implementation=model_config.attention_implementation,
+            attn_implementation=self.attention_implementation,
         )
 
         self.model = prepare_model_for_kbit_training(

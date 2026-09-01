@@ -43,6 +43,7 @@ def _pair(index: int, repository: bool = False):
         "project": f"project-{index % 5}" if repository else "synthetic",
         "bug_family": f"family-{index % 4}",
         "source_name": f"source-{index % 3}",
+        "complexity_tier": "complex" if not repository and index % 4 == 0 else "simple",
     }
 
 
@@ -123,6 +124,27 @@ def test_bounded_smoke_never_falls_back_to_incompatible_records():
     assert [pair["id"] for pair in selected] == ["pair-0000", "pair-0001"]
 
 
+def test_bounded_smoke_guarantees_declared_complex_function_share():
+    pairs = [
+        {
+            **_pair(index),
+            "complexity_tier": "complex" if index < 40 else "simple",
+        }
+        for index in range(200)
+    ]
+
+    selected = select_bounded_train_pairs(
+        pairs, 80, target_real_fraction=0.0, target_complex_fraction=0.50
+    )
+    control = select_bounded_train_pairs(
+        pairs, 80, target_real_fraction=0.0, target_complex_fraction=0.0
+    )
+
+    assert sum(item["complexity_tier"] == "complex" for item in selected) == 40
+    assert sum(item["complexity_tier"] == "complex" for item in control) <= 40
+    assert summarize_train_pair_selection(selected)["complex_function_fraction"] == 0.50
+
+
 def test_bounded_dpo_smoke_preserves_full_sft_identity():
     assert sft_training_scope(100, False, None) == (
         "full_train_split:execution_mode=all:repository_completion_limit=2048:"
@@ -131,16 +153,19 @@ def test_bounded_dpo_smoke_preserves_full_sft_identity():
         "prompt_schema=oneiros_unified_test_generation_v2:"
         "prompt_information=full:output_instruction=self_contained:"
         "dataset_identity=source.upstream_then_source.name_v1:"
+        "complex_target_fraction=0.6:"
         "generation_completion_limit=128:repository_generation_completion_limit=1024"
     )
     assert sft_training_scope(100, True, None) == (
-        "first_100_train_records:bounded_selection=stratified_generation_compatible_v3:"
+        "first_100_train_records:bounded_selection=stratified_generation_compatible_complex_v5:"
         "execution_mode=all:repository_completion_limit=2048:prompt_token_limit=512:"
+        "selection_prompt_token_limit=512:"
         "repository_prompt_token_limit=1024:"
         "prompt_compaction=section_aware_ast_units_before_chat_v4_1:"
         "prompt_schema=oneiros_unified_test_generation_v2:"
         "prompt_information=full:output_instruction=self_contained:"
         "dataset_identity=source.upstream_then_source.name_v1:"
+        "complex_target_fraction=0.6:"
         "generation_completion_limit=128:repository_generation_completion_limit=1024"
     )
 
@@ -408,6 +433,8 @@ def test_old_run_config_gets_only_inactive_sampler_defaults():
         "synthetic_balance_fraction": 0.0,
         "synthetic_balance_mode": "none",
         "max_synthetic_repeats": 2,
+        "complex_target_fraction": 0.0,
+        "selection_prompt_token_limit": 512,
         "lr_scheduler_type": "cosine",
         "min_function_kill_rate": 0.50,
     }

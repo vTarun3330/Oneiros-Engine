@@ -21,6 +21,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from config import CANONICAL_CORPUS_VERSION, model_config, training_config
 from harness.candidate_policy import validate_function_assertion
 from harness.corpus import sha256_file, valid_corpus_version, verify_corpus
+from harness.corpus_view import (
+    load_complexity_index,
+    load_development_split,
+    verify_development_view,
+)
+from harness.function_complexity import analyze_function_complexity
 from harness.safe_execution import classify_assertions
 from harness.training_data import extract_dataset_assertions
 from metrics.research_evaluation import (
@@ -88,6 +94,13 @@ SFT_LEARNING_RATE_OVERRIDE = None
 SFT_BATCH_SIZE_OVERRIDE = None
 SFT_LR_SCHEDULER_TYPE_OVERRIDE = None
 SFT_REPOSITORY_COMPLETION_TOKEN_LIMIT_OVERRIDE = None
+# A base-model/backend swap is itself a declared ablation, never a silent
+# default change: these stay None (canonical Phi-3/eager) unless a run
+# explicitly opts in, and the resolved values are recorded in that run's
+# reproducibility manifest so it can never be confused with the canonical model.
+BASE_MODEL_NAME_OVERRIDE = None
+BASE_MODEL_REVISION_OVERRIDE = None
+BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE = None
 # Real repository records are rare in V2/V3.  Bound their deterministic
 # repetition during SFT so verified real behaviour is not drowned out by the
 # synthetic corpus, without letting a tiny real subset dominate the model.
@@ -107,6 +120,16 @@ SFT_BALANCED_SAMPLING_ENABLED = True
 SFT_SYNTHETIC_BALANCE_FRACTION = 0.0
 SFT_SYNTHETIC_BALANCE_MODE = "none"
 SFT_MAX_SYNTHETIC_REPEATS = 2
+# A bounded run must not accidentally collapse to short, low-branching
+# functions. This fraction is a minimum pair-level representation target based
+# solely on buggy-side AST metrics. It is separately ablated on ablation_dev.
+SFT_COMPLEX_TARGET_FRACTION = 0.60
+SFT_COMPLEX_TARGET_FRACTION_OVERRIDE = None
+# Prompt-budget ablations must select from one common eligibility universe.
+# When unset, bounded selection uses the active training prompt budget. Group J
+# explicitly pins this to the smallest admissible budget (1,024) for both arms.
+SFT_SELECTION_PROMPT_TOKEN_LIMIT_OVERRIDE = None
+REQUIRE_SPLIT_ISOLATION = False
 MAX_NEW_TOKENS_OVERRIDE = 128
 PROMPT_TOKEN_LIMIT = training_config.sft_prompt_token_limit
 REPOSITORY_PROMPT_TOKEN_LIMIT = training_config.sft_repository_prompt_token_limit
@@ -164,6 +187,11 @@ def normalized_sft_run_hyperparameters(hyperparameters: Dict) -> Dict:
     normalized.setdefault("synthetic_balance_fraction", 0.0)
     normalized.setdefault("synthetic_balance_mode", "none")
     normalized.setdefault("max_synthetic_repeats", 2)
+    normalized.setdefault("complex_target_fraction", 0.0)
+    normalized.setdefault(
+        "selection_prompt_token_limit",
+        normalized.get("prompt_token_limit", PROMPT_TOKEN_LIMIT),
+    )
     # Runs created before this field existed always used cosine.
     normalized.setdefault("lr_scheduler_type", "cosine")
     # Preserve the identity of historical V3/V4 runs that predate the field.
@@ -188,18 +216,31 @@ def sft_training_scope(
         if bounded_sft_pairs else "full_train_split"
     )
     if bounded_sft_pairs:
-        scope += ":bounded_selection=stratified_generation_compatible_v3"
+        scope += ":bounded_selection=stratified_generation_compatible_complex_v5"
     scope += f":execution_mode={execution_mode or 'all'}"
     scope += f":repository_completion_limit={MAX_SFT_COMPLETION_TOKENS}"
     if HOLDOUT_BUG_FAMILY:
         scope += f":holdout_bug_family={HOLDOUT_BUG_FAMILY}"
     scope += f":prompt_token_limit={PROMPT_TOKEN_LIMIT}"
+    if bounded_sft_pairs:
+        selection_prompt_limit = (
+            SFT_SELECTION_PROMPT_TOKEN_LIMIT_OVERRIDE
+            if SFT_SELECTION_PROMPT_TOKEN_LIMIT_OVERRIDE is not None
+            else PROMPT_TOKEN_LIMIT
+        )
+        scope += f":selection_prompt_token_limit={selection_prompt_limit}"
     scope += f":repository_prompt_token_limit={REPOSITORY_PROMPT_TOKEN_LIMIT}"
     scope += f":prompt_compaction={PROMPT_COMPACTION_STRATEGY}"
     scope += f":prompt_schema={PROMPT_SCHEMA_VERSION}"
     scope += f":prompt_information={PROMPT_INFORMATION_VARIANT}"
     scope += f":output_instruction={OUTPUT_INSTRUCTION_VARIANT}"
     scope += f":dataset_identity={DATASET_IDENTITY_POLICY}"
+    complex_fraction = (
+        SFT_COMPLEX_TARGET_FRACTION_OVERRIDE
+        if SFT_COMPLEX_TARGET_FRACTION_OVERRIDE is not None
+        else SFT_COMPLEX_TARGET_FRACTION
+    )
+    scope += f":complex_target_fraction={complex_fraction}"
     scope += (
         ":generation_completion_limit="
         f"{MAX_SFT_GENERATION_COMPATIBLE_TOKENS}"
@@ -280,7 +321,9 @@ def build_pair_prompt(pair: Dict) -> str:
     )
 
 
-def _record_to_pair(record: Dict) -> Dict:
+def _record_to_pair(
+    record: Dict, complexity: Optional[Dict[str, Any]] = None,
+) -> Dict:
     """Adapt a canonical record to the internal oracle evaluation shape."""
     provenance = record.get("provenance", {})
     source = record.get("source", {})
@@ -288,6 +331,11 @@ def _record_to_pair(record: Dict) -> Dict:
     target_symbols = normalize_target_symbols(
         record.get("target_symbols"), record.get("entry_point", "")
     )
+    if execution_mode == FUNCTION_EXECUTION_MODE and complexity is None:
+        complexity = analyze_function_complexity(
+            record.get("prompt_code_under_test") or record["code_under_test"],
+            record["entry_point"],
+        ).to_dict()
     return {
         "id": record["id"],
         "task_type": record["task_type"],
@@ -312,6 +360,10 @@ def _record_to_pair(record: Dict) -> Dict:
             or "synthetic"
         ),
         "group_id": record.get("group_id", record["id"]),
+        "complexity_tier": (
+            str(complexity.get("tier", "unknown")) if complexity else "repository"
+        ),
+        "function_complexity": dict(complexity or {}),
         "bug_family": (
             provenance.get("mutation_type")
             or provenance.get("category")
@@ -337,6 +389,16 @@ def make_sft_data_point(pair: Dict, prompt: str, completion: str):
 
 def load_phase3_pairs(corpus_dir: Path, split: str) -> List[Dict]:
     """Load one already-verified canonical split without legacy fallbacks."""
+    complexity_index: Dict[str, Dict[str, Any]] = {}
+    if REQUIRE_SPLIT_ISOLATION:
+        records = load_development_split(corpus_dir, split)
+        if split in {"train", "ablation_dev"}:
+            complexity_index = load_complexity_index(corpus_dir)
+        return [
+            _record_to_pair(record, complexity_index.get(record["id"]))
+            for record in records
+        ]
+
     records = json.loads((corpus_dir / "records.json").read_text(encoding="utf-8"))
     split_ids = json.loads((corpus_dir / "splits.json").read_text(encoding="utf-8"))[split]
     if split in {"train", "ablation_dev"}:
@@ -401,6 +463,7 @@ def select_bounded_train_pairs(
     compatible_synthetic_ids: Optional[set] = None,
     target_real_fraction: float = SFT_REAL_TARGET_FRACTION,
     max_real_repeats: int = SFT_MAX_REAL_REPEATS,
+    target_complex_fraction: float = SFT_COMPLEX_TARGET_FRACTION,
 ) -> List[Dict]:
     """Build a representative smoke subset containing synthetic and real data.
 
@@ -412,6 +475,8 @@ def select_bounded_train_pairs(
         raise ValueError("target_real_fraction must be in [0, 1)")
     if max_real_repeats < 1:
         raise ValueError("max_real_repeats must be at least one")
+    if not 0.0 <= target_complex_fraction <= 1.0:
+        raise ValueError("target_complex_fraction must be in [0, 1]")
     if limit <= 0:
         return list(pairs)
     repository = [
@@ -440,7 +505,7 @@ def select_bounded_train_pairs(
     ]
     if limit >= len(eligible_in_original_order):
         return eligible_in_original_order
-    if not repository or not synthetic or limit < 2:
+    if not synthetic or limit < 2:
         return eligible_in_original_order[:limit]
 
     # A synthetic record can contribute three retained winners while a
@@ -462,17 +527,54 @@ def select_bounded_train_pairs(
         if target_real_fraction
         else 0
     )
-    repository_count = min(
-        len(repository),
-        max(2 if limit >= 32 else 1, target_repository_count),
+    repository_count = (
+        min(
+            len(repository),
+            max(2 if limit >= 32 else 1, target_repository_count),
+        )
+        if repository
+        else 0
     )
     repository_count = min(repository_count, limit - 1)
     synthetic_count = min(len(synthetic), limit - repository_count)
     repository_count = min(len(repository), limit - synthetic_count)
+    selected_synthetic = _stratified_subset(
+        synthetic, synthetic_count, ("bug_family", "source_name")
+    )
+    selected_synthetic_ids = {pair["id"] for pair in selected_synthetic}
+    current_complex_count = sum(
+        pair.get("complexity_tier") == "complex" for pair in selected_synthetic
+    )
+    desired_complex_count = min(
+        sum(pair.get("complexity_tier") == "complex" for pair in synthetic),
+        math.ceil(synthetic_count * target_complex_fraction),
+    )
+    replacements_needed = max(0, desired_complex_count - current_complex_count)
+    if replacements_needed:
+        replacement_candidates = [
+            pair for pair in synthetic
+            if pair.get("complexity_tier") == "complex"
+            and pair["id"] not in selected_synthetic_ids
+        ]
+        replacements = _stratified_subset(
+            replacement_candidates,
+            replacements_needed,
+            ("bug_family", "source_name"),
+        )
+        replacement_ids = {pair["id"] for pair in replacements}
+        removable_ids = [
+            pair["id"] for pair in reversed(selected_synthetic)
+            if pair.get("complexity_tier") != "complex"
+        ]
+        removable_ids = set(removable_ids[:len(replacements)])
+        selected_synthetic = [
+            pair for pair in selected_synthetic if pair["id"] not in removable_ids
+        ]
+        selected_synthetic.extend(
+            pair for pair in replacements if pair["id"] in replacement_ids
+        )
     selected = [
-        *_stratified_subset(
-            synthetic, synthetic_count, ("bug_family", "source_name")
-        ),
+        *selected_synthetic,
         *_stratified_subset(
             repository, repository_count, ("project", "bug_family")
         ),
@@ -506,6 +608,15 @@ def summarize_train_pair_selection(pairs: List[Dict]) -> Dict:
         ).items())),
         "ingestion_source_counts": counts("source_name"),
         "dataset_identity_policy": DATASET_IDENTITY_POLICY,
+        "complexity_tier_counts": counts("complexity_tier"),
+        "complex_function_pairs": sum(
+            pair.get("complexity_tier") == "complex" for pair in pairs
+        ),
+        "complex_function_fraction": round(
+            sum(pair.get("complexity_tier") == "complex" for pair in pairs)
+            / max(1, len(pairs) - len(repository)),
+            6,
+        ),
         "repository_project_counts": dict(sorted({
             project: sum(1 for pair in repository if str(pair.get("project", "unknown") or "unknown") == project)
             for project in {str(pair.get("project", "unknown") or "unknown") for pair in repository}
@@ -1257,10 +1368,20 @@ def _adapter_evaluation_context(
     function_count: int,
 ) -> Dict:
     """Identity fields that make validation progress safe to resume."""
+    resolved_base_model_name = BASE_MODEL_NAME_OVERRIDE or model_config.model_name
+    resolved_base_model_revision = (
+        BASE_MODEL_REVISION_OVERRIDE
+        if BASE_MODEL_REVISION_OVERRIDE is not None
+        else (
+            model_config.model_revision
+            if resolved_base_model_name == model_config.model_name
+            else "main"
+        )
+    )
     reproducibility = build_reproducibility_manifest(
         Path(__file__).parent.parent,
-        model_config.model_name,
-        model_config.model_revision,
+        resolved_base_model_name,
+        resolved_base_model_revision,
     )
     profile = {
         "feedback_rounds": EVAL_FEEDBACK_ROUNDS,
@@ -1419,11 +1540,21 @@ def _evaluate_adapter_kill_rate(
     adapter_file = adapter_dir / "adapter_model.safetensors" if adapter_dir else None
     if adapter_file is not None and not adapter_file.exists():
         raise RuntimeError(f"{adapter_label} validation requires its frozen adapter")
+    resolved_base_model_name = BASE_MODEL_NAME_OVERRIDE or model_config.model_name
+    resolved_base_model_revision = (
+        BASE_MODEL_REVISION_OVERRIDE
+        if BASE_MODEL_REVISION_OVERRIDE is not None
+        else (
+            model_config.model_revision
+            if resolved_base_model_name == model_config.model_name
+            else "main"
+        )
+    )
     adapter_sha256 = (
         sha256_file(adapter_file)
         if adapter_file is not None
         else hashlib.sha256(
-            f"{model_config.model_name}@{model_config.model_revision}".encode("utf-8")
+            f"{resolved_base_model_name}@{resolved_base_model_revision}".encode("utf-8")
         ).hexdigest()
     )
 
@@ -1432,7 +1563,11 @@ def _evaluate_adapter_kill_rate(
         torch.cuda.manual_seed_all(SEED)
 
     started = time.time()
-    generator = Phi3Generator()
+    generator = Phi3Generator(
+        model_name=BASE_MODEL_NAME_OVERRIDE,
+        model_revision=BASE_MODEL_REVISION_OVERRIDE,
+        attention_implementation=BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE,
+    )
     try:
         generator.load_model()
         if adapter_dir is not None:
@@ -2259,7 +2394,24 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
     if not valid_corpus_version(CORPUS_VERSION):
         raise RuntimeError(f"Invalid corpus version: {CORPUS_VERSION!r}")
     corpus_dir = DATA_DIR / "corpus" / CORPUS_VERSION
-    manifest = verify_corpus(corpus_dir)
+    if REQUIRE_SPLIT_ISOLATION:
+        required_splits = ["train", EVALUATION_SPLIT]
+        if TRAINING_PHASE == "dpo_eval":
+            raise RuntimeError(
+                "The development-only local corpus view deliberately excludes the "
+                "sealed test. Final measurement requires the separately authorized "
+                "post-selection path."
+            )
+        verify_development_view(corpus_dir, required_splits)
+        manifest = json.loads(
+            (corpus_dir / "manifest.json").read_text(encoding="utf-8")
+        )
+        print(
+            "Sealed-test-free development corpus view verified for: "
+            + ", ".join(required_splits)
+        )
+    else:
+        manifest = verify_corpus(corpus_dir)
     print(
         "Canonical corpus verified: "
         f"{manifest['training_records']:,} behaviorally checked records; "
@@ -2334,6 +2486,11 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         )
         compatible_repository_ids = set()
         compatible_synthetic_ids = set()
+        selection_prompt_limit = (
+            SFT_SELECTION_PROMPT_TOKEN_LIMIT_OVERRIDE
+            if SFT_SELECTION_PROMPT_TOKEN_LIMIT_OVERRIDE is not None
+            else PROMPT_TOKEN_LIMIT
+        )
         repository_generation_limit = (
             SFT_REPOSITORY_COMPLETION_TOKEN_LIMIT_OVERRIDE
             if SFT_REPOSITORY_COMPLETION_TOKEN_LIMIT_OVERRIDE is not None
@@ -2347,7 +2504,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                     compact_unified_user_prompt(
                         sft_preflight_tokenizer,
                         pair_prompt,
-                        PROMPT_TOKEN_LIMIT,
+                        selection_prompt_limit,
                         format_chat_prompt,
                     )
                 except (PromptBudgetError, ValueError):
@@ -2394,6 +2551,11 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                 SFT_MAX_REAL_REPEATS_OVERRIDE
                 if SFT_MAX_REAL_REPEATS_OVERRIDE is not None
                 else SFT_MAX_REAL_REPEATS
+            ),
+            target_complex_fraction=(
+                SFT_COMPLEX_TARGET_FRACTION_OVERRIDE
+                if SFT_COMPLEX_TARGET_FRACTION_OVERRIDE is not None
+                else SFT_COMPLEX_TARGET_FRACTION
             ),
         )
     dpo_training_scope_sha256 = _dpo_training_scope_sha256(train_pairs) if run_dpo else None
@@ -2474,6 +2636,11 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         "seed": SEED,
         "max_sequence_length": MAX_SFT_COMPLETION_TOKENS,
         "prompt_token_limit": PROMPT_TOKEN_LIMIT,
+        "selection_prompt_token_limit": (
+            SFT_SELECTION_PROMPT_TOKEN_LIMIT_OVERRIDE
+            if SFT_SELECTION_PROMPT_TOKEN_LIMIT_OVERRIDE is not None
+            else PROMPT_TOKEN_LIMIT
+        ),
         "repository_prompt_token_limit": REPOSITORY_PROMPT_TOKEN_LIMIT,
         "prompt_compaction_strategy": PROMPT_COMPACTION_STRATEGY,
         "prompt_schema_version": PROMPT_SCHEMA_VERSION,
@@ -2514,11 +2681,30 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         "synthetic_balance_fraction": SFT_SYNTHETIC_BALANCE_FRACTION,
         "synthetic_balance_mode": SFT_SYNTHETIC_BALANCE_MODE,
         "max_synthetic_repeats": SFT_MAX_SYNTHETIC_REPEATS,
+        "complex_target_fraction": (
+            SFT_COMPLEX_TARGET_FRACTION_OVERRIDE
+            if SFT_COMPLEX_TARGET_FRACTION_OVERRIDE is not None
+            else SFT_COMPLEX_TARGET_FRACTION
+        ),
     }
+    resolved_base_model_name = BASE_MODEL_NAME_OVERRIDE or model_config.model_name
+    resolved_base_model_revision = (
+        BASE_MODEL_REVISION_OVERRIDE
+        if BASE_MODEL_REVISION_OVERRIDE is not None
+        else (
+            model_config.model_revision
+            if resolved_base_model_name == model_config.model_name
+            else "main"
+        )
+    )
+    resolved_attention_implementation = (
+        BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE
+        or model_config.attention_implementation
+    )
     reproducibility = build_reproducibility_manifest(
         Path(__file__).parent.parent,
-        model_config.model_name,
-        model_config.model_revision,
+        resolved_base_model_name,
+        resolved_base_model_revision,
     )
     if (
         sft_hyperparameters["epochs"] <= 0
@@ -2530,6 +2716,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         or sft_hyperparameters["synthetic_balance_mode"]
         not in {"none", "dataset", "dataset_family"}
         or sft_hyperparameters["max_synthetic_repeats"] < 1
+        or not 0.0 <= sft_hyperparameters["complex_target_fraction"] <= 1.0
         or sft_hyperparameters["prompt_token_limit"] <= 0
         or sft_hyperparameters["repository_prompt_token_limit"] <= 0
         or sft_hyperparameters["generation_completion_token_limit"] <= 0
@@ -2933,6 +3120,9 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                     warmup_steps=sft_hyperparameters["warmup_steps"],
                     checkpoint_steps=sft_hyperparameters["checkpoint_save_steps"],
                     lr_scheduler_type=sft_hyperparameters["lr_scheduler_type"],
+                    model_name=BASE_MODEL_NAME_OVERRIDE,
+                    model_revision=BASE_MODEL_REVISION_OVERRIDE,
+                    attention_implementation=BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE,
                 )
                 sft_trainer.setup_model()
                 checkpoint_monitor = None
@@ -3660,6 +3850,15 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
+        "--sft-selection-prompt-token-limit",
+        type=int,
+        default=None,
+        help=(
+            "Prompt budget used only to define bounded-selection eligibility. "
+            "Pin this to a common admissible floor when comparing prompt budgets."
+        ),
+    )
+    parser.add_argument(
         "--sft-repository-completion-token-limit",
         type=int,
         default=None,
@@ -3701,6 +3900,15 @@ if __name__ == "__main__":
         help="Maximum copies of any synthetic example under balanced sampling",
     )
     parser.add_argument(
+        "--sft-complex-target-fraction",
+        type=float,
+        default=SFT_COMPLEX_TARGET_FRACTION,
+        help=(
+            "Minimum complex-function share in bounded synthetic SFT selection, "
+            "using only buggy-side AST metrics (default: 0.60)"
+        ),
+    )
+    parser.add_argument(
         "--sft-monitor-kill-rate", action=argparse.BooleanOptionalAction,
         default=None,
         help="Enable or disable the locked 50-step validation monitor (enabled by default)",
@@ -3735,6 +3943,24 @@ if __name__ == "__main__":
         help="Canonical corpus version",
     )
     parser.add_argument(
+        "--base-model-name", default=None,
+        help=(
+            "Override the canonical Phi-3 base model for a declared base-model "
+            "ablation (e.g. Qwen/Qwen2.5-Coder-1.5B-Instruct). Leave unset for "
+            "every canonical/production run; the choice is recorded in the "
+            "run's reproducibility manifest so it can never be mistaken for "
+            "the canonical model."
+        ),
+    )
+    parser.add_argument(
+        "--base-model-revision", default=None,
+        help="Pin an exact snapshot for --base-model-name (defaults to 'main' if unset)",
+    )
+    parser.add_argument(
+        "--attention-implementation", default=None, choices=[None, "eager", "sdpa", "flash_attention_2"],
+        help="Override the canonical eager attention backend for this run",
+    )
+    parser.add_argument(
         "--phase", default="sft", choices=["base_eval", "sft", "sft_eval", "dpo", "dpo_eval", "sft_then_dpo"],
         help="Run SFT, locked adapter validation, DPO from a verified SFT adapter, or the combined legacy flow",
     )
@@ -3751,7 +3977,35 @@ if __name__ == "__main__":
         "--confirm-final-test", action="store_true",
         help="Explicit one-time authorization for the sealed dpo_eval test split",
     )
+    parser.add_argument(
+        "--run-name", required=True,
+        help="Local run identity; isolates checkpoints and results without Modal",
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true",
+        help="Print local paths/options without opening the corpus or loading a model",
+    )
     args = parser.parse_args()
+    from utils.local_run import local_run_paths
+
+    try:
+        ADAPTER_DIR, RESULTS_DIR = local_run_paths(
+            Path(__file__).resolve().parent.parent, args.run_name, fresh=args.fresh,
+        )
+    except ValueError as exc:
+        parser.error(str(exc))
+    if args.dry_run:
+        print(json.dumps({
+            "backend": "local_cuda",
+            "adapter_dir": str(ADAPTER_DIR),
+            "results_dir": str(RESULTS_DIR),
+            "options": vars(args),
+            "training_launched": False,
+            "corpus_opened": False,
+            "readiness_checked": False,
+            "warning": "Execution requires research preflight and sealed-data access isolation",
+        }, indent=2))
+        sys.exit(0)
     if args.seed < 0:
         raise ValueError("--seed must be non-negative")
     SEED = args.seed
@@ -3796,6 +4050,8 @@ if __name__ == "__main__":
         )
     if args.sft_max_synthetic_repeats < 1:
         raise ValueError("--sft-max-synthetic-repeats must be at least one")
+    if not 0.0 <= args.sft_complex_target_fraction <= 1.0:
+        raise ValueError("--sft-complex-target-fraction must be in [0, 1]")
     if args.sft_monitor_validation_functions <= 0:
         raise ValueError("--sft-monitor-validation-functions must be positive")
     if args.sft_monitor_patience <= 0:
@@ -3823,6 +4079,16 @@ if __name__ == "__main__":
                 "--sft-prompt-token-limit must be between 1 and the sequence limit"
             )
         PROMPT_TOKEN_LIMIT = args.sft_prompt_token_limit
+    if args.sft_selection_prompt_token_limit is not None:
+        from engine.sft_trainer import MAX_SFT_SEQUENCE_LENGTH
+
+        if not 0 < args.sft_selection_prompt_token_limit < MAX_SFT_SEQUENCE_LENGTH:
+            raise ValueError(
+                "--sft-selection-prompt-token-limit must be between 1 and the sequence limit"
+            )
+        SFT_SELECTION_PROMPT_TOKEN_LIMIT_OVERRIDE = (
+            args.sft_selection_prompt_token_limit
+        )
     SFT_REPOSITORY_COMPLETION_TOKEN_LIMIT_OVERRIDE = (
         args.sft_repository_completion_token_limit
     )
@@ -3833,6 +4099,8 @@ if __name__ == "__main__":
     SFT_SYNTHETIC_BALANCE_FRACTION = args.sft_synthetic_balance_fraction
     SFT_SYNTHETIC_BALANCE_MODE = args.sft_synthetic_balance_mode
     SFT_MAX_SYNTHETIC_REPEATS = args.sft_max_synthetic_repeats
+    SFT_COMPLEX_TARGET_FRACTION_OVERRIDE = args.sft_complex_target_fraction
+    REQUIRE_SPLIT_ISOLATION = True
     if args.sft_monitor_kill_rate is not None:
         SFT_CHECKPOINT_MONITOR_ENABLED = args.sft_monitor_kill_rate
     SFT_MONITOR_VALIDATION_FUNCTIONS = args.sft_monitor_validation_functions
@@ -3842,10 +4110,19 @@ if __name__ == "__main__":
     )
     SFT_MIN_MONITOR_CHECKPOINTS_OVERRIDE = args.sft_min_monitor_checkpoints
     CORPUS_VERSION = args.corpus_version
+    BASE_MODEL_NAME_OVERRIDE = args.base_model_name
+    BASE_MODEL_REVISION_OVERRIDE = args.base_model_revision
+    BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE = args.attention_implementation
     EXECUTION_MODE_FILTER = args.execution_mode or None
     TRAINING_PHASE = args.phase
     if TRAINING_PHASE in {"dpo", "dpo_eval", "sft_then_dpo"} and EVALUATION_SPLIT != "val":
         raise ValueError("DPO gating and final comparison require the locked val split")
     RESTART_DPO = args.restart_dpo
     CONFIRM_FINAL_TEST = args.confirm_final_test
+    if not args.mock:
+        import torch
+
+        if not torch.cuda.is_available():
+            parser.error("Local execution requires a CUDA GPU; CPU fallback is disabled")
+        print(f"Local GPU: {torch.cuda.get_device_name(0)}", flush=True)
     run_training(use_mock=args.mock, fresh=args.fresh)
