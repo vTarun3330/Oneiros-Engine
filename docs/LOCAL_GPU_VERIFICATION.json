@@ -1,0 +1,26 @@
+﻿{
+  "python": "3.12.14",
+  "executable": "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Scripts\\python.exe",
+  "torch": "2.5.1+cu124",
+  "cuda_runtime": "12.4",
+  "cuda_available": true,
+  "gpu": "NVIDIA RTX 4500 Ada Generation",
+  "vram_gib": 23.99,
+  "compute_capability": [
+    8,
+    9
+  ],
+  "bf16_supported": true,
+  "cuda_matmul": "passed",
+  "bitsandbytes_nf4_cuda": "passed",
+  "packages": {
+    "transformers": "4.48.3",
+    "peft": "0.14.0",
+    "trl": "0.15.2",
+    "accelerate": "1.2.1",
+    "bitsandbytes": "0.45.0",
+    "datasets": "3.2.0"
+  },
+  "data_accessed": false,
+  "training_launched": false
+}

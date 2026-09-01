@@ -87,3 +87,10 @@ validation_output.txt
 real_examples.txt
 real_ex.txt
 mutant_ex.txt
+logs_*.txt
+
+# Isolated local Windows GPU environment
+.venv-gpu/
+
+# Generated sealed-test-free local corpus shards (reproducible from manifest)
+data/corpus/*/development_view/

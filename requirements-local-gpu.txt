@@ -1,0 +1,23 @@
+﻿# Windows/Python 3.12 overlay matching the Modal ML stack.
+# Install torch first using https://download.pytorch.org/whl/cu124.
+torch==2.5.1+cu124
+transformers==4.48.3
+peft==0.14.0
+trl==0.15.2
+accelerate==1.2.1
+datasets==3.2.0
+bitsandbytes==0.45.0
+sentence-transformers==3.3.1
+sentencepiece==0.2.0
+protobuf==5.29.3
+faiss-cpu==1.9.0.post1
+numpy>=1.25,<3
+pandas>=2.0
+tqdm>=4.65
+pyyaml>=6.0
+coverage>=7.0
+matplotlib>=3.7
+seaborn>=0.12
+pytest>=8,<9
+# Modal excluded: local execution does not need the cloud client.
+# mutmut is not used by SFT; assess its Windows support separately.
