@@ -1,0 +1,178 @@
+{
+  "schema_version": "oneiros_v4_1_prompt_budget_sweep_v1",
+  "final_test_measurement": false,
+  "corpus_version": "v4_1_research_hardened_candidate",
+  "base_model_name": "microsoft/Phi-3-mini-4k-instruct",
+  "base_model_revision": "f39ac1d28e925b323eae81227eaba4464caced4e",
+  "panels": [
+    "ablation_dev",
+    "val"
+  ],
+  "budgets_tested": [
+    512,
+    768,
+    1024,
+    1280
+  ],
+  "panel_results": {
+    "ablation_dev": {
+      "function_records": 542,
+      "by_budget": {
+        "512": {
+          "function_records": 542,
+          "promptable": 154,
+          "unpromptable": 388,
+          "unpromptable_fraction": 0.715867,
+          "max_retained_prompt_tokens": 512,
+          "unpromptable_record_ids": [
+            "mutation::humaneval_HumanEval_103_mut_00820",
+            "mutation::humaneval_HumanEval_103_mut_00821",
+            "mutation::humaneval_HumanEval_103_mut_00822",
+            "mutation::humaneval_HumanEval_103_mut_00823",
+            "mutation::humaneval_HumanEval_103_mut_00824",
+            "mutation::humaneval_HumanEval_103_mut_00825",
+            "mutation::humaneval_HumanEval_103_mut_00826",
+            "mutation::humaneval_HumanEval_103_mut_00827",
+            "mutation::humaneval_HumanEval_103_mut_00828",
+            "mutation::humaneval_HumanEval_103_mut_00829",
+            "mutation::humaneval_HumanEval_103_mut_00830",
+            "mutation::humaneval_HumanEval_103_mut_00831",
+            "mutation::humaneval_HumanEval_103_mut_00832",
+            "mutation::humaneval_HumanEval_103_mut_00833",
+            "mutation::humaneval_HumanEval_103_mut_00834",
+            "mutation::humaneval_HumanEval_103_mut_00835",
+            "mutation::humaneval_HumanEval_126_mut_01115",
+            "mutation::humaneval_HumanEval_126_mut_01116",
+            "mutation::humaneval_HumanEval_126_mut_01117",
+            "mutation::humaneval_HumanEval_126_mut_01119",
+            "mutation::humaneval_HumanEval_126_mut_01120",
+            "mutation::humaneval_HumanEval_126_mut_01121",
+            "mutation::humaneval_HumanEval_126_mut_01122",
+            "mutation::humaneval_HumanEval_126_mut_01124",
+            "mutation::humaneval_HumanEval_126_mut_01125"
+          ]
+        },
+        "768": {
+          "function_records": 542,
+          "promptable": 514,
+          "unpromptable": 28,
+          "unpromptable_fraction": 0.051661,
+          "max_retained_prompt_tokens": 753,
+          "unpromptable_record_ids": [
+            "mutation::humaneval_HumanEval_126_mut_01115",
+            "mutation::humaneval_HumanEval_126_mut_01116",
+            "mutation::humaneval_HumanEval_126_mut_01117",
+            "mutation::humaneval_HumanEval_126_mut_01119",
+            "mutation::humaneval_HumanEval_126_mut_01120",
+            "mutation::humaneval_HumanEval_126_mut_01121",
+            "mutation::humaneval_HumanEval_126_mut_01122",
+            "mutation::humaneval_HumanEval_126_mut_01124",
+            "mutation::humaneval_HumanEval_126_mut_01125",
+            "mutation::humaneval_HumanEval_126_mut_01126",
+            "mutation::humaneval_HumanEval_126_mut_01128",
+            "mutation::humaneval_HumanEval_126_mut_01130",
+            "mutation::humaneval_HumanEval_126_mut_01131",
+            "mutation::humaneval_HumanEval_95_mut_00745",
+            "mutation::humaneval_HumanEval_95_mut_00746",
+            "mutation::humaneval_HumanEval_95_mut_00747",
+            "mutation::humaneval_HumanEval_95_mut_00748",
+            "mutation::humaneval_HumanEval_95_mut_00749",
+            "mutation::humaneval_HumanEval_95_mut_00750",
+            "mutation::humaneval_HumanEval_95_mut_00753",
+            "mutation::humaneval_HumanEval_95_mut_00754",
+            "mutation::humaneval_HumanEval_95_mut_00755",
+            "mutation::humaneval_HumanEval_95_mut_00756",
+            "mutation::humaneval_HumanEval_95_mut_00757",
+            "mutation::humaneval_HumanEval_95_mut_00758"
+          ]
+        },
+        "1024": {
+          "function_records": 542,
+          "promptable": 542,
+          "unpromptable": 0,
+          "unpromptable_fraction": 0.0,
+          "max_retained_prompt_tokens": 989,
+          "unpromptable_record_ids": []
+        },
+        "1280": {
+          "function_records": 542,
+          "promptable": 542,
+          "unpromptable": 0,
+          "unpromptable_fraction": 0.0,
+          "max_retained_prompt_tokens": 1046,
+          "unpromptable_record_ids": []
+        }
+      }
+    },
+    "val": {
+      "function_records": 757,
+      "by_budget": {
+        "512": {
+          "function_records": 757,
+          "promptable": 174,
+          "unpromptable": 583,
+          "unpromptable_fraction": 0.770145,
+          "max_retained_prompt_tokens": 512,
+          "unpromptable_record_ids": [
+            "mutation::humaneval_HumanEval_143_mut_01387",
+            "mutation::humaneval_HumanEval_143_mut_01388",
+            "mutation::humaneval_HumanEval_143_mut_01389",
+            "mutation::humaneval_HumanEval_143_mut_01390",
+            "mutation::humaneval_HumanEval_143_mut_01391",
+            "mutation::humaneval_HumanEval_143_mut_01393",
+            "mutation::humaneval_HumanEval_143_mut_01394",
+            "mutation::humaneval_HumanEval_143_mut_01395",
+            "mutation::humaneval_HumanEval_143_mut_01396",
+            "mutation::humaneval_HumanEval_143_mut_01397",
+            "mutation::humaneval_HumanEval_143_mut_01398",
+            "mutation::humaneval_HumanEval_143_mut_01399",
+            "mutation::humaneval_HumanEval_143_mut_01401",
+            "mutation::humaneval_HumanEval_144_mut_01402",
+            "mutation::humaneval_HumanEval_144_mut_01403",
+            "mutation::humaneval_HumanEval_144_mut_01404",
+            "mutation::humaneval_HumanEval_144_mut_01405",
+            "mutation::humaneval_HumanEval_144_mut_01407",
+            "mutation::humaneval_HumanEval_144_mut_01408",
+            "mutation::humaneval_HumanEval_144_mut_01409",
+            "mutation::humaneval_HumanEval_144_mut_01410",
+            "mutation::humaneval_HumanEval_144_mut_01412",
+            "mutation::humaneval_HumanEval_40_mut_00237",
+            "mutation::humaneval_HumanEval_40_mut_00239",
+            "mutation::humaneval_HumanEval_40_mut_00240"
+          ]
+        },
+        "768": {
+          "function_records": 757,
+          "promptable": 757,
+          "unpromptable": 0,
+          "unpromptable_fraction": 0.0,
+          "max_retained_prompt_tokens": 739,
+          "unpromptable_record_ids": []
+        },
+        "1024": {
+          "function_records": 757,
+          "promptable": 757,
+          "unpromptable": 0,
+          "unpromptable_fraction": 0.0,
+          "max_retained_prompt_tokens": 878,
+          "unpromptable_record_ids": []
+        },
+        "1280": {
+          "function_records": 757,
+          "promptable": 757,
+          "unpromptable": 0,
+          "unpromptable_fraction": 0.0,
+          "max_retained_prompt_tokens": 878,
+          "unpromptable_record_ids": []
+        }
+      }
+    }
+  },
+  "admissible_budgets": [
+    1024,
+    1280
+  ],
+  "smallest_admissible_budget": 1024,
+  "note": "Promptability is a prerequisite, not a performance result. A budget with any unpromptable record would silently change the evaluation panel and is not permitted. Token counts are tokenizer-specific, so this sweep is only valid for the base model named above.",
+  "elapsed_seconds": 7.3
+}
