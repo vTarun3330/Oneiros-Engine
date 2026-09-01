@@ -101,6 +101,39 @@ SFT_REPOSITORY_COMPLETION_TOKEN_LIMIT_OVERRIDE = None
 BASE_MODEL_NAME_OVERRIDE = None
 BASE_MODEL_REVISION_OVERRIDE = None
 BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE = None
+# Preflight accepts --checkpoint-steps, so production must accept the same
+# override or the two can plan different monitor schedules for one run.
+SFT_CHECKPOINT_STEPS_OVERRIDE = None
+# Which tokenizer decides supervision eligibility. It defaults to the run's own
+# base model, because eligibility means "does this actually fit the budget for
+# the model being trained". A controlled base-model comparison pins every arm to
+# one common tokenizer instead, so the arms train on identical records and only
+# the model varies; that pinning must be declared, never inherited by accident.
+SFT_SELECTION_TOKENIZER_NAME_OVERRIDE = None
+
+
+def resolved_base_model_identity() -> Tuple[str, str]:
+    """Return the (name, revision) actually used to load and tokenize."""
+    name = BASE_MODEL_NAME_OVERRIDE or model_config.model_name
+    if BASE_MODEL_REVISION_OVERRIDE is not None:
+        revision = BASE_MODEL_REVISION_OVERRIDE
+    elif name == model_config.model_name:
+        revision = model_config.model_revision
+    else:
+        revision = "main"
+    return name, revision
+
+
+def resolved_selection_tokenizer_identity() -> Tuple[str, str]:
+    """Return the (name, revision) that decides supervision eligibility."""
+    if SFT_SELECTION_TOKENIZER_NAME_OVERRIDE:
+        name = SFT_SELECTION_TOKENIZER_NAME_OVERRIDE
+        revision = (
+            model_config.model_revision
+            if name == model_config.model_name else "main"
+        )
+        return name, revision
+    return resolved_base_model_identity()
 # Real repository records are rare in V2/V3.  Bound their deterministic
 # repetition during SFT so verified real behaviour is not drowned out by the
 # synthetic corpus, without letting a tiny real subset dominate the model.
@@ -229,6 +262,12 @@ def sft_training_scope(
             else PROMPT_TOKEN_LIMIT
         )
         scope += f":selection_prompt_token_limit={selection_prompt_limit}"
+    # Only recorded when eligibility is deliberately pinned away from the run's
+    # own base model, so fingerprints of existing runs stay stable.
+    selection_tokenizer, _ = resolved_selection_tokenizer_identity()
+    base_model, _ = resolved_base_model_identity()
+    if selection_tokenizer != base_model:
+        scope += f":selection_tokenizer={selection_tokenizer}"
     scope += f":repository_prompt_token_limit={REPOSITORY_PROMPT_TOKEN_LIMIT}"
     scope += f":prompt_compaction={PROMPT_COMPACTION_STRATEGY}"
     scope += f":prompt_schema={PROMPT_SCHEMA_VERSION}"
@@ -1079,9 +1118,10 @@ def _filter_overlong_repository_completions(
 
     from transformers import AutoTokenizer
 
+    selection_model, selection_revision = resolved_selection_tokenizer_identity()
     tokenizer = AutoTokenizer.from_pretrained(
-        model_config.model_name,
-        revision=model_config.model_revision,
+        selection_model,
+        revision=selection_revision,
         trust_remote_code=True,
     )
     if not tokenizer.eos_token:
@@ -2479,9 +2519,12 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
     compatible_synthetic_ids = None
     if MAX_TRAIN_PAIRS and run_sft and not use_mock:
         from transformers import AutoTokenizer
+        _selection_model, _selection_revision = (
+            resolved_selection_tokenizer_identity()
+        )
         sft_preflight_tokenizer = AutoTokenizer.from_pretrained(
-            model_config.model_name,
-            revision=model_config.model_revision,
+            _selection_model,
+            revision=_selection_revision,
             trust_remote_code=True,
         )
         compatible_repository_ids = set()
@@ -2654,7 +2697,11 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
             else MAX_SFT_REPOSITORY_GENERATION_COMPATIBLE_TOKENS
         ),
         "warmup_steps": training_config.sft_warmup_steps,
-        "checkpoint_save_steps": training_config.sft_checkpoint_steps,
+        "checkpoint_save_steps": (
+            SFT_CHECKPOINT_STEPS_OVERRIDE
+            if SFT_CHECKPOINT_STEPS_OVERRIDE is not None
+            else training_config.sft_checkpoint_steps
+        ),
         "minimum_monitor_checkpoints": (
             SFT_MIN_MONITOR_CHECKPOINTS_OVERRIDE
             if SFT_MIN_MONITOR_CHECKPOINTS_OVERRIDE is not None
@@ -2676,7 +2723,11 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
             if SFT_MONITOR_MIN_FUNCTION_KILL_RATE_OVERRIDE is not None
             else training_config.sft_min_function_kill_rate
         ),
-        "monitor_interval_optimizer_steps": training_config.sft_checkpoint_steps,
+        "monitor_interval_optimizer_steps": (
+            SFT_CHECKPOINT_STEPS_OVERRIDE
+            if SFT_CHECKPOINT_STEPS_OVERRIDE is not None
+            else training_config.sft_checkpoint_steps
+        ),
         "balanced_sampling_enabled": SFT_BALANCED_SAMPLING_ENABLED,
         "synthetic_balance_fraction": SFT_SYNTHETIC_BALANCE_FRACTION,
         "synthetic_balance_mode": SFT_SYNTHETIC_BALANCE_MODE,
@@ -2889,9 +2940,12 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                 # GPU training starts when the supervision is incompatible.
                 if sft_preflight_tokenizer is None:
                     from transformers import AutoTokenizer
+                    _sel_model, _sel_revision = (
+                        resolved_selection_tokenizer_identity()
+                    )
                     sft_preflight_tokenizer = AutoTokenizer.from_pretrained(
-                        model_config.model_name,
-                        revision=model_config.model_revision,
+                        _sel_model,
+                        revision=_sel_revision,
                         trust_remote_code=True,
                     )
                 synthetic_sft_data, synthetic_generation_exclusions = (
@@ -3909,6 +3963,25 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
+        "--sft-selection-tokenizer-name",
+        default=None,
+        help=(
+            "Tokenizer that decides supervision eligibility. Defaults to the "
+            "run's own base model. Pin every arm of a base-model comparison to "
+            "one common tokenizer so the arms train on identical records."
+        ),
+    )
+    parser.add_argument(
+        "--sft-checkpoint-steps",
+        type=int,
+        default=None,
+        help=(
+            "Optimizer-step interval between monitored checkpoints. Must match "
+            "the --checkpoint-steps value given to preflight, or the planned and "
+            "runtime monitor schedules will disagree."
+        ),
+    )
+    parser.add_argument(
         "--sft-monitor-kill-rate", action=argparse.BooleanOptionalAction,
         default=None,
         help="Enable or disable the locked 50-step validation monitor (enabled by default)",
@@ -4113,6 +4186,11 @@ if __name__ == "__main__":
     BASE_MODEL_NAME_OVERRIDE = args.base_model_name
     BASE_MODEL_REVISION_OVERRIDE = args.base_model_revision
     BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE = args.attention_implementation
+    if args.sft_checkpoint_steps is not None:
+        if args.sft_checkpoint_steps <= 0:
+            raise ValueError("--sft-checkpoint-steps must be positive")
+        SFT_CHECKPOINT_STEPS_OVERRIDE = args.sft_checkpoint_steps
+    SFT_SELECTION_TOKENIZER_NAME_OVERRIDE = args.sft_selection_tokenizer_name
     EXECUTION_MODE_FILTER = args.execution_mode or None
     TRAINING_PHASE = args.phase
     if TRAINING_PHASE in {"dpo", "dpo_eval", "sft_then_dpo"} and EVALUATION_SPLIT != "val":
