@@ -1,0 +1,1539 @@
+{
+  "ready": true,
+  "mode": "exact_local_sft_preflight",
+  "modal_used": false,
+  "gpu_model_loaded": false,
+  "corpus_modified": false,
+  "checkpoint_modified": false,
+  "elapsed_seconds": 413.818,
+  "corpus": {
+    "version": "v4_1_research_hardened_candidate",
+    "corpus_id": "oneiros-corpus-v4.1-research-hardened-candidate",
+    "training_records": 8237,
+    "train_records": 5941,
+    "context_eligible_train_records": 5941,
+    "context_excluded_repository_completions": 0,
+    "records_sha256": "04940ee92c7eeef3efb0808e577470cfb5415c13612ecb25bd11eb00c2adfd50",
+    "splits_sha256": "4baaa7a6eb4069203691d5453d50d58a189eeee63feb0c3dfe236c139947ba2a",
+    "ablation_dev_sha256": "ca2e247f1a1f6be8c095398f6e33b078f064aacf8d21ce6951908c097d052172",
+    "leakage_audit_sha256": "003fd6ccb8a3f55642e1ba4ce0159ef000db41fe14f4f26c9454233c3baf13e7"
+  },
+  "leakage": {
+    "audit_schema_version": "oneiros_prompt_leakage_audit_v4_1",
+    "records_scanned": 8237,
+    "schema_failures": 0,
+    "schema_failure_details": [],
+    "verbatim_reference_leaks": 0,
+    "verbatim_reference_leak_record_ids": [],
+    "partial_reference_overlap_flags": 14,
+    "pending_manual_review_flags": 0,
+    "reviewed_manual_flags": 14,
+    "gold_test_lineage_failures": 0,
+    "gold_patch_lineage_failures": 0,
+    "oracle_lineage_failures": 0,
+    "other_prohibited_lineage_failures": 0,
+    "lineage_failure_details": {
+      "gold_test": [],
+      "gold_patch": [],
+      "oracle": [],
+      "other": []
+    },
+    "manual_review_flags": [
+      {
+        "record_id": "official-repository::black::14::tests/test_black.py__BlackTestCase__test_get_future_imports",
+        "reference_only_fragment_sha256": "0a4416b562c96c77af092bcfc0da9c11d0a60abb9e4e332a1f442e2e10eb0cdd",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::black::8::tests/test_black.py__BlackTestCase__test_comments7",
+        "reference_only_fragment_sha256": "e256ee8e7aff6957a781d8328f0f68e26996564c81fa458da59fbca2305138ad",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::scrapy::16::tests/test_utils_url.py__CanonicalizeUrlTest__test_canonicalize_url_unicode_query_string",
+        "reference_only_fragment_sha256": "8f3a5a65ded8b5fb647ee889d819321aa631888e81dedffb104554f52409b845",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-11815::3649b4b1c37e",
+        "reference_only_fragment_sha256": "fc4c1868f34cfb519e76be7307878b7254a939fea0a2f13fd8029482816af74d",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14011::a198ad695f79",
+        "reference_only_fragment_sha256": "0d5b29c6152d4fead197a2698e20cbd2ff9a49cc7855ab29c1bd7341622265a4",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14011::a198ad695f79",
+        "reference_only_fragment_sha256": "4a3ae5b7b911de442f3d0df886c722f40a349e6bc4cb249dfc46736e2b83f8fa",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14011::a198ad695f79",
+        "reference_only_fragment_sha256": "d1c5240add1891eb69664e94cef7d3253cd5ea8ab0a7595567d4d4fafce0a4cf",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14011::a198ad695f79",
+        "reference_only_fragment_sha256": "512169ffb0253b477de49cfb969c810910e71784e725d12114912558ee71241d",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14011::a198ad695f79",
+        "reference_only_fragment_sha256": "543eec1b68cce685cac416c195987798c91c19006c2dc2fc568bff8c6f7ed160",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15127::a570a5b315f1",
+        "reference_only_fragment_sha256": "da1d42fe450ea0d6fab4ba64151c7e4934c388757c878db45c0c65936a3edb83",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-16938::052b49c860cd",
+        "reference_only_fragment_sha256": "fc4c1868f34cfb519e76be7307878b7254a939fea0a2f13fd8029482816af74d",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::pydata__xarray-3095::3ad5c7839466",
+        "reference_only_fragment_sha256": "6405d953aebb74f853e22523b6e4c539ebd837403cdfe385d7399f937179dc2e",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::31::test/test_utils.py__TestUtil__test_parse_duration",
+        "reference_only_fragment_sha256": "66e488b7f33a5a6879f26c6f049d9d26cd296330df29ba0cb6a746df18702671",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::32::test/test_utils.py__TestUtil__test_strip_jsonp",
+        "reference_only_fragment_sha256": "214cd1597a23653110cdb87d2b7a461f64f3f389b94e2ee8715463e417a8ea16",
+        "source_field": "other_model_visible_field",
+        "review_status": "reviewed_allowed_independent_buggy_context",
+        "disposition": "Independent immutable buggy-revision non-gold test-module context; not derived from the fixed source."
+      }
+    ],
+    "claim_zero_oracle_leakage_supported": true
+  },
+  "ablation_dev": {
+    "schema_version": "oneiros_ablation_dev_v1",
+    "selection_policy": "training-groups-hash-sampled-10pct-with-dataset-minimum",
+    "selection_salt": "oneiros-v4.1-ablation-dev",
+    "source_split": "v4_train_only",
+    "target_fraction": 0.1,
+    "record_count": 594,
+    "semantic_group_count": 63,
+    "record_ids_sha256": "415f6ac27cbf17f3dd1cc289495e08d6844b57a6a689d265958b5aceed19034e",
+    "semantic_group_ids_sha256": "208cbcfa7f7e1f321ec67e9029cc6510d003298d8cb470456cb73780f4145771",
+    "records_by_dataset": {
+      "BugsInPy": 35,
+      "SWE-bench Verified": 17,
+      "humaneval": 112,
+      "manual_curated_examples": 1,
+      "mbpp": 429
+    },
+    "records_by_mutation_family": {
+      "arithmetic": 152,
+      "boolean": 10,
+      "boundary": 234,
+      "comparison": 73,
+      "identity": 1,
+      "index": 5,
+      "logical": 13,
+      "membership": 4,
+      "negate_removal": 3,
+      "off_by_one": 39,
+      "real_repository_defect": 52,
+      "return": 7,
+      "string_manipulation": 1
+    },
+    "validation_overlap": 0,
+    "test_overlap": 0,
+    "frozen_before_results": true
+  },
+  "evaluation_panel": {
+    "evaluation_split": "ablation_dev",
+    "function_records": 542,
+    "promptable_function_records": 542,
+    "prompt_budget_failures": 0,
+    "prompt_budget_failure_rate": 0.0,
+    "prompt_token_limit": 1024,
+    "failure_sources": {},
+    "examples": []
+  },
+  "local_test_status": {
+    "schema_version": "oneiros_v4_1_local_test_status_v1",
+    "timestamp_utc": "2026-09-01T18:57:43.348865+00:00",
+    "command": [
+      "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "-q"
+    ],
+    "returncode": 0,
+    "passed": 169,
+    "failed": 0,
+    "source_tree_sha256": "1d1f948e85b4b53f91282bf3b6b335597159552822b76b8f701e5e674f67986f",
+    "completion_only_masking_verified": true,
+    "sealed_final_test_accessed": false,
+    "output_tail": "........................................................................ [ 42%]\n........................................................................ [ 85%]\n.........................                                                [100%]\n============================== warnings summary ===============================\n.venv-gpu\\Lib\\site-packages\\faiss\\loader.py:49\n  C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Lib\\site-packages\\faiss\\loader.py:49: DeprecationWarning: numpy.core._multiarray_umath is deprecated and has been renamed to numpy._core._multiarray_umath. The numpy._core namespace contains private NumPy internals and its use is discouraged, as NumPy internals can change without warning in any release. In practice, most real-world usage of numpy.core is to access functionality in the public NumPy API. If that is the case, use the public NumPy API. If not, you are using NumPy internals. If you would still like to access an internal attribute, use numpy._core._multiarray_umath.__cpu_features__.\n    from numpy.core._multiarray_umath import __cpu_features__\n\ntests/test_canonical_corpus_default.py::test_phase3_entry_points_share_the_canonical_corpus_default\n  C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\tests\\test_canonical_corpus_default.py:12: DeprecationError: 2026-08-26: `Function.get_raw_f` is deprecated and will be removed in `modal` version 1.6.0\n    inspect.signature(modal_train.run_cloud_training.get_raw_f())\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n169 passed, 2 warnings in 8.20s"
+  },
+  "selection": {
+    "execution_mode_filter": null,
+    "requested_pairs": 800,
+    "retained_pairs": 800,
+    "selection_sha256": "2cdc22e171f452cc9997110403c1a04dfe485dd7a9bcb4d8a929fe462aa54144",
+    "selection_prompt_token_limit": 1024,
+    "context_eligible_repository_pairs": 346,
+    "generation_compatible_repository_pairs": 213,
+    "prompt_compatible_synthetic_pairs": 5595,
+    "repository_budget_incompatibilities": [
+      {
+        "record_id": "official-repository::ansible::13::test/units/cli/test_galaxy.py__test_collection_install_with_url",
+        "completion_tokens": 280,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1669 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::ansible::16::test/units/module_utils/facts/hardware/test_linux_get_cpu_info.py__test_get_cpu_info_missing_arch",
+        "completion_tokens": 155,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1298 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::ansible::18::test/units/cli/test_galaxy.py__test_collection_default",
+        "completion_tokens": 283,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (3688 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::ansible::2::test/units/utils/test_version.py__test_numeric",
+        "completion_tokens": 534,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1180 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::ansible::9::test/units/modules/packaging/os/test_redhat_subscription.py__test_redhat_subscribtion",
+        "completion_tokens": 307,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1805 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::matplotlib::12::lib/matplotlib/tests/test_axes.py__test_lines_with_colors",
+        "completion_tokens": 256,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1385 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::matplotlib::1::lib/matplotlib/tests/test_bbox_tight.py__test_noop_tight_bbox",
+        "completion_tokens": 236,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1441 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::matplotlib::21::lib/matplotlib/tests/test_axes.py__test_boxplot_marker_behavior",
+        "completion_tokens": 205,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2474 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::matplotlib::22::lib/matplotlib/tests/test_axes.py__test_hist_datetime_datasets_bins",
+        "completion_tokens": 326,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2558 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::matplotlib::23::lib/matplotlib/tests/test_axes.py__test_aspect_nonlinear_adjustable_datalim",
+        "completion_tokens": 226,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1227 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::matplotlib::2::lib/matplotlib/tests/test_axes.py__TestScatter__test_scatter_unfilled",
+        "completion_tokens": 865,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1397 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::matplotlib::3::lib/matplotlib/tests/test_marker.py__test_marker_fillstyle",
+        "completion_tokens": 43,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1907 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::matplotlib::4::lib/matplotlib/tests/test_axes.py__test_vlines_default",
+        "completion_tokens": 58,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1590 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::sanic::1::tests/test_blueprints.py__test_bp_middleware_order",
+        "completion_tokens": 230,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (5564 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::sanic::2::tests/test_app.py__test_asyncio_server_start_serving",
+        "completion_tokens": 130,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (3433 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::astropy__astropy-13033::33430854cfa5",
+        "completion_tokens": 589,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1310 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::astropy__astropy-13236::a6b4c7bd4e18",
+        "completion_tokens": 898,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1486 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::astropy__astropy-13398::5d1da2fafbb0",
+        "completion_tokens": 708,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1619 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::astropy__astropy-13453::6f54aeb5afc8",
+        "completion_tokens": 301,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (3431 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::astropy__astropy-13977::19c3bfdcf08e",
+        "completion_tokens": 203,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1579 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::astropy__astropy-14369::f34d59c0c871",
+        "completion_tokens": 650,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1759 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::astropy__astropy-14508::7929b011ce72",
+        "completion_tokens": 242,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1400 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::astropy__astropy-14598::fde920809b47",
+        "completion_tokens": 155,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2394 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::astropy__astropy-14995::440165b99298",
+        "completion_tokens": 422,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1200 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::astropy__astropy-7671::bf70b8e34ecf",
+        "completion_tokens": 120,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1061 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-11087::bd22d8dee29c",
+        "completion_tokens": 95,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (3482 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-11138::6c0f0b3487b6",
+        "completion_tokens": 848,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (3886 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-11292::2eaa4cca8415",
+        "completion_tokens": 235,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1071 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-11299::840256a09d99",
+        "completion_tokens": 398,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1391 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-11400::74d9723f5ba3",
+        "completion_tokens": 900,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1100 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-11749::ba98edf2c62e",
+        "completion_tokens": 285,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1068 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-11885::225eab4c09f8",
+        "completion_tokens": 208,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1579 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-12209::47e90a973dba",
+        "completion_tokens": 64,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1165 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-12325::55760919fbcb",
+        "completion_tokens": 234,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2375 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-12663::9686f15e745f",
+        "completion_tokens": 78,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1193 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-12708::6a4722363996",
+        "completion_tokens": 306,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1282 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-12741::1ed123cbbbec",
+        "completion_tokens": 301,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1320 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-12858::8b762e4e87ff",
+        "completion_tokens": 146,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1154 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-12965::23e98a56094e",
+        "completion_tokens": 231,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1096 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13033::33a15e7a1149",
+        "completion_tokens": 43,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1709 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13112::505c903ff7be",
+        "completion_tokens": 307,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1114 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13121::3d275e272fbe",
+        "completion_tokens": 111,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1410 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13212::2cc3cb48b989",
+        "completion_tokens": 966,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1340 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13406::c74044e04efa",
+        "completion_tokens": 289,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1350 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13658::0706be34fdd4",
+        "completion_tokens": 283,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1087 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13786::aee6dd6e70dd",
+        "completion_tokens": 247,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1234 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13794::5f620eca01dc",
+        "completion_tokens": 192,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1035 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13807::c81045f8cda0",
+        "completion_tokens": 69,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2015 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13809::4256aab8a097",
+        "completion_tokens": 337,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1050 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13810::71612af4dfc3",
+        "completion_tokens": 235,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1331 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13820::66996094d964",
+        "completion_tokens": 347,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1204 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-13925::045bd61c1135",
+        "completion_tokens": 540,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1448 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14053::ea58887419f6",
+        "completion_tokens": 367,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1407 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14376::699e92e07a13",
+        "completion_tokens": 449,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1953 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14434::6ea17de664ac",
+        "completion_tokens": 639,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1333 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14493::3f57cc8407b8",
+        "completion_tokens": 65,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1270 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14539::d8122ac91a0c",
+        "completion_tokens": 285,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1156 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14559::e696a866c0fc",
+        "completion_tokens": 303,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1033 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14631::23219fb24682",
+        "completion_tokens": 622,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1488 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14725::219faff32b38",
+        "completion_tokens": 873,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1136 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-14752::7ba3c811fb09",
+        "completion_tokens": 466,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1040 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15037::1bf8d446f390",
+        "completion_tokens": 40,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1603 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15098::ac4f9e5fe5bb",
+        "completion_tokens": 884,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2403 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15128::be08cebf84ba",
+        "completion_tokens": 104,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1803 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15277::ad345f4d42ac",
+        "completion_tokens": 485,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1137 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15280::892127f19fe0",
+        "completion_tokens": 370,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2416 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15368::d62f28d50385",
+        "completion_tokens": 188,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1277 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15499::3f8770761af0",
+        "completion_tokens": 168,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1159 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15561::fe974bbba0c9",
+        "completion_tokens": 701,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1430 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15563::2e35439d02e7",
+        "completion_tokens": 261,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1138 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15629::9901831e0020",
+        "completion_tokens": 206,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1053 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15732::7de24654de17",
+        "completion_tokens": 684,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1745 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15814::8c540192bf21",
+        "completion_tokens": 260,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1848 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15863::48ce2b76f5e2",
+        "completion_tokens": 979,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1035 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-15916::a31b61b23f72",
+        "completion_tokens": 546,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1050 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-16082::0d3d97e89f98",
+        "completion_tokens": 552,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1180 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-16100::9c123d0faedd",
+        "completion_tokens": 872,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1601 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-16116::08aa25408be3",
+        "completion_tokens": 315,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1722 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-16136::f99ef36d70fa",
+        "completion_tokens": 228,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1058 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-16256::6440d13b598a",
+        "completion_tokens": 29,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (5230 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-16263::bff3ac56ad00",
+        "completion_tokens": 547,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2595 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-16315::3da7111838bc",
+        "completion_tokens": 70,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1742 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-16569::11f8eae03f91",
+        "completion_tokens": 564,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1056 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::django__django-16667::c4e3dc904092",
+        "completion_tokens": 412,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1061 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::matplotlib__matplotlib-13989::7230d6ec9d11",
+        "completion_tokens": 56,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (3298 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::matplotlib__matplotlib-14623::167f5bdcff73",
+        "completion_tokens": 230,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2258 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::matplotlib__matplotlib-20488::e9831ddbda82",
+        "completion_tokens": 218,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2605 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::matplotlib__matplotlib-20826::9b167f75df52",
+        "completion_tokens": 122,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1218 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::matplotlib__matplotlib-22865::fefbcda64207",
+        "completion_tokens": 334,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1051 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::matplotlib__matplotlib-24870::325b6b3791f0",
+        "completion_tokens": 286,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1882 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::matplotlib__matplotlib-26466::bac64775dd81",
+        "completion_tokens": 211,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1071 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-13091::ed4897905c80",
+        "completion_tokens": 398,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1084 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-13551::2b031527bec5",
+        "completion_tokens": 123,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1232 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-13852::8cb9409acbf3",
+        "completion_tokens": 465,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1115 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-14248::5ff4c84f1f8a",
+        "completion_tokens": 625,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1514 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-14531::7d77823a6b81",
+        "completion_tokens": 318,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1554 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-15349::38dbd1cf36cb",
+        "completion_tokens": 734,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1078 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-16597::26c5a6d57afe",
+        "completion_tokens": 748,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2674 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-16792::b98a6125f43d",
+        "completion_tokens": 298,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1944 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-17139::7e12da82976c",
+        "completion_tokens": 449,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1213 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-17318::db7fde448ef9",
+        "completion_tokens": 164,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2003 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-17630::4245a09233a0",
+        "completion_tokens": 235,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1635 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-18763::2ff90ad7034d",
+        "completion_tokens": 858,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1067 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-19495::32422bccd8e7",
+        "completion_tokens": 725,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1250 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-19954::51be790e2d5f",
+        "completion_tokens": 765,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1086 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-20438::76ef257c0e69",
+        "completion_tokens": 675,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1686 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-21596::02252423c86b",
+        "completion_tokens": 656,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (3398 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-22714::13046aa2a6ff",
+        "completion_tokens": 181,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1344 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::swebench-verified::sympy__sympy-24213::e08a4bff34cf",
+        "completion_tokens": 502,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1079 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::thefuck::16::tests/shells/test_bash.py__TestBash__test_app_alias_variables_correctly_set",
+        "completion_tokens": 121,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1093 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::tornado::11::tornado/test/httpserver_test.py__HTTPServerRawTest__test_chunked_request_uppercase",
+        "completion_tokens": 233,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (4094 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::tornado::14::tornado/test/ioloop_test.py__TestIOLoopCurrent__test_force_current",
+        "completion_tokens": 130,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (3303 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::tornado::2::tornado/test/httpclient_test.py__HTTPClientCommonTestCase__test_redirect_put_without_body",
+        "completion_tokens": 250,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (4536 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::tornado::5::tornado/test/ioloop_test.py__TestPeriodicCallbackMath__test_clock_backwards",
+        "completion_tokens": 385,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (4119 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::tornado::6::tornado/test/asyncio_test.py__LeakTest__test_asyncio_close_leak",
+        "completion_tokens": 264,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (4113 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::tornado::9::tornado/test/httputil_test.py__TestUrlConcat__test_url_concat_none_params",
+        "completion_tokens": 60,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1626 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::11::test/test_utils.py__TestUtil__test_str_to_int",
+        "completion_tokens": 77,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (21970 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::12::test/test_YoutubeDL.py__TestFormatSelection__test_format_selection_string_ops",
+        "completion_tokens": 778,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (17055 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::18::test/test_YoutubeDL.py__TestYoutubeDL__test_do_not_override_ie_key_in_url_transparent",
+        "completion_tokens": 335,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (16642 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::19::test/test_YoutubeDL.py__TestYoutubeDL__test_prepare_filename",
+        "completion_tokens": 570,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (16585 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::30::test/test_YoutubeDL.py__TestFormatSelection__test_format_filtering",
+        "completion_tokens": 753,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (14428 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::31::test/test_utils.py__TestUtil__test_parse_duration",
+        "completion_tokens": 399,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1190 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::32::test/test_utils.py__TestUtil__test_strip_jsonp",
+        "completion_tokens": 119,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1791 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::33::test/test_utils.py__TestUtil__test_parse_iso8601",
+        "completion_tokens": 203,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1157 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::35::test/test_utils.py__TestUtil__test_unified_dates",
+        "completion_tokens": 215,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1927 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::36::test/test_all_urls.py__TestAllURLsMatching__test_facebook_matching",
+        "completion_tokens": 117,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (1626 > 1024); refusing token slicing."
+      },
+      {
+        "record_id": "official-repository::youtube-dl::4::test/test_jsinterp.py__TestJSInterpreter__test_call",
+        "completion_tokens": 72,
+        "prompt_limit_tokens": 1024,
+        "reason": "required_prompt_sections_exceed_mode_budget",
+        "detail": "Required prompt sections and complete target source exceed the declared budget (2228 > 1024); refusing token slicing."
+      }
+    ],
+    "selected_generation_compatible_repository_pairs": 69,
+    "selected_repository_record_ids": [
+      "official-repository::ansible::10::test/units/modules/system/test_pamd.py__PamdServiceTestCase__test_remove_first_rule",
+      "official-repository::ansible::1::test/units/galaxy/test_collection.py__test_verify_collections_no_version",
+      "official-repository::ansible::7::test/units/modules/network/eos/test_eos_vlans.py__TestEosVlansModule__test_eos_vlan_replaced",
+      "official-repository::fastapi::12::tests/test_security_http_bearer_optional.py__test_security_http_bearer_incorrect_scheme_credentials",
+      "official-repository::httpie::2::tests/test_redirects.py__TestRedirects__test_max_redirects",
+      "official-repository::matplotlib::11::lib/matplotlib/tests/test_text.py__test_non_default_dpi",
+      "official-repository::matplotlib::16::lib/matplotlib/tests/test_colorbar.py__test_colorbar_int",
+      "official-repository::matplotlib::20::lib/matplotlib/tests/test_axes.py__test_invisible_axes",
+      "official-repository::matplotlib::25::lib/matplotlib/tests/test_collections.py__test_EventCollection_nosort",
+      "official-repository::matplotlib::29::lib/matplotlib/tests/test_axes.py__test_inverted_cla",
+      "official-repository::sanic::5::tests/test_logging.py__test_logging_modified_root_logger_config",
+      "official-repository::swebench-verified::astropy__astropy-14096::351d8ceca705",
+      "official-repository::swebench-verified::astropy__astropy-7166::85903bb2df68",
+      "official-repository::swebench-verified::django__django-11095::f19c979dd0a4",
+      "official-repository::swebench-verified::django__django-11141::4fe87012f665",
+      "official-repository::swebench-verified::django__django-11211::e3206907ffbd",
+      "official-repository::swebench-verified::django__django-11451::be4366f52f43",
+      "official-repository::swebench-verified::django__django-11555::7986b66130a5",
+      "official-repository::swebench-verified::django__django-11848::30fc826324a5",
+      "official-repository::swebench-verified::django__django-12039::c0f3787d5912",
+      "official-repository::swebench-verified::django__django-12143::3325776d861f",
+      "official-repository::swebench-verified::django__django-12304::dea06e90b34a",
+      "official-repository::swebench-verified::django__django-12713::d421d72aa25b",
+      "official-repository::swebench-verified::django__django-13089::e2095d31641a",
+      "official-repository::swebench-verified::django__django-13343::4b0681e57592",
+      "official-repository::swebench-verified::django__django-13516::3196b1a9e733",
+      "official-repository::swebench-verified::django__django-13590::2ea83a3c5b21",
+      "official-repository::swebench-verified::django__django-13821::e6a75a0f4f60",
+      "official-repository::swebench-verified::django__django-14017::57a8cceb14bc",
+      "official-repository::swebench-verified::django__django-14373::89ea07512dab",
+      "official-repository::swebench-verified::django__django-14534::06083d184ec0",
+      "official-repository::swebench-verified::django__django-15127::a570a5b315f1",
+      "official-repository::swebench-verified::django__django-15382::a0e7ec89c261",
+      "official-repository::swebench-verified::django__django-15695::1546d6c07fd1",
+      "official-repository::swebench-verified::django__django-15987::30c1bd1ba9a5",
+      "official-repository::swebench-verified::django__django-16485::9c3765e707f1",
+      "official-repository::swebench-verified::django__django-16527::8d18f39e60af",
+      "official-repository::swebench-verified::django__django-16662::ec5dbbf452c9",
+      "official-repository::swebench-verified::django__django-17029::8c48c2511991",
+      "official-repository::swebench-verified::matplotlib__matplotlib-20676::b58d8a5df6d3",
+      "official-repository::swebench-verified::matplotlib__matplotlib-25332::fa0bc38ce335",
+      "official-repository::swebench-verified::pallets__flask-5014::f516f04a4f02",
+      "official-repository::swebench-verified::pylint-dev__pylint-4970::e202eb39356c",
+      "official-repository::swebench-verified::sympy__sympy-12419::7b1621c3a7f4",
+      "official-repository::swebench-verified::sympy__sympy-13647::691a8ddd008b",
+      "official-repository::swebench-verified::sympy__sympy-14976::e68152fd6dca",
+      "official-repository::swebench-verified::sympy__sympy-16450::f4f247ee5fd3",
+      "official-repository::swebench-verified::sympy__sympy-18698::942628cce1f0",
+      "official-repository::swebench-verified::sympy__sympy-19346::ec1bd8341891",
+      "official-repository::swebench-verified::sympy__sympy-20801::6ca917816e24",
+      "official-repository::swebench-verified::sympy__sympy-23262::f0f2bd0fef5a",
+      "official-repository::swebench-verified::sympy__sympy-24443::7e85bcadcee6",
+      "official-repository::swebench-verified::sympy__sympy-24661::7b4a2497dfa6",
+      "official-repository::thefuck::13::tests/rules/test_git_branch_exists.py__test_get_new_command",
+      "official-repository::thefuck::18::tests/rules/test_sudo.py__test_not_match",
+      "official-repository::thefuck::20::tests/rules/test_dirty_unzip.py__test_get_new_command",
+      "official-repository::thefuck::23::tests/test_utils.py__TestCache__test_when_etag_changed",
+      "official-repository::thefuck::25::tests/rules/test_mkdir_p.py__test_get_new_command",
+      "official-repository::thefuck::31::tests/rules/test_git_diff_staged.py__test_get_new_command",
+      "official-repository::thefuck::4::tests/shells/test_fish.py__TestFish__test_get_aliases",
+      "official-repository::thefuck::9::tests/rules/test_git_push.py__test_get_new_command",
+      "official-repository::tornado::16::tornado/test/gen_test.py__WaitIteratorTest__test_no_ref",
+      "official-repository::youtube-dl::17::test/test_utils.py__TestUtil__test_cli_bool_option",
+      "official-repository::youtube-dl::21::test/test_utils.py__TestUtil__test_urljoin",
+      "official-repository::youtube-dl::25::test/test_utils.py__TestUtil__test_js_to_json_realworld",
+      "official-repository::youtube-dl::26::test/test_utils.py__TestUtil__test_js_to_json_realworld",
+      "official-repository::youtube-dl::34::test/test_utils.py__TestUtil__test_js_to_json",
+      "official-repository::youtube-dl::41::test/test_utils.py__TestUtil__test_unified_dates",
+      "official-repository::youtube-dl::7::test/test_utils.py__TestUtil__test_js_to_json_realworld"
+    ],
+    "total_pairs": 800,
+    "synthetic_pairs": 731,
+    "repository_pairs": 69,
+    "bug_family_counts": {
+      "arithmetic": 205,
+      "boolean": 15,
+      "boundary": 275,
+      "comparison": 105,
+      "data_validation": 3,
+      "identity": 2,
+      "index": 17,
+      "list_operations": 1,
+      "logical": 16,
+      "membership": 6,
+      "negate_removal": 8,
+      "off_by_one": 64,
+      "official_repository_pytest_reproduction": 19,
+      "official_repository_swebench_reproduction": 42,
+      "official_repository_unittest_reproduction": 8,
+      "return": 10,
+      "string": 3,
+      "string_manipulation": 1
+    },
+    "complexity_tier_counts": {
+      "complex": 439,
+      "moderate": 199,
+      "repository": 69,
+      "simple": 93
+    },
+    "complex_function_pairs": 439,
+    "complex_function_fraction": 0.600547,
+    "repository_project_counts": {
+      "ansible": 3,
+      "astropy": 2,
+      "django": 26,
+      "fastapi": 1,
+      "flask": 1,
+      "httpie": 1,
+      "matplotlib": 7,
+      "pylint": 1,
+      "sanic": 1,
+      "sympy": 10,
+      "thefuck": 8,
+      "tornado": 1,
+      "youtube-dl": 7
+    }
+  },
+  "supervision": {
+    "raw_synthetic_examples": 1819,
+    "raw_repository_examples": 71,
+    "generation_compatible_synthetic_examples": 1808,
+    "generation_compatible_repository_examples": 71,
+    "generation_exclusions": {
+      "synthetic": 11,
+      "repository": 0,
+      "details": [
+        {
+          "record_id": "mutation::humaneval_HumanEval_145_mut_01414",
+          "execution_mode": "function_assertion",
+          "project": "synthetic",
+          "bug_family": "boundary",
+          "completion_tokens": 136,
+          "limit_tokens": 128,
+          "reason": "completion_exceeds_live_generation_limit"
+        },
+        {
+          "record_id": "mutation::humaneval_HumanEval_145_mut_01425",
+          "execution_mode": "function_assertion",
+          "project": "synthetic",
+          "bug_family": "comparison",
+          "completion_tokens": 136,
+          "limit_tokens": 128,
+          "reason": "completion_exceeds_live_generation_limit"
+        },
+        {
+          "record_id": "mutation::mbpp_834_mut_08810",
+          "execution_mode": "function_assertion",
+          "project": "synthetic",
+          "bug_family": "boundary",
+          "completion_tokens": 195,
+          "limit_tokens": 128,
+          "reason": "completion_exceeds_live_generation_limit"
+        },
+        {
+          "record_id": "mutation::mbpp_834_mut_08818",
+          "execution_mode": "function_assertion",
+          "project": "synthetic",
+          "bug_family": "arithmetic",
+          "completion_tokens": 195,
+          "limit_tokens": 128,
+          "reason": "completion_exceeds_live_generation_limit"
+        },
+        {
+          "record_id": "mutation::mbpp_834_mut_08827",
+          "execution_mode": "function_assertion",
+          "project": "synthetic",
+          "bug_family": "boundary",
+          "completion_tokens": 195,
+          "limit_tokens": 128,
+          "reason": "completion_exceeds_live_generation_limit"
+        },
+        {
+          "record_id": "mutation::mbpp_834_mut_08836",
+          "execution_mode": "function_assertion",
+          "project": "synthetic",
+          "bug_family": "boundary",
+          "completion_tokens": 195,
+          "limit_tokens": 128,
+          "reason": "completion_exceeds_live_generation_limit"
+        },
+        {
+          "record_id": "mutation::mbpp_834_mut_08843",
+          "execution_mode": "function_assertion",
+          "project": "synthetic",
+          "bug_family": "boundary",
+          "completion_tokens": 195,
+          "limit_tokens": 128,
+          "reason": "completion_exceeds_live_generation_limit"
+        },
+        {
+          "record_id": "mutation::mbpp_834_mut_08845",
+          "execution_mode": "function_assertion",
+          "project": "synthetic",
+          "bug_family": "arithmetic",
+          "completion_tokens": 195,
+          "limit_tokens": 128,
+          "reason": "completion_exceeds_live_generation_limit"
+        },
+        {
+          "record_id": "mutation::mbpp_834_mut_08852",
+          "execution_mode": "function_assertion",
+          "project": "synthetic",
+          "bug_family": "off_by_one",
+          "completion_tokens": 195,
+          "limit_tokens": 128,
+          "reason": "completion_exceeds_live_generation_limit"
+        },
+        {
+          "record_id": "mutation::mbpp_834_mut_08861",
+          "execution_mode": "function_assertion",
+          "project": "synthetic",
+          "bug_family": "boundary",
+          "completion_tokens": 195,
+          "limit_tokens": 128,
+          "reason": "completion_exceeds_live_generation_limit"
+        },
+        {
+          "record_id": "mutation::mbpp_834_mut_08869",
+          "execution_mode": "function_assertion",
+          "project": "synthetic",
+          "bug_family": "arithmetic",
+          "completion_tokens": 195,
+          "limit_tokens": 128,
+          "reason": "completion_exceeds_live_generation_limit"
+        }
+      ]
+    },
+    "deduplication": {
+      "synthetic": {
+        "input_examples": 1808,
+        "retained_examples": 1808,
+        "exact_duplicates_excluded": 0
+      },
+      "repository": {
+        "input_examples": 71,
+        "retained_examples": 71,
+        "exact_duplicates_excluded": 0
+      }
+    },
+    "records_without_verified_winners": [],
+    "verified_supervision_exclusions": {
+      "reason": "no_policy_and_reference_valid_mutation_killing_completion",
+      "count": 0,
+      "record_ids": [],
+      "record_ids_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "canonical_records_modified": false
+    },
+    "records_without_generation_compatible_winners": [],
+    "raw_repository_project_counts": {
+      "ansible": 3,
+      "astropy": 2,
+      "django": 27,
+      "fastapi": 1,
+      "flask": 1,
+      "httpie": 1,
+      "matplotlib": 7,
+      "pylint": 1,
+      "sanic": 1,
+      "sympy": 11,
+      "thefuck": 8,
+      "tornado": 1,
+      "youtube-dl": 7
+    },
+    "raw_synthetic_bug_family_counts": {
+      "arithmetic": 522,
+      "boolean": 24,
+      "boundary": 687,
+      "comparison": 275,
+      "data_validation": 4,
+      "identity": 4,
+      "index": 39,
+      "list_operations": 2,
+      "logical": 30,
+      "membership": 15,
+      "negate_removal": 19,
+      "off_by_one": 156,
+      "return": 20,
+      "string": 9,
+      "string_manipulation": 2
+    }
+  },
+  "sampling": {
+    "balanced_sampling_enabled": true,
+    "target_real_fraction": 0.2,
+    "target_complex_function_fraction": 0.6,
+    "actual_real_fraction": 0.2,
+    "target_reached": true,
+    "effective_synthetic_examples": 1808,
+    "desired_repository_examples": 452,
+    "effective_repository_examples": 452,
+    "effective_total_examples": 2260,
+    "max_real_repeats": 8,
+    "repository_project_balance": {
+      "raw_examples": 71,
+      "target_examples": 452,
+      "effective_examples": 452,
+      "max_repeats": 8,
+      "group_attribute": "project",
+      "raw_group_counts": {
+        "ansible": 3,
+        "astropy": 2,
+        "django": 27,
+        "fastapi": 1,
+        "flask": 1,
+        "httpie": 1,
+        "matplotlib": 7,
+        "pylint": 1,
+        "sanic": 1,
+        "sympy": 11,
+        "thefuck": 8,
+        "tornado": 1,
+        "youtube-dl": 7
+      },
+      "effective_group_counts": {
+        "ansible": 24,
+        "astropy": 16,
+        "django": 100,
+        "fastapi": 8,
+        "flask": 8,
+        "httpie": 8,
+        "matplotlib": 56,
+        "pylint": 8,
+        "sanic": 8,
+        "sympy": 88,
+        "thefuck": 64,
+        "tornado": 8,
+        "youtube-dl": 56
+      },
+      "repeat_histogram": {
+        "3": 8,
+        "4": 19,
+        "8": 44
+      },
+      "achievable_max_examples": 568,
+      "target_reached": true
+    },
+    "synthetic_balance_fraction": 0.0,
+    "synthetic_balance_mode": "none",
+    "synthetic_semantic_group_balance": null
+  },
+  "tokenization": {
+    "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "model_revision": "main",
+    "prompt_information_variant": "full",
+    "output_instruction_variant": "self_contained",
+    "prompt_token_limit": 1024,
+    "repository_prompt_token_limit": 1024,
+    "completion_token_limit": 128,
+    "repository_completion_token_limit": 1024,
+    "sequence_token_limit": 2048,
+    "prompt_compaction_strategy": "section_aware_ast_units_before_chat_v4_1",
+    "prompt_compacted_examples": 315,
+    "prompt_compacted_fraction": 0.139381,
+    "prompt_compacted_by_execution_mode": {
+      "function_assertion": 25,
+      "repository_pytest_fragment": 226,
+      "repository_unittest_fragment": 64
+    },
+    "raw_prompt_tokens": {
+      "minimum": 374,
+      "median": 511,
+      "p95": 2051,
+      "maximum": 35362
+    },
+    "retained_prompt_tokens": {
+      "minimum": 374,
+      "median": 511,
+      "p95": 1012,
+      "maximum": 1022
+    },
+    "completion_tokens": {
+      "minimum": 8,
+      "median": 27,
+      "p95": 395,
+      "maximum": 834
+    },
+    "sequence_overflow_examples": []
+  },
+  "training": {
+    "epochs": 1,
+    "batch_size": 1,
+    "learning_rate": 5e-05,
+    "lr_scheduler_type": "constant_with_warmup",
+    "warmup_steps_requested": 25,
+    "checkpoint_steps": 50,
+    "monitor_schedule_required": true,
+    "planned_validation_checkpoints": [
+      50,
+      100,
+      142
+    ],
+    "min_function_kill_rate": 0.58,
+    "optimizer_schedule": {
+      "unique_examples": 2260,
+      "optimizer_examples": 2272,
+      "optimizer_padding_examples": 12,
+      "samples_per_optimizer_step": 16,
+      "gradient_accumulation_steps": 16,
+      "planned_optimizer_steps": 142,
+      "effective_checkpoint_steps": 50,
+      "effective_warmup_steps": 25,
+      "minimum_monitor_checkpoints": 2,
+      "minimum_monitored_optimizer_steps": 100
+    }
+  },
+  "gates": {
+    "all_automated_tests_pass": true,
+    "corpus_verified": true,
+    "corpus_hashes_verified": true,
+    "semantic_split_overlap_zero": true,
+    "ablation_dev_validation_overlap_zero": true,
+    "ablation_dev_test_overlap_zero": true,
+    "schema_failures_zero": true,
+    "prohibited_prompt_lineage_zero": true,
+    "verbatim_reference_leaks_zero": true,
+    "manual_review_flags_dispositioned": true,
+    "gold_test_support_context_failures_zero": true,
+    "locked_train_readiness": true,
+    "verified_supervision_exclusions_accounted": true,
+    "verified_synthetic_supervision_present": true,
+    "requested_pair_count_reached": true,
+    "generation_compatible_supervision_present": true,
+    "zero_sequence_overflows": true,
+    "evaluation_panel_fully_promptable": true,
+    "completion_only_masking_verified": true,
+    "v4_1_checkpoint_namespace": true,
+    "terminal_checkpoint_monitor_enabled": true,
+    "minimum_monitor_schedule_reached": true,
+    "repository_supervision_present": true,
+    "real_fraction_target_reached": true
+  }
+}

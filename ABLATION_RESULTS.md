@@ -153,4 +153,105 @@ repository). K0 (natural mix) versus K1 (0.60 floor) is predeclared in
 enforced and audited, but no evidence yet shows the floor improves the objective.
 The share is a design input, not a result.
 
+## Group I — training scale (200 vs 800 pairs)
+
+Qwen, LR 5e-5, seed 42, 100-function `ablation_dev` panel.
+
+| Step | 200 pairs killed | ref-valid | | Step | 800 pairs killed | ref-valid |
+| ---: | ---: | ---: | --- | ---: | ---: | ---: |
+| 0 | 65 | 0.609 | | 0 | 65 | 0.609 |
+| **17** | **70** | 0.580 | | **50** | **73** | 0.449 |
+| 34 | 69 | 0.446 | | 100 | 64 | 0.444 |
+| 35 | 64 | 0.431 | | 142 | 69 | 0.479 |
+
+Quadrupling supervision (553 → 2,260 examples, 35 → 142 steps) moved the
+selected peak from 70 to 73 — at or barely above the two-function noise floor —
+while reference-validity still collapsed inside the first 50 steps.
+
+**Decision: REJECT.** The policy is **not data-starved** at this learning rate.
+This is a negative result against the undertraining hypothesis that motivated
+the training-scale ablation, and it is retained as such.
+
+Both predictions in `results/v4_1_prediction_qwen_sft800_seed42.json`, recorded
+**before** the run, were confirmed: the monitor selected an early checkpoint
+(50, not terminal 142), and reference-validity at 142 ended below step 0.
+
+## Group M — learning rate (5e-5 vs 1e-5)
+
+Identical 2,260 examples, seed 42, 800 pairs. Only the rate differs.
+
+| Step | 5e-5 killed | 5e-5 ref-valid | 1e-5 killed | 1e-5 ref-valid |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 65 | 0.609 | 65 | 0.609 |
+| **50** | **73** | 0.449 | **72** | **0.541** |
+| 100 | 64 | 0.444 | 62 | 0.464 |
+| ~142 | 69 | 0.479 | 65 | 0.464 |
+| loss | 0.7696 | | 0.8690 | |
+
+At the selected checkpoint the kill rate is unchanged within noise (72 vs 73)
+while reference-validity recovers 0.449 → 0.541 against a 0.609 baseline, about
+57% of the damage 5e-5 caused.
+
+**Decision: ACCEPT 1e-5.** Section 53 ranks reference-validity above the
+headline metric, and this buys a large gain there for no measurable kill-rate
+cost. Single seed, so directional until confirmed on 43 and 44.
+
+**Limitation, stated plainly:** the lower rate *slowed* the degradation without
+preventing it. Both arms still peak at the first checkpoint and decline. The
+learning rate is not the root cause.
+
+## Group K — complex-function mix (measured)
+
+Qwen, LR 1e-5, 800 pairs, seed 42. Complexity is derived only from the
+buggy-side localized AST.
+
+| Step | K0 (49.8% complex) | ref-valid | K1 (60.1% complex) | ref-valid |
+| ---: | ---: | ---: | ---: | ---: |
+| 0 | 65 | 0.609 | 65 | 0.609 |
+| **50** | **68** | 0.543 | **72** | 0.541 |
+| 100 | 64 | 0.468 | 62 | 0.464 |
+| ~143 | 66 | 0.456 | 65 | 0.464 |
+| loss | 0.8867 | | 0.8690 | |
+
+K1 beats K0 by four functions at the selected checkpoint, with reference-validity
+identical and slightly lower loss.
+
+**Decision: WEAK ACCEPT.** Directional, not established, for three reasons:
+
+1. Four functions sits just above the two-function noise floor.
+2. One seed.
+3. **The contrast is narrower than the labels suggest.** Removing the floor
+   still leaves 49.8% complex records, because the corpus is naturally
+   complex-heavy. This measures a ten-point shift, not zero-versus-sixty. A
+   stronger test needs a deliberately simple-heavy control.
+
+So: complex functions *are* in the training mix, the 0.60 floor is enforced and
+audited, and raising the share does appear to help — but report it as
+directional.
+
+## Cross-cutting observation — form is learned before behaviour
+
+Not a controlled ablation; a pattern present in every completed Qwen arm.
+
+Parse-validity and execution-validity rise **monotonically** (0.991 → 0.999 and
+0.968 → 0.991) while reference-validity **collapses** (0.609 → 0.43–0.48). The
+policy learns to emit well-formed, runnable tests that assert **incorrect
+expected values**. It acquires form faster than behaviour.
+
+Every arm also peaks at its *first* monitored checkpoint and declines, which
+means **the true maximum has never been observed** — a 50-step checkpoint
+interval is too coarse to locate it.
+
+Phi-3 is the informative exception: under the same recipe its reference-validity
+*rose* (0.295 → 0.466). So the collapse is a property of a policy already near
+its ceiling, not of the recipe.
+
+Neither more data (Group I) nor a gentler learning rate (Group M) fixed this;
+both only slowed it. That points at **supervision content** rather than quantity
+or optimisation speed.
+
+**Decision: INCONCLUSIVE**, with two concrete follow-ups: finer checkpointing to
+locate the real peak, and ablation A to test whether the behavioural
+specification is being used at all.
+
 Future rows must report requested, parse-valid, execution-valid, reference-valid, and killing candidates; Kill@1/2/4/8; Wilson intervals per seed; dataset and mutation-family slices; token use; unique/effective examples; and an ACCEPT, REJECT, or INCONCLUSIVE decision. Negative results must remain in both artifacts.

@@ -165,27 +165,6 @@
       "reason": "V4.1 counts are frozen; comparative training has not run."
     },
     {
-      "id": "I_SCALE",
-      "hypothesis": "The 800-pair run is undertrained relative to the verified corpus.",
-      "changed_variable": "training scale",
-      "control": "800",
-      "treatments": [
-        "approximately 2000",
-        "approximately 4000",
-        "full eligible train"
-      ],
-      "training_size": null,
-      "seeds": [
-        42,
-        43,
-        44
-      ],
-      "metrics": null,
-      "result": "NOT_RUN",
-      "decision": "INCONCLUSIVE",
-      "reason": "Run only after 32-pair integration succeeds."
-    },
-    {
       "id": "J_prompt_budget",
       "hypothesis": "The declared 512-token function prompt budget is below the size of the prompt's own required sections, so raising it should increase reference-validity and Kill@k without changing evaluator semantics.",
       "changed_variable": "function prompt token budget",
@@ -238,130 +217,332 @@
       "gate_conclusion": "Promptability is a hard prerequisite, not a performance result. 512 fails on both panels. 768 clears val but leaves 28 unpromptable ablation_dev records. 1024 is the smallest tested budget that clears evaluation_panel_fully_promptable on both panels, and 1024+128 leaves ample room in the 2048 sequence budget. Excluding the 28 records to make 768 pass would silently change the panel and is not permitted."
     },
     {
+      "id": "I_SCALE_qwen_200_vs_800",
+      "hypothesis": "The policy is undertrained; more verified supervision raises Kill@k.",
+      "changed_variable": "bounded training pairs (200 vs 800)",
+      "control": "200 pairs (553 effective examples, 35 optimizer steps)",
+      "treatments": [
+        "800 pairs (2,260 effective examples, 142 optimizer steps)"
+      ],
+      "learning_rate": 5e-05,
+      "metrics": {
+        "200_pairs": {
+          "best_step": 17,
+          "best_killed_per_100": 70,
+          "loss": 0.8794,
+          "wall_time_seconds": 929,
+          "trend_killed": {
+            "0": 65,
+            "17": 70,
+            "34": 69,
+            "35": 64
+          },
+          "trend_reference_valid": {
+            "0": 0.6088,
+            "17": 0.58,
+            "34": 0.4462,
+            "35": 0.4313
+          }
+        },
+        "800_pairs": {
+          "best_step": 50,
+          "best_killed_per_100": 73,
+          "loss": 0.7696,
+          "wall_time_seconds": 1746,
+          "trend_killed": {
+            "0": 65,
+            "50": 73,
+            "100": 64,
+            "142": 69
+          },
+          "trend_reference_valid": {
+            "0": 0.6088,
+            "50": 0.4487,
+            "100": 0.4437,
+            "142": 0.4788
+          }
+        }
+      },
+      "result": "Quadrupling supervision (553 -> 2,260 examples) moved the selected peak from 70 to 73 of 100, at or barely above the two-function noise floor, while reference-validity still collapsed within the first 50 steps.",
+      "decision": "REJECT",
+      "reason": "The policy is not data-starved at this learning rate. Scale is not the binding constraint, so further scaling is not the productive lever. Recorded as a negative result: evidence against the undertraining hypothesis that motivated the training-scale ablation.",
+      "predeclared_prediction": "results/v4_1_prediction_qwen_sft800_seed42.json",
+      "prediction_outcome": "Both predictions confirmed, recorded before results were viewed: the monitor selected an early checkpoint (50, not terminal 142), and reference-validity at 142 (0.479) ended below step 0 (0.609).",
+      "evaluation_set": "fixed 100-function ablation_dev monitor panel",
+      "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct @2e1fd397 (SDPA)",
+      "seeds": [
+        42
+      ],
+      "protocol_unchanged_from": "research/v4_1/FROZEN_EVALUATION_CONFIG.json",
+      "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence."
+    },
+    {
+      "id": "M_learning_rate_5e5_vs_1e5",
+      "hypothesis": "5e-5 is too aggressive for a 1.5B policy: reference-validity fell while token loss kept improving, which is a learning-rate signature rather than a data-quantity one.",
+      "changed_variable": "SFT learning rate",
+      "control": "5e-5 (the inherited default)",
+      "treatments": [
+        "1e-5"
+      ],
+      "training_size": 800,
+      "metrics": {
+        "lr_5e-5": {
+          "best_step": 50,
+          "best_killed_per_100": 73,
+          "loss": 0.7696,
+          "reference_valid_at_best": 0.4487,
+          "trend_killed": {
+            "0": 65,
+            "50": 73,
+            "100": 64,
+            "142": 69
+          },
+          "trend_reference_valid": {
+            "0": 0.6088,
+            "50": 0.4487,
+            "100": 0.4437,
+            "142": 0.4788
+          }
+        },
+        "lr_1e-5": {
+          "best_step": 50,
+          "best_killed_per_100": 72,
+          "loss": 0.869,
+          "reference_valid_at_best": 0.5413,
+          "trend_killed": {
+            "0": 65,
+            "50": 72,
+            "100": 62,
+            "142": 65
+          },
+          "trend_reference_valid": {
+            "0": 0.6088,
+            "50": 0.5413,
+            "100": 0.4637,
+            "142": 0.4637
+          }
+        }
+      },
+      "result": "At the selected checkpoint the kill rate is unchanged within noise (72 vs 73) while reference-validity recovers from 0.449 to 0.541 against a 0.609 baseline - roughly 57 percent of the loss 5e-5 caused.",
+      "decision": "ACCEPT",
+      "reason": "Section 53 ranks reference-validity above the headline metric, and this buys a large reference-validity gain for no measurable kill-rate cost. Single seed, so directional until confirmed on 43 and 44.",
+      "limitation": "A lower rate slowed the degradation but did not prevent it: both arms still peak at the first checkpoint and decline. The learning rate is not the root cause.",
+      "evaluation_set": "fixed 100-function ablation_dev monitor panel",
+      "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct @2e1fd397 (SDPA)",
+      "seeds": [
+        42
+      ],
+      "protocol_unchanged_from": "research/v4_1/FROZEN_EVALUATION_CONFIG.json",
+      "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence."
+    },
+    {
+      "id": "K_complex_function_mix",
+      "hypothesis": "Guaranteeing execution-verified complex functions in bounded SFT improves reference-validity and Kill@k.",
+      "changed_variable": "minimum complex-function share in bounded synthetic selection",
+      "control": "K0 floor removed (natural mix, measured at 49.8 percent complex)",
+      "treatments": [
+        "K1 floor 0.60 (measured at 60.1 percent complex)"
+      ],
+      "training_size": 800,
+      "learning_rate": 1e-05,
+      "complexity_lineage": "buggy_revision_ast_only",
+      "metrics": {
+        "K0_natural_49_8pct": {
+          "best_step": 50,
+          "best_killed_per_100": 68,
+          "loss": 0.8867,
+          "trend_killed": {
+            "0": 65,
+            "50": 68,
+            "100": 64,
+            "143": 66
+          },
+          "trend_reference_valid": {
+            "0": 0.6088,
+            "50": 0.5425,
+            "100": 0.4675,
+            "143": 0.4562
+          },
+          "selection_tiers": {
+            "complex": 364,
+            "moderate": 254,
+            "simple": 113,
+            "repository": 69
+          }
+        },
+        "K1_floor_60pct": {
+          "best_step": 50,
+          "best_killed_per_100": 72,
+          "loss": 0.869,
+          "trend_killed": {
+            "0": 65,
+            "50": 72,
+            "100": 62,
+            "142": 65
+          },
+          "trend_reference_valid": {
+            "0": 0.6088,
+            "50": 0.5413,
+            "100": 0.4637,
+            "142": 0.4637
+          }
+        }
+      },
+      "result": "K1 beats K0 by four functions at the selected checkpoint (72 vs 68), with reference-validity identical (0.541 vs 0.543) and slightly lower loss.",
+      "decision": "WEAK_ACCEPT",
+      "reason": "Directional support for the complexity floor, not an established result. Three reasons for caution: a four-function gap sits just above the two-function noise floor; it is one seed; and the contrast is narrower than the labels suggest, because removing the floor still leaves 49.8 percent complex records - the corpus is naturally complex-heavy, so this measures a ten-point shift, not zero versus sixty. A stronger test needs a deliberately simple-heavy control.",
+      "evaluation_set": "fixed 100-function ablation_dev monitor panel",
+      "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct @2e1fd397 (SDPA)",
+      "seeds": [
+        42
+      ],
+      "protocol_unchanged_from": "research/v4_1/FROZEN_EVALUATION_CONFIG.json",
+      "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence."
+    },
+    {
+      "id": "CROSS_CUTTING_form_before_behaviour",
+      "hypothesis": "(observational, not a controlled ablation)",
+      "changed_variable": "none - pattern observed across all completed runs",
+      "control": null,
+      "treatments": [],
+      "metrics": {
+        "pattern": "In every Qwen arm, parse-validity and execution-validity rise monotonically (0.991 -> 0.999 and 0.968 -> 0.991) while reference-validity collapses (0.609 -> 0.43-0.48).",
+        "runs_exhibiting": [
+          "qwen 200 @5e-5",
+          "qwen 800 @5e-5",
+          "qwen 800 @1e-5",
+          "K0 natural @1e-5"
+        ],
+        "informative_exception": "phi3 200 @5e-5 (partial): reference-validity ROSE 0.295 -> 0.466"
+      },
+      "result": "The policy learns to emit well-formed, runnable tests that assert incorrect expected values - it acquires form faster than behaviour. Every arm also peaks at its first monitored checkpoint and declines, so the true maximum has never been observed: a 50-step checkpoint interval is too coarse to locate it.",
+      "decision": "INCONCLUSIVE",
+      "reason": "Neither more data nor a gentler learning rate fixed this; both only slowed it, which points at supervision content rather than quantity or optimisation speed. Phi-3 is the informative exception: its reference-validity rose under the same recipe, so the collapse is a property of a policy already near its ceiling, not of the recipe. Next: finer checkpointing to locate the peak, and ablation A to test whether the specification is being used at all.",
+      "evaluation_set": "fixed 100-function ablation_dev monitor panel",
+      "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct @2e1fd397 (SDPA)",
+      "seeds": [
+        42
+      ],
+      "protocol_unchanged_from": "research/v4_1/FROZEN_EVALUATION_CONFIG.json",
+      "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence."
+    },
+    {
       "id": "L_base_model",
-      "hypothesis": "A smaller code-specialised base model with an available fused-attention backend can raise reference-valid, execution-valid generation and cut generation cost without any change to the evaluation protocol.",
+      "hypothesis": "A smaller code-specialised base model with an available fused-attention backend can raise reference-valid, execution-valid generation and cut generation cost with no change to the evaluation protocol.",
       "changed_variable": "base model and attention backend",
       "control": "L0 microsoft/Phi-3-mini-4k-instruct @f39ac1d2, eager attention",
       "treatments": [
         "L1 microsoft/Phi-3-mini-4k-instruct, SDPA attention",
         "L2 Qwen/Qwen2.5-Coder-1.5B-Instruct @2e1fd397, SDPA attention"
       ],
-      "training_size": "zero-shot screen (no training); plus one 32-pair integration run for L2",
+      "evidence_tiers": [
+        "zero-shot screen on the fixed 32-function panel",
+        "trained 200-pair comparison on the 100-function panel, identical 553 records, seed 42, LR 5e-5, 1024 budget"
+      ],
       "seeds": [
         42
       ],
-      "evaluation_set": "fixed 32-function ablation_dev monitor panel",
-      "evaluation_set_selection_sha256": "0ed8b64f30df20bab19c1afc755b199c7f424d9d227f5a2e01c588144fafe907",
-      "protocol": {
-        "candidate_count": 8,
-        "temperature": 0.7,
-        "top_p": 0.9,
-        "max_new_tokens": 128,
-        "prompt_token_limit": 1024,
-        "unchanged_from": "research/v4_1/FROZEN_EVALUATION_CONFIG.json"
-      },
-      "metrics": {
+      "zero_shot_screen_32_functions": {
         "L0_phi3_eager": {
           "function_kill_rate": 0.59375,
-          "function_kill_rate_wilson_95": [
-            0.4226,
-            0.744804
-          ],
-          "function_validation_killed": 19,
-          "function_validation_records": 32,
-          "kill_at_k": {
-            "1": 0.15625,
-            "2": 0.21875,
-            "4": 0.4375,
-            "8": 0.59375
-          },
-          "parse_success_rate": 0.507813,
-          "execution_valid_rate": 0.410156,
-          "reference_valid_rate": 0.269531,
-          "wall_time_seconds": 208.8,
+          "parse": 0.5078,
+          "execution_valid": 0.4102,
+          "reference_valid": 0.2695,
           "seconds_per_function": 6.53
         },
         "L1_phi3_sdpa": null,
         "L2_qwen_sdpa": {
           "function_kill_rate": 0.71875,
-          "function_kill_rate_wilson_95": [
-            0.546255,
-            0.844354
-          ],
-          "function_validation_killed": 23,
-          "function_validation_records": 32,
-          "kill_at_k": {
-            "1": 0.375,
-            "2": 0.46875,
-            "4": 0.6875,
-            "8": 0.71875
-          },
-          "parse_success_rate": 0.980469,
-          "execution_valid_rate": 0.980469,
-          "reference_valid_rate": 0.566406,
-          "wall_time_seconds": 40.9,
+          "parse": 0.9805,
+          "execution_valid": 0.9805,
+          "reference_valid": 0.5664,
           "seconds_per_function": 1.28
         }
       },
-      "integration_evidence_L2": {
-        "run_name": "local_j1024_integration_32_seed42_qwen_v1",
-        "baseline_function_kill_rate": 0.65625,
-        "terminal_function_kill_rate": 0.71875,
-        "planned_checkpoints": [
-          6
-        ],
-        "evaluated_checkpoints": [
-          6
-        ],
-        "sft_loss": 0.7749310334523519,
-        "wall_time_seconds": 215.5,
-        "phi3_equivalent_run_wall_time_seconds": 1710.5,
-        "monitor_gate_passed": false,
-        "monitor_gate_reason": "end_to_end_candidate_kill_rate fell 0.277344 -> 0.253906, outside the monitor's 0.01 candidate-health tolerance, so the checkpoint was correctly not promoted. Function kill rate rose 21 -> 23 and McNemar exact p = 0.7266, so this 6-optimizer-step run carries no training signal either way."
+      "trained_200_pair_comparison_100_functions": {
+        "note": "Identical 553 training records (442 synthetic + 111 repository), same seed, same panel, same budget. Only the model differs. The Phi-3 arm is PARTIAL: stopped after step 17, so steps 34 and 35 were never measured.",
+        "L0_phi3_eager": {
+          "step_0": {
+            "killed_per_100": 46,
+            "parse": 0.5487,
+            "execution_valid": 0.3862,
+            "reference_valid": 0.295
+          },
+          "step_17": {
+            "killed_per_100": 68,
+            "parse": 0.7488,
+            "execution_valid": 0.6462,
+            "reference_valid": 0.4662
+          },
+          "delta_base_to_17": {
+            "killed": 22,
+            "parse": 0.2,
+            "execution_valid": 0.26,
+            "reference_valid": 0.171
+          },
+          "status": "PARTIAL_DELIBERATELY_TERMINATED"
+        },
+        "L2_qwen_sdpa": {
+          "step_0": {
+            "killed_per_100": 65,
+            "parse": 0.9912,
+            "execution_valid": 0.9675,
+            "reference_valid": 0.6088
+          },
+          "step_17": {
+            "killed_per_100": 70,
+            "parse": 0.9962,
+            "execution_valid": 0.9725,
+            "reference_valid": 0.58
+          },
+          "delta_base_to_17": {
+            "killed": 5,
+            "parse": 0.005,
+            "execution_valid": 0.005,
+            "reference_valid": -0.029
+          },
+          "status": "COMPLETE"
+        }
       },
-      "result": "L1 is impossible in the pinned environment. L2 beats L0 on every candidate-validity layer measured over 256 candidates per arm (parse 0.980 vs 0.508, execution 0.980 vs 0.410, reference 0.566 vs 0.270) and is 5.1x faster per function, while zero-shot function kill rate is higher (0.719 vs 0.594) with overlapping Wilson intervals on n=32.",
-      "decision": "ACCEPT_FOR_SCREENING_ONLY",
-      "reason": "Accepted as the base model for subsequent experiments because the decision hierarchy ranks reference- and execution-validity above the headline kill rate, and those gaps are large and measured over 256 candidates per arm. The kill-rate gap alone would be inconclusive at n=32. This is not a trained-model result: no research-scale SFT comparison between the two base models exists. A base-model swap also changes the tokenizer, so the prompt-budget admissibility sweep and every V4 comparison must be re-derived before any headline claim.",
+      "feasibility": {
+        "qwen_200_pair_run_seconds": 929,
+        "phi3_200_pair_run_projected_seconds": 88200,
+        "ratio": 95,
+        "phi3_training_only_seconds": 244,
+        "phi3_baseline_monitor_seconds": 2100.6,
+        "phi3_step17_monitor_seconds": 27790.5,
+        "phi3_monitor_regression_factor": 13.2,
+        "phi3_vram_mib": 24076,
+        "qwen_vram_mib": 15629,
+        "card_total_mib": 24564,
+        "explanation": "Phi-3 training is only about nine minutes for the whole run; the cost is monitoring. The same 800-generation monitor pass took 35 minutes at baseline and 7.7 hours mid-training, once optimizer state pushed the card to 98 percent VRAM. Probable cause is allocator thrashing under VRAM exhaustion. This is a hypothesis, not an instrumented diagnosis, and may be a fixable defect rather than a property of Phi-3."
+      },
+      "result": "L1 is impossible in the pinned environment. On the trained comparison Qwen leads every candidate-validity layer at the matched checkpoint (parse 0.996 vs 0.749, execution 0.973 vs 0.646, reference 0.580 vs 0.466) while kill rate ties within noise (70 vs 68). But Phi-3 gains far more from the same supervision: +22 functions versus +5, and its reference-validity RISES (0.295 -> 0.466) where Qwen's falls.",
+      "decision": "ACCEPT",
+      "reason": "Qwen is adopted as the base model on two grounds. First, quality at matched training: it wins every layer section 53 ranks above the headline metric, with kill rate tied. Second, feasibility: 929 seconds versus a projected 24.5 hours for identical work, which decides whether the remaining programme - roughly fifteen further training runs plus three-seed locked validation and DPO - is a day of GPU or a month.",
       "negative_results_retained": [
-        "L1 Phi-3 + SDPA: transformers 4.48.3 refuses SDPA for Phi3ForCausalLM; flash_attention_2 also unavailable for its sliding-window attention. Eager is the only admissible Phi-3 backend in this environment.",
-        "L2 32-pair integration did not pass the checkpoint-promotion gate; the candidate-health dip is retained rather than reported as a success.",
-        "Repeated identical-configuration runs did not reproduce bit-exactly: L0 Kill@1 moved 7/32 -> 5/32 and L2 baseline moved 23/32 -> 21/32 across processes at fixed seed, so single-run deltas below roughly two functions on this panel are not evidence."
+        "L1 Phi-3 + SDPA: transformers 4.48.3 refuses SDPA for Phi3ForCausalLM and flash-attention does not cover its sliding-window attention. Eager is the only admissible Phi-3 backend here, so no speedup is reachable for the incumbent.",
+        "The zero-shot screen OVERSTATED Qwen's advantage. Most of its apparent edge was a head start, not superior trainability: SFT closed the gap from 19 points to 2. A screening result is not a trained result.",
+        "Phi-3 was not rejected on merit. It learns more per step and was still improving steeply when stopped. It is set aside because it is impractical on a 24 GB card under the current monitor implementation - a qualified statement, not 'Phi-3 is worse'.",
+        "The Phi-3 arm is incomplete: steps 34 and 35 were never measured, so its curve could still have overtaken Qwen's and we would not know.",
+        "Repeated identical-configuration runs vary by about two functions at fixed seed; the 70 vs 68 comparison is inside that band."
+      ],
+      "artifacts": [
+        "results/v4_1_smoke_backend_phi3_eager_seed42.json",
+        "results/v4_1_smoke_backend_phi3_sdpa_seed42.json",
+        "results/v4_1_smoke_backend_qwen_sdpa_seed42.json",
+        "results/local_sft200_qwen_seed42/",
+        "results/local_sft200_phi3_seed42_v2/PARTIAL_RUN.json"
       ]
-    },
-    {
-      "id": "K_complex_function_mix",
-      "hypothesis": "Guaranteeing execution-verified complex functions in bounded SFT improves reference-validity and Kill@k.",
-      "changed_variable": "minimum complex-function share in bounded synthetic selection",
-      "control": "K0 natural mix (complex_target_fraction = 0.0)",
-      "treatments": [
-        "K1 complex_target_fraction = 0.60"
-      ],
-      "training_size": 800,
-      "seeds": [
-        42,
-        43,
-        44
-      ],
-      "complexity_lineage": "buggy_revision_ast_only",
-      "corpus_evidence": {
-        "train_split_records": 5941,
-        "train_complex_records": 2754,
-        "train_moderate_records": 1999,
-        "train_simple_records": 842,
-        "train_repository_records_without_function_ast": 346,
-        "enforced_floor": 0.6,
-        "observed_share_in_32_pair_selection": 0.62069
-      },
-      "metrics": null,
-      "result": "NOT_RUN",
-      "decision": "INCONCLUSIVE",
-      "reason": "Complex functions are present and the 0.60 floor is enforced and audited in preflight, but no GPU evidence exists yet that the floor improves the objective. The share is a design input, not a result."
     }
   ],
   "accepted_changes": [
-    "L2 base model -> Qwen/Qwen2.5-Coder-1.5B-Instruct + SDPA (screening-only: zero-shot candidate-validity and cost evidence; no trained-model comparison exists yet)"
+    "M learning rate 5e-5 -> 1e-5 (large reference-validity gain, no kill-rate cost; single seed)",
+    "K1 complex-function floor 0.60 (weak: +4 functions, just above noise, single seed, narrow contrast)",
+    "L2 base model -> Qwen/Qwen2.5-Coder-1.5B-Instruct + SDPA (screening plus trained 200-pair comparison)"
   ],
   "rejected_changes": [
+    "I_SCALE 200 -> 800 pairs (peak moved 70 -> 73, within noise; the policy is not data-starved)",
     "L1 Phi-3 + SDPA (infeasible in the pinned transformers/model environment)"
   ],
   "inconclusive_changes": [
@@ -373,8 +554,7 @@
     "F",
     "G",
     "H",
-    "I",
     "J",
-    "K"
+    "CROSS_CUTTING_form_before_behaviour"
   ]
 }

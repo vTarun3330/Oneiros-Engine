@@ -1,0 +1,24 @@
+{
+  "schema_version": "oneiros_predeclared_prediction_v1",
+  "experiment": "qwen_sft800_seed42",
+  "recorded_before_results": true,
+  "recorded_utc": "2026-09-02T08:05:32Z",
+  "basis": "The 200-pair Qwen run peaked at its first checkpoint (step 17: 70/100) and declined thereafter (34: 69, 35: 64), while reference-validity fell monotonically 0.609 -> 0.431.",
+  "predictions": [
+    {
+      "claim": "The monitor selects an early checkpoint, not the terminal one",
+      "specifically": "best checkpoint is step 50 or 100, not 142",
+      "falsified_if": "the terminal step 142 is selected as best"
+    },
+    {
+      "claim": "Reference-validity declines across checkpoints",
+      "specifically": "ref-valid at step 142 < ref-valid at step 0",
+      "falsified_if": "ref-valid at 142 >= ref-valid at 0"
+    }
+  ],
+  "interpretation_rule": {
+    "if_both_hold": "Qwen is not data-starved at this learning rate; more data does not fix early overfitting, and the low-LR arm becomes the priority.",
+    "if_both_fail": "The 200-pair decline was a small-sample artifact and scale genuinely helps; 800 becomes the new baseline scale.",
+    "note": "Run-to-run sampling variance on this hardware has been about two functions at fixed seed, so differences smaller than that are noise."
+  }
+}
