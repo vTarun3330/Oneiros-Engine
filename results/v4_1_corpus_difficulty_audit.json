@@ -1,0 +1,96 @@
+{
+  "schema_version": "oneiros_corpus_difficulty_audit_v1",
+  "corpus_version": "v4_1_research_hardened_candidate",
+  "complexity_lineage": "buggy_revision_ast_only",
+  "final_test_measurement": false,
+  "splits": {
+    "train": {
+      "records": 5941,
+      "tier_counts": {
+        "complex": 2754,
+        "moderate": 1999,
+        "simple": 842,
+        "unindexed": 346
+      },
+      "tier_fractions": {
+        "complex": 0.4636,
+        "moderate": 0.3365,
+        "simple": 0.1417,
+        "unindexed": 0.0582
+      },
+      "dataset_counts": {
+        "unknown": 5941
+      },
+      "mutation_family_counts": {
+        "unknown": 5941
+      }
+    },
+    "ablation_dev": {
+      "records": 580,
+      "tier_counts": {
+        "complex": 326,
+        "moderate": 129,
+        "simple": 87,
+        "unindexed": 38
+      },
+      "tier_fractions": {
+        "complex": 0.5621,
+        "moderate": 0.2224,
+        "simple": 0.15,
+        "unindexed": 0.0655
+      },
+      "dataset_counts": {
+        "unknown": 580
+      },
+      "mutation_family_counts": {
+        "unknown": 580
+      }
+    },
+    "val": {
+      "records": 781,
+      "tier_counts": {
+        "complex": 480,
+        "moderate": 201,
+        "simple": 76,
+        "unindexed": 24
+      },
+      "tier_fractions": {
+        "complex": 0.6146,
+        "moderate": 0.2574,
+        "simple": 0.0973,
+        "unindexed": 0.0307
+      },
+      "dataset_counts": {
+        "unknown": 781
+      },
+      "mutation_family_counts": {
+        "unknown": 781
+      }
+    }
+  },
+  "evaluation_panel": {
+    "source": "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\local_ablation_k0_natural_qwen_seed42\\sft_monitor_selection.json",
+    "declared_records": 100,
+    "resolved_records": 100,
+    "records": 100,
+    "tier_counts": {
+      "complex": 57,
+      "moderate": 24,
+      "simple": 19
+    },
+    "tier_fractions": {
+      "complex": 0.57,
+      "moderate": 0.24,
+      "simple": 0.19
+    },
+    "dataset_counts": {
+      "unknown": 100
+    },
+    "mutation_family_counts": {
+      "unknown": 100
+    }
+  },
+  "findings": [
+    "all tiers present at >=5% in train and panel"
+  ]
+}

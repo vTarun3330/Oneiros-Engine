@@ -116,3 +116,48 @@ def test_view_detects_modified_shard(
 
     with pytest.raises(RuntimeError, match="hash gate"):
         verify_development_view(corpus, ["train"])
+
+
+def test_complexity_indexes_val_for_reporting_but_never_for_selection():
+    """val must be measurable by tier without becoming selectable for training.
+
+    Locked validation could not be broken down by difficulty at all while the
+    index covered only the training partition. Indexing val fixes that, but the
+    two roles must stay distinct: bounded selection may only ever draw on the
+    training partition.
+    """
+    from harness.corpus_view import (
+        COMPLEXITY_REPORTING_SPLITS,
+        COMPLEXITY_SELECTION_SPLITS,
+    )
+
+    assert "val" in COMPLEXITY_REPORTING_SPLITS
+    assert "val" not in COMPLEXITY_SELECTION_SPLITS
+    assert "test" not in COMPLEXITY_REPORTING_SPLITS
+    assert "test" not in COMPLEXITY_SELECTION_SPLITS
+    # Everything selectable must also be reportable, never the reverse.
+    assert set(COMPLEXITY_SELECTION_SPLITS).issubset(set(COMPLEXITY_REPORTING_SPLITS))
+
+
+def test_materialized_complexity_manifest_declares_both_roles():
+    import json
+    from pathlib import Path
+
+    from config import CANONICAL_CORPUS_VERSION
+
+    manifest_path = (
+        Path("data/corpus") / CANONICAL_CORPUS_VERSION
+        / "development_view" / "complexity_manifest.json"
+    )
+    if not manifest_path.exists():
+        return  # view not materialized in this environment
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert manifest["eligible_splits"] == ["train", "ablation_dev"]
+    assert "val" in manifest["reporting_splits"]
+    assert "test" not in manifest["reporting_splits"]
+    assert manifest["prohibited_sources_used"] == []
+    # All three tiers must be present in val or per-tier validation reporting
+    # would be impossible.
+    val_tiers = manifest["tier_counts_by_split"].get("val", {})
+    assert {"simple", "moderate", "complex"}.issubset(set(val_tiers))

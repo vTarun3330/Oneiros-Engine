@@ -254,4 +254,73 @@ or optimisation speed.
 locate the real peak, and ablation A to test whether the behavioural
 specification is being used at all.
 
+## Group N — checkpoint resolution sweep (hypothesis refuted)
+
+**Hypothesis, recorded before the run.** Every arm peaked at its first
+monitored checkpoint — step 17 at 200 pairs, step 50 at 800. We had never
+observed the actual maximum, only the first place we happened to look. If the
+true peak sat at step 20 with reference-validity still near 0.58, then every
+number recorded so far would understate the model.
+
+Qwen, LR 1e-5, 800 pairs, seed 42, 100-function `ablation_dev` panel. Only the
+monitor interval changed (50 → 10); early stopping was disabled so no
+checkpoint could be skipped. Run `20260902-231747-sweep_fine_ckpt`, 4,123 s,
+16 checkpoints.
+
+| Step | Killed/100 | Parse | Exec | Ref-valid | Cand-kill |
+| ---: | ---: | ---: | ---: | ---: | ---: |
+| 0 | 65 | 0.9912 | 0.9675 | **0.6088** | 0.2537 |
+| 10 | 64 | 0.9938 | 0.9663 | 0.6012 | 0.2562 |
+| 20 | 64 | 0.9938 | 0.9688 | 0.6012 | 0.2625 |
+| 30 | 61 | 0.9988 | 0.9675 | 0.5800 | 0.2462 |
+| 40 | 67 | 0.9975 | 0.9762 | 0.5813 | 0.2762 |
+| 50 | 68 | 0.9962 | 0.9725 | 0.5575 | 0.2737 |
+| **60** | **72** | 0.9975 | 0.9712 | 0.5375 | 0.2900 |
+| 70 | 67 | 0.9988 | 0.9775 | 0.5500 | 0.2825 |
+| 80 | 65 | 0.9988 | 0.9738 | 0.5038 | 0.2800 |
+| 90 | 65 | 0.9975 | 0.9750 | 0.4838 | 0.2938 |
+| 100 | 63 | 0.9962 | 0.9750 | 0.4650 | 0.2850 |
+| 110 | 63 | 0.9962 | 0.9725 | 0.4750 | 0.2938 |
+| 120 | 67 | 0.9975 | 0.9788 | 0.4775 | 0.3050 |
+| 130 | 64 | 0.9988 | 0.9812 | 0.4662 | 0.2988 |
+| 140 | 68 | 0.9988 | 0.9750 | 0.4738 | 0.3137 |
+| 142 | 69 | 0.9988 | 0.9762 | 0.4788 | **0.3175** |
+
+### Both predictions falsified
+
+**"The peak lies strictly before step 50" — FALSIFIED.** The peak is step 60 at
+72/100. The best checkpoint strictly before 50 is step 40 at 67, *worse* than
+the 68 we already had at step 50. Steps 10, 20 and 30 (64, 64, 61) are at or
+**below the untrained baseline of 65** — the model gets worse before it gets
+better.
+
+**"Peak reference-validity exceeds 0.541" — FALSIFIED where it matters.**
+Reference-validity never rises above its untrained 0.6088. The highest
+post-training value is 0.6012 at steps 10–20, and those checkpoints kill fewer
+bugs than doing nothing at all. At the best kill-rate checkpoint (60),
+reference-validity is 0.5375 — *lower* than the 0.541 at step 50.
+
+**Decision: the understatement hypothesis is REJECTED.** The coarse interval was
+not hiding a better model. No previously recorded number was an understatement.
+Finer checkpointing cost 69 minutes and bought +4 functions — barely above the
+±2 noise floor — at a checkpoint with worse reference-validity than the one it
+replaces. A 10-step interval is not worth its monitoring cost as a default.
+
+### What the resolution did reveal
+
+The form-before-behaviour pattern starts at the **very first checkpoint**, not
+after some threshold. By step 10, parse-validity is already climbing
+(0.9912 → 0.9938) and reference-validity is already falling (0.6088 → 0.6012).
+The two move in opposite directions for the entire run.
+
+The two success layers do not even peak together: candidate kill rate rises
+almost monotonically to its maximum at the *terminal* step (0.3175), while
+function kill rate peaks at 60 and then falls.
+
+**The practical consequence is a genuine trade-off, not a sampling artifact.**
+There is no checkpoint that is simultaneously good at killing bugs and faithful
+to the reference. Select on kill rate and you take step 60 with
+reference-validity 0.5375; select on reference-validity and you take step 10–20
+with a kill rate at or below the untrained baseline.
+
 Future rows must report requested, parse-valid, execution-valid, reference-valid, and killing candidates; Kill@1/2/4/8; Wilson intervals per seed; dataset and mutation-family slices; token use; unique/effective examples; and an ACCEPT, REJECT, or INCONCLUSIVE decision. Negative results must remain in both artifacts.

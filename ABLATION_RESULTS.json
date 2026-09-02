@@ -534,6 +534,158 @@
         "results/local_sft200_qwen_seed42/",
         "results/local_sft200_phi3_seed42_v2/PARTIAL_RUN.json"
       ]
+    },
+    {
+      "id": "N_checkpoint_resolution_sweep",
+      "hypothesis": "Every arm peaked at its first monitored checkpoint (17 at 200 pairs, 50 at 800), so the true maximum had never been observed - only the first place we happened to look. If the real peak sat near step 20 with reference-validity still near 0.58, every recorded number would be an understatement.",
+      "changed_variable": "monitor checkpoint interval 50 -> 10 (nothing else)",
+      "control": "the same run at a 50-step interval (M_learning_rate lr_1e-5 arm)",
+      "treatments": [
+        "10-step interval, early stopping disabled so the whole curve is seen"
+      ],
+      "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct @2e1fd397 (SDPA)",
+      "training_size": 800,
+      "learning_rate": 1e-05,
+      "seeds": [
+        42
+      ],
+      "evaluation_set": "fixed 100-function ablation_dev monitor panel",
+      "protocol_note": "Patience was set to 99 so no checkpoint was skipped by early stopping. That changes which checkpoints are observed, never what is measured at each one.",
+      "run_id": "20260902-231747-sweep_fine_ckpt",
+      "wall_time_seconds": 4123,
+      "checkpoints_measured": 16,
+      "curve": {
+        "0": {
+          "killed": 65,
+          "parse": 0.9912,
+          "exec": 0.9675,
+          "ref": 0.6088,
+          "cand_kill": 0.2537
+        },
+        "10": {
+          "killed": 64,
+          "parse": 0.9938,
+          "exec": 0.9663,
+          "ref": 0.6012,
+          "cand_kill": 0.2562
+        },
+        "20": {
+          "killed": 64,
+          "parse": 0.9938,
+          "exec": 0.9688,
+          "ref": 0.6012,
+          "cand_kill": 0.2625
+        },
+        "30": {
+          "killed": 61,
+          "parse": 0.9988,
+          "exec": 0.9675,
+          "ref": 0.58,
+          "cand_kill": 0.2462
+        },
+        "40": {
+          "killed": 67,
+          "parse": 0.9975,
+          "exec": 0.9762,
+          "ref": 0.5813,
+          "cand_kill": 0.2762
+        },
+        "50": {
+          "killed": 68,
+          "parse": 0.9962,
+          "exec": 0.9725,
+          "ref": 0.5575,
+          "cand_kill": 0.2737
+        },
+        "60": {
+          "killed": 72,
+          "parse": 0.9975,
+          "exec": 0.9712,
+          "ref": 0.5375,
+          "cand_kill": 0.29
+        },
+        "70": {
+          "killed": 67,
+          "parse": 0.9988,
+          "exec": 0.9775,
+          "ref": 0.55,
+          "cand_kill": 0.2825
+        },
+        "80": {
+          "killed": 65,
+          "parse": 0.9988,
+          "exec": 0.9738,
+          "ref": 0.5038,
+          "cand_kill": 0.28
+        },
+        "90": {
+          "killed": 65,
+          "parse": 0.9975,
+          "exec": 0.975,
+          "ref": 0.4838,
+          "cand_kill": 0.2938
+        },
+        "100": {
+          "killed": 63,
+          "parse": 0.9962,
+          "exec": 0.975,
+          "ref": 0.465,
+          "cand_kill": 0.285
+        },
+        "110": {
+          "killed": 63,
+          "parse": 0.9962,
+          "exec": 0.9725,
+          "ref": 0.475,
+          "cand_kill": 0.2938
+        },
+        "120": {
+          "killed": 67,
+          "parse": 0.9975,
+          "exec": 0.9788,
+          "ref": 0.4775,
+          "cand_kill": 0.305
+        },
+        "130": {
+          "killed": 64,
+          "parse": 0.9988,
+          "exec": 0.9812,
+          "ref": 0.4662,
+          "cand_kill": 0.2988
+        },
+        "140": {
+          "killed": 68,
+          "parse": 0.9988,
+          "exec": 0.975,
+          "ref": 0.4738,
+          "cand_kill": 0.3137
+        },
+        "142": {
+          "killed": 69,
+          "parse": 0.9988,
+          "exec": 0.9762,
+          "ref": 0.4788,
+          "cand_kill": 0.3175
+        }
+      },
+      "predeclared_prediction": "results/v4_1_prediction_qwen_fine_checkpoints_seed42.json",
+      "prediction_outcome": {
+        "prediction_1": {
+          "claim": "the peak lies strictly before step 50",
+          "verdict": "FALSIFIED",
+          "evidence": "The peak is step 60 at 72/100. The best checkpoint strictly before 50 is step 40 at 67, which is worse than the step-50 value of 68 we already had. Steps 10, 20 and 30 (64, 64, 61) are at or BELOW the untrained baseline of 65."
+        },
+        "prediction_2": {
+          "claim": "peak reference-validity exceeds the 0.541 measured at step 50",
+          "verdict": "FALSIFIED_IN_THE_SENSE_THAT_MATTERS",
+          "evidence": "Reference-validity never rises above its untrained 0.6088. The highest post-training value is 0.6012 at steps 10-20, and those checkpoints kill fewer functions than doing nothing. At the best kill-rate checkpoint (60) reference-validity is 0.5375, LOWER than the 0.541 at step 50."
+        }
+      },
+      "result": "The coarse 50-step interval was not hiding a better model. Nothing before step 50 beats what was already recorded, so no previous number was an understatement. The peak sits one interval later at step 60 (72/100), worth +4 over step 50 - barely above the two-function noise floor.",
+      "decision": "REJECT_THE_UNDERSTATEMENT_HYPOTHESIS",
+      "reason": "The motivating hypothesis was wrong and is recorded as wrong. Finer checkpointing cost 69 minutes and bought +4 functions at a checkpoint with worse reference-validity than the one it replaces. A 10-step interval is not worth its monitoring cost as a default.",
+      "cross_cutting_confirmation": "At 10-step resolution the form-before-behaviour pattern is visible from the FIRST checkpoint rather than emerging later: parse-validity is already climbing at step 10 (0.9912 -> 0.9938) while reference-validity is already falling (0.6088 -> 0.6012). The two metrics move in opposite directions for the entire run. Candidate kill rate rises monotonically to its maximum at the terminal step (0.3175) while function kill rate peaks at 60, so the two success layers do not even peak together.",
+      "practical_consequence": "There is no checkpoint that is simultaneously good at killing bugs and faithful to the reference. Selecting on kill rate picks step 60 and accepts reference-validity 0.5375; selecting on reference-validity picks step 10-20 and accepts a kill rate at or below the untrained baseline. This is a genuine trade-off in the current recipe, not a sampling artifact."
     }
   ],
   "accepted_changes": [
@@ -543,7 +695,8 @@
   ],
   "rejected_changes": [
     "I_SCALE 200 -> 800 pairs (peak moved 70 -> 73, within noise; the policy is not data-starved)",
-    "L1 Phi-3 + SDPA (infeasible in the pinned transformers/model environment)"
+    "L1 Phi-3 + SDPA (infeasible in the pinned transformers/model environment)",
+    "N checkpoint-resolution sweep: the understatement hypothesis is refuted; a 10-step interval is not worth its monitoring cost"
   ],
   "inconclusive_changes": [
     "A",

@@ -29,6 +29,12 @@ from harness.function_complexity import (
 VIEW_SCHEMA_VERSION = "oneiros_development_corpus_view_v1"
 COMPLEXITY_MANIFEST_SCHEMA_VERSION = "oneiros_complex_function_manifest_v1"
 DEFAULT_INCLUDED_SPLITS = ("train", "ablation_dev", "val")
+# Complexity may be USED for bounded selection only on the training
+# partition. It is RECORDED for val as well, so locked-validation results
+# can be reported per difficulty tier. The two sets are deliberately
+# different and must not be collapsed.
+COMPLEXITY_SELECTION_SPLITS = ("train", "ablation_dev")
+COMPLEXITY_REPORTING_SPLITS = ("train", "ablation_dev", "val")
 SEALED_SPLITS = frozenset({"test"})
 
 
@@ -111,7 +117,12 @@ def materialize_development_view(
             "record_ids_sha256": _sha256_json(ids),
             "sha256": sha256_file(shard_path),
         }
-        if split in {"train", "ablation_dev"}:
+        # val is indexed for REPORTING only, never for selection: bounded
+        # selection loads the index for train/ablation_dev alone, so indexing
+        # val cannot route a locked-validation record into training. Without
+        # this, locked validation results cannot be broken down by difficulty
+        # tier at all.
+        if split in COMPLEXITY_REPORTING_SPLITS:
             complexity_entries.extend(
                 entry
                 for record in shard
@@ -136,7 +147,7 @@ def materialize_development_view(
         split: dict(sorted(Counter(
             item["tier"] for item in complexity_entries if item["split"] == split
         ).items()))
-        for split in ("train", "ablation_dev")
+        for split in COMPLEXITY_REPORTING_SPLITS
         if split in split_names
     }
     complexity_manifest = {
@@ -148,8 +159,16 @@ def materialize_development_view(
         ],
         "prohibited_sources_used": [],
         "eligible_splits": [
-            split for split in ("train", "ablation_dev") if split in split_names
+            split for split in COMPLEXITY_SELECTION_SPLITS if split in split_names
         ],
+        "reporting_splits": [
+            split for split in COMPLEXITY_REPORTING_SPLITS if split in split_names
+        ],
+        "selection_vs_reporting": (
+            "eligible_splits may influence bounded training selection; "
+            "reporting_splits are indexed for per-tier analysis only and never "
+            "enter selection"
+        ),
         "function_record_count": len(complexity_entries),
         "tier_counts": dict(sorted(tier_counts.items())),
         "tier_counts_by_split": split_tier_counts,
