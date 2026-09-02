@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_v4_1_local_test_status_v1",
-  "timestamp_utc": "2026-09-02T10:22:12.969782+00:00",
+  "timestamp_utc": "2026-09-02T10:28:43.213199+00:00",
   "command": [
     "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Scripts\\python.exe",
     "-m",
@@ -8,10 +8,10 @@
     "-q"
   ],
   "returncode": 0,
-  "passed": 169,
+  "passed": 214,
   "failed": 0,
-  "source_tree_sha256": "1d1f948e85b4b53f91282bf3b6b335597159552822b76b8f701e5e674f67986f",
+  "source_tree_sha256": "4cf76ba3f82144b9b884a9674dc6bbf984967d8f41a40c012757fffbffa54023",
   "completion_only_masking_verified": true,
   "sealed_final_test_accessed": false,
-  "output_tail": "........................................................................ [ 42%]\n........................................................................ [ 85%]\n.........................                                                [100%]\n============================== warnings summary ===============================\n.venv-gpu\\Lib\\site-packages\\faiss\\loader.py:49\n  C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Lib\\site-packages\\faiss\\loader.py:49: DeprecationWarning: numpy.core._multiarray_umath is deprecated and has been renamed to numpy._core._multiarray_umath. The numpy._core namespace contains private NumPy internals and its use is discouraged, as NumPy internals can change without warning in any release. In practice, most real-world usage of numpy.core is to access functionality in the public NumPy API. If that is the case, use the public NumPy API. If not, you are using NumPy internals. If you would still like to access an internal attribute, use numpy._core._multiarray_umath.__cpu_features__.\n    from numpy.core._multiarray_umath import __cpu_features__\n\ntests/test_canonical_corpus_default.py::test_phase3_entry_points_share_the_canonical_corpus_default\n  C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\tests\\test_canonical_corpus_default.py:12: DeprecationError: 2026-08-26: `Function.get_raw_f` is deprecated and will be removed in `modal` version 1.6.0\n    inspect.signature(modal_train.run_cloud_training.get_raw_f())\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n169 passed, 2 warnings in 8.32s"
+  "output_tail": "........................................................................ [ 33%]\n........................................................................ [ 67%]\n......................................................................   [100%]\n============================== warnings summary ===============================\n.venv-gpu\\Lib\\site-packages\\faiss\\loader.py:49\n  C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Lib\\site-packages\\faiss\\loader.py:49: DeprecationWarning: numpy.core._multiarray_umath is deprecated and has been renamed to numpy._core._multiarray_umath. The numpy._core namespace contains private NumPy internals and its use is discouraged, as NumPy internals can change without warning in any release. In practice, most real-world usage of numpy.core is to access functionality in the public NumPy API. If that is the case, use the public NumPy API. If not, you are using NumPy internals. If you would still like to access an internal attribute, use numpy._core._multiarray_umath.__cpu_features__.\n    from numpy.core._multiarray_umath import __cpu_features__\n\ntests/test_canonical_corpus_default.py::test_phase3_entry_points_share_the_canonical_corpus_default\n  C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\tests\\test_canonical_corpus_default.py:12: DeprecationError: 2026-08-26: `Function.get_raw_f` is deprecated and will be removed in `modal` version 1.6.0\n    inspect.signature(modal_train.run_cloud_training.get_raw_f())\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n214 passed, 2 warnings in 8.69s"
 }
