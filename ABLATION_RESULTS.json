@@ -389,15 +389,16 @@
         }
       },
       "result": "K1 beats K0 by four functions at the selected checkpoint (72 vs 68), with reference-validity identical (0.541 vs 0.543) and slightly lower loss.",
-      "decision": "WEAK_ACCEPT",
-      "reason": "Directional support for the complexity floor, not an established result. Three reasons for caution: a four-function gap sits just above the two-function noise floor; it is one seed; and the contrast is narrower than the labels suggest, because removing the floor still leaves 49.8 percent complex records - the corpus is naturally complex-heavy, so this measures a ten-point shift, not zero versus sixty. A stronger test needs a deliberately simple-heavy control.",
+      "decision": "INCONCLUSIVE",
+      "reason": "DOWNGRADED from WEAK_ACCEPT. The +4 difference was an unpaired comparison between two separately trained runs on seed 42 alone. Multi-seed measurement later showed the untrained baseline varies by 7 functions across seeds, so a 4-function unpaired difference cannot be distinguished from seed choice. Complex functions remain present and the 0.60 floor remains enforced and audited; what is withdrawn is the claim that raising the share demonstrably helps. Re-running K0 and K1 on seeds 43 and 44 would settle it.",
       "evaluation_set": "fixed 100-function ablation_dev monitor panel",
       "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct @2e1fd397 (SDPA)",
       "seeds": [
         42
       ],
       "protocol_unchanged_from": "research/v4_1/FROZEN_EVALUATION_CONFIG.json",
-      "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence."
+      "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence.",
+      "superseded_by": "O_multi_seed_confirmation"
     },
     {
       "id": "CROSS_CUTTING_form_before_behaviour",
@@ -686,12 +687,135 @@
       "reason": "The motivating hypothesis was wrong and is recorded as wrong. Finer checkpointing cost 69 minutes and bought +4 functions at a checkpoint with worse reference-validity than the one it replaces. A 10-step interval is not worth its monitoring cost as a default.",
       "cross_cutting_confirmation": "At 10-step resolution the form-before-behaviour pattern is visible from the FIRST checkpoint rather than emerging later: parse-validity is already climbing at step 10 (0.9912 -> 0.9938) while reference-validity is already falling (0.6088 -> 0.6012). The two metrics move in opposite directions for the entire run. Candidate kill rate rises monotonically to its maximum at the terminal step (0.3175) while function kill rate peaks at 60, so the two success layers do not even peak together.",
       "practical_consequence": "There is no checkpoint that is simultaneously good at killing bugs and faithful to the reference. Selecting on kill rate picks step 60 and accepts reference-validity 0.5375; selecting on reference-validity picks step 10-20 and accepts a kill rate at or below the untrained baseline. This is a genuine trade-off in the current recipe, not a sampling artifact."
+    },
+    {
+      "id": "O_multi_seed_confirmation",
+      "hypothesis": "Single-seed conclusions were being judged against a noise floor of about two functions, measured from repeated runs at the SAME seed. If across-seed variability is larger, several accepted findings do not stand.",
+      "changed_variable": "random seed only (42, 43, 44); config otherwise identical",
+      "control": "seed 42, the seed every prior conclusion rests on",
+      "treatments": [
+        "seed 43",
+        "seed 44"
+      ],
+      "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct @2e1fd397 (SDPA)",
+      "training_size": 800,
+      "learning_rate": 1e-05,
+      "evaluation_set": "fixed 100-function ablation_dev monitor panel",
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "per_seed": {
+        "42": {
+          "baseline": 65,
+          "best": 72,
+          "best_step": 50,
+          "gain": 7,
+          "baseline_wilson_95": [
+            0.5525,
+            0.7364
+          ],
+          "best_wilson_95": [
+            0.6251,
+            0.7986
+          ]
+        },
+        "43": {
+          "baseline": 58,
+          "best": 73,
+          "best_step": 142,
+          "gain": 15,
+          "baseline_wilson_95": [
+            0.4821,
+            0.672
+          ],
+          "best_wilson_95": [
+            0.6357,
+            0.8073
+          ]
+        },
+        "44": {
+          "baseline": 62,
+          "best": 73,
+          "best_step": 142,
+          "gain": 11,
+          "baseline_wilson_95": [
+            0.5221,
+            0.709
+          ],
+          "best_wilson_95": [
+            0.6357,
+            0.8073
+          ]
+        }
+      },
+      "across_seed": {
+        "untrained_baseline": {
+          "values": [
+            65,
+            58,
+            62
+          ],
+          "mean": 61.67,
+          "range": 7,
+          "stdev": 3.51
+        },
+        "trained_best": {
+          "values": [
+            72,
+            73,
+            73
+          ],
+          "mean": 72.67,
+          "range": 1,
+          "stdev": 0.58
+        },
+        "paired_gain": {
+          "values": [
+            7,
+            15,
+            11
+          ],
+          "mean": 11.0,
+          "range": 8,
+          "stdev": 4.0
+        },
+        "statistical_note": "Wilson intervals are attached only to per-seed binomial proportions. The across-seed mean is a mean of proportions and is reported with its observed range, never as a binomial sample."
+      },
+      "result": "The untrained baseline moves 65 / 58 / 62 across seeds - a range of 7 functions on the same panel with nothing changed but the seed. The previously quoted two-function noise floor was measured at a fixed seed and understates across-run variability by more than threefold. The trained result, by contrast, is 72 / 73 / 73 - a range of 1.",
+      "decision": "ACCEPT_SFT_CORRECT_TWO_PRIOR_CLAIMS",
+      "findings": [
+        {
+          "finding": "SFT improves kill rate, and this now survives multiple seeds",
+          "design": "paired within seed, which cancels seed choice",
+          "evidence": "gains of +7, +15, +11; positive in every seed",
+          "status": "ESTABLISHED across three seeds"
+        },
+        {
+          "finding": "SFT sharply REDUCES seed sensitivity",
+          "evidence": "untrained range 7 functions (stdev 3.51) versus trained range 1 (stdev 0.58). The three seeds start far apart and converge to 72-73.",
+          "status": "NEW - not previously observed, and a stronger argument for keeping SFT than the raw gain was"
+        },
+        {
+          "finding": "The complexity-floor WEAK ACCEPT does not stand",
+          "evidence": "K1 vs K0 was +4 on seed 42 alone, an UNPAIRED comparison between two separately trained runs, against an across-seed range of 7.",
+          "status": "DOWNGRADED to INCONCLUSIVE pending K0/K1 on seeds 43 and 44"
+        },
+        {
+          "finding": "Checkpoint selection is not stable across seeds",
+          "evidence": "best step is 50, 142, 142 for seeds 42, 43, 44",
+          "status": "The step-60 peak from the resolution sweep is marginal (+4 against a same-seed floor of 2) and, more importantly, picking a checkpoint by peak kill rate on one seed is unreliable."
+        }
+      ],
+      "methodological_correction": "Two noise floors apply and were previously conflated. A PAIRED within-seed comparison cancels seed choice, so its floor is same-seed run-to-run variability (about 2 functions). An UNPAIRED comparison between separately trained runs does not, so its floor is the across-seed range (7 functions here). Judging a paired gain against the unpaired range would wrongly discard a real effect; judging an unpaired difference against the paired floor wrongly accepts noise. The earlier single-seed acceptances used the wrong floor.",
+      "artifact": "results/v4_1_seed_variance_analysis.json"
     }
   ],
   "accepted_changes": [
     "M learning rate 5e-5 -> 1e-5 (large reference-validity gain, no kill-rate cost; single seed)",
-    "K1 complex-function floor 0.60 (weak: +4 functions, just above noise, single seed, narrow contrast)",
-    "L2 base model -> Qwen/Qwen2.5-Coder-1.5B-Instruct + SDPA (screening plus trained 200-pair comparison)"
+    "L2 base model -> Qwen/Qwen2.5-Coder-1.5B-Instruct + SDPA (screening plus trained 200-pair comparison)",
+    "SFT itself (paired gains +7/+15/+11 across seeds 42/43/44, and it reduces across-seed variance from a range of 7 to a range of 1)"
   ],
   "rejected_changes": [
     "I_SCALE 200 -> 800 pairs (peak moved 70 -> 73, within noise; the policy is not data-starved)",
@@ -702,12 +826,13 @@
     "A",
     "B",
     "C",
+    "CROSS_CUTTING_form_before_behaviour",
     "D",
     "E",
     "F",
     "G",
     "H",
     "J",
-    "CROSS_CUTTING_form_before_behaviour"
+    "K"
   ]
 }

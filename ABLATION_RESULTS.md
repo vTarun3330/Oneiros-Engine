@@ -323,4 +323,60 @@ to the reference. Select on kill rate and you take step 60 with
 reference-validity 0.5375; select on reference-validity and you take step 10–20
 with a kill rate at or below the untrained baseline.
 
+## Group O — multi-seed confirmation (corrects two earlier claims)
+
+Qwen, LR 1e-5, 800 pairs, 100-function `ablation_dev` panel. Only the seed
+changed.
+
+| Seed | Baseline | Best | At step | Paired gain | Baseline 95% CI | Best 95% CI |
+| ---: | ---: | ---: | ---: | ---: | :--- | :--- |
+| 42 | 65 | 72 | 50 | **+7** | [0.553, 0.736] | [0.625, 0.799] |
+| 43 | 58 | 73 | 142 | **+15** | [0.482, 0.672] | [0.636, 0.807] |
+| 44 | 62 | 73 | 142 | **+11** | [0.522, 0.709] | [0.636, 0.807] |
+
+| | Values | Mean | Range | Stdev |
+| --- | --- | ---: | ---: | ---: |
+| Untrained baseline | 65, 58, 62 | 61.67 | **7** | 3.51 |
+| Trained best | 72, 73, 73 | 72.67 | **1** | 0.58 |
+| Paired gain | 7, 15, 11 | 11.0 | 8 | 4.00 |
+
+### The noise floor was wrong
+
+The ±2 figure quoted throughout earlier sections came from repeated runs at the
+**same seed**. Across seeds the untrained baseline moves by **7 functions** on
+the identical panel with nothing changed but the seed — more than three times
+larger. Two prior claims have to be re-judged against that.
+
+**Two floors apply and were being conflated.** A *paired* within-seed
+comparison (baseline vs trained inside one run) cancels seed choice, so its
+floor is same-seed variability, about 2. An *unpaired* comparison between two
+separately trained runs does not cancel it, so its floor is the across-seed
+range, 7. Judging a paired gain against the unpaired range discards real
+effects; judging an unpaired difference against the paired floor accepts noise.
+
+### What this establishes
+
+**SFT works, and now on evidence rather than one seed.** The paired gain is
+positive in all three seeds (+7, +15, +11) and exceeds the applicable floor in
+each. **ACCEPTED.**
+
+**SFT sharply reduces seed sensitivity — a new finding.** The three untrained
+baselines are spread across 7 functions; after training they converge to 72–73,
+a range of 1. That stability is a stronger argument for keeping SFT than the raw
+gain, and it was invisible at one seed.
+
+### What this withdraws
+
+**The complexity-floor WEAK ACCEPT is downgraded to INCONCLUSIVE.** K1 vs K0 was
++4 on seed 42 alone — an *unpaired* comparison between two separately trained
+runs, against an across-seed range of 7. Complex functions remain in the corpus
+and the 0.60 floor remains enforced and audited; what is withdrawn is the claim
+that raising the share demonstrably helps. Running K0 and K1 on seeds 43 and 44
+would settle it.
+
+**Checkpoint selection is not stable across seeds.** Best step is 50, 142, 142.
+The step-60 peak from Group N was already marginal (+4 against a floor of 2);
+combined with this, selecting a checkpoint by peak kill rate on a single seed is
+not reliable.
+
 Future rows must report requested, parse-valid, execution-valid, reference-valid, and killing candidates; Kill@1/2/4/8; Wilson intervals per seed; dataset and mutation-family slices; token use; unique/effective examples; and an ACCEPT, REJECT, or INCONCLUSIVE decision. Negative results must remain in both artifacts.
