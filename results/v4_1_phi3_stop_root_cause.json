@@ -1,0 +1,86 @@
+{
+  "schema_version": "oneiros_run_stop_root_cause_v1",
+  "authored_utc": "2026-09-02T18:00:00Z",
+  "scope": "Two distinct Phi-3 200-pair run terminations, diagnosed separately.",
+
+  "events": [
+    {
+      "event": 1,
+      "run_name": "local_sft200_phi3_seed42",
+      "launch_method": "foreground child of the agent/SSH session (Bash tool)",
+      "timeline": {
+        "00:33:00": "checkpoints/.../sft_run_config.json written - run started",
+        "00:33:25": "sft_monitor_selection.json written - panel selected",
+        "00:33:25 to 00:53:32": "no further artifact; baseline monitor was in progress",
+        "expected_baseline_completion": "~01:08 based on run 2's measured 35-minute baseline monitor",
+        "00:53:32": "relaunch attempt truncated the original stdout log to 0 bytes",
+        "00:53:36": "relaunch rejected by the --fresh guard; its argparse error overwrote the original stderr log"
+      },
+      "classified_cause": "external_termination_by_session_teardown",
+      "confidence": "high_circumstantial_primary_log_destroyed",
+      "positive_evidence": [
+        "The process was launched as a foreground child of the agent session, not detached.",
+        "The wait command associated with this run returned exit code 137 (SIGKILL).",
+        "Background task records for this period were reported orphaned/stopped by the harness.",
+        "Controlled contrast: run 2 executed the IDENTICAL command and data, differing only in being launched detached via Start-Process, and survived 8h25m including a full SSH disconnect. Run 1 died within ~20 minutes without a disconnect-independent cause."
+      ],
+      "ruled_out": {
+        "host_restart": "No System log Kernel-Power 41, 1074 or 6008 events within two days.",
+        "application_crash_or_hang": "No Application log 1000/1001/1002 events between 00:00 and 01:00.",
+        "disk_exhaustion": "233.3 GB free on C:.",
+        "ram_exhaustion": "127.7 GB physical RAM; the identical run 2 peaked near 19 GB.",
+        "cuda_oom": "No OOM text in any surviving log, and run 2 completed the same baseline monitor on the same GPU.",
+        "python_exception": "No traceback in any surviving artifact.",
+        "dependency_or_credential_failure": "Run 2 started successfully from the same environment two minutes later."
+      },
+      "why_not_certain": "The run's own stdout and stderr were destroyed at 00:53:32/00:53:36 when a relaunch reused the same log paths. The definitive record - exit code and any final traceback - no longer exists. Per the stated policy this is reported as strongly indicated rather than proven.",
+      "evidence_destruction_defect": {
+        "description": "Reusing a fixed log filename let a later launch truncate an earlier run's only log.",
+        "fix": "The durable launcher writes to runs/<run_id>/ with a unique run id; log paths are never reused."
+      }
+    },
+    {
+      "event": 2,
+      "run_name": "local_sft200_phi3_seed42_v2",
+      "launch_method": "detached via PowerShell Start-Process",
+      "timeline": {
+        "00:55:21": "start",
+        "00:57:51": "panel selected",
+        "01:32:51": "baseline monitor complete, 46/100, 2100.6s",
+        "09:20:06": "step-17 monitor complete, 68/100, 27790.5s",
+        "13:26:52": "PARTIAL_RUN.json written"
+      },
+      "classified_cause": "manual_termination_deliberate",
+      "confidence": "certain",
+      "evidence": [
+        "Stop-Process -Id 39632 -Force issued deliberately to free the GPU.",
+        "Recorded at the time in results/local_sft200_phi3_seed42_v2/PARTIAL_RUN.json with status PARTIAL_DELIBERATELY_TERMINATED.",
+        "Remaining work was two monitor passes at ~7.7 hours each for two data points that could not change the conclusion."
+      ],
+      "not_a_failure": true
+    }
+  ],
+
+  "secondary_finding": {
+    "name": "monitor_wall_time_regression_under_vram_pressure",
+    "measurement": {
+      "baseline_monitor_seconds": 2100.6,
+      "step17_monitor_seconds": 27790.5,
+      "regression_factor": 13.2,
+      "identical_work": "100 functions x 8 candidates = 800 generations, same model, same panel",
+      "training_17_steps_seconds": 244,
+      "phi3_vram_mib": 24076,
+      "card_total_mib": 24564,
+      "occupancy": 0.98
+    },
+    "hypothesis": "Allocator thrashing once optimizer state pushes the card to ~98% occupancy, so generation cannot obtain KV-cache memory without repeated retry/defragmentation.",
+    "status": "UNVERIFIED_HYPOTHESIS - not instrumented. Possibly a fixable defect rather than a property of Phi-3.",
+    "implication": "Phi-3 200-pair runs cost about 24.5 hours end to end, of which only ~9 minutes is training. The cost is monitoring, not learning."
+  },
+
+  "confidence_summary": {
+    "event_1": "high_circumstantial",
+    "event_2": "certain",
+    "secondary_finding": "measured_effect_unverified_mechanism"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "oneiros_predeclared_prediction_v1",
+  "experiment": "qwen_sft800_lr1e5_fine_checkpoints_seed42",
+  "recorded_before_results": true,
+  "recorded_utc": "2026-09-02T11:36:09Z",
+  "changed_variable": "monitor checkpoint interval 50 -> 10 (nothing else)",
+  "basis": "Every run peaked at its first monitored checkpoint (17 at 200 pairs, 50 at 800), so the true maximum has never been observed.",
+  "predictions": [
+    {
+      "claim": "The peak lies strictly before step 50",
+      "falsified_if": "best checkpoint is 50 or later"
+    },
+    {
+      "claim": "Peak reference-validity exceeds the 0.541 measured at step 50",
+      "falsified_if": "no checkpoint exceeds 0.541"
+    }
+  ],
+  "interpretation_rule": {
+    "if_peak_is_early": "Our recorded bests are understatements; the monitor interval was hiding the real optimum, and 50 is too coarse for every prior result.",
+    "if_peak_is_at_50": "The 50-step interval was adequate after all and prior numbers stand as measured.",
+    "noise_floor": "about two functions at fixed seed on this panel"
+  }
+}
