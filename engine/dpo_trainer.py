@@ -111,7 +111,9 @@ class DPOTrainer:
         model_name: str = None,
         output_dir: Path = None,
         learning_rate: float = None,
-        beta: float = None
+        beta: float = None,
+        model_revision: str = None,
+        attention_implementation: str = None,
     ):
         if not TRL_AVAILABLE:
             raise ImportError("trl is required. Install with: pip install trl")
@@ -119,6 +121,19 @@ class DPOTrainer:
             raise ImportError("peft is required. Install with: pip install peft")
 
         self.model_name = model_name or model_config.model_name
+        # DPO continues from an SFT adapter, and a LoRA adapter is a delta on
+        # specific base weights. Loading a different base model here would
+        # silently apply one model's adapter to another's weights, so the base
+        # identity must follow the run rather than the canonical default.
+        if model_revision is not None:
+            self.model_revision = model_revision
+        elif self.model_name == model_config.model_name:
+            self.model_revision = model_config.model_revision
+        else:
+            self.model_revision = "main"
+        self.attention_implementation = (
+            attention_implementation or model_config.attention_implementation
+        )
         self.output_dir = Path(output_dir or training_config.checkpoint_dir)
         self.learning_rate = (
             learning_rate if learning_rate is not None
@@ -165,7 +180,7 @@ class DPOTrainer:
         # Load tokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.model_name,
-            revision=model_config.model_revision,
+            revision=self.model_revision,
             trust_remote_code=True
         )
         if self.tokenizer.pad_token is None:
@@ -175,12 +190,12 @@ class DPOTrainer:
         # and `device_map=self.device_map` (self.device_map never existed)
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
-            revision=model_config.model_revision,
+            revision=self.model_revision,
             quantization_config=bnb_config,
             device_map="auto",
             trust_remote_code=True,
             torch_dtype=self.compute_dtype,
-            attn_implementation=model_config.attention_implementation
+            attn_implementation=self.attention_implementation
         )
 
         # Prepare for k-bit training

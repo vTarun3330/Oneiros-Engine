@@ -3486,7 +3486,12 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         from engine.generator import Phi3Generator
 
         try:
-            dpo_trainer = DPOTrainer(output_dir=ADAPTER_DIR)
+            dpo_trainer = DPOTrainer(
+                output_dir=ADAPTER_DIR,
+                model_name=BASE_MODEL_NAME_OVERRIDE,
+                model_revision=BASE_MODEL_REVISION_OVERRIDE,
+                attention_implementation=BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE,
+            )
             dpo_trainer.setup_model()
             if not dpo_trainer.has_reference_adapter:
                 raise RuntimeError("DPO setup did not load the SFT reference adapter")
