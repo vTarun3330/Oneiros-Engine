@@ -54,6 +54,33 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+#: Fields that actually determine what a trained artifact is. ``git_commit``
+#: is deliberately excluded: committing a run's own results - which section 47
+#: requires - changes the commit without changing a single byte of executable
+#: source, and would otherwise invalidate the adapter that produced them.
+#: ``source_tree_sha256`` is the stronger guarantee, because it also catches
+#: uncommitted edits that a commit SHA would miss.
+FUNCTIONAL_IDENTITY_FIELDS = (
+    "source_tree_sha256",
+    "dependency_spec_sha256",
+    "model_name",
+    "model_revision",
+    "python_version",
+    "python_implementation",
+    "runtime_dependencies",
+)
+
+
+def functional_identity(manifest: Dict[str, object]) -> Dict[str, object]:
+    """Return only the parts of a manifest that determine model behaviour.
+
+    Use this to decide whether one phase may consume another's artifact. Git
+    identity stays in the full manifest as recorded provenance; it is not an
+    equality requirement.
+    """
+    return {field: manifest.get(field) for field in FUNCTIONAL_IDENTITY_FIELDS}
+
+
 def build_reproducibility_manifest(
     project_root: Path, model_name: str, model_revision: str,
 ) -> Dict[str, object]:

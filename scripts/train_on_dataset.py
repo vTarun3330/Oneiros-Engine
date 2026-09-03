@@ -54,7 +54,7 @@ from engine.test_generation_prompt import (
     task_mode_for_execution_mode,
     test_format_for_execution_mode,
 )
-from utils.reproducibility import build_reproducibility_manifest
+from utils.reproducibility import build_reproducibility_manifest, functional_identity
 from utils.dataset_identity import DATASET_IDENTITY_POLICY, dataset_name_for_pair, dataset_name_from_source
 from utils.sampling_audit import summarize_sampling_weights
 
@@ -2832,15 +2832,29 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                 sft_metadata = json.loads(sft_metadata_file.read_text(encoding="utf-8"))
                 if sft_metadata.get("dataset_fingerprint") != dataset_fingerprint:
                     raise RuntimeError("SFT metadata does not match the requested DPO training scope")
-                if (
-                    TRAINING_PHASE in {"dpo", "dpo_eval"}
-                    and sft_metadata.get("reproducibility") != reproducibility
-                ):
-                    raise RuntimeError(
-                        "DPO requires an SFT adapter produced by this exact source, "
-                        "dependency specification, Python runtime, and pinned base model. "
-                        "The existing adapter is legacy or mismatched; start a new SFT run."
+                if TRAINING_PHASE in {"dpo", "dpo_eval"}:
+                    # Compare what actually determines the artifact, which is
+                    # exactly what this check's message claims to require.
+                    # Comparing the whole manifest also compared git_commit, so
+                    # committing the SFT run's own results - required by section
+                    # 47 - invalidated the adapter that produced them. Source
+                    # identity is the stronger test regardless, since it also
+                    # catches uncommitted edits a commit SHA would miss.
+                    recorded = functional_identity(
+                        sft_metadata.get("reproducibility") or {}
                     )
+                    current = functional_identity(reproducibility)
+                    if recorded != current:
+                        differing = sorted(
+                            field for field in current
+                            if recorded.get(field) != current.get(field)
+                        )
+                        raise RuntimeError(
+                            "DPO requires an SFT adapter produced by this exact source, "
+                            "dependency specification, Python runtime, and pinned base "
+                            f"model. Differing fields: {differing}. "
+                            "The existing adapter is legacy or mismatched; start a new SFT run."
+                        )
                 requested_sft_examples = sft_metadata["requested_sft_examples"]
                 verified_sft_examples = sft_metadata["verified_sft_examples"]
                 optimizer_sft_examples = sft_metadata.get(
