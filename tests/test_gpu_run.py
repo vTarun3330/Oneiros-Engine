@@ -135,3 +135,61 @@ def test_manifest_captures_reproducibility_identity():
     assert "commit" in manifest["git"] and "dirty" in manifest["git"]
     assert "torch" in manifest["versions"] and "python" in manifest["versions"]
     assert manifest["resume"]["lineage"] == ["20260101-000000-x"]
+
+
+def test_colliding_run_names_are_refused(tmp_path, monkeypatch):
+    """Two runs writing one artifact set corrupt each other's checkpoints.
+
+    Launching the same evaluation twice seconds apart put two processes on one
+    progress-checkpoint sequence; one read a partially written file and died
+    with EOFError. The launcher must make that collision impossible.
+    """
+    import json as _json
+
+    from scripts import gpu_run
+
+    runs_dir = tmp_path / "runs"
+    (runs_dir / "existing").mkdir(parents=True)
+    (runs_dir / "existing" / "status.json").write_text(
+        _json.dumps({"state": "running"}), encoding="utf-8"
+    )
+    (runs_dir / "existing" / "manifest.json").write_text(
+        _json.dumps({"config_snapshot": {"run_name": "target_run", "seed": "44"}}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(gpu_run, "RUNS_DIR", runs_dir)
+
+    args = type("A", (), {
+        "name": "second",
+        "allow_concurrent": False,
+        "resumed_from": None,
+        "lineage": None,
+        "command": ["--", "python", "x.py", "--run-name", "target_run", "--seed", "44"],
+    })()
+
+    assert gpu_run.cmd_start(args) == 3
+    # Only the pre-existing run directory survives; nothing new was created.
+    assert [p.name for p in runs_dir.iterdir()] == ["existing"]
+
+
+def test_a_different_seed_on_the_same_run_name_is_allowed(tmp_path, monkeypatch):
+    """Only an identical (run_name, seed) target collides."""
+    import json as _json
+
+    from scripts import gpu_run
+
+    runs_dir = tmp_path / "runs"
+    (runs_dir / "existing").mkdir(parents=True)
+    (runs_dir / "existing" / "status.json").write_text(
+        _json.dumps({"state": "running"}), encoding="utf-8"
+    )
+    (runs_dir / "existing" / "manifest.json").write_text(
+        _json.dumps({"config_snapshot": {"run_name": "target_run", "seed": "43"}}),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(gpu_run, "RUNS_DIR", runs_dir)
+
+    conflicting = gpu_run._extract_arg(
+        ["python", "x.py", "--run-name", "target_run", "--seed", "44"], "--seed"
+    )
+    assert conflicting == "44"  # differs from the running job's 43, so no collision

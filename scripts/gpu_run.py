@@ -505,6 +505,41 @@ def cmd_start(args: argparse.Namespace) -> int:
     elif shutil.which(command[0]):
         command[0] = shutil.which(command[0])
 
+    # Refuse to start a second run that writes the same artifacts. Launching
+    # the same evaluation twice five seconds apart had two processes writing
+    # one progress-checkpoint sequence; one read a partially written file and
+    # died with EOFError. The surviving run was unaffected, but the collision
+    # must not be possible in the first place.
+    target = _extract_arg(command, "--run-name")
+    target_seed = _extract_arg(command, "--seed")
+    if target and RUNS_DIR.exists() and not args.allow_concurrent:
+        for existing in sorted(RUNS_DIR.iterdir()):
+            status_file = existing / "status.json"
+            manifest_file = existing / "manifest.json"
+            if not status_file.exists() or not manifest_file.exists():
+                continue
+            try:
+                state = json.loads(status_file.read_text(encoding="utf-8")).get("state")
+                other = json.loads(manifest_file.read_text(encoding="utf-8"))
+            except Exception:
+                continue
+            if state != "running":
+                continue
+            snapshot = other.get("config_snapshot", {})
+            if snapshot.get("run_name") == target and snapshot.get("seed") == target_seed:
+                print(json.dumps({
+                    "error": "refusing to start a colliding run",
+                    "reason": (
+                        "another run is already writing these artifacts; two "
+                        "writers corrupt the shared progress checkpoints"
+                    ),
+                    "conflicting_run_id": existing.name,
+                    "run_name": target,
+                    "seed": target_seed,
+                    "override": "pass --allow-concurrent only if you are certain",
+                }, indent=2), file=sys.stderr)
+                return 3
+
     run_id = f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{args.name}"
     run_dir = RUNS_DIR / run_id
     run_dir.mkdir(parents=True, exist_ok=False)
@@ -659,6 +694,8 @@ def main() -> int:
 
     start = sub.add_parser("start", help="launch a detached, supervised run")
     start.add_argument("--name", required=True, help="short run label")
+    start.add_argument("--allow-concurrent", action="store_true",
+                       help="permit a run that writes artifacts another running job owns")
     start.add_argument("--resumed-from", default=None)
     start.add_argument("--lineage", nargs="*", default=None)
     start.add_argument("command", nargs=argparse.REMAINDER)
