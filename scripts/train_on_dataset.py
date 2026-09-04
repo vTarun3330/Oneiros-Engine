@@ -110,6 +110,13 @@ SFT_CHECKPOINT_STEPS_OVERRIDE = None
 # one common tokenizer instead, so the arms train on identical records and only
 # the model varies; that pinning must be declared, never inherited by accident.
 SFT_SELECTION_TOKENIZER_NAME_OVERRIDE = None
+# Verified multi-mutant supervision, keyed by displayed record id. When a record
+# has one, it REPLACES the per-record winner search: the completion was already
+# executed against the reference and every sibling mutant of its lineage, so
+# re-deriving it here would only re-run work whose answer is recorded, and the
+# single-assert policy would reject its shape anyway.
+MULTI_MUTANT_COMPLETIONS: Dict[str, str] = {}
+MULTI_MUTANT_DATASET_PATH = None
 
 
 def resolved_base_model_identity() -> Tuple[str, str]:
@@ -409,6 +416,41 @@ def _record_to_pair(
             or record["task_type"]
         ),
     }
+
+
+def load_multi_mutant_completions(directory, split: str = "train") -> Dict[str, str]:
+    """Load verified multi-mutant supervision, keyed by displayed record id.
+
+    Every example must carry execution evidence that it passed on the reference
+    AND killed the target it is shown against.  An example missing either has no
+    evidence behind it, and section 4 of the research contract forbids treating
+    an unverified output as a correct SFT label - so this raises rather than
+    quietly dropping it, which would silently change the training set size.
+    """
+    directory = Path(directory)
+    examples_file = directory / f"{split}.examples.json"
+    if not examples_file.exists():
+        raise FileNotFoundError(
+            f"multi-mutant dataset has no {split}.examples.json: {examples_file}"
+        )
+    loaded = json.loads(examples_file.read_text(encoding="utf-8"))
+    unverified = [
+        item for item in loaded
+        if not (item.get("verified") and item.get("kills_displayed_target"))
+    ]
+    if unverified:
+        raise ValueError(
+            f"{len(unverified)} multi-mutant examples are unverified; "
+            "rebuild the dataset rather than training on them"
+        )
+    completions: Dict[str, str] = {}
+    for item in loaded:
+        record_id = str(item["displayed_record_id"])
+        completion = str(item["completion"])
+        if not completion.strip():
+            raise ValueError(f"multi-mutant example {record_id} has an empty completion")
+        completions[record_id] = completion
+    return completions
 
 
 def make_sft_data_point(pair: Dict, prompt: str, completion: str):
@@ -2911,10 +2953,16 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
 
                 synthetic_sft_data = []
                 repository_sft_data = []
+                multi_mutant_examples_used = 0
                 for pair in train_pairs:
                     if is_repository_execution_mode(pair.get("execution_mode", FUNCTION_EXECUTION_MODE)):
                         verified_winners = _repository_fragment_tests(pair.get("test_cases", []))
                         repository_sft_examples += len(verified_winners[:3])
+                    elif pair["id"] in MULTI_MUTANT_COMPLETIONS:
+                        # Already executed against the reference and every
+                        # sibling mutant when the dataset was built.
+                        verified_winners = [MULTI_MUTANT_COMPLETIONS[pair["id"]]]
+                        multi_mutant_examples_used += 1
                     else:
                         source_tests = extract_dataset_tests(pair.get("test_cases", []), pair["entry_point"])
                         verified_winners, _ = evaluate_pair(
@@ -2940,6 +2988,11 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                 sft_sampling_stats["verified_supervision_exclusions"] = (
                     verified_supervision_exclusions
                 )
+                sft_sampling_stats["multi_mutant_supervision"] = {
+                    "dataset": MULTI_MUTANT_DATASET_PATH,
+                    "available_completions": len(MULTI_MUTANT_COMPLETIONS),
+                    "examples_used": multi_mutant_examples_used,
+                }
                 if sft_records_without_verified_winners:
                     print(
                         "[VERIFIED SUPERVISION GATE] Explicitly excluded "
@@ -3991,6 +4044,16 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
+        "--multi-mutant-dataset",
+        default=None,
+        help=(
+            "Directory holding <split>.examples.json from "
+            "scripts/build_multi_mutant_dataset.py. Synthetic records with a "
+            "verified multi-mutant example use it as their SFT completion "
+            "instead of a single retained assertion."
+        ),
+    )
+    parser.add_argument(
         "--sft-checkpoint-steps",
         type=int,
         default=None,
@@ -4109,6 +4172,15 @@ if __name__ == "__main__":
     HOLDOUT_BUG_FAMILY = sanitise_family_name(args.holdout_bug_family)
     PROMPT_INFORMATION_VARIANT = args.prompt_information_variant
     OUTPUT_INSTRUCTION_VARIANT = args.output_instruction_variant
+    if args.multi_mutant_dataset:
+        MULTI_MUTANT_DATASET_PATH = args.multi_mutant_dataset
+        MULTI_MUTANT_COMPLETIONS = load_multi_mutant_completions(
+            args.multi_mutant_dataset
+        )
+        print(
+            f"[MULTI-MUTANT SUPERVISION] Loaded {len(MULTI_MUTANT_COMPLETIONS)} "
+            f"verified completions from {args.multi_mutant_dataset}"
+        )
     if args.max_pairs:
         MAX_TRAIN_PAIRS = args.max_pairs
     if args.max_validation_functions:

@@ -313,3 +313,66 @@ def test_upstream_assertions_widen_the_candidate_pool():
         extra_assertions=["assert clamp(5, 0, 10) == 5"],
     )
     assert "assert clamp(5, 0, 10) == 5" in matrix.assertions
+
+
+# --------------------------------------------------------------------------
+# multi-mutant supervision loading
+# --------------------------------------------------------------------------
+
+def _write_examples(directory, items):
+    import json
+    path = directory / "train.examples.json"
+    path.write_text(json.dumps(items), encoding="utf-8")
+    return directory
+
+
+def test_loader_returns_verified_completions_keyed_by_record(tmp_path):
+    from scripts.train_on_dataset import load_multi_mutant_completions
+
+    _write_examples(tmp_path, [{
+        "displayed_record_id": "r1", "completion": "def test_f():\n    assert f(1) == 2\n",
+        "verified": True, "kills_displayed_target": True,
+    }])
+    loaded = load_multi_mutant_completions(tmp_path)
+    assert loaded == {"r1": "def test_f():\n    assert f(1) == 2\n"}
+
+
+def test_loader_refuses_an_unverified_example(tmp_path):
+    """An unverified completion has no execution evidence behind it."""
+    from scripts.train_on_dataset import load_multi_mutant_completions
+
+    _write_examples(tmp_path, [{
+        "displayed_record_id": "r1", "completion": "def test_f():\n    assert f(1) == 2\n",
+        "verified": False, "kills_displayed_target": True,
+    }])
+    with pytest.raises(ValueError, match="unverified"):
+        load_multi_mutant_completions(tmp_path)
+
+
+def test_loader_refuses_a_completion_that_misses_its_displayed_target(tmp_path):
+    from scripts.train_on_dataset import load_multi_mutant_completions
+
+    _write_examples(tmp_path, [{
+        "displayed_record_id": "r1", "completion": "def test_f():\n    assert f(1) == 2\n",
+        "verified": True, "kills_displayed_target": False,
+    }])
+    with pytest.raises(ValueError, match="unverified"):
+        load_multi_mutant_completions(tmp_path)
+
+
+def test_loader_refuses_an_empty_completion(tmp_path):
+    from scripts.train_on_dataset import load_multi_mutant_completions
+
+    _write_examples(tmp_path, [{
+        "displayed_record_id": "r1", "completion": "   ",
+        "verified": True, "kills_displayed_target": True,
+    }])
+    with pytest.raises(ValueError, match="empty completion"):
+        load_multi_mutant_completions(tmp_path)
+
+
+def test_loader_reports_a_missing_dataset_file(tmp_path):
+    from scripts.train_on_dataset import load_multi_mutant_completions
+
+    with pytest.raises(FileNotFoundError):
+        load_multi_mutant_completions(tmp_path)
