@@ -4066,8 +4066,15 @@ if __name__ == "__main__":
         help="Equal-budget candidate prioritisation ablation",
     )
     parser.add_argument(
-        "--evaluation-split", choices=["ablation_dev", "val"], default="val",
-        help="Use training-only ablation_dev for design experiments; val remains locked model selection",
+        "--evaluation-split", choices=["train", "ablation_dev", "val"], default="val",
+        help=(
+            "Use training-only ablation_dev for design experiments; val remains "
+            "locked model selection. train evaluates the split the model was "
+            "fitted on and is ONLY for mining hard examples for a relearning "
+            "round - it is not a held-out measurement and must never be "
+            "reported as one. Its artifact is named for its split and the "
+            "comparison scripts refuse any split but val."
+        ),
     )
     parser.add_argument(
         "--holdout-bug-family", default="",

@@ -28,7 +28,14 @@ RELEARNING_SCHEMA_VERSION = "oneiros_sft_relearning_v1"
 #: Splits a loser may be drawn from.  Validation and the sealed test are the
 #: measurement surfaces; mining them for training cases would tune the model on
 #: the thing it is later judged by.
+#: ``train`` is the only split a correction can both be mined from and trained
+#: on. ``ablation_dev`` stays eligible for ANALYSING losers, but corrections
+#: mined from it are unusable twice over: the trainer draws pairs from train so
+#: they can never reach an optimizer step, and ablation_dev is the
+#: checkpoint-selection panel, so training on it would select for memorisation.
+#: See assert_corrections_are_trainable.
 ELIGIBLE_SPLITS = frozenset({"train", "ablation_dev"})
+TRAINABLE_SPLITS = frozenset({"train"})
 FORBIDDEN_SPLITS = frozenset({"val", "validation", "test"})
 
 #: Loser categories, derived from per-candidate failure taxonomy outcomes.
