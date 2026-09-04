@@ -174,6 +174,41 @@ def paired_by_function(
     return rows
 
 
+def holm_bonferroni(tests: list[tuple[str, float]]) -> dict[str, Any]:
+    """Adjust every McNemar p-value reported in this comparison, together.
+
+    Each arm-seed pair is a separate hypothesis test against the same base
+    model. Reporting the smallest of nine p-values as though it were the only
+    one is how a noise result becomes a headline, and this project has already
+    shown once how far a small panel can mislead.
+
+    Holm-Bonferroni controls the family-wise error rate without assuming the
+    tests are independent, and is uniformly more powerful than plain Bonferroni,
+    so it does not throw away a real effect to buy the correction.
+    """
+    ordered = sorted(tests, key=lambda item: item[1])
+    total = len(ordered)
+    adjusted: dict[str, float] = {}
+    running = 0.0
+    for index, (name, raw) in enumerate(ordered):
+        value = min(1.0, (total - index) * raw)
+        running = max(running, value)  # enforce monotonicity
+        adjusted[name] = round(running, 6)
+    return {
+        "method": "holm_bonferroni",
+        "hypotheses": total,
+        "family": "every arm-seed McNemar test against the same base model",
+        "adjusted_p_values": adjusted,
+        "significant_after_adjustment": sorted(
+            name for name, value in adjusted.items() if value < 0.05
+        ),
+        "note": (
+            "an unadjusted p below 0.05 that does not survive adjustment is "
+            "reported as not significant, not as significant with a caveat"
+        ),
+    }
+
+
 def compare(base_run: str, arms: dict[str, str]) -> dict[str, Any]:
     base = _arm(base_run, "base_validation_*.json")
     if not base:
@@ -249,6 +284,14 @@ def compare(base_run: str, arms: dict[str, str]) -> dict[str, Any]:
                 [float(payload["function_kill_rate"]) for payload in arm.values()]
             ), 6),
         }
+    tests = [
+        (f"{name}:seed{seed}", float(row["mcnemar_exact_p_value"]))
+        for name, arm in report["arms"].items()
+        for seed, row in (arm.get("paired_by_function") or {}).items()
+        if row.get("mcnemar_exact_p_value") is not None
+    ]
+    if tests:
+        report["multiplicity"] = holm_bonferroni(tests)
     return report
 
 

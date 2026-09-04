@@ -74,6 +74,106 @@
       },
       "mean_kill_rate": 1.0,
       "range_across_seeds": 0.0
+    },
+    "random": {
+      "description": "random inputs, asserted against the reference",
+      "sees_dataset_tests": false,
+      "by_seed": {
+        "42": {
+          "seed": 42,
+          "targets": 757,
+          "killed": 182,
+          "kill_rate": 0.240423,
+          "kill_rate_wilson_95": [
+            0.21134,
+            0.272127
+          ],
+          "candidates_generated": 4874,
+          "policy_valid_candidates": 1594,
+          "reference_valid_candidates": 1560,
+          "wall_seconds": 583.2
+        },
+        "43": {
+          "seed": 43,
+          "targets": 757,
+          "killed": 186,
+          "kill_rate": 0.245707,
+          "kill_rate_wilson_95": [
+            0.216374,
+            0.277608
+          ],
+          "candidates_generated": 5051,
+          "policy_valid_candidates": 1649,
+          "reference_valid_candidates": 1585,
+          "wall_seconds": 607.0
+        },
+        "44": {
+          "seed": 44,
+          "targets": 757,
+          "killed": 189,
+          "kill_rate": 0.24967,
+          "kill_rate_wilson_95": [
+            0.220153,
+            0.281714
+          ],
+          "candidates_generated": 5186,
+          "policy_valid_candidates": 1671,
+          "reference_valid_candidates": 1572,
+          "wall_seconds": 567.9
+        }
+      },
+      "mean_kill_rate": 0.245267,
+      "range_across_seeds": 0.009247
+    },
+    "static": {
+      "description": "boundary-value templates",
+      "sees_dataset_tests": false,
+      "by_seed": {
+        "42": {
+          "seed": 42,
+          "targets": 757,
+          "killed": 197,
+          "kill_rate": 0.260238,
+          "kill_rate_wilson_95": [
+            0.230248,
+            0.292649
+          ],
+          "candidates_generated": 4530,
+          "policy_valid_candidates": 1613,
+          "reference_valid_candidates": 1607,
+          "wall_seconds": 536.1
+        },
+        "43": {
+          "seed": 43,
+          "targets": 757,
+          "killed": 197,
+          "kill_rate": 0.260238,
+          "kill_rate_wilson_95": [
+            0.230248,
+            0.292649
+          ],
+          "candidates_generated": 4530,
+          "policy_valid_candidates": 1613,
+          "reference_valid_candidates": 1607,
+          "wall_seconds": 535.4
+        },
+        "44": {
+          "seed": 44,
+          "targets": 757,
+          "killed": 197,
+          "kill_rate": 0.260238,
+          "kill_rate_wilson_95": [
+            0.230248,
+            0.292649
+          ],
+          "candidates_generated": 4530,
+          "policy_valid_candidates": 1613,
+          "reference_valid_candidates": 1607,
+          "wall_seconds": 545.6
+        }
+      },
+      "mean_kill_rate": 0.260238,
+      "range_across_seeds": 0.0
     }
   }
 }
