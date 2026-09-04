@@ -1,0 +1,184 @@
+{
+  "schema_version": "oneiros_native_repository_pilot_v1",
+  "status": "PARTIAL_SUCCESS",
+  "environment": {
+    "host": "WSL2 Ubuntu 24.04 on Windows 11 (the Windows host cannot build these environments)",
+    "interpreters_available": [
+      "python3.7.17",
+      "python3.8.20",
+      "python3.9.25",
+      "python3.11.15"
+    ],
+    "driver_python": "python3.8",
+    "timeout_seconds": 900
+  },
+  "protocol": {
+    "repository_source": "upstream URL from record provenance",
+    "why_not_the_local_cache": "The ingestion cache stores each project as a partial clone (partialclonefilter=blob:none, promisor remote): commits and trees are present but file blobs are not, so cloning from it fails with 'unable to read sha1 file' for every file.",
+    "interpreter": "the exact Python minor version BugsInPy records per bug",
+    "test_injection": "BugsInPy adds the bug-revealing test IN the fix commit, so the buggy revision does not contain it. The protocol is buggy SOURCE with the fixed revision's TEST FILE; without injection pytest reports 'no tests ran' (exit 4) or an older passing test.",
+    "setuptools_pin": "setuptools<70. Modern setuptools no longer ships pkg_resources, which these 2019-era projects import during their own build.",
+    "pytest_exit_code_policy": "Only exit 1 is a test failure. Exit 2/3/4/5 means pytest could not run the test and is recorded as infrastructure failure, never as a reproduced defect."
+  },
+  "outcomes": {
+    "infrastructure_failure": 2,
+    "reproduced": 3
+  },
+  "infrastructure_failure_rate": 0.4,
+  "reproduced_count": 3,
+  "tasks_total": 5,
+  "records": [
+    {
+      "task_id": "bugsinpy::thefuck::1",
+      "project": "thefuck",
+      "bug_id": "1",
+      "outcome": "reproduced",
+      "failed_step": null,
+      "detail": "",
+      "buggy_commit": "2ced7a7f33ae0bec3ffc7a43ce95330bdf6cfcb9",
+      "fixed_commit": "444908ce1c17767ef4aaf9e0b4950497914f7f63",
+      "test_selector": "tests/rules/test_pip_unknown_command.py::test_get_new_command",
+      "python": {
+        "requested": "3.7.0",
+        "used": "python3.7",
+        "matched_requested_minor": true
+      },
+      "pytest_returncodes": {
+        "buggy": 1,
+        "fixed": 0
+      },
+      "buggy_failed": true,
+      "fixed_passed": true,
+      "test_injection": {
+        "test_file": "tests/rules/test_pip_unknown_command.py",
+        "injected_from": "fixed_revision",
+        "characters": 1085
+      },
+      "buggy_test_tail": "e's documentation for alternative uses\n    from imp import load_source\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ============================\nFAILED tests/rules/test_pip_unknown_command.py::test_get_new_command[pip un+install thefuck-un+install-uninstall-pip uninstall thefuck]\n1 failed, 1 passed, 1 warning in 0.02s\n",
+      "fixed_test_tail": "=================== warnings summary ===============================\nthefuck/conf.py:1\n  /tmp/nativepilot/thefuck-1-fixed/thefuck/conf.py:1: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses\n    from imp import load_source\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n2 passed, 1 warning in 0.01s\n",
+      "seconds": 10.59
+    },
+    {
+      "task_id": "bugsinpy::httpie::1",
+      "project": "httpie",
+      "bug_id": "1",
+      "outcome": "infrastructure_failure",
+      "failed_step": "pytest_could_not_run_the_test",
+      "detail": "pytest exit codes [4]",
+      "buggy_commit": "001bda19450ad85c91345eea3cfa3991e1d492ba",
+      "fixed_commit": "5300b0b490b8db48fac30b5e32164be93dc574b7",
+      "test_selector": "tests/test_downloads.py::TestDownloadUtils::test_unique_filename",
+      "python": {
+        "requested": "3.7.3",
+        "used": "python3.7",
+        "matched_requested_minor": true
+      },
+      "pytest_returncodes": {
+        "buggy": 4,
+        "fixed": 4
+      },
+      "buggy_failed": false,
+      "fixed_passed": false,
+      "test_injection": {
+        "test_file": "tests/test_downloads.py",
+        "injected_from": "fixed_revision",
+        "characters": 5857
+      },
+      "buggy_test_tail": "",
+      "fixed_test_tail": "",
+      "seconds": 11.6
+    },
+    {
+      "task_id": "bugsinpy::sanic::1",
+      "project": "sanic",
+      "bug_id": "1",
+      "outcome": "reproduced",
+      "failed_step": null,
+      "detail": "",
+      "buggy_commit": "e7001b00747b659f7042b0534802b936ee8a53e0",
+      "fixed_commit": "44973125c15304b4262c51c78b5a86bd1daafa86",
+      "test_selector": "tests/test_blueprints.py::test_bp_middleware_order",
+      "python": {
+        "requested": "3.8.3",
+        "used": "python3.8",
+        "matched_requested_minor": true
+      },
+      "pytest_returncodes": {
+        "buggy": 1,
+        "fixed": 0
+      },
+      "buggy_failed": true,
+      "fixed_passed": true,
+      "test_injection": {
+        "test_file": "tests/test_blueprints.py",
+        "injected_from": "fixed_revision",
+        "characters": 20435
+      },
+      "buggy_test_tail": "http://127.0.0.1:51113/\nINFO     sanic.access:server.py:449 \nINFO     sanic.root:server.py:855 Starting worker [996]\nINFO     sanic.root:server.py:858 Stopping worker [996]\nINFO     sanic.root:app.py:1180 Server Stopped\n=========================== short test summary info ============================\nFAILED tests/test_blueprints.py::test_bp_middleware_order - assert [1, 2, 3, ...\n1 failed in 0.05s\n",
+      "fixed_test_tail": ".                                                                        [100%]\n1 passed in 0.04s\n",
+      "seconds": 13.67
+    },
+    {
+      "task_id": "bugsinpy::tornado::1",
+      "project": "tornado",
+      "bug_id": "1",
+      "outcome": "reproduced",
+      "failed_step": null,
+      "detail": "",
+      "buggy_commit": "6a5a0bfa370b6c0d3dbbf9589a560a98202d2baa",
+      "fixed_commit": "4677c54cc18bbfbdf0f4dadf11610fab6203fd63",
+      "test_selector": "tornado/test/websocket_test.py::WebSocketTest::test_nodelay",
+      "python": {
+        "requested": "3.7.0",
+        "used": "python3.7",
+        "matched_requested_minor": true
+      },
+      "pytest_returncodes": {
+        "buggy": 1,
+        "fixed": 0
+      },
+      "buggy_failed": true,
+      "fixed_passed": true,
+      "test_injection": {
+        "test_file": "tornado/test/websocket_test.py",
+        "injected_from": "fixed_revision",
+        "characters": 27509
+      },
+      "buggy_test_tail": "gy/tornado/test/websocket_test.py\", line 203, in open\n    self.set_nodelay(True)\n  File \"/tmp/nativepilot/tornado-1-buggy/tornado/websocket.py\", line 561, in set_nodelay\n    assert self.stream is not None\nAssertionError\n=========================== short test summary info ============================\nFAILED tornado/test/websocket_test.py::WebSocketTest::test_nodelay - Assertio...\n1 failed in 0.11s\n",
+      "fixed_test_tail": ".                                                                        [100%]\n1 passed in 0.10s\n",
+      "seconds": 12.78
+    },
+    {
+      "task_id": "bugsinpy::fastapi::1",
+      "project": "fastapi",
+      "bug_id": "1",
+      "outcome": "infrastructure_failure",
+      "failed_step": "install",
+      "detail": "",
+      "buggy_commit": "766157bfb4e7dfccba09ab398e8ec444d14e947c",
+      "fixed_commit": "3397d4d69a9c2d64c1219fcbf291ea5697a4abb8",
+      "test_selector": "tests/test_jsonable_encoder.py::test_encode_model_with_default",
+      "python": {
+        "requested": "3.8.3",
+        "used": "python3.8",
+        "matched_requested_minor": true
+      },
+      "pytest_returncodes": null,
+      "buggy_failed": null,
+      "fixed_passed": null,
+      "test_injection": null,
+      "buggy_test_tail": "",
+      "fixed_test_tail": "",
+      "seconds": null
+    }
+  ],
+  "interpretation": {
+    "claim_now_supported": "Native repository execution is demonstrated: three real defects reproduce buggy-fail / fixed-pass end to end on their own revisions.",
+    "claim_NOT_yet_supported": "This pilot reproduces the OFFICIAL test. It is not yet generated-test real-repository kill evidence: no model-generated test has been executed natively. Repository corpus records therefore remain VERIFIED SUPERVISION COVERAGE in reporting.",
+    "reliability": "3 of 5 reproduced; 40% infrastructure failure. The plan requires the pilot to succeed reliably before scaling, so this is a partial pass.",
+    "remaining_infrastructure_failures": {
+      "httpie::1": "pytest exit 4 at both revisions; test could not be collected",
+      "fastapi::1": "project build requires flit_core<4, which does not resolve"
+    }
+  }
+}
