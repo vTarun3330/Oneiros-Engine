@@ -73,10 +73,33 @@ def build() -> dict[str, Any]:
     if balanced and not (balanced.get("readiness") or {}).get("ready_for_final_sft", False):
         for condition in (balanced.get("readiness") or {}).get("blocking_conditions", []):
             blockers.append(f"balanced corpus: {condition}")
-    if not (results / "v4_2_final_sft_receipt.json").exists():
+    receipt = _read(results / "v4_2_final_sft_receipt.json")
+    if receipt is None:
         blockers.append(
             "the final source-bound SFT adapter has not been rebuilt and receipted"
         )
+    else:
+        # A run named for an intervention must actually have applied it. The
+        # first "multi-mutant final" rebuild used multi-mutant supervision for
+        # 76 of 2085 examples and nothing in the artifacts said so.
+        density = (
+            (receipt.get("multi_mutant_supervision") or {})
+            .get("density_over_eligible_synthetic")
+        )
+        if density is not None and density < 0.5:
+            blockers.append(
+                f"the receipted adapter applied multi-mutant supervision to only "
+                f"{density:.1%} of eligible synthetic pairs, so it does not test "
+                "the intervention it is named for"
+            )
+        if receipt.get("allow_test_function_candidates") and not receipt.get(
+            "baselines_rescored_under_same_shape_policy"
+        ):
+            blockers.append(
+                "the adapter was scored under the widened test-function shape "
+                "policy but the baselines were not rescored under it, so the "
+                "comparison is not like-for-like"
+            )
     if pilot and pilot.get("status") != "SUCCESS":
         blockers.append(
             "native repository execution is a partial pass; no model-generated "

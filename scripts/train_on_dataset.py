@@ -3093,11 +3093,38 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                 sft_sampling_stats["verified_supervision_exclusions"] = (
                     verified_supervision_exclusions
                 )
+                # Density, not just a count. A run named for multi-mutant
+                # supervision once used it for 76 of 2085 examples because the
+                # completions were keyed by displayed record id alone, and
+                # nothing in the artifact said so - it read as a successful
+                # multi-mutant rebuild while being 96% ordinary supervision.
+                eligible_synthetic = sum(
+                    1 for pair in train_pairs
+                    if not is_repository_execution_mode(
+                        pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
+                    )
+                )
+                density = (
+                    multi_mutant_examples_used / eligible_synthetic
+                    if eligible_synthetic else 0.0
+                )
                 sft_sampling_stats["multi_mutant_supervision"] = {
                     "dataset": MULTI_MUTANT_DATASET_PATH,
                     "available_completions": len(MULTI_MUTANT_COMPLETIONS),
                     "examples_used": multi_mutant_examples_used,
+                    "eligible_synthetic_pairs": eligible_synthetic,
+                    "density_over_eligible_synthetic": round(density, 6),
                 }
+                if MULTI_MUTANT_COMPLETIONS and density < 0.5:
+                    print(
+                        "[MULTI-MUTANT DENSITY WARNING] Only "
+                        f"{multi_mutant_examples_used:,} of {eligible_synthetic:,} "
+                        f"eligible synthetic pairs ({density:.1%}) received "
+                        "multi-mutant supervision. This run is NOT a test of the "
+                        "multi-mutant intervention; check the completion keying "
+                        "before reporting it as one.",
+                        flush=True,
+                    )
                 if sft_records_without_verified_winners:
                     print(
                         "[VERIFIED SUPERVISION GATE] Explicitly excluded "
