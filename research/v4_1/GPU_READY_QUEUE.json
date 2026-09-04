@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_v4_1_gpu_ready_queue_v1",
-  "generated_utc": "2026-09-01T05:58:37.495735+00:00",
+  "generated_utc": "2026-09-04T15:02:38.541599+00:00",
   "branch": "experiment/research-eval-ablations",
   "baseline_commit": "1d2cca8",
   "corpus_version": "v4_1_research_hardened_candidate",
@@ -76,14 +76,15 @@
             "G",
             "H",
             "I",
-            "J"
+            "J",
+            "K"
           ],
           "screening_prompt_token_limit": 1024,
           "prompt_budget_selection_status": "NOT_SELECTED_CANDIDATE_COMMANDS_ONLY",
           "dataset_identity_policy": "source.upstream_then_source.name_v1"
         },
-        "plan_sha256": "c6433a9fecc505ad1f25cda27cbc04f4c9d6ff2924df197fd33c614360d46e95",
-        "experiment_matrix_sha256": "771638a0e4e46597c61245a1edd8ee000b24688200227f508867b41cec8cc750",
+        "plan_sha256": "6749a8f40fa6be735a862997db6afbbecbc0783a70836f3b6b459dff55584e31",
+        "experiment_matrix_sha256": "6d730bec7b067266d9c6a6916742d5787b59771082fcfbe0bc99f923fbad0de9",
         "selection_rule": {
           "priority": [
             "reference_validity",
@@ -138,13 +139,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_j_budget_1024_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1024_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1024_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1024_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_j_budget_1024_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1024 --sft-selection-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1024_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-selection-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1024_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-selection-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1024_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-selection-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_j_budget_1024_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_j_budget_1024_p1024_preflight.json --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_j_budget_1024_p1024_preflight.json --prompt-token-limit 1024 --selection-prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 800,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -165,6 +166,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": 1024,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Among budgets that can actually prompt the whole panel, measure which yields better reference-validity and Kill@k. 1024 is the smallest budget that clears the gate on both panels; 1280 tests whether additional context helps further. Function completions are capped at 128, so both fit the 2048 sequence budget.",
             "note": "Changing the budget changes the evaluation scope hash. Results are not comparable with V4 numbers produced at 512 unless the V4 adapter is re-evaluated under the same budget.",
             "requires_before_execution": [
@@ -178,13 +181,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_j_budget_1280_p1280 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1280 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1280_p1280 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1280",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1280_p1280 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1280",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1280_p1280 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1280"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_j_budget_1280_p1280 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1280 --sft-selection-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1280_p1280 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1280 --sft-selection-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1280_p1280 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1280 --sft-selection-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_j_budget_1280_p1280 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1280 --sft-selection-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_j_budget_1280_p1280",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_j_budget_1280_p1280_preflight.json --prompt-token-limit 1280",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_j_budget_1280_p1280_preflight.json --prompt-token-limit 1280 --selection-prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 800,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -205,6 +208,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1280,
+            "selection_prompt_token_limit": 1024,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Among budgets that can actually prompt the whole panel, measure which yields better reference-validity and Kill@k. 1024 is the smallest budget that clears the gate on both panels; 1280 tests whether additional context helps further. Function completions are capped at 128, so both fit the 2048 sequence budget.",
             "note": "Changing the budget changes the evaluation scope hash. Results are not comparable with V4 numbers produced at 512 unless the V4 adapter is re-evaluated under the same budget.",
             "requires_before_execution": [
@@ -218,13 +223,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_a0_code_only_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --prompt-information-variant code_only --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a0_code_only_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --prompt-information-variant code_only --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a0_code_only_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --prompt-information-variant code_only --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a0_code_only_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --prompt-information-variant code_only --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_a0_code_only_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --prompt-information-variant code_only --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a0_code_only_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --prompt-information-variant code_only --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a0_code_only_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --prompt-information-variant code_only --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a0_code_only_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --prompt-information-variant code_only --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_a0_code_only_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_a0_code_only_p1024_preflight.json --prompt-information-variant code_only --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_a0_code_only_p1024_preflight.json --prompt-information-variant code_only --prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 800,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -245,6 +250,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure the incremental value of specification and legitimate support context.",
             "requires_before_execution": [
               "successful_32_pair_integration",
@@ -258,13 +265,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_a1_code_specification_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --prompt-information-variant code_specification --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a1_code_specification_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --prompt-information-variant code_specification --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a1_code_specification_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --prompt-information-variant code_specification --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a1_code_specification_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --prompt-information-variant code_specification --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_a1_code_specification_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --prompt-information-variant code_specification --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a1_code_specification_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --prompt-information-variant code_specification --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a1_code_specification_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --prompt-information-variant code_specification --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a1_code_specification_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --prompt-information-variant code_specification --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_a1_code_specification_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_a1_code_specification_p1024_preflight.json --prompt-information-variant code_specification --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_a1_code_specification_p1024_preflight.json --prompt-information-variant code_specification --prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 800,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -285,6 +292,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure the incremental value of specification and legitimate support context.",
             "requires_before_execution": [
               "successful_32_pair_integration",
@@ -298,13 +307,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_a2_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a2_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a2_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a2_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_a2_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a2_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a2_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_a2_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_a2_full_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_a2_full_p1024_preflight.json --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_a2_full_p1024_preflight.json --prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 800,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -325,6 +334,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure the incremental value of specification and legitimate support context.",
             "requires_before_execution": [
               "successful_32_pair_integration",
@@ -338,13 +349,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_c0_legacy_exactly_one_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --output-instruction-variant legacy_exactly_one --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_c0_legacy_exactly_one_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --output-instruction-variant legacy_exactly_one --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_c0_legacy_exactly_one_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --output-instruction-variant legacy_exactly_one --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_c0_legacy_exactly_one_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --output-instruction-variant legacy_exactly_one --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_c0_legacy_exactly_one_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --output-instruction-variant legacy_exactly_one --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_c0_legacy_exactly_one_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --output-instruction-variant legacy_exactly_one --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_c0_legacy_exactly_one_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --output-instruction-variant legacy_exactly_one --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_c0_legacy_exactly_one_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --output-instruction-variant legacy_exactly_one --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_c0_legacy_exactly_one_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_c0_legacy_exactly_one_p1024_preflight.json --output-instruction-variant legacy_exactly_one --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_c0_legacy_exactly_one_p1024_preflight.json --output-instruction-variant legacy_exactly_one --prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 800,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -365,6 +376,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure whether revised one-test-case wording improves candidate validity.",
             "requires_before_execution": [
               "successful_32_pair_integration",
@@ -378,13 +391,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_c1_self_contained_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_c1_self_contained_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_c1_self_contained_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_c1_self_contained_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_c1_self_contained_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_c1_self_contained_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_c1_self_contained_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_c1_self_contained_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_c1_self_contained_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_c1_self_contained_p1024_preflight.json --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_c1_self_contained_p1024_preflight.json --prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 800,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -405,6 +418,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure whether revised one-test-case wording improves candidate validity.",
             "requires_before_execution": [
               "successful_32_pair_integration",
@@ -418,13 +433,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_f_repo_0_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-real-target-fraction 0.0 --execution-mode function_assertion --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_0_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-real-target-fraction 0.0 --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_0_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-real-target-fraction 0.0 --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_0_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-real-target-fraction 0.0 --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_f_repo_0_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-real-target-fraction 0.0 --execution-mode function_assertion --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_0_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-real-target-fraction 0.0 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_0_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-real-target-fraction 0.0 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_0_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-real-target-fraction 0.0 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_f_repo_0_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_f_repo_0_p1024_preflight.json --real-target-fraction 0.0 --execution-mode function_assertion --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_f_repo_0_p1024_preflight.json --real-target-fraction 0.0 --execution-mode function_assertion --prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 800,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -445,6 +460,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": "function_assertion",
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure repository-supervision transfer without changing the evaluator.",
             "requires_before_execution": [
               "successful_32_pair_integration",
@@ -458,13 +475,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_f_repo_10_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-real-target-fraction 0.1 --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_10_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-real-target-fraction 0.1 --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_10_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-real-target-fraction 0.1 --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_10_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-real-target-fraction 0.1 --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_f_repo_10_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-real-target-fraction 0.1 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_10_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-real-target-fraction 0.1 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_10_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-real-target-fraction 0.1 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_10_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-real-target-fraction 0.1 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_f_repo_10_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_f_repo_10_p1024_preflight.json --real-target-fraction 0.1 --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_f_repo_10_p1024_preflight.json --real-target-fraction 0.1 --prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 800,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -485,6 +502,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure repository-supervision transfer without changing the evaluator.",
             "requires_before_execution": [
               "successful_32_pair_integration",
@@ -498,13 +517,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_f_repo_20_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-real-target-fraction 0.2 --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_20_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-real-target-fraction 0.2 --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_20_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-real-target-fraction 0.2 --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_20_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-real-target-fraction 0.2 --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_f_repo_20_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-real-target-fraction 0.2 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_20_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-real-target-fraction 0.2 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_20_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-real-target-fraction 0.2 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_20_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-real-target-fraction 0.2 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_f_repo_20_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_f_repo_20_p1024_preflight.json --real-target-fraction 0.2 --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_f_repo_20_p1024_preflight.json --real-target-fraction 0.2 --prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 800,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -525,6 +544,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure repository-supervision transfer without changing the evaluator.",
             "requires_before_execution": [
               "successful_32_pair_integration",
@@ -538,13 +559,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_f_repo_30_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-real-target-fraction 0.3 --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_30_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-real-target-fraction 0.3 --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_30_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-real-target-fraction 0.3 --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_30_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-real-target-fraction 0.3 --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_f_repo_30_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-real-target-fraction 0.3 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_30_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-real-target-fraction 0.3 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_30_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-real-target-fraction 0.3 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_f_repo_30_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-real-target-fraction 0.3 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_f_repo_30_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_f_repo_30_p1024_preflight.json --real-target-fraction 0.3 --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_f_repo_30_p1024_preflight.json --real-target-fraction 0.3 --prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 800,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -565,6 +586,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure repository-supervision transfer without changing the evaluator.",
             "requires_before_execution": [
               "successful_32_pair_integration",
@@ -611,13 +634,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_i_scale_800_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_800_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_800_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_800_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_i_scale_800_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_800_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_800_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_800_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_i_scale_800_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_i_scale_800_p1024_preflight.json --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_i_scale_800_p1024_preflight.json --prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 800,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -638,6 +661,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure whether the current policy is undertrained.",
             "requires_before_execution": [
               "successful_32_pair_integration",
@@ -651,13 +676,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_i_scale_2000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 2000 --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_2000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_2000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_2000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_i_scale_2000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 2000 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_2000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_2000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_2000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_i_scale_2000_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 2000 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_i_scale_2000_p1024_preflight.json --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 2000 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_i_scale_2000_p1024_preflight.json --prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 2000,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -678,6 +703,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure whether the current policy is undertrained.",
             "requires_before_execution": [
               "successful_32_pair_integration",
@@ -691,13 +718,13 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_i_scale_4000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 4000 --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_4000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_4000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_4000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_i_scale_4000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 4000 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_4000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_4000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_4000_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_i_scale_4000_p1024",
-            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 4000 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_i_scale_4000_p1024_preflight.json --prompt-token-limit 1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 4000 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_i_scale_4000_p1024_preflight.json --prompt-token-limit 1024 --complex-target-fraction 0.6",
             "training_size": 4000,
             "training_command_index": 0,
             "evaluation_command_indexes": [
@@ -718,6 +745,8 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure whether the current policy is undertrained.",
             "requires_before_execution": [
               "successful_32_pair_integration",
@@ -731,10 +760,10 @@
             "status": "planned_modal_not_run",
             "uses_final_test": false,
             "commands": [
-              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_i_scale_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024",
-              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024"
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_i_scale_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_i_scale_full_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
             ],
             "run_name": "v4_1_ablation_i_scale_full_p1024",
             "preflight_command": null,
@@ -758,12 +787,157 @@
             "synthetic_balance_mode": "none",
             "training_execution_mode": null,
             "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
             "hypothesis": "Measure whether the current policy is undertrained.",
             "requires_before_execution": [
               "successful_32_pair_integration",
               "group_J_decision_frozen_at_this_exact_prompt_budget",
               "matching_treatment_preflight"
             ]
+          },
+          {
+            "id": "K_complex_function_mix_K0_natural_mix",
+            "axis": "complex_function_mix",
+            "status": "planned_modal_not_run",
+            "uses_final_test": false,
+            "commands": [
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_k0_natural_mix_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.0 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_k0_natural_mix_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.0",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_k0_natural_mix_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.0",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_k0_natural_mix_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.0"
+            ],
+            "run_name": "v4_1_ablation_k0_natural_mix_p1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_k0_natural_mix_p1024_preflight.json --prompt-token-limit 1024 --complex-target-fraction 0.0",
+            "training_size": 800,
+            "training_command_index": 0,
+            "evaluation_command_indexes": [
+              1,
+              2,
+              3
+            ],
+            "seeds": [
+              42,
+              43,
+              44
+            ],
+            "prompt_information_variant": "full",
+            "output_instruction_variant": "self_contained",
+            "real_target_fraction": null,
+            "balanced_sampling": null,
+            "synthetic_balance_fraction": null,
+            "synthetic_balance_mode": "none",
+            "training_execution_mode": null,
+            "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.0,
+            "hypothesis": "Measure whether guaranteeing execution-verified complex functions in bounded SFT improves reference-validity and Kill@k.",
+            "complexity_lineage": "buggy_revision_ast_only",
+            "requires_before_execution": [
+              "successful_32_pair_integration",
+              "group_J_decision_frozen_at_this_exact_prompt_budget",
+              "matching_treatment_preflight"
+            ]
+          },
+          {
+            "id": "K_complex_function_mix_K1_complex_60",
+            "axis": "complex_function_mix",
+            "status": "planned_modal_not_run",
+            "uses_final_test": false,
+            "commands": [
+              "py -3.12 scripts/modal_train.py --phase sft --run-name v4_1_ablation_k1_complex_60_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --max-pairs 800 --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6 --fresh --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-repository-completion-token-limit 1024 --sft-monitor-validation-functions 100 --sft-monitor-patience 3 --sft-monitor-min-function-kill-rate 0.58",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_k1_complex_60_p1024 --corpus-version v4_1_research_hardened_candidate --seed 42 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_k1_complex_60_p1024 --corpus-version v4_1_research_hardened_candidate --seed 43 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6",
+              "py -3.12 scripts/modal_train.py --phase sft_eval --run-name v4_1_ablation_k1_complex_60_p1024 --corpus-version v4_1_research_hardened_candidate --seed 44 --evaluation-split ablation_dev --sft-prompt-token-limit 1024 --sft-complex-target-fraction 0.6"
+            ],
+            "run_name": "v4_1_ablation_k1_complex_60_p1024",
+            "preflight_command": "py -3.12 scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --evaluation-split ablation_dev --max-pairs 800 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --repository-completion-token-limit 1024 --min-function-kill-rate 0.58 --output results/v4_1_ablation_k1_complex_60_p1024_preflight.json --prompt-token-limit 1024 --complex-target-fraction 0.6",
+            "training_size": 800,
+            "training_command_index": 0,
+            "evaluation_command_indexes": [
+              1,
+              2,
+              3
+            ],
+            "seeds": [
+              42,
+              43,
+              44
+            ],
+            "prompt_information_variant": "full",
+            "output_instruction_variant": "self_contained",
+            "real_target_fraction": null,
+            "balanced_sampling": null,
+            "synthetic_balance_fraction": null,
+            "synthetic_balance_mode": "none",
+            "training_execution_mode": null,
+            "prompt_token_limit": 1024,
+            "selection_prompt_token_limit": null,
+            "complex_target_fraction": 0.6,
+            "hypothesis": "Measure whether guaranteeing execution-verified complex functions in bounded SFT improves reference-validity and Kill@k.",
+            "complexity_lineage": "buggy_revision_ast_only",
+            "requires_before_execution": [
+              "successful_32_pair_integration",
+              "group_J_decision_frozen_at_this_exact_prompt_budget",
+              "matching_treatment_preflight"
+            ]
+          },
+          {
+            "id": "L_base_model_L0_phi3_eager",
+            "axis": "base_model",
+            "status": "completed_local_zero_shot_screen",
+            "uses_final_test": false,
+            "commands": [],
+            "local_screen_commands": [
+              "python scripts/smoke_backend_compare.py --backend phi3_eager --seed 42 --prompt-token-limit 1024"
+            ],
+            "command_kind": "local_not_modal",
+            "role": "control",
+            "model": "microsoft/Phi-3-mini-4k-instruct",
+            "model_revision": "f39ac1d28e925b323eae81227eaba4464caced4e",
+            "attention_implementation": "eager",
+            "evaluation_panel": "fixed_32_function_ablation_dev_monitor_panel",
+            "panel_selection_sha256": "0ed8b64f30df20bab19c1afc755b199c7f424d9d227f5a2e01c588144fafe907",
+            "seeds": [
+              42
+            ],
+            "hypothesis": "Establish the incumbent base model's zero-shot candidate validity and generation cost under the frozen evaluation protocol."
+          },
+          {
+            "id": "L_base_model_L1_phi3_sdpa",
+            "axis": "base_model",
+            "status": "infeasible_in_pinned_environment",
+            "uses_final_test": false,
+            "commands": [],
+            "decision": "REJECT",
+            "role": "treatment",
+            "model": "microsoft/Phi-3-mini-4k-instruct",
+            "attention_implementation": "sdpa",
+            "reason": "transformers 4.48.3 raises ValueError: Phi3ForCausalLM does not support an attention implementation through torch.nn.functional.scaled_dot_product_attention. flash_attention_2 is also unavailable for Phi-3's sliding-window attention in this environment, so eager is the only admissible Phi-3 backend."
+          },
+          {
+            "id": "L_base_model_L2_qwen25_coder_sdpa",
+            "axis": "base_model",
+            "status": "completed_local_zero_shot_screen_plus_integration",
+            "uses_final_test": false,
+            "commands": [],
+            "command_kind": "local_not_modal",
+            "local_screen_commands": [
+              "python scripts/smoke_backend_compare.py --backend qwen_sdpa --seed 42 --prompt-token-limit 1024",
+              "python scripts/preflight_sft_run.py --corpus-version v4_1_research_hardened_candidate --max-pairs 32 --epochs 1 --batch-size 1 --learning-rate 0.00005 --lr-scheduler-type constant_with_warmup --real-target-fraction 0.20 --repository-prompt-token-limit 1024 --repository-completion-token-limit 1024 --prompt-token-limit 1024 --minimum-monitor-checkpoints 1 --min-function-kill-rate 0.58 --base-model-name Qwen/Qwen2.5-Coder-1.5B-Instruct --output results/v4_1_integration_32_qwen_seed42_preflight.json",
+              "python scripts/train_on_dataset.py --fresh --phase sft --corpus-version v4_1_research_hardened_candidate --run-name local_j1024_integration_32_seed42_qwen_v1 --seed 42 --max-pairs 32 --evaluation-split ablation_dev --sft-epochs 1 --sft-learning-rate 0.00005 --sft-lr-scheduler-type constant_with_warmup --sft-batch-size 1 --sft-prompt-token-limit 1024 --sft-selection-prompt-token-limit 1024 --sft-repository-completion-token-limit 1024 --sft-complex-target-fraction 0.6 --sft-min-monitor-checkpoints 1 --sft-monitor-validation-functions 32 --sft-monitor-patience 1 --sft-monitor-min-function-kill-rate 0.58 --base-model-name Qwen/Qwen2.5-Coder-1.5B-Instruct --attention-implementation sdpa"
+            ],
+            "role": "treatment",
+            "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+            "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+            "attention_implementation": "sdpa",
+            "evaluation_panel": "fixed_32_function_ablation_dev_monitor_panel",
+            "panel_selection_sha256": "0ed8b64f30df20bab19c1afc755b199c7f424d9d227f5a2e01c588144fafe907",
+            "seeds": [
+              42
+            ],
+            "hypothesis": "Measure whether a smaller code-specialised base model with an available fused-attention backend improves reference-validity and generation cost without weakening the evaluation protocol.",
+            "note": "Screening evidence only. A base-model swap changes the tokenizer, so the prompt-budget admissibility sweep and every V4 comparison must be re-derived before any headline claim."
           },
           {
             "id": "B_legacy_vs_unified",
