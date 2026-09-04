@@ -98,3 +98,8 @@ logs_*.txt
 
 # Generated sealed-test-free local corpus shards (reproducible from manifest)
 data/corpus/*/development_view/
+
+# libFuzzer writes a crash-<sha1> artifact into its working directory whenever a
+# fuzz target raises. The Atheris driver now runs each target in a scratch dir,
+# but an interrupted or hand-run harness can still drop one here.
+crash-*

@@ -21,6 +21,7 @@ from __future__ import annotations
 import argparse
 import collections
 import json
+import math
 import sys
 from pathlib import Path
 from typing import Any
@@ -62,47 +63,36 @@ def _excluded_ids(view_dir: Path) -> dict[str, str]:
     }
 
 
-def _cap_by_project(
+def _audit_project_balance(
     entries: list[dict[str, Any]], max_fraction: float,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    """Limit any single project's share of the repository side.
+    """Report project concentration without discarding unique evidence.
 
     Without this, django alone supplies 196 of 457 repository targets and the
     'real repository' half of the corpus becomes largely one codebase.
+    The cure is more non-dominant repositories, not dropping verified defects
+    and then repeating the smaller set to manufacture a 50:50 row count.
     """
     if not entries:
-        return [], {"cap_applied": False}
+        return [], {"cap_applied": False, "cap_met": True}
     by_project: dict[str, list[dict[str, Any]]] = collections.defaultdict(list)
     for entry in entries:
         by_project[str(entry.get("project") or "unknown")].append(entry)
-    for values in by_project.values():
-        values.sort(key=lambda item: item["target_key"])
-
-    # The cap is a fraction of the RETAINED total, which depends on the cap, so
-    # solve it by iterating to a fixed point rather than guessing an order.
-    retained_total = len(entries)
-    for _ in range(64):
-        limit = max(1, int(retained_total * max_fraction))
-        kept = {
-            project: values[:limit] for project, values in by_project.items()
-        }
-        new_total = sum(len(values) for values in kept.values())
-        if new_total == retained_total:
-            break
-        retained_total = new_total
-    limit = max(1, int(retained_total * max_fraction))
-    selected = [item for project in sorted(kept) for item in kept[project]]
-    return selected, {
-        "cap_applied": True,
+    counts = {project: len(values) for project, values in sorted(by_project.items())}
+    dominant_project, dominant_count = max(counts.items(), key=lambda item: item[1])
+    observed_fraction = dominant_count / len(entries)
+    required_total = math.ceil(dominant_count / max_fraction)
+    return list(entries), {
+        "cap_applied": False,
+        "audit_only_until_more_unique_repositories_are_added": True,
         "max_project_fraction": max_fraction,
-        "per_project_limit": limit,
-        "dropped": len(entries) - len(selected),
-        "project_counts_before": {
-            project: len(values) for project, values in sorted(by_project.items())
-        },
-        "project_counts_after": {
-            project: len(values) for project, values in sorted(kept.items())
-        },
+        "cap_met": observed_fraction <= max_fraction,
+        "dominant_project": dominant_project,
+        "dominant_project_count": dominant_count,
+        "dominant_project_fraction": round(observed_fraction, 4),
+        "additional_non_dominant_targets_needed": max(0, required_total - len(entries)),
+        "unique_targets_dropped": 0,
+        "project_counts": counts,
     }
 
 
@@ -181,22 +171,33 @@ def build(
         })
     stages["repository_eligible_unique_targets"] = len(repository_entries)
 
-    repository_entries, project_cap = _cap_by_project(
+    repository_entries, project_cap = _audit_project_balance(
         repository_entries, MAX_PROJECT_FRACTION,
     )
-    stages["repository_after_project_cap"] = len(repository_entries)
+    stages["repository_after_project_audit"] = len(repository_entries)
 
     # --- bounded repetition to approach the frozen ratio ---
     synthetic_count = len(synthetic_entries)
     repository_count = len(repository_entries)
     desired_repository = synthetic_count  # 50/50 by unique target
-    shortfall = max(0, desired_repository - repository_count)
+    unique_repository_shortfall = max(0, desired_repository - repository_count)
+    shortfall = unique_repository_shortfall
     achievable = repository_count * (MAX_REPEATS - 1)
     repeats_used = min(shortfall, achievable)
 
     repeated: list[dict[str, Any]] = []
     if repeats_used:
-        ordered = sorted(repository_entries, key=lambda item: item["target_key"])
+        project_counts = collections.Counter(
+            item["project"] for item in repository_entries
+        )
+        family_counts = collections.Counter(
+            item["bug_family"] for item in repository_entries
+        )
+        ordered = sorted(repository_entries, key=lambda item: (
+            project_counts[item["project"]],
+            family_counts[item["bug_family"]],
+            item["project"], item["bug_family"], item["target_key"],
+        ))
         for index in range(repeats_used):
             entry = dict(ordered[index % len(ordered)])
             entry["repeat_index"] = 2
@@ -209,6 +210,13 @@ def build(
     complex_count = sum(
         1 for item in selection if item["complexity_tier"] == "complex"
     )
+    moderate_or_complex_count = sum(
+        1 for item in selection
+        if item["complexity_tier"] in {"moderate", "complex"}
+    )
+    unique_total = synthetic_count + repository_count
+    unique_synthetic_fraction = synthetic_count / max(1, unique_total)
+    effective_synthetic_fraction = synthetic_count / max(1, total)
     summary = {
         "schema_version": "oneiros_balanced_sft_dataset_v1",
         "split": split,
@@ -230,14 +238,28 @@ def build(
             "final_repository_examples": final_repository,
             "final_total_examples": total,
         },
-        "achieved_balance": {
-            "synthetic_fraction": round(synthetic_count / max(1, total), 4),
-            "repository_fraction": round(final_repository / max(1, total), 4),
-            "target_met": abs(synthetic_count / max(1, total) - 0.5) <= 0.05,
+        "unique_target_balance": {
+            "synthetic_unique_targets": synthetic_count,
+            "repository_unique_targets": repository_count,
+            "synthetic_fraction": round(unique_synthetic_fraction, 4),
+            "repository_fraction": round(1.0 - unique_synthetic_fraction, 4),
+            "repository_shortfall_to_exact_parity": unique_repository_shortfall,
+            "target_met": abs(unique_synthetic_fraction - 0.5) <= 0.05,
+            "repetitions_do_not_count_as_unique_targets": True,
+        },
+        "effective_training_balance": {
+            "synthetic_fraction": round(effective_synthetic_fraction, 4),
+            "repository_fraction": round(1.0 - effective_synthetic_fraction, 4),
+            "target_met": abs(effective_synthetic_fraction - 0.5) <= 0.05,
+            "provisional_because_repetitions_used": bool(repeated),
         },
         "complexity": {
             "complex_examples": complex_count,
             "complex_fraction": round(complex_count / max(1, total), 4),
+            "moderate_or_complex_examples": moderate_or_complex_count,
+            "moderate_or_complex_fraction": round(
+                moderate_or_complex_count / max(1, total), 4,
+            ),
             "floor": COMPLEX_TARGET_FRACTION,
             "floor_met": complex_count / max(1, total) >= COMPLEX_TARGET_FRACTION,
             "floor_status": "design choice; not demonstrated to improve results",
@@ -256,6 +278,29 @@ def build(
         "dataset_counts": dict(sorted(collections.Counter(
             item["dataset"] for item in selection
         ).items())),
+    }
+    summary["readiness"] = {
+        "ready_for_final_sft": (
+            summary["unique_target_balance"]["target_met"]
+            and project_cap["cap_met"]
+            and summary["complexity"]["floor_met"]
+        ),
+        "blocking_conditions": [
+            reason for condition, reason in (
+                (
+                    summary["unique_target_balance"]["target_met"],
+                    f"need {unique_repository_shortfall} more unique repository targets for parity",
+                ),
+                (
+                    project_cap["cap_met"],
+                    "repository project concentration exceeds the frozen cap",
+                ),
+                (
+                    summary["complexity"]["floor_met"],
+                    "the aspirational 0.60 complex-only floor is not met",
+                ),
+            ) if not condition
+        ],
     }
 
     output_dir.mkdir(parents=True, exist_ok=True)

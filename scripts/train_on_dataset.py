@@ -54,7 +54,11 @@ from engine.test_generation_prompt import (
     task_mode_for_execution_mode,
     test_format_for_execution_mode,
 )
-from utils.reproducibility import build_reproducibility_manifest, functional_identity
+from utils.reproducibility import (
+    build_reproducibility_manifest,
+    functional_identity,
+    source_tree_sha256,
+)
 from utils.dataset_identity import DATASET_IDENTITY_POLICY, dataset_name_for_pair, dataset_name_from_source
 from utils.sampling_audit import summarize_sampling_weights
 
@@ -117,6 +121,7 @@ SFT_SELECTION_TOKENIZER_NAME_OVERRIDE = None
 # single-assert policy would reject its shape anyway.
 MULTI_MUTANT_COMPLETIONS: Dict[str, str] = {}
 MULTI_MUTANT_DATASET_PATH = None
+BALANCED_SFT_DATASET_PATH = None
 
 
 def resolved_base_model_identity() -> Tuple[str, str]:
@@ -451,6 +456,77 @@ def load_multi_mutant_completions(directory, split: str = "train") -> Dict[str, 
             raise ValueError(f"multi-mutant example {record_id} has an empty completion")
         completions[record_id] = completion
     return completions
+
+
+def apply_balanced_sft_selection(
+    pairs: List[Dict], directory, split: str = "train",
+) -> List[Dict]:
+    """Apply an exact, hashed, final-ready semantic-target selection.
+
+    Repeated record IDs are intentional bounded replay entries. A manifest
+    that reaches 50:50 only after repetition is still provisional and cannot
+    launch the final SFT run: the agreed balance unit is a unique target.
+    """
+    directory = Path(directory)
+    selection_path = directory / f"{split}.selection.json"
+    manifest_path = directory / f"{split}.manifest.json"
+    if not selection_path.exists() or not manifest_path.exists():
+        raise FileNotFoundError(
+            f"balanced SFT view requires {selection_path.name} and "
+            f"{manifest_path.name} under {directory}"
+        )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("split") != split:
+        raise ValueError("balanced SFT manifest split does not match the request")
+    if sha256_file(selection_path) != manifest.get("selection_sha256"):
+        raise ValueError("balanced SFT selection does not match its manifest hash")
+    if manifest.get("source_tree_sha256") != source_tree_sha256(DATA_DIR.parent):
+        raise ValueError(
+            "balanced SFT view was built from a different source tree; rebuild "
+            "it after finishing code changes"
+        )
+    readiness = manifest.get("readiness") or {}
+    if readiness.get("ready_for_final_sft") is not True:
+        blockers = readiness.get("blocking_conditions") or ["unknown blocker"]
+        raise ValueError(
+            "balanced SFT view is provisional and cannot launch final SFT: "
+            + "; ".join(str(item) for item in blockers)
+        )
+
+    selection = json.loads(selection_path.read_text(encoding="utf-8"))
+    by_id = {str(pair["id"]): pair for pair in pairs}
+    occurrences = Counter(str(item.get("record_id") or "") for item in selection)
+    if "" in occurrences:
+        raise ValueError("balanced SFT selection contains a missing record_id")
+    max_repeats = int((manifest.get("policy") or {}).get("max_repeats", 1))
+    over_repeated = {
+        record_id: count for record_id, count in occurrences.items()
+        if count > max_repeats
+    }
+    if over_repeated:
+        raise ValueError(f"balanced SFT selection exceeds repeat cap: {over_repeated}")
+    missing = sorted(set(occurrences) - set(by_id))
+    if missing:
+        raise ValueError(
+            f"balanced SFT selection references {len(missing)} ineligible records: "
+            f"{missing[:3]}"
+        )
+
+    selected: List[Dict] = []
+    for item in selection:
+        record_id = str(item["record_id"])
+        pair = by_id[record_id]
+        repository = is_repository_execution_mode(
+            pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
+        )
+        expected_group = "real_repository" if repository else "synthetic_function"
+        if item.get("origin_group") != expected_group:
+            raise ValueError(
+                f"balanced SFT origin mismatch for {record_id}: "
+                f"{item.get('origin_group')!r} != {expected_group!r}"
+            )
+        selected.append(pair)
+    return selected
 
 
 def make_sft_data_point(pair: Dict, prompt: str, completion: str):
@@ -2536,6 +2612,19 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
             f"from SFT and DPO while retaining their canonical corpus records: "
             + ", ".join(item["record_id"] for item in overlong_repository_completions)
         )
+    if BALANCED_SFT_DATASET_PATH:
+        if MAX_TRAIN_PAIRS:
+            raise RuntimeError(
+                "--balanced-sft-dataset and --max-pairs cannot be combined; "
+                "the balanced view already freezes the exact training scope"
+            )
+        train_pairs = apply_balanced_sft_selection(
+            train_pairs, BALANCED_SFT_DATASET_PATH,
+        )
+        print(
+            f"[BALANCED SFT] Loaded {len(train_pairs):,} ordered examples from "
+            f"{BALANCED_SFT_DATASET_PATH}"
+        )
     dpo_overlong_repository_completions = []
     if run_dpo:
         train_pairs, dpo_overlong_repository_completions = (
@@ -4054,6 +4143,16 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
+        "--balanced-sft-dataset",
+        default=None,
+        help=(
+            "Directory holding the hashed train.selection.json and "
+            "train.manifest.json produced by build_balanced_sft_dataset.py. "
+            "Final SFT refuses a provisional view whose unique-target, project, "
+            "or complexity readiness gates are not met."
+        ),
+    )
+    parser.add_argument(
         "--sft-checkpoint-steps",
         type=int,
         default=None,
@@ -4181,6 +4280,7 @@ if __name__ == "__main__":
             f"[MULTI-MUTANT SUPERVISION] Loaded {len(MULTI_MUTANT_COMPLETIONS)} "
             f"verified completions from {args.multi_mutant_dataset}"
         )
+    BALANCED_SFT_DATASET_PATH = args.balanced_sft_dataset
     if args.max_pairs:
         MAX_TRAIN_PAIRS = args.max_pairs
     if args.max_validation_functions:

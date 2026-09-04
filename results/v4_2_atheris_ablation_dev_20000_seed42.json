@@ -1,0 +1,59 @@
+{
+  "schema_version": "oneiros_atheris_comparison_v1",
+  "source_tree_sha256": "1aec9497fe79f44b7911d323be58160a01fe928cbf7782fba0e543ef07f740ae",
+  "sealed_final_test_accessed": false,
+  "atheris": {
+    "package": "atheris==2.3.0",
+    "runtime": "WSL2 Ubuntu 24.04, Python 3.11",
+    "is_actual_atheris": true,
+    "oracle": "differential against the reference implementation",
+    "run_configurations": [
+      {
+        "harness_version": "oneiros_atheris_differential_harness_v1",
+        "python_version": "3.11.15",
+        "max_runs": 20000,
+        "time_budget_seconds": 10.0,
+        "seed": 42,
+        "runner_wall_limit": "30s"
+      }
+    ],
+    "targets": 542,
+    "supported_targets": 542,
+    "unsupported_targets": 0,
+    "killed": 381,
+    "survived": 136,
+    "time_budget_exhausted": 0,
+    "outer_wall_timeouts": 0,
+    "incomplete_results": 0,
+    "harness_failures": 0,
+    "unit_timeouts": 25,
+    "completed_supported_processes": 542,
+    "comparison_complete": true,
+    "kill_rate_over_all_targets": 0.702952,
+    "kill_rate_over_supported_targets": 0.702952,
+    "kill_rate_wilson_95": [
+      0.663163,
+      0.739885
+    ],
+    "kill_kinds": {
+      "crash_kill": 66,
+      "semantic_kill": 315
+    },
+    "median_runs_to_kill": 11,
+    "total_recorded_fuzz_callback_runs": 3036755,
+    "unsupported_reasons": {},
+    "unit_timeout_note": "A per-input timeout is not counted as a kill because the harness cannot attribute the stall to the buggy side without also timing the reference side in isolation."
+  },
+  "oneiros": {},
+  "fairness": {
+    "shared_panel_with_oneiros_evidence": false,
+    "atheris_sees_the_reference_implementation": true,
+    "oneiros_sees_the_reference_implementation": false,
+    "atheris_execution_budget": [
+      20000
+    ],
+    "oneiros_execution_budget": "8 generated candidates per target",
+    "execution_count_matched": false,
+    "note": "The differential oracle favours Atheris because Oneiros never sees the reference implementation. Runs above eight inputs also favour Atheris by execution count; the matched-eight arm does not have that second asymmetry."
+  }
+}

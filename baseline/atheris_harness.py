@@ -31,9 +31,11 @@ import argparse
 import ast
 import json
 import math
+import os
 import sys
 import time
 import traceback
+from pathlib import Path
 from typing import Any
 
 
@@ -160,7 +162,7 @@ def _equal(left: Any, right: Any) -> bool:
 
 def fuzz_one_target(
     task: dict[str, Any], max_runs: int, time_budget_seconds: float,
-    persist: Any = None,
+    persist: Any = None, unit_timeout_seconds: float = 5.0, seed: int = 42,
 ) -> dict[str, Any]:
     """Fuzz one buggy/reference pair and report the first distinguishing input.
 
@@ -183,8 +185,12 @@ def fuzz_one_target(
     kinds = infer_parameter_kinds(
         task["reference_code"], entry_point, task.get("example_assertions") or [],
     )
+    # "incomplete" is the honest starting value. libFuzzer can terminate this
+    # process itself - on its per-unit timeout, or when -runs is exhausted -
+    # and the checkpoint on disk must never claim a verdict that was not
+    # reached. It becomes "survived" only when Fuzz() returns normally.
     state: dict[str, Any] = {
-        "outcome": "survived", "runs": 0, "witness": None,
+        "outcome": "incomplete", "runs": 0, "witness": None,
         "kill_kind": None, "started": time.time(),
     }
 
@@ -213,7 +219,7 @@ def fuzz_one_target(
         # before results can be recorded - which is how the first version of
         # this harness lost every result it produced. Once the verdict is
         # known, remaining iterations become cheap no-ops instead.
-        if state["outcome"] != "survived":
+        if state["outcome"] not in ("incomplete", "survived"):
             return
         if time.time() - state["started"] > time_budget_seconds:
             state["outcome"] = "time_budget_exhausted"
@@ -254,14 +260,25 @@ def fuzz_one_target(
             checkpoint()
             return
 
+    # -timeout bounds a SINGLE input. Without it a fuzzed argument that sends
+    # the target into a near-infinite loop hangs the whole process: the wall
+    # clock check below only runs between inputs, never inside one.
     atheris.Setup(
-        [sys.argv[0], f"-runs={max_runs}", "-max_len=256", "-print_final_stats=0"],
+        [
+            sys.argv[0], f"-runs={max_runs}", "-max_len=256",
+            f"-seed={seed}",
+            f"-timeout={max(1, int(unit_timeout_seconds))}",
+            "-print_final_stats=0",
+        ],
         target, enable_python_coverage=True,
     )
     try:
         atheris.Fuzz()
+        if state["outcome"] == "incomplete":
+            state["outcome"] = "survived"
     except SystemExit:
-        pass
+        if state["outcome"] == "incomplete":
+            state["outcome"] = "survived"
     except Exception as exc:  # pragma: no cover - libFuzzer teardown paths
         state.setdefault("harness_error", f"{type(exc).__name__}: {str(exc)[:200]}")
 
@@ -269,21 +286,99 @@ def fuzz_one_target(
     return snapshot()
 
 
+def finalize_result(
+    output_path: Path, process_returncode: int, wall_limit: str,
+    runner_elapsed_seconds: float | None = None,
+) -> dict[str, Any]:
+    """Turn the runner's process status into a durable terminal verdict.
+
+    libFuzzer may call ``exit(0)`` when ``-runs`` is exhausted, bypassing all
+    Python teardown.  The fuzz callback checkpoints an ``incomplete`` result
+    before entering libFuzzer; this separate process converts that checkpoint
+    to ``survived`` only after the shell has observed a clean return code.
+    Outer ``timeout`` terminations and harness failures remain distinct.
+    """
+    payload = json.loads(output_path.read_text(encoding="utf-8"))
+    rows = payload.get("results") or []
+    for row in rows:
+        row["process_returncode"] = process_returncode
+        if row.get("outcome") != "incomplete":
+            continue
+        if process_returncode == 0:
+            row["outcome"] = "survived"
+            row["runs"] = max(
+                int(row.get("runs") or 0), int(payload.get("max_runs") or 0),
+            )
+        elif process_returncode == 70:
+            row["outcome"] = "unit_timeout"
+            row["harness_error"] = (
+                "libFuzzer terminated a single input at the configured "
+                "per-unit timeout"
+            )
+        elif process_returncode in {124, 137}:
+            row["outcome"] = "outer_wall_timeout"
+            row["harness_error"] = (
+                f"runner exceeded outer wall limit {wall_limit} "
+                f"(return code {process_returncode})"
+            )
+        else:
+            row["outcome"] = "harness_failure"
+            row["harness_error"] = (
+                f"atheris process exited with return code {process_returncode}"
+            )
+        if runner_elapsed_seconds is not None:
+            row["elapsed_seconds"] = max(
+                float(row.get("elapsed_seconds") or 0.0), runner_elapsed_seconds,
+            )
+    payload["runner_finalized"] = True
+    payload["runner_process_returncode"] = process_returncode
+    payload["runner_wall_limit"] = wall_limit
+    temporary = output_path.with_suffix(output_path.suffix + ".tmp")
+    temporary.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    os.replace(temporary, output_path)
+    return payload
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--tasks", required=True, help="JSON file of fuzz tasks")
-    parser.add_argument("--output", required=True, help="JSON results file")
+    parser.add_argument("--tasks", help="JSON file of fuzz tasks")
+    parser.add_argument("--output", help="JSON results file")
     parser.add_argument("--max-runs", type=int, default=20000)
     parser.add_argument("--time-budget", type=float, default=10.0)
+    parser.add_argument("--seed", type=int, default=42)
     parser.add_argument(
-        "--task-index", type=int, required=True,
+        "--unit-timeout", type=float, default=5.0,
+        help="libFuzzer per-input timeout; bounds one pathological argument.",
+    )
+    parser.add_argument(
+        "--task-index", type=int,
         help=(
             "Index of the single task to fuzz. atheris.Setup() may be called "
             "only once per process, so each target needs its own process; the "
             "driver loops over indexes."
         ),
     )
+    parser.add_argument(
+        "--finalize-output",
+        help="Finalize a checkpoint after the separate fuzz process exits.",
+    )
+    parser.add_argument("--process-returncode", type=int)
+    parser.add_argument("--wall-limit", default="unknown")
+    parser.add_argument("--runner-elapsed-seconds", type=float)
     arguments = parser.parse_args()
+
+    if arguments.finalize_output:
+        if arguments.process_returncode is None:
+            parser.error("--finalize-output requires --process-returncode")
+        finalize_result(
+            Path(arguments.finalize_output),
+            arguments.process_returncode,
+            arguments.wall_limit,
+            arguments.runner_elapsed_seconds,
+        )
+        return 0
+    if not arguments.tasks or not arguments.output or arguments.task_index is None:
+        parser.error("fuzzing requires --tasks, --output, and --task-index")
 
     with open(arguments.tasks, encoding="utf-8") as handle:
         tasks = json.load(handle)
@@ -298,12 +393,15 @@ def main() -> int:
                 "python_version": sys.version.split()[0],
                 "max_runs": arguments.max_runs,
                 "time_budget_seconds": arguments.time_budget,
+                "seed": arguments.seed,
                 "results": [result],
             }, handle, indent=2)
 
     try:
         results = [fuzz_one_target(
             task, arguments.max_runs, arguments.time_budget, persist=write,
+            unit_timeout_seconds=arguments.unit_timeout,
+            seed=arguments.seed,
         )]
     except Exception as exc:
         results = [{
@@ -322,6 +420,7 @@ def main() -> int:
             "python_version": sys.version.split()[0],
             "max_runs": arguments.max_runs,
             "time_budget_seconds": arguments.time_budget,
+            "seed": arguments.seed,
             "results": results,
         }, handle, indent=2)
     return 0
