@@ -68,6 +68,19 @@ def _arm(run: str, pattern: str) -> dict[int, dict[str, Any]]:
         if ".progress." in path.name:
             continue
         payload = _load(path)
+        # A run directory holds one artifact per evaluated split, and they all
+        # match this glob. Without an explicit check, seed collisions are
+        # resolved by filename sort order: "standard" (val) happens to sort
+        # after "ablation-dev", so val won by luck rather than by design, and a
+        # "train" artifact would sort after both and be reported as validation.
+        split = str(payload.get("evaluation_split") or "")
+        if split and split != "val":
+            continue
+        if payload.get("final_test_measurement"):
+            raise SystemExit(
+                f"Refusing {path}: a sealed final-test measurement must never "
+                "enter a validation comparison"
+            )
         seed = payload.get("seed")
         if seed is None:
             stem = path.stem.rsplit("_", 1)[-1]
