@@ -120,6 +120,13 @@ SFT_SELECTION_TOKENIZER_NAME_OVERRIDE = None
 # executed against the reference and every sibling mutant of its lineage, so
 # re-deriving it here would only re-run work whose answer is recorded, and the
 # single-assert policy would reject its shape anyway.
+# Candidate shape accepted at evaluation time. False is the frozen
+# single-assertion protocol every historical result and baseline was scored
+# under, so it stays the default. Multi-mutant supervision is shaped as a
+# ``def test_*()`` carrying several assertions, so an arm trained on it must
+# declare the wider shape or it would be scored by a rule that rejects the very
+# thing it was taught to produce.
+ALLOW_TEST_FUNCTION_CANDIDATES = False
 MULTI_MUTANT_COMPLETIONS: Dict[str, str] = {}
 MULTI_MUTANT_DATASET_PATH = None
 BALANCED_SFT_DATASET_PATH = None
@@ -1826,6 +1833,7 @@ def _evaluate_adapter_kill_rate(
                     pair["golden_code"],
                     pair["mutant_code"],
                     pair["entry_point"],
+                    allow_test_function=ALLOW_TEST_FUNCTION_CANDIDATES,
                 )
                 item = build_function_result(
                     pair["id"],
@@ -1991,6 +1999,7 @@ def _evaluate_loaded_sft_monitor(
                     pair["golden_code"],
                     pair["mutant_code"],
                     pair["entry_point"],
+                    allow_test_function=ALLOW_TEST_FUNCTION_CANDIDATES,
                 )
                 function_results.append(build_function_result(
                     pair["id"],
@@ -4158,6 +4167,21 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
+        "--allow-test-function-candidates",
+        action="store_true",
+        help=(
+            "Accept a single `def test_*()` carrying several assertions as a "
+            "valid candidate, in addition to the frozen lone-assertion policy. "
+            "A lone assertion is still validated FIRST by the identical frozen "
+            "rule, so this can never change the verdict on a candidate the "
+            "frozen protocol already accepted - it only admits shapes that were "
+            "rejected outright. Required for any arm trained on multi-mutant "
+            "supervision, whose completions are test functions. Declare it: "
+            "results scored under it are a named protocol variant, not "
+            "interchangeable with the frozen assertion-only numbers."
+        ),
+    )
+    parser.add_argument(
         "--balanced-sft-dataset",
         default=None,
         help=(
@@ -4295,6 +4319,7 @@ if __name__ == "__main__":
             f"[MULTI-MUTANT SUPERVISION] Loaded {len(MULTI_MUTANT_COMPLETIONS)} "
             f"verified completions from {args.multi_mutant_dataset}"
         )
+    ALLOW_TEST_FUNCTION_CANDIDATES = args.allow_test_function_candidates
     BALANCED_SFT_DATASET_PATH = args.balanced_sft_dataset
     if args.max_pairs:
         MAX_TRAIN_PAIRS = args.max_pairs

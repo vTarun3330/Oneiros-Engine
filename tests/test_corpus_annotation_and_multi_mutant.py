@@ -14,6 +14,7 @@ from harness.corpus_annotation import (
     origin_group,
     record_test_framework,
 )
+from harness.candidate_policy import validate_generated_test
 from harness.multi_mutant_examples import (
     verified_completions_by_record,
     build_kill_matrix,
@@ -431,3 +432,60 @@ def test_the_first_example_wins_so_the_mapping_is_order_deterministic():
     )
     mapping = verified_completions_by_record([first, second])
     assert mapping["mut_b"] == first["completion"]
+
+
+# --------------------------------------------------------------------------
+# candidate shape policy - the widened rule must be strictly additive
+# --------------------------------------------------------------------------
+
+_SHAPE_SAMPLES = [
+    "assert add(1, 2) == 3",
+    "assert add(1, 2) == 4",
+    "assert  add(-1, 2)  ==  1",
+    "def test_add():\n    assert add(1, 2) == 3\n",
+    "def test_add():\n    assert add(1, 2) == 3\n    assert add(0, 0) == 0\n",
+    "import os\nassert add(1, 2) == 3",
+    "assert add(1, 2) == 3\nassert add(0, 0) == 0",
+    "print(add(1, 2))",
+    "",
+    "def helper():\n    return 1\n",
+]
+
+
+@pytest.mark.parametrize("code", _SHAPE_SAMPLES)
+def test_widening_the_shape_never_flips_an_accepted_candidate(code):
+    """The whole comparability argument rests on this being strictly additive.
+
+    Enabling the test-function shape may only admit candidates the frozen
+    policy rejected outright. If it could change the verdict on a candidate the
+    frozen policy already accepted, every historical number would silently mean
+    something different.
+    """
+    frozen = validate_generated_test(code, "add", allow_test_function=False)
+    widened = validate_generated_test(code, "add", allow_test_function=True)
+    if frozen.valid:
+        assert widened.valid, "widening rejected a candidate the frozen rule accepted"
+        assert widened.shape == frozen.shape
+
+
+def test_the_widened_shape_admits_a_multi_assertion_test_function():
+    code = "def test_add():\n    assert add(1, 2) == 3\n    assert add(0, 0) == 0\n"
+    assert not validate_generated_test(code, "add", allow_test_function=False).valid
+    widened = validate_generated_test(code, "add", allow_test_function=True)
+    assert widened.valid and widened.shape == "test_function"
+
+
+def test_multi_mutant_completions_are_rejected_by_the_frozen_shape_policy():
+    """Why the flag must exist: the supervision shape is not an assertion.
+
+    An arm trained on multi-mutant completions and scored assertion-only would
+    be judged by a rule that rejects exactly what it was taught to produce.
+    """
+    completion = (
+        "def test_substract_elements_c00021f4():\n"
+        "    assert substract_elements((10, 4), (2, 5)) == (8, -1)\n"
+        "    assert substract_elements((11, 2), (24, 45)) == (-13, -43)\n"
+    )
+    entry = "substract_elements"
+    assert not validate_generated_test(completion, entry, allow_test_function=False).valid
+    assert validate_generated_test(completion, entry, allow_test_function=True).valid
