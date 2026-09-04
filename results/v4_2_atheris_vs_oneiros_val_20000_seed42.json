@@ -1,0 +1,82 @@
+{
+  "schema_version": "oneiros_atheris_comparison_v1",
+  "source_tree_sha256": "abc57a9f5120bed11e338695cef5c5e1c85efbc4940328e39fa855f0c8236da3",
+  "sealed_final_test_accessed": false,
+  "atheris": {
+    "package": "atheris==2.3.0",
+    "runtime": "WSL2 Ubuntu 24.04, Python 3.11",
+    "is_actual_atheris": true,
+    "oracle": "differential against the reference implementation",
+    "run_configurations": [
+      {
+        "harness_version": "oneiros_atheris_differential_harness_v1",
+        "python_version": "3.11.15",
+        "max_runs": 20000,
+        "time_budget_seconds": 10.0,
+        "seed": 42,
+        "runner_wall_limit": "30s"
+      }
+    ],
+    "targets": 757,
+    "supported_targets": 757,
+    "unsupported_targets": 0,
+    "killed": 360,
+    "survived": 337,
+    "time_budget_exhausted": 0,
+    "outer_wall_timeouts": 0,
+    "incomplete_results": 0,
+    "harness_failures": 0,
+    "unit_timeouts": 60,
+    "completed_supported_processes": 757,
+    "comparison_complete": true,
+    "kill_rate_over_all_targets": 0.475561,
+    "kill_rate_over_supported_targets": 0.475561,
+    "kill_rate_wilson_95": [
+      0.440199,
+      0.511171
+    ],
+    "kill_kinds": {
+      "semantic_kill": 285,
+      "crash_kill": 75
+    },
+    "median_runs_to_kill": 11,
+    "total_recorded_fuzz_callback_runs": 7083549,
+    "unsupported_reasons": {},
+    "unit_timeout_note": "A per-input timeout is not counted as a kill because the harness cannot attribute the stall to the buggy side without also timing the reference side in isolation."
+  },
+  "oneiros": {
+    "base": {
+      "artifact": "results/v4_2_base_qwen_val_seed42.json",
+      "checkpoint_step": null,
+      "seed": 42,
+      "function_kill_rate": 0.620872,
+      "functions": 757,
+      "functions_killed_recomputed": 470,
+      "shared_targets_with_atheris": 757,
+      "panel_matches_atheris_targets": true,
+      "atheris_kill_rate_on_shared": 0.475561
+    },
+    "historical_sft": {
+      "artifact": "results/local_sft800_qwen_final_seed42/sft_validation_standard_seed_42.json",
+      "checkpoint_step": null,
+      "seed": 42,
+      "function_kill_rate": 0.635403,
+      "functions": 757,
+      "functions_killed_recomputed": 481,
+      "shared_targets_with_atheris": 757,
+      "panel_matches_atheris_targets": true,
+      "atheris_kill_rate_on_shared": 0.475561
+    }
+  },
+  "fairness": {
+    "shared_panel_with_oneiros_evidence": true,
+    "atheris_sees_the_reference_implementation": true,
+    "oneiros_sees_the_reference_implementation": false,
+    "atheris_execution_budget": [
+      20000
+    ],
+    "oneiros_execution_budget": "8 generated candidates per target",
+    "execution_count_matched": false,
+    "note": "The differential oracle favours Atheris because Oneiros never sees the reference implementation. Runs above eight inputs also favour Atheris by execution count; the matched-eight arm does not have that second asymmetry."
+  }
+}
