@@ -78,6 +78,11 @@ class LoserCase:
     bug_family: str
     complexity_tier: str
     project: str
+    #: The unit diversity is actually measured in. Every synthetic record shares
+    #: the constant pseudo-project "synthetic", so capping those by project caps
+    #: the whole side at once; their real diversity unit is the function lineage.
+    #: Repository records genuinely differ by project, so theirs stays the project.
+    diversity_key: str
     dominant_category: str
     categories: dict[str, int]
     requested_candidates: int
@@ -182,24 +187,36 @@ def classify_loser(
 
     dominant = max(sorted(categories.items()), key=lambda item: item[1])[0]
     annotation = annotation or {}
+    origin = str(annotation.get("origin_group") or "unknown")
+    project = str(annotation.get("project") or result.get("project") or "synthetic")
+    diversity_key = (
+        project if origin == "real_repository"
+        else str(annotation.get("function_lineage") or result.get("record_id") or "")
+    )
     return LoserCase(
         record_id=str(result.get("record_id") or result.get("id") or ""),
         split=split,
-        origin_group=str(annotation.get("origin_group") or "unknown"),
+        origin_group=origin,
         bug_family=str(
             annotation.get("primary_bug_family") or result.get("bug_family") or "unknown"
         ),
         complexity_tier=str(annotation.get("complexity_tier") or "unknown"),
-        project=str(annotation.get("project") or result.get("project") or "synthetic"),
+        project=project,
+        diversity_key=diversity_key,
         dominant_category=dominant,
         categories=dict(sorted(categories.items())),
         requested_candidates=int(result.get("requested_candidates") or 0),
         parsed_candidates=int(result.get("parsed_candidates") or 0),
+        # Evaluation artifacts spell these differently depending on which writer
+        # produced them; accepting only one spelling silently records zeros.
         reference_valid_candidates=int(
             result.get("reference_valid_candidates")
+            or result.get("valid_candidates")
             or result.get("execution_valid_candidates") or 0
         ),
-        killed_candidates=int(result.get("killed_candidates") or 0),
+        killed_candidates=int(
+            result.get("killed_candidates") or result.get("killing_candidates") or 0
+        ),
         base_model_killed=base_killed,
         worse_than_base=worse_than_base,
         model_run=model_run,
@@ -253,17 +270,17 @@ def attach_corrections(
 def balanced_replay(
     corrections: Sequence[Correction],
     losers_by_id: dict[str, LoserCase],
-    max_per_project: int = 40,
+    max_per_group: int = 40,
     max_per_family: int = 60,
     max_per_category: int = 120,
 ) -> tuple[list[Correction], dict[str, Any]]:
-    """Cap how much any one project, family, or failure mode can contribute.
+    """Cap how much any one diversity group, family, or failure mode contributes.
 
     Without caps a single recurring failure mode dominates the round and the
     adapter overfits to it, which is the catastrophic-forgetting risk the plan
     calls out.  Ordering is deterministic so the same inputs give the same set.
     """
-    project_counts: Counter[str] = Counter()
+    group_counts: Counter[str] = Counter()
     family_counts: Counter[str] = Counter()
     category_counts: Counter[str] = Counter()
     kept: list[Correction] = []
@@ -271,11 +288,11 @@ def balanced_replay(
 
     for correction in sorted(corrections, key=lambda item: item.record_id):
         loser = losers_by_id.get(correction.record_id)
-        project = loser.project if loser else "unknown"
+        group = loser.diversity_key if loser else "unknown"
         family = loser.bug_family if loser else "unknown"
         category = correction.loser_category
-        if project_counts[project] >= max_per_project:
-            dropped["project_cap"] += 1
+        if group_counts[group] >= max_per_group:
+            dropped["diversity_group_cap"] += 1
             continue
         if family_counts[family] >= max_per_family:
             dropped["family_cap"] += 1
@@ -283,7 +300,7 @@ def balanced_replay(
         if category_counts[category] >= max_per_category:
             dropped["category_cap"] += 1
             continue
-        project_counts[project] += 1
+        group_counts[group] += 1
         family_counts[family] += 1
         category_counts[category] += 1
         kept.append(correction)
@@ -293,11 +310,11 @@ def balanced_replay(
         "retained": len(kept),
         "dropped_by_cap": dict(sorted(dropped.items())),
         "caps": {
-            "max_per_project": max_per_project,
+            "max_per_diversity_group": max_per_group,
             "max_per_family": max_per_family,
             "max_per_category": max_per_category,
         },
-        "retained_by_project": dict(sorted(project_counts.items())),
+        "retained_by_diversity_group": dict(sorted(group_counts.items())),
         "retained_by_category": dict(sorted(category_counts.items())),
     }
 

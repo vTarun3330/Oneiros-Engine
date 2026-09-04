@@ -126,6 +126,7 @@ def _loser(record_id="r1", project="synthetic", family="arithmetic",
         record_id=record_id, split="ablation_dev", origin_group="synthetic_function",
         bug_family=family, complexity_tier="moderate", project=project,
         dominant_category=category, categories={category: 1},
+        diversity_key=project,
         requested_candidates=8, parsed_candidates=8, reference_valid_candidates=8,
         killed_candidates=0, base_model_killed=None, worse_than_base=False,
         model_run="run", checkpoint_step=50, seed=42, prompt_version="v2",
@@ -177,9 +178,9 @@ def test_one_project_cannot_dominate_the_round():
         f"r{index}": _loser(record_id=f"r{index}", project="django")
         for index in range(10)
     }
-    kept, summary = balanced_replay(corrections, losers, max_per_project=3)
+    kept, summary = balanced_replay(corrections, losers, max_per_group=3)
     assert len(kept) == 3
-    assert summary["dropped_by_cap"]["project_cap"] == 7
+    assert summary["dropped_by_cap"]["diversity_group_cap"] == 7
 
 
 def test_caps_are_independent_across_projects():
@@ -190,15 +191,15 @@ def test_caps_are_independent_across_projects():
         )
         for index in range(6)
     }
-    kept, _ = balanced_replay(corrections, losers, max_per_project=3)
+    kept, _ = balanced_replay(corrections, losers, max_per_group=3)
     assert len(kept) == 6
 
 
 def test_replay_selection_is_deterministic():
     corrections = [_correction(f"r{index}") for index in range(8)]
     losers = {f"r{index}": _loser(record_id=f"r{index}") for index in range(8)}
-    first, _ = balanced_replay(corrections, losers, max_per_project=4)
-    second, _ = balanced_replay(list(reversed(corrections)), losers, max_per_project=4)
+    first, _ = balanced_replay(corrections, losers, max_per_group=4)
+    second, _ = balanced_replay(list(reversed(corrections)), losers, max_per_group=4)
     assert [item.record_id for item in first] == [item.record_id for item in second]
 
 

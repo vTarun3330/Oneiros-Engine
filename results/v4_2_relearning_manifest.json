@@ -1,0 +1,97 @@
+{
+  "schema_version": "oneiros_sft_relearning_v1",
+  "source_tree_sha256": "a963e7c3e1727fab9b137cbdc6d8999c5137ccf558e9d5b7148a7ebce1f04a0d",
+  "sealed_final_test_accessed": false,
+  "round": 1,
+  "source_evaluation": {
+    "artifact": "results/local_sft800_qwen_final_seed42/sft_validation_ablation-dev_seed_42.json",
+    "sha256": "60994d9847ab25c8d92b6106dbee74e0b47e144311eba6359618c9dd94d87d65",
+    "split": "ablation_dev",
+    "seed": 42,
+    "checkpoint_step": null,
+    "function_kill_rate": 0.640221,
+    "functions_evaluated": 542
+  },
+  "base_evaluation": null,
+  "split_isolation": {
+    "eligible_splits": [
+      "train",
+      "ablation_dev"
+    ],
+    "validation_or_sealed_test_used": false,
+    "enforced_by": "harness.relearning.assert_split_is_eligible",
+    "selection_contamination_warning": "ablation_dev is also the checkpoint-selection panel. An adapter trained on corrections mined from it must NOT then be selected using that same panel, or selection is measuring memorisation. Promote a relearning challenger only on locked validation."
+  },
+  "supervision_policy": {
+    "model_output_used_as_label": false,
+    "correction_source": "verified multi-mutant completion",
+    "verification": "each correction was executed against the reference and every sibling mutant of its lineage when the dataset was built"
+  },
+  "losers": {
+    "count": 195,
+    "loser_rate": 0.359779,
+    "by_dominant_category": {
+      "no_kill": 195
+    },
+    "by_origin_group": {
+      "synthetic_function": 195
+    },
+    "by_complexity_tier": {
+      "complex": 129,
+      "moderate": 32,
+      "simple": 34
+    },
+    "worse_than_base": 0
+  },
+  "corrections": {
+    "losers": 195,
+    "corrections": 195,
+    "skipped_without_verified_supervision": 0,
+    "skipped_by_category": {}
+  },
+  "balanced_replay": {
+    "input_corrections": 195,
+    "retained": 120,
+    "dropped_by_cap": {
+      "category_cap": 75
+    },
+    "caps": {
+      "max_per_diversity_group": 40,
+      "max_per_family": 60,
+      "max_per_category": 120
+    },
+    "retained_by_diversity_group": {
+      "function:semantic:00df83bdda75b2d54e5f1671b1d7ee97240531f7dc6d22c699ac84a92a59fd7d": 4,
+      "function:semantic:0cd9841fd93014a5a8ae2d54ab4932fe72909aa75096900d22e4e0ad6e72694c": 1,
+      "function:semantic:17de4760877c185c412f4ffb7d87a181bb2253049178d8efd6ed6110249f53ff": 9,
+      "function:semantic:21289c0e43ef36c1b1556103fa344c174c5e8fd2a404dfe5714db0c68055837f": 8,
+      "function:semantic:2b481ebe130edb4e7f54e98363c32c078ff8b3ceebca171da174c20538a81d29": 2,
+      "function:semantic:370c7de46965025028dd9e34884fc6fcbc0061492e908fa19e47b321d6067c7d": 3,
+      "function:semantic:3a9e86a9e8a9d251aaf48bda07513a509e43229c1a796eb4d6591b3102dc7c8e": 6,
+      "function:semantic:5ceabc9f59f9fd3446e49f37ea6b18cfee724f8506ff722285cb5d9849fd3fe7": 14,
+      "function:semantic:6a8b03a37712e8b8bb4833338d096c74d8236de0031b33d38b858c2b633bc92c": 2,
+      "function:semantic:6aefbd8a80d9c4aa8ad54dd87880f73b232315088f7df6e4dcdc8c80d548c67d": 2,
+      "function:semantic:6feab324a6105873d4437549bdaf75cf3d3056345050716ad753be47886edf79": 11,
+      "function:semantic:80bf4c36af060e47bb22b937d446e727010f9489ea0e41b78e931ec40329a45c": 17,
+      "function:semantic:8853f514fee0b600f2ed588e86deeef5420e060dc29670afcd77a0390aa91652": 1,
+      "function:semantic:91c5328e7e48275e52144cec55f7488fe8534b10f032a6bebba918b88da8fc86": 2,
+      "function:semantic:9c361ce8d56b62f7c42cae1b7168777b6d3c173e240b54d5febd771eabffbc71": 6,
+      "function:semantic:9ddb3e26ae27b2fcb2c88d7e0723b0c09fe1b06091eed17cd03fa2839e0cb908": 4,
+      "function:semantic:a7f3c3d64cd65874426a8af5158a0b7702e5c4546890cd9d013c6f54960e98de": 1,
+      "function:semantic:ac20336a0c5c5270ec4adbc604fd1369483422a7f07abf401d0ae6d3fa538b57": 7,
+      "function:semantic:bceab8bd8bbc5e2baae7e715923395843a95e97d246b4495ded23626c4f3b4f8": 1,
+      "function:semantic:c291293a626c256d2f9ec733e5da7cf645e7f6b5ecf26a4211e074cb1f56fd44": 1,
+      "function:semantic:d4fa10787e0b8c364b4e31ccbe93278d1bbc0d3d4e5c79c069f3cc7decabcbe7": 5,
+      "function:semantic:e631fda31ad4e31de505c05bfde4d38104f222fa6b7118407c017c64fa5c2e63": 3,
+      "function:semantic:fa5fce6fe52da4cef3c354c33017ec04198b825c2100a086e9274f73e1a99fd9": 10
+    },
+    "retained_by_category": {
+      "no_kill": 120
+    }
+  },
+  "dataset_sha256": "b92df98cb6117bdeda407c528cf38547628e1f2f7a11c6e5b19c7891d71e7796",
+  "files": {
+    "losers.json": "7a3caa04f3a68e04e88705c9cdc3192308c45d200d9d17ffbdf175cbcd4c15ba",
+    "corrections.json": "21dea1dcd3c6da966b2f8f383ff38ac949e51f6824def813ac94b61f1b5bef09"
+  }
+}

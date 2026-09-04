@@ -37,6 +37,15 @@ DEFAULT_MULTI_MUTANT = ROOT / "data" / "training_views" / "multi_mutant_v1"
 DEFAULT_OUTPUT = ROOT / "data" / "training_views" / "relearning_v1"
 
 
+def _relative(path: Path) -> str:
+    """Repo-relative when possible; a caller may legitimately pass either form."""
+    resolved = Path(path).resolve()
+    try:
+        return str(resolved.relative_to(ROOT)).replace("\\", "/")
+    except ValueError:
+        return str(resolved).replace("\\", "/")
+
+
 def _load_evaluation(path: Path) -> dict[str, Any]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if payload.get("final_test_measurement"):
@@ -58,21 +67,42 @@ def _annotations(inventory_dir: Path, split: str) -> dict[str, dict[str, Any]]:
     }
 
 
-def _verified_completions(multi_mutant_dir: Path, split: str = "train") -> dict[str, str]:
-    path = multi_mutant_dir / f"{split}.examples.json"
-    if not path.exists():
-        return {}
+def _verified_completions(
+    multi_mutant_dir: Path, splits: tuple[str, ...] = ("train", "ablation_dev"),
+) -> dict[str, str]:
+    """Map every record a verified completion actually kills to that completion.
+
+    The builder emits one broad example per function lineage, displayed against
+    a single record. But that completion was executed against every sibling
+    mutant of the lineage, and the run recorded which ones it killed. A sibling
+    it killed is a record for which this completion is a correct, verified label
+    - so keying only by displayed record would discard most of the supervision
+    that was actually verified.
+
+    Surviving siblings are deliberately NOT mapped: the completion does not
+    distinguish them, so using it there would be an unverified label.
+    """
     completions: dict[str, str] = {}
-    for item in json.loads(path.read_text(encoding="utf-8")):
-        if item.get("verified") and item.get("kills_displayed_target"):
-            completions[str(item["displayed_record_id"])] = str(item["completion"])
+    for split in splits:
+        path = multi_mutant_dir / f"{split}.examples.json"
+        if not path.exists():
+            continue
+        for item in json.loads(path.read_text(encoding="utf-8")):
+            if not (item.get("verified") and item.get("kills_displayed_target")):
+                continue
+            completion = str(item["completion"])
+            survivors = {str(value) for value in item.get("surviving_mutant_ids") or []}
+            siblings = [str(value) for value in item.get("sibling_mutant_ids") or []]
+            killed = [record for record in siblings if record not in survivors]
+            for record_id in killed or [str(item["displayed_record_id"])]:
+                completions.setdefault(record_id, completion)
     return completions
 
 
 def build(
     evaluation: Path, base_evaluation: Path | None, inventory_dir: Path,
     multi_mutant_dir: Path, output_dir: Path,
-    max_per_project: int, max_per_family: int, max_per_category: int,
+    max_per_group: int, max_per_family: int, max_per_category: int,
 ) -> dict[str, Any]:
     payload = _load_evaluation(evaluation)
     split = str(payload.get("evaluation_split") or "")
@@ -105,7 +135,7 @@ def build(
     corrections, attach_summary = attach_corrections(losers, verified)
     losers_by_id = {loser.record_id: loser for loser in losers}
     retained, replay_summary = balanced_replay(
-        corrections, losers_by_id, max_per_project, max_per_family, max_per_category,
+        corrections, losers_by_id, max_per_group, max_per_family, max_per_category,
     )
 
     evaluated = len(payload.get("function_results", []))
@@ -115,7 +145,7 @@ def build(
         "sealed_final_test_accessed": False,
         "round": 1,
         "source_evaluation": {
-            "artifact": str(evaluation.relative_to(ROOT)).replace("\\", "/"),
+            "artifact": _relative(evaluation),
             "sha256": sha256_file(evaluation),
             "split": split,
             "seed": payload.get("seed"),
@@ -125,7 +155,7 @@ def build(
         },
         "base_evaluation": (
             {
-                "artifact": str(base_evaluation.relative_to(ROOT)).replace("\\", "/"),
+                "artifact": _relative(base_evaluation),
                 "sha256": sha256_file(base_evaluation),
             } if base_evaluation else None
         ),
@@ -133,6 +163,12 @@ def build(
             "eligible_splits": ["train", "ablation_dev"],
             "validation_or_sealed_test_used": False,
             "enforced_by": "harness.relearning.assert_split_is_eligible",
+            "selection_contamination_warning": (
+                "ablation_dev is also the checkpoint-selection panel. An adapter "
+                "trained on corrections mined from it must NOT then be selected "
+                "using that same panel, or selection is measuring memorisation. "
+                "Promote a relearning challenger only on locked validation."
+            ) if split == "ablation_dev" else None,
         },
         "supervision_policy": {
             "model_output_used_as_label": False,
@@ -182,7 +218,7 @@ def main() -> int:
     parser.add_argument("--inventory-dir", type=Path, default=DEFAULT_INVENTORY)
     parser.add_argument("--multi-mutant-dir", type=Path, default=DEFAULT_MULTI_MUTANT)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT)
-    parser.add_argument("--max-per-project", type=int, default=40)
+    parser.add_argument("--max-per-group", type=int, default=40)
     parser.add_argument("--max-per-family", type=int, default=60)
     parser.add_argument("--max-per-category", type=int, default=120)
     arguments = parser.parse_args()
@@ -190,7 +226,7 @@ def main() -> int:
     manifest = build(
         arguments.evaluation, arguments.base_evaluation, arguments.inventory_dir,
         arguments.multi_mutant_dir, arguments.output_dir,
-        arguments.max_per_project, arguments.max_per_family,
+        arguments.max_per_group, arguments.max_per_family,
         arguments.max_per_category,
     )
     print(json.dumps({
