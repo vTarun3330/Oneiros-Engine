@@ -187,6 +187,56 @@ def _seed_of(run_name: str, training: dict[str, Any]) -> str:
     return match.group(1) if match else run_name
 
 
+def _terminal_coincidence(
+    training: dict[str, Any], points_by_seed: dict[str, list[dict[str, Any]]],
+) -> dict[str, Any]:
+    """Say so when the "selected" checkpoint is just where training stopped.
+
+    A selection rule that picks the last checkpoint has not discriminated
+    between checkpoints; it has only reported that training ended. Reporting it
+    as a selection would overstate what the rule did, and it hides the more
+    useful signal - a monitor still climbing at the final step means the run was
+    cut short by data, not converged.
+    """
+    steps = sorted({
+        int(point["checkpoint_step"])
+        for points in points_by_seed.values()
+        for point in points
+        if point["checkpoint_step"] is not None
+    })
+    if not steps:
+        return {}
+    last = steps[-1]
+    rates = {
+        int(point["checkpoint_step"]): point["ablation_dev_kill_rate"]
+        for points in points_by_seed.values()
+        for point in points
+        if point["checkpoint_step"] is not None
+    }
+    still_rising = (
+        len(steps) >= 2
+        and rates.get(steps[-1]) is not None
+        and rates.get(steps[-2]) is not None
+        and rates[steps[-1]] > rates[steps[-2]]
+    )
+    return {
+        "terminal_checkpoint_step": last,
+        "selected_step_is_the_terminal_step": True,
+        "selection_did_not_discriminate": (
+            "The rule chose the final checkpoint, which is also where training "
+            "ended, so no checkpoint was rejected by it. Early stopping was "
+            "never exercised."
+        ),
+        "monitor_still_rising_at_final_step": still_rising,
+        "under_trained_signal": (
+            "The ablation_dev monitor was still improving at the last "
+            "checkpoint, so this configuration was stopped by the end of the "
+            "data rather than by convergence. A longer schedule is motivated by "
+            "the trajectory, not chosen after seeing a result."
+        ) if still_rising else None,
+    }
+
+
 def build(run_name: str, extra_seed_runs: list[str]) -> dict[str, Any]:
     run_dir = ROOT / "results" / run_name
     training = _read(run_dir / "training_results.json") or {}
@@ -272,7 +322,10 @@ def build(run_name: str, extra_seed_runs: list[str]) -> dict[str, Any]:
         "baselines_rescored_under_same_shape_policy": bool(
             rescore_summary and rescore_summary.get("all_monotone")
         ),
-        "checkpoint_selection": select_checkpoint(points_by_seed),
+        "checkpoint_selection": {
+            **select_checkpoint(points_by_seed),
+            **_terminal_coincidence(training, points_by_seed),
+        },
         "monitor_points_by_seed": points_by_seed,
         "locked_validation": locked_validation(run_dir),
     }
