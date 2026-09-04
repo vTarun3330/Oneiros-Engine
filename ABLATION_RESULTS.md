@@ -1,6 +1,86 @@
 # Oneiros V4.1 ablation results
 
-No GPU ablation result is recorded yet. This file intentionally preserves every predeclared experiment as **INCONCLUSIVE / NOT RUN** rather than inventing metrics or selecting a change from the locked validation set.
+GPU results ARE now recorded. This file preserves every predeclared
+experiment - including the failed, the negative, and the inconclusive - and
+never invents a metric or selects a change from the locked validation set.
+
+## Status at a glance
+
+| Kind | Meaning |
+| --- | --- |
+| MEASURED | run to completion; the artifact is in `results/` |
+| INCONCLUSIVE | run, but the difference does not clear its noise floor |
+| DEFERRED | not run; not on the critical path |
+| OUT OF SCOPE | deliberately excluded from this phase |
+
+**DPO is OUT OF SCOPE for this phase.** It is not prepared, launched, debugged,
+evaluated, or budgeted, and reaching any Kill@8 target does not trigger it.
+
+## Headline measured result: base model versus SFT on locked validation
+
+This is the comparison the project previously did not have. Every earlier SFT
+claim rested on the 100-function `ablation_dev` monitor panel; no base-model
+number on the 757-function `val` split existed. Paired within evaluation seed,
+same split, same protocol, same 8-candidate budget:
+
+| Arm | seed 42 | seed 43 | seed 44 | mean | vs base (mean) |
+| --- | --- | --- | --- | --- | --- |
+| Base Qwen2.5-Coder-1.5B (untrained) | 0.6209 | 0.6129 | 0.6301 | 0.6213 | - |
+| SFT lr1e-5 | 0.6235 | 0.6433 | 0.6367 | 0.6345 | **+0.0132** |
+| SFT clean | 0.6156 | 0.6248 | 0.6103 | 0.6169 | **-0.0044** |
+
+Artifact: `results/v4_2_base_vs_sft_validation.json`.
+
+Three things follow, and all three matter more than the headline number:
+
+1. The monitor panel reported SFT gains of +7/+15/+11 functions out of 100. On
+   held-out validation the effect is about **+1.3 points at best** - roughly an
+   order of magnitude smaller.
+2. One trained adapter (`clean`) is **worse than no training at all**, negative
+   in two of three seeds.
+3. **Reference validity regressed against base in every seed of every arm.**
+
+### What SFT actually changed
+
+From the failure taxonomy over the identical 757 functions and 6,056
+candidates (`results/v4_2_failure_taxonomy_{base,sft}_seed42.json`):
+
+| Category | Base | SFT | Direction |
+| --- | --- | --- | --- |
+| boundary_miss | .1058 | .0907 | better |
+| wrong_target_api | .0201 | .0144 | better |
+| undefined_symbol | .0017 | .0005 | better |
+| wrong_expected_value | .4833 | .5007 | **worse** |
+| reference_invalid | .0352 | .0464 | **worse** |
+| syntax_invalid | .0061 | .0106 | **worse** |
+
+SFT learns *where to look* and mis-states *what the answer should be* more
+often. `wrong_expected_value` is the dominant failure for both models at
+roughly half of all candidates. This is the specific defect the multi-mutant
+supervision (`data/training_views/multi_mutant_v1`) is built to address: its
+expected values are execution-derived and verified against the reference and
+every sibling mutant.
+
+## Native repository execution: PARTIAL
+
+Three of five BugsInPy defects reproduce buggy-fail / fixed-pass natively under
+WSL2 (`results/v4_2_native_repository_pilot.json`); 40% infrastructure failure.
+This reproduces the OFFICIAL test. No model-generated test has been executed
+natively, so repository records remain **verified supervision coverage**, not
+generated-test real-repository kill evidence.
+
+## Actual Atheris: AVAILABLE, comparison not yet run
+
+Real `atheris` 2.3.0 runs under WSL2 on Python 3.11 (it has no 3.12 wheel and
+its native extension does not build there). The simulated coverage fuzzer in
+`baseline/coverage_fuzzer.py` is **not** Atheris and is never reported as such.
+
+## Corpus composition, counted correctly
+
+Balance is counted by **unique semantic target**, not by raw mutation row. By
+row the training split looks 92% synthetic; by target it is 663 synthetic
+against 457 repository, **59/41** (`results/v4_2_corpus_inventory.json`).
+Repository projects are verified disjoint across splits.
 
 All design experiments use the fixed, training-only `ablation_dev` split (`415f6ac27cbf17f3dd1cc289495e08d6844b57a6a689d265958b5aceed19034e`) with seeds 42, 43, and 44. Candidate count, generation order, sampling configuration, execution policy, and Kill@k definitions are frozen in `research/v4_1/FROZEN_EVALUATION_CONFIG.json`.
 

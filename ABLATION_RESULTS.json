@@ -24,7 +24,9 @@
       "metrics": null,
       "result": "NOT_RUN",
       "decision": "INCONCLUSIVE",
-      "reason": "Local harness and split are ready; no GPU evidence has been generated."
+      "reason": "Local harness and split are ready; no GPU evidence has been generated.",
+      "status": "DEFERRED",
+      "status_reason": "predeclared but not run; not on the critical path"
     },
     {
       "id": "B0_B1",
@@ -43,7 +45,9 @@
       "metrics": null,
       "result": "NOT_RUN",
       "decision": "INCONCLUSIVE",
-      "reason": "Do not use the historical leaked V4 repository context as a control."
+      "reason": "Do not use the historical leaked V4 repository context as a control.",
+      "status": "DEFERRED",
+      "status_reason": "predeclared but not run; not on the critical path"
     },
     {
       "id": "C0_C1",
@@ -62,7 +66,9 @@
       "metrics": null,
       "result": "NOT_RUN",
       "decision": "INCONCLUSIVE",
-      "reason": "Safety wording is implemented; performance effect remains unmeasured."
+      "reason": "Safety wording is implemented; performance effect remains unmeasured.",
+      "status": "DEFERRED",
+      "status_reason": "predeclared but not run; not on the critical path"
     },
     {
       "id": "D0_D1",
@@ -81,7 +87,9 @@
       "metrics": null,
       "result": "LOCAL_SAFETY_TESTS_ONLY",
       "decision": "INCONCLUSIVE",
-      "reason": "D1 is required for prompt integrity; Kill@k effect remains unmeasured."
+      "reason": "D1 is required for prompt integrity; Kill@k effect remains unmeasured.",
+      "status": "INCONCLUSIVE",
+      "status_reason": "local safety tests only; no paired GPU arms"
     },
     {
       "id": "E0_E1",
@@ -100,7 +108,9 @@
       "metrics": null,
       "result": "NOT_RUN",
       "decision": "INCONCLUSIVE",
-      "reason": "E0 can never become the headline condition."
+      "reason": "E0 can never become the headline condition.",
+      "status": "DEFERRED",
+      "status_reason": "predeclared but not run; not on the critical path"
     },
     {
       "id": "F0_F1",
@@ -121,7 +131,9 @@
       "metrics": null,
       "result": "NOT_RUN",
       "decision": "INCONCLUSIVE",
-      "reason": "Predeclared weights; no result discarded."
+      "reason": "Predeclared weights; no result discarded.",
+      "status": "DEFERRED",
+      "status_reason": "predeclared but not run; not on the critical path"
     },
     {
       "id": "G0_G1_G2",
@@ -143,7 +155,9 @@
       "decision": "INCONCLUSIVE",
       "gpu_command_status": "WITHHELD_UNMATCHED_SAMPLING_CONTROLS",
       "local_evidence": "results/v4_1_dataset_sampling_audit.json",
-      "reason": "CPU audit fixed upstream dataset labels and weight reporting, but rejected the old GPU matrix. G0 changed deduplication and repository composition as well as balance. G1/G2 requested 2x examples with a 2x repetition cap, which repeats every example twice and leaves dataset weights unchanged. A shared verified pool and equal effective budget are required before GPU commands are emitted."
+      "reason": "CPU audit fixed upstream dataset labels and weight reporting, but rejected the old GPU matrix. G0 changed deduplication and repository composition as well as balance. G1/G2 requested 2x examples with a 2x repetition cap, which repeats every example twice and leaves dataset weights unchanged. A shared verified pool and equal effective budget are required before GPU commands are emitted.",
+      "status": "INCONCLUSIVE",
+      "status_reason": "CPU sampling audit only; GPU controls withheld"
     },
     {
       "id": "H0_H1",
@@ -162,7 +176,9 @@
       "metrics": null,
       "result": "NOT_RUN",
       "decision": "INCONCLUSIVE",
-      "reason": "V4.1 counts are frozen; comparative training has not run."
+      "reason": "V4.1 counts are frozen; comparative training has not run.",
+      "status": "DEFERRED",
+      "status_reason": "predeclared but not run; not on the critical path"
     },
     {
       "id": "J_prompt_budget",
@@ -214,7 +230,9 @@
         }
       },
       "protocol_note": "The prompt budget is part of the evaluation scope hash. Results at a new budget are not comparable with V4 numbers produced at 512 unless the V4 adapter is re-evaluated under the same budget.",
-      "gate_conclusion": "Promptability is a hard prerequisite, not a performance result. 512 fails on both panels. 768 clears val but leaves 28 unpromptable ablation_dev records. 1024 is the smallest tested budget that clears evaluation_panel_fully_promptable on both panels, and 1024+128 leaves ample room in the 2048 sequence budget. Excluding the 28 records to make 768 pass would silently change the panel and is not permitted."
+      "gate_conclusion": "Promptability is a hard prerequisite, not a performance result. 512 fails on both panels. 768 clears val but leaves 28 unpromptable ablation_dev records. 1024 is the smallest tested budget that clears evaluation_panel_fully_promptable on both panels, and 1024+128 leaves ample room in the 2048 sequence budget. Excluding the 28 records to make 768 pass would silently change the panel and is not permitted.",
+      "status": "INCONCLUSIVE",
+      "status_reason": "local CPU promptability evidence only"
     },
     {
       "id": "I_SCALE_qwen_200_vs_800",
@@ -274,7 +292,8 @@
         42
       ],
       "protocol_unchanged_from": "research/v4_1/FROZEN_EVALUATION_CONFIG.json",
-      "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence."
+      "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence.",
+      "status": "MEASURED"
     },
     {
       "id": "M_learning_rate_5e5_vs_1e5",
@@ -333,7 +352,8 @@
         42
       ],
       "protocol_unchanged_from": "research/v4_1/FROZEN_EVALUATION_CONFIG.json",
-      "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence."
+      "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence.",
+      "status": "MEASURED"
     },
     {
       "id": "K_complex_function_mix",
@@ -398,7 +418,9 @@
       ],
       "protocol_unchanged_from": "research/v4_1/FROZEN_EVALUATION_CONFIG.json",
       "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence.",
-      "superseded_by": "O_multi_seed_confirmation"
+      "superseded_by": "O_multi_seed_confirmation",
+      "status": "INCONCLUSIVE",
+      "status_reason": "unpaired single-seed +4 against an across-seed range of 7"
     },
     {
       "id": "CROSS_CUTTING_form_before_behaviour",
@@ -425,7 +447,9 @@
         42
       ],
       "protocol_unchanged_from": "research/v4_1/FROZEN_EVALUATION_CONFIG.json",
-      "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence."
+      "noise_floor_note": "Repeated identical-configuration runs vary by about two functions on this panel at fixed seed. Differences at or below that are not evidence.",
+      "status": "INCONCLUSIVE",
+      "status_reason": "diagnostic; no controlled arms"
     },
     {
       "id": "L_base_model",
@@ -534,7 +558,8 @@
         "results/v4_1_smoke_backend_qwen_sdpa_seed42.json",
         "results/local_sft200_qwen_seed42/",
         "results/local_sft200_phi3_seed42_v2/PARTIAL_RUN.json"
-      ]
+      ],
+      "status": "MEASURED"
     },
     {
       "id": "N_checkpoint_resolution_sweep",
@@ -686,7 +711,8 @@
       "decision": "REJECT_THE_UNDERSTATEMENT_HYPOTHESIS",
       "reason": "The motivating hypothesis was wrong and is recorded as wrong. Finer checkpointing cost 69 minutes and bought +4 functions at a checkpoint with worse reference-validity than the one it replaces. A 10-step interval is not worth its monitoring cost as a default.",
       "cross_cutting_confirmation": "At 10-step resolution the form-before-behaviour pattern is visible from the FIRST checkpoint rather than emerging later: parse-validity is already climbing at step 10 (0.9912 -> 0.9938) while reference-validity is already falling (0.6088 -> 0.6012). The two metrics move in opposite directions for the entire run. Candidate kill rate rises monotonically to its maximum at the terminal step (0.3175) while function kill rate peaks at 60, so the two success layers do not even peak together.",
-      "practical_consequence": "There is no checkpoint that is simultaneously good at killing bugs and faithful to the reference. Selecting on kill rate picks step 60 and accepts reference-validity 0.5375; selecting on reference-validity picks step 10-20 and accepts a kill rate at or below the untrained baseline. This is a genuine trade-off in the current recipe, not a sampling artifact."
+      "practical_consequence": "There is no checkpoint that is simultaneously good at killing bugs and faithful to the reference. Selecting on kill rate picks step 60 and accepts reference-validity 0.5375; selecting on reference-validity picks step 10-20 and accepts a kill rate at or below the untrained baseline. This is a genuine trade-off in the current recipe, not a sampling artifact.",
+      "status": "MEASURED"
     },
     {
       "id": "O_multi_seed_confirmation",
@@ -809,7 +835,8 @@
         }
       ],
       "methodological_correction": "Two noise floors apply and were previously conflated. A PAIRED within-seed comparison cancels seed choice, so its floor is same-seed run-to-run variability (about 2 functions). An UNPAIRED comparison between separately trained runs does not, so its floor is the across-seed range (7 functions here). Judging a paired gain against the unpaired range would wrongly discard a real effect; judging an unpaired difference against the paired floor wrongly accepts noise. The earlier single-seed acceptances used the wrong floor.",
-      "artifact": "results/v4_1_seed_variance_analysis.json"
+      "artifact": "results/v4_1_seed_variance_analysis.json",
+      "status": "MEASURED"
     }
   ],
   "accepted_changes": [
@@ -834,5 +861,95 @@
     "H",
     "J",
     "K"
-  ]
+  ],
+  "phase": "sft_only",
+  "out_of_scope": {
+    "dpo": "DPO is out of scope for this phase: not prepared, launched, debugged, evaluated, or budgeted. Reaching any Kill@8 target does not trigger it."
+  },
+  "measured_base_versus_sft_on_locked_validation": {
+    "artifact": "results/v4_2_base_vs_sft_validation.json",
+    "design": "paired within evaluation seed; val split; 8 candidates; no reranking",
+    "base_qwen_per_seed": {
+      "42": 0.620872,
+      "43": 0.612945,
+      "44": 0.630119
+    },
+    "base_qwen_mean": 0.621312,
+    "base_qwen_range": 0.017173,
+    "arms": {
+      "sft_lr1e5": {
+        "per_seed": {
+          "42": 0.623514,
+          "43": 0.643329,
+          "44": 0.636724
+        },
+        "mean": 0.634522,
+        "paired_delta_mean": 0.01321,
+        "positive_in_every_seed": true,
+        "reference_validity_regressed_in_every_seed": true
+      },
+      "sft_clean": {
+        "per_seed": {
+          "42": 0.615588,
+          "43": 0.624835,
+          "44": 0.610304
+        },
+        "mean": 0.616909,
+        "paired_delta_mean": -0.004403,
+        "positive_in_every_seed": false,
+        "reference_validity_regressed_in_every_seed": true
+      }
+    },
+    "interpretation": "The 100-function ablation_dev monitor panel reported SFT gains of +7/+15/+11 functions. On the 757-function locked validation split the paired effect is about +1.3 points at best, and one trained adapter is net worse than the untrained base. Reference validity regressed against base in every seed of every arm."
+  },
+  "measured_failure_taxonomy": {
+    "artifacts": [
+      "results/v4_2_failure_taxonomy_base_seed42.json",
+      "results/v4_2_failure_taxonomy_sft_seed42.json"
+    ],
+    "functions": 757,
+    "candidates": 6056,
+    "sft_improves": {
+      "boundary_miss": [
+        0.1058,
+        0.0907
+      ],
+      "wrong_target_api": [
+        0.0201,
+        0.0144
+      ],
+      "undefined_symbol": [
+        0.0017,
+        0.0005
+      ]
+    },
+    "sft_regresses": {
+      "wrong_expected_value": [
+        0.4833,
+        0.5007
+      ],
+      "reference_invalid": [
+        0.0352,
+        0.0464
+      ],
+      "syntax_invalid": [
+        0.0061,
+        0.0106
+      ]
+    },
+    "interpretation": "SFT learns where to look and mis-states the expected value more often. wrong_expected_value is the dominant failure for both models."
+  },
+  "native_repository_execution": {
+    "status": "PARTIAL",
+    "artifact": "results/v4_2_native_repository_pilot.json",
+    "reproduced": 3,
+    "attempted": 5,
+    "infrastructure_failure_rate": 0.4,
+    "claim_limit": "Reproduces the OFFICIAL test only. No model-generated test has been executed natively, so repository records remain verified supervision coverage, not generated-test real-repository kill evidence."
+  },
+  "actual_atheris": {
+    "status": "ENVIRONMENT_AVAILABLE_COMPARISON_NOT_RUN",
+    "package": "atheris==2.3.0 under WSL2 Ubuntu 24.04, Python 3.11",
+    "note": "baseline/coverage_fuzzer.py is a SIMULATED coverage fuzzer and is never reported as Atheris."
+  }
 }
