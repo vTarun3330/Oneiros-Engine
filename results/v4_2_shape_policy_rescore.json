@@ -1,0 +1,102 @@
+{
+  "schema_version": "oneiros_shape_policy_rescore_v1",
+  "source_tree_sha256": "a582eab5be241b7746545b5be838f48a04fb061792578194a5b7ec438f7c268f",
+  "sealed_final_test_accessed": false,
+  "purpose": "hold the generations fixed and vary only the candidate shape rule, so an arm scored under the widened policy can be compared against a baseline scored the same way",
+  "rescored": [
+    {
+      "artifact": "results/v4_2_base_qwen_val_seed42.json",
+      "split": "val",
+      "seed": 42,
+      "functions": 757,
+      "frozen_assertion_only": {
+        "killed": 470,
+        "kill_rate": 0.620872,
+        "kill_rate_wilson_95": [
+          0.585782,
+          0.654741
+        ]
+      },
+      "widened_test_function_allowed": {
+        "killed": 470,
+        "kill_rate": 0.620872,
+        "kill_rate_wilson_95": [
+          0.585782,
+          0.654741
+        ]
+      },
+      "delta_kill_rate": 0.0,
+      "rejected_candidates_examined": 0,
+      "rejected_candidates_without_stored_text": 17,
+      "interpretation": "no rejected candidate carried stored text, so every frozen-policy rejection here was an empty or ungenerated output rather than a test-function shape the widened rule would admit. The widened policy therefore gives this arm no advantage at all, which is what makes it fair to compare against an arm scored under it.",
+      "newly_admitted_candidates": 0,
+      "newly_killing_candidates": 0,
+      "functions_flipped_to_killed": [],
+      "monotone_as_expected": true,
+      "monotonicity_note": "the widened rule only admits candidates the frozen rule rejected, so the kill count can rise but never fall"
+    },
+    {
+      "artifact": "results/v4_2_base_qwen_val_seed43.json",
+      "split": "val",
+      "seed": 43,
+      "functions": 757,
+      "frozen_assertion_only": {
+        "killed": 464,
+        "kill_rate": 0.612946,
+        "kill_rate_wilson_95": [
+          0.577761,
+          0.64699
+        ]
+      },
+      "widened_test_function_allowed": {
+        "killed": 464,
+        "kill_rate": 0.612946,
+        "kill_rate_wilson_95": [
+          0.577761,
+          0.64699
+        ]
+      },
+      "delta_kill_rate": 0.0,
+      "rejected_candidates_examined": 0,
+      "rejected_candidates_without_stored_text": 17,
+      "interpretation": "no rejected candidate carried stored text, so every frozen-policy rejection here was an empty or ungenerated output rather than a test-function shape the widened rule would admit. The widened policy therefore gives this arm no advantage at all, which is what makes it fair to compare against an arm scored under it.",
+      "newly_admitted_candidates": 0,
+      "newly_killing_candidates": 0,
+      "functions_flipped_to_killed": [],
+      "monotone_as_expected": true,
+      "monotonicity_note": "the widened rule only admits candidates the frozen rule rejected, so the kill count can rise but never fall"
+    },
+    {
+      "artifact": "results/v4_2_base_qwen_val_seed44.json",
+      "split": "val",
+      "seed": 44,
+      "functions": 757,
+      "frozen_assertion_only": {
+        "killed": 477,
+        "kill_rate": 0.630119,
+        "kill_rate_wilson_95": [
+          0.595152,
+          0.663772
+        ]
+      },
+      "widened_test_function_allowed": {
+        "killed": 477,
+        "kill_rate": 0.630119,
+        "kill_rate_wilson_95": [
+          0.595152,
+          0.663772
+        ]
+      },
+      "delta_kill_rate": 0.0,
+      "rejected_candidates_examined": 0,
+      "rejected_candidates_without_stored_text": 19,
+      "interpretation": "no rejected candidate carried stored text, so every frozen-policy rejection here was an empty or ungenerated output rather than a test-function shape the widened rule would admit. The widened policy therefore gives this arm no advantage at all, which is what makes it fair to compare against an arm scored under it.",
+      "newly_admitted_candidates": 0,
+      "newly_killing_candidates": 0,
+      "functions_flipped_to_killed": [],
+      "monotone_as_expected": true,
+      "monotonicity_note": "the widened rule only admits candidates the frozen rule rejected, so the kill count can rise but never fall"
+    }
+  ],
+  "all_monotone": true
+}

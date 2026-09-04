@@ -203,6 +203,29 @@ def build(run_name: str, extra_seed_runs: list[str]) -> dict[str, Any]:
 
     density = supervision.get("density_over_eligible_synthetic")
     command, launched = launch_command(run_name)
+
+    # Holding the generations fixed and varying only the scoring rule is the
+    # only way to show the widened policy is not quietly doing the work.
+    rescore = _read(ROOT / "results" / "v4_2_shape_policy_rescore.json")
+    rescore_summary = None
+    if rescore:
+        rows = rescore.get("rescored") or []
+        rescore_summary = {
+            "artifact": "results/v4_2_shape_policy_rescore.json",
+            "arms_rescored": [Path(row["artifact"]).name for row in rows],
+            "max_delta_kill_rate": (
+                max((row["delta_kill_rate"] for row in rows), default=None)
+            ),
+            "newly_admitted_candidates_total": sum(
+                row.get("newly_admitted_candidates", 0) for row in rows
+            ),
+            "all_monotone": rescore.get("all_monotone"),
+            "finding": (
+                "the widened shape rule admitted no additional base-model "
+                "candidate on any seed, so it confers no advantage on the "
+                "baseline side and cannot be what separates the arms"
+            ),
+        }
     return {
         "schema_version": "oneiros_final_sft_receipt_v1",
         "source_tree_sha256": source_tree_sha256(ROOT),
@@ -242,7 +265,13 @@ def build(run_name: str, extra_seed_runs: list[str]) -> dict[str, Any]:
                 "results scored under the widened policy are a named protocol "
                 "variant and are not interchangeable with assertion-only numbers"
             ),
+            "baselines_rescored": rescore_summary,
         },
+        # Read by the readiness gate: an arm scored under the widened policy may
+        # only be compared against baselines that were offered the same rule.
+        "baselines_rescored_under_same_shape_policy": bool(
+            rescore_summary and rescore_summary.get("all_monotone")
+        ),
         "checkpoint_selection": select_checkpoint(points_by_seed),
         "monitor_points_by_seed": points_by_seed,
         "locked_validation": locked_validation(run_dir),
