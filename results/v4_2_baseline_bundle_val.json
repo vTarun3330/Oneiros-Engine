@@ -1,0 +1,79 @@
+{
+  "schema_version": "oneiros_baseline_bundle_v1",
+  "source_tree_sha256": "32bd89b3689f2a1696c460e838994a55006799177ac8841b6529ed947ee28437",
+  "sealed_final_test_accessed": false,
+  "split": "val",
+  "targets": 757,
+  "protocol": {
+    "candidates_per_target": 8,
+    "execution_timeout_seconds": 5.0,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "validity_rule": "harness.candidate_policy.validate_generated_test",
+    "kill_rule": "candidate must pass on the reference implementation AND fail on the mutant; a candidate that fails on the reference is invalid, not a kill",
+    "matched_to_oneiros": "same targets, same candidate budget, same per-execution timeout, same validity and kill rules",
+    "advantage_given_to_the_baselines": "every generative arm derives its expected value by EXECUTING the reference implementation, so each is handed a perfect oracle and only has to choose inputs. Oneiros is never shown the reference. A baseline that still loses is not losing for want of an oracle."
+  },
+  "naming_honesty": {
+    "simulated_coverage_fuzzer_is_not_atheris": true,
+    "actual_atheris_artifacts": [
+      "results/v4_2_atheris_vs_historical_oneiros_val_matched8_seed42.json",
+      "results/v4_2_atheris_vs_oneiros_val_20000_seed42.json"
+    ]
+  },
+  "arms": {
+    "dataset_tests": {
+      "description": "the corpus's own retained tests; an upper reference, not a generator",
+      "sees_dataset_tests": true,
+      "by_seed": {
+        "42": {
+          "seed": 42,
+          "targets": 757,
+          "killed": 757,
+          "kill_rate": 1.0,
+          "kill_rate_wilson_95": [
+            0.994951,
+            1.0
+          ],
+          "candidates_generated": 891,
+          "policy_valid_candidates": 891,
+          "reference_valid_candidates": 891,
+          "wall_seconds": 149.0
+        },
+        "43": {
+          "seed": 43,
+          "targets": 757,
+          "killed": 757,
+          "kill_rate": 1.0,
+          "kill_rate_wilson_95": [
+            0.994951,
+            1.0
+          ],
+          "candidates_generated": 891,
+          "policy_valid_candidates": 891,
+          "reference_valid_candidates": 891,
+          "wall_seconds": 142.6
+        },
+        "44": {
+          "seed": 44,
+          "targets": 757,
+          "killed": 757,
+          "kill_rate": 1.0,
+          "kill_rate_wilson_95": [
+            0.994951,
+            1.0
+          ],
+          "candidates_generated": 891,
+          "policy_valid_candidates": 891,
+          "reference_valid_candidates": 891,
+          "wall_seconds": 148.0
+        }
+      },
+      "mean_kill_rate": 1.0,
+      "range_across_seeds": 0.0
+    }
+  }
+}

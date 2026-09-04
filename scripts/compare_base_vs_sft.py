@@ -101,6 +101,66 @@ def _summary(payload: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _killed_by_record(payload: dict[str, Any]) -> dict[str, bool]:
+    return {
+        str(result.get("record_id")): bool(result.get("killed"))
+        for result in payload.get("function_results") or []
+        if result.get("record_id") is not None
+    }
+
+
+def _mcnemar_exact(discordant_a: int, discordant_b: int) -> float:
+    """Two-sided exact McNemar p-value from the discordant pair counts.
+
+    Under the null the arms differ only by chance, so each discordant pair is a
+    fair coin. Concordant pairs carry no information about a difference and are
+    correctly ignored - which is exactly why this is more sensitive than
+    comparing two aggregate proportions over the same functions.
+    """
+    from math import comb
+
+    total = discordant_a + discordant_b
+    if total == 0:
+        return 1.0
+    smaller = min(discordant_a, discordant_b)
+    tail = sum(comb(total, index) for index in range(smaller + 1)) / (2 ** total)
+    return min(1.0, 2 * tail)
+
+
+def paired_by_function(
+    base: dict[int, dict[str, Any]], arm: dict[int, dict[str, Any]],
+) -> dict[str, Any]:
+    """Per-function paired comparison within each seed.
+
+    The seed-level delta compares two aggregate proportions and throws away the
+    pairing that makes the design strong. With the same functions evaluated by
+    both arms under the same seed, every function is its own control.
+    """
+    rows: dict[str, Any] = {}
+    for seed in sorted(set(base) & set(arm)):
+        left = _killed_by_record(base[seed])
+        right = _killed_by_record(arm[seed])
+        shared = sorted(set(left) & set(right))
+        improved = [key for key in shared if right[key] and not left[key]]
+        regressed = [key for key in shared if left[key] and not right[key]]
+        rows[str(seed)] = {
+            "paired_functions": len(shared),
+            "improved": len(improved),
+            "regressed": len(regressed),
+            "unchanged": len(shared) - len(improved) - len(regressed),
+            "net_function_gain": len(improved) - len(regressed),
+            "mcnemar_exact_p_value": round(
+                _mcnemar_exact(len(improved), len(regressed)), 6
+            ),
+            "significant_at_05": _mcnemar_exact(
+                len(improved), len(regressed)
+            ) < 0.05,
+            "improved_record_ids": improved[:40],
+            "regressed_record_ids": regressed[:40],
+        }
+    return rows
+
+
 def compare(base_run: str, arms: dict[str, str]) -> dict[str, Any]:
     base = _arm(base_run, "base_validation_*.json")
     if not base:
@@ -163,6 +223,7 @@ def compare(base_run: str, arms: dict[str, str]) -> dict[str, Any]:
             "exceeds_paired_noise_floor_in_every_seed": (
                 all(delta > floor for delta in deltas) if deltas and floor else None
             ),
+            "paired_by_function": paired_by_function(base, arm),
             "paired_reference_validity_delta": {
                 str(seed): round(delta, 6)
                 for seed, delta in zip(shared, reference_deltas)
