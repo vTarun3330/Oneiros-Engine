@@ -1,0 +1,83 @@
+{
+  "schema_version": "oneiros_repository_expansion_ceiling_v1",
+  "source_tree_sha256": "c373302105242c7cc9979e86fc03ab6f89dc7df1ecda608e1a8d5480957a7e2a",
+  "corpus_version": "v4_1_research_hardened_candidate",
+  "sealed_final_test_accessed": false,
+  "eligibility_rule": "project-disjoint splits: a defect whose project is assigned to ablation_dev, val, or test can never enter training, so it is not part of the ceiling however many such defects exist",
+  "current_unique_targets": {
+    "synthetic": 663,
+    "repository": 346,
+    "repository_shortfall_for_parity": 317
+  },
+  "bugsinpy": {
+    "already_ingested": 269,
+    "un_ingested_train_eligible": 190,
+    "un_ingested_train_eligible_by_project": {
+      "ansible": 3,
+      "matplotlib": 6,
+      "pandas": 169,
+      "sanic": 1,
+      "spacy": 10,
+      "tornado": 1
+    },
+    "un_ingested_but_project_held_out": 42,
+    "un_ingested_but_project_held_out_by_project": {
+      "black": 1,
+      "keras": 34,
+      "luigi": 2,
+      "scrapy": 5
+    },
+    "dominant_available_project": "pandas",
+    "dominant_available_count": 169,
+    "dominant_share_of_available": 0.8895,
+    "historical_acceptance_rate": 0.3601,
+    "expected_accepted_if_all_attempted": 68,
+    "ingestion_path": "native WSL2 execution (the pilot reproduces 3 of 5)"
+  },
+  "swebench_verified": {
+    "source_rows": 500,
+    "already_ingested": 324,
+    "un_ingested_project_in_train": 70,
+    "un_ingested_project_in_train_by_project": {
+      "astropy": 4,
+      "django": 35,
+      "matplotlib": 23,
+      "pylint": 7,
+      "sympy": 1
+    },
+    "un_ingested_project_held_out": 62,
+    "un_ingested_project_held_out_by_project": {
+      "pytest": 18,
+      "requests": 7,
+      "scikit-learn": 31,
+      "seaborn": 1,
+      "xarray": 5
+    },
+    "un_ingested_project_unassigned": 44,
+    "un_ingested_project_unassigned_by_project": {
+      "sphinx": 44
+    },
+    "train_eligible_total": 114,
+    "ingestion_path": "official SWE-bench harness on Modal"
+  },
+  "ceiling": {
+    "optimistic_additional_targets_if_every_attempt_succeeded": 304,
+    "expected_additional_targets_at_historical_acceptance": 182,
+    "required_for_parity": 317,
+    "parity_reachable_optimistically": false,
+    "parity_reachable_at_expected_yield": false
+  },
+  "blockers": {
+    "swebench_ingestion": {
+      "blocked": true,
+      "reason": "The SWE-bench path runs the official harness on Modal. No Modal token is configured, so those instances cannot be reproduced or verified here.",
+      "affected_available_targets": 114
+    },
+    "bugsinpy_project_concentration": {
+      "dominant_project": "pandas",
+      "dominant_share_of_available": 0.8895,
+      "note": "Most of the un-ingested BugsInPy supply is one project. Ingesting it wholesale would fix the count while making the project-concentration problem worse, which the balancing policy explicitly forbids."
+    }
+  },
+  "conclusion": "The 50/50 unique-target balance is NOT reachable from the data currently available under the project-disjointness rule. The balanced-dataset manifest reports this as a blocking condition rather than manufacturing the ratio by deleting synthetic targets or repeating repository ones."
+}
