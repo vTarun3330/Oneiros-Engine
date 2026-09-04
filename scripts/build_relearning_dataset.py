@@ -21,6 +21,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from harness.corpus import sha256_file, write_json
+from harness.multi_mutant_examples import verified_completions_by_record
 from harness.relearning import (
     RELEARNING_SCHEMA_VERSION,
     assert_split_is_eligible,
@@ -70,32 +71,19 @@ def _annotations(inventory_dir: Path, split: str) -> dict[str, dict[str, Any]]:
 def _verified_completions(
     multi_mutant_dir: Path, splits: tuple[str, ...] = ("train", "ablation_dev"),
 ) -> dict[str, str]:
-    """Map every record a verified completion actually kills to that completion.
+    """Verified supervision keyed by every record each completion actually kills.
 
-    The builder emits one broad example per function lineage, displayed against
-    a single record. But that completion was executed against every sibling
-    mutant of the lineage, and the run recorded which ones it killed. A sibling
-    it killed is a record for which this completion is a correct, verified label
-    - so keying only by displayed record would discard most of the supervision
-    that was actually verified.
-
-    Surviving siblings are deliberately NOT mapped: the completion does not
-    distinguish them, so using it there would be an unverified label.
+    The mapping itself lives in harness.multi_mutant_examples so the trainer and
+    this builder share one definition of what a completion is verified on.
     """
     completions: dict[str, str] = {}
     for split in splits:
         path = multi_mutant_dir / f"{split}.examples.json"
         if not path.exists():
             continue
-        for item in json.loads(path.read_text(encoding="utf-8")):
-            if not (item.get("verified") and item.get("kills_displayed_target")):
-                continue
-            completion = str(item["completion"])
-            survivors = {str(value) for value in item.get("surviving_mutant_ids") or []}
-            siblings = [str(value) for value in item.get("sibling_mutant_ids") or []]
-            killed = [record for record in siblings if record not in survivors]
-            for record_id in killed or [str(item["displayed_record_id"])]:
-                completions.setdefault(record_id, completion)
+        loaded = json.loads(path.read_text(encoding="utf-8"))
+        for record_id, completion in verified_completions_by_record(loaded).items():
+            completions.setdefault(record_id, completion)
     return completions
 
 

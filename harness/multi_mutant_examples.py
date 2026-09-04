@@ -466,3 +466,36 @@ def uncovered_mutants(
         index for index, mutant_id in enumerate(matrix.mutant_ids)
         if mutant_id not in killed
     ]
+
+
+def verified_completions_by_record(
+    examples: Sequence[dict[str, Any]],
+) -> dict[str, str]:
+    """Map every record a verified completion actually kills to that completion.
+
+    A broad example is *displayed* against one record of its lineage, but it was
+    executed against the reference and every sibling mutant, and the build
+    recorded which siblings it killed.  Each killed sibling is a record for
+    which this completion is a correct label carrying real execution evidence.
+
+    Keying only by the displayed record is therefore not merely conservative, it
+    discards most of the supervision that was actually verified: on the train
+    split it covers 663 records instead of 5588.  This function exists so the
+    trainer and the relearning builder cannot disagree about that again.
+
+    Surviving siblings are deliberately left unmapped.  The completion does not
+    distinguish them, so using it there would be an unverified label - the one
+    thing the supervision contract forbids.
+    """
+    completions: dict[str, str] = {}
+    for item in examples:
+        if not (item.get("verified") and item.get("kills_displayed_target")):
+            continue
+        completion = str(item["completion"])
+        survivors = {str(value) for value in item.get("surviving_mutant_ids") or []}
+        siblings = [str(value) for value in item.get("sibling_mutant_ids") or []]
+        killed = [record for record in siblings if record not in survivors]
+        for record_id in killed or [str(item["displayed_record_id"])]:
+            completions.setdefault(record_id, completion)
+        completions.setdefault(str(item["displayed_record_id"]), completion)
+    return completions

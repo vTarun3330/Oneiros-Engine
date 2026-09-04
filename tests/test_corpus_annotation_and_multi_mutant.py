@@ -15,6 +15,7 @@ from harness.corpus_annotation import (
     record_test_framework,
 )
 from harness.multi_mutant_examples import (
+    verified_completions_by_record,
     build_kill_matrix,
     build_multi_mutant_example,
     select_assertion_cover,
@@ -376,3 +377,57 @@ def test_loader_reports_a_missing_dataset_file(tmp_path):
 
     with pytest.raises(FileNotFoundError):
         load_multi_mutant_completions(tmp_path)
+
+
+# --------------------------------------------------------------------------
+# verified_completions_by_record - what a completion is a valid label FOR
+# --------------------------------------------------------------------------
+
+def _example(**overrides):
+    payload = {
+        "displayed_record_id": "mut_a",
+        "completion": "def test_x():\n    assert f(1) == 2\n",
+        "verified": True,
+        "kills_displayed_target": True,
+        "sibling_mutant_ids": ["mut_a", "mut_b", "mut_c"],
+        "surviving_mutant_ids": ["mut_c"],
+    }
+    payload.update(overrides)
+    return payload
+
+
+def test_a_completion_labels_every_sibling_it_killed():
+    """The whole point: supervision is not limited to the displayed record."""
+    mapping = verified_completions_by_record([_example()])
+    assert set(mapping) == {"mut_a", "mut_b"}
+
+
+def test_a_surviving_sibling_never_receives_the_label():
+    """The completion does not distinguish it, so the label is unverified there."""
+    mapping = verified_completions_by_record([_example()])
+    assert "mut_c" not in mapping
+
+
+def test_an_unverified_example_contributes_nothing():
+    assert verified_completions_by_record([_example(verified=False)]) == {}
+    assert verified_completions_by_record(
+        [_example(kills_displayed_target=False)]
+    ) == {}
+
+
+def test_the_displayed_record_is_covered_even_with_no_sibling_evidence():
+    mapping = verified_completions_by_record(
+        [_example(sibling_mutant_ids=[], surviving_mutant_ids=[])]
+    )
+    assert mapping == {"mut_a": _example()["completion"]}
+
+
+def test_the_first_example_wins_so_the_mapping_is_order_deterministic():
+    first = _example(completion="def test_first():\n    assert True\n")
+    second = _example(
+        displayed_record_id="mut_b",
+        completion="def test_second():\n    assert True\n",
+        sibling_mutant_ids=["mut_b"], surviving_mutant_ids=[],
+    )
+    mapping = verified_completions_by_record([first, second])
+    assert mapping["mut_b"] == first["completion"]

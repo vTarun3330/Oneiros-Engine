@@ -20,6 +20,7 @@ from typing import Any, Dict, List, Optional, Tuple
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from config import CANONICAL_CORPUS_VERSION, model_config, training_config
 from harness.candidate_policy import validate_function_assertion
+from harness.multi_mutant_examples import verified_completions_by_record
 from harness.corpus import sha256_file, valid_corpus_version, verify_corpus
 from harness.corpus_view import (
     load_complexity_index,
@@ -424,13 +425,20 @@ def _record_to_pair(
 
 
 def load_multi_mutant_completions(directory, split: str = "train") -> Dict[str, str]:
-    """Load verified multi-mutant supervision, keyed by displayed record id.
+    """Load verified multi-mutant supervision for every record it is verified on.
 
     Every example must carry execution evidence that it passed on the reference
     AND killed the target it is shown against.  An example missing either has no
     evidence behind it, and section 4 of the research contract forbids treating
     an unverified output as a correct SFT label - so this raises rather than
     quietly dropping it, which would silently change the training set size.
+
+    Keying is by every sibling mutant the completion actually killed, not by the
+    displayed record alone.  Keying by the displayed record covered 663 train
+    records instead of 5588, and only 76 of the 800 selected training pairs
+    received multi-mutant supervision at all - a "multi-mutant" run that was
+    96% ordinary supervision.  Shared with the relearning builder via
+    harness.multi_mutant_examples so the two cannot diverge again.
     """
     directory = Path(directory)
     examples_file = directory / f"{split}.examples.json"
@@ -448,14 +456,13 @@ def load_multi_mutant_completions(directory, split: str = "train") -> Dict[str, 
             f"{len(unverified)} multi-mutant examples are unverified; "
             "rebuild the dataset rather than training on them"
         )
-    completions: Dict[str, str] = {}
     for item in loaded:
-        record_id = str(item["displayed_record_id"])
-        completion = str(item["completion"])
-        if not completion.strip():
-            raise ValueError(f"multi-mutant example {record_id} has an empty completion")
-        completions[record_id] = completion
-    return completions
+        if not str(item["completion"]).strip():
+            raise ValueError(
+                f"multi-mutant example {item['displayed_record_id']} has an "
+                "empty completion"
+            )
+    return verified_completions_by_record(loaded)
 
 
 def apply_balanced_sft_selection(
