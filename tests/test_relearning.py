@@ -9,6 +9,8 @@ from __future__ import annotations
 import pytest
 
 from harness.relearning import (
+    CorrectionsNotTrainable,
+    assert_corrections_are_trainable,
     Correction,
     LoserCase,
     assert_split_is_eligible,
@@ -212,3 +214,43 @@ def test_dataset_hash_is_order_independent_and_content_sensitive():
         completion_shape="test_function", supervision_source="x", verified=True,
     )]
     assert relearning_dataset_sha256(left) != relearning_dataset_sha256(changed)
+
+
+# --------------------------------------------------------------------------
+# a relearning round must be able to train on its own corrections
+# --------------------------------------------------------------------------
+
+def _correction(record_id: str) -> Correction:
+    return Correction(
+        record_id=record_id,
+        loser_category="no_kill",
+        completion="def test_x():\n    assert f(1) == 2\n",
+        completion_shape="test_function",
+        supervision_source="multi_mutant_verified_completion",
+        verified=True,
+    )
+
+
+def test_corrections_the_trainer_cannot_reach_are_refused():
+    """The round that is silently inert is worse than the round that fails."""
+    corrections = [_correction("ablation_dev_1"), _correction("ablation_dev_2")]
+    with pytest.raises(CorrectionsNotTrainable, match="train on nothing"):
+        assert_corrections_are_trainable(
+            corrections, {"train_1", "train_2"}, "ablation_dev",
+        )
+
+
+def test_reachable_corrections_are_accepted_and_counted():
+    corrections = [_correction("train_1"), _correction("elsewhere")]
+    summary = assert_corrections_are_trainable(
+        corrections, {"train_1", "train_9"}, "train",
+    )
+    assert summary["reachable_by_trainer"] == 1
+    assert summary["unreachable"] == 1
+
+
+def test_an_empty_correction_set_is_not_an_error():
+    """Nothing to train on is a finding about the model, not a broken round."""
+    assert assert_corrections_are_trainable([], {"train_1"}, "train")[
+        "corrections"
+    ] == 0

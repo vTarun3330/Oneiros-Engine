@@ -329,3 +329,47 @@ def relearning_dataset_sha256(corrections: Iterable[Correction]) -> str:
         digest.update(correction.loser_category.encode("utf-8"))
         digest.update(b"\x01")
     return digest.hexdigest()
+
+
+class CorrectionsNotTrainable(ValueError):
+    """Raised when a relearning round could not actually train on its own data."""
+
+
+def assert_corrections_are_trainable(
+    corrections: Sequence[Correction],
+    trainable_record_ids: Iterable[str],
+    source_split: str,
+) -> dict[str, Any]:
+    """Refuse a relearning set the trainer cannot consume.
+
+    The first relearning round mined 195 losers from ablation_dev and produced
+    120 verified corrections. Every one of them was an ablation_dev record, and
+    the trainer draws its pairs from the train split, so not one correction
+    could ever have reached an optimizer step. The dataset was built, hashed and
+    documented, and was structurally inert.
+
+    Two separate things were wrong and only one was visible. Training on
+    ablation_dev would also have contaminated the checkpoint-selection panel, so
+    the round had to move to train-split losers regardless. But nothing in the
+    pipeline would have said so: the round would simply have trained on ordinary
+    supervision and been reported as relearning.
+    """
+    trainable = {str(value) for value in trainable_record_ids}
+    reachable = [
+        correction for correction in corrections
+        if correction.record_id in trainable
+    ]
+    summary = {
+        "source_split": source_split,
+        "corrections": len(corrections),
+        "reachable_by_trainer": len(reachable),
+        "unreachable": len(corrections) - len(reachable),
+    }
+    if corrections and not reachable:
+        raise CorrectionsNotTrainable(
+            f"none of the {len(corrections)} corrections mined from "
+            f"{source_split!r} appear in the trainable split, so this round "
+            "would train on nothing while being reported as relearning; mine "
+            "losers from the split the trainer actually draws pairs from"
+        )
+    return summary
