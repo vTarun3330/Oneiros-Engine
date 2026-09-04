@@ -327,7 +327,18 @@ def classify_termination(
             "detail": f"exit code {exit_code} with no recognised failure signature"}
 
 
-def validate_artifacts(run_name: str | None) -> dict:
+#: Phases that produce an evaluation artifact rather than a trained adapter.
+#: These write ``<phase>_validation_*.json`` and never write
+#: ``training_results.json``; validating them against the training contract
+#: reports a successful run as failed.
+_EVALUATION_PHASES = {
+    "base_eval": "base_validation_*.json",
+    "sft_eval": "sft_validation_*.json",
+    "dpo_eval": "dpo_validation_*.json",
+}
+
+
+def validate_artifacts(run_name: str | None, phase: str | None = None) -> dict:
     """A run is complete only if its expected artifacts actually exist."""
     if not run_name:
         # A command with no --run-name has no training-artifact contract (a
@@ -340,6 +351,20 @@ def validate_artifacts(run_name: str | None) -> dict:
             "reason": "no --run-name; validated on exit code alone",
         }
     results_dir = ROOT / "results" / run_name
+    if phase in _EVALUATION_PHASES:
+        pattern = _EVALUATION_PHASES[phase]
+        produced = sorted(p.name for p in results_dir.glob(pattern))
+        if not produced:
+            return {
+                "validated": False,
+                "artifact_contract": f"evaluation:{phase}",
+                "reason": f"missing {results_dir / pattern}",
+            }
+        return {
+            "validated": True,
+            "artifact_contract": f"evaluation:{phase}",
+            "evaluation_artifacts": produced,
+        }
     training_results = results_dir / "training_results.json"
     if not training_results.exists():
         return {"validated": False, "reason": f"missing {training_results}"}
@@ -445,7 +470,7 @@ def _supervise_inner(run_dir: Path) -> int:
     classification = classify_termination(
         exit_code, stdout_path, stderr_path, telemetry_path
     )
-    validation = validate_artifacts(run_name)
+    validation = validate_artifacts(run_name, _extract_arg(command, "--phase"))
     progress = _scan_progress(stdout_path)
 
     final_state = (

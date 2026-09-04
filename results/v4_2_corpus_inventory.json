@@ -1,0 +1,438 @@
+{
+  "schema_version": "oneiros_corpus_inventory_v1",
+  "annotation_schema_version": "oneiros_corpus_annotation_v1",
+  "defect_taxonomy_version": "oneiros_repository_defect_taxonomy_v1",
+  "repository_complexity_policy_version": "oneiros_buggy_region_repository_complexity_v1",
+  "source_view": "data/corpus/v4_1_research_hardened_candidate/development_view",
+  "source_tree_sha256": "a17f638b215b1f3482d83334bf90ba3a33a1b4cf7a70fd4882b211802192f220",
+  "sealed_split_opened": false,
+  "defect_family_vocabulary": [
+    "boundary_and_control_flow",
+    "arithmetic_and_numerical",
+    "input_validation",
+    "state_mutation",
+    "parsing_and_serialization",
+    "exception_handling",
+    "API_contract",
+    "indexing_and_data_structures",
+    "configuration_and_integration",
+    "filesystem_and_resource_handling",
+    "asynchronous_and_concurrency",
+    "dependency_interaction",
+    "output_formatting",
+    "type_and_schema_handling",
+    "other_verified_repository_defect"
+  ],
+  "repository_complexity_thresholds": {
+    "complex": {
+      "cyclomatic_complexity": 12,
+      "max_control_nesting": 4,
+      "logical_lines": 60,
+      "ast_node_count": 320,
+      "branch_count": 10
+    },
+    "moderate": {
+      "cyclomatic_complexity": 5,
+      "max_control_nesting": 2,
+      "logical_lines": 22,
+      "ast_node_count": 110,
+      "branch_count": 3
+    },
+    "rule": "any-of: a region reaching ANY threshold takes that tier"
+  },
+  "splits": {
+    "train": {
+      "records": {
+        "total": 6052,
+        "synthetic_function": 5588,
+        "real_repository": 457,
+        "manual_curated": 7
+      },
+      "unique_semantic_targets": {
+        "synthetic_function": 663,
+        "real_repository": 457,
+        "manual_curated": 7,
+        "total_excluding_manual": 1120
+      },
+      "effective_balance_by_unique_target": {
+        "synthetic_fraction": 0.592,
+        "repository_fraction": 0.408,
+        "note": "Counted by unique semantic target. Counted by raw rows the synthetic share would look far larger, because one benchmark function contributes many sibling mutation rows while one repository defect contributes exactly one."
+      },
+      "records_by_dataset": {
+        "BugsInPy": 154,
+        "SWE-bench Verified": 303,
+        "humaneval": 938,
+        "manual_curated_examples": 7,
+        "mbpp": 4650
+      },
+      "synthetic_mutation_families": {
+        "arithmetic": 1657,
+        "boolean": 105,
+        "boundary": 2199,
+        "comparison": 790,
+        "identity": 7,
+        "index": 76,
+        "logical": 139,
+        "membership": 51,
+        "negate_removal": 36,
+        "off_by_one": 426,
+        "return": 95,
+        "string": 7
+      },
+      "repository_defect_families": {
+        "API_contract": 37,
+        "arithmetic_and_numerical": 14,
+        "asynchronous_and_concurrency": 8,
+        "boundary_and_control_flow": 64,
+        "configuration_and_integration": 9,
+        "dependency_interaction": 33,
+        "exception_handling": 20,
+        "filesystem_and_resource_handling": 5,
+        "indexing_and_data_structures": 78,
+        "input_validation": 87,
+        "other_verified_repository_defect": 34,
+        "output_formatting": 28,
+        "parsing_and_serialization": 15,
+        "state_mutation": 16,
+        "type_and_schema_handling": 9
+      },
+      "repository_defect_family_unique_targets": {
+        "API_contract": 37,
+        "arithmetic_and_numerical": 14,
+        "asynchronous_and_concurrency": 8,
+        "boundary_and_control_flow": 64,
+        "configuration_and_integration": 9,
+        "dependency_interaction": 33,
+        "exception_handling": 20,
+        "filesystem_and_resource_handling": 5,
+        "indexing_and_data_structures": 78,
+        "input_validation": 87,
+        "other_verified_repository_defect": 34,
+        "output_formatting": 28,
+        "parsing_and_serialization": 15,
+        "state_mutation": 16,
+        "type_and_schema_handling": 9
+      },
+      "repository_classification_confidence": {
+        "high": 103,
+        "low": 207,
+        "medium": 113,
+        "none": 34
+      },
+      "repository_classification_method": {
+        "patch_diff+patch_paths": 306,
+        "patch_diff+traceback+patch_paths": 151
+      },
+      "repository_projects": {
+        "ansible": 15,
+        "astropy": 18,
+        "django": 196,
+        "fastapi": 16,
+        "flask": 1,
+        "httpie": 5,
+        "matplotlib": 35,
+        "pylint": 3,
+        "sanic": 4,
+        "sympy": 74,
+        "thefuck": 32,
+        "tornado": 15,
+        "youtube-dl": 43
+      },
+      "repository_unique_projects": 13,
+      "test_frameworks": {
+        "assert_statement": 5595,
+        "pytest": 399,
+        "unittest_fragment": 58
+      },
+      "complexity_tiers": {
+        "synthetic_function": {
+          "complex": 2753,
+          "moderate": 1998,
+          "simple": 837
+        },
+        "real_repository": {
+          "complex": 308,
+          "moderate": 107,
+          "simple": 42
+        },
+        "manual_curated": {
+          "complex": 1,
+          "moderate": 1,
+          "simple": 5
+        }
+      },
+      "complex_fraction": {
+        "synthetic_function": 0.4927,
+        "real_repository": 0.674
+      },
+      "repository_parse_status": {
+        "parsed": 457
+      }
+    },
+    "ablation_dev": {
+      "records": {
+        "total": 594,
+        "synthetic_function": 541,
+        "real_repository": 52,
+        "manual_curated": 1
+      },
+      "unique_semantic_targets": {
+        "synthetic_function": 60,
+        "real_repository": 52,
+        "manual_curated": 1,
+        "total_excluding_manual": 112
+      },
+      "effective_balance_by_unique_target": {
+        "synthetic_fraction": 0.5357,
+        "repository_fraction": 0.4643,
+        "note": "Counted by unique semantic target. Counted by raw rows the synthetic share would look far larger, because one benchmark function contributes many sibling mutation rows while one repository defect contributes exactly one."
+      },
+      "records_by_dataset": {
+        "BugsInPy": 35,
+        "SWE-bench Verified": 17,
+        "humaneval": 112,
+        "manual_curated_examples": 1,
+        "mbpp": 429
+      },
+      "synthetic_mutation_families": {
+        "arithmetic": 152,
+        "boolean": 10,
+        "boundary": 234,
+        "comparison": 73,
+        "identity": 1,
+        "index": 5,
+        "logical": 13,
+        "membership": 4,
+        "negate_removal": 3,
+        "off_by_one": 39,
+        "return": 7
+      },
+      "repository_defect_families": {
+        "API_contract": 4,
+        "boundary_and_control_flow": 3,
+        "configuration_and_integration": 1,
+        "dependency_interaction": 6,
+        "exception_handling": 2,
+        "filesystem_and_resource_handling": 2,
+        "indexing_and_data_structures": 9,
+        "input_validation": 13,
+        "other_verified_repository_defect": 2,
+        "parsing_and_serialization": 2,
+        "type_and_schema_handling": 8
+      },
+      "repository_defect_family_unique_targets": {
+        "API_contract": 4,
+        "boundary_and_control_flow": 3,
+        "configuration_and_integration": 1,
+        "dependency_interaction": 6,
+        "exception_handling": 2,
+        "filesystem_and_resource_handling": 2,
+        "indexing_and_data_structures": 9,
+        "input_validation": 13,
+        "other_verified_repository_defect": 2,
+        "parsing_and_serialization": 2,
+        "type_and_schema_handling": 8
+      },
+      "repository_classification_confidence": {
+        "high": 20,
+        "low": 11,
+        "medium": 19,
+        "none": 2
+      },
+      "repository_classification_method": {
+        "patch_diff+patch_paths": 19,
+        "patch_diff+traceback+patch_paths": 33
+      },
+      "repository_projects": {
+        "scrapy": 35,
+        "xarray": 17
+      },
+      "repository_unique_projects": 2,
+      "test_frameworks": {
+        "assert_statement": 542,
+        "pytest": 17,
+        "unittest_fragment": 35
+      },
+      "complexity_tiers": {
+        "synthetic_function": {
+          "complex": 326,
+          "moderate": 129,
+          "simple": 86
+        },
+        "real_repository": {
+          "complex": 28,
+          "moderate": 20,
+          "simple": 4
+        },
+        "manual_curated": {
+          "simple": 1
+        }
+      },
+      "complex_fraction": {
+        "synthetic_function": 0.6026,
+        "real_repository": 0.5385
+      },
+      "repository_parse_status": {
+        "parsed": 52
+      }
+    },
+    "val": {
+      "records": {
+        "total": 781,
+        "synthetic_function": 757,
+        "real_repository": 24,
+        "manual_curated": 0
+      },
+      "unique_semantic_targets": {
+        "synthetic_function": 78,
+        "real_repository": 24,
+        "manual_curated": 0,
+        "total_excluding_manual": 102
+      },
+      "effective_balance_by_unique_target": {
+        "synthetic_fraction": 0.7647,
+        "repository_fraction": 0.2353,
+        "note": "Counted by unique semantic target. Counted by raw rows the synthetic share would look far larger, because one benchmark function contributes many sibling mutation rows while one repository defect contributes exactly one."
+      },
+      "records_by_dataset": {
+        "BugsInPy": 23,
+        "SWE-bench Verified": 1,
+        "humaneval": 56,
+        "mbpp": 701
+      },
+      "synthetic_mutation_families": {
+        "arithmetic": 201,
+        "boolean": 11,
+        "boundary": 339,
+        "comparison": 87,
+        "index": 22,
+        "logical": 18,
+        "membership": 2,
+        "negate_removal": 7,
+        "off_by_one": 56,
+        "return": 14
+      },
+      "repository_defect_families": {
+        "API_contract": 2,
+        "arithmetic_and_numerical": 1,
+        "boundary_and_control_flow": 1,
+        "configuration_and_integration": 1,
+        "dependency_interaction": 2,
+        "exception_handling": 2,
+        "filesystem_and_resource_handling": 1,
+        "indexing_and_data_structures": 4,
+        "input_validation": 3,
+        "other_verified_repository_defect": 1,
+        "output_formatting": 1,
+        "parsing_and_serialization": 1,
+        "type_and_schema_handling": 4
+      },
+      "repository_defect_family_unique_targets": {
+        "API_contract": 2,
+        "arithmetic_and_numerical": 1,
+        "boundary_and_control_flow": 1,
+        "configuration_and_integration": 1,
+        "dependency_interaction": 2,
+        "exception_handling": 2,
+        "filesystem_and_resource_handling": 1,
+        "indexing_and_data_structures": 4,
+        "input_validation": 3,
+        "other_verified_repository_defect": 1,
+        "output_formatting": 1,
+        "parsing_and_serialization": 1,
+        "type_and_schema_handling": 4
+      },
+      "repository_classification_confidence": {
+        "high": 6,
+        "low": 6,
+        "medium": 11,
+        "none": 1
+      },
+      "repository_classification_method": {
+        "patch_diff+patch_paths": 8,
+        "patch_diff+traceback+patch_paths": 16
+      },
+      "repository_projects": {
+        "PySnooper": 3,
+        "keras": 11,
+        "seaborn": 1,
+        "tqdm": 9
+      },
+      "repository_unique_projects": 4,
+      "test_frameworks": {
+        "assert_statement": 757,
+        "pytest": 24
+      },
+      "complexity_tiers": {
+        "synthetic_function": {
+          "complex": 480,
+          "moderate": 201,
+          "simple": 76
+        },
+        "real_repository": {
+          "complex": 13,
+          "moderate": 10,
+          "simple": 1
+        },
+        "manual_curated": {}
+      },
+      "complex_fraction": {
+        "synthetic_function": 0.6341,
+        "real_repository": 0.5417
+      },
+      "repository_parse_status": {
+        "parsed": 24
+      }
+    }
+  },
+  "repository_project_disjointness": {
+    "projects_by_split": {
+      "train": [
+        "ansible",
+        "astropy",
+        "django",
+        "fastapi",
+        "flask",
+        "httpie",
+        "matplotlib",
+        "pylint",
+        "sanic",
+        "sympy",
+        "thefuck",
+        "tornado",
+        "youtube-dl"
+      ],
+      "ablation_dev": [
+        "scrapy",
+        "xarray"
+      ],
+      "val": [
+        "PySnooper",
+        "keras",
+        "seaborn",
+        "tqdm"
+      ]
+    },
+    "overlaps": {},
+    "disjoint": true
+  },
+  "annotations_sha256": "69743847aafa6ebe19c4b573f7b7e01977d029f0bb2caac294535e6b5e6c2ece",
+  "annotation_files": {
+    "train": {
+      "filename": "train.annotations.json",
+      "record_count": 6052,
+      "sha256": "64dca923d76b826588f5c5e8c2a1a9b82f400d802949b9e7f34a085c523b068e"
+    },
+    "ablation_dev": {
+      "filename": "ablation_dev.annotations.json",
+      "record_count": 594,
+      "sha256": "c44e195cb74daa41d3b46c3334f0bcc2594bdd1adba160c35142ec094839a0b8"
+    },
+    "val": {
+      "filename": "val.annotations.json",
+      "record_count": 781,
+      "sha256": "4a33c91e9d192e9af5bb0cd80a108fe2503ad6000713f9e500042e0c80f53c1d"
+    }
+  }
+}

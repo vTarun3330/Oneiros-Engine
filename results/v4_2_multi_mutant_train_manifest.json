@@ -1,0 +1,46 @@
+{
+  "schema_version": "oneiros_multi_mutant_dataset_v1",
+  "builder_version": "oneiros_multi_mutant_set_cover_v1",
+  "source_view": "data/corpus/v4_1_research_hardened_candidate/development_view",
+  "split": "train",
+  "source_tree_sha256": "0745cfe78807fc557f373ef0e89a5d648626fea2c50d87ab7a46b878a2a9f7e4",
+  "policy": {
+    "max_assertions": 8,
+    "min_assertions": 3,
+    "execution_timeout_seconds": 5.0,
+    "one_broad_example_per_lineage": true,
+    "targeted_examples_for_uncovered_siblings": true,
+    "max_targeted_examples_per_lineage": 3,
+    "completion_reverified_against_reference_and_all_siblings": true,
+    "prompt_shows_single_target_only": true
+  },
+  "counts": {
+    "synthetic_records": 5588,
+    "lineages": 663,
+    "lineages_built": 663,
+    "lineages_without_example": 0,
+    "broad_examples": 663,
+    "broad_examples_verified": 663,
+    "targeted_examples": 0,
+    "uncovered_siblings_total": 0,
+    "total_examples": 663
+  },
+  "quality": {
+    "mean_assertions_per_example": 2.961,
+    "mean_mutants_killed_per_example": 8.428,
+    "examples_killing_at_least_four_siblings": 428,
+    "percent_killing_at_least_four_siblings": 64.555,
+    "assertion_count_histogram": {
+      "1": 11,
+      "2": 10,
+      "3": 637,
+      "4": 4,
+      "5": 1
+    }
+  },
+  "verification_status_counts": {
+    "verified": 663
+  },
+  "elapsed_seconds": 1069.1,
+  "examples_sha256": "05de66873cc0eb43ad25062a55793def5c4ff1fe8befb739301cbc27ecb12f70"
+}

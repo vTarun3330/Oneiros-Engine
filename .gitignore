@@ -66,6 +66,10 @@ results/**
 # V4.1 readiness/preflight evidence is small, structured, and must be
 # reproducible from the repository (specification section 47).
 !results/v4_1_*.json
+# V4.2 corpus inventory, multi-mutant manifests, and paired base/SFT evidence
+# are the same class of artifact: small, structured, and required to be
+# reproducible from the repository.
+!results/v4_2_*.json
 logs/
 wandb/
 runs/

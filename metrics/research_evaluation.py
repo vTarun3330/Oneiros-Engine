@@ -18,7 +18,11 @@ from collections import Counter, defaultdict
 from copy import deepcopy
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
-from harness.candidate_policy import validate_function_assertion
+from harness.candidate_policy import (
+    executable_candidate,
+    validate_function_assertion,
+    validate_generated_test,
+)
 from harness.safe_execution import classify_assertions
 from utils.dataset_identity import DATASET_IDENTITY_POLICY
 
@@ -173,8 +177,15 @@ def evaluate_candidate_slots(
     golden_code: str,
     mutant_code: str,
     entry_point: str,
+    allow_test_function: bool = False,
 ) -> List[Dict[str, Any]]:
-    """Classify ordered generation slots without losing invalid candidates."""
+    """Classify ordered generation slots without losing invalid candidates.
+
+    ``allow_test_function`` additionally accepts one ``def test_*()`` carrying
+    several assertions.  It defaults to off, so the frozen single-assertion
+    contract - and therefore every historical number and every baseline - is
+    scored by exactly the rule it was always scored by.
+    """
     outcomes = [deepcopy(dict(slot)) for slot in slots]
     executable_codes: List[str] = []
     executable_indexes: List[int] = []
@@ -187,13 +198,14 @@ def evaluate_candidate_slots(
         outcome["killed"] = False
         if not outcome["parse_valid"] or not isinstance(code, str):
             continue
-        policy = validate_function_assertion(code, entry_point)
+        policy = validate_generated_test(code, entry_point, allow_test_function)
         outcome["policy_valid"] = bool(policy.valid)
+        outcome["candidate_shape"] = policy.shape
         if not policy.valid:
             outcome["policy_error"] = policy.reason
             continue
         executable_indexes.append(index)
-        executable_codes.append(code)
+        executable_codes.append(executable_candidate(code, policy.shape))
 
     rows = classify_assertions(executable_codes, golden_code, mutant_code)
     if len(rows) != len(executable_indexes):
