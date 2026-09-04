@@ -1,0 +1,144 @@
+{
+  "schema_version": "oneiros_final_readiness_v1",
+  "source_tree_sha256": "610907c08fe6bda41267be932bdcd1f8ce6e500837f222c792cefccdfe03c091",
+  "sealed_final_test_accessed": false,
+  "phase": "sft_only",
+  "dpo": "OUT OF SCOPE - not prepared, launched, evaluated, or budgeted",
+  "doctor": {
+    "all_passed": false,
+    "checks": {
+      "active_experiment_branch": true,
+      "v4_baseline_is_ancestor": true,
+      "tracked_worktree_clean": true,
+      "canonical_corpus_hashes": true,
+      "source_bound_tests_current": false,
+      "locked_train_readiness": true,
+      "integration_preflight_current": false,
+      "frozen_evaluation_protocol": true,
+      "sealed_final_test_unaccessed": true
+    }
+  },
+  "measured": {
+    "base_versus_sft_on_locked_validation": {
+      "category": "MEASURED",
+      "artifact": "results/v4_2_base_vs_sft_validation.json",
+      "base_mean": 0.621312,
+      "arms": {
+        "lr1e5": {
+          "paired_delta_mean": 0.01321,
+          "positive_in_every_seed": true,
+          "reference_validity_regressed_in_every_seed": true
+        },
+        "clean": {
+          "paired_delta_mean": -0.004403,
+          "positive_in_every_seed": false,
+          "reference_validity_regressed_in_every_seed": true
+        },
+        "final": {
+          "paired_delta_mean": 0.014531,
+          "positive_in_every_seed": true,
+          "reference_validity_regressed_in_every_seed": true
+        }
+      },
+      "interpretation": "SFT helps by roughly +1.3 points at best on held-out validation, an order of magnitude less than the 100-function monitor panel implied, and one trained adapter was net worse than the untrained base."
+    },
+    "actual_atheris_same_targets": {
+      "category": "MEASURED",
+      "matched_budget_kill_rate": 0.153236,
+      "generous_budget_kill_rate": 0.475561,
+      "oneiros_sft_kill_rate": 0.635403,
+      "interpretation": "On the same 757 validation targets Oneiros beats real Atheris at both budgets, including when Atheris is given 2,500x the executions AND the reference implementation for a differential oracle."
+    },
+    "prompt_compaction": {
+      "category": "MEASURED",
+      "artifact": "results/v4_2_prompt_compaction_audit.json",
+      "function_mode": "fits comfortably; 0 rejected at 1024 tokens",
+      "repository_mode_rejection_rate": {
+        "train": 0.411379,
+        "ablation_dev": 0.307692,
+        "val": 0.333333
+      },
+      "limitation": "About a third of repository prompts do not fit the frozen 1024-token budget and fail closed, so they are absent from every repository result."
+    },
+    "relearning_losers": {
+      "category": "MEASURED",
+      "artifact": "results/v4_2_relearning_manifest.json",
+      "losers": 195,
+      "loser_rate": 0.359779,
+      "by_category": {
+        "no_kill": 195
+      }
+    },
+    "corpus_inventory": {
+      "category": "MEASURED",
+      "artifact": "results/v4_2_corpus_inventory.json",
+      "train_unique_targets": {
+        "synthetic_function": 663,
+        "real_repository": 457,
+        "manual_curated": 7,
+        "total_excluding_manual": 1120
+      },
+      "repository_projects_disjoint": true
+    }
+  },
+  "incomplete": {
+    "final_sft_adapter": {
+      "category": "INCOMPLETE",
+      "detail": "The final source-bound rebuild on verified multi-mutant supervision must complete and be receipted before any final claim about the selected adapter."
+    },
+    "relearning_challenger": {
+      "category": "INCOMPLETE",
+      "detail": "The relearning dataset is built and hashed. No relearning adapter has been trained, so there is no base-vs-SFT-vs-relearning comparison yet."
+    }
+  },
+  "infrastructure_blockers": {
+    "swebench_expansion": {
+      "category": "INFRASTRUCTURE BLOCKER",
+      "detail": "SWE-bench ingestion runs the official harness on Modal and no Modal token is configured, removing 114 otherwise eligible instances."
+    },
+    "native_generated_test_execution": {
+      "category": "INFRASTRUCTURE BLOCKER",
+      "detail": "The native pilot reproduces the OFFICIAL test on 3 of 5 BugsInPy defects. No model-generated test has been run natively, so repository records remain verified supervision coverage."
+    }
+  },
+  "limitations": {
+    "balance_parity_unreachable": {
+      "category": "LIMITATION",
+      "detail": "50/50 by unique semantic target needs 317 more repository targets. The optimistic ceiling is 304 and the expected yield 182, so parity is not reachable from available data.",
+      "artifact": "results/v4_2_repository_expansion_ceiling.json"
+    },
+    "complexity_floor": {
+      "category": "DESIGN CHOICE",
+      "detail": "The 0.60 complex-example floor is a design choice. It has not been shown to improve results and is not claimed to."
+    },
+    "checkpoint_instability": {
+      "category": "LIMITATION",
+      "detail": "Best checkpoint differed across seeds (50, 142, 142). Checkpoint 50 is not universally optimal."
+    },
+    "base_model_choice": {
+      "category": "DESIGN CHOICE",
+      "detail": "Qwen was selected because Phi-3 cannot use SDPA in the pinned transformers build. That is a feasibility constraint, not evidence that Qwen beats a fully trained Phi-3 in a controlled comparison."
+    }
+  },
+  "sealed_test": {
+    "may_be_opened": false,
+    "blocking_conditions": [
+      "the readiness doctor is not fully green",
+      "balanced corpus: need 317 more unique repository targets for parity",
+      "balanced corpus: repository project concentration exceeds the frozen cap",
+      "balanced corpus: the aspirational 0.60 complex-only floor is not met",
+      "the final source-bound SFT adapter has not been rebuilt and receipted",
+      "native repository execution is a partial pass; no model-generated test has been executed natively"
+    ],
+    "one_time_guard": "harness/sealed_final.py (mock-tested, 34 tests)",
+    "requirement": "Opening requires a fully frozen bundle and a one-time authorization token issued against that bundle's hash."
+  },
+  "selected_configuration_sha256": "67d8e95cb6e146600191d5ece6e5dd3314fe1c389d56c5fde8fd58c464ccec9d",
+  "repository_expansion_ceiling": {
+    "optimistic_additional_targets_if_every_attempt_succeeded": 304,
+    "expected_additional_targets_at_historical_acceptance": 182,
+    "required_for_parity": 317,
+    "parity_reachable_optimistically": false,
+    "parity_reachable_at_expected_yield": false
+  }
+}
