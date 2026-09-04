@@ -339,6 +339,7 @@ class OneirosSFTTrainer:
             "input_examples": 0,
             "retained_examples": 0,
             "dropped_overlong_examples": 0,
+            "prompt_compacted_examples": 0,
             "prompt_truncated_examples": 0,
             "max_observed_prompt_tokens": 0,
             "max_observed_completion_tokens": 0,
@@ -504,6 +505,11 @@ class OneirosSFTTrainer:
             "input_examples": len(data_points),
             "retained_examples": len(input_ids),
             "dropped_overlong_examples": len(incompatible),
+            # Section-aware compaction removes whole AST/support units and fails
+            # closed; it never slices a statement. "truncated" described the
+            # behaviour this replaced. The old key is retained as a deprecated
+            # alias so existing readers keep working.
+            "prompt_compacted_examples": prompt_truncated,
             "prompt_truncated_examples": prompt_truncated,
             "max_observed_prompt_tokens": max_observed_prompt,
             "max_observed_completion_tokens": max_observed_completion,

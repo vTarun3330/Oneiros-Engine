@@ -3359,7 +3359,9 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                 verified_sft_examples = result["retained_examples"]
                 optimizer_sft_examples = result["optimizer_examples"]
                 optimizer_padding_examples = result["optimizer_padding_examples"]
-                sft_prompt_truncated_examples = result["prompt_truncated_examples"]
+                sft_prompt_truncated_examples = result.get(
+                    "prompt_compacted_examples", result["prompt_truncated_examples"]
+                )
                 sft_monitor_stopped_early = result["monitor_stopped_early"]
                 sft_monitor_history = result["monitor_history"]
                 sft_monitor_best_adapter = result.get("best_validation_adapter_path")
@@ -3416,7 +3418,10 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                     "verified_sft_examples": verified_sft_examples,
                     "optimizer_sft_examples": optimizer_sft_examples,
                     "optimizer_padding_examples": optimizer_padding_examples,
-                    "prompt_truncated_examples": sft_prompt_truncated_examples,
+                    "prompt_compacted_examples": sft_prompt_truncated_examples,
+                    "prompt_compacted_examples": sft_prompt_truncated_examples,
+            "prompt_compacted_examples": sft_prompt_truncated_examples,
+        "prompt_truncated_examples": sft_prompt_truncated_examples,
                     "generation_incompatible_completions_excluded": (
                         sft_generation_incompatible_completions
                     ),
@@ -3543,7 +3548,9 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
             "requested_sft_examples": requested_sft_examples,
             "optimizer_sft_examples": optimizer_sft_examples,
             "optimizer_padding_examples": optimizer_padding_examples,
-            "prompt_truncated_examples": sft_prompt_truncated_examples,
+            "prompt_compacted_examples": sft_prompt_truncated_examples,
+            "prompt_compacted_examples": sft_prompt_truncated_examples,
+        "prompt_truncated_examples": sft_prompt_truncated_examples,
             "sft_dropped_overlong_examples": requested_sft_examples - verified_sft_examples,
             "repository_overlong_completions_excluded": overlong_repository_completions,
             "generation_incompatible_completions_excluded": (
@@ -3938,6 +3945,7 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         "requested_sft_examples": requested_sft_examples,
         "optimizer_sft_examples": optimizer_sft_examples,
         "optimizer_padding_examples": optimizer_padding_examples,
+        "prompt_compacted_examples": sft_prompt_truncated_examples,
         "prompt_truncated_examples": sft_prompt_truncated_examples,
         "sft_dropped_overlong_examples": requested_sft_examples - verified_sft_examples,
         "repository_overlong_completions_excluded": overlong_repository_completions,

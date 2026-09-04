@@ -1,0 +1,216 @@
+{
+  "schema_version": "oneiros_prompt_compaction_audit_v1",
+  "source_tree_sha256": "e01cb150b209ed286da109869dcb64b5cf00896359ceb949e75fd27f8566084f",
+  "tokenizer": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "sealed_final_test_accessed": false,
+  "policy": {
+    "strategy": "section_aware_ast_units_before_chat_v4_1",
+    "fail_closed": true,
+    "never_slices_a_statement_or_ast_node": true,
+    "preserved_sections": [
+      "task instructions",
+      "behavioural specification",
+      "the complete target function or AST unit",
+      "required imports and declarations"
+    ],
+    "removable_sections": [
+      "optional support-context units, whole units only"
+    ],
+    "metric_naming": "prompt_compacted_examples; prompt_truncated_examples is retained as a deprecated alias because the behaviour is compaction, not truncation"
+  },
+  "mode_budgets": {
+    "function": 1024,
+    "repository": 1024
+  },
+  "splits": {
+    "train": {
+      "function": {
+        "budget_tokens": 1024,
+        "prompts": 5595,
+        "fit_without_compaction": 5524,
+        "compacted": 71,
+        "rejected_for_budget": 0,
+        "malformed": 0,
+        "support_units_removed": 0,
+        "code_units_removed": 0,
+        "compaction_rate": 0.01269,
+        "rejection_rate": 0.0,
+        "original_tokens": {
+          "max": 1269,
+          "p50": 471,
+          "p90": 637,
+          "p99": 1101,
+          "mean": 507.05
+        },
+        "final_tokens": {
+          "max": 999,
+          "p50": 471,
+          "p90": 637,
+          "p99": 883
+        },
+        "rejection_reasons": {}
+      },
+      "repository": {
+        "budget_tokens": 1024,
+        "prompts": 457,
+        "fit_without_compaction": 70,
+        "compacted": 199,
+        "rejected_for_budget": 188,
+        "malformed": 0,
+        "support_units_removed": 8499,
+        "code_units_removed": 0,
+        "compaction_rate": 0.435449,
+        "rejection_rate": 0.411379,
+        "original_tokens": {
+          "max": 37112,
+          "p50": 1332,
+          "p90": 6387,
+          "p99": 35371,
+          "mean": 3708.87
+        },
+        "final_tokens": {
+          "max": 1024,
+          "p50": 984,
+          "p90": 1020,
+          "p99": 1024
+        },
+        "rejection_reasons": {
+          "Required prompt sections and complete target source exceed the declared budget (1180 > 102": 2,
+          "Required prompt sections and complete target source exceed the declared budget (1127 > 102": 2,
+          "Required prompt sections and complete target source exceed the declared budget (1579 > 102": 2,
+          "Required prompt sections and complete target source exceed the declared budget (1061 > 102": 2,
+          "Required prompt sections and complete target source exceed the declared budget (1071 > 102": 2,
+          "Required prompt sections and complete target source exceed the declared budget (1165 > 102": 2,
+          "Required prompt sections and complete target source exceed the declared budget (1035 > 102": 2,
+          "Required prompt sections and complete target source exceed the declared budget (1050 > 102": 2
+        }
+      }
+    },
+    "ablation_dev": {
+      "function": {
+        "budget_tokens": 1024,
+        "prompts": 542,
+        "fit_without_compaction": 542,
+        "compacted": 0,
+        "rejected_for_budget": 0,
+        "malformed": 0,
+        "support_units_removed": 0,
+        "code_units_removed": 0,
+        "compaction_rate": 0.0,
+        "rejection_rate": 0.0,
+        "original_tokens": {
+          "max": 896,
+          "p50": 465,
+          "p90": 637,
+          "p99": 896,
+          "mean": 505.8
+        },
+        "final_tokens": {
+          "max": 896,
+          "p50": 465,
+          "p90": 637,
+          "p99": 896
+        },
+        "rejection_reasons": {}
+      },
+      "repository": {
+        "budget_tokens": 1024,
+        "prompts": 52,
+        "fit_without_compaction": 30,
+        "compacted": 6,
+        "rejected_for_budget": 16,
+        "malformed": 0,
+        "support_units_removed": 127,
+        "code_units_removed": 0,
+        "compaction_rate": 0.115385,
+        "rejection_rate": 0.307692,
+        "original_tokens": {
+          "max": 2475,
+          "p50": 788,
+          "p90": 1155,
+          "p99": 2475,
+          "mean": 882.42
+        },
+        "final_tokens": {
+          "max": 1019,
+          "p50": 774,
+          "p90": 982,
+          "p99": 1019
+        },
+        "rejection_reasons": {
+          "Unified prompt headings are out of canonical order": 4,
+          "Required prompt sections and complete target source exceed the declared budget (1749 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (1072 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (1194 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (1243 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (1424 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (1741 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (1835 > 102": 1
+        }
+      }
+    },
+    "val": {
+      "function": {
+        "budget_tokens": 1024,
+        "prompts": 757,
+        "fit_without_compaction": 757,
+        "compacted": 0,
+        "rejected_for_budget": 0,
+        "malformed": 0,
+        "support_units_removed": 0,
+        "code_units_removed": 0,
+        "compaction_rate": 0.0,
+        "rejection_rate": 0.0,
+        "original_tokens": {
+          "max": 758,
+          "p50": 469,
+          "p90": 581,
+          "p99": 757,
+          "mean": 496.22
+        },
+        "final_tokens": {
+          "max": 758,
+          "p50": 469,
+          "p90": 581,
+          "p99": 757
+        },
+        "rejection_reasons": {}
+      },
+      "repository": {
+        "budget_tokens": 1024,
+        "prompts": 24,
+        "fit_without_compaction": 2,
+        "compacted": 14,
+        "rejected_for_budget": 8,
+        "malformed": 0,
+        "support_units_removed": 417,
+        "code_units_removed": 0,
+        "compaction_rate": 0.583333,
+        "rejection_rate": 0.333333,
+        "original_tokens": {
+          "max": 17102,
+          "p50": 3421,
+          "p90": 13449,
+          "p99": 17102,
+          "mean": 5647.25
+        },
+        "final_tokens": {
+          "max": 1024,
+          "p50": 950,
+          "p90": 1020,
+          "p99": 1024
+        },
+        "rejection_reasons": {
+          "Required prompt sections and complete target source exceed the declared budget (1028 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (3272 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (1927 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (1196 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (1304 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (1422 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (4087 > 102": 1,
+          "Required prompt sections and complete target source exceed the declared budget (1136 > 102": 1
+        }
+      }
+    }
+  }
+}
