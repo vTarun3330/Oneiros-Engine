@@ -65,6 +65,8 @@ def build() -> dict[str, Any]:
     balanced = _read(
         ROOT / "data" / "training_views" / "balanced_sft_v1" / "train.manifest.json"
     )
+    bundle = _read(results / "v4_2_baseline_bundle_val.json")
+    rescore = _read(results / "v4_2_shape_policy_rescore.json")
     doctor = _doctor()
 
     blockers: list[str] = []
@@ -172,6 +174,48 @@ def build() -> dict[str, Any]:
                 "loser_rate": (relearning or {}).get("losers", {}).get("loser_rate"),
                 "by_category": (relearning or {}).get("losers", {}).get(
                     "by_dominant_category"
+                ),
+            },
+            "non_llm_baseline_bundle": {
+                "category": "MEASURED" if bundle else "INCOMPLETE",
+                "artifact": "results/v4_2_baseline_bundle_val.json",
+                "arms": {
+                    name: arm.get("mean_kill_rate")
+                    for name, arm in ((bundle or {}).get("arms") or {}).items()
+                },
+                "protocol": (
+                    "same targets, candidate budget, timeout, seeds, validity "
+                    "and kill rules as the model arms"
+                ),
+                "advantage_given_to_baselines": (
+                    "every generative baseline derives its expected value by "
+                    "executing the reference implementation, so each has a "
+                    "perfect oracle and need only choose inputs. Oneiros never "
+                    "sees the reference."
+                ),
+                "naming": (
+                    "the coverage arm is a SIMULATED coverage fuzzer written "
+                    "for this project and is never reported as Atheris"
+                ),
+            },
+            "shape_policy_is_not_doing_the_work": {
+                "category": "MEASURED" if rescore else "INCOMPLETE",
+                "artifact": "results/v4_2_shape_policy_rescore.json",
+                "base_seeds_rescored": [
+                    row.get("seed") for row in (rescore or {}).get("rescored", [])
+                ],
+                "max_delta_kill_rate": max(
+                    (
+                        row.get("delta_kill_rate", 0)
+                        for row in (rescore or {}).get("rescored", [])
+                    ),
+                    default=None,
+                ),
+                "interpretation": (
+                    "rescoring the stored base generations under the widened "
+                    "test-function rule admitted no additional candidate on any "
+                    "seed, so the widened policy confers no baseline-side "
+                    "advantage and cannot explain a gap between the arms."
                 ),
             },
             "corpus_inventory": {
