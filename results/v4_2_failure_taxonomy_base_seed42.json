@@ -1,0 +1,503 @@
+{
+  "report_schema_version": 1,
+  "source_tree_sha256": "34e79e4d59558037e0744cdc41fa1f65b4003caab452802f59cf7eaf137cb093",
+  "sealed_final_test_accessed": false,
+  "artifacts": [
+    {
+      "artifact": "results/local_base_qwen_val_seed42/base_validation_standard_seed_42.json",
+      "evaluation_split": "val",
+      "seed": 42,
+      "adapter": "base_model",
+      "adapter_sha256": "03ef86c1c4c8287f339ae1ac1b91d6b6b3f1cc5564813c502f012f249ac0e22d",
+      "function_results": 757,
+      "taxonomy": {
+        "failure_taxonomy_schema_version": 1,
+        "classified_functions": 757,
+        "unclassifiable_functions": 0,
+        "classified_candidates": 6056,
+        "overall": {
+          "candidates": 6056,
+          "counts": {
+            "killed": 1461,
+            "syntax_invalid": 37,
+            "wrong_target_api": 122,
+            "undefined_symbol": 10,
+            "wrong_expected_value": 2927,
+            "reference_invalid": 213,
+            "boundary_miss": 641,
+            "off_by_one_miss": 91,
+            "logical_condition_miss": 219,
+            "indexing_miss": 15,
+            "passes_both": 320
+          },
+          "rates": {
+            "killed": 0.241248,
+            "syntax_invalid": 0.00611,
+            "wrong_target_api": 0.020145,
+            "undefined_symbol": 0.001651,
+            "wrong_expected_value": 0.483322,
+            "reference_invalid": 0.035172,
+            "boundary_miss": 0.105845,
+            "off_by_one_miss": 0.015026,
+            "logical_condition_miss": 0.036162,
+            "indexing_miss": 0.002477,
+            "passes_both": 0.05284
+          }
+        },
+        "by_source": {
+          "oneiros_clean_mutations": {
+            "candidates": 6056,
+            "counts": {
+              "killed": 1461,
+              "syntax_invalid": 37,
+              "wrong_target_api": 122,
+              "undefined_symbol": 10,
+              "wrong_expected_value": 2927,
+              "reference_invalid": 213,
+              "boundary_miss": 641,
+              "off_by_one_miss": 91,
+              "logical_condition_miss": 219,
+              "indexing_miss": 15,
+              "passes_both": 320
+            },
+            "rates": {
+              "killed": 0.241248,
+              "syntax_invalid": 0.00611,
+              "wrong_target_api": 0.020145,
+              "undefined_symbol": 0.001651,
+              "wrong_expected_value": 0.483322,
+              "reference_invalid": 0.035172,
+              "boundary_miss": 0.105845,
+              "off_by_one_miss": 0.015026,
+              "logical_condition_miss": 0.036162,
+              "indexing_miss": 0.002477,
+              "passes_both": 0.05284
+            }
+          }
+        },
+        "by_mutation_family": {
+          "arithmetic": {
+            "candidates": 1608,
+            "counts": {
+              "killed": 401,
+              "syntax_invalid": 11,
+              "wrong_target_api": 15,
+              "undefined_symbol": 2,
+              "wrong_expected_value": 835,
+              "reference_invalid": 58,
+              "passes_both": 286
+            },
+            "rates": {
+              "killed": 0.249378,
+              "syntax_invalid": 0.006841,
+              "wrong_target_api": 0.009328,
+              "undefined_symbol": 0.001244,
+              "wrong_expected_value": 0.519279,
+              "reference_invalid": 0.03607,
+              "passes_both": 0.177861
+            }
+          },
+          "boolean": {
+            "candidates": 88,
+            "counts": {
+              "killed": 21,
+              "syntax_invalid": 1,
+              "wrong_expected_value": 41,
+              "logical_condition_miss": 25
+            },
+            "rates": {
+              "killed": 0.238636,
+              "syntax_invalid": 0.011364,
+              "wrong_expected_value": 0.465909,
+              "logical_condition_miss": 0.284091
+            }
+          },
+          "boundary": {
+            "candidates": 2712,
+            "counts": {
+              "killed": 590,
+              "syntax_invalid": 13,
+              "wrong_target_api": 62,
+              "undefined_symbol": 6,
+              "wrong_expected_value": 1281,
+              "reference_invalid": 119,
+              "boundary_miss": 641
+            },
+            "rates": {
+              "killed": 0.217552,
+              "syntax_invalid": 0.004794,
+              "wrong_target_api": 0.022861,
+              "undefined_symbol": 0.002212,
+              "wrong_expected_value": 0.472345,
+              "reference_invalid": 0.043879,
+              "boundary_miss": 0.236357
+            }
+          },
+          "comparison": {
+            "candidates": 696,
+            "counts": {
+              "killed": 217,
+              "wrong_target_api": 27,
+              "wrong_expected_value": 291,
+              "reference_invalid": 8,
+              "logical_condition_miss": 153
+            },
+            "rates": {
+              "killed": 0.311782,
+              "wrong_target_api": 0.038793,
+              "wrong_expected_value": 0.418103,
+              "reference_invalid": 0.011494,
+              "logical_condition_miss": 0.219828
+            }
+          },
+          "index": {
+            "candidates": 176,
+            "counts": {
+              "killed": 31,
+              "syntax_invalid": 4,
+              "undefined_symbol": 1,
+              "wrong_expected_value": 124,
+              "reference_invalid": 1,
+              "indexing_miss": 15
+            },
+            "rates": {
+              "killed": 0.176136,
+              "syntax_invalid": 0.022727,
+              "undefined_symbol": 0.005682,
+              "wrong_expected_value": 0.704545,
+              "reference_invalid": 0.005682,
+              "indexing_miss": 0.085227
+            }
+          },
+          "logical": {
+            "candidates": 144,
+            "counts": {
+              "killed": 44,
+              "syntax_invalid": 1,
+              "wrong_target_api": 5,
+              "wrong_expected_value": 53,
+              "logical_condition_miss": 41
+            },
+            "rates": {
+              "killed": 0.305556,
+              "syntax_invalid": 0.006944,
+              "wrong_target_api": 0.034722,
+              "wrong_expected_value": 0.368056,
+              "logical_condition_miss": 0.284722
+            }
+          },
+          "membership": {
+            "candidates": 16,
+            "counts": {
+              "killed": 8,
+              "wrong_expected_value": 8
+            },
+            "rates": {
+              "killed": 0.5,
+              "wrong_expected_value": 0.5
+            }
+          },
+          "negate_removal": {
+            "candidates": 56,
+            "counts": {
+              "killed": 22,
+              "syntax_invalid": 1,
+              "wrong_target_api": 2,
+              "wrong_expected_value": 19,
+              "reference_invalid": 8,
+              "passes_both": 4
+            },
+            "rates": {
+              "killed": 0.392857,
+              "syntax_invalid": 0.017857,
+              "wrong_target_api": 0.035714,
+              "wrong_expected_value": 0.339286,
+              "reference_invalid": 0.142857,
+              "passes_both": 0.071429
+            }
+          },
+          "off_by_one": {
+            "candidates": 448,
+            "counts": {
+              "killed": 83,
+              "syntax_invalid": 6,
+              "wrong_target_api": 11,
+              "undefined_symbol": 1,
+              "wrong_expected_value": 245,
+              "reference_invalid": 11,
+              "off_by_one_miss": 91
+            },
+            "rates": {
+              "killed": 0.185268,
+              "syntax_invalid": 0.013393,
+              "wrong_target_api": 0.024554,
+              "undefined_symbol": 0.002232,
+              "wrong_expected_value": 0.546875,
+              "reference_invalid": 0.024554,
+              "off_by_one_miss": 0.203125
+            }
+          },
+          "return": {
+            "candidates": 112,
+            "counts": {
+              "killed": 44,
+              "wrong_expected_value": 30,
+              "reference_invalid": 8,
+              "passes_both": 30
+            },
+            "rates": {
+              "killed": 0.392857,
+              "wrong_expected_value": 0.267857,
+              "reference_invalid": 0.071429,
+              "passes_both": 0.267857
+            }
+          }
+        }
+      }
+    }
+  ],
+  "pooled": {
+    "failure_taxonomy_schema_version": 1,
+    "classified_functions": 757,
+    "unclassifiable_functions": 0,
+    "classified_candidates": 6056,
+    "overall": {
+      "candidates": 6056,
+      "counts": {
+        "killed": 1461,
+        "syntax_invalid": 37,
+        "wrong_target_api": 122,
+        "undefined_symbol": 10,
+        "wrong_expected_value": 2927,
+        "reference_invalid": 213,
+        "boundary_miss": 641,
+        "off_by_one_miss": 91,
+        "logical_condition_miss": 219,
+        "indexing_miss": 15,
+        "passes_both": 320
+      },
+      "rates": {
+        "killed": 0.241248,
+        "syntax_invalid": 0.00611,
+        "wrong_target_api": 0.020145,
+        "undefined_symbol": 0.001651,
+        "wrong_expected_value": 0.483322,
+        "reference_invalid": 0.035172,
+        "boundary_miss": 0.105845,
+        "off_by_one_miss": 0.015026,
+        "logical_condition_miss": 0.036162,
+        "indexing_miss": 0.002477,
+        "passes_both": 0.05284
+      }
+    },
+    "by_source": {
+      "oneiros_clean_mutations": {
+        "candidates": 6056,
+        "counts": {
+          "killed": 1461,
+          "syntax_invalid": 37,
+          "wrong_target_api": 122,
+          "undefined_symbol": 10,
+          "wrong_expected_value": 2927,
+          "reference_invalid": 213,
+          "boundary_miss": 641,
+          "off_by_one_miss": 91,
+          "logical_condition_miss": 219,
+          "indexing_miss": 15,
+          "passes_both": 320
+        },
+        "rates": {
+          "killed": 0.241248,
+          "syntax_invalid": 0.00611,
+          "wrong_target_api": 0.020145,
+          "undefined_symbol": 0.001651,
+          "wrong_expected_value": 0.483322,
+          "reference_invalid": 0.035172,
+          "boundary_miss": 0.105845,
+          "off_by_one_miss": 0.015026,
+          "logical_condition_miss": 0.036162,
+          "indexing_miss": 0.002477,
+          "passes_both": 0.05284
+        }
+      }
+    },
+    "by_mutation_family": {
+      "arithmetic": {
+        "candidates": 1608,
+        "counts": {
+          "killed": 401,
+          "syntax_invalid": 11,
+          "wrong_target_api": 15,
+          "undefined_symbol": 2,
+          "wrong_expected_value": 835,
+          "reference_invalid": 58,
+          "passes_both": 286
+        },
+        "rates": {
+          "killed": 0.249378,
+          "syntax_invalid": 0.006841,
+          "wrong_target_api": 0.009328,
+          "undefined_symbol": 0.001244,
+          "wrong_expected_value": 0.519279,
+          "reference_invalid": 0.03607,
+          "passes_both": 0.177861
+        }
+      },
+      "boolean": {
+        "candidates": 88,
+        "counts": {
+          "killed": 21,
+          "syntax_invalid": 1,
+          "wrong_expected_value": 41,
+          "logical_condition_miss": 25
+        },
+        "rates": {
+          "killed": 0.238636,
+          "syntax_invalid": 0.011364,
+          "wrong_expected_value": 0.465909,
+          "logical_condition_miss": 0.284091
+        }
+      },
+      "boundary": {
+        "candidates": 2712,
+        "counts": {
+          "killed": 590,
+          "syntax_invalid": 13,
+          "wrong_target_api": 62,
+          "undefined_symbol": 6,
+          "wrong_expected_value": 1281,
+          "reference_invalid": 119,
+          "boundary_miss": 641
+        },
+        "rates": {
+          "killed": 0.217552,
+          "syntax_invalid": 0.004794,
+          "wrong_target_api": 0.022861,
+          "undefined_symbol": 0.002212,
+          "wrong_expected_value": 0.472345,
+          "reference_invalid": 0.043879,
+          "boundary_miss": 0.236357
+        }
+      },
+      "comparison": {
+        "candidates": 696,
+        "counts": {
+          "killed": 217,
+          "wrong_target_api": 27,
+          "wrong_expected_value": 291,
+          "reference_invalid": 8,
+          "logical_condition_miss": 153
+        },
+        "rates": {
+          "killed": 0.311782,
+          "wrong_target_api": 0.038793,
+          "wrong_expected_value": 0.418103,
+          "reference_invalid": 0.011494,
+          "logical_condition_miss": 0.219828
+        }
+      },
+      "index": {
+        "candidates": 176,
+        "counts": {
+          "killed": 31,
+          "syntax_invalid": 4,
+          "undefined_symbol": 1,
+          "wrong_expected_value": 124,
+          "reference_invalid": 1,
+          "indexing_miss": 15
+        },
+        "rates": {
+          "killed": 0.176136,
+          "syntax_invalid": 0.022727,
+          "undefined_symbol": 0.005682,
+          "wrong_expected_value": 0.704545,
+          "reference_invalid": 0.005682,
+          "indexing_miss": 0.085227
+        }
+      },
+      "logical": {
+        "candidates": 144,
+        "counts": {
+          "killed": 44,
+          "syntax_invalid": 1,
+          "wrong_target_api": 5,
+          "wrong_expected_value": 53,
+          "logical_condition_miss": 41
+        },
+        "rates": {
+          "killed": 0.305556,
+          "syntax_invalid": 0.006944,
+          "wrong_target_api": 0.034722,
+          "wrong_expected_value": 0.368056,
+          "logical_condition_miss": 0.284722
+        }
+      },
+      "membership": {
+        "candidates": 16,
+        "counts": {
+          "killed": 8,
+          "wrong_expected_value": 8
+        },
+        "rates": {
+          "killed": 0.5,
+          "wrong_expected_value": 0.5
+        }
+      },
+      "negate_removal": {
+        "candidates": 56,
+        "counts": {
+          "killed": 22,
+          "syntax_invalid": 1,
+          "wrong_target_api": 2,
+          "wrong_expected_value": 19,
+          "reference_invalid": 8,
+          "passes_both": 4
+        },
+        "rates": {
+          "killed": 0.392857,
+          "syntax_invalid": 0.017857,
+          "wrong_target_api": 0.035714,
+          "wrong_expected_value": 0.339286,
+          "reference_invalid": 0.142857,
+          "passes_both": 0.071429
+        }
+      },
+      "off_by_one": {
+        "candidates": 448,
+        "counts": {
+          "killed": 83,
+          "syntax_invalid": 6,
+          "wrong_target_api": 11,
+          "undefined_symbol": 1,
+          "wrong_expected_value": 245,
+          "reference_invalid": 11,
+          "off_by_one_miss": 91
+        },
+        "rates": {
+          "killed": 0.185268,
+          "syntax_invalid": 0.013393,
+          "wrong_target_api": 0.024554,
+          "undefined_symbol": 0.002232,
+          "wrong_expected_value": 0.546875,
+          "reference_invalid": 0.024554,
+          "off_by_one_miss": 0.203125
+        }
+      },
+      "return": {
+        "candidates": 112,
+        "counts": {
+          "killed": 44,
+          "wrong_expected_value": 30,
+          "reference_invalid": 8,
+          "passes_both": 30
+        },
+        "rates": {
+          "killed": 0.392857,
+          "wrong_expected_value": 0.267857,
+          "reference_invalid": 0.071429,
+          "passes_both": 0.267857
+        }
+      }
+    }
+  }
+}
