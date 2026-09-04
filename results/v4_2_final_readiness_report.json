@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_final_readiness_v1",
-  "source_tree_sha256": "610907c08fe6bda41267be932bdcd1f8ce6e500837f222c792cefccdfe03c091",
+  "source_tree_sha256": "fa43add8f16f39382efd6c406f3e624cdaddaa9f76a10dfbc624b12e7fa87af9",
   "sealed_final_test_accessed": false,
   "phase": "sft_only",
   "dpo": "OUT OF SCOPE - not prepared, launched, evaluated, or budgeted",
@@ -9,7 +9,7 @@
     "checks": {
       "active_experiment_branch": true,
       "v4_baseline_is_ancestor": true,
-      "tracked_worktree_clean": true,
+      "tracked_worktree_clean": false,
       "canonical_corpus_hashes": true,
       "source_bound_tests_current": false,
       "locked_train_readiness": true,
@@ -69,6 +69,30 @@
         "no_kill": 195
       }
     },
+    "non_llm_baseline_bundle": {
+      "category": "MEASURED",
+      "artifact": "results/v4_2_baseline_bundle_val.json",
+      "arms": {
+        "dataset_tests": 1.0,
+        "random": 0.245267,
+        "static": 0.260238,
+        "grammar": 0.26244
+      },
+      "protocol": "same targets, candidate budget, timeout, seeds, validity and kill rules as the model arms",
+      "advantage_given_to_baselines": "every generative baseline derives its expected value by executing the reference implementation, so each has a perfect oracle and need only choose inputs. Oneiros never sees the reference.",
+      "naming": "the coverage arm is a SIMULATED coverage fuzzer written for this project and is never reported as Atheris"
+    },
+    "shape_policy_is_not_doing_the_work": {
+      "category": "MEASURED",
+      "artifact": "results/v4_2_shape_policy_rescore.json",
+      "base_seeds_rescored": [
+        42,
+        43,
+        44
+      ],
+      "max_delta_kill_rate": 0.0,
+      "interpretation": "rescoring the stored base generations under the widened test-function rule admitted no additional candidate on any seed, so the widened policy confers no baseline-side advantage and cannot explain a gap between the arms."
+    },
     "corpus_inventory": {
       "category": "MEASURED",
       "artifact": "results/v4_2_corpus_inventory.json",
@@ -127,7 +151,6 @@
       "balanced corpus: need 317 more unique repository targets for parity",
       "balanced corpus: repository project concentration exceeds the frozen cap",
       "balanced corpus: the aspirational 0.60 complex-only floor is not met",
-      "the final source-bound SFT adapter has not been rebuilt and receipted",
       "native repository execution is a partial pass; no model-generated test has been executed natively"
     ],
     "one_time_guard": "harness/sealed_final.py (mock-tested, 34 tests)",

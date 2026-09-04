@@ -1,0 +1,202 @@
+{
+  "schema_version": "oneiros_final_sft_receipt_v1",
+  "source_tree_sha256": "fa43add8f16f39382efd6c406f3e624cdaddaa9f76a10dfbc624b12e7fa87af9",
+  "sealed_final_test_accessed": false,
+  "phase": "sft_only",
+  "dpo": "OUT OF SCOPE - not prepared, launched, evaluated, or budgeted",
+  "run_name": "local_sft_mm_full_v2_seed42",
+  "adapter": "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\checkpoints\\local_sft_mm_full_v2_seed42\\sft_validation_best\\checkpoint-137",
+  "dataset_fingerprint": "oneiros-corpus-v4.1-research-hardened-candidate:1:04940ee92c7eeef3efb0808e577470cfb5415c13612ecb25bd11eb00c2adfd50:4baaa7a6eb4069203691d5453d50d58a189eeee63feb0c3dfe236c139947ba2a:sft_scope=first_2400_train_records:bounded_selection=stratified_generation_compatible_complex_v5:execution_mode=all:repository_completion_limit=2048:prompt_token_limit=1024:selection_prompt_token_limit=1024:repository_prompt_token_limit=1024:prompt_compaction=section_aware_ast_units_before_chat_v4_1:prompt_schema=oneiros_unified_test_generation_v2:prompt_information=full:output_instruction=self_contained:dataset_identity=source.upstream_then_source.name_v1:complex_target_fraction=0.6:generation_completion_limit=128:repository_generation_completion_limit=1024",
+  "hyperparameters": {
+    "epochs": 1,
+    "learning_rate": 1e-05,
+    "lr_scheduler_type": "constant_with_warmup",
+    "batch_size": 1,
+    "seed": 42,
+    "max_sequence_length": 2048,
+    "prompt_token_limit": 1024,
+    "selection_prompt_token_limit": 1024,
+    "repository_prompt_token_limit": 1024,
+    "prompt_compaction_strategy": "section_aware_ast_units_before_chat_v4_1",
+    "prompt_schema_version": "oneiros_unified_test_generation_v2",
+    "prompt_information_variant": "full",
+    "output_instruction_variant": "self_contained",
+    "dataset_identity_policy": "source.upstream_then_source.name_v1",
+    "generation_completion_token_limit": 128,
+    "repository_generation_completion_token_limit": 1024,
+    "warmup_steps": 25,
+    "checkpoint_save_steps": 50,
+    "minimum_monitor_checkpoints": 2,
+    "real_target_fraction": 0.2,
+    "max_real_repeats": 8,
+    "checkpoint_monitor_enabled": true,
+    "monitor_validation_functions": 100,
+    "monitor_patience": 3,
+    "min_function_kill_rate": 0.58,
+    "monitor_interval_optimizer_steps": 50,
+    "balanced_sampling_enabled": true,
+    "synthetic_balance_fraction": 0.0,
+    "synthetic_balance_mode": "none",
+    "max_synthetic_repeats": 2,
+    "complex_target_fraction": 0.6
+  },
+  "sft_loss": 1.0038876811953357,
+  "wall_time_seconds": 2709.1,
+  "supervision": {
+    "verified_sft_examples": 2189,
+    "repository_sft_examples": 224,
+    "prompt_compacted_examples": 306,
+    "every_label_carries_execution_evidence": true,
+    "model_output_used_as_label": false
+  },
+  "multi_mutant_supervision": {
+    "dataset": "data/training_views/multi_mutant_v1",
+    "available_completions": 5588,
+    "examples_used": 2189,
+    "eligible_synthetic_pairs": 2194,
+    "density_over_eligible_synthetic": 0.997721
+  },
+  "intervention_actually_applied": true,
+  "launch_command": [
+    "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Scripts\\python.exe",
+    "scripts/train_on_dataset.py",
+    "--phase",
+    "sft_eval",
+    "--corpus-version",
+    "v4_1_research_hardened_candidate",
+    "--run-name",
+    "local_sft_mm_full_v2_seed42",
+    "--seed",
+    "44",
+    "--evaluation-split",
+    "val",
+    "--sft-prompt-token-limit",
+    "1024",
+    "--sft-selection-prompt-token-limit",
+    "1024",
+    "--sft-repository-completion-token-limit",
+    "1024",
+    "--multi-mutant-dataset",
+    "data/training_views/multi_mutant_v1",
+    "--allow-test-function-candidates",
+    "--base-model-name",
+    "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "--attention-implementation",
+    "sdpa"
+  ],
+  "launched_utc": "2026-09-04T21:23:09+00:00",
+  "candidate_shape_policy": {
+    "allow_test_function": true,
+    "evidence": "the argv recorded by the durable GPU run manifest",
+    "frozen_default": "single bounded assert statement",
+    "widening_is_additive": "a lone assertion is validated first by the identical frozen rule, so no candidate the frozen protocol accepted can change verdict; only shapes it rejected outright are admitted",
+    "comparability": "results scored under the widened policy are a named protocol variant and are not interchangeable with assertion-only numbers",
+    "baselines_rescored": {
+      "artifact": "results/v4_2_shape_policy_rescore.json",
+      "arms_rescored": [
+        "v4_2_base_qwen_val_seed42.json",
+        "v4_2_base_qwen_val_seed43.json",
+        "v4_2_base_qwen_val_seed44.json"
+      ],
+      "max_delta_kill_rate": 0.0,
+      "newly_admitted_candidates_total": 0,
+      "all_monotone": true,
+      "finding": "the widened shape rule admitted no additional base-model candidate on any seed, so it confers no advantage on the baseline side and cannot be what separates the arms"
+    }
+  },
+  "baselines_rescored_under_same_shape_policy": true,
+  "checkpoint_selection": {
+    "rule": "highest mean ablation_dev monitor function kill rate across the trained seeds; ties broken by the earlier step. Locked validation is never used for selection.",
+    "seeds_used_for_selection": [
+      "42"
+    ],
+    "steps_comparable_across_all_seeds": [
+      50,
+      100,
+      137
+    ],
+    "mean_ablation_dev_kill_rate_by_step": {
+      "50": 0.59,
+      "100": 0.68,
+      "137": 0.73
+    },
+    "selected_checkpoint_step": 137,
+    "single_seed_selection": true,
+    "limitation": "Selected from one trained seed, so this step is not shown to be optimal across seeds. An earlier sweep chose steps 50, 142 and 142 on three seeds; no step is universally optimal.",
+    "terminal_checkpoint_step": 137,
+    "selected_step_is_the_terminal_step": true,
+    "selection_did_not_discriminate": "The rule chose the final checkpoint, which is also where training ended, so no checkpoint was rejected by it. Early stopping was never exercised.",
+    "monitor_still_rising_at_final_step": true,
+    "under_trained_signal": "The ablation_dev monitor was still improving at the last checkpoint, so this configuration was stopped by the end of the data rather than by convergence. A longer schedule is motivated by the trajectory, not chosen after seeing a result."
+  },
+  "monitor_points_by_seed": {
+    "42": [
+      {
+        "checkpoint_step": 50,
+        "ablation_dev_kill_rate": 0.59,
+        "functions": 100,
+        "killed": 59,
+        "artifact": "sft_monitor_checkpoint_50.json"
+      },
+      {
+        "checkpoint_step": 100,
+        "ablation_dev_kill_rate": 0.68,
+        "functions": 100,
+        "killed": 68,
+        "artifact": "sft_monitor_checkpoint_100.json"
+      },
+      {
+        "checkpoint_step": 137,
+        "ablation_dev_kill_rate": 0.73,
+        "functions": 100,
+        "killed": 73,
+        "artifact": "sft_monitor_checkpoint_137.json"
+      }
+    ]
+  },
+  "locked_validation": {
+    "by_seed": {
+      "42": {
+        "kill_rate": 0.635403,
+        "wilson_95": [
+          0.600512,
+          0.668927
+        ],
+        "functions": 757,
+        "killed": 481,
+        "prompt_budget_failed_functions": 0,
+        "artifact": "results/local_sft_mm_full_v2_seed42/sft_validation_standard_seed_42.json"
+      },
+      "43": {
+        "kill_rate": 0.661823,
+        "wilson_95": [
+          0.62738,
+          0.694632
+        ],
+        "functions": 757,
+        "killed": 501,
+        "prompt_budget_failed_functions": 0,
+        "artifact": "results/local_sft_mm_full_v2_seed42/sft_validation_standard_seed_43.json"
+      },
+      "44": {
+        "kill_rate": 0.620872,
+        "wilson_95": [
+          0.585782,
+          0.654741
+        ],
+        "functions": 757,
+        "killed": 470,
+        "prompt_budget_failed_functions": 0,
+        "artifact": "results/local_sft_mm_full_v2_seed42/sft_validation_standard_seed_44.json"
+      }
+    },
+    "seeds_measured": [
+      "42",
+      "43",
+      "44"
+    ],
+    "mean_kill_rate": 0.639366,
+    "range_across_seeds": 0.040951,
+    "measurement_only": "No checkpoint, hyperparameter, prompt, threshold or selection rule was chosen using locked validation."
+  }
+}

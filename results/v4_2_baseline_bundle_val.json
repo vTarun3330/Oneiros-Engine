@@ -174,6 +174,56 @@
       },
       "mean_kill_rate": 0.260238,
       "range_across_seeds": 0.0
+    },
+    "grammar": {
+      "description": "type-aware boundary analysis",
+      "sees_dataset_tests": false,
+      "by_seed": {
+        "42": {
+          "seed": 42,
+          "targets": 757,
+          "killed": 189,
+          "kill_rate": 0.24967,
+          "kill_rate_wilson_95": [
+            0.220153,
+            0.281714
+          ],
+          "candidates_generated": 5243,
+          "policy_valid_candidates": 1239,
+          "reference_valid_candidates": 1173,
+          "wall_seconds": 540.4
+        },
+        "43": {
+          "seed": 43,
+          "targets": 757,
+          "killed": 210,
+          "kill_rate": 0.277411,
+          "kill_rate_wilson_95": [
+            0.246702,
+            0.310368
+          ],
+          "candidates_generated": 4950,
+          "policy_valid_candidates": 1192,
+          "reference_valid_candidates": 1158,
+          "wall_seconds": 544.5
+        },
+        "44": {
+          "seed": 44,
+          "targets": 757,
+          "killed": 197,
+          "kill_rate": 0.260238,
+          "kill_rate_wilson_95": [
+            0.230248,
+            0.292649
+          ],
+          "candidates_generated": 5126,
+          "policy_valid_candidates": 1297,
+          "reference_valid_candidates": 1296,
+          "wall_seconds": 542.3
+        }
+      },
+      "mean_kill_rate": 0.26244,
+      "range_across_seeds": 0.027741
     }
   }
 }
