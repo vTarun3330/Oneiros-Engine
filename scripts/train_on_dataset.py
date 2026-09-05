@@ -126,6 +126,12 @@ SFT_SELECTION_TOKENIZER_NAME_OVERRIDE = None
 # ``def test_*()`` carrying several assertions, so an arm trained on it must
 # declare the wider shape or it would be scored by a rule that rejects the very
 # thing it was taught to produce.
+# Hard-example relearning. A round is defined by which records it oversamples,
+# so it needs selection control: training again on the ordinary mix is not
+# relearning, it is a second epoch. Corrections carry verified supervision and
+# are drawn only from the split the trainer draws pairs from.
+RELEARNING_DATASET_PATH = None
+RELEARNING_REPEATS = 3
 ALLOW_TEST_FUNCTION_CANDIDATES = False
 MULTI_MUTANT_COMPLETIONS: Dict[str, str] = {}
 MULTI_MUTANT_DATASET_PATH = None
@@ -470,6 +476,79 @@ def load_multi_mutant_completions(directory, split: str = "train") -> Dict[str, 
                 "empty completion"
             )
     return verified_completions_by_record(loaded)
+
+
+def apply_relearning_round(
+    selected_pairs: List[Dict], all_train_pairs: List[Dict],
+    directory, repeats: int,
+) -> Tuple[List[Dict], Dict]:
+    """Oversample the records this model actually failed, with verified labels.
+
+    A relearning round is defined by which cases it emphasises. Training again
+    on the ordinary mixture is a second epoch, not relearning, so the loser
+    records are guaranteed a place in the batch even when the bounded selection
+    would not have chosen them, and are repeated.
+
+    The corrections are refused unless they carry execution evidence and lie in
+    the split the trainer draws pairs from - the first round produced 120
+    corrections that satisfied neither, and would have trained on nothing while
+    reporting itself as relearning.
+    """
+    directory = Path(directory)
+    corrections_path = directory / "corrections.json"
+    manifest_path = directory / "manifest.json"
+    if not corrections_path.exists() or not manifest_path.exists():
+        raise FileNotFoundError(
+            f"relearning view requires corrections.json and manifest.json under "
+            f"{directory}"
+        )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    source_split = str((manifest.get("source_evaluation") or {}).get("split") or "")
+    if source_split != "train":
+        raise ValueError(
+            f"relearning corrections were mined from {source_split!r}; only "
+            "train-split losers can be trained on, because ablation_dev is the "
+            "checkpoint-selection panel and its records never enter train pairs"
+        )
+    corrections = json.loads(corrections_path.read_text(encoding="utf-8"))
+    unverified = [item for item in corrections if not item.get("verified")]
+    if unverified:
+        raise ValueError(
+            f"{len(unverified)} relearning corrections are unverified; a failed "
+            "generation is never a label"
+        )
+
+    by_id = {str(pair["id"]): pair for pair in all_train_pairs}
+    already = {str(pair["id"]) for pair in selected_pairs}
+    pairs_before = len(selected_pairs)
+    injected = 0
+    added: List[Dict] = []
+    for item in corrections:
+        record_id = str(item["record_id"])
+        pair = by_id.get(record_id)
+        if pair is None:
+            continue
+        if record_id not in already:
+            added.append(pair)
+            already.add(record_id)
+            injected += 1
+        for _ in range(max(0, repeats - 1)):
+            added.append(pair)
+
+    result = list(selected_pairs) + added
+    return result, {
+        "dataset": str(directory).replace("\\", "/"),
+        "dataset_sha256": manifest.get("dataset_sha256"),
+        "source_split": source_split,
+        "corrections": len(corrections),
+        "injected_records": injected,
+        "added_pairs": len(added),
+        "repeats": repeats,
+        "pairs_before": pairs_before,
+        "pairs_after": len(result),
+        "labels_are_verified_supervision": True,
+        "model_output_used_as_label": False,
+    }
 
 
 def apply_balanced_sft_selection(
@@ -2756,6 +2835,20 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                 else SFT_COMPLEX_TARGET_FRACTION
             ),
         )
+    if RELEARNING_DATASET_PATH:
+        train_pairs, relearning_stats = apply_relearning_round(
+            train_pairs, load_phase3_pairs(corpus_dir, "train"),
+            RELEARNING_DATASET_PATH, RELEARNING_REPEATS,
+        )
+        print(
+            f"[RELEARNING] {relearning_stats['corrections']} corrections, "
+            f"{relearning_stats['injected_records']} records injected, "
+            f"{relearning_stats['added_pairs']} pairs added at "
+            f"{RELEARNING_REPEATS}x; train pairs "
+            f"{relearning_stats['pairs_before']} -> {relearning_stats['pairs_after']}",
+            flush=True,
+        )
+
     dpo_training_scope_sha256 = _dpo_training_scope_sha256(train_pairs) if run_dpo else None
     selected_repository_pairs = sum(
         is_repository_execution_mode(
@@ -4209,6 +4302,20 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
+        "--relearning-dataset", default=None,
+        help=(
+            "Directory holding corrections.json and manifest.json from "
+            "scripts/build_relearning_dataset.py. The loser records are "
+            "guaranteed a place in the training batch and repeated, so the "
+            "round emphasises what the model failed rather than repeating the "
+            "ordinary mixture. Only train-split corrections are accepted."
+        ),
+    )
+    parser.add_argument(
+        "--relearning-repeats", type=int, default=3,
+        help="How many times each corrected record appears (default 3).",
+    )
+    parser.add_argument(
         "--allow-test-function-candidates",
         action="store_true",
         help=(
@@ -4361,6 +4468,8 @@ if __name__ == "__main__":
             f"[MULTI-MUTANT SUPERVISION] Loaded {len(MULTI_MUTANT_COMPLETIONS)} "
             f"verified completions from {args.multi_mutant_dataset}"
         )
+    RELEARNING_DATASET_PATH = args.relearning_dataset
+    RELEARNING_REPEATS = args.relearning_repeats
     ALLOW_TEST_FUNCTION_CANDIDATES = args.allow_test_function_candidates
     BALANCED_SFT_DATASET_PATH = args.balanced_sft_dataset
     if args.max_pairs:
