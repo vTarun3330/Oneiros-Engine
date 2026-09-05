@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_final_readiness_v1",
-  "source_tree_sha256": "4243ea4351fe1537b33d0e6c0ca59cccbb0445d6e95600e308b9889599e4587f",
+  "source_tree_sha256": "696763b26e74130b4325bc7d4f024412f2f911e353daaf4a00a48ee52761d76f",
   "sealed_final_test_accessed": false,
   "phase": "sft_only",
   "dpo": "OUT OF SCOPE - not prepared, launched, evaluated, or budgeted",
@@ -9,7 +9,7 @@
     "checks": {
       "active_experiment_branch": true,
       "v4_baseline_is_ancestor": true,
-      "tracked_worktree_clean": false,
+      "tracked_worktree_clean": true,
       "canonical_corpus_hashes": true,
       "source_bound_tests_current": false,
       "locked_train_readiness": true,
