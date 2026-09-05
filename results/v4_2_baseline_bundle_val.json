@@ -224,6 +224,56 @@
       },
       "mean_kill_rate": 0.26244,
       "range_across_seeds": 0.027741
+    },
+    "simulated_coverage_fuzzer": {
+      "description": "output-diversity fuzzing written for this project. NOT Atheris, NOT libFuzzer, and never to be reported as either",
+      "sees_dataset_tests": false,
+      "by_seed": {
+        "42": {
+          "seed": 42,
+          "targets": 757,
+          "killed": 286,
+          "kill_rate": 0.377807,
+          "kill_rate_wilson_95": [
+            0.343968,
+            0.41288
+          ],
+          "candidates_generated": 1299,
+          "policy_valid_candidates": 1257,
+          "reference_valid_candidates": 1212,
+          "wall_seconds": 1585.7
+        },
+        "43": {
+          "seed": 43,
+          "targets": 757,
+          "killed": 336,
+          "kill_rate": 0.443857,
+          "kill_rate_wilson_95": [
+            0.408836,
+            0.479445
+          ],
+          "candidates_generated": 1528,
+          "policy_valid_candidates": 1444,
+          "reference_valid_candidates": 1400,
+          "wall_seconds": 1522.6
+        },
+        "44": {
+          "seed": 44,
+          "targets": 757,
+          "killed": 389,
+          "kill_rate": 0.513871,
+          "kill_rate_wilson_95": [
+            0.478286,
+            0.549315
+          ],
+          "candidates_generated": 1281,
+          "policy_valid_candidates": 1277,
+          "reference_valid_candidates": 1262,
+          "wall_seconds": 1395.0
+        }
+      },
+      "mean_kill_rate": 0.445178,
+      "range_across_seeds": 0.136064
     }
   }
 }

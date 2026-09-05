@@ -5,15 +5,15 @@
   "phase": "sft_only",
   "dpo": "OUT OF SCOPE - not prepared, launched, evaluated, or budgeted",
   "doctor": {
-    "all_passed": false,
+    "all_passed": true,
     "checks": {
       "active_experiment_branch": true,
       "v4_baseline_is_ancestor": true,
-      "tracked_worktree_clean": false,
+      "tracked_worktree_clean": true,
       "canonical_corpus_hashes": true,
-      "source_bound_tests_current": false,
+      "source_bound_tests_current": true,
       "locked_train_readiness": true,
-      "integration_preflight_current": false,
+      "integration_preflight_current": true,
       "frozen_evaluation_protocol": true,
       "sealed_final_test_unaccessed": true
     }
@@ -147,7 +147,6 @@
   "sealed_test": {
     "may_be_opened": false,
     "blocking_conditions": [
-      "the readiness doctor is not fully green",
       "balanced corpus: need 317 more unique repository targets for parity",
       "balanced corpus: repository project concentration exceeds the frozen cap",
       "balanced corpus: the aspirational 0.60 complex-only floor is not met",
