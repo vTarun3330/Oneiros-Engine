@@ -1707,8 +1707,16 @@ def _evaluate_adapter_kill_rate(
     import torch
     from engine.generator import Phi3Generator
 
-    if evaluation_split not in {"ablation_dev", "val", "test"}:
-        raise ValueError("Evaluation split must be 'ablation_dev', 'val', or 'test'")
+    # "train" is permitted for hard-example mining only. It is the split the
+    # model was fitted on, so it is not a held-out measurement and must never be
+    # reported as one; the artifact is named for its split, and the comparison
+    # and receipt scripts accept only val. Adding it to the argparse choices
+    # without adding it here is what made the first mining run fail after ten
+    # seconds - two gates, one changed.
+    if evaluation_split not in {"train", "ablation_dev", "val", "test"}:
+        raise ValueError(
+            "Evaluation split must be 'train', 'ablation_dev', 'val', or 'test'"
+        )
     adapter_file = adapter_dir / "adapter_model.safetensors" if adapter_dir else None
     if adapter_file is not None and not adapter_file.exists():
         raise RuntimeError(f"{adapter_label} validation requires its frozen adapter")
