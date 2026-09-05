@@ -24,6 +24,7 @@ from harness.corpus import sha256_file, write_json
 from harness.multi_mutant_examples import verified_completions_by_record
 from harness.relearning import (
     RELEARNING_SCHEMA_VERSION,
+    assert_corrections_are_trainable,
     assert_split_is_eligible,
     attach_corrections,
     balanced_replay,
@@ -126,6 +127,21 @@ def build(
         corrections, losers_by_id, max_per_group, max_per_family, max_per_category,
     )
 
+    # Refuse a round the trainer could never consume. The first attempt mined
+    # ablation_dev and produced 120 corrections, none of which lie in the split
+    # the trainer draws pairs from, so it would have trained on nothing while
+    # reporting itself as relearning.
+    trainable_ids = {
+        str(record["id"])
+        for record in json.loads(
+            (
+                ROOT / "data" / "corpus" / "v4_1_research_hardened_candidate"
+                / "development_view" / "train.records.json"
+            ).read_text(encoding="utf-8")
+        )
+    }
+    trainability = assert_corrections_are_trainable(retained, trainable_ids, split)
+
     evaluated = len(payload.get("function_results", []))
     manifest = {
         "schema_version": RELEARNING_SCHEMA_VERSION,
@@ -182,6 +198,7 @@ def build(
         },
         "corrections": attach_summary,
         "balanced_replay": replay_summary,
+        "trainability": trainability,
         "dataset_sha256": relearning_dataset_sha256(retained),
     }
 
