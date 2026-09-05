@@ -180,9 +180,27 @@ def build() -> dict[str, Any]:
                 "category": "MEASURED" if bundle else "INCOMPLETE",
                 "artifact": "results/v4_2_baseline_bundle_val.json",
                 "arms": {
-                    name: arm.get("mean_kill_rate")
+                    name: {
+                        "mean_kill_rate": arm.get("mean_kill_rate"),
+                        # A mean alone hides that the simulated coverage fuzzer
+                        # swings 0.378 to 0.514 across seeds - a spread wider
+                        # than the entire SFT effect being studied, and wider
+                        # than its own Wilson interval on any single seed. Any
+                        # single-seed number from a stochastic baseline is
+                        # unreliable and must be read with this range.
+                        "range_across_seeds": arm.get("range_across_seeds"),
+                        "per_seed": {
+                            seed: row.get("kill_rate")
+                            for seed, row in (arm.get("by_seed") or {}).items()
+                        },
+                    }
                     for name, arm in ((bundle or {}).get("arms") or {}).items()
                 },
+                "seed_sensitivity": (
+                    "deterministic arms (static, dataset_tests) have zero "
+                    "spread; the stochastic coverage arm has the largest, so "
+                    "comparisons against it need all three seeds"
+                ),
                 "protocol": (
                     "same targets, candidate budget, timeout, seeds, validity "
                     "and kill rules as the model arms"

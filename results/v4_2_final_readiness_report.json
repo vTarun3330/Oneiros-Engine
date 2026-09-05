@@ -1,19 +1,19 @@
 {
   "schema_version": "oneiros_final_readiness_v1",
-  "source_tree_sha256": "fa43add8f16f39382efd6c406f3e624cdaddaa9f76a10dfbc624b12e7fa87af9",
+  "source_tree_sha256": "4243ea4351fe1537b33d0e6c0ca59cccbb0445d6e95600e308b9889599e4587f",
   "sealed_final_test_accessed": false,
   "phase": "sft_only",
   "dpo": "OUT OF SCOPE - not prepared, launched, evaluated, or budgeted",
   "doctor": {
-    "all_passed": true,
+    "all_passed": false,
     "checks": {
       "active_experiment_branch": true,
       "v4_baseline_is_ancestor": true,
-      "tracked_worktree_clean": true,
+      "tracked_worktree_clean": false,
       "canonical_corpus_hashes": true,
-      "source_bound_tests_current": true,
+      "source_bound_tests_current": false,
       "locked_train_readiness": true,
-      "integration_preflight_current": true,
+      "integration_preflight_current": false,
       "frozen_evaluation_protocol": true,
       "sealed_final_test_unaccessed": true
     }
@@ -73,11 +73,53 @@
       "category": "MEASURED",
       "artifact": "results/v4_2_baseline_bundle_val.json",
       "arms": {
-        "dataset_tests": 1.0,
-        "random": 0.245267,
-        "static": 0.260238,
-        "grammar": 0.26244
+        "dataset_tests": {
+          "mean_kill_rate": 1.0,
+          "range_across_seeds": 0.0,
+          "per_seed": {
+            "42": 1.0,
+            "43": 1.0,
+            "44": 1.0
+          }
+        },
+        "random": {
+          "mean_kill_rate": 0.245267,
+          "range_across_seeds": 0.009247,
+          "per_seed": {
+            "42": 0.240423,
+            "43": 0.245707,
+            "44": 0.24967
+          }
+        },
+        "static": {
+          "mean_kill_rate": 0.260238,
+          "range_across_seeds": 0.0,
+          "per_seed": {
+            "42": 0.260238,
+            "43": 0.260238,
+            "44": 0.260238
+          }
+        },
+        "grammar": {
+          "mean_kill_rate": 0.26244,
+          "range_across_seeds": 0.027741,
+          "per_seed": {
+            "42": 0.24967,
+            "43": 0.277411,
+            "44": 0.260238
+          }
+        },
+        "simulated_coverage_fuzzer": {
+          "mean_kill_rate": 0.445178,
+          "range_across_seeds": 0.136064,
+          "per_seed": {
+            "42": 0.377807,
+            "43": 0.443857,
+            "44": 0.513871
+          }
+        }
       },
+      "seed_sensitivity": "deterministic arms (static, dataset_tests) have zero spread; the stochastic coverage arm has the largest, so comparisons against it need all three seeds",
       "protocol": "same targets, candidate budget, timeout, seeds, validity and kill rules as the model arms",
       "advantage_given_to_baselines": "every generative baseline derives its expected value by executing the reference implementation, so each has a perfect oracle and need only choose inputs. Oneiros never sees the reference.",
       "naming": "the coverage arm is a SIMULATED coverage fuzzer written for this project and is never reported as Atheris"
@@ -147,6 +189,7 @@
   "sealed_test": {
     "may_be_opened": false,
     "blocking_conditions": [
+      "the readiness doctor is not fully green",
       "balanced corpus: need 317 more unique repository targets for parity",
       "balanced corpus: repository project concentration exceeds the frozen cap",
       "balanced corpus: the aspirational 0.60 complex-only floor is not met",
