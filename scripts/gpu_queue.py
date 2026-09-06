@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -51,6 +52,32 @@ def wait(run_id: str, poll_seconds: int = 30) -> dict[str, Any]:
     return _status(run_id)
 
 
+def process_is_alive(pid: int) -> bool:
+    """True while `pid` is still running.
+
+    Used to chain one queue behind another. --after waits on a single run_id,
+    which cannot express "after those ten jobs" because the last job's run_id
+    does not exist until the ninth finishes. Waiting on the earlier queue's own
+    process does express it, and needs nothing to be known in advance.
+    """
+    if os.name == "nt":
+        finished = subprocess.run(
+            ["tasklist", "/FI", f"PID eq {pid}", "/NH"],
+            capture_output=True, text=True,
+        )
+        return str(pid) in finished.stdout
+    try:
+        os.kill(pid, 0)
+    except (ProcessLookupError, PermissionError):
+        return False
+    return True
+
+
+def wait_for_pid(pid: int, poll_seconds: int = 30) -> None:
+    while process_is_alive(pid):
+        time.sleep(poll_seconds)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -66,9 +93,22 @@ def main() -> int:
             "the queue."
         ),
     )
+    parser.add_argument(
+        "--after-pid", type=int, default=None,
+        help=(
+            "wait for this process to exit before starting the queue. Use it "
+            "to chain behind an earlier gpu_queue whose final run_id is not "
+            "yet known, so the card does not idle between experiments."
+        ),
+    )
     parser.add_argument("--stop-on-failure", action="store_true")
     parser.add_argument("--poll-seconds", type=int, default=30)
     arguments = parser.parse_args()
+
+    if arguments.after_pid:
+        print(f"[QUEUE] waiting for pid {arguments.after_pid} to exit", flush=True)
+        wait_for_pid(arguments.after_pid, arguments.poll_seconds)
+        print(f"[QUEUE] pid {arguments.after_pid} exited", flush=True)
 
     if arguments.after:
         print(f"[QUEUE] waiting for {arguments.after}", flush=True)

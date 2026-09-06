@@ -133,6 +133,11 @@ SFT_SELECTION_TOKENIZER_NAME_OVERRIDE = None
 RELEARNING_DATASET_PATH = None
 RELEARNING_REPEATS = 3
 ALLOW_TEST_FUNCTION_CANDIDATES = False
+#: Regularisation overrides for the memorisation arm. ``None`` means "use the
+#: frozen configuration", so a run that does not pass them is identical to
+#: every result already reported rather than merely similar to it.
+LORA_DROPOUT_OVERRIDE = None
+WEIGHT_DECAY_OVERRIDE = None
 MULTI_MUTANT_COMPLETIONS: Dict[str, str] = {}
 MULTI_MUTANT_DATASET_PATH = None
 BALANCED_SFT_DATASET_PATH = None
@@ -3477,6 +3482,8 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                     model_name=BASE_MODEL_NAME_OVERRIDE,
                     model_revision=BASE_MODEL_REVISION_OVERRIDE,
                     attention_implementation=BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE,
+                    lora_dropout=LORA_DROPOUT_OVERRIDE,
+                    weight_decay=WEIGHT_DECAY_OVERRIDE,
                 )
                 sft_trainer.setup_model()
                 checkpoint_monitor = None
@@ -4154,6 +4161,19 @@ if __name__ == "__main__":
     parser.add_argument("--fresh", action="store_true", help="Delete Phase 3 checkpoints before SFT")
     parser.add_argument("--max-pairs", type=int, default=None, help="Limit training pairs for a smoke test")
     parser.add_argument(
+        "--lora-dropout", type=float, default=None,
+        help=(
+            "override LoRA dropout (frozen default 0.05). Raising it is the "
+            "memorisation arm: the model kills 82.9%% on train against 63.7%% "
+            "on locked validation, and that gap, not supervision volume, is "
+            "the binding constraint"
+        ),
+    )
+    parser.add_argument(
+        "--weight-decay", type=float, default=None,
+        help="override optimizer weight decay (frozen default 0.0)",
+    )
+    parser.add_argument(
         "--max-validation-functions", type=int, default=None,
         help="Bound validation for an explicitly labelled smoke run; never changes training scope",
     )
@@ -4471,6 +4491,18 @@ if __name__ == "__main__":
     RELEARNING_DATASET_PATH = args.relearning_dataset
     RELEARNING_REPEATS = args.relearning_repeats
     ALLOW_TEST_FUNCTION_CANDIDATES = args.allow_test_function_candidates
+    LORA_DROPOUT_OVERRIDE = args.lora_dropout
+    WEIGHT_DECAY_OVERRIDE = args.weight_decay
+    if LORA_DROPOUT_OVERRIDE is not None or WEIGHT_DECAY_OVERRIDE is not None:
+        # Announce it. Three runs in this project were named for an
+        # intervention they did not apply, so a regularisation arm says out
+        # loud what it is doing before it spends an hour of GPU time.
+        print(
+            "[REGULARISATION ARM] lora_dropout="
+            f"{LORA_DROPOUT_OVERRIDE if LORA_DROPOUT_OVERRIDE is not None else 'frozen'}"
+            f" weight_decay="
+            f"{WEIGHT_DECAY_OVERRIDE if WEIGHT_DECAY_OVERRIDE is not None else 'frozen'}"
+        )
     BALANCED_SFT_DATASET_PATH = args.balanced_sft_dataset
     if args.max_pairs:
         MAX_TRAIN_PAIRS = args.max_pairs

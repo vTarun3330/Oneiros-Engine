@@ -267,6 +267,8 @@ class OneirosSFTTrainer:
         lr_scheduler_type: str = None,
         model_revision: str = None,
         attention_implementation: str = None,
+        lora_dropout: float = None,
+        weight_decay: float = None,
     ):
         if not SFT_AVAILABLE:
             raise ImportError("trl SFTTrainer required. Install with: pip install trl")
@@ -289,6 +291,15 @@ class OneirosSFTTrainer:
         self.output_dir = Path(output_dir or training_config.checkpoint_dir)
         self.learning_rate = learning_rate or training_config.sft_learning_rate
         self.max_grad_norm = training_config.max_grad_norm
+        # Regularisation is overridable because the measured 19-point
+        # train/validation gap is a memorisation result, and testing it needs
+        # these two values varied while everything else is held fixed. Both
+        # default to the frozen configuration, so an unspecified run is
+        # bit-identical to every result already reported.
+        self.lora_dropout = (
+            model_config.lora_dropout if lora_dropout is None else float(lora_dropout)
+        )
+        self.weight_decay = 0.0 if weight_decay is None else float(weight_decay)
         self.max_prompt_tokens = (
             max_prompt_tokens or training_config.sft_prompt_token_limit
         )
@@ -413,7 +424,7 @@ class OneirosSFTTrainer:
             lora_config = LoraConfig(
                 r=model_config.lora_r,
                 lora_alpha=model_config.lora_alpha,
-                lora_dropout=model_config.lora_dropout,
+                lora_dropout=self.lora_dropout,
                 target_modules=model_config.target_modules,
                 bias="none",
                 task_type="CAUSAL_LM",
@@ -604,6 +615,7 @@ class OneirosSFTTrainer:
             per_device_train_batch_size=batch_size,
             learning_rate=self.learning_rate,
             max_grad_norm=self.max_grad_norm,
+            weight_decay=self.weight_decay,
             logging_steps=10,
             save_steps=checkpoint_save_steps,
             warmup_steps=warmup_steps,
