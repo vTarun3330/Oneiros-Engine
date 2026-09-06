@@ -1,0 +1,73 @@
+{
+  "schema_version": "oneiros_atheris_seed_aggregate_v1",
+  "source_tree_sha256": "1f4da6f05f3be3225012e8ba35c7170d0623321ef639ba7aac037d258b42c3b9",
+  "sealed_final_test_accessed": false,
+  "system": "actual Atheris, not the simulated coverage fuzzer",
+  "arms": {
+    "matched_8_executions": {
+      "by_seed": [
+        {
+          "directory": "results/atheris_val_matched8_seed42",
+          "seed": 42,
+          "max_runs": 8,
+          "targets": 757,
+          "killed": 116,
+          "kill_rate": 0.153236,
+          "kill_rate_wilson_95": [
+            0.129332,
+            0.180643
+          ],
+          "kill_kinds": {
+            "semantic_kill": 76,
+            "crash_kill": 40
+          },
+          "incomplete_task_files": 0
+        },
+        {
+          "directory": "results/atheris_val_matched8_seed43",
+          "seed": 43,
+          "max_runs": 8,
+          "targets": 757,
+          "killed": 116,
+          "kill_rate": 0.153236,
+          "kill_rate_wilson_95": [
+            0.129332,
+            0.180643
+          ],
+          "kill_kinds": {
+            "semantic_kill": 77,
+            "crash_kill": 39
+          },
+          "incomplete_task_files": 0
+        },
+        {
+          "directory": "results/atheris_val_matched8_seed44",
+          "seed": 44,
+          "max_runs": 8,
+          "targets": 757,
+          "killed": 120,
+          "kill_rate": 0.15852,
+          "kill_rate_wilson_95": [
+            0.134236,
+            0.186253
+          ],
+          "kill_kinds": {
+            "semantic_kill": 77,
+            "crash_kill": 43
+          },
+          "incomplete_task_files": 0
+        }
+      ],
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "mean_kill_rate": 0.154997,
+      "range_across_seeds": 0.005284,
+      "min_kill_rate": 0.153236,
+      "max_kill_rate": 0.15852,
+      "total_incomplete_task_files": 0
+    }
+  }
+}
