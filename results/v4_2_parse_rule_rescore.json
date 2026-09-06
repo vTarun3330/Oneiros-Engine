@@ -1,0 +1,80 @@
+{
+  "schema_version": "oneiros_parse_rule_rescore_v1",
+  "source_tree_sha256": "48da6bc4c88c68b70ffa8be9e3c7fc1fb223fe0f6b9a1f07296fbc13d9579262",
+  "sealed_final_test_accessed": false,
+  "artifact": "local_sft_relearn_v2_seed42/sft_validation_ablation-dev_smoke200_seed_52.json",
+  "split": "ablation_dev",
+  "seed": 52,
+  "functions": 200,
+  "candidates_without_retained_raw_output": 0,
+  "frozen_first_assertion": {
+    "killed": 161,
+    "kill_rate": 0.805,
+    "kill_rate_wilson_95": [
+      0.74456,
+      0.853945
+    ]
+  },
+  "whole_output": {
+    "killed": 159,
+    "kill_rate": 0.795,
+    "kill_rate_wilson_95": [
+      0.733743,
+      0.845138
+    ]
+  },
+  "delta_kill_rate": -0.01,
+  "functions_killed_only_by_whole_output": 20,
+  "functions_killed_only_by_first_assertion": 22,
+  "assertions_per_test_function": {
+    "mean": 4.095,
+    "median": 3,
+    "max": 11,
+    "test_functions_seen": 671
+  },
+  "interpretation": "generations are held fixed and only the parse rule varies, so the delta is attributable to the rule. Keeping every assertion can only add detection chances, because the first assertion is still present; a function killed only by the first-assertion rule means the longer test failed on the reference implementation, which is a real regression and is counted separately.",
+  "sample_functions_recovered": [
+    "mutation::humaneval_HumanEval_103_mut_00834",
+    "mutation::humaneval_HumanEval_25_mut_00116",
+    "mutation::humaneval_HumanEval_43_mut_00262",
+    "mutation::humaneval_HumanEval_43_mut_00265",
+    "mutation::humaneval_HumanEval_57_mut_00382",
+    "mutation::humaneval_HumanEval_57_mut_00384",
+    "mutation::humaneval_HumanEval_57_mut_00387",
+    "mutation::humaneval_HumanEval_64_mut_00455",
+    "mutation::humaneval_HumanEval_80_mut_00610",
+    "mutation::humaneval_HumanEval_80_mut_00611",
+    "mutation::humaneval_HumanEval_80_mut_00612",
+    "mutation::humaneval_HumanEval_80_mut_00613",
+    "mutation::humaneval_HumanEval_80_mut_00616",
+    "mutation::humaneval_HumanEval_80_mut_00619",
+    "mutation::humaneval_HumanEval_80_mut_00624",
+    "mutation::humaneval_HumanEval_95_mut_00747",
+    "mutation::humaneval_HumanEval_95_mut_00748",
+    "mutation::humaneval_HumanEval_95_mut_00758",
+    "mutation::humaneval_HumanEval_95_mut_00761",
+    "mutation::mbpp_11_mut_01748"
+  ],
+  "sample_functions_lost": [
+    "mutation::humaneval_HumanEval_126_mut_01120",
+    "mutation::humaneval_HumanEval_64_mut_00456",
+    "mutation::humaneval_HumanEval_64_mut_00457",
+    "mutation::humaneval_HumanEval_64_mut_00458",
+    "mutation::humaneval_HumanEval_64_mut_00463",
+    "mutation::humaneval_HumanEval_64_mut_00468",
+    "mutation::humaneval_HumanEval_80_mut_00621",
+    "mutation::humaneval_HumanEval_80_mut_00626",
+    "mutation::humaneval_HumanEval_95_mut_00749",
+    "mutation::humaneval_HumanEval_95_mut_00750",
+    "mutation::mbpp_11_mut_01754",
+    "mutation::mbpp_11_mut_01755",
+    "mutation::mbpp_11_mut_01756",
+    "mutation::mbpp_11_mut_01758",
+    "mutation::mbpp_11_mut_01759",
+    "mutation::mbpp_11_mut_01763",
+    "mutation::mbpp_148_mut_02978",
+    "mutation::mbpp_148_mut_02981",
+    "mutation::mbpp_148_mut_02985",
+    "mutation::mbpp_181_mut_03281"
+  ]
+}
