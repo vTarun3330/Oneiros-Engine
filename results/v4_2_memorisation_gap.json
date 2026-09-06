@@ -8,24 +8,41 @@
       "train_targets": 900,
       "val_kill_rate": 0.635403,
       "val_targets": 757,
-      "gap_points": 19.35
+      "gap_points": 19.35,
+      "train_gain_over_base": 0.15,
+      "val_gain_over_base": 0.014531,
+      "excess_gap_over_base_control_points": 13.55
     },
     "relearning": {
       "train_kill_rate": 0.826667,
       "train_targets": 900,
       "val_kill_rate": 0.659181,
       "val_targets": 757,
-      "gap_points": 16.75
+      "gap_points": 16.75,
+      "train_gain_over_base": 0.147778,
+      "val_gain_over_base": 0.038309,
+      "excess_gap_over_base_control_points": 10.95
     },
     "regularised_dropout_010_unpromoted": {
       "train_kill_rate": 0.83,
       "train_targets": 900,
       "val_kill_rate": 0.619551,
       "val_targets": 757,
-      "gap_points": 21.04
+      "gap_points": 21.04,
+      "train_gain_over_base": 0.151111,
+      "val_gain_over_base": -0.001321,
+      "excess_gap_over_base_control_points": 15.24
     }
   },
-  "answer": "No. Train fitting is 0.827-0.830 across every arm, a spread of three tenths of a point, while supervision density, hard-example oversampling and LoRA dropout were all varied. The regularised arm fits train the MOST (0.8300) and generalises the least (0.6196), widening the gap to 21.0 points rather than closing it.",
+  "answer": "The model overfits, and the control now proves it rather than implying it. The panels do differ: the untrained base scores 0.6789 on train against 0.6209 on val, a 5.8 point gap owed purely to panel difficulty. Every trained arm sits at 16.7 to 21.0 points, so SFT adds 11 to 15 points of gap on top of that. The mechanism is stark in the gains: SFT moves train by about +15 points and validation by +1.5 to +3.8, and the regularised arm moves validation by -0.1 while still gaining +15.1 on train.",
   "implication": "The ~0.83 train / ~0.62-0.66 validation split looks like a property of the task and model rather than something these knobs reach. Treating the gap as a tunable target is not supported by any measurement here.",
-  "caveat": "train is the first 900 train records and val is the 757 held-out targets; both are synthetic, and the panels differ in composition, so the gap is a within-arm comparison rather than an absolute difficulty-matched one."
+  "caveat": "train is the first 900 train records and val is the 757 held-out targets; both are synthetic, and the panels differ in composition, so the gap is a within-arm comparison rather than an absolute difficulty-matched one.",
+  "base_control": {
+    "train_kill_rate": 0.678889,
+    "val_kill_rate": 0.620872,
+    "gap_points": 5.8,
+    "why_it_matters": "the train and val panels are different functions, so a raw train/val gap cannot distinguish overfitting from the two panels differing in difficulty. The untrained base model measures that difference directly. Without this control the gap was uninterpretable and should not have been called memorisation."
+  },
+  "regularisation_did_not_help": "LoRA dropout 0.10 left train fitting at 0.8300, the highest of any arm, so the standard remedy did not touch the quantity it targets.",
+  "not_underfitting": "Every arm rises through training on the monitor panel and reaches 0.83 on train, so capacity and schedule are not the binding constraint."
 }
