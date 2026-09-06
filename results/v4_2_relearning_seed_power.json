@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_seed_power_analysis_v1",
-  "source_tree_sha256": "726f33e35a1b3654036a1b9240e77fb8edeb7275e32f68865add6a058e900f32",
+  "source_tree_sha256": "a5ec187966f6669fb4885aee42f28c26ea84b770b36443039e15279f3958b98c",
   "sealed_final_test_accessed": false,
   "arm": "relearning",
   "base_run": "local_base_qwen_val_seed*",
@@ -11,7 +11,8 @@
     44,
     45,
     46,
-    47
+    47,
+    48
   ],
   "per_seed": [
     {
@@ -133,31 +134,52 @@
       "functions_moved": 226,
       "net_function_gain": 10,
       "mcnemar_exact_p": 0.549488
+    },
+    {
+      "seed": 48,
+      "paired_functions": 757,
+      "base_kill_rate": 0.614267,
+      "base_kill_rate_wilson_95": [
+        0.579097,
+        0.648283
+      ],
+      "arm_kill_rate": 0.620872,
+      "arm_kill_rate_wilson_95": [
+        0.585782,
+        0.654741
+      ],
+      "delta": 0.006605,
+      "improved": 117,
+      "regressed": 112,
+      "functions_moved": 229,
+      "net_function_gain": 5,
+      "mcnemar_exact_p": 0.791597
     }
   ],
-  "mean_delta": 0.034786,
+  "mean_delta": 0.03076,
   "positive_in_every_seed": true,
   "sign_test_over_seeds": {
-    "seeds_positive": 6,
+    "seeds_positive": 7,
     "seeds_negative": 0,
     "seeds_tied": 0,
-    "effective_trials": 6,
-    "p_value": 0.03125,
-    "smallest_reachable_p_at_this_n": 0.03125,
+    "effective_trials": 7,
+    "p_value": 0.015625,
+    "smallest_reachable_p_at_this_n": 0.015625,
     "note": "no tied seeds"
   },
   "holm_bonferroni": {
     "method": "holm_bonferroni",
-    "hypotheses": 7,
+    "hypotheses": 8,
     "family": "every arm-seed McNemar test against the same base model",
     "adjusted_p_values": {
-      "relearning_seed_45": 0.094444,
-      "relearning_sign_test_over_seeds": 0.1875,
-      "relearning_seed_43": 0.1875,
-      "relearning_seed_46": 0.1875,
-      "relearning_seed_42": 0.199119,
-      "relearning_seed_44": 0.868892,
-      "relearning_seed_47": 0.868892
+      "relearning_seed_45": 0.107936,
+      "relearning_sign_test_over_seeds": 0.109375,
+      "relearning_seed_43": 0.193272,
+      "relearning_seed_46": 0.199175,
+      "relearning_seed_42": 0.265492,
+      "relearning_seed_44": 1.0,
+      "relearning_seed_47": 1.0,
+      "relearning_seed_48": 1.0
     },
     "significant_after_adjustment": [],
     "note": "an unadjusted p below 0.05 that does not survive adjustment is reported as not significant, not as significant with a caveat"
@@ -167,10 +189,10 @@
     "status": "RECORDED, NOT REPAIRED",
     "defect": "the sign test over seeds is the primary hypothesis, and it was pre-registered into the same Holm family as its own per-seed decompositions. That family cannot resolve it at any affordable seed count.",
     "reachability": {
-      "n=6": {
-        "sign_test_raw_p_if_all_positive": 0.03125,
-        "family_members": 7,
-        "holm_adjusted": 0.21875,
+      "n=7": {
+        "sign_test_raw_p_if_all_positive": 0.015625,
+        "family_members": 8,
+        "holm_adjusted": 0.125,
         "could_ever_be_significant": false
       },
       "n=8": {
