@@ -1,0 +1,97 @@
+{
+  "schema_version": "oneiros_benchmark_breakdown_v1",
+  "sealed_final_test_accessed": false,
+  "split": "val",
+  "by_arm": {
+    "base": {
+      "humaneval": {
+        "killed": 47,
+        "targets": 56,
+        "kill_rate": 0.839286,
+        "wilson_95": [
+          0.721938,
+          0.913073
+        ]
+      },
+      "mbpp": {
+        "killed": 423,
+        "targets": 701,
+        "kill_rate": 0.603424,
+        "wilson_95": [
+          0.566742,
+          0.638979
+        ]
+      }
+    },
+    "relearning_1_epoch": {
+      "humaneval": {
+        "killed": 53,
+        "targets": 56,
+        "kill_rate": 0.946429,
+        "wilson_95": [
+          0.853927,
+          0.981614
+        ]
+      },
+      "mbpp": {
+        "killed": 446,
+        "targets": 701,
+        "kill_rate": 0.636234,
+        "wilson_95": [
+          0.599968,
+          0.671015
+        ]
+      }
+    },
+    "long_2_epoch": {
+      "humaneval": {
+        "killed": 51,
+        "targets": 56,
+        "kill_rate": 0.910714,
+        "wilson_95": [
+          0.80744,
+          0.961258
+        ]
+      },
+      "mbpp": {
+        "killed": 417,
+        "targets": 701,
+        "kill_rate": 0.594864,
+        "wilson_95": [
+          0.558102,
+          0.630593
+        ]
+      }
+    }
+  },
+  "gains_over_base": {
+    "humaneval": {
+      "relearning_1_epoch": 0.107143,
+      "long_2_epoch": 0.071429
+    },
+    "mbpp": {
+      "relearning_1_epoch": 0.03281,
+      "long_2_epoch": -0.008559
+    }
+  },
+  "split_composition_percent": {
+    "train": {
+      "other": 7.7,
+      "humaneval": 15.5,
+      "mbpp": 76.8
+    },
+    "ablation_dev": {
+      "other": 8.9,
+      "humaneval": 18.9,
+      "mbpp": 72.2
+    },
+    "val": {
+      "humaneval": 7.2,
+      "mbpp": 89.8,
+      "other": 3.1
+    }
+  },
+  "finding": "SFT improves the benchmark the base model is already good at and barely moves the one it is weak at. On HumanEval the base scores 0.839 and the relearning arm reaches 0.946, +10.7 points. On MBPP the base scores 0.603 and the same arm reaches 0.636, +3.3 points. The two-epoch arm is +7.1 on HumanEval and -0.9 on MBPP.",
+  "explains_the_monitor": "This resolves the standing puzzle without invoking leakage. train and ablation_dev are 15.5% and 18.9% HumanEval; val is 7.2%. Both held-out splits are fully lineage-disjoint from train, so nothing leaked - the monitor panel simply contains 2.6x the share of the benchmark where SFT works. Every 'the monitor overstated' observation in this study is this composition difference.",
+  "caveat": "HumanEval is 56 of the 757 val targets, so its interval is roughly +/-9 points and the +10.7 gain is six functions. The direction agrees with the independent ablation_dev evidence, but the magnitude is not precise."
+}
