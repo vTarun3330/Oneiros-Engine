@@ -33,6 +33,7 @@ import importlib
 import json
 import re
 import sys
+import warnings
 from pathlib import Path
 from typing import Any
 
@@ -75,7 +76,14 @@ def _stdlib_exporters() -> dict[str, list[str]]:
             # not have side effects.
             continue
         try:
-            module = importlib.import_module(name)
+            with warnings.catch_warnings():
+                # Importing the whole standard library to index it emits a
+                # DeprecationWarning per doomed module. Those are true of the
+                # interpreter, not of anything this audit found, and they were
+                # being recorded into the source-bound test evidence as though
+                # the suite had raised them.
+                warnings.simplefilter("ignore", DeprecationWarning)
+                module = importlib.import_module(name)
         except Exception:
             continue
         exporters[name].append(name)
