@@ -68,3 +68,28 @@ def test_a_balanced_split_is_not_evidence():
 
 def test_no_seeds_is_not_a_significant_result():
     assert sign_test([])["p_value"] == 1.0
+
+
+def test_the_declared_family_cannot_resolve_the_primary_hypothesis():
+    """The pre-registration defect is asserted, not left as prose.
+
+    If a later change makes the family resolvable, this test fails and the
+    recorded defect must be re-derived rather than silently going stale.
+    """
+    from scripts.analyze_seed_power import _preregistration_defect
+
+    defect = _preregistration_defect(6)
+    assert defect["status"] == "RECORDED, NOT REPAIRED"
+    at_eight = defect["reachability"]["n=8"]
+    assert at_eight["sign_test_raw_p_if_all_positive"] == 0.007812
+    assert at_eight["family_members"] == 9
+    assert at_eight["could_ever_be_significant"] is False, (
+        "eight seeds all positive still cannot clear the declared family"
+    )
+
+
+def test_six_positive_seeds_are_raw_significant():
+    """The raw result must be reported even though it does not survive Holm."""
+    result = sign_test([0.04] * 6)
+    assert result["p_value"] == 0.03125
+    assert result["p_value"] < 0.05

@@ -151,6 +151,60 @@ def analyse(base_run: str, arm_run: str, arm_name: str) -> dict[str, Any]:
             "tests. Correcting only the per-seed tests and reporting the sign "
             "test raw would be choosing the family after seeing the result."
         ),
+        "preregistration_defect": _preregistration_defect(len(deltas)),
+    }
+
+
+def _preregistration_defect(seeds: int) -> dict[str, Any]:
+    """Record that the declared family cannot resolve the primary hypothesis.
+
+    Putting the sign test in the same Holm family as the per-seed McNemar
+    tests was decided before any of these seeds ran, and it is wrong. Those
+    are not several distinct hypotheses; they are one hypothesis - does
+    relearning improve this panel - tested once directly and then decomposed
+    per seed. Correcting a primary test against its own decompositions is not
+    standard, and here it is severe enough to be disqualifying: at eight seeds
+    all positive the sign test reaches 0.0078, and Holm over nine members
+    still returns 0.0703. No affordable seed count can produce a significant
+    result under this family.
+
+    It is recorded rather than repaired. The family was fixed in advance
+    precisely so it could not be re-chosen once a member crossed a threshold,
+    and re-choosing it now - at the exact moment the sign test went below 0.05
+    - is the behaviour that rule exists to prevent. The correct design is
+    stated here so a successor can pre-register it BEFORE running, not
+    adopted mid-analysis.
+    """
+    reachable = {}
+    for count in (seeds, 8):
+        if count <= 0:
+            continue
+        raw = 2 / (2 ** count)
+        reachable[f"n={count}"] = {
+            "sign_test_raw_p_if_all_positive": round(raw, 6),
+            "family_members": count + 1,
+            "holm_adjusted": round(min(1.0, raw * (count + 1)), 6),
+            "could_ever_be_significant": min(1.0, raw * (count + 1)) < 0.05,
+        }
+    return {
+        "status": "RECORDED, NOT REPAIRED",
+        "defect": (
+            "the sign test over seeds is the primary hypothesis, and it was "
+            "pre-registered into the same Holm family as its own per-seed "
+            "decompositions. That family cannot resolve it at any affordable "
+            "seed count."
+        ),
+        "reachability": reachable,
+        "why_not_fixed_now": (
+            "the family was fixed in advance so it could not be re-chosen "
+            "after a member crossed a threshold; re-choosing it at exactly "
+            "that moment is the fishing the rule forbids"
+        ),
+        "correct_design_for_a_successor": (
+            "pre-register the sign test over seeds as the sole primary "
+            "hypothesis, and Holm-correct the per-seed McNemar tests among "
+            "themselves as secondary. Decide this before running, not after."
+        ),
     }
 
 

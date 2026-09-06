@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_seed_power_analysis_v1",
-  "source_tree_sha256": "6ff98c05c00b65afd1929243d4df5fb3604481db79ce5cfcd283e05b38d5681a",
+  "source_tree_sha256": "726f33e35a1b3654036a1b9240e77fb8edeb7275e32f68865add6a058e900f32",
   "sealed_final_test_accessed": false,
   "arm": "relearning",
   "base_run": "local_base_qwen_val_seed*",
@@ -10,7 +10,8 @@
     43,
     44,
     45,
-    46
+    46,
+    47
   ],
   "per_seed": [
     {
@@ -112,33 +113,74 @@
       "functions_moved": 228,
       "net_function_gain": 32,
       "mcnemar_exact_p": 0.039835
+    },
+    {
+      "seed": 47,
+      "paired_functions": 757,
+      "base_kill_rate": 0.620872,
+      "base_kill_rate_wilson_95": [
+        0.585782,
+        0.654741
+      ],
+      "arm_kill_rate": 0.634082,
+      "arm_kill_rate_wilson_95": [
+        0.599171,
+        0.667638
+      ],
+      "delta": 0.01321,
+      "improved": 118,
+      "regressed": 108,
+      "functions_moved": 226,
+      "net_function_gain": 10,
+      "mcnemar_exact_p": 0.549488
     }
   ],
-  "mean_delta": 0.039102,
+  "mean_delta": 0.034786,
   "positive_in_every_seed": true,
   "sign_test_over_seeds": {
-    "seeds_positive": 5,
+    "seeds_positive": 6,
     "seeds_negative": 0,
     "seeds_tied": 0,
-    "effective_trials": 5,
-    "p_value": 0.0625,
-    "smallest_reachable_p_at_this_n": 0.0625,
+    "effective_trials": 6,
+    "p_value": 0.03125,
+    "smallest_reachable_p_at_this_n": 0.03125,
     "note": "no tied seeds"
   },
   "holm_bonferroni": {
     "method": "holm_bonferroni",
-    "hypotheses": 6,
+    "hypotheses": 7,
     "family": "every arm-seed McNemar test against the same base model",
     "adjusted_p_values": {
-      "relearning_seed_45": 0.080952,
-      "relearning_seed_43": 0.16106,
-      "relearning_seed_46": 0.16106,
+      "relearning_seed_45": 0.094444,
       "relearning_sign_test_over_seeds": 0.1875,
-      "relearning_seed_42": 0.1875,
-      "relearning_seed_44": 0.434446
+      "relearning_seed_43": 0.1875,
+      "relearning_seed_46": 0.1875,
+      "relearning_seed_42": 0.199119,
+      "relearning_seed_44": 0.868892,
+      "relearning_seed_47": 0.868892
     },
     "significant_after_adjustment": [],
     "note": "an unadjusted p below 0.05 that does not survive adjustment is reported as not significant, not as significant with a caveat"
   },
-  "family_note": "the sign test is corrected in the same family as the per-seed tests. Correcting only the per-seed tests and reporting the sign test raw would be choosing the family after seeing the result."
+  "family_note": "the sign test is corrected in the same family as the per-seed tests. Correcting only the per-seed tests and reporting the sign test raw would be choosing the family after seeing the result.",
+  "preregistration_defect": {
+    "status": "RECORDED, NOT REPAIRED",
+    "defect": "the sign test over seeds is the primary hypothesis, and it was pre-registered into the same Holm family as its own per-seed decompositions. That family cannot resolve it at any affordable seed count.",
+    "reachability": {
+      "n=6": {
+        "sign_test_raw_p_if_all_positive": 0.03125,
+        "family_members": 7,
+        "holm_adjusted": 0.21875,
+        "could_ever_be_significant": false
+      },
+      "n=8": {
+        "sign_test_raw_p_if_all_positive": 0.007812,
+        "family_members": 9,
+        "holm_adjusted": 0.070312,
+        "could_ever_be_significant": false
+      }
+    },
+    "why_not_fixed_now": "the family was fixed in advance so it could not be re-chosen after a member crossed a threshold; re-choosing it at exactly that moment is the fishing the rule forbids",
+    "correct_design_for_a_successor": "pre-register the sign test over seeds as the sole primary hypothesis, and Holm-correct the per-seed McNemar tests among themselves as secondary. Decide this before running, not after."
+  }
 }
