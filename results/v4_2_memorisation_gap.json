@@ -1,0 +1,31 @@
+{
+  "schema_version": "oneiros_memorisation_gap_v1",
+  "sealed_final_test_accessed": false,
+  "question": "does any intervention reduce how much the model fits its training targets?",
+  "arms": {
+    "full_density": {
+      "train_kill_rate": 0.828889,
+      "train_targets": 900,
+      "val_kill_rate": 0.635403,
+      "val_targets": 757,
+      "gap_points": 19.35
+    },
+    "relearning": {
+      "train_kill_rate": 0.826667,
+      "train_targets": 900,
+      "val_kill_rate": 0.659181,
+      "val_targets": 757,
+      "gap_points": 16.75
+    },
+    "regularised_dropout_010_unpromoted": {
+      "train_kill_rate": 0.83,
+      "train_targets": 900,
+      "val_kill_rate": 0.619551,
+      "val_targets": 757,
+      "gap_points": 21.04
+    }
+  },
+  "answer": "No. Train fitting is 0.827-0.830 across every arm, a spread of three tenths of a point, while supervision density, hard-example oversampling and LoRA dropout were all varied. The regularised arm fits train the MOST (0.8300) and generalises the least (0.6196), widening the gap to 21.0 points rather than closing it.",
+  "implication": "The ~0.83 train / ~0.62-0.66 validation split looks like a property of the task and model rather than something these knobs reach. Treating the gap as a tunable target is not supported by any measurement here.",
+  "caveat": "train is the first 900 train records and val is the 757 held-out targets; both are synthetic, and the panels differ in composition, so the gap is a within-arm comparison rather than an absolute difficulty-matched one."
+}
