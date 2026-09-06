@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_atheris_seed_aggregate_v1",
-  "source_tree_sha256": "1f4da6f05f3be3225012e8ba35c7170d0623321ef639ba7aac037d258b42c3b9",
+  "source_tree_sha256": "4dc2408f168cbebbd57ab78c5b785312ff3e2881718610a0075e22332f63f29d",
   "sealed_final_test_accessed": false,
   "system": "actual Atheris, not the simulated coverage fuzzer",
   "arms": {
@@ -67,6 +67,71 @@
       "range_across_seeds": 0.005284,
       "min_kill_rate": 0.153236,
       "max_kill_rate": 0.15852,
+      "total_incomplete_task_files": 0
+    },
+    "high_budget_20000_executions": {
+      "by_seed": [
+        {
+          "directory": "results/atheris_val_20000_seed42",
+          "seed": 42,
+          "max_runs": 20000,
+          "targets": 757,
+          "killed": 360,
+          "kill_rate": 0.475561,
+          "kill_rate_wilson_95": [
+            0.440199,
+            0.511171
+          ],
+          "kill_kinds": {
+            "semantic_kill": 285,
+            "crash_kill": 75
+          },
+          "incomplete_task_files": 0
+        },
+        {
+          "directory": "results/atheris_val_20000_seed43",
+          "seed": 43,
+          "max_runs": 20000,
+          "targets": 757,
+          "killed": 362,
+          "kill_rate": 0.478203,
+          "kill_rate_wilson_95": [
+            0.442819,
+            0.513808
+          ],
+          "kill_kinds": {
+            "semantic_kill": 291,
+            "crash_kill": 71
+          },
+          "incomplete_task_files": 0
+        },
+        {
+          "directory": "results/atheris_val_20000_seed44",
+          "seed": 44,
+          "max_runs": 20000,
+          "targets": 757,
+          "killed": 365,
+          "kill_rate": 0.482166,
+          "kill_rate_wilson_95": [
+            0.446751,
+            0.517762
+          ],
+          "kill_kinds": {
+            "semantic_kill": 291,
+            "crash_kill": 74
+          },
+          "incomplete_task_files": 0
+        }
+      ],
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "mean_kill_rate": 0.478643,
+      "range_across_seeds": 0.006605,
+      "min_kill_rate": 0.475561,
+      "max_kill_rate": 0.482166,
       "total_incomplete_task_files": 0
     }
   }
