@@ -12,7 +12,8 @@
     45,
     46,
     47,
-    48
+    48,
+    49
   ],
   "per_seed": [
     {
@@ -154,29 +155,50 @@
       "functions_moved": 229,
       "net_function_gain": 5,
       "mcnemar_exact_p": 0.791597
+    },
+    {
+      "seed": 49,
+      "paired_functions": 757,
+      "base_kill_rate": 0.648613,
+      "base_kill_rate_wilson_95": [
+        0.613932,
+        0.681793
+      ],
+      "arm_kill_rate": 0.619551,
+      "arm_kill_rate_wilson_95": [
+        0.584444,
+        0.65345
+      ],
+      "delta": -0.029062,
+      "improved": 105,
+      "regressed": 127,
+      "functions_moved": 232,
+      "net_function_gain": -22,
+      "mcnemar_exact_p": 0.167845
     }
   ],
-  "mean_delta": 0.03076,
-  "positive_in_every_seed": true,
+  "mean_delta": 0.023283,
+  "positive_in_every_seed": false,
   "sign_test_over_seeds": {
     "seeds_positive": 7,
-    "seeds_negative": 0,
+    "seeds_negative": 1,
     "seeds_tied": 0,
-    "effective_trials": 7,
-    "p_value": 0.015625,
-    "smallest_reachable_p_at_this_n": 0.015625,
+    "effective_trials": 8,
+    "p_value": 0.070312,
+    "smallest_reachable_p_at_this_n": 0.007812,
     "note": "no tied seeds"
   },
   "holm_bonferroni": {
     "method": "holm_bonferroni",
-    "hypotheses": 8,
+    "hypotheses": 9,
     "family": "every arm-seed McNemar test against the same base model",
     "adjusted_p_values": {
-      "relearning_seed_45": 0.107936,
-      "relearning_sign_test_over_seeds": 0.109375,
-      "relearning_seed_43": 0.193272,
-      "relearning_seed_46": 0.199175,
-      "relearning_seed_42": 0.265492,
+      "relearning_seed_45": 0.121428,
+      "relearning_seed_43": 0.257696,
+      "relearning_seed_46": 0.278845,
+      "relearning_seed_42": 0.398238,
+      "relearning_sign_test_over_seeds": 0.398238,
+      "relearning_seed_49": 0.67138,
       "relearning_seed_44": 1.0,
       "relearning_seed_47": 1.0,
       "relearning_seed_48": 1.0
@@ -189,12 +211,6 @@
     "status": "RECORDED, NOT REPAIRED",
     "defect": "the sign test over seeds is the primary hypothesis, and it was pre-registered into the same Holm family as its own per-seed decompositions. That family cannot resolve it at any affordable seed count.",
     "reachability": {
-      "n=7": {
-        "sign_test_raw_p_if_all_positive": 0.015625,
-        "family_members": 8,
-        "holm_adjusted": 0.125,
-        "could_ever_be_significant": false
-      },
       "n=8": {
         "sign_test_raw_p_if_all_positive": 0.007812,
         "family_members": 9,
