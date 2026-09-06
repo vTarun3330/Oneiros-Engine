@@ -1,0 +1,39 @@
+{
+  "schema_version": "oneiros_overfitting_onset_v1",
+  "sealed_final_test_accessed": false,
+  "arm": "relearning seed 42; data, seed and recipe fixed, only training length varies",
+  "checkpoints": {
+    "base": {
+      "train": 0.678889,
+      "val": 0.620872
+    },
+    "step_100": {
+      "train": 0.812222,
+      "val": 0.611625,
+      "train_gain_over_base": 0.133333,
+      "val_gain_over_base": -0.009247
+    },
+    "step_141": {
+      "train": 0.826667,
+      "val": 0.659181,
+      "train_gain_over_base": 0.147778,
+      "val_gain_over_base": 0.038309
+    }
+  },
+  "phases": {
+    "steps_0_to_100": {
+      "train": 0.133333,
+      "val": -0.009247,
+      "reading": "all of the training-set fitting, and no validation gain at all"
+    },
+    "steps_100_to_141": {
+      "train": 0.014444,
+      "val": 0.047556,
+      "reading": "almost no further fitting, and the entire validation gain"
+    }
+  },
+  "finding": "Overfitting and generalisation are separated in time, and in the order opposite to the usual assumption. The first 100 steps produce +13.3 points on train and -0.9 on validation. The last 41 steps produce +1.4 on train and +4.8 on validation. Stopping early would have removed the entire benefit and left the model at base.",
+  "consequence": "Early stopping is the wrong remedy here, and 'train less' would have made the arm worse. The validation curve is still climbing steeply when the data runs out, so this schedule may be too SHORT rather than too long.",
+  "caveats": "One seed, one arm, two checkpoints. val 0.6116 against base 0.6209 is seven functions in 757 and is within noise, so step 100 is best read as AT base rather than below it. The step 100 to 141 move is 36 functions and is the substantial one.",
+  "monitor_panel_contradiction": "The 100-function monitor scored step 100 at 0.67 and step 141 at 0.80, a 13 point jump, while locked validation moved 4.8 and train moved 1.4. That is the fifth time the monitor has disagreed with a measurement it is used to approximate."
+}
