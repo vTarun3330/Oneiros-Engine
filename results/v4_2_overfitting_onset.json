@@ -35,5 +35,15 @@
   "finding": "Overfitting and generalisation are separated in time, and in the order opposite to the usual assumption. The first 100 steps produce +13.3 points on train and -0.9 on validation. The last 41 steps produce +1.4 on train and +4.8 on validation. Stopping early would have removed the entire benefit and left the model at base.",
   "consequence": "Early stopping is the wrong remedy here, and 'train less' would have made the arm worse. The validation curve is still climbing steeply when the data runs out, so this schedule may be too SHORT rather than too long.",
   "caveats": "One seed, one arm, two checkpoints. val 0.6116 against base 0.6209 is seven functions in 757 and is within noise, so step 100 is best read as AT base rather than below it. The step 100 to 141 move is 36 functions and is the substantial one.",
-  "monitor_panel_contradiction": "The 100-function monitor scored step 100 at 0.67 and step 141 at 0.80, a 13 point jump, while locked validation moved 4.8 and train moved 1.4. That is the fifth time the monitor has disagreed with a measurement it is used to approximate."
+  "monitor_panel_contradiction": "The 100-function monitor scored step 100 at 0.67 and step 141 at 0.80, a 13 point jump, while locked validation moved 4.8 and train moved 1.4. That is the fifth time the monitor has disagreed with a measurement it is used to approximate.",
+  "longer_schedule_test": {
+    "arm": "identical recipe, 2 epochs instead of 1 (282 steps against 141)",
+    "monitor_kill_at_terminal": 0.81,
+    "locked_validation_kill_at_8": 0.618229,
+    "vs_base": -0.002642,
+    "vs_one_epoch_arm": -0.040951,
+    "verdict": "Refuted. The validation gain seen between steps 100 and 141 does not extend. Doubling the schedule put the arm BELOW base and 4.1 points below the same recipe at one epoch, so 'the schedule is too short' was wrong and the hypothesis this file proposed is dead.",
+    "monitor_disagreement": "The monitor scored this arm 0.81, its highest reading for any arm, while locked validation returned the LOWEST of any SFT arm and below base. A 19-point disagreement, in the wrong direction. The monitor's error also grows with training length, which is the sixth and most extreme instance.",
+    "open_question": "Both ablation_dev and val are held out from training, yet the model reaches 0.81 on one and 0.618 on the other. That difference is not explained by training exposure and is worth auditing: if val is lineage or project disjoint in a way ablation_dev is not, it would explain every monitor overstatement recorded here."
+  }
 }
