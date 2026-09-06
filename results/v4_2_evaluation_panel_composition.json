@@ -1,0 +1,234 @@
+{
+  "schema_version": "oneiros_evaluation_panel_composition_v1",
+  "source_tree_sha256": "33e8502b4111e06cce1fb1c56818ebb1838abaafb578635ed41a1b91dd9b5834",
+  "sealed_final_test_accessed": false,
+  "question": "do the reported Kill@8 numbers measure the balanced synthetic/repository corpus, or only its synthetic half?",
+  "answer": "Only the synthetic half. The evaluation panel is built from function-mode records; repository records are supervision during training and are never evaluated.",
+  "corpus_by_split": {
+    "train": {
+      "records": 6052,
+      "function_records": 5595,
+      "repository_records": 457
+    },
+    "ablation_dev": {
+      "records": 594,
+      "function_records": 542,
+      "repository_records": 52
+    },
+    "val": {
+      "records": 781,
+      "function_records": 757,
+      "repository_records": 24
+    }
+  },
+  "artifacts_audited": 25,
+  "artifacts_by_split": {
+    "val": 23,
+    "ablation_dev": 1,
+    "train": 1
+  },
+  "total_repository_targets_evaluated": 0,
+  "panels": [
+    {
+      "artifact": "./results/local_sft800_qwen_clean_seed42/sft_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft800_qwen_clean_seed42/sft_validation_standard_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft800_qwen_clean_seed42/sft_validation_standard_seed_44.json",
+      "split": "val",
+      "seed": 44,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft800_qwen_final_seed42/sft_validation_ablation-dev_seed_42.json",
+      "split": "ablation_dev",
+      "seed": 42,
+      "evaluated_targets": 542,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft800_qwen_final_seed42/sft_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft800_qwen_final_seed42/sft_validation_standard_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft800_qwen_lr1e5_seed42/sft_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft800_qwen_lr1e5_seed42/sft_validation_standard_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft800_qwen_lr1e5_seed42/sft_validation_standard_seed_44.json",
+      "split": "val",
+      "seed": 44,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft_mm_full_v2_seed42/sft_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft_mm_full_v2_seed42/sft_validation_standard_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft_mm_full_v2_seed42/sft_validation_standard_seed_44.json",
+      "split": "val",
+      "seed": 44,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft_mm_full_v2_seed42/sft_validation_train_smoke900_seed_42.json",
+      "split": "train",
+      "seed": 42,
+      "evaluated_targets": 900,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft_multimutant_seed42/sft_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft_relearn_v2_seed42/sft_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft_relearn_v2_seed42/sft_validation_standard_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft_relearn_v2_seed42/sft_validation_standard_seed_44.json",
+      "split": "val",
+      "seed": 44,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_sft_relearn_v2_seed42/sft_validation_standard_seed_45.json",
+      "split": "val",
+      "seed": 45,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/v3_repo1024_aligned_constant_lr_smoke_800_20260821_1/sft_validation_hardened_results_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "evaluated_targets": 775,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/v3_repo1024_aligned_constant_lr_smoke_800_20260821_1/sft_validation_hardened_results_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "evaluated_targets": 775,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_base_qwen_val_seed42/base_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_base_qwen_val_seed43/base_validation_standard_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_base_qwen_val_seed44/base_validation_standard_seed_44.json",
+      "split": "val",
+      "seed": 44,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_base_qwen_val_seed45/base_validation_standard_seed_45.json",
+      "split": "val",
+      "seed": 45,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    },
+    {
+      "artifact": "./results/local_base_qwen_val_seed46/base_validation_standard_seed_46.json",
+      "split": "val",
+      "seed": 46,
+      "evaluated_targets": 757,
+      "repository_targets_evaluated": 0,
+      "repository_target_ids": []
+    }
+  ],
+  "reporting_consequence": "Report these results as measured on held-out SYNTHETIC mutation targets, not as 'held-out functions' unqualified. Per-dataset and synthetic-versus-repository breakdowns cannot be produced for validation because the repository side has no measurements to break down. The comparison against actual Atheris and the non-LLM baselines is sound - every arm ran the identical panel - but it is a synthetic-target comparison."
+}

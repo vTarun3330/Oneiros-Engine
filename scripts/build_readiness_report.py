@@ -296,6 +296,26 @@ def build() -> dict[str, Any]:
                 ),
                 "artifact": "results/v4_2_repository_expansion_ceiling.json",
             },
+            "measured_panel_is_synthetic_only": {
+                "category": "LIMITATION",
+                "detail": (
+                    "Every reported Kill@8 number - base, every SFT arm, "
+                    "actual Atheris at both budgets, all five non-LLM "
+                    "baselines - is measured on function-mode records only. "
+                    "The val corpus holds 757 function and 24 repository "
+                    "records; the evaluation panel is the 757. Across all 25 "
+                    "evaluation artifacts, zero repository targets were "
+                    "evaluated at any seed by any arm. Report these as "
+                    "held-out SYNTHETIC targets, not as 'held-out functions' "
+                    "unqualified. Per-dataset and synthetic-versus-repository "
+                    "breakdowns cannot be produced for validation, because the "
+                    "repository side has no measurements to break down. The "
+                    "comparison against Atheris and the baselines remains "
+                    "sound - every arm ran the identical panel - but it is a "
+                    "synthetic-target comparison."
+                ),
+                "artifact": "results/v4_2_evaluation_panel_composition.json",
+            },
             "eligibility_is_not_a_budget_problem": {
                 "category": "LIMITATION",
                 "detail": (
