@@ -43,6 +43,13 @@ SPLITS = ("train", "ablation_dev", "val")
 
 #: Frozen mode budgets. The function budget of 1024 is the selected
 #: configuration; the repository budget matches the corpus manifest.
+#:
+#: ``--repository-budget`` sweeps the repository value WITHOUT changing this
+#: default, because the 41% repository rejection rate at 1024 raises an obvious
+#: question - how much of it a larger budget would recover - that must be
+#: answerable without mutating the frozen configuration every measured result
+#: is bound to. A swept audit is evidence for a labelled successor run; it is
+#: not itself a protocol change, and the report records which it was.
 MODE_BUDGETS = {"function": 1024, "repository": 1024}
 
 
@@ -58,11 +65,15 @@ def _mode(record: dict[str, Any]) -> str:
     return "repository" if record.get("task_mode") == "repository" else "function"
 
 
-def audit_split(records: list[dict[str, Any]], tokenizer) -> dict[str, Any]:
+def audit_split(
+    records: list[dict[str, Any]], tokenizer,
+    budgets: dict[str, int] | None = None,
+) -> dict[str, Any]:
+    budgets = budgets or MODE_BUDGETS
     by_mode: dict[str, dict[str, Any]] = {}
-    for mode in MODE_BUDGETS:
+    for mode in budgets:
         by_mode[mode] = {
-            "budget_tokens": MODE_BUDGETS[mode],
+            "budget_tokens": budgets[mode],
             "prompts": 0,
             "fit_without_compaction": 0,
             "compacted": 0,
@@ -101,7 +112,7 @@ def audit_split(records: list[dict[str, Any]], tokenizer) -> dict[str, Any]:
 
         try:
             result = compact_unified_user_prompt(
-                tokenizer, prompt, MODE_BUDGETS[mode], format_chat_prompt,
+                tokenizer, prompt, budgets[mode], format_chat_prompt,
             )
         except PromptBudgetError as exc:
             # Fail-closed: the required sections do not fit. The record yields no
@@ -155,7 +166,19 @@ def main() -> int:
         "--output", type=Path,
         default=ROOT / "results" / "v4_2_prompt_compaction_audit.json",
     )
+    parser.add_argument(
+        "--repository-budget", type=int, default=MODE_BUDGETS["repository"],
+        help=(
+            "sweep the repository prompt budget. The default is the frozen "
+            "value; any other value produces an EXPLORATORY audit that is "
+            "labelled as such and must not be cited as a measurement of the "
+            "frozen protocol"
+        ),
+    )
     arguments = parser.parse_args()
+
+    budgets = dict(MODE_BUDGETS)
+    budgets["repository"] = arguments.repository_budget
 
     from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(arguments.tokenizer)
@@ -181,7 +204,16 @@ def main() -> int:
                 "truncation"
             ),
         },
-        "mode_budgets": MODE_BUDGETS,
+        "mode_budgets": budgets,
+        "frozen_mode_budgets": MODE_BUDGETS,
+        "is_frozen_configuration": budgets == MODE_BUDGETS,
+        "audit_status": (
+            "FROZEN: measures the configuration every reported result is bound to"
+            if budgets == MODE_BUDGETS else
+            "EXPLORATORY: sweeps the repository budget away from the frozen "
+            "value. Evidence for a labelled successor run, NOT a measurement "
+            "of the protocol under which any reported result was produced."
+        ),
         "splits": {},
     }
     for split in SPLITS:
@@ -189,7 +221,7 @@ def main() -> int:
         if not path.exists():
             continue
         records = json.loads(path.read_text(encoding="utf-8"))
-        report["splits"][split] = audit_split(records, tokenizer)
+        report["splits"][split] = audit_split(records, tokenizer, budgets)
         print(f"  {split}: {len(records)} records audited", flush=True)
 
     write_json(arguments.output, report)

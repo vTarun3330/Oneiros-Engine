@@ -1,0 +1,278 @@
+{
+  "schema_version": "oneiros_repository_exclusion_audit_v1",
+  "source_tree_sha256": "bbf653af89a7fa2b996c3e2d3437c25e56cecf2b339c8337f310e1522529c485",
+  "sealed_final_test_accessed": false,
+  "question": "is the repository eligibility shortfall the same problem as the repository prompt-budget rejection rate?",
+  "answer": "No. They are separate mechanisms. Budget rejection happens at prompt construction and a larger budget recovers it. Eligibility exclusion happens in corpus construction because the independent fragment references symbols it cannot resolve, and no budget recovers a symbol that is absent from the record.",
+  "exclusion_reasons": {
+    "independent_repository_context_incomplete": 113,
+    "canonical_retained_training_excluded": 31
+  },
+  "context_incomplete_exclusions": 113,
+  "unresolved_symbol_categories": {
+    "project_local_symbol": 96,
+    "fixture_or_local": 36,
+    "stdlib_unambiguous": 10,
+    "stdlib_ambiguous": 11,
+    "inherited_test_class": 23
+  },
+  "fully_recoverable_by_import_resolution": 4,
+  "recovery_fraction_of_context_exclusions": 0.0354,
+  "verdict": "An import resolver would recover at most 4 of 113 excluded records. The remainder are blocked by pytest fixture parameters and inherited test classes, which belong to the surrounding test suite rather than to any import line. Building the resolver is not a route to repository parity.",
+  "recoverable_records": [
+    {
+      "record_id": "official-repository::httpie::1::tests/test_downloads.py__TestDownloadUtils__test_unique_filename",
+      "symbols": [
+        {
+          "symbol": "mock",
+          "module": "unittest"
+        }
+      ]
+    },
+    {
+      "record_id": "official-repository::httpie::3::tests/test_sessions.py__TestSession__test_download_in_session",
+      "symbols": [
+        {
+          "symbol": "gettempdir",
+          "module": "tempfile"
+        }
+      ]
+    },
+    {
+      "record_id": "official-repository::swebench-verified::astropy__astropy-14309::94e6ab281d9c",
+      "symbols": [
+        {
+          "symbol": "connect",
+          "module": "sqlite3"
+        }
+      ]
+    },
+    {
+      "record_id": "official-repository::swebench-verified::django__django-14792::5a761e5b8c02",
+      "symbols": [
+        {
+          "symbol": "zoneinfo",
+          "module": "zoneinfo"
+        }
+      ]
+    }
+  ],
+  "blocked_records_sample": [
+    {
+      "record_id": "official-repository::PySnooper::1::tests/test_chinese.py__test_chinese",
+      "blocking_symbols": [
+        "temp_file_tools"
+      ]
+    },
+    {
+      "record_id": "official-repository::PySnooper::3::tests/test_pysnooper.py__test_file_output",
+      "blocking_symbols": [
+        "temp_file_tools"
+      ]
+    },
+    {
+      "record_id": "official-repository::ansible::15::test/units/modules/network/eos/test_eos_eapi.py__TestEosEapiModule__test_eos_eapi_vrf",
+      "blocking_symbols": [
+        "args",
+        "kwargs"
+      ]
+    },
+    {
+      "record_id": "official-repository::ansible::4::test/units/playbook/test_collectionsearch.py__test_collection_static_warning",
+      "blocking_symbols": []
+    },
+    {
+      "record_id": "official-repository::ansible::5::test/units/module_utils/common/validation/test_check_required_arguments.py__test_check_required_arguments_missing_multiple",
+      "blocking_symbols": []
+    },
+    {
+      "record_id": "official-repository::fastapi::10::tests/test_skip_defaults.py__test_return_defaults",
+      "blocking_symbols": [
+        "client"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::11::tests/test_union_inherited_body.py__test_post_item",
+      "blocking_symbols": [
+        "client",
+        "skip_py36"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::13::tests/test_additional_responses_router.py__test_openapi_schema",
+      "blocking_symbols": [
+        "client",
+        "openapi_schema"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::14::tests/test_additional_properties.py__test_additional_properties_schema",
+      "blocking_symbols": [
+        "client",
+        "openapi_schema"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::15::tests/test_ws_router.py__test_prefix_router",
+      "blocking_symbols": [
+        "TestClient"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::16::tests/test_jsonable_encoder.py__test_encode_model_with_config",
+      "blocking_symbols": [
+        "ModelWithConfig",
+        "RoleEnum"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::1::tests/test_jsonable_encoder.py__test_encode_model_with_default",
+      "blocking_symbols": [
+        "ModelWithDefault"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::2::tests/test_ws_router.py__test_router_ws_depends_with_override",
+      "blocking_symbols": [
+        "ws_dependency"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::3::tests/test_serialize_response_model.py__test_validdict_exclude_unset",
+      "blocking_symbols": [
+        "client"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::4::tests/test_param_in_path_and_dependency.py__test_reused_param",
+      "blocking_symbols": [
+        "client",
+        "openapi_schema"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::5::tests/test_filter_pydantic_sub_model.py__test_filter_sub_model",
+      "blocking_symbols": [
+        "client"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::6::tests/test_forms_from_non_typing_sequences.py__test_python_list_param_as_form",
+      "blocking_symbols": [
+        "client"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::7::tests/test_multi_body_errors.py__test_jsonable_encoder_requiring_error",
+      "blocking_symbols": [
+        "single_error"
+      ]
+    },
+    {
+      "record_id": "official-repository::fastapi::8::tests/test_custom_route_class.py__test_route_classes",
+      "blocking_symbols": []
+    },
+    {
+      "record_id": "official-repository::fastapi::9::tests/test_request_body_parameters_media_type.py__test_openapi_schema",
+      "blocking_symbols": [
+        "client",
+        "create_product_request_body",
+        "create_shop_request_body"
+      ]
+    },
+    {
+      "record_id": "official-repository::httpie::4::tests/test_regressions.py__test_Host_header_overwrite",
+      "blocking_symbols": [
+        "HTTP_OK",
+        "socket"
+      ]
+    },
+    {
+      "record_id": "official-repository::httpie::5::tests/tests.py__TestItemParsing__test_escape_longsep",
+      "blocking_symbols": [
+        "BaseTest"
+      ]
+    },
+    {
+      "record_id": "official-repository::keras::11::tests/integration_tests/test_image_data_tasks.py__test_image_data_generator_training",
+      "blocking_symbols": [
+        "ImageDataGenerator"
+      ]
+    },
+    {
+      "record_id": "official-repository::keras::2::tests/keras/backend/backend_test.py__TestBackend__test_in_top_k",
+      "blocking_symbols": [
+        "WITH_NP"
+      ]
+    },
+    {
+      "record_id": "official-repository::keras::3::tests/keras/test_sequential_model.py__test_clone_functional_model_with_multi_outputs",
+      "blocking_symbols": [
+        "shapes"
+      ]
+    }
+  ],
+  "blocked_record_count": 109,
+  "most_common_blocking_symbols": [
+    [
+      "kwargs",
+      11
+    ],
+    [
+      "client",
+      9
+    ],
+    [
+      "args",
+      7
+    ],
+    [
+      "__file__",
+      5
+    ],
+    [
+      "TestDataMixin",
+      4
+    ],
+    [
+      "StringIO",
+      4
+    ],
+    [
+      "openapi_schema",
+      3
+    ],
+    [
+      "Person",
+      3
+    ],
+    [
+      "WebSocketBaseTestCase",
+      3
+    ],
+    [
+      "temp_file_tools",
+      2
+    ],
+    [
+      "socket",
+      2
+    ],
+    [
+      "RequestTest",
+      2
+    ],
+    [
+      "p",
+      2
+    ],
+    [
+      "WebTestCase",
+      2
+    ],
+    [
+      "unichr",
+      2
+    ]
+  ]
+}
