@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_seed_power_analysis_v1",
-  "source_tree_sha256": "92277202adc25568c4d8300053e4504eea19623121028d64597597a038f11f54",
+  "source_tree_sha256": "6ff98c05c00b65afd1929243d4df5fb3604481db79ce5cfcd283e05b38d5681a",
   "sealed_final_test_accessed": false,
   "arm": "relearning",
   "base_run": "local_base_qwen_val_seed*",
@@ -9,7 +9,8 @@
     42,
     43,
     44,
-    45
+    45,
+    46
   ],
   "per_seed": [
     {
@@ -91,28 +92,49 @@
       "functions_moved": 263,
       "net_function_gain": 41,
       "mcnemar_exact_p": 0.013492
+    },
+    {
+      "seed": 46,
+      "paired_functions": 757,
+      "base_kill_rate": 0.615588,
+      "base_kill_rate_wilson_95": [
+        0.580434,
+        0.649575
+      ],
+      "arm_kill_rate": 0.65786,
+      "arm_kill_rate_wilson_95": [
+        0.623343,
+        0.690783
+      ],
+      "delta": 0.042272,
+      "improved": 130,
+      "regressed": 98,
+      "functions_moved": 228,
+      "net_function_gain": 32,
+      "mcnemar_exact_p": 0.039835
     }
   ],
-  "mean_delta": 0.038309,
+  "mean_delta": 0.039102,
   "positive_in_every_seed": true,
   "sign_test_over_seeds": {
-    "seeds_positive": 4,
+    "seeds_positive": 5,
     "seeds_negative": 0,
     "seeds_tied": 0,
-    "effective_trials": 4,
-    "p_value": 0.125,
-    "smallest_reachable_p_at_this_n": 0.125,
+    "effective_trials": 5,
+    "p_value": 0.0625,
+    "smallest_reachable_p_at_this_n": 0.0625,
     "note": "no tied seeds"
   },
   "holm_bonferroni": {
     "method": "holm_bonferroni",
-    "hypotheses": 5,
+    "hypotheses": 6,
     "family": "every arm-seed McNemar test against the same base model",
     "adjusted_p_values": {
-      "relearning_seed_45": 0.06746,
-      "relearning_seed_43": 0.128848,
-      "relearning_seed_42": 0.199119,
-      "relearning_sign_test_over_seeds": 0.25,
+      "relearning_seed_45": 0.080952,
+      "relearning_seed_43": 0.16106,
+      "relearning_seed_46": 0.16106,
+      "relearning_sign_test_over_seeds": 0.1875,
+      "relearning_seed_42": 0.1875,
       "relearning_seed_44": 0.434446
     },
     "significant_after_adjustment": [],
