@@ -209,6 +209,41 @@ def holm_bonferroni(tests: list[tuple[str, float]]) -> dict[str, Any]:
     }
 
 
+def panel_composition(payloads: list[dict[str, Any]]) -> dict[str, Any]:
+    """State what the scored panel held, from the artifacts' own accounting.
+
+    Every evaluation artifact already records evaluation_split_records,
+    function_validation_records and repository_validation_records_held. The
+    numbers were correct and present the whole time; no report surfaced them,
+    so "757 held-out functions" read as though the balanced corpus had been
+    measured. Carrying the composition into the comparison makes that
+    impossible: a reader sees 757 of 781 with 24 repository targets held, in
+    the same artifact as the result.
+    """
+    split_records = {payload.get("evaluation_split_records") for payload in payloads}
+    scored = {payload.get("function_validation_records") for payload in payloads}
+    held = {payload.get("repository_validation_records_held") for payload in payloads}
+    consistent = len(split_records) <= 1 and len(scored) <= 1 and len(held) <= 1
+    return {
+        "records_in_split": sorted(v for v in split_records if v is not None),
+        "targets_scored": sorted(v for v in scored if v is not None),
+        "repository_targets_held_unscored": sorted(
+            v for v in held if v is not None
+        ),
+        "all_arms_share_one_panel": consistent,
+        "why_repository_targets_are_held": (
+            "executing a repository test needs the native project environment, "
+            "which the evaluator does not build; the status is recorded as "
+            "not_implemented_requires_native_project_environment"
+        ),
+        "reporting_consequence": (
+            "these results measure held-out SYNTHETIC targets. A "
+            "synthetic-versus-repository breakdown cannot be produced for this "
+            "split, because the repository side has no measurements."
+        ),
+    }
+
+
 def compare(base_run: str, arms: dict[str, str]) -> dict[str, Any]:
     base = _arm(base_run, "base_validation_*.json")
     if not base:
@@ -220,6 +255,7 @@ def compare(base_run: str, arms: dict[str, str]) -> dict[str, Any]:
         "evaluation_split": "val",
         "sealed_final_test_accessed": False,
         "design": "paired within evaluation seed; same split, protocol, and budget",
+        "panel_composition": panel_composition(list(base.values())),
         "base_run": base_run,
         "base_per_seed": {
             str(seed): _summary(payload) for seed, payload in sorted(base.items())
