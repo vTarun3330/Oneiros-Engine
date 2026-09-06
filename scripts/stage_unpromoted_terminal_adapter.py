@@ -42,14 +42,36 @@ if str(ROOT) not in sys.path:
 from harness.corpus import write_json
 
 
-def stage(run_name: str, reason: str) -> dict[str, Any]:
+def stage(run_name: str, reason: str, source: str = "sft_terminal_adapter",
+          destination_run: str | None = None) -> dict[str, Any]:
     adapter_dir = ROOT / "checkpoints" / run_name
     if not adapter_dir.is_dir():
         raise SystemExit(f"no checkpoint directory for run {run_name!r}")
 
-    terminal = adapter_dir / "sft_terminal_adapter"
+    terminal = adapter_dir / source
     if not terminal.is_dir():
-        raise SystemExit(f"{run_name} has no sft_terminal_adapter to stage")
+        raise SystemExit(f"{run_name} has no {source} to stage")
+    if not (terminal / "adapter_model.safetensors").exists():
+        raise SystemExit(f"{terminal} is not a LoRA adapter directory")
+
+    # An intermediate checkpoint is staged into its OWN run directory, so the
+    # arm it came from keeps its promoted adapter and its reported numbers
+    # untouched. Overwriting a measured run to inspect one of its checkpoints
+    # would destroy the result the checkpoint is being compared against.
+    if destination_run:
+        target_dir = ROOT / "checkpoints" / destination_run
+        if target_dir.exists():
+            raise SystemExit(f"{destination_run} already exists; choose a new name")
+        target_dir.mkdir(parents=True)
+        # dataset_manifest.sha256 is what the trainer compares against to
+        # refuse an adapter from a different corpus or training scope. Omitting
+        # it makes the staged run look like it was trained on nothing, and
+        # every evaluation is refused before it starts.
+        for name in ("sft_metadata.json", "sft_run_config.json",
+                     "dataset_manifest.sha256"):
+            if (adapter_dir / name).exists():
+                shutil.copy2(adapter_dir / name, target_dir / name)
+        adapter_dir = target_dir
 
     marker = adapter_dir / "sft_complete.marker"
     promoted = adapter_dir / "sft_adapter"
@@ -62,7 +84,7 @@ def stage(run_name: str, reason: str) -> dict[str, Any]:
 
     results = ROOT / "results" / run_name / "training_results.json"
     training = json.loads(results.read_text(encoding="utf-8")) if results.exists() else {}
-    if training.get("sft_monitor_gate_passed"):
+    if training.get("sft_monitor_gate_passed") and source == "sft_terminal_adapter":
         raise SystemExit(
             f"{run_name} passed the monitor gate; it should have promoted "
             "normally and does not need staging"
@@ -77,7 +99,8 @@ def stage(run_name: str, reason: str) -> dict[str, Any]:
     )
     metadata["monitor_promoted"] = False
     metadata["monitor_rejection_reason"] = reason
-    metadata["adapter_source"] = "sft_terminal_adapter"
+    metadata["adapter_source"] = source
+    metadata["staged_from_run"] = run_name
     metadata["measurement_only"] = (
         "staged so the arm can be evaluated. It failed the promotion gate and "
         "must never be reported as a promoted or selected adapter."
@@ -92,6 +115,7 @@ def stage(run_name: str, reason: str) -> dict[str, Any]:
     return {
         "run_name": run_name,
         "staged_from": terminal.as_posix().split("checkpoints/", 1)[-1],
+        "staged_into": adapter_dir.as_posix().split("checkpoints/", 1)[-1],
         "monitor_promoted": False,
         "monitor_rejection_reason": reason,
         "marker_contents": "staged_unpromoted_terminal_adapter",
@@ -105,12 +129,17 @@ def stage(run_name: str, reason: str) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-name", required=True)
+    parser.add_argument("--source", default="sft_terminal_adapter",
+                        help="subdirectory to stage, e.g. sft_tmp/checkpoint-100")
+    parser.add_argument("--destination-run", default=None,
+                        help="stage into a NEW run name, leaving the source run intact")
     parser.add_argument(
         "--reason", required=True,
         help="why the monitor rejected it, recorded in the metadata",
     )
     arguments = parser.parse_args()
-    print(json.dumps(stage(arguments.run_name, arguments.reason), indent=2))
+    print(json.dumps(stage(arguments.run_name, arguments.reason,
+                           arguments.source, arguments.destination_run), indent=2))
     return 0
 
 
