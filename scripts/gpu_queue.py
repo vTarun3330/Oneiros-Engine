@@ -45,11 +45,29 @@ def launch(name: str, command: list[str]) -> str | None:
         return None
 
 
+#: Run states that mean the supervisor is done with a run, successfully or not.
+TERMINAL_STATES = frozenset({"completed", "failed", "killed", "crashed", "timeout"})
+
+
 def wait(run_id: str, poll_seconds: int = 30) -> dict[str, Any]:
+    """Block until a run finishes, however it finishes.
+
+    The .complete marker is written only on success. Waiting on it alone hangs
+    the queue forever the moment any job fails - which is exactly what happened
+    when an evaluation was refused for having no promotable adapter: the queue
+    sat on a marker that was never going to appear, the queue chained behind it
+    never started, and the card idled for hours while the log's last line still
+    read "starting". A failed job must advance the queue, not stop it, and the
+    status file records the terminal state whether or not the marker exists.
+    """
     marker = ROOT / "runs" / run_id / ".complete"
-    while not marker.exists():
+    while True:
+        if marker.exists():
+            return _status(run_id)
+        status = _status(run_id)
+        if str(status.get("state")) in TERMINAL_STATES:
+            return status
         time.sleep(poll_seconds)
-    return _status(run_id)
 
 
 def process_is_alive(pid: int) -> bool:
