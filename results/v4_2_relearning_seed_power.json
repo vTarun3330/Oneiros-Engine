@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_seed_power_analysis_v1",
-  "source_tree_sha256": "739caff645917f4b4c9e44cd20c6635c5263fb25ac10e63e7822d61c53d7e309",
+  "source_tree_sha256": "92277202adc25568c4d8300053e4504eea19623121028d64597597a038f11f54",
   "sealed_final_test_accessed": false,
   "arm": "relearning",
   "base_run": "local_base_qwen_val_seed*",
@@ -8,7 +8,8 @@
   "seeds_compared": [
     42,
     43,
-    44
+    44,
+    45
   ],
   "per_seed": [
     {
@@ -70,28 +71,49 @@
       "functions_moved": 198,
       "net_function_gain": 12,
       "mcnemar_exact_p": 0.434446
+    },
+    {
+      "seed": 45,
+      "paired_functions": 757,
+      "base_kill_rate": 0.599736,
+      "base_kill_rate_wilson_95": [
+        0.564415,
+        0.63405
+      ],
+      "arm_kill_rate": 0.653897,
+      "arm_kill_rate_wilson_95": [
+        0.619308,
+        0.686932
+      ],
+      "delta": 0.054161,
+      "improved": 152,
+      "regressed": 111,
+      "functions_moved": 263,
+      "net_function_gain": 41,
+      "mcnemar_exact_p": 0.013492
     }
   ],
-  "mean_delta": 0.033025,
+  "mean_delta": 0.038309,
   "positive_in_every_seed": true,
   "sign_test_over_seeds": {
-    "seeds_positive": 3,
+    "seeds_positive": 4,
     "seeds_negative": 0,
     "seeds_tied": 0,
-    "effective_trials": 3,
-    "p_value": 0.25,
-    "smallest_reachable_p_at_this_n": 0.25,
+    "effective_trials": 4,
+    "p_value": 0.125,
+    "smallest_reachable_p_at_this_n": 0.125,
     "note": "no tied seeds"
   },
   "holm_bonferroni": {
     "method": "holm_bonferroni",
-    "hypotheses": 4,
+    "hypotheses": 5,
     "family": "every arm-seed McNemar test against the same base model",
     "adjusted_p_values": {
+      "relearning_seed_45": 0.06746,
       "relearning_seed_43": 0.128848,
       "relearning_seed_42": 0.199119,
-      "relearning_sign_test_over_seeds": 0.5,
-      "relearning_seed_44": 0.5
+      "relearning_sign_test_over_seeds": 0.25,
+      "relearning_seed_44": 0.434446
     },
     "significant_after_adjustment": [],
     "note": "an unadjusted p below 0.05 that does not survive adjustment is reported as not significant, not as significant with a caveat"
