@@ -138,6 +138,10 @@ ALLOW_TEST_FUNCTION_CANDIDATES = False
 #: every result already reported rather than merely similar to it.
 LORA_DROPOUT_OVERRIDE = None
 WEIGHT_DECAY_OVERRIDE = None
+#: How a model output becomes a candidate, and whether the raw output survives.
+#: Both default to the frozen behaviour every reported result used.
+CANDIDATE_PARSE_MODE = "first_assertion"
+RETAIN_RAW_OUTPUT = False
 MULTI_MUTANT_COMPLETIONS: Dict[str, str] = {}
 MULTI_MUTANT_DATASET_PATH = None
 BALANCED_SFT_DATASET_PATH = None
@@ -1258,6 +1262,13 @@ def generate_tests_ai_batched(
         local_rank = sequence_index % num
         slot = accounting[pair_index]["candidate_slots"][local_rank]
         slot["raw_output_sha256"] = hashlib.sha256(text.encode("utf-8")).hexdigest()
+        if RETAIN_RAW_OUTPUT:
+            # The hash alone proves an output existed but cannot say what it
+            # was. Without the text there is no way to tell whether a model
+            # trained on multi-assertion completions actually emits them, so
+            # the question stays unanswerable no matter how many seeds run.
+            slot["raw_output"] = text
+        generator.parse_mode = CANDIDATE_PARSE_MODE
         parsed = generator._parse_output(text, pairs_chunk[pair_index]["entry_point"])
         if parsed.is_valid:
             results.setdefault(pair_index, []).append(parsed.input_code)
@@ -4174,6 +4185,25 @@ if __name__ == "__main__":
         help="override optimizer weight decay (frozen default 0.0)",
     )
     parser.add_argument(
+        "--candidate-parse-mode", choices=["first_assertion", "whole_output"],
+        default="first_assertion",
+        help=(
+            "how a model output becomes a candidate. The frozen default scans "
+            "for the first 'assert ' line and discards the rest, which cannot "
+            "express a multi-assertion test. 'whole_output' judges the entire "
+            "output under the widened policy and CHANGES WHAT Kill@8 MEANS, so "
+            "it belongs to a labelled successor run"
+        ),
+    )
+    parser.add_argument(
+        "--retain-raw-output", action="store_true",
+        help=(
+            "store each candidate's raw model output alongside its hash. "
+            "Needed to check what the model actually emitted; off by default "
+            "because it enlarges every artifact"
+        ),
+    )
+    parser.add_argument(
         "--max-validation-functions", type=int, default=None,
         help="Bound validation for an explicitly labelled smoke run; never changes training scope",
     )
@@ -4493,6 +4523,15 @@ if __name__ == "__main__":
     ALLOW_TEST_FUNCTION_CANDIDATES = args.allow_test_function_candidates
     LORA_DROPOUT_OVERRIDE = args.lora_dropout
     WEIGHT_DECAY_OVERRIDE = args.weight_decay
+    CANDIDATE_PARSE_MODE = args.candidate_parse_mode
+    RETAIN_RAW_OUTPUT = args.retain_raw_output
+    if CANDIDATE_PARSE_MODE != "first_assertion":
+        print(
+            "[CANDIDATE PARSE MODE] "
+            f"{CANDIDATE_PARSE_MODE}: this is NOT the frozen protocol. Kill@8 "
+            "from this run is not comparable with any previously reported "
+            "number."
+        )
     if LORA_DROPOUT_OVERRIDE is not None or WEIGHT_DECAY_OVERRIDE is not None:
         # Announce it. Three runs in this project were named for an
         # intervention they did not apply, so a regularisation arm says out

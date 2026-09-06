@@ -35,7 +35,9 @@ from engine.model_runtime import (
 )
 from engine.prompt_budget import PromptBudgetError, compact_unified_user_prompt
 from engine.test_generation_prompt import build_unified_user_prompt, format_chat_prompt
-from harness.candidate_policy import validate_function_assertion
+from harness.candidate_policy import (
+    validate_function_assertion, validate_generated_test,
+)
 
 
 @dataclass
@@ -229,10 +231,63 @@ class Phi3Generator:
             entry_point=entry_point,
         )
 
+    #: How a model output becomes a candidate.
+    #:
+    #: "first_assertion" is the frozen behaviour every reported result was
+    #: produced under: scan for the first line starting with "assert " and
+    #: discard the rest. It cannot express a multi-assertion test, so a model
+    #: trained on broad multi-mutant completions is scored on whichever single
+    #: assertion it happens to emit first.
+    #:
+    #: "whole_output" keeps the output intact and lets the widened candidate
+    #: policy judge it, which is what makes the multi-mutant capability
+    #: measurable at all. It changes what Kill@8 means, so it is opt-in and
+    #: belongs to a labelled successor run rather than to this protocol.
+    parse_mode: str = "first_assertion"
+
+    def _parse_whole_output(
+        self, output: str, function_id: str, target_entry_point: str = "",
+    ) -> GeneratedTest:
+        """Judge the entire output under the widened candidate policy.
+
+        No line is discarded, so a multi-assertion test function survives to
+        the validator, the executor and the artifact. Fenced code blocks are
+        unwrapped because a chat model routinely wraps code in them and the
+        fence itself is not Python.
+        """
+        code = output.strip()
+        if code.startswith("```"):
+            body = code.split("```")
+            if len(body) >= 2:
+                candidate = body[1]
+                first, _, rest = candidate.partition(chr(10))
+                code = (rest if first.strip().isalpha() else candidate).strip()
+
+        policy = validate_generated_test(
+            code, target_entry_point or function_id, allow_test_function=True
+        )
+        test_id = f"gen_{function_id}_{self.stats['total_generated']}"
+        self.stats["total_generated"] += 1
+        if policy.valid:
+            self.stats["valid_generated"] += 1
+        return GeneratedTest(
+            id=test_id,
+            input_code=code,
+            function_id=function_id,
+            raw_output=output,
+            is_valid=policy.valid,
+            parse_error=policy.reason,
+        )
+
     def _parse_output(
         self, output: str, function_id: str, target_entry_point: str = "",
     ) -> GeneratedTest:
         """Parse model output into a test case, prioritizing assert statements."""
+        if getattr(self, "parse_mode", "first_assertion") == "whole_output":
+            return self._parse_whole_output(
+                output, function_id, target_entry_point
+            )
+
         output = output.strip()
         lines = output.split('\n')
         test_code = None
