@@ -1,0 +1,386 @@
+{
+  "schema_version": "oneiros_candidate_shape_pipeline_audit_v1",
+  "source_tree_sha256": "d2bd7abd84a57c1f6454031ac2ab0cef7b6c2f0bf4ace7732356ca3c30e13e4d",
+  "sealed_final_test_accessed": false,
+  "question": "can the evaluation path score the multi-assertion test the model was trained to write?",
+  "answer": "No. The generator collapses each output to its first assertion before anything else sees it, so every scored candidate is a single assertion by construction.",
+  "parser_evidence": {
+    "file": "engine/generator.py",
+    "scans_lines_for_a_leading_assert": true,
+    "stops_at_the_first_match": true,
+    "collapses_output_to_one_assertion": true,
+    "effect": "a multi-assertion test function is reduced to its first assertion before validation, execution and recording"
+  },
+  "artifacts_audited": 23,
+  "test_function_candidates_across_all_artifacts": 0,
+  "panels": [
+    {
+      "artifact": "local_sft800_qwen_clean_seed42/sft_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "recorded_candidate_shape": {
+        "None": 6056
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5993,
+        "empty": 63
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft800_qwen_clean_seed42/sft_validation_standard_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "recorded_candidate_shape": {
+        "None": 6056
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5999,
+        "empty": 57
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft800_qwen_clean_seed42/sft_validation_standard_seed_44.json",
+      "split": "val",
+      "seed": 44,
+      "recorded_candidate_shape": {
+        "None": 6056
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5988,
+        "empty": 68
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft800_qwen_final_seed42/sft_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "recorded_candidate_shape": {
+        "None": 6056
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5992,
+        "empty": 64
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft800_qwen_final_seed42/sft_validation_standard_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "recorded_candidate_shape": {
+        "assertion": 5992,
+        "None": 64
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5992,
+        "empty": 64
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft800_qwen_lr1e5_seed42/sft_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "recorded_candidate_shape": {
+        "None": 6056
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5996,
+        "empty": 60
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft800_qwen_lr1e5_seed42/sft_validation_standard_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "recorded_candidate_shape": {
+        "None": 6056
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 6003,
+        "empty": 53
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft800_qwen_lr1e5_seed42/sft_validation_standard_seed_44.json",
+      "split": "val",
+      "seed": 44,
+      "recorded_candidate_shape": {
+        "None": 6056
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5991,
+        "empty": 65
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft_mm_full_v2_seed42/sft_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "recorded_candidate_shape": {
+        "assertion": 5823,
+        "None": 233
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5823,
+        "empty": 233
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft_mm_full_v2_seed42/sft_validation_standard_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "recorded_candidate_shape": {
+        "assertion": 5840,
+        "None": 216
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5840,
+        "empty": 216
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft_mm_full_v2_seed42/sft_validation_standard_seed_44.json",
+      "split": "val",
+      "seed": 44,
+      "recorded_candidate_shape": {
+        "assertion": 5799,
+        "None": 257
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5799,
+        "empty": 257
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft_multimutant_seed42/sft_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "recorded_candidate_shape": {
+        "assertion": 6004,
+        "None": 52
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 6004,
+        "empty": 52
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft_relearn_v2_seed42/sft_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "recorded_candidate_shape": {
+        "assertion": 5803,
+        "None": 253
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5803,
+        "empty": 253
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft_relearn_v2_seed42/sft_validation_standard_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "recorded_candidate_shape": {
+        "assertion": 5788,
+        "None": 268
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5788,
+        "empty": 268
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft_relearn_v2_seed42/sft_validation_standard_seed_44.json",
+      "split": "val",
+      "seed": 44,
+      "recorded_candidate_shape": {
+        "assertion": 5807,
+        "None": 249
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5807,
+        "empty": 249
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft_relearn_v2_seed42/sft_validation_standard_seed_45.json",
+      "split": "val",
+      "seed": 45,
+      "recorded_candidate_shape": {
+        "assertion": 5779,
+        "None": 277
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5779,
+        "empty": 277
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_sft_relearn_v2_seed42/sft_validation_standard_seed_46.json",
+      "split": "val",
+      "seed": 46,
+      "recorded_candidate_shape": {
+        "assertion": 5769,
+        "None": 287
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5769,
+        "empty": 287
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_base_qwen_val_seed42/base_validation_standard_seed_42.json",
+      "split": "val",
+      "seed": 42,
+      "recorded_candidate_shape": {
+        "None": 6056
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 6019,
+        "empty": 37
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_base_qwen_val_seed43/base_validation_standard_seed_43.json",
+      "split": "val",
+      "seed": 43,
+      "recorded_candidate_shape": {
+        "assertion": 6024,
+        "None": 32
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 6024,
+        "empty": 32
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_base_qwen_val_seed44/base_validation_standard_seed_44.json",
+      "split": "val",
+      "seed": 44,
+      "recorded_candidate_shape": {
+        "assertion": 6014,
+        "None": 42
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 6014,
+        "empty": 42
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_base_qwen_val_seed45/base_validation_standard_seed_45.json",
+      "split": "val",
+      "seed": 45,
+      "recorded_candidate_shape": {
+        "assertion": 6020,
+        "None": 36
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 6020,
+        "empty": 36
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_base_qwen_val_seed46/base_validation_standard_seed_46.json",
+      "split": "val",
+      "seed": 46,
+      "recorded_candidate_shape": {
+        "assertion": 6010,
+        "None": 46
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 6010,
+        "empty": 46
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    },
+    {
+      "artifact": "local_base_qwen_val_seed47/base_validation_standard_seed_47.json",
+      "split": "val",
+      "seed": 47,
+      "recorded_candidate_shape": {
+        "assertion": 5997,
+        "None": 59
+      },
+      "recorded_code_shape": {
+        "bare_assertion": 5997,
+        "empty": 59
+      },
+      "test_function_candidates": 0,
+      "raw_output_text_retained": 0,
+      "raw_output_hash_retained": 6056
+    }
+  ],
+  "consequences": [
+    "every evaluated candidate is a single assertion, in every arm",
+    "--allow-test-function-candidates is inert in this generation path: the validator is widened but the parser upstream has already collapsed the output, so no test-function-shaped candidate ever reaches the rule",
+    "Kill@8 measures eight single assertions, never one broad test",
+    "the multi-mutant capability is demonstrated in the dataset (8.43 mutants killed per verified completion) and has never been measured in the trained model"
+  ],
+  "explicitly_not_claimed": "This does NOT show the model fails to emit multi-assertion tests. Only raw_output_sha256 is retained - the raw text is hashed, not stored - so what the model emitted cannot be recovered from these artifacts. The pipeline cannot express the capability; whether the model has it is unmeasured.",
+  "to_measure_it": "retain raw model output alongside its hash, and add a generation path that validates the whole output under the widened shape policy instead of scanning for the first assertion. Both are changes to the frozen evaluation protocol and belong in a labelled successor run, not in this one."
+}
