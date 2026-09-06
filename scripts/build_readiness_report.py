@@ -296,6 +296,36 @@ def build() -> dict[str, Any]:
                 ),
                 "artifact": "results/v4_2_repository_expansion_ceiling.json",
             },
+            "eligibility_is_not_a_budget_problem": {
+                "category": "LIMITATION",
+                "detail": (
+                    "The repository prompt-budget rejection and the repository "
+                    "eligibility shortfall are separate mechanisms and were "
+                    "briefly reported as one. Raising the repository budget to "
+                    "2048 recovers 152 of 212 rejected prompts (39.8% -> "
+                    "11.3%), but recovers no excluded record: the 113 "
+                    "exclusions reference symbols absent from the record, and "
+                    "only 4 are recoverable by import resolution. The rest are "
+                    "pytest fixture parameters and inherited test classes. An "
+                    "import resolver is not a route to repository parity."
+                ),
+                "artifacts": [
+                    "results/v4_2_prompt_compaction_audit_repo2048.json",
+                    "results/v4_2_repository_exclusion_audit.json",
+                ],
+            },
+            "seed_count_bounded_the_conclusion": {
+                "category": "LIMITATION",
+                "detail": (
+                    "An exact two-sided sign test over seed signs returns "
+                    "p=0.25 for three positive seeds, which is the SMALLEST "
+                    "reachable value at n=3. No three-seed outcome could have "
+                    "been significant by that test, so the three-seed result "
+                    "bounded the conclusion rather than answering it. The "
+                    "floor is 0.0078 at eight seeds."
+                ),
+                "artifact": "results/v4_2_relearning_seed_power.json",
+            },
             "complexity_floor": {
                 "category": "DESIGN CHOICE",
                 "detail": (
@@ -336,6 +366,51 @@ def build() -> dict[str, Any]:
         )
     if ceiling:
         report["repository_expansion_ceiling"] = ceiling.get("ceiling")
+
+    # Evidence added after the first readiness pass. Each is attached only if
+    # the artifact exists, so a report built before a sweep has run says
+    # nothing about it rather than reporting a default as a measurement.
+    atheris = _read(ROOT / "results" / "v4_2_atheris_seed_aggregate.json")
+    if atheris:
+        report["actual_atheris_by_seed"] = {
+            name: {
+                "seeds": arm.get("seeds"),
+                "mean_kill_rate": arm.get("mean_kill_rate"),
+                "range_across_seeds": arm.get("range_across_seeds"),
+            }
+            for name, arm in (atheris.get("arms") or {}).items()
+        }
+
+    power = _read(ROOT / "results" / "v4_2_relearning_seed_power.json")
+    if power:
+        report["relearning_seed_power"] = {
+            "seeds": power.get("seeds_compared"),
+            "per_seed_delta": [
+                row.get("delta") for row in power.get("per_seed") or []
+            ],
+            "mean_delta": power.get("mean_delta"),
+            "positive_in_every_seed": power.get("positive_in_every_seed"),
+            "sign_test": power.get("sign_test_over_seeds"),
+            "significant_after_adjustment": (
+                power.get("holm_bonferroni") or {}
+            ).get("significant_after_adjustment"),
+        }
+
+    budget = _read(
+        ROOT / "results" / "v4_2_prompt_compaction_audit_repo2048.json"
+    )
+    if budget:
+        report["exploratory_repository_budget_sweep"] = {
+            "audit_status": budget.get("audit_status"),
+            "is_frozen_configuration": budget.get("is_frozen_configuration"),
+            "swept_repository_budget": (
+                budget.get("mode_budgets") or {}
+            ).get("repository"),
+            "note": (
+                "evidence for a labelled successor run; not a measurement of "
+                "the protocol any reported result was produced under"
+            ),
+        }
     return report
 
 

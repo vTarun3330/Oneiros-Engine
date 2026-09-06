@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_final_readiness_v1",
-  "source_tree_sha256": "696763b26e74130b4325bc7d4f024412f2f911e353daaf4a00a48ee52761d76f",
+  "source_tree_sha256": "c8b9c221dff7eb5c7b6444c22921fb6a910ef4033c033dd0223a9bfcc7adae25",
   "sealed_final_test_accessed": false,
   "phase": "sft_only",
   "dpo": "OUT OF SCOPE - not prepared, launched, evaluated, or budgeted",
@@ -9,7 +9,7 @@
     "checks": {
       "active_experiment_branch": true,
       "v4_baseline_is_ancestor": true,
-      "tracked_worktree_clean": true,
+      "tracked_worktree_clean": false,
       "canonical_corpus_hashes": true,
       "source_bound_tests_current": false,
       "locked_train_readiness": true,
@@ -173,6 +173,19 @@
       "detail": "50/50 by unique semantic target needs 317 more repository targets. The optimistic ceiling is 304 and the expected yield 182, so parity is not reachable from available data.",
       "artifact": "results/v4_2_repository_expansion_ceiling.json"
     },
+    "eligibility_is_not_a_budget_problem": {
+      "category": "LIMITATION",
+      "detail": "The repository prompt-budget rejection and the repository eligibility shortfall are separate mechanisms and were briefly reported as one. Raising the repository budget to 2048 recovers 152 of 212 rejected prompts (39.8% -> 11.3%), but recovers no excluded record: the 113 exclusions reference symbols absent from the record, and only 4 are recoverable by import resolution. The rest are pytest fixture parameters and inherited test classes. An import resolver is not a route to repository parity.",
+      "artifacts": [
+        "results/v4_2_prompt_compaction_audit_repo2048.json",
+        "results/v4_2_repository_exclusion_audit.json"
+      ]
+    },
+    "seed_count_bounded_the_conclusion": {
+      "category": "LIMITATION",
+      "detail": "An exact two-sided sign test over seed signs returns p=0.25 for three positive seeds, which is the SMALLEST reachable value at n=3. No three-seed outcome could have been significant by that test, so the three-seed result bounded the conclusion rather than answering it. The floor is 0.0078 at eight seeds.",
+      "artifact": "results/v4_2_relearning_seed_power.json"
+    },
     "complexity_floor": {
       "category": "DESIGN CHOICE",
       "detail": "The 0.60 complex-example floor is a design choice. It has not been shown to improve results and is not claimed to."
@@ -205,5 +218,57 @@
     "required_for_parity": 317,
     "parity_reachable_optimistically": false,
     "parity_reachable_at_expected_yield": false
+  },
+  "actual_atheris_by_seed": {
+    "matched_8_executions": {
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "mean_kill_rate": 0.154997,
+      "range_across_seeds": 0.005284
+    },
+    "high_budget_20000_executions": {
+      "seeds": [
+        42,
+        43,
+        44
+      ],
+      "mean_kill_rate": 0.478643,
+      "range_across_seeds": 0.006605
+    }
+  },
+  "relearning_seed_power": {
+    "seeds": [
+      42,
+      43,
+      44,
+      45
+    ],
+    "per_seed_delta": [
+      0.038309,
+      0.044914,
+      0.015852,
+      0.054161
+    ],
+    "mean_delta": 0.038309,
+    "positive_in_every_seed": true,
+    "sign_test": {
+      "seeds_positive": 4,
+      "seeds_negative": 0,
+      "seeds_tied": 0,
+      "effective_trials": 4,
+      "p_value": 0.125,
+      "smallest_reachable_p_at_this_n": 0.125,
+      "note": "no tied seeds"
+    },
+    "significant_after_adjustment": []
+  },
+  "exploratory_repository_budget_sweep": {
+    "audit_status": "EXPLORATORY: sweeps the repository budget away from the frozen value. Evidence for a labelled successor run, NOT a measurement of the protocol under which any reported result was produced.",
+    "is_frozen_configuration": false,
+    "swept_repository_budget": 2048,
+    "note": "evidence for a labelled successor run; not a measurement of the protocol any reported result was produced under"
   }
 }
