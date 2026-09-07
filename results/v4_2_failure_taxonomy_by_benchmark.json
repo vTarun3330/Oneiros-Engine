@@ -1,0 +1,201 @@
+{
+  "schema_version": "oneiros_failure_taxonomy_by_benchmark_set_v1",
+  "sealed_final_test_accessed": false,
+  "artifacts": {
+    "local_base_qwen_val_seed42/base_validation_standard_seed_42.json": {
+      "schema_version": "oneiros_failure_taxonomy_by_benchmark_v1",
+      "artifact": "local_base_qwen_val_seed42/base_validation_standard_seed_42.json",
+      "evaluation_split": "val",
+      "sealed_final_test_accessed": false,
+      "adapter": "base_model",
+      "by_benchmark": {
+        "humaneval": {
+          "functions": 56,
+          "functions_killed": 47,
+          "function_kill_rate": 0.839286,
+          "candidates": 448,
+          "counts": {
+            "killed": 168,
+            "wrong_expected_value": 152,
+            "passes_both": 57,
+            "boundary_miss": 37,
+            "logical_condition_miss": 29,
+            "indexing_miss": 5
+          },
+          "rates": {
+            "killed": 0.375,
+            "wrong_expected_value": 0.339286,
+            "passes_both": 0.127232,
+            "boundary_miss": 0.082589,
+            "logical_condition_miss": 0.064732,
+            "indexing_miss": 0.011161
+          }
+        },
+        "mbpp": {
+          "functions": 701,
+          "functions_killed": 423,
+          "function_kill_rate": 0.603424,
+          "candidates": 5608,
+          "counts": {
+            "wrong_expected_value": 2775,
+            "killed": 1293,
+            "boundary_miss": 604,
+            "passes_both": 263,
+            "reference_invalid": 213,
+            "logical_condition_miss": 190,
+            "wrong_target_api": 122,
+            "off_by_one_miss": 91,
+            "syntax_invalid": 37,
+            "undefined_symbol": 10,
+            "indexing_miss": 10
+          },
+          "rates": {
+            "wrong_expected_value": 0.494829,
+            "killed": 0.230563,
+            "boundary_miss": 0.107703,
+            "passes_both": 0.046897,
+            "reference_invalid": 0.037981,
+            "logical_condition_miss": 0.03388,
+            "wrong_target_api": 0.021755,
+            "off_by_one_miss": 0.016227,
+            "syntax_invalid": 0.006598,
+            "undefined_symbol": 0.001783,
+            "indexing_miss": 0.001783
+          }
+        }
+      }
+    },
+    "local_sft_v42_s42/sft_validation_standard_seed_42.json": {
+      "schema_version": "oneiros_failure_taxonomy_by_benchmark_v1",
+      "artifact": "local_sft_v42_s42/sft_validation_standard_seed_42.json",
+      "evaluation_split": "val",
+      "sealed_final_test_accessed": false,
+      "adapter": "sft_adapter",
+      "by_benchmark": {
+        "humaneval": {
+          "functions": 56,
+          "functions_killed": 51,
+          "function_kill_rate": 0.910714,
+          "candidates": 448,
+          "counts": {
+            "killed": 244,
+            "wrong_expected_value": 66,
+            "boundary_miss": 45,
+            "passes_both": 45,
+            "logical_condition_miss": 34,
+            "indexing_miss": 8,
+            "timeout": 4,
+            "syntax_invalid": 2
+          },
+          "rates": {
+            "killed": 0.544643,
+            "wrong_expected_value": 0.147321,
+            "boundary_miss": 0.100446,
+            "passes_both": 0.100446,
+            "logical_condition_miss": 0.075893,
+            "indexing_miss": 0.017857,
+            "timeout": 0.008929,
+            "syntax_invalid": 0.004464
+          }
+        },
+        "mbpp": {
+          "functions": 701,
+          "functions_killed": 434,
+          "function_kill_rate": 0.619116,
+          "candidates": 5608,
+          "counts": {
+            "wrong_expected_value": 3008,
+            "killed": 1181,
+            "reference_invalid": 346,
+            "boundary_miss": 309,
+            "syntax_invalid": 271,
+            "wrong_target_api": 145,
+            "passes_both": 141,
+            "logical_condition_miss": 118,
+            "off_by_one_miss": 61,
+            "indexing_miss": 14,
+            "undefined_symbol": 14
+          },
+          "rates": {
+            "wrong_expected_value": 0.536377,
+            "killed": 0.210592,
+            "reference_invalid": 0.061698,
+            "boundary_miss": 0.0551,
+            "syntax_invalid": 0.048324,
+            "wrong_target_api": 0.025856,
+            "passes_both": 0.025143,
+            "logical_condition_miss": 0.021041,
+            "off_by_one_miss": 0.010877,
+            "indexing_miss": 0.002496,
+            "undefined_symbol": 0.002496
+          }
+        }
+      }
+    },
+    "local_sft_relearn_v2_seed42/sft_validation_standard_seed_42.json": {
+      "schema_version": "oneiros_failure_taxonomy_by_benchmark_v1",
+      "artifact": "local_sft_relearn_v2_seed42/sft_validation_standard_seed_42.json",
+      "evaluation_split": "val",
+      "sealed_final_test_accessed": false,
+      "adapter": "sft_adapter",
+      "by_benchmark": {
+        "humaneval": {
+          "functions": 56,
+          "functions_killed": 53,
+          "function_kill_rate": 0.946429,
+          "candidates": 448,
+          "counts": {
+            "killed": 235,
+            "wrong_expected_value": 69,
+            "passes_both": 47,
+            "boundary_miss": 45,
+            "logical_condition_miss": 36,
+            "indexing_miss": 9,
+            "timeout": 7
+          },
+          "rates": {
+            "killed": 0.524554,
+            "wrong_expected_value": 0.154018,
+            "passes_both": 0.104911,
+            "boundary_miss": 0.100446,
+            "logical_condition_miss": 0.080357,
+            "indexing_miss": 0.020089,
+            "timeout": 0.015625
+          }
+        },
+        "mbpp": {
+          "functions": 701,
+          "functions_killed": 446,
+          "function_kill_rate": 0.636234,
+          "candidates": 5608,
+          "counts": {
+            "wrong_expected_value": 3042,
+            "killed": 1182,
+            "reference_invalid": 337,
+            "boundary_miss": 295,
+            "syntax_invalid": 253,
+            "passes_both": 158,
+            "wrong_target_api": 148,
+            "logical_condition_miss": 111,
+            "off_by_one_miss": 47,
+            "undefined_symbol": 26,
+            "indexing_miss": 9
+          },
+          "rates": {
+            "wrong_expected_value": 0.542439,
+            "killed": 0.21077,
+            "reference_invalid": 0.060093,
+            "boundary_miss": 0.052603,
+            "syntax_invalid": 0.045114,
+            "passes_both": 0.028174,
+            "wrong_target_api": 0.026391,
+            "logical_condition_miss": 0.019793,
+            "off_by_one_miss": 0.008381,
+            "undefined_symbol": 0.004636,
+            "indexing_miss": 0.001605
+          }
+        }
+      }
+    }
+  }
+}

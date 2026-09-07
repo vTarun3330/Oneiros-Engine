@@ -1,0 +1,56 @@
+{
+  "schema_version": "oneiros_specification_quality_v1",
+  "corpus_dir": "v4_2_balanced_expansion_candidate",
+  "sealed_final_test_accessed": false,
+  "measures": "presence of an input/output example in the specification text",
+  "by_split": {
+    "train": {
+      "humaneval": {
+        "records": 964,
+        "with_worked_example": 795,
+        "worked_example_rate": 0.8247,
+        "median_specification_chars": 346,
+        "median_specification_lines": 9
+      },
+      "mbpp": {
+        "records": 4650,
+        "with_worked_example": 0,
+        "worked_example_rate": 0.0,
+        "median_specification_chars": 80,
+        "median_specification_lines": 1
+      }
+    },
+    "ablation_dev": {
+      "humaneval": {
+        "records": 112,
+        "with_worked_example": 98,
+        "worked_example_rate": 0.875,
+        "median_specification_chars": 338,
+        "median_specification_lines": 9
+      },
+      "mbpp": {
+        "records": 429,
+        "with_worked_example": 0,
+        "worked_example_rate": 0.0,
+        "median_specification_chars": 77,
+        "median_specification_lines": 1
+      }
+    },
+    "val": {
+      "humaneval": {
+        "records": 56,
+        "with_worked_example": 34,
+        "worked_example_rate": 0.6071,
+        "median_specification_chars": 497,
+        "median_specification_lines": 12
+      },
+      "mbpp": {
+        "records": 701,
+        "with_worked_example": 0,
+        "worked_example_rate": 0.0,
+        "median_specification_chars": 76,
+        "median_specification_lines": 1
+      }
+    }
+  }
+}
