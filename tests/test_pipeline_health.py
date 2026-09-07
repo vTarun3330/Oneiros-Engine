@@ -6,6 +6,7 @@ had, and each must be NAMED rather than appear as an absence.
 """
 from __future__ import annotations
 
+import json
 import sys
 import time
 from pathlib import Path
@@ -39,15 +40,24 @@ def test_a_cold_gpu_under_a_claimed_job_is_reported_as_stalled(tmp_path, monkeyp
 
 
 def test_a_terminal_run_the_queue_never_reported_is_stranded(tmp_path, monkeypatch):
-    """The refused evaluation: run failed, queue waits on a marker forever."""
+    """The refused evaluation: run failed, queue waits on a marker forever.
+
+    Stranding is now resolved against the run belonging to the CLAIMED job
+    rather than whatever run happens to be newest, so a queue stuck on job A
+    is still caught once an unrelated job B has started.
+    """
     monkeypatch.setattr(health, "_gpu_utilisation", lambda: 50)
+    monkeypatch.setattr(health, "_run_for_job", lambda job: {
+        "run_id": "20260906-000000-jobA", "state": "failed",
+        "detail": "no adapter", "settled_at": time.time(),
+    })
     monkeypatch.setattr(health, "_latest_run", lambda: {
         "state": "failed", "name": "jobA", "exit_code": 1,
         "termination": "python_exception", "detail": "no adapter",
     })
     log = _log(tmp_path, "[QUEUE] starting jobA\n")
 
-    report = health.check([log])
+    report = health.check([log], live_queues=1)
     assert report["healthy"] is False
     assert any("STRANDED" in p for p in report["problems"])
 
@@ -85,7 +95,7 @@ def test_a_healthy_pipeline_reports_healthy(tmp_path, monkeypatch):
     })
     log = _log(tmp_path, "[QUEUE] starting jobA\n")
 
-    report = health.check([log])
+    report = health.check([log], live_queues=1)
     assert report["healthy"] is True
     assert report["problems"] == []
 
@@ -102,15 +112,129 @@ def test_the_cpu_bound_startup_window_is_not_called_a_stall(tmp_path, monkeypatc
     })
     log = _log(tmp_path, "[QUEUE] starting jobA\n", age_seconds=60)
 
-    report = health.check([log])
+    report = health.check([log], live_queues=1)
     assert report["healthy"] is True
 
 
-def test_an_idle_gpu_with_no_outstanding_work_is_a_warning_not_a_failure(tmp_path, monkeypatch):
+def test_an_idle_gpu_with_no_outstanding_work_is_a_failure(tmp_path, monkeypatch):
+    """Deliberately reversed. This test previously asserted the opposite.
+
+    Treating an idle card as a warning was wrong twice over: the standing
+    instruction on this project is that the GPU must not sit idle, and
+    warnings were not printed at all while any problem existed. On 2026-09-08
+    a false STALLED alarm from a dead queue's log therefore hid both a
+    finished pair of seed evaluations and an idle GPU behind it.
+
+    The previous expectation stays in git history rather than being deleted,
+    and the reversal is recorded here so it reads as a decision, not a drift.
+    """
     monkeypatch.setattr(health, "_gpu_utilisation", lambda: 0)
-    monkeypatch.setattr(health, "_latest_run", lambda: {"state": "completed", "name": "jobA"})
+    monkeypatch.setattr(health, "_latest_run",
+                        lambda: {"state": "completed", "name": "jobA"})
     log = _log(tmp_path, "[QUEUE] starting jobA\n[QUEUE] jobA -> completed\n")
 
-    report = health.check([log])
-    assert report["healthy"] is True
-    assert any("idle" in w for w in report["warnings"])
+    report = health.check([log], live_queues=0)
+    assert report["healthy"] is False
+    assert any(problem.startswith("IDLE") for problem in report["problems"])
+
+
+# --- per-queue liveness, added after the watchdog cried wolf --------------
+#
+# queue_memorisation_arm.log has claimed 'reg_val_s42' is running since
+# 2026-09-06. The job actually failed and the queue was killed before writing
+# its result line, so the log claims a running job forever. The first fix
+# counted gpu_queue processes globally, which was worse: any OTHER queue
+# running made every dead queue's log read as stranded again, and the false
+# alarm hid a genuinely idle GPU behind it.
+
+def _settled_run(tmp_path, job, state, age_seconds):
+    import os
+    import time
+    run = tmp_path / "runs" / f"20260906-000000-{job}"
+    run.mkdir(parents=True)
+    (run / "status.json").write_text(json.dumps({
+        "run_id": run.name, "state": state,
+        "termination": {"reason": "error", "detail": "adapter missing"},
+    }), encoding="utf-8")
+    when = time.time() - age_seconds
+    os.utime(run / "status.json", (when, when))
+    return run
+
+
+def _queue_log(tmp_path, name, job, age_seconds):
+    import os
+    import time
+    log = tmp_path / name
+    log.write_text(f"[QUEUE] starting {job}\n", encoding="utf-8")
+    when = time.time() - age_seconds
+    os.utime(log, (when, when))
+    return log
+
+
+def test_a_finished_queues_log_is_a_note_not_a_stall(tmp_path, monkeypatch):
+    """The exact false alarm: dead queue, job long settled, nothing since."""
+    import scripts.pipeline_health as health
+
+    _settled_run(tmp_path, "reg_val_s42", "failed", age_seconds=100_000)
+    log = _queue_log(tmp_path, "queue_old.log", "reg_val_s42", age_seconds=110_000)
+    monkeypatch.setattr(health, "ROOT", tmp_path)
+    monkeypatch.setattr(health, "_gpu_utilisation", lambda: 60)
+
+    report = health.check([log], live_queues=1)
+    assert not any("STRANDED" in p for p in report["problems"]), (
+        "a queue that has written nothing since its job settled long ago is "
+        "gone, not waiting"
+    )
+    assert any("finished queue" in w for w in report["warnings"])
+
+
+def test_a_live_queue_waiting_on_a_settled_job_is_still_stranded(tmp_path, monkeypatch):
+    """The real stranding must survive the fix for the false alarm."""
+    import os
+    import time
+
+    import scripts.pipeline_health as health
+
+    _settled_run(tmp_path, "reg_val_s42", "failed", age_seconds=3_000)
+    log = _queue_log(tmp_path, "queue_live.log", "reg_val_s42", age_seconds=10)
+    now = time.time()
+    os.utime(log, (now, now))
+    monkeypatch.setattr(health, "ROOT", tmp_path)
+    monkeypatch.setattr(health, "_gpu_utilisation", lambda: 60)
+
+    report = health.check([log], live_queues=1)
+    assert any("STRANDED" in p for p in report["problems"])
+
+
+def test_an_idle_gpu_with_nothing_queued_is_a_problem(tmp_path, monkeypatch):
+    """Reported as a warning before, and warnings were hidden behind problems."""
+    import scripts.pipeline_health as health
+
+    run = _settled_run(tmp_path, "v42_val_s44", "completed", age_seconds=60)
+    monkeypatch.setattr(health, "ROOT", tmp_path)
+    monkeypatch.setattr(health, "_gpu_utilisation", lambda: 0)
+
+    report = health.check([], live_queues=0)
+    assert any(p.startswith("IDLE") for p in report["problems"]), (
+        "an idle card with no outstanding work is the failure this project "
+        "keeps paying for; it must not be a warning"
+    )
+    assert run.exists()
+
+
+def test_warnings_are_printed_even_when_a_problem_exists(capsys, tmp_path, monkeypatch):
+    import scripts.pipeline_health as health
+
+    monkeypatch.setattr(health, "ROOT", tmp_path)
+    monkeypatch.setattr(health, "_gpu_utilisation", lambda: None)
+    monkeypatch.setattr(health, "check", lambda *a, **k: {
+        "problems": ["IDLE: nothing is running"],
+        "warnings": ["a warning that must not be swallowed"],
+        "latest_run": {}, "gpu_utilisation_percent": None,
+    })
+    monkeypatch.setattr(sys, "argv", ["pipeline_health.py"])
+
+    assert health.main() == 1
+    printed = capsys.readouterr().out
+    assert "[UNHEALTHY] IDLE" in printed
+    assert "must not be swallowed" in printed
