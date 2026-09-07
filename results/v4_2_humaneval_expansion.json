@@ -1,44 +1,27 @@
 {
   "schema_version": "oneiros_humaneval_expansion_v1",
-  "source_tree_sha256": "d19890acc8445a7a4b45d104e6633b1bed1d3976018556e3ebf12db5f577b35b",
+  "source_tree_sha256": "e209b191538c8f0a19cc131b30d735c0d01f14b45d616dc3fcaa09f7f6adcfaa",
   "sealed_final_test_accessed": false,
   "immutable_corpus_modified": false,
   "destination": "staging only; promotion into a successor corpus is separate",
   "split_assignment": "train",
   "leakage_guarantee": "every problem here is absent from train, ablation_dev and val, checked against the corpus rather than assumed, so adding these lineages to train cannot leak into a held-out split",
-  "problems_available_unused": 37,
-  "problems_with_verified_mutants": 22,
-  "new_unique_lineages": 22,
-  "new_records": 156,
+  "problems_available_unused": 19,
+  "problems_with_verified_mutants": 4,
+  "new_unique_lineages": 4,
+  "new_records": 26,
   "mutants_per_problem": {
-    "HumanEval_0": 7,
-    "HumanEval_6": 7,
-    "HumanEval_11": 4,
-    "HumanEval_24": 3,
-    "HumanEval_31": 12,
-    "HumanEval_42": 4,
     "HumanEval_44": 5,
     "HumanEval_53": 1,
-    "HumanEval_61": 12,
-    "HumanEval_72": 12,
     "HumanEval_75": 12,
-    "HumanEval_83": 8,
-    "HumanEval_85": 5,
-    "HumanEval_87": 7,
-    "HumanEval_89": 4,
-    "HumanEval_119": 12,
-    "HumanEval_120": 4,
-    "HumanEval_124": 12,
-    "HumanEval_133": 2,
-    "HumanEval_139": 11,
-    "HumanEval_151": 9,
-    "HumanEval_158": 3
+    "HumanEval_151": 8
   },
   "max_mutants_per_problem": 12,
   "rejected": {
-    "no_test_distinguishes_the_mutant": 23,
+    "no_test_distinguishes_the_mutant": 11,
     "problem_yielded_no_verified_mutant": 12,
-    "missing_reference_entry_or_assertions": 3
+    "missing_reference_entry_or_assertions": 3,
+    "duplicate_semantic_supervision": 3
   },
   "verification_rule": "a retained test must PASS on the reference and FAIL on the mutant; a mutant no test distinguishes is a rewrite, not a defect"
 }

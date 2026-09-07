@@ -92,3 +92,44 @@ def test_expansion_records_never_reuse_an_existing_problem(tmp_path):
             f"HumanEval_{number} is already in {used[number]}; adding it to "
             "train would leak a held-out problem into training"
         )
+
+
+def test_the_used_check_covers_the_sealed_test_split():
+    """The leakage check must see all four splits, not just the visible three.
+
+    This originally read the development view, which materialises train,
+    ablation_dev and val and NOT the sealed test split. It declared 37 problems
+    unused; 18 of them were sealed TEST problems, and staging those for
+    training would have put the final test set into the model. Only the corpus
+    verifier's semantic-duplicate gate stopped it.
+    """
+    from scripts.expand_humaneval_coverage import used_problem_ids
+
+    used = used_problem_ids()
+    assert "test" in set(used.values()), (
+        "the sealed test split is invisible to the leakage check again"
+    )
+    assert len(used) == 145, (
+        f"expected 145 HumanEval problems across all four splits, saw {len(used)}"
+    )
+
+
+def test_no_staged_problem_belongs_to_any_existing_split():
+    """Derived from the corpus, so it cannot drift from what is really there."""
+    import json
+    import re
+
+    from scripts.expand_humaneval_coverage import used_problem_ids
+
+    staged = ROOT / "data" / "humaneval_expansion_staging" / "records.json"
+    if not staged.exists():
+        return
+    used = used_problem_ids()
+    report = json.loads(staged.read_text(encoding="utf-8"))
+    for record in report["records"]:
+        upstream = record["provenance"]["upstream_record_id"]
+        number = int(re.search(r"(\d+)", upstream).group(1))
+        assert number not in used, (
+            f"HumanEval_{number} is already in the {used[number]} split; "
+            "staging it for training would leak held-out data"
+        )

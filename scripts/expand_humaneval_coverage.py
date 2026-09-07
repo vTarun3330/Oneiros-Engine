@@ -42,16 +42,18 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from harness.corpus import write_json
+from harness.corpus import (
+    function_group_id, record_content_hash, semantic_supervision_key,
+    write_json,
+)
 from harness.safe_execution import execute_code
 from scripts.generate_mutations import (
     generate_mutations_for_function, is_clean_mutant, is_valid_python,
 )
 from utils.reproducibility import source_tree_sha256
 
-VIEW = (
-    ROOT / "data" / "corpus" / "v4_1_research_hardened_candidate" / "development_view"
-)
+CORPUS = ROOT / "data" / "corpus" / "v4_1_research_hardened_candidate"
+VIEW = CORPUS / "development_view"
 UNIFIED = ROOT / "data" / "unified_dataset.json"
 EXECUTION_TIMEOUT_SECONDS = 5.0
 #: Cap per problem so one prolific function cannot re-create the skew being fixed.
@@ -64,16 +66,26 @@ def _problem_number(record_id: str) -> int | None:
 
 
 def used_problem_ids() -> dict[int, str]:
-    """Every HumanEval problem already present, and the split it lives in."""
+    """Every HumanEval problem already present, in ANY split, sealed included.
+
+    This originally read the development view, which materialises train,
+    ablation_dev and val - and NOT the sealed test split. 18 of the 22 problems
+    it declared unused were sealed test problems, and staging them for training
+    would have leaked the final test set into the model. The canonical
+    splits.json is the only source that knows about all four splits.
+
+    Only record IDS are read here, never a sealed record's fields, so the test
+    split stays closed while still being able to defend itself.
+    """
+    splits = json.loads(
+        (CORPUS / "splits.json").read_text(encoding="utf-8")
+    )
     used: dict[int, str] = {}
-    for split in ("train", "ablation_dev", "val"):
-        path = VIEW / f"{split}.records.json"
-        if not path.exists():
-            continue
-        for record in json.loads(path.read_text(encoding="utf-8")):
-            number = _problem_number(record.get("id", ""))
+    for split_name, record_ids in splits.items():
+        for record_id in record_ids:
+            number = _problem_number(record_id)
             if number is not None:
-                used.setdefault(number, split)
+                used.setdefault(number, split_name)
     return used
 
 
@@ -166,17 +178,13 @@ def _corpus_record(
     multi-mutant builder and the evaluator all read these fields, and a record
     missing one is silently skipped rather than loudly rejected.
     """
-    body = json.dumps(
-        [reference, mutant, sorted(a["code"] for a in assertions)],
-        sort_keys=True,
-    )
-    lineage = hashlib.sha256(
-        f"humaneval::{entry}::{reference}".encode("utf-8")
-    ).hexdigest()
-    return {
+    record: dict[str, Any] = {
         "schema_version": 1,
         "id": f"mutation::humaneval_HumanEval_{number}_expand_{index:05d}",
-        "group_id": f"function:semantic:{lineage}",
+        # The verifier recomputes this with function_group_id and refuses the
+        # record if it disagrees. It is an AST-normalised semantic hash, so a
+        # plain hash of the source text is not the same value and never will be.
+        "group_id": function_group_id(reference, entry),
         "language": "python",
         "task_mode": "function",
         "task_type": "hidden_mutation_reproduction",
@@ -188,7 +196,7 @@ def _corpus_record(
         "reference_code": reference,
         "code_under_test": mutant,
         "prompt_code_under_test": mutant,
-        "content_hash": hashlib.sha256(body.encode("utf-8")).hexdigest(),
+        "content_hash": "",  # replaced below by the canonical hash
         "source": {"name": "oneiros_clean_mutations", "upstream": "humaneval"},
         "provenance": {
             "upstream_record_id": f"humaneval_HumanEval_{number}",
@@ -228,6 +236,11 @@ def _corpus_record(
             for a in assertions
         ],
     }
+    # The corpus verifier recomputes this with record_content_hash and refuses
+    # the record if it disagrees, so the canonical function has to produce it -
+    # an equivalent-looking hash of my own is exactly what it rejects.
+    record["content_hash"] = record_content_hash(record)
+    return record
 
 
 def build(limit_problems: int | None = None) -> dict[str, Any]:
@@ -248,6 +261,12 @@ def build(limit_problems: int | None = None) -> dict[str, Any]:
     records: list[dict[str, Any]] = []
     rejected = collections.Counter()
     per_problem: dict[str, int] = {}
+    # The corpus rejects two records that teach the same thing. Two mutants of
+    # one function killed by exactly the same assertions are duplicate
+    # supervision no matter how different their source looks, so they are
+    # deduplicated here by the corpus's own key rather than discovered at
+    # promotion time.
+    supervision_seen: set[tuple[str, str]] = set()
 
     for number, row in candidates:
         reference = str(row.get("code") or "")
@@ -274,11 +293,17 @@ def build(limit_problems: int | None = None) -> dict[str, Any]:
                 # No retained test distinguishes it, so it is not a defect.
                 rejected["no_test_distinguishes_the_mutant"] += 1
                 continue
-            kept += 1
-            records.append(_corpus_record(
-                number, kept, entry, reference, mutant,
+            candidate_record = _corpus_record(
+                number, kept + 1, entry, reference, mutant,
                 mutation_type, description, row, assertions, evidence,
-            ))
+            )
+            key = semantic_supervision_key(candidate_record)
+            if key in supervision_seen:
+                rejected["duplicate_semantic_supervision"] += 1
+                continue
+            supervision_seen.add(key)
+            kept += 1
+            records.append(candidate_record)
         if kept:
             per_problem[f"HumanEval_{number}"] = kept
         else:

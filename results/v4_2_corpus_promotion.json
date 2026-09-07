@@ -1,0 +1,19 @@
+{
+  "schema_version": "oneiros_corpus_promotion_v1",
+  "source_corpus": "v4_1_research_hardened_candidate",
+  "target_corpus": "v4_2_balanced_expansion_candidate",
+  "source_corpus_modified": false,
+  "sealed_test_records_inspected": false,
+  "added_records": 26,
+  "added_unique_lineages": 4,
+  "train_records_before": 6052,
+  "train_records_after": 6078,
+  "sealed_test_record_count_carried": 810,
+  "view_split_counts": {
+    "train": 6078,
+    "ablation_dev": 594,
+    "val": 781
+  },
+  "records_sha256": "5d91ead0e2a28eee39c089531896f98d289101e8c5a370f0024b1791fcc473fe",
+  "splits_sha256": "0c33d8819c6e7ab0e12cdbf665b6bd430d8ddd77e8b7f2aa88df80b24b190d9d"
+}
