@@ -45,17 +45,18 @@ DEFAULT_OUTPUT = ROOT / "data" / "training_views" / "balanced_sft_v1"
 TARGET_SYNTHETIC_FRACTION = 0.5
 MAX_REPEATS = 2
 MAX_PROJECT_FRACTION = 0.35
-#: No single SOURCE DATASET may exceed this share of unique targets.
+#: Share of unique targets above which a source dataset counts as dominant.
 #:
-#: Unlike the project cap, this one is ENFORCED. The project cap is audit-only
-#: because dropping verified repository defects would shrink a group that is
-#: already short; here the opposite holds - mbpp supplies 555 of 1009 unique
-#: targets, more than the other three sources combined, and trimming it costs
-#: nothing that is scarce. Left uncapped, "the corpus" means "mbpp", and the
-#: measured per-benchmark gap makes that concrete: SFT moves HumanEval +10.7
+#: AUDIT ONLY. mbpp supplies 555 of 1009 unique targets, more than the other
+#: three sources combined, and that skew is real - SFT moves HumanEval +10.7
 #: points and mbpp +3.3, so a corpus that is mostly mbpp is mostly the case
-#: where the method does not work.
+#: where the method does not work. The fix is to grow the scarce sources, not
+#: to delete verified mbpp targets: trimming would reach the ratio by making
+#: the corpus smaller, which throws away supervision that took execution to
+#: verify and cannot be recovered. The report states the shortfall so
+#: ingestion can close it.
 MAX_DATASET_FRACTION = 0.35
+ENFORCE_DATASET_CAP = False
 COMPLEX_TARGET_FRACTION = 0.60
 
 
@@ -104,6 +105,31 @@ def _audit_project_balance(
         "additional_non_dominant_targets_needed": max(0, required_total - len(entries)),
         "unique_targets_dropped": 0,
         "project_counts": counts,
+    }
+
+
+def _growth_to_balance(
+    entries: list[dict[str, Any]], max_fraction: float,
+) -> dict[str, Any]:
+    """How many NEW targets each source needs so no source is dominant.
+
+    The mirror image of trimming. If the largest source holds D targets and
+    must end at or below `max_fraction` of the total, the corpus has to reach
+    D / max_fraction targets overall, and every target added has to come from
+    somewhere other than that source.
+    """
+    if not entries:
+        return {}
+    counts = collections.Counter(str(e.get("dataset") or "unknown") for e in entries)
+    dominant, dominant_count = counts.most_common(1)[0]
+    required_total = math.ceil(dominant_count / max_fraction)
+    return {
+        "dominant_dataset": dominant,
+        "dominant_count": dominant_count,
+        "dominant_share": round(dominant_count / len(entries), 4),
+        "current_total_unique_targets": len(entries),
+        "required_total_unique_targets": required_total,
+        "new_non_dominant_targets_needed": max(0, required_total - len(entries)),
     }
 
 
@@ -271,13 +297,22 @@ def build(
     # the synthetic/repository split come out even, since trimming mbpp is
     # exactly what the shortfall needed.
     combined = synthetic_entries + repository_entries
-    combined, dataset_cap = cap_dataset_share(combined, MAX_DATASET_FRACTION)
-    synthetic_entries = [
-        item for item in combined if item["origin_group"] == "synthetic_function"
-    ]
-    repository_entries = [
-        item for item in combined if item["origin_group"] == "real_repository"
-    ]
+    capped, dataset_cap = cap_dataset_share(combined, MAX_DATASET_FRACTION)
+    if ENFORCE_DATASET_CAP:
+        combined = capped
+        synthetic_entries = [
+            item for item in combined if item["origin_group"] == "synthetic_function"
+        ]
+        repository_entries = [
+            item for item in combined if item["origin_group"] == "real_repository"
+        ]
+    else:
+        # Report the shortfall instead of deleting targets to reach the ratio.
+        dataset_cap = {**dataset_cap, "cap_applied": False,
+                       "enforced": False,
+                       "targets_needed_to_balance_by_growth":
+                           _growth_to_balance(combined, MAX_DATASET_FRACTION),
+                       "policy": "grow the scarce sources; never trim verified targets"}
     stages["after_dataset_cap_synthetic"] = len(synthetic_entries)
     stages["after_dataset_cap_repository"] = len(repository_entries)
     stages["dataset_cap_targets_dropped"] = dataset_cap.get(
