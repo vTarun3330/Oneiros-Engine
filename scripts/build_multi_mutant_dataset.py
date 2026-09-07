@@ -23,6 +23,7 @@ import re
 import sys
 import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
+from concurrent.futures import TimeoutError as FuturesTimeout
 from pathlib import Path
 from typing import Any
 
@@ -166,6 +167,7 @@ def build(
     view_dir: Path, output_dir: Path, split: str, max_assertions: int,
     min_assertions: int, timeout: float, workers: int, limit: int | None,
     max_targeted: int = MAX_TARGETED_EXAMPLES_PER_LINEAGE,
+    lineage_budget: float = 1800.0,
 ) -> dict[str, Any]:
     records = json.loads((view_dir / f"{split}.records.json").read_text(encoding="utf-8"))
     synthetic = [
@@ -191,22 +193,45 @@ def build(
 
     started = time.time()
     results: list[dict[str, Any]] = []
+    abandoned: list[str] = []
     if workers <= 1:
         for task in tasks:
             results.append(_process_lineage(task))
     else:
+        # One lineage must not be able to stall the whole build. The
+        # per-execution timeout bounds a single test, but a lineage runs
+        # candidates x sibling mutants, and a mutant that allocates or blocks
+        # below the timeout can hold a worker indefinitely: this build stopped
+        # at exactly 660 of 667 on three consecutive runs, with no traceback
+        # and no manifest, and the missing output was indistinguishable from
+        # slow progress. A lineage that exceeds the budget is RECORDED as
+        # abandoned rather than silently dropped, so the manifest states what
+        # it does not contain.
         with ProcessPoolExecutor(max_workers=workers) as pool:
             futures = {pool.submit(_process_lineage, task): task[0] for task in tasks}
             done = 0
-            for future in as_completed(futures):
-                results.append(future.result())
-                done += 1
-                if done % 10 == 0 or done == len(tasks):
-                    print(
-                        f"  {done}/{len(tasks)} lineages "
-                        f"({time.time() - started:.0f}s)",
-                        file=sys.stderr, flush=True,
-                    )
+            try:
+                for future in as_completed(futures, timeout=lineage_budget):
+                    results.append(future.result())
+                    done += 1
+                    if done % 10 == 0 or done == len(tasks):
+                        print(
+                            f"  {done}/{len(tasks)} lineages "
+                            f"({time.time() - started:.0f}s)",
+                            file=sys.stderr, flush=True,
+                        )
+            except FuturesTimeout:
+                for future, lineage in futures.items():
+                    if not future.done():
+                        abandoned.append(str(lineage))
+                        future.cancel()
+                print(
+                    f"  [BUDGET] abandoned {len(abandoned)} lineage(s) after "
+                    f"{lineage_budget:.0f}s: {', '.join(abandoned[:5])}",
+                    file=sys.stderr, flush=True,
+                )
+                for process in list(getattr(pool, "_processes", {}).values()):
+                    process.terminate()
     results.sort(key=lambda item: item["lineage"])
 
     broad = [item["broad"] for item in results if item.get("broad")]
@@ -232,6 +257,7 @@ def build(
             "completion_reverified_against_reference_and_all_siblings": True,
             "prompt_shows_single_target_only": True,
         },
+        "abandoned_lineages": abandoned,
         "counts": {
             "synthetic_records": len(synthetic),
             "lineages": len(ordered),
@@ -291,6 +317,14 @@ def main() -> int:
     parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 4) - 2))
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument(
+        "--lineage-budget", type=float, default=1800.0,
+        help=(
+            "wall-clock seconds for the whole lineage sweep. A lineage that "
+            "outlives it is abandoned and recorded, so one pathological "
+            "function cannot stall the build with no output and no manifest"
+        ),
+    )
+    parser.add_argument(
         "--max-targeted", type=int, default=MAX_TARGETED_EXAMPLES_PER_LINEAGE,
     )
     arguments = parser.parse_args()
@@ -299,7 +333,7 @@ def main() -> int:
         arguments.view_dir, arguments.output_dir, arguments.split,
         arguments.max_assertions, arguments.min_assertions,
         arguments.timeout, arguments.workers, arguments.limit,
-        arguments.max_targeted,
+        arguments.max_targeted, arguments.lineage_budget,
     )
     print(json.dumps(summary, indent=2))
     return 0
