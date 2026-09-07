@@ -46,6 +46,12 @@ TERMINAL_STATES = {"completed", "failed", "killed", "crashed", "timeout"}
 #: verified by executing candidates in sandboxed subprocesses before the model
 #: is ever loaded. Calling that a stall would cry wolf on every launch.
 GPU_GRACE_SECONDS = 600
+#: gpu_queue polls every 30s, so between a run reaching a terminal state and
+#: its queue writing the result line there is a normal window where the last
+#: job looks finished-but-unreported and the card is briefly idle. Reporting
+#: that is a false alarm on EVERY successful handoff, which is precisely how a
+#: watchdog becomes noise nobody reads. Three poll intervals of margin.
+HANDOFF_GRACE_SECONDS = 120
 
 
 def _gpu_utilisation() -> int | None:
@@ -165,7 +171,12 @@ def _latest_run() -> dict[str, Any]:
         run_id = str(status.get("run_id") or latest.name)
         name = run_id.split("-", 2)[-1] if "-" in run_id else run_id
     stdout = latest / "stdout.log"
+    settled_at = (
+        (latest / "status.json").stat().st_mtime
+        if status.get("state") in TERMINAL_STATES else None
+    )
     return {
+        "settled_at": settled_at,
         "run_id": status.get("run_id", latest.name),
         "name": name,
         "state": status.get("state"),
@@ -215,6 +226,12 @@ def check(queue_logs: list[Path], live_queues: int | None = None) -> dict[str, A
             written_since = log_mtime >= settled
             settled_for = time.time() - settled
             queue["wrote_after_job_settled"] = written_since
+            queue["job_settled_seconds_ago"] = round(settled_for)
+            if settled_for <= HANDOFF_GRACE_SECONDS:
+                # Normal handoff in progress; the queue has not had a poll yet.
+                queue["verdict"] = "handoff"
+                active.append(queue)
+                continue
             if not written_since and settled_for > GPU_GRACE_SECONDS:
                 queue["verdict"] = "finished_queue_log"
                 warnings.append(
@@ -273,7 +290,14 @@ def check(queue_logs: list[Path], live_queues: int | None = None) -> dict[str, A
     # and warnings were not printed at all when any problem existed - so a
     # false alarm from a dead queue's log hid two finished seeds and an idle
     # GPU behind it.
-    if not active and run.get("state") in TERMINAL_STATES and (gpu or 0) < 5:
+    settled_for = (
+        time.time() - run["settled_at"] if run.get("settled_at") else None
+    )
+    within_handoff = (
+        settled_for is not None and settled_for <= HANDOFF_GRACE_SECONDS
+    )
+    if (not active and run.get("state") in TERMINAL_STATES
+            and (gpu or 0) < 5 and not within_handoff):
         problems.append(
             f"IDLE: nothing is running. Last run '{run.get('name')}' is "
             f"{run.get('state')}, no queue has outstanding work, GPU at {gpu}%"

@@ -49,7 +49,9 @@ def test_a_terminal_run_the_queue_never_reported_is_stranded(tmp_path, monkeypat
     monkeypatch.setattr(health, "_gpu_utilisation", lambda: 50)
     monkeypatch.setattr(health, "_run_for_job", lambda job: {
         "run_id": "20260906-000000-jobA", "state": "failed",
-        "detail": "no adapter", "settled_at": time.time(),
+        # Comfortably outside HANDOFF_GRACE_SECONDS, so this is a real
+        # stranding rather than a queue that has not polled yet.
+        "detail": "no adapter", "settled_at": time.time() - 3_000,
     })
     monkeypatch.setattr(health, "_latest_run", lambda: {
         "state": "failed", "name": "jobA", "exit_code": 1,
@@ -210,7 +212,7 @@ def test_an_idle_gpu_with_nothing_queued_is_a_problem(tmp_path, monkeypatch):
     """Reported as a warning before, and warnings were hidden behind problems."""
     import scripts.pipeline_health as health
 
-    run = _settled_run(tmp_path, "v42_val_s44", "completed", age_seconds=60)
+    run = _settled_run(tmp_path, "v42_val_s44", "completed", age_seconds=3_000)
     monkeypatch.setattr(health, "ROOT", tmp_path)
     monkeypatch.setattr(health, "_gpu_utilisation", lambda: 0)
 
@@ -238,3 +240,65 @@ def test_warnings_are_printed_even_when_a_problem_exists(capsys, tmp_path, monke
     printed = capsys.readouterr().out
     assert "[UNHEALTHY] IDLE" in printed
     assert "must not be swallowed" in printed
+
+
+# --- the handoff race, caught by the watchdog firing on a healthy queue ----
+#
+# gpu_queue polls every 30s. Between a run reaching a terminal state and its
+# queue writing the result line, the last job looks finished-but-unreported
+# and the card is briefly idle. On 2026-09-08 that produced STRANDED and IDLE
+# alerts for base_val_s52 while the queue was working perfectly and started
+# relearn_val_s52 moments later. A watchdog that fires on every successful
+# handoff is noise, and noise is what let the original 2.7 hour stall survive
+# a monitor.
+
+def test_a_job_that_settled_moments_ago_is_a_handoff_not_a_stranding(monkeypatch, tmp_path):
+    monkeypatch.setattr(health, "_gpu_utilisation", lambda: 0)
+    monkeypatch.setattr(health, "_run_for_job", lambda job: {
+        "run_id": "20260908-040121-jobA", "state": "completed",
+        "detail": "child exited 0", "settled_at": time.time() - 5,
+    })
+    monkeypatch.setattr(health, "_latest_run", lambda: {
+        "state": "completed", "name": "jobA", "settled_at": time.time() - 5,
+    })
+    log = _log(tmp_path, "[QUEUE] starting jobA" + chr(92) + "n")
+
+    report = health.check([log], live_queues=1)
+    assert report["problems"] == [], (
+        "a queue mid-handoff is working, not stranded; alerting here fires on "
+        "every successful job transition"
+    )
+
+
+def test_a_job_settled_long_ago_and_unreported_is_still_stranded(monkeypatch, tmp_path):
+    """The grace must not swallow the real stranding it sits next to."""
+    monkeypatch.setattr(health, "_gpu_utilisation", lambda: 50)
+    monkeypatch.setattr(health, "_run_for_job", lambda job: {
+        "run_id": "20260906-000000-jobA", "state": "failed",
+        "detail": "no adapter", "settled_at": time.time() - 3_000,
+    })
+    monkeypatch.setattr(health, "_latest_run", lambda: {"state": "failed", "name": "jobA"})
+    log = _log(tmp_path, "[QUEUE] starting jobA" + chr(92) + "n")
+
+    report = health.check([log], live_queues=1)
+    assert any("STRANDED" in problem for problem in report["problems"])
+
+
+def test_an_idle_card_between_two_jobs_is_not_reported(monkeypatch, tmp_path):
+    monkeypatch.setattr(health, "_gpu_utilisation", lambda: 0)
+    monkeypatch.setattr(health, "_latest_run", lambda: {
+        "state": "completed", "name": "jobA", "settled_at": time.time() - 10,
+    })
+
+    report = health.check([], live_queues=1)
+    assert not any(problem.startswith("IDLE") for problem in report["problems"])
+
+
+def test_an_idle_card_long_after_the_last_job_is_reported(monkeypatch, tmp_path):
+    monkeypatch.setattr(health, "_gpu_utilisation", lambda: 0)
+    monkeypatch.setattr(health, "_latest_run", lambda: {
+        "state": "completed", "name": "jobA", "settled_at": time.time() - 3_000,
+    })
+
+    report = health.check([], live_queues=0)
+    assert any(problem.startswith("IDLE") for problem in report["problems"])
