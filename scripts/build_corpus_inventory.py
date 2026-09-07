@@ -141,6 +141,21 @@ def summarize_split(annotations: list[RecordAnnotation]) -> dict[str, Any]:
     }
 
 
+def _relative_view(view_dir: Path) -> str:
+    """Describe the view path without assuming it was given relative to ROOT.
+
+    ``Path.relative_to`` raises when the caller passes an absolute path, and
+    this is the LAST statement of a build that has already done all its work -
+    so a run could execute 667 lineages of verification and then throw the
+    result away on a cosmetic manifest field. Resolve both sides, and fall back
+    to the absolute path rather than failing.
+    """
+    try:
+        return str(view_dir.resolve().relative_to(ROOT.resolve())).replace("\\", "/")
+    except ValueError:
+        return view_dir.resolve().as_posix()
+
+
 def build(view_dir: Path, output_dir: Path) -> dict[str, Any]:
     per_split: dict[str, list[RecordAnnotation]] = {}
     for split in SPLITS:
@@ -174,7 +189,7 @@ def build(view_dir: Path, output_dir: Path) -> dict[str, Any]:
         "annotation_schema_version": ANNOTATION_SCHEMA_VERSION,
         "defect_taxonomy_version": DEFECT_TAXONOMY_VERSION,
         "repository_complexity_policy_version": REPOSITORY_COMPLEXITY_POLICY_VERSION,
-        "source_view": str(view_dir.relative_to(ROOT)).replace("\\", "/"),
+        "source_view": _relative_view(view_dir),
         "source_tree_sha256": source_tree_sha256(ROOT),
         "sealed_split_opened": False,
         "defect_family_vocabulary": list(DEFECT_FAMILIES),

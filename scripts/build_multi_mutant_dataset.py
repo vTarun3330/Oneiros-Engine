@@ -147,6 +147,21 @@ def _process_lineage(
     }
 
 
+def _relative_view(view_dir: Path) -> str:
+    """Describe the view path without assuming it was given relative to ROOT.
+
+    ``Path.relative_to`` raises when the caller passes an absolute path, and
+    this is the LAST statement of a build that has already done all its work -
+    so a run could execute 667 lineages of verification and then throw the
+    result away on a cosmetic manifest field. Resolve both sides, and fall back
+    to the absolute path rather than failing.
+    """
+    try:
+        return str(view_dir.resolve().relative_to(ROOT.resolve())).replace("\\", "/")
+    except ValueError:
+        return view_dir.resolve().as_posix()
+
+
 def build(
     view_dir: Path, output_dir: Path, split: str, max_assertions: int,
     min_assertions: int, timeout: float, workers: int, limit: int | None,
@@ -204,7 +219,7 @@ def build(
     summary = {
         "schema_version": "oneiros_multi_mutant_dataset_v1",
         "builder_version": MULTI_MUTANT_BUILDER_VERSION,
-        "source_view": str(view_dir.relative_to(ROOT)).replace("\\", "/"),
+        "source_view": _relative_view(view_dir),
         "split": split,
         "source_tree_sha256": source_tree_sha256(ROOT),
         "policy": {
