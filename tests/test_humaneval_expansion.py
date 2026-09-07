@@ -21,6 +21,7 @@ from scripts.expand_humaneval_coverage import _problem_number, runnable, verify
 REFERENCE = "def f(x):\n    return x + 1\n"
 MUTANT = "def f(x):\n    return x + 2\n"
 CHECK_TEST = "def check(candidate):\n    assert candidate(1) == 2\n"
+KILLING = ["assert f(1) == 2"]
 
 
 def test_a_check_style_test_is_invoked():
@@ -40,26 +41,32 @@ def test_a_plain_assertion_is_left_alone():
 
 
 def test_a_detectable_mutant_verifies():
-    evidence = verify(REFERENCE, MUTANT, [CHECK_TEST], "f")
+    labelled, evidence = verify(REFERENCE, MUTANT, KILLING)
     assert evidence["verified"] is True
     assert evidence["killing_tests"] == 1
     assert evidence["reference_valid_tests"] == 1
+    assert labelled[0]["kills"] is True
 
 
 def test_an_undetectable_mutant_is_rejected():
     """A mutant no test distinguishes is a rewrite, not a defect."""
     equivalent = "def f(x):\n    y = x\n    return y + 1\n"
-    evidence = verify(REFERENCE, equivalent, [CHECK_TEST], "f")
+    labelled, evidence = verify(REFERENCE, equivalent, KILLING)
     assert evidence["verified"] is False
     assert evidence["killing_tests"] == 0
+    assert labelled and labelled[0]["kills"] is False, (
+        "a non-distinguishing assertion is still a valid test and is retained, "
+        "just labelled as not distinguishing"
+    )
 
 
 def test_a_test_failing_on_the_reference_is_not_counted():
     """It would flag correct code as buggy, so it cannot certify a mutant."""
-    wrong = "def check(candidate):\n    assert candidate(1) == 99\n"
-    evidence = verify(REFERENCE, MUTANT, [wrong], "f")
+    labelled, evidence = verify(REFERENCE, MUTANT, ["assert f(1) == 99"])
     assert evidence["reference_valid_tests"] == 0
+    assert evidence["reference_invalid_excluded"] == 1
     assert evidence["verified"] is False
+    assert labelled == []
 
 
 def test_problem_numbers_are_parsed_from_record_ids():
@@ -77,8 +84,11 @@ def test_expansion_records_never_reuse_an_existing_problem(tmp_path):
     if not staged.exists():
         return
     report = json.loads(staged.read_text(encoding="utf-8"))
+    import re
     for record in report["records"]:
-        assert record["problem_number"] not in used, (
-            f"HumanEval_{record['problem_number']} is already in "
-            f"{used[record['problem_number']]}; adding it to train would leak"
+        upstream = record["provenance"]["upstream_record_id"]
+        number = int(re.search(r"(\d+)", upstream).group(1))
+        assert number not in used, (
+            f"HumanEval_{number} is already in {used[number]}; adding it to "
+            "train would leak a held-out problem into training"
         )

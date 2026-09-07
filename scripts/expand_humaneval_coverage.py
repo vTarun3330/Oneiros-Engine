@@ -29,7 +29,9 @@ What this does and does not do:
 from __future__ import annotations
 
 import argparse
+import ast
 import collections
+import hashlib
 import json
 import re
 import sys
@@ -75,6 +77,37 @@ def used_problem_ids() -> dict[int, str]:
     return used
 
 
+def decompose_check(test: str, entry_point: str) -> list[str]:
+    """Split HumanEval's check() into the corpus's individual assertions.
+
+    Corpus records store one assert per test with its own execution-derived
+    oracle label, not a single blob. Keeping the blob would produce records
+    the rest of the pipeline cannot score the same way as every existing one,
+    which is the train/eval shape mismatch this project has already paid for
+    once. `candidate` is the parameter name HumanEval uses for the function
+    under test, so it is rebound to the real entry point.
+    """
+    try:
+        tree = ast.parse(str(test))
+    except SyntaxError:
+        return []
+    out: list[str] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef) and node.name == "check":
+            for statement in node.body:
+                if isinstance(statement, ast.Assert):
+                    try:
+                        rendered = ast.unparse(statement)
+                    except Exception:
+                        continue
+                    out.append(
+                        # Word-bounded: a bare substitution would also rewrite
+                        # identifiers that merely contain the name.
+                        re.sub(r"\bcandidate\b", entry_point, rendered)
+                    )
+    return out
+
+
 def runnable(test: str, entry_point: str) -> str:
     """Make a HumanEval test actually execute.
 
@@ -92,26 +125,108 @@ def runnable(test: str, entry_point: str) -> str:
 
 
 def verify(
-    reference: str, mutant: str, tests: list[str], entry_point: str,
-) -> dict[str, Any]:
-    """A mutant counts only if a retained test passes clean and fails dirty."""
-    passing = []
-    killing = []
-    for raw in tests:
-        if not str(raw).strip():
+    reference: str, mutant: str, assertions: list[str],
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Label each assertion by execution against the reference and the mutant.
+
+    Two-sided, exactly as the corpus does it. An assertion that FAILS on the
+    reference is dropped, not recorded: it would flag correct code as buggy and
+    cannot certify anything. An assertion that passes both is kept but labelled
+    non-distinguishing, because it is still a valid test of the function.
+    """
+    labelled: list[dict[str, Any]] = []
+    reference_invalid = 0
+    for code in assertions:
+        if not code.strip():
             continue
-        test = runnable(raw, entry_point)
-        reference_ok, _, _ = execute_code(reference, test, EXECUTION_TIMEOUT_SECONDS)
+        reference_ok, _, _ = execute_code(reference, code, EXECUTION_TIMEOUT_SECONDS)
         if not reference_ok:
+            reference_invalid += 1
             continue
-        passing.append(test)
-        mutant_ok, _, _ = execute_code(mutant, test, EXECUTION_TIMEOUT_SECONDS)
-        if not mutant_ok:
-            killing.append(test)
-    return {
-        "reference_valid_tests": len(passing),
-        "killing_tests": len(killing),
+        mutant_ok, _, _ = execute_code(mutant, code, EXECUTION_TIMEOUT_SECONDS)
+        labelled.append({"code": code, "kills": not mutant_ok})
+
+    killing = sum(1 for a in labelled if a["kills"])
+    return labelled, {
+        "reference_valid_tests": len(labelled),
+        "killing_tests": killing,
+        "reference_invalid_excluded": reference_invalid,
         "verified": bool(killing),
+    }
+
+
+def _corpus_record(
+    number: int, index: int, entry: str, reference: str, mutant: str,
+    mutation_type: str, description: str, row: dict[str, Any],
+    assertions: list[dict[str, Any]], evidence: dict[str, Any],
+) -> dict[str, Any]:
+    """Emit a record shaped exactly like the ones already in the corpus.
+
+    Anything less makes these records second-class: the annotator, the
+    multi-mutant builder and the evaluator all read these fields, and a record
+    missing one is silently skipped rather than loudly rejected.
+    """
+    body = json.dumps(
+        [reference, mutant, sorted(a["code"] for a in assertions)],
+        sort_keys=True,
+    )
+    lineage = hashlib.sha256(
+        f"humaneval::{entry}::{reference}".encode("utf-8")
+    ).hexdigest()
+    return {
+        "schema_version": 1,
+        "id": f"mutation::humaneval_HumanEval_{number}_expand_{index:05d}",
+        "group_id": f"function:semantic:{lineage}",
+        "language": "python",
+        "task_mode": "function",
+        "task_type": "hidden_mutation_reproduction",
+        "test_format": "assert_statement",
+        "entry_point": entry,
+        "target_symbols": [entry],
+        "specification": str(row.get("docstring") or ""),
+        "support_context": "",
+        "reference_code": reference,
+        "code_under_test": mutant,
+        "prompt_code_under_test": mutant,
+        "content_hash": hashlib.sha256(body.encode("utf-8")).hexdigest(),
+        "source": {"name": "oneiros_clean_mutations", "upstream": "humaneval"},
+        "provenance": {
+            "upstream_record_id": f"humaneval_HumanEval_{number}",
+            "mutation_type": mutation_type,
+            "mutation_description": description,
+            "expansion": "humaneval_unused_problem_coverage_v1",
+        },
+        "quality": {
+            "pair_behaviorally_verified": True,
+            "oracle": "mutation_reference",
+            "test_oracle_labels_execution_derived": True,
+            "test_count": len(assertions),
+            "killing_test_count": evidence["killing_tests"],
+            "non_killing_test_count": len(assertions) - evidence["killing_tests"],
+            "reference_invalid_tests_excluded": evidence["reference_invalid_excluded"],
+            "candidate_policy_invalid_tests_excluded": 0,
+            "current_execution_policy_reverified": True,
+        },
+        "field_lineage": {
+            "prompt_code_under_test": "mutant_body_only",
+            "specification": "humaneval_docstring",
+            "support_context": "none",
+            "target_symbols": "entry_point",
+            "task_mode": "function",
+            "test_format": "assert_statement",
+        },
+        "tests": [
+            {
+                "code": a["code"],
+                "oracle": ("passes_reference_fails_target" if a["kills"]
+                           else "passes_reference_passes_target"),
+                "distinguishing": a["kills"],
+                "reference_execution_status": "pass",
+                "target_execution_status": ("assertion_error" if a["kills"]
+                                            else "pass"),
+            }
+            for a in assertions
+        ],
     }
 
 
@@ -137,9 +252,12 @@ def build(limit_problems: int | None = None) -> dict[str, Any]:
     for number, row in candidates:
         reference = str(row.get("code") or "")
         entry = str(row.get("entry_point") or "")
-        tests = [str(t) for t in (row.get("test_cases") or []) if str(t).strip()]
-        if not (reference and entry and tests):
-            rejected["missing_reference_entry_or_tests"] += 1
+        raw_tests = [str(t) for t in (row.get("test_cases") or []) if str(t).strip()]
+        decomposed: list[str] = []
+        for raw in raw_tests:
+            decomposed.extend(decompose_check(raw, entry))
+        if not (reference and entry and decomposed):
+            rejected["missing_reference_entry_or_assertions"] += 1
             continue
 
         kept = 0
@@ -151,32 +269,22 @@ def build(limit_problems: int | None = None) -> dict[str, Any]:
             if not is_valid_python(mutant) or not is_clean_mutant(reference, mutant):
                 rejected["invalid_or_identical_mutant"] += 1
                 continue
-            evidence = verify(reference, mutant, tests, entry)
+            assertions, evidence = verify(reference, mutant, decomposed)
             if not evidence["verified"]:
                 # No retained test distinguishes it, so it is not a defect.
                 rejected["no_test_distinguishes_the_mutant"] += 1
                 continue
             kept += 1
-            records.append({
-                "id": f"mutation::humaneval_HumanEval_{number}_expand_{kept:03d}",
-                "lineage": f"humaneval_HumanEval_{number}",
-                "problem_number": number,
-                "task_mode": "function",
-                "source_dataset": "humaneval",
-                "entry_point": entry,
-                "reference_code": reference,
-                "code_under_test": mutant,
-                "mutation_type": mutation_type,
-                "mutation_description": description,
-                "tests": tests,
-                "verification": evidence,
-            })
+            records.append(_corpus_record(
+                number, kept, entry, reference, mutant,
+                mutation_type, description, row, assertions, evidence,
+            ))
         if kept:
             per_problem[f"HumanEval_{number}"] = kept
         else:
             rejected["problem_yielded_no_verified_mutant"] += 1
 
-    lineages = {row["lineage"] for row in records}
+    lineages = {row["group_id"] for row in records}
     return {
         "schema_version": "oneiros_humaneval_expansion_v1",
         "source_tree_sha256": source_tree_sha256(ROOT),
