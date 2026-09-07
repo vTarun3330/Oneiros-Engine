@@ -45,6 +45,17 @@ DEFAULT_OUTPUT = ROOT / "data" / "training_views" / "balanced_sft_v1"
 TARGET_SYNTHETIC_FRACTION = 0.5
 MAX_REPEATS = 2
 MAX_PROJECT_FRACTION = 0.35
+#: No single SOURCE DATASET may exceed this share of unique targets.
+#:
+#: Unlike the project cap, this one is ENFORCED. The project cap is audit-only
+#: because dropping verified repository defects would shrink a group that is
+#: already short; here the opposite holds - mbpp supplies 555 of 1009 unique
+#: targets, more than the other three sources combined, and trimming it costs
+#: nothing that is scarce. Left uncapped, "the corpus" means "mbpp", and the
+#: measured per-benchmark gap makes that concrete: SFT moves HumanEval +10.7
+#: points and mbpp +3.3, so a corpus that is mostly mbpp is mostly the case
+#: where the method does not work.
+MAX_DATASET_FRACTION = 0.35
 COMPLEX_TARGET_FRACTION = 0.60
 
 
@@ -93,6 +104,84 @@ def _audit_project_balance(
         "additional_non_dominant_targets_needed": max(0, required_total - len(entries)),
         "unique_targets_dropped": 0,
         "project_counts": counts,
+    }
+
+
+def cap_dataset_share(
+    entries: list[dict[str, Any]], max_fraction: float,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Trim over-represented source datasets down to a share ceiling.
+
+    Selection within a trimmed dataset is deterministic and diversity-first:
+    entries are ordered by how rare their bug family and complexity tier are,
+    so trimming removes the most redundant targets rather than an arbitrary
+    tail. Two runs of this function on the same input produce the same corpus.
+
+    Scarce datasets are never padded up to the ceiling - the cap is a maximum,
+    not a quota - because manufacturing HumanEval targets that do not exist is
+    exactly the manipulation this project forbids.
+    """
+    if not entries:
+        return [], {"cap_applied": False, "cap_met": True, "dataset_counts": {}}
+
+    by_dataset: dict[str, list[dict[str, Any]]] = collections.defaultdict(list)
+    for entry in entries:
+        by_dataset[str(entry.get("dataset") or "unknown")].append(entry)
+    before = {name: len(rows) for name, rows in sorted(by_dataset.items())}
+
+    family_counts = collections.Counter(str(e.get("bug_family")) for e in entries)
+    tier_counts = collections.Counter(str(e.get("complexity_tier")) for e in entries)
+
+    # A dataset's allowance depends on the final total, which depends on the
+    # allowances. Solve it directly: with F the cap and R the targets from
+    # datasets already under the cap, an over-represented dataset may keep
+    # k = floor(F * R / (1 - F)).
+    kept: dict[str, list[dict[str, Any]]] = {}
+    over = {n for n, rows in by_dataset.items()
+            if len(rows) / len(entries) > max_fraction}
+    if not over:
+        return list(entries), {
+            "cap_applied": False, "cap_met": True,
+            "max_dataset_fraction": max_fraction,
+            "dataset_counts_before": before, "dataset_counts_after": before,
+            "unique_targets_dropped": 0,
+        }
+
+    under_total = sum(len(rows) for n, rows in by_dataset.items() if n not in over)
+    allowance = int(max_fraction * under_total / (1 - max_fraction * len(over)))
+
+    for name, rows in by_dataset.items():
+        if name not in over:
+            kept[name] = list(rows)
+            continue
+        ordered = sorted(rows, key=lambda e: (
+            family_counts[str(e.get("bug_family"))],
+            tier_counts[str(e.get("complexity_tier"))],
+            str(e.get("target_key")),
+        ))
+        kept[name] = ordered[:allowance]
+
+    selection = [e for name in sorted(kept) for e in kept[name]]
+    after = {name: len(rows) for name, rows in sorted(kept.items())}
+    total = len(selection)
+    shares = {n: round(c / max(1, total), 4) for n, c in after.items()}
+    return selection, {
+        "cap_applied": True,
+        "max_dataset_fraction": max_fraction,
+        "cap_met": all(v <= max_fraction + 1e-9 for v in shares.values()),
+        "dataset_counts_before": before,
+        "dataset_counts_after": after,
+        "dataset_shares_after": shares,
+        "unique_targets_dropped": len(entries) - total,
+        "trimmed_datasets": sorted(over),
+        "selection_rule": (
+            "deterministic; rarest bug family then rarest complexity tier "
+            "survives, so trimming removes the most redundant targets"
+        ),
+        "scarce_datasets_not_padded": (
+            "the cap is a ceiling, never a quota; a small dataset is left at "
+            "its true size rather than duplicated up to the ceiling"
+        ),
     }
 
 
@@ -176,6 +265,25 @@ def build(
     )
     stages["repository_after_project_audit"] = len(repository_entries)
 
+    # The dataset cap spans both groups, because the four source datasets do:
+    # humaneval and mbpp are synthetic, BugsInPy and SWE-bench are repository.
+    # Capping them together rather than within each group is also what makes
+    # the synthetic/repository split come out even, since trimming mbpp is
+    # exactly what the shortfall needed.
+    combined = synthetic_entries + repository_entries
+    combined, dataset_cap = cap_dataset_share(combined, MAX_DATASET_FRACTION)
+    synthetic_entries = [
+        item for item in combined if item["origin_group"] == "synthetic_function"
+    ]
+    repository_entries = [
+        item for item in combined if item["origin_group"] == "real_repository"
+    ]
+    stages["after_dataset_cap_synthetic"] = len(synthetic_entries)
+    stages["after_dataset_cap_repository"] = len(repository_entries)
+    stages["dataset_cap_targets_dropped"] = dataset_cap.get(
+        "unique_targets_dropped", 0
+    )
+
     # --- bounded repetition to approach the frozen ratio ---
     synthetic_count = len(synthetic_entries)
     repository_count = len(repository_entries)
@@ -226,6 +334,7 @@ def build(
             "target_synthetic_fraction": TARGET_SYNTHETIC_FRACTION,
             "max_repeats": MAX_REPEATS,
             "max_project_fraction": MAX_PROJECT_FRACTION,
+            "max_dataset_fraction": MAX_DATASET_FRACTION,
             "complex_target_fraction": COMPLEX_TARGET_FRACTION,
             "unique_first": True,
             "no_synthetic_deleted_to_reach_ratio": True,
@@ -238,6 +347,7 @@ def build(
             "final_repository_examples": final_repository,
             "final_total_examples": total,
         },
+        "source_dataset_cap": dataset_cap,
         "unique_target_balance": {
             "synthetic_unique_targets": synthetic_count,
             "repository_unique_targets": repository_count,

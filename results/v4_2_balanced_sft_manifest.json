@@ -1,0 +1,165 @@
+{
+  "schema_version": "oneiros_balanced_sft_dataset_v1",
+  "split": "train",
+  "source_tree_sha256": "8029987176f5d6fb5e67c42a52939511408d9964752eb0cc6a60c5e77dc84a4b",
+  "policy": {
+    "balance_unit": "unique_semantic_target",
+    "target_synthetic_fraction": 0.5,
+    "max_repeats": 2,
+    "max_project_fraction": 0.35,
+    "max_dataset_fraction": 0.35,
+    "complex_target_fraction": 0.6,
+    "unique_first": true,
+    "no_synthetic_deleted_to_reach_ratio": true
+  },
+  "stages": {
+    "raw_corpus_rows_in_split": 6052,
+    "training_excluded_records": 111,
+    "synthetic_examples": 663,
+    "synthetic_unique_lineages": 663,
+    "repository_eligible_unique_targets": 346,
+    "repository_after_project_audit": 346,
+    "after_dataset_cap_synthetic": 352,
+    "after_dataset_cap_repository": 346,
+    "dataset_cap_targets_dropped": 311,
+    "repository_repeated_examples": 6,
+    "repository_repeat_shortfall_unmet": 0,
+    "final_synthetic_examples": 352,
+    "final_repository_examples": 352,
+    "final_total_examples": 704
+  },
+  "source_dataset_cap": {
+    "cap_applied": true,
+    "max_dataset_fraction": 0.35,
+    "cap_met": true,
+    "dataset_counts_before": {
+      "BugsInPy": 112,
+      "SWE-bench Verified": 234,
+      "humaneval": 108,
+      "mbpp": 555
+    },
+    "dataset_counts_after": {
+      "BugsInPy": 112,
+      "SWE-bench Verified": 234,
+      "humaneval": 108,
+      "mbpp": 244
+    },
+    "dataset_shares_after": {
+      "BugsInPy": 0.1605,
+      "SWE-bench Verified": 0.3352,
+      "humaneval": 0.1547,
+      "mbpp": 0.3496
+    },
+    "unique_targets_dropped": 311,
+    "trimmed_datasets": [
+      "mbpp"
+    ],
+    "selection_rule": "deterministic; rarest bug family then rarest complexity tier survives, so trimming removes the most redundant targets",
+    "scarce_datasets_not_padded": "the cap is a ceiling, never a quota; a small dataset is left at its true size rather than duplicated up to the ceiling"
+  },
+  "unique_target_balance": {
+    "synthetic_unique_targets": 352,
+    "repository_unique_targets": 346,
+    "synthetic_fraction": 0.5043,
+    "repository_fraction": 0.4957,
+    "repository_shortfall_to_exact_parity": 6,
+    "target_met": true,
+    "repetitions_do_not_count_as_unique_targets": true
+  },
+  "effective_training_balance": {
+    "synthetic_fraction": 0.5,
+    "repository_fraction": 0.5,
+    "target_met": true,
+    "provisional_because_repetitions_used": true
+  },
+  "complexity": {
+    "complex_examples": 320,
+    "complex_fraction": 0.4545,
+    "moderate_or_complex_examples": 557,
+    "moderate_or_complex_fraction": 0.7912,
+    "floor": 0.6,
+    "floor_met": false,
+    "floor_status": "design choice; not demonstrated to improve results",
+    "by_group": {
+      "synthetic_function": {
+        "complex": 84,
+        "moderate": 154,
+        "simple": 114
+      },
+      "real_repository": {
+        "complex": 236,
+        "moderate": 83,
+        "simple": 33
+      }
+    }
+  },
+  "project_cap": {
+    "cap_applied": false,
+    "audit_only_until_more_unique_repositories_are_added": true,
+    "max_project_fraction": 0.35,
+    "cap_met": false,
+    "dominant_project": "django",
+    "dominant_project_count": 154,
+    "dominant_project_fraction": 0.4451,
+    "additional_non_dominant_targets_needed": 94,
+    "unique_targets_dropped": 0,
+    "project_counts": {
+      "ansible": 12,
+      "astropy": 13,
+      "django": 154,
+      "fastapi": 1,
+      "flask": 1,
+      "httpie": 1,
+      "matplotlib": 34,
+      "pylint": 1,
+      "sanic": 3,
+      "sympy": 55,
+      "thefuck": 28,
+      "tornado": 7,
+      "youtube-dl": 36
+    }
+  },
+  "bug_family_counts": {
+    "API_contract": 29,
+    "arithmetic": 24,
+    "arithmetic_and_numerical": 14,
+    "asynchronous_and_concurrency": 6,
+    "boolean": 16,
+    "boundary": 99,
+    "boundary_and_control_flow": 47,
+    "comparison": 101,
+    "configuration_and_integration": 7,
+    "dependency_interaction": 24,
+    "exception_handling": 13,
+    "filesystem_and_resource_handling": 3,
+    "identity": 2,
+    "index": 12,
+    "indexing_and_data_structures": 59,
+    "input_validation": 69,
+    "logical": 11,
+    "membership": 22,
+    "negate_removal": 9,
+    "off_by_one": 32,
+    "other_verified_repository_defect": 32,
+    "output_formatting": 21,
+    "parsing_and_serialization": 12,
+    "return": 21,
+    "state_mutation": 13,
+    "string": 3,
+    "type_and_schema_handling": 3
+  },
+  "dataset_counts": {
+    "BugsInPy": 116,
+    "SWE-bench Verified": 236,
+    "humaneval": 108,
+    "mbpp": 244
+  },
+  "readiness": {
+    "ready_for_final_sft": false,
+    "blocking_conditions": [
+      "repository project concentration exceeds the frozen cap",
+      "the aspirational 0.60 complex-only floor is not met"
+    ]
+  },
+  "selection_sha256": "0247b01afadbae5d688df0009de0bc95066e5762caca4c561a8286f1c1e6f6de"
+}
