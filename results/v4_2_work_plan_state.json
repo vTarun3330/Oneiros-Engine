@@ -220,11 +220,20 @@
       "phase": "P2",
       "detail": "Per-failure-category verified corrections; never train on a raw failed output as a positive label. Permitted prompt enrichment only.",
       "uses_gpu": false,
-      "status": "in_progress",
-      "progress": [],
-      "artifacts": [],
+      "status": "done",
+      "progress": [
+        {
+          "at": "2026-09-08T18:47:28Z",
+          "note": "candidate-level classification fixed (89% wrong_oracle, was 100% no_kill); 663 verified single-assertion corrections built"
+        }
+      ],
+      "artifacts": [
+        "data/training_views/single_assertion_v1/corrections.json"
+      ],
       "run_ids": [],
-      "started_utc": "2026-09-08T18:17:12Z"
+      "started_utc": "2026-09-08T18:17:12Z",
+      "finished_utc": "2026-09-08T18:47:28Z",
+      "summary": "relearning queue now classified per candidate; corrections are one verified killing assertion each, settling the open decision toward fewer surer assertions"
     },
     {
       "id": "P3-data-regularization",
@@ -298,7 +307,7 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T18:17:12Z",
+  "updated_utc": "2026-09-08T18:47:28Z",
   "paused_utc": "2026-09-08T11:50:47Z",
   "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",
