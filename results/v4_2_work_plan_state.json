@@ -13,11 +13,20 @@
       "phase": "B",
       "detail": "Compare the ablation_dev gain against the locked val gain across three seeds; the single-seed figures were +12.2 and +3.8.",
       "uses_gpu": true,
-      "status": "in_progress",
-      "progress": [],
-      "artifacts": [],
+      "status": "done",
+      "progress": [
+        {
+          "at": "2026-09-08T02:52:50Z",
+          "note": "three seeds on both panels; inflation 3.2x, per-seed ranges disjoint"
+        }
+      ],
+      "artifacts": [
+        "results/v4_2_panel_selection_effect.json"
+      ],
       "run_ids": [],
-      "started_utc": "2026-09-08T02:36:54Z"
+      "started_utc": "2026-09-08T02:36:54Z",
+      "finished_utc": "2026-09-08T02:52:51Z",
+      "summary": "ablation_dev overstates the relearning gain by 3.2x (+10.5 pts vs +3.3 pts on locked val), stable across seeds 42-44 with disjoint per-seed ranges"
     },
     {
       "id": "B2-results-table",
@@ -119,5 +128,5 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T02:36:54Z"
+  "updated_utc": "2026-09-08T02:52:51Z"
 }

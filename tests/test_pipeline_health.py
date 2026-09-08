@@ -29,12 +29,19 @@ def _log(tmp_path: Path, text: str, age_seconds: int = 0) -> Path:
 
 
 def test_a_cold_gpu_under_a_claimed_job_is_reported_as_stalled(tmp_path, monkeypatch):
-    """The 2.7-hour idle: queue says running, card is cold, log frozen."""
+    """The 2.7-hour idle: queue says running, card is cold, log frozen.
+
+    live_queues is passed explicitly here and everywhere below. Left to
+    default, check() probes the real machine, and this test passed or failed
+    depending on whether an unrelated gpu_queue happened to be running at the
+    time - which is how it passed at 15:00 and failed at 15:40 with no code
+    change between.
+    """
     monkeypatch.setattr(health, "_gpu_utilisation", lambda: 0)
     monkeypatch.setattr(health, "_latest_run", lambda: {"state": "completed", "name": "other"})
     log = _log(tmp_path, "[QUEUE] starting jobA\n", age_seconds=3600)
 
-    report = health.check([log])
+    report = health.check([log], live_queues=1)
     assert report["healthy"] is False
     assert any("STALLED" in p and "jobA" in p for p in report["problems"])
 
@@ -72,7 +79,7 @@ def test_a_failed_run_is_always_a_problem(tmp_path, monkeypatch):
     })
     log = _log(tmp_path, "[QUEUE] starting jobA\n[QUEUE] jobA -> completed\n")
 
-    report = health.check([log])
+    report = health.check([log], live_queues=1)
     assert report["healthy"] is False
     assert any("FAILED RUN" in p and "cuda_oom" in p for p in report["problems"])
 
@@ -85,7 +92,7 @@ def test_a_silent_running_job_with_a_cold_gpu_is_a_problem(tmp_path, monkeypatch
     })
     log = _log(tmp_path, "[QUEUE] starting jobA\n[QUEUE] jobA -> completed\n")
 
-    report = health.check([log])
+    report = health.check([log], live_queues=1)
     assert report["healthy"] is False
     assert any("SILENT RUN" in p for p in report["problems"])
 

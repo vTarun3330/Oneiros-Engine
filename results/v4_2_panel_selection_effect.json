@@ -1,0 +1,74 @@
+{
+  "schema_version": "oneiros_panel_selection_effect_v1",
+  "arm": "relearning",
+  "arm_run": "local_sft_relearn_v2_seed42",
+  "sealed_final_test_accessed": false,
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "panels": {
+    "ablation_dev": {
+      "role": "selection panel; checkpoints and settings were chosen on it",
+      "seeds": [
+        {
+          "seed": 42,
+          "base_kill_at_8": 0.595941,
+          "arm_kill_at_8": 0.717712,
+          "gain": 0.121771,
+          "targets": 580
+        },
+        {
+          "seed": 43,
+          "base_kill_at_8": 0.621771,
+          "arm_kill_at_8": 0.708487,
+          "gain": 0.086716,
+          "targets": 580
+        },
+        {
+          "seed": 44,
+          "base_kill_at_8": 0.623616,
+          "arm_kill_at_8": 0.728782,
+          "gain": 0.105166,
+          "targets": 580
+        }
+      ],
+      "mean_gain": 0.104551,
+      "min_gain": 0.086716,
+      "max_gain": 0.121771
+    },
+    "val": {
+      "role": "locked; never selected on",
+      "seeds": [
+        {
+          "seed": 42,
+          "base_kill_at_8": 0.620872,
+          "arm_kill_at_8": 0.659181,
+          "gain": 0.038309,
+          "targets": 781
+        },
+        {
+          "seed": 43,
+          "base_kill_at_8": 0.612946,
+          "arm_kill_at_8": 0.65786,
+          "gain": 0.044914,
+          "targets": 781
+        },
+        {
+          "seed": 44,
+          "base_kill_at_8": 0.630119,
+          "arm_kill_at_8": 0.645971,
+          "gain": 0.015852,
+          "targets": 781
+        }
+      ],
+      "mean_gain": 0.033025,
+      "min_gain": 0.015852,
+      "max_gain": 0.044914
+    }
+  },
+  "selection_panel_inflation_factor": 3.166,
+  "per_seed_ranges_disjoint": true,
+  "interpretation": "the same adapter and prompts on both panels, so the difference between the gains is the selection effect. A figure quoted from ablation_dev is not a generalisation estimate and must not be reported as one."
+}
