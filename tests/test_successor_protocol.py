@@ -109,3 +109,42 @@ def test_the_committed_receipt_matches_the_current_sources():
         "a file defining the protocol changed after the receipt was written; "
         "rebuild the receipt before running anything under it"
     )
+
+
+# --- the successor must not overwrite the legacy artifact ------------------
+#
+# The evaluation profile slug encodes split, smoke size, feedback rounds,
+# diversity, holdout and prompt/instruction variants - but not the parse mode.
+# A whole_output run on ablation_dev therefore wrote
+# sft_validation_ablation-dev_seed_42.json: byte-for-byte the legacy
+# artifact's name, silently replacing a different metric under the same field
+# names.
+
+def test_the_parse_mode_appears_in_the_results_filename(monkeypatch):
+    import scripts.train_on_dataset as driver
+
+    monkeypatch.setattr(driver, "EVALUATION_SPLIT", "ablation_dev")
+    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "whole_output")
+    successor = driver.evaluation_results_filename("sft", 42)
+
+    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "first_assertion")
+    legacy = driver.evaluation_results_filename("sft", 42)
+
+    assert successor != legacy, (
+        "a successor run would overwrite the legacy artifact it is meant to "
+        "be compared against"
+    )
+    assert "parse-whole-output" in successor
+    assert "parse-" not in legacy, (
+        "the frozen protocol's filenames must not change, or every historical "
+        "artifact stops being found by the name it was written under"
+    )
+
+
+def test_the_frozen_filename_is_unchanged(monkeypatch):
+    import scripts.train_on_dataset as driver
+
+    monkeypatch.setattr(driver, "EVALUATION_SPLIT", "val")
+    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "first_assertion")
+    assert driver.evaluation_results_filename("base", 42) == \
+        "base_validation_standard_seed_42.json"

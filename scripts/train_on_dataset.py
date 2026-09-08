@@ -235,6 +235,13 @@ def _evaluation_profile_slug() -> str:
         parts.append(f"prompt-{PROMPT_INFORMATION_VARIANT.replace('_', '-')}")
     if OUTPUT_INSTRUCTION_VARIANT != "self_contained":
         parts.append(f"instruction-{OUTPUT_INSTRUCTION_VARIANT.replace('_', '-')}")
+    # The successor protocol judges the whole output rather than the first
+    # assertion, so its kill@k is a DIFFERENT metric under the same field
+    # names. Without this the successor run writes the legacy artifact's exact
+    # filename and overwrites it, leaving one file that could be read as
+    # either protocol - the confusion the successor receipt exists to refuse.
+    if CANDIDATE_PARSE_MODE != "first_assertion":
+        parts.append(f"parse-{CANDIDATE_PARSE_MODE.replace('_', '-')}")
     return "_".join(parts) or "standard"
 
 
