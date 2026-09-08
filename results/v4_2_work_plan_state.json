@@ -2,9 +2,9 @@
   "schema_version": "oneiros_work_plan_v1",
   "name": "P0-P6 diagnosis brief (supersedes the B4/B5 + A ordering)",
   "created_utc": "2026-09-08T02:36:48Z",
-  "execution": "paused",
+  "execution": "running",
   "paused_mid_step": null,
-  "paused_reason": "user asked to pause; paused between steps with P1 blocked on the open decision",
+  "paused_reason": "",
   "decided": "Superseded by the user's P0-P6 brief. The framing is corrected: this is weak GENERALIZATION plus oracle/value error, not absence of learning. P0 blocks all further full training.",
   "steps": [
     {
@@ -183,6 +183,18 @@
       "summary": "--max-sequence-tokens and --generation-completion-token-limit added with an enforced fit check; 2048 was a project constant, model supports 32768"
     },
     {
+      "id": "P5a-parallel-harness",
+      "title": "Parallelise the local execution harness across cores",
+      "phase": "P5",
+      "detail": "Every analysis runs one sandboxed subprocess at a time on a 32-core machine. The Atheris rerun is 4542 independent runs and is the largest remaining block. Pool the work locally - no Modal, no remote credits - keeping per-execution isolation and timeouts unchanged.",
+      "uses_gpu": false,
+      "status": "in_progress",
+      "progress": [],
+      "artifacts": [],
+      "run_ids": [],
+      "started_utc": "2026-09-08T12:14:55Z"
+    },
+    {
       "id": "P1-curriculum",
       "title": "Build the progressive mixed curriculum",
       "phase": "P1",
@@ -249,9 +261,9 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T11:50:47Z",
+  "updated_utc": "2026-09-08T12:14:55Z",
   "paused_utc": "2026-09-08T11:50:47Z",
-  "resumed_utc": "2026-09-08T05:29:43Z",
+  "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",
   "out_of_scope": [
     "DPO - explicitly out of scope; easy examples serve as SFT replay anchors"
@@ -280,5 +292,6 @@
   "must_rerun": {
     "atheris": "All six Atheris result sets, 4542 runs, are invalid: the targets were never coverage-instrumented (740 of 757 logs warn, 697 ended at a 1-byte corpus) and reference/mutant shared argument objects so identical implementations could disagree. Both fixed; the runs are not redone. This is P5.",
     "not_invalidated": "Every Oneiros base and SFT evaluation. The audit defects touched provenance, the sealed-final freeze, the Atheris baseline and resume identity - none touched generation or scoring of those runs."
-  }
+  },
+  "execution_note": "Local CPU only. Modal is present in the repo but deliberately unused: no credits are to be spent, and this machine has 32 cores and 137 GB of RAM sitting idle."
 }
