@@ -2,9 +2,9 @@
   "schema_version": "oneiros_work_plan_v1",
   "name": "Phase B writeup, then Phase A value-prediction training",
   "created_utc": "2026-09-08T02:36:48Z",
-  "execution": "paused",
+  "execution": "running",
   "paused_mid_step": "B3-leakage-section",
-  "paused_reason": "user asked to pause",
+  "paused_reason": "",
   "decided": "B before A: the 80% target is not reachable on this panel at 1.5B without contaminating it, and the negative results plus the prompt-copying finding are the substantive output.",
   "steps": [
     {
@@ -55,16 +55,24 @@
       "phase": "B",
       "detail": "The 46% of humaneval records stating a killing value, the 44-46% copied kills, and SFT doubling the copy rate.",
       "uses_gpu": false,
-      "status": "in_progress",
+      "status": "done",
       "progress": [
         {
           "at": "2026-09-08T05:12:42Z",
           "note": "paused before any B3 content was written; no partial draft exists to reconcile"
+        },
+        {
+          "at": "2026-09-08T06:00:12Z",
+          "note": "corrected a pooling bug that overstated the giveaway effect; three-way stratification, doc written"
         }
       ],
-      "artifacts": [],
+      "artifacts": [
+        "docs/PROMPT_BORNE_ANSWERS.md"
+      ],
       "run_ids": [],
-      "started_utc": "2026-09-08T03:00:44Z"
+      "started_utc": "2026-09-08T03:00:44Z",
+      "finished_utc": "2026-09-08T06:00:12Z",
+      "summary": "prompt-copying finding written up: 46% of humaneval records state a killing value, 44-46% of adev kills are copies, but the counterfactual advantage is only +3.11/+6.50 points"
     },
     {
       "id": "B4-report",
@@ -144,6 +152,7 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T05:12:43Z",
-  "paused_utc": "2026-09-08T05:12:43Z"
+  "updated_utc": "2026-09-08T06:00:12Z",
+  "paused_utc": "2026-09-08T05:12:43Z",
+  "resumed_utc": "2026-09-08T05:29:43Z"
 }

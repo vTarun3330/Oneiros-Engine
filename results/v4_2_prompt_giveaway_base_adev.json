@@ -1,0 +1,31 @@
+{
+  "schema_version": "oneiros_prompt_giveaway_effect_v1",
+  "artifact": "local_base_qwen_adev_seed42/base_validation_ablation-dev_seed_42.json",
+  "evaluation_split": "ablation_dev",
+  "sealed_final_test_accessed": false,
+  "strata": {
+    "humaneval_prompt_states_a_killing_value": {
+      "functions": 52,
+      "killed": 40,
+      "kill_rate": 0.769231
+    },
+    "humaneval_no_giveaway": {
+      "functions": 42,
+      "killed": 31,
+      "kill_rate": 0.738095
+    },
+    "humaneval_unverifiable_example": {
+      "functions": 18,
+      "killed": 4,
+      "kill_rate": 0.222222
+    },
+    "mbpp": {
+      "functions": 429,
+      "killed": 247,
+      "kill_rate": 0.575758
+    }
+  },
+  "giveaway_advantage_points": 3.11,
+  "clean_humaneval_minus_mbpp_points": 16.23,
+  "interpretation": "the same evaluation, stratified rather than re-run. If clean humaneval sits near mbpp, the humaneval/mbpp gap is a property of the prompts rather than of the model or the benchmark's difficulty."
+}
