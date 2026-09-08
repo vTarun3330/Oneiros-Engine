@@ -19,6 +19,8 @@ from __future__ import annotations
 import hashlib
 import json
 from collections import Counter
+
+from metrics.research_evaluation import classify_candidate_failure
 from dataclasses import asdict, dataclass, field
 from typing import Any, Iterable, Sequence
 
@@ -167,13 +169,34 @@ def classify_loser(
         return None
 
     categories: Counter[str] = Counter()
-    for candidate in result.get("candidates") or result.get("candidate_results") or []:
+    # Evaluation artifacts store per-candidate detail under `candidate_outcomes`.
+    # This loop previously looked only for `candidates` and `candidate_results`,
+    # neither of which any artifact writes, so it never executed once: every
+    # loser fell through to the aggregate fallback below and was labelled
+    # `no_kill`. Measured on ablation_dev seed 42, that was all 153 losers and
+    # 1214 of 1224 candidate entries - while the real dominant failure is
+    # wrong_expected_value. Relearning has been correcting a category that
+    # described almost none of its inputs.
+    candidates = (
+        result.get("candidate_outcomes")
+        or result.get("candidates")
+        or result.get("candidate_results")
+        or []
+    )
+    family = str(result.get("bug_family") or "unknown")
+    for candidate in candidates:
         mode = str(candidate.get("failure_mode") or "")
         taxonomy = mode.split(":")[0] if mode else ""
-        if taxonomy.startswith("killed"):
-            continue
         if taxonomy.startswith("reference_"):
+            # A recorded reference failure is already unambiguous.
             categories["wrong_oracle"] += 1
+            continue
+        if not taxonomy:
+            # No coarse label, so ask the evaluator's own classifier - the
+            # authority on WHY a candidate failed, and what every taxonomy
+            # report in this project is built from.
+            taxonomy = classify_candidate_failure(candidate, family)
+        if taxonomy.startswith("killed") or taxonomy == "killed":
             continue
         mapped = _CATEGORY_FROM_TAXONOMY.get(taxonomy)
         if mapped:

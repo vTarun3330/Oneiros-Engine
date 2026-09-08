@@ -220,10 +220,11 @@
       "phase": "P2",
       "detail": "Per-failure-category verified corrections; never train on a raw failed output as a positive label. Permitted prompt enrichment only.",
       "uses_gpu": false,
-      "status": "pending",
+      "status": "in_progress",
       "progress": [],
       "artifacts": [],
-      "run_ids": []
+      "run_ids": [],
+      "started_utc": "2026-09-08T18:17:12Z"
     },
     {
       "id": "P3-data-regularization",
@@ -242,11 +243,20 @@
       "phase": "P5",
       "detail": "Why targets survive: branch not reached, wrong oracle, unsupported input shape, budget, timeout, harness defect, equivalent mutant.",
       "uses_gpu": false,
-      "status": "in_progress",
-      "progress": [],
-      "artifacts": [],
+      "status": "done",
+      "progress": [
+        {
+          "at": "2026-09-08T18:17:10Z",
+          "note": "failure matrix, survivor diagnosis, adapter widened, three-seed rerun"
+        }
+      ],
+      "artifacts": [
+        "results/v4_2_atheris_failure_matrix.json"
+      ],
       "run_ids": [],
-      "started_utc": "2026-09-08T12:19:37Z"
+      "started_utc": "2026-09-08T12:19:37Z",
+      "finished_utc": "2026-09-08T18:17:11Z",
+      "summary": "Atheris baseline corrected 0.4786 -> 0.6059 by fixing our own harness; 42% of survivors were unreachable inputs, now 23%; no equivalent mutants found; Oneiros lead narrows from ~18 to ~5.3 points"
     },
     {
       "id": "B4-report",
@@ -288,7 +298,7 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T18:17:01Z",
+  "updated_utc": "2026-09-08T18:17:12Z",
   "paused_utc": "2026-09-08T11:50:47Z",
   "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",

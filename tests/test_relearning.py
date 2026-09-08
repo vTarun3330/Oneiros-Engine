@@ -254,3 +254,74 @@ def test_an_empty_correction_set_is_not_an_error():
     assert assert_corrections_are_trainable([], {"train_1"}, "train")[
         "corrections"
     ] == 0
+
+
+# --- the classifier must actually see the candidates ----------------------
+#
+# classify_loser looked for per-candidate detail under `candidates` and
+# `candidate_results`. No evaluation artifact writes either name; they write
+# `candidate_outcomes`. The loop therefore never executed once, every loser
+# fell through to the aggregate fallback, and the whole queue was labelled
+# `no_kill`. On ablation_dev seed 42 that was 153 of 153 losers and 1214 of
+# 1224 candidate entries, while the true dominant failure is
+# wrong_expected_value -> wrong_oracle at 877 entries. Relearning was
+# generating corrections for a failure mode that described almost none of its
+# inputs.
+
+def _function(outcomes, killed=False, family="boundary"):
+    return {
+        "record_id": "r", "killed": killed, "bug_family": family,
+        "requested_candidates": len(outcomes),
+        "parsed_candidates": len(outcomes),
+        "candidate_outcomes": outcomes,
+    }
+
+
+def _wrong_value_outcome():
+    return {"parse_valid": True, "policy_valid": True,
+            "reference_status": "assertion_error", "killed": False}
+
+
+def _syntax_outcome():
+    return {"parse_valid": False, "killed": False}
+
+
+def test_candidate_outcomes_are_read():
+    from harness.relearning import classify_loser
+
+    case = classify_loser(_function([_wrong_value_outcome()] * 4), "ablation_dev")
+    assert case is not None
+    assert case.dominant_category == "wrong_oracle", (
+        "a function whose candidates all asserted values the reference does "
+        "not produce is a wrong-oracle case, not an undifferentiated no_kill"
+    )
+    assert case.categories.get("no_kill") in (None, 0)
+
+
+def test_mixed_failures_are_counted_per_candidate():
+    from harness.relearning import classify_loser
+
+    case = classify_loser(
+        _function([_wrong_value_outcome(), _wrong_value_outcome(), _syntax_outcome()]),
+        "ablation_dev")
+    assert case.categories["wrong_oracle"] == 2
+    assert case.categories["syntax_invalid"] == 1
+
+
+def test_a_killed_function_is_still_not_a_loser():
+    from harness.relearning import classify_loser
+
+    assert classify_loser(_function([_wrong_value_outcome()], killed=True),
+                          "ablation_dev") is None
+
+
+def test_the_aggregate_fallback_still_works_without_candidate_detail():
+    """Older artifacts carry aggregates only and must not crash or mislabel."""
+    from harness.relearning import classify_loser
+
+    case = classify_loser(
+        {"record_id": "r", "killed": False, "requested_candidates": 8,
+         "parsed_candidates": 6}, "ablation_dev")
+    assert case is not None
+    assert case.categories["syntax_invalid"] == 2
+    assert case.categories["no_kill"] == 6
