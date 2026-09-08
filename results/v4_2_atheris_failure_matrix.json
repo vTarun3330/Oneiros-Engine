@@ -1,0 +1,403 @@
+{
+  "schema_version": "oneiros_atheris_failure_matrix_v1",
+  "sealed_final_test_accessed": false,
+  "sets": [
+    "atheris_val_20000_seed42_rerun",
+    "atheris_val_20000_seed43_rerun",
+    "atheris_val_20000_seed44_rerun",
+    "atheris_val_matched8_seed42_rerun",
+    "atheris_val_matched8_seed43_rerun",
+    "atheris_val_matched8_seed44_rerun"
+  ],
+  "per_set": {
+    "atheris_val_20000_seed42_rerun": {
+      "targets": 757,
+      "counts": {
+        "killed": 371,
+        "survived": 339,
+        "unit_timeout": 47
+      },
+      "kill_rate": 0.4901
+    },
+    "atheris_val_20000_seed43_rerun": {
+      "targets": 757,
+      "counts": {
+        "killed": 371,
+        "survived": 339,
+        "unit_timeout": 47
+      },
+      "kill_rate": 0.4901
+    },
+    "atheris_val_20000_seed44_rerun": {
+      "targets": 757,
+      "counts": {
+        "killed": 438,
+        "survived": 270,
+        "unit_timeout": 49
+      },
+      "kill_rate": 0.5786
+    },
+    "atheris_val_matched8_seed42_rerun": {
+      "targets": 757,
+      "counts": {
+        "killed": 121,
+        "survived": 618,
+        "unit_timeout": 18
+      },
+      "kill_rate": 0.1598
+    },
+    "atheris_val_matched8_seed43_rerun": {
+      "targets": 757,
+      "counts": {
+        "killed": 120,
+        "survived": 619,
+        "unit_timeout": 18
+      },
+      "kill_rate": 0.1585
+    },
+    "atheris_val_matched8_seed44_rerun": {
+      "targets": 757,
+      "counts": {
+        "killed": 124,
+        "survived": 615,
+        "unit_timeout": 18
+      },
+      "kill_rate": 0.1638
+    }
+  },
+  "overall": {
+    "targets": 4542,
+    "counts": {
+      "killed": 1545,
+      "survived": 2800,
+      "unit_timeout": 197
+    },
+    "kill_rate": 0.3402
+  },
+  "kill_kinds": {
+    "semantic_kill": 1181,
+    "crash_kill": 364
+  },
+  "by_dimension": {
+    "execution_budget": {
+      "20000": {
+        "targets": 2271,
+        "counts": {
+          "killed": 1180,
+          "survived": 948,
+          "unit_timeout": 143
+        },
+        "kill_rate": 0.5196
+      },
+      "8": {
+        "targets": 2271,
+        "counts": {
+          "killed": 365,
+          "survived": 1852,
+          "unit_timeout": 54
+        },
+        "kill_rate": 0.1607
+      }
+    },
+    "argument_arity": {
+      "1": {
+        "targets": 2274,
+        "counts": {
+          "killed": 1072,
+          "survived": 1087,
+          "unit_timeout": 115
+        },
+        "kill_rate": 0.4714
+      },
+      "2": {
+        "targets": 1188,
+        "counts": {
+          "killed": 272,
+          "survived": 834,
+          "unit_timeout": 82
+        },
+        "kill_rate": 0.229
+      },
+      "3": {
+        "targets": 618,
+        "counts": {
+          "killed": 133,
+          "survived": 485
+        },
+        "kill_rate": 0.2152
+      },
+      "4": {
+        "targets": 342,
+        "counts": {
+          "killed": 68,
+          "survived": 274
+        },
+        "kill_rate": 0.1988
+      },
+      "5": {
+        "targets": 120,
+        "counts": {
+          "survived": 120
+        },
+        "kill_rate": 0.0
+      }
+    },
+    "parameter_kinds": {
+      "int": {
+        "targets": 1278,
+        "counts": {
+          "killed": 686,
+          "survived": 477,
+          "unit_timeout": 115
+        },
+        "kill_rate": 0.5368
+      },
+      "list_int,int": {
+        "targets": 672,
+        "counts": {
+          "killed": 75,
+          "survived": 597
+        },
+        "kill_rate": 0.1116
+      },
+      "any": {
+        "targets": 480,
+        "counts": {
+          "survived": 480
+        },
+        "kill_rate": 0.0
+      },
+      "list_int": {
+        "targets": 360,
+        "counts": {
+          "killed": 302,
+          "survived": 58
+        },
+        "kill_rate": 0.8389
+      },
+      "any,int,int": {
+        "targets": 348,
+        "counts": {
+          "survived": 348
+        },
+        "kill_rate": 0.0
+      },
+      "int,int": {
+        "targets": 234,
+        "counts": {
+          "killed": 56,
+          "survived": 96,
+          "unit_timeout": 82
+        },
+        "kill_rate": 0.2393
+      },
+      "str,str,int,int": {
+        "targets": 180,
+        "counts": {
+          "killed": 32,
+          "survived": 148
+        },
+        "kill_rate": 0.1778
+      },
+      "list_int,int,int,int": {
+        "targets": 162,
+        "counts": {
+          "killed": 36,
+          "survived": 126
+        },
+        "kill_rate": 0.2222
+      },
+      "list_int,int,int": {
+        "targets": 138,
+        "counts": {
+          "killed": 43,
+          "survived": 95
+        },
+        "kill_rate": 0.3116
+      },
+      "int,int,int": {
+        "targets": 132,
+        "counts": {
+          "killed": 90,
+          "survived": 42
+        },
+        "kill_rate": 0.6818
+      },
+      "int,list_int": {
+        "targets": 132,
+        "counts": {
+          "killed": 81,
+          "survived": 51
+        },
+        "kill_rate": 0.6136
+      },
+      "str": {
+        "targets": 126,
+        "counts": {
+          "killed": 66,
+          "survived": 60
+        },
+        "kill_rate": 0.5238
+      },
+      "list_int,list_int,int,int,int": {
+        "targets": 120,
+        "counts": {
+          "survived": 120
+        },
+        "kill_rate": 0.0
+      },
+      "str,str": {
+        "targets": 78,
+        "counts": {
+          "killed": 12,
+          "survived": 66
+        },
+        "kill_rate": 0.1538
+      },
+      "list_int,list_int": {
+        "targets": 60,
+        "counts": {
+          "killed": 48,
+          "survived": 12
+        },
+        "kill_rate": 0.8
+      },
+      "list_str": {
+        "targets": 30,
+        "counts": {
+          "killed": 18,
+          "survived": 12
+        },
+        "kill_rate": 0.6
+      },
+      "any,int": {
+        "targets": 12,
+        "counts": {
+          "survived": 12
+        },
+        "kill_rate": 0.0
+      }
+    },
+    "benchmark": {
+      "mbpp": {
+        "targets": 4206,
+        "counts": {
+          "killed": 1368,
+          "survived": 2641,
+          "unit_timeout": 197
+        },
+        "kill_rate": 0.3252
+      },
+      "humaneval": {
+        "targets": 336,
+        "counts": {
+          "killed": 177,
+          "survived": 159
+        },
+        "kill_rate": 0.5268
+      }
+    },
+    "mutation_family": {
+      "boundary": {
+        "targets": 2034,
+        "counts": {
+          "killed": 637,
+          "survived": 1310,
+          "unit_timeout": 87
+        },
+        "kill_rate": 0.3132
+      },
+      "arithmetic": {
+        "targets": 1206,
+        "counts": {
+          "killed": 431,
+          "survived": 710,
+          "unit_timeout": 65
+        },
+        "kill_rate": 0.3574
+      },
+      "comparison": {
+        "targets": 522,
+        "counts": {
+          "killed": 221,
+          "survived": 268,
+          "unit_timeout": 33
+        },
+        "kill_rate": 0.4234
+      },
+      "off_by_one": {
+        "targets": 336,
+        "counts": {
+          "killed": 66,
+          "survived": 258,
+          "unit_timeout": 12
+        },
+        "kill_rate": 0.1964
+      },
+      "index": {
+        "targets": 132,
+        "counts": {
+          "killed": 45,
+          "survived": 87
+        },
+        "kill_rate": 0.3409
+      },
+      "logical": {
+        "targets": 108,
+        "counts": {
+          "killed": 40,
+          "survived": 68
+        },
+        "kill_rate": 0.3704
+      },
+      "return": {
+        "targets": 84,
+        "counts": {
+          "killed": 47,
+          "survived": 37
+        },
+        "kill_rate": 0.5595
+      },
+      "boolean": {
+        "targets": 66,
+        "counts": {
+          "killed": 33,
+          "survived": 33
+        },
+        "kill_rate": 0.5
+      },
+      "negate_removal": {
+        "targets": 42,
+        "counts": {
+          "killed": 13,
+          "survived": 29
+        },
+        "kill_rate": 0.3095
+      },
+      "membership": {
+        "targets": 12,
+        "counts": {
+          "killed": 12
+        },
+        "kill_rate": 1.0
+      }
+    },
+    "instrumented": {
+      "True": {
+        "targets": 4542,
+        "counts": {
+          "killed": 1545,
+          "survived": 2800,
+          "unit_timeout": 197
+        },
+        "kill_rate": 0.3402
+      }
+    }
+  },
+  "survivors_by_search_progress": {
+    "coverage_unknown": 1502,
+    "never_found_new_coverage": 918,
+    "explored_and_survived": 380
+  },
+  "interpretation": "a survivor that never found new coverage was not searching, which is an adapter or harness problem. A survivor that explored and still could not distinguish the mutant is either a genuinely hard target or an equivalent mutant, and only sampling can tell those apart."
+}
