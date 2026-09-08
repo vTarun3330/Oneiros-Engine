@@ -1,11 +1,11 @@
 {
   "schema_version": "oneiros_work_plan_v1",
-  "name": "Phase B writeup, then Phase A value-prediction training",
+  "name": "P0-P6 diagnosis brief (supersedes the B4/B5 + A ordering)",
   "created_utc": "2026-09-08T02:36:48Z",
-  "execution": "paused",
+  "execution": "running",
   "paused_mid_step": null,
-  "paused_reason": "user asked to pause after B3",
-  "decided": "B before A: the 80% target is not reachable on this panel at 1.5B without contaminating it, and the negative results plus the prompt-copying finding are the substantive output.",
+  "paused_reason": "",
+  "decided": "Superseded by the user's P0-P6 brief. The framing is corrected: this is weak GENERALIZATION plus oracle/value error, not absence of learning. P0 blocks all further full training.",
   "steps": [
     {
       "id": "B1-adev-seeds",
@@ -75,10 +75,128 @@
       "summary": "prompt-copying finding written up: 46% of humaneval records state a killing value, 44-46% of adev kills are copies, but the counterfactual advantage is only +3.11/+6.50 points"
     },
     {
+      "id": "P0a-shape-accounting",
+      "title": "Record assertion count and shape per candidate",
+      "phase": "P0",
+      "detail": "candidate_shape is recorded; assertion_count is not. Needed to show a multi-assertion candidate was evaluated as one.",
+      "uses_gpu": false,
+      "status": "done",
+      "progress": [
+        {
+          "at": "2026-09-08T07:00:43Z",
+          "note": "assertion_count recorded on every candidate via count_assertions(); import ordered"
+        }
+      ],
+      "artifacts": [],
+      "run_ids": [],
+      "started_utc": "2026-09-08T06:58:05Z",
+      "finished_utc": "2026-09-08T07:00:44Z",
+      "summary": "assertion_count now recorded beside candidate_shape, so a collapsed multi-assertion candidate is distinguishable in the artifact"
+    },
+    {
+      "id": "P0b-collapse-tests",
+      "title": "Prove a five-assertion completion is not collapsed",
+      "phase": "P0",
+      "detail": "Explicit test that all five assertions survive parsing AND all five execute, not merely that the text is retained.",
+      "uses_gpu": false,
+      "status": "pending",
+      "progress": [],
+      "artifacts": [],
+      "run_ids": []
+    },
+    {
+      "id": "P0c-successor-protocol",
+      "title": "Label the successor evaluation protocol",
+      "phase": "P0",
+      "detail": "Distinct run names and artifacts so legacy single-assertion results remain valid historical results rather than being overwritten.",
+      "uses_gpu": false,
+      "status": "pending",
+      "progress": [],
+      "artifacts": [],
+      "run_ids": []
+    },
+    {
+      "id": "P0d-regenerate",
+      "title": "Regenerate base and SFT comparisons under the successor",
+      "phase": "P0",
+      "detail": "Evaluation only, not training. Base and relearning, ablation_dev then locked val.",
+      "uses_gpu": true,
+      "status": "pending",
+      "progress": [],
+      "artifacts": [],
+      "run_ids": []
+    },
+    {
+      "id": "P4a-truncation-audit",
+      "title": "Audit the 128-token completion limit",
+      "phase": "P4",
+      "detail": "Completion-token percentiles, finish_reason, count ending on length, incomplete ASTs, assertions lost. Raise only if measured.",
+      "uses_gpu": false,
+      "status": "pending",
+      "progress": [],
+      "artifacts": [],
+      "run_ids": []
+    },
+    {
+      "id": "P4b-repository-budget",
+      "title": "Cost a repository prompt/completion allocation",
+      "phase": "P4",
+      "detail": "2048 prompt + 1024 completion cannot fit a 2048 sequence length. Either raise sequence length with a GPU-memory preflight or pick a measured allocation. Never silently truncate.",
+      "uses_gpu": false,
+      "status": "pending",
+      "progress": [],
+      "artifacts": [],
+      "run_ids": []
+    },
+    {
+      "id": "P1-curriculum",
+      "title": "Build the progressive mixed curriculum",
+      "phase": "P1",
+      "detail": "Deterministic easy/moderate/hard tiers from training-only signals; replay anchors late; record realized mixture per epoch.",
+      "uses_gpu": false,
+      "status": "pending",
+      "progress": [],
+      "artifacts": [],
+      "run_ids": []
+    },
+    {
+      "id": "P2-relearning-inputs",
+      "title": "Rebuild the relearning queue at candidate level",
+      "phase": "P2",
+      "detail": "Per-failure-category verified corrections; never train on a raw failed output as a positive label. Permitted prompt enrichment only.",
+      "uses_gpu": false,
+      "status": "pending",
+      "progress": [],
+      "artifacts": [],
+      "run_ids": []
+    },
+    {
+      "id": "P3-data-regularization",
+      "title": "Regularize through data first",
+      "phase": "P3",
+      "detail": "Unique-lineage sampling, caps, bounded repetition, dedup, diversity monitoring. At most one predeclared parameter challenger after.",
+      "uses_gpu": false,
+      "status": "pending",
+      "progress": [],
+      "artifacts": [],
+      "run_ids": []
+    },
+    {
+      "id": "P5-atheris-audit",
+      "title": "Atheris per-target failure matrix",
+      "phase": "P5",
+      "detail": "Why targets survive: branch not reached, wrong oracle, unsupported input shape, budget, timeout, harness defect, equivalent mutant.",
+      "uses_gpu": false,
+      "status": "pending",
+      "progress": [],
+      "artifacts": [],
+      "run_ids": []
+    },
+    {
       "id": "B4-report",
       "title": "Write the research report",
       "phase": "B",
-      "detail": "Pipeline, corpus, method, every measured arm including the negative ones, the honest 80% arithmetic, threats to validity.",
+      "detail": "Deferred behind P0-P2 so it can describe the successor protocol.",
       "uses_gpu": false,
       "status": "pending",
       "progress": [],
@@ -87,72 +205,21 @@
     },
     {
       "id": "B5-publish",
-      "title": "Publish the report for the mentor meeting",
+      "title": "Publish the report",
       "phase": "B",
-      "detail": "A shareable page carrying the same content as the repo document.",
+      "detail": "Shareable page for the mentor.",
       "uses_gpu": false,
-      "status": "pending",
-      "progress": [],
-      "artifacts": [],
-      "run_ids": []
-    },
-    {
-      "id": "A1-design",
-      "title": "Design the auxiliary value-prediction task",
-      "phase": "A",
-      "detail": "Predict what reference code returns for a given input. Train split only; no val or sealed data; no prompt-borne answers.",
-      "uses_gpu": false,
-      "status": "pending",
-      "progress": [],
-      "artifacts": [],
-      "run_ids": []
-    },
-    {
-      "id": "A2-build",
-      "title": "Build the auxiliary dataset and trainer path",
-      "phase": "A",
-      "detail": "Derived from train-split references, with leakage gates and a manifest, mirroring the existing corpus discipline.",
-      "uses_gpu": false,
-      "status": "pending",
-      "progress": [],
-      "artifacts": [],
-      "run_ids": []
-    },
-    {
-      "id": "A3-preflight",
-      "title": "Preflight: tests, leakage audit, dry run",
-      "phase": "A",
-      "detail": "Must pass before any GPU time, per the standing rule.",
-      "uses_gpu": false,
-      "status": "pending",
-      "progress": [],
-      "artifacts": [],
-      "run_ids": []
-    },
-    {
-      "id": "A4-train",
-      "title": "Train the auxiliary arm",
-      "phase": "A",
-      "detail": "Durable GPU run, checkpointed.",
-      "uses_gpu": true,
-      "status": "pending",
-      "progress": [],
-      "artifacts": [],
-      "run_ids": []
-    },
-    {
-      "id": "A5-evaluate",
-      "title": "Evaluate on ablation_dev, then locked val",
-      "phase": "A",
-      "detail": "Report against base and relearning on the same panels and seeds.",
-      "uses_gpu": true,
       "status": "pending",
       "progress": [],
       "artifacts": [],
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T06:00:13Z",
+  "updated_utc": "2026-09-08T07:00:44Z",
   "paused_utc": "2026-09-08T06:00:13Z",
-  "resumed_utc": "2026-09-08T05:29:43Z"
+  "resumed_utc": "2026-09-08T05:29:43Z",
+  "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",
+  "out_of_scope": [
+    "DPO - explicitly out of scope; easy examples serve as SFT replay anchors"
+  ]
 }

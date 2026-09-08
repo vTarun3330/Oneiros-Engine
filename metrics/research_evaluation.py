@@ -19,6 +19,7 @@ from copy import deepcopy
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 from harness.candidate_policy import (
+    count_assertions,
     executable_candidate,
     validate_function_assertion,
     validate_generated_test,
@@ -201,6 +202,11 @@ def evaluate_candidate_slots(
         policy = validate_generated_test(code, entry_point, allow_test_function)
         outcome["policy_valid"] = bool(policy.valid)
         outcome["candidate_shape"] = policy.shape
+        # Shape alone cannot show whether a multi-assertion test was actually
+        # evaluated as one. Without the count, a five-assertion completion
+        # collapsed to its first assertion and a genuine single-assertion
+        # candidate are indistinguishable in every stored artifact.
+        outcome["assertion_count"] = count_assertions(code)
         if not policy.valid:
             outcome["policy_error"] = policy.reason
             continue

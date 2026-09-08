@@ -305,3 +305,27 @@ def executable_candidate(test_code: str, shape: str) -> str:
     if shape == "test_function":
         return executable_test_function(test_code)
     return test_code
+
+
+def count_assertions(test_code: str) -> int:
+    """How many assert statements the candidate actually contains.
+
+    Recorded on every evaluated candidate. ``candidate_shape`` says which rule
+    admitted the candidate; it does NOT say whether a multi-assertion test was
+    evaluated whole or collapsed to its first line. Under the frozen
+    first_assertion parser every candidate is one assertion by construction,
+    so without this count the artifacts cannot distinguish "the model wrote one
+    assertion" from "the model wrote five and the parser kept one".
+
+    Counts nested asserts too, so a test function's whole body is measured
+    rather than only its top level. Unparseable code counts zero rather than
+    raising, because this is accounting on a candidate that may well be
+    invalid.
+    """
+    if not isinstance(test_code, str) or not test_code.strip():
+        return 0
+    try:
+        tree = ast.parse(test_code, mode="exec")
+    except SyntaxError:
+        return 0
+    return sum(1 for node in ast.walk(tree) if isinstance(node, ast.Assert))
