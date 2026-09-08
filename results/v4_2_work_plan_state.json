@@ -249,11 +249,36 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T11:11:27Z",
+  "updated_utc": "2026-09-08T11:36:01Z",
   "paused_utc": "2026-09-08T06:00:13Z",
   "resumed_utc": "2026-09-08T05:29:43Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",
   "out_of_scope": [
     "DPO - explicitly out of scope; easy examples serve as SFT replay anchors"
-  ]
+  ],
+  "open_decision_before_p1": {
+    "question": "Should the arm emit fewer, surer assertions, or should scoring move to per-assertion rather than per-candidate?",
+    "why_it_blocks_p1": "It changes what the curriculum optimises for. Tiering examples by difficulty is the wrong objective if the real failure is that a candidate conjoins more assertions than the model can get right.",
+    "evidence": {
+      "assertions_per_completion_trained": 3.65,
+      "assertions_per_completion_base": 1.01,
+      "reference_valid_per_requested_trained": 0.2749,
+      "reference_valid_per_requested_base": 0.5655,
+      "legacy_kill_at_8": 0.7159,
+      "successor_kill_at_8": 0.548,
+      "targets_killed_only_under_legacy": 120,
+      "targets_killed_only_under_successor": 29,
+      "truncation_ruled_out": "incomplete ASTs fell 481 -> 49 at a 1024-token budget while the kill gap moved less than a point"
+    },
+    "artifacts": [
+      "results/v4_2_parser_pilot_relearn_1024.json",
+      "results/v4_2_completion_truncation_relearn_1024.json",
+      "results/v4_2_successor_protocol_receipt.json"
+    ],
+    "status": "AWAITING THE USER. Do not start P1 before this is settled."
+  },
+  "must_rerun": {
+    "atheris": "All six Atheris result sets, 4542 runs, are invalid: the targets were never coverage-instrumented (740 of 757 logs warn, 697 ended at a 1-byte corpus) and reference/mutant shared argument objects so identical implementations could disagree. Both fixed; the runs are not redone. This is P5.",
+    "not_invalidated": "Every Oneiros base and SFT evaluation. The audit defects touched provenance, the sealed-final freeze, the Atheris baseline and resume identity - none touched generation or scoring of those runs."
+  }
 }
