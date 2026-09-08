@@ -250,14 +250,24 @@
     },
     {
       "id": "B4-report",
-      "title": "Write the research report",
+      "title": "Write the full chronological project report",
       "phase": "B",
-      "detail": "Deferred behind P0-P2 so it can describe the successor protocol.",
+      "detail": "A step-by-step record of the whole project, not just the current findings. Must cover, in order: why the model changed from Phi-3-mini to Qwen2.5-Coder and what that changed; every intervention attempted with its measured result; what worked, what did not, and what was retired on evidence; every defect found in our own harness and what it invalidated; and the honest position against the 80% target. Positives AND negatives - the negative results and the self-inflicted measurement errors are the substance, not an appendix.",
       "uses_gpu": false,
       "status": "pending",
       "progress": [],
       "artifacts": [],
-      "run_ids": []
+      "run_ids": [],
+      "requested_by_user": "Asked for explicitly: a progress-tracking document covering everything from the start, so the trajectory is legible rather than only the latest numbers.",
+      "sources_of_truth": [
+        "git log on experiment/research-eval-ablations - the commit messages are the running record and predate this session",
+        "results/v4_2_results_table.json - every arm, rebuilt from artifacts",
+        "docs/PROMPT_BORNE_ANSWERS.md",
+        "results/v4_2_seed_power_relearning_12.json",
+        "results/v4_2_atheris_failure_matrix.json",
+        "results/v4_2_memorisation_gap.json"
+      ],
+      "caveat": "The Phi-3 era predates this session's context. Reconstruct it from git history and committed artifacts, and say plainly where the record is thin rather than inventing a narrative."
     },
     {
       "id": "B5-publish",
@@ -271,7 +281,7 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T12:19:37Z",
+  "updated_utc": "2026-09-08T18:14:36Z",
   "paused_utc": "2026-09-08T11:50:47Z",
   "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",
