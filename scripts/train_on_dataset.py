@@ -4308,6 +4308,18 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
+        "--max-sequence-tokens",
+        type=int,
+        default=None,
+        help=(
+            "Sequence budget the prompt and completion must share. The 2048 "
+            "default is a PROJECT constant, not a model limit: "
+            "Qwen2.5-Coder-1.5B-Instruct has max_position_embeddings=32768. "
+            "Raise it to let generation run to its natural stop instead of "
+            "being cut by a budget chosen for one-line assertions."
+        ),
+    )
+    parser.add_argument(
         "--generation-completion-token-limit",
         type=int,
         default=None,
@@ -4563,6 +4575,8 @@ if __name__ == "__main__":
     LORA_DROPOUT_OVERRIDE = args.lora_dropout
     WEIGHT_DECAY_OVERRIDE = args.weight_decay
     CANDIDATE_PARSE_MODE = args.candidate_parse_mode
+    if args.max_sequence_tokens is not None:
+        MAX_SFT_COMPLETION_TOKENS = args.max_sequence_tokens
     if args.generation_completion_token_limit is not None:
         MAX_NEW_TOKENS_OVERRIDE = args.generation_completion_token_limit
         MAX_SFT_GENERATION_COMPATIBLE_TOKENS = MAX_NEW_TOKENS_OVERRIDE
@@ -4613,13 +4627,15 @@ if __name__ == "__main__":
         # more on top. A configuration that cannot fit is refused here rather
         # than silently truncating the prompt at generation time.
         prompt_budget = args.sft_prompt_token_limit or 1024
+        sequence_budget = args.max_sequence_tokens or MAX_SFT_COMPLETION_TOKENS
         total = prompt_budget + args.generation_completion_token_limit
-        if total >= MAX_SFT_COMPLETION_TOKENS:
+        if total >= sequence_budget:
             raise ValueError(
                 f"prompt budget {prompt_budget} plus completion budget "
                 f"{args.generation_completion_token_limit} is {total}, which "
-                f"does not fit the {MAX_SFT_COMPLETION_TOKENS}-token sequence "
-                "before chat-template overhead; choose an allocation that fits"
+                f"does not fit the {sequence_budget}-token sequence before "
+                "chat-template overhead; raise --max-sequence-tokens (the "
+                "model supports 32768) or choose an allocation that fits"
             )
     if args.sft_real_target_fraction is not None and not 0.0 <= args.sft_real_target_fraction < 1.0:
         raise ValueError("--sft-real-target-fraction must be in [0, 1)")

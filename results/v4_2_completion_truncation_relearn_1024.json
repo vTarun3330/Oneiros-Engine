@@ -1,0 +1,24 @@
+{
+  "schema_version": "oneiros_completion_truncation_audit_v1",
+  "artifact": "local_sft_relearn_v2_seed42/sft_validation_ablation-dev_parse-whole-output_completion1024_seed_42.json",
+  "evaluation_split": "ablation_dev",
+  "sealed_final_test_accessed": false,
+  "completion_token_limit": 1024,
+  "tokenizer": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "completions_with_retained_text": 4336,
+  "completion_token_percentiles": {
+    "p50": 79,
+    "p75": 106,
+    "p90": 141,
+    "p99": 1024,
+    "max": 1030,
+    "mean": 101
+  },
+  "completions_at_or_over_the_limit": 45,
+  "share_at_or_over_the_limit": 0.010378,
+  "unparseable_completions": 49,
+  "unparseable_that_parse_after_dropping_the_last_line": 48,
+  "assertions_present": 15818,
+  "assertions_recoverable_from_truncated_completions": 1518,
+  "verdict_rule": "raise the budget only if completions at the limit are a material share AND dropping a trailing partial line rescues a meaningful number of assertions. A high unparseable count with few rescues is bad generation, not truncation, and a larger budget would not fix it."
+}
