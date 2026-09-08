@@ -340,6 +340,13 @@ def summarise_function_results(
         int(item.get("execution_invalid_candidates", 0)) for item in function_results
     )
     killed_functions = sum(bool(item.get("killed")) for item in function_results)
+    # A function-level view of reference validity. The candidate-level rates
+    # answer "how many candidates were usable"; this answers "how many targets
+    # got at least one usable candidate", which is the denominator kill@k
+    # actually lives on.
+    functions_with_valid = sum(
+        bool(int(item.get("valid_candidates", 0))) for item in function_results
+    )
     prompt_budget_failures = sum(
         bool(item.get("prompt_budget_failure")) for item in function_results
     )
@@ -496,6 +503,26 @@ def summarise_function_results(
         "parse_success_rate": round(parsed / max(requested, 1), 6),
         "execution_valid_rate": round(execution_valid / max(requested, 1), 6),
         "reference_valid_rate": round(valid / max(requested, 1), 6),
+        # Four different questions were being read off one field name. They
+        # have different denominators and are NOT comparable, so each carries
+        # its denominator in its name. `reference_valid_rate` keeps its
+        # meaning - valid / requested - so every historical artifact and every
+        # comparison already made against it stays correct.
+        "reference_valid_rate_per_requested": round(valid / max(requested, 1), 6),
+        "reference_valid_rate_per_parsed": round(valid / max(parsed, 1), 6),
+        "reference_valid_rate_per_executed": round(
+            valid / max(execution_valid, 1), 6),
+        "functions_with_a_reference_valid_candidate": functions_with_valid,
+        "function_reference_valid_rate": round(
+            functions_with_valid / max(total_functions, 1), 6),
+        "reference_valid_denominators": {
+            "reference_valid_rate": "requested candidates (the frozen field)",
+            "reference_valid_rate_per_requested": "requested candidates",
+            "reference_valid_rate_per_parsed": "candidates that parsed",
+            "reference_valid_rate_per_executed": "candidates that executed",
+            "function_reference_valid_rate":
+                "functions with >=1 reference-valid candidate / evaluated functions",
+        },
         "kill_at_k": kill_at_k,
         "pass_at_k": pass_at_k,
         "candidate_redundancy": {

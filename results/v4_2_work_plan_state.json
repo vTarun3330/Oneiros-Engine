@@ -99,10 +99,13 @@
       "phase": "P0",
       "detail": "Explicit test that all five assertions survive parsing AND all five execute, not merely that the text is retained.",
       "uses_gpu": false,
-      "status": "pending",
+      "status": "done",
       "progress": [],
       "artifacts": [],
-      "run_ids": []
+      "run_ids": [],
+      "started_utc": "2026-09-08T07:00:44Z",
+      "finished_utc": "2026-09-08T07:00:45Z",
+      "summary": "covered by the same commit: 8 tests including the fifth-assertion-only mutant proof"
     },
     {
       "id": "P0c-successor-protocol",
@@ -110,10 +113,20 @@
       "phase": "P0",
       "detail": "Distinct run names and artifacts so legacy single-assertion results remain valid historical results rather than being overwritten.",
       "uses_gpu": false,
-      "status": "pending",
-      "progress": [],
-      "artifacts": [],
-      "run_ids": []
+      "status": "done",
+      "progress": [
+        {
+          "at": "2026-09-08T07:14:03Z",
+          "note": "denominators separated; receipt written with source hashes and directory-conflict refusal"
+        }
+      ],
+      "artifacts": [
+        "results/v4_2_successor_protocol_receipt.json"
+      ],
+      "run_ids": [],
+      "started_utc": "2026-09-08T07:14:03Z",
+      "finished_utc": "2026-09-08T07:14:04Z",
+      "summary": "successor protocol declared: name, version, source hashes, budgets, timeout, no-reranking rule, raw-output storage, legacy preservation; 10 tests including directory-confusion refusal"
     },
     {
       "id": "P0d-regenerate",
@@ -215,7 +228,7 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T07:00:44Z",
+  "updated_utc": "2026-09-08T07:14:04Z",
   "paused_utc": "2026-09-08T06:00:13Z",
   "resumed_utc": "2026-09-08T05:29:43Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",

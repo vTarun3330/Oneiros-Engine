@@ -1,0 +1,85 @@
+{
+  "schema_version": "oneiros_successor_protocol_receipt_v1",
+  "protocol_name": "oneiros_whole_output_successor",
+  "protocol_version": "1.0.0",
+  "supersedes": {
+    "protocol_name": "oneiros_first_assertion_frozen",
+    "status": "HISTORICAL, NOT INVALID. Every reported result to date was produced under it and remains a correct measurement of what it measured: eight single assertions. Legacy artifacts are never overwritten, never regenerated in place, and never compared to successor numbers as though they were the same metric."
+  },
+  "generation": {
+    "candidate_parse_mode": "whole_output",
+    "retain_raw_output": true,
+    "candidates_per_target": 8,
+    "seeds": [
+      42
+    ],
+    "no_reranking": true,
+    "no_reranking_rule": "candidates are scored in generation order and none is reordered, filtered or re-sampled on any signal derived from the reference, the mutant or the evaluator",
+    "generated_once": "each candidate is generated exactly once; the legacy and successor interpretations are both computed from the SAME retained raw output, so the comparison carries no generation randomness"
+  },
+  "candidate_policy": {
+    "permitted_shapes": [
+      "assertion",
+      "test_function"
+    ],
+    "max_assertions_per_test_function": 24,
+    "assertion_count_implementation": "harness.candidate_policy.count_assertions, ast.walk over all ast.Assert nodes, unparseable code counts zero",
+    "refuses": [
+      "helper functions beside the test",
+      "imports",
+      "network names",
+      "filesystem names",
+      "process names",
+      "dunder access",
+      "decorated tests",
+      "parameterised tests",
+      "unbounded string, integer and container literals",
+      "candidates that never call the target entry point"
+    ]
+  },
+  "budgets": {
+    "prompt_tokens": 1024,
+    "completion_tokens": 128,
+    "total_sequence_tokens": 2048,
+    "fits": true,
+    "note": "prompt + completion must fit the sequence budget before chat template overhead, which is additional. A configuration that does not fit is refused rather than silently truncated."
+  },
+  "timeout_policy": {
+    "per_candidate_seconds": 5.0,
+    "source": "harness.safe_execution.DEFAULT_TIMEOUT_SECONDS",
+    "on_timeout": "recorded as a timeout outcome, never as a kill"
+  },
+  "raw_output": {
+    "storage": "results/{run}/raw_generations",
+    "retained": true,
+    "hash_field": "raw_output_sha256",
+    "why": "the legacy protocol kept only the hash, so what the model actually emitted could not be recovered and the collapse could not be quantified after the fact"
+  },
+  "defining_sources": {
+    "evaluator": {
+      "path": "metrics/research_evaluation.py",
+      "sha256": "649e96fab00af35e172cdd0590f6b6c1241d03aa6aef71ede4fb2e731fad27c2"
+    },
+    "parser": {
+      "path": "engine/generator.py",
+      "sha256": "7347f59ae698aba7b7edbd96c3923cbba7d6aad819cf44b609951330c0f7dee1"
+    },
+    "candidate_policy": {
+      "path": "harness/candidate_policy.py",
+      "sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426"
+    },
+    "execution_harness": {
+      "path": "harness/safe_execution.py",
+      "sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35"
+    }
+  },
+  "reference_validity_denominators": {
+    "reference_valid_rate": "valid / requested (the frozen field)",
+    "reference_valid_rate_per_parsed": "valid / parsed",
+    "reference_valid_rate_per_executed": "valid / executed",
+    "function_reference_valid_rate": "functions with >=1 valid candidate / evaluated functions",
+    "why": "these are four different questions with four denominators; quoting one while meaning another overstated candidate health by five points on locked validation seed 42"
+  },
+  "locked_validation_policy": "ablation_dev only for P0 diagnosis. Locked validation is not used to debug or redesign the protocol, and the three-seed successor evaluation runs only once token limits, prompt budgets, the whole-output policy, candidate-validity rules, the curriculum, the dataset and the selected adapters are all frozen.",
+  "sealed_final_test_accessed": false
+}
