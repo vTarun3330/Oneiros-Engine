@@ -134,3 +134,51 @@ def test_the_committed_finding_reports_a_modest_giveaway_advantage():
         "the unverifiable stratum has vanished, which is how the clean number "
         "was overstated the first time"
     )
+
+
+# --- the stated value must match the reference ----------------------------
+#
+# The giveaway check compared the reference against the mutant on the
+# example's INPUT, and never checked that the example's stated OUTPUT is what
+# the reference actually produces. A prompt stating a wrong value was
+# therefore counted as handing the model a killing assertion, when copying it
+# would fail on correct code and kill nothing.
+#
+# Re-measured after the fix, ablation_dev humaneval was UNCHANGED: 0 examples
+# state a value the reference does not produce, so all 52 giveaway records and
+# the +3.11 / +6.50 advantages stand. The defect was real and its impact here
+# was nil, which is worth pinning in both directions.
+
+def test_a_prompt_stating_a_wrong_value_is_not_a_giveaway():
+    record = _record("r", "Adds one.\n>>> f(0)\n999\n")
+    assert _states_a_killing_value(record, 5.0) is False, (
+        "asserting the stated pair would FAIL on correct code, so it is a "
+        "wrong example rather than a handed-over killing assertion"
+    )
+
+
+def test_a_prompt_stating_the_correct_value_is_still_a_giveaway():
+    record = _record("r", "Adds one.\n>>> f(1)\n2\n")
+    assert _states_a_killing_value(record, 5.0) is True
+
+
+def test_stated_values_are_compared_as_values_not_text():
+    """"0b11" and '0b11' are the same answer written two ways."""
+    from scripts.audit_native_example_leakage import stated_matches_reference
+
+    assert stated_matches_reference('"0b11"', "'0b11'")
+    assert stated_matches_reference("[1, 2]", "[1, 2]")
+    assert not stated_matches_reference("'0b100'", "'0b11'")
+
+
+def test_the_committed_audit_reports_the_wrong_value_count():
+    """Zero here is a measurement, not an absence of the check."""
+    import json
+    report = ROOT / "results" / "v4_2_native_example_leakage_adev.json"
+    if not report.exists():
+        return
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert "examples_stating_a_value_the_reference_does_not_produce" in payload, (
+        "the corrected audit must report this count even when it is zero, or "
+        "a reader cannot tell the check ran"
+    )

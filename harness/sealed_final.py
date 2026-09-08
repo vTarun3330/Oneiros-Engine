@@ -43,6 +43,11 @@ SEALED_SPLIT = "test"
 #: thing that would let a result be tuned after the fact.
 REQUIRED_BUNDLE_FIELDS = (
     "adapter_path",
+    # The WEIGHTS, not just where they sit. adapter_path plus the source-tree
+    # hash pinned the code and the location but not the model: retraining into
+    # the same directory produced a byte-identical bundle hash, so the one
+    # thing a final measurement most depends on was the one thing not frozen.
+    "adapter_sha256",
     "adapter_source_tree_sha256",
     "base_model_name",
     "base_model_revision",
@@ -81,6 +86,13 @@ class FinalBundle:
         ]
 
     def sha256(self) -> str:
+        """Hash of every REQUIRED field.
+
+        Fields outside REQUIRED_BUNDLE_FIELDS are deliberately excluded: the
+        bundle is the frozen contract, and letting arbitrary extra keys change
+        the hash would make two equivalent freezes disagree. That makes it all
+        the more important that anything a measurement depends on IS required.
+        """
         payload = json.dumps(
             {name: self.fields.get(name) for name in sorted(REQUIRED_BUNDLE_FIELDS)},
             sort_keys=True, separators=(",", ":"), default=str,

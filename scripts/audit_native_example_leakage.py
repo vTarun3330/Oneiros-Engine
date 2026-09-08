@@ -66,6 +66,27 @@ def examples_in(specification: str, entry_point: str) -> list[dict[str, str]]:
     return found
 
 
+def stated_matches_reference(stated: str, reference_repr: str) -> bool:
+    """Does the value the prompt STATES equal what the reference produces?
+
+    Omitting this check was a real defect: a record whose docstring states an
+    output the reference does not produce was counted as handing the model a
+    killing assertion. Copying that stated pair FAILS on correct code, so it
+    kills nothing - it is a wrong example, not a giveaway.
+
+    Compared as values rather than text, so "0b11" and '0b11' are the same
+    answer written two ways. Falls back to normalised text when either side is
+    not a literal.
+    """
+    stated_text = (stated or "").strip()
+    if not stated_text:
+        return False
+    try:
+        return ast.literal_eval(stated_text) == ast.literal_eval(reference_repr)
+    except (ValueError, SyntaxError):
+        return stated_text.strip("\"'") == (reference_repr or "").strip("\"'")
+
+
 def _value(code: str, support: str, call: str, timeout: float) -> tuple[bool, str]:
     ok, result, _error = execute_code(
         support + "\n" + code, "result = repr(" + call + ")", timeout)
@@ -91,6 +112,7 @@ def audit(corpus_dir: Path, split: str, benchmark: str, timeout: float,
     with_examples = 0
     total_examples = 0
     stated_and_differing = 0
+    stated_value_wrong = 0
     records_with_a_giveaway = 0
     unverifiable = 0
 
@@ -116,6 +138,12 @@ def audit(corpus_dir: Path, split: str, benchmark: str, timeout: float,
                 # cannot be treated as a statement of correct behaviour.
                 unverifiable += 1
                 continue
+            if not stated_matches_reference(example["output"], reference_value):
+                # The prompt states a value the reference does not produce.
+                # Asserting it fails on correct code, so it is a wrong example
+                # rather than a handed-over killing assertion.
+                stated_value_wrong += 1
+                continue
             if (not mutant_ok) or mutant_value != reference_value:
                 stated_and_differing += 1
                 giveaway = True
@@ -132,6 +160,7 @@ def audit(corpus_dir: Path, split: str, benchmark: str, timeout: float,
         "records_with_a_parsed_example": with_examples,
         "examples_parsed": total_examples,
         "examples_unverifiable_on_the_reference": unverifiable,
+        "examples_stating_a_value_the_reference_does_not_produce": stated_value_wrong,
         "examples_whose_value_the_mutant_does_not_produce": stated_and_differing,
         "share_of_examples": round(stated_and_differing / total_examples, 4)
         if total_examples else None,

@@ -1665,6 +1665,14 @@ def _adapter_evaluation_context(
         "max_validation_functions": MAX_VALIDATION_PAIRS,
         "k_values": list(DEFAULT_K_VALUES),
         "dataset_identity_policy": DATASET_IDENTITY_POLICY,
+        # The scoring protocol is part of the evaluation's identity. Without
+        # these three, a resume could not tell a first_assertion run from a
+        # whole_output one, and progress recorded under one protocol would be
+        # adopted by the other - producing a single artifact whose candidates
+        # were scored by two different rules.
+        "candidate_parse_mode": CANDIDATE_PARSE_MODE,
+        "retain_raw_output": RETAIN_RAW_OUTPUT,
+        "allow_test_function_candidates": ALLOW_TEST_FUNCTION_CANDIDATES,
     }
     return {
         "format_version": 3,

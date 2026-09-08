@@ -25,6 +25,7 @@ from harness.sealed_final import (
 def _fields(**overrides):
     payload = {
         "adapter_path": "checkpoints/final",
+        "adapter_sha256": "d" * 64,
         "adapter_source_tree_sha256": "a" * 64,
         "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
         "base_model_revision": "2e1fd397",
@@ -205,3 +206,25 @@ def test_development_commands_refuse_the_sealed_split_by_name():
 @pytest.mark.parametrize("split", ["train", "ablation_dev", "val"])
 def test_development_commands_allow_development_splits(split):
     assert refuse_sealed_split_for_development(split, "train_on_dataset.py") is None
+
+
+def test_the_adapter_weights_are_part_of_the_frozen_bundle():
+    """adapter_path pinned WHERE the model was, not WHICH model it was.
+
+    Retraining into the same directory left adapter_path and
+    adapter_source_tree_sha256 unchanged, so the bundle hash was identical for
+    two different sets of weights - and the sealed measurement's single most
+    important dependency was the one thing not frozen.
+    """
+    one = FinalBundle(_fields(adapter_sha256="d" * 64))
+    another = FinalBundle(_fields(adapter_sha256="e" * 64))
+
+    assert one.sha256() != another.sha256()
+    assert one.missing_fields() == []
+
+
+def test_a_bundle_without_the_adapter_hash_is_not_frozen():
+    incomplete = _fields()
+    del incomplete["adapter_sha256"]
+
+    assert "adapter_sha256" in FinalBundle(incomplete).missing_fields()

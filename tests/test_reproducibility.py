@@ -60,3 +60,42 @@ def test_functional_identity_still_rejects_changed_source_or_model():
     assert functional_identity(dict(trained, model_name="microsoft/Phi-3-mini-4k-instruct")) != functional_identity(trained)
     assert functional_identity(dict(trained, runtime_dependencies={"torch": "9.9.9"})) != functional_identity(trained)
     assert functional_identity(dict(trained, dependency_spec_sha256="DEPS-2")) != functional_identity(trained)
+
+
+# --- provenance must cover everything that can change a result ------------
+#
+# source_tree_sha256 hashed only .py/.json/.toml/.yaml/.yml/.ini under eight
+# directories. scripts/run_atheris_wsl.sh launches the entire Atheris
+# baseline and research/v4_1/FROZEN_EVALUATION_CONFIG.json is by name the
+# frozen evaluation config; neither was covered, so either could change while
+# provenance asserted the tree was identical.
+
+def test_executable_shell_scripts_are_covered():
+    from utils.reproducibility import _included_files
+    root = Path(__file__).resolve().parent.parent
+    covered = {p.relative_to(root).as_posix() for p in _included_files(root)}
+    if (root / "scripts/run_atheris_wsl.sh").exists():
+        assert "scripts/run_atheris_wsl.sh" in covered, (
+            "the Atheris baseline runner can change without changing the "
+            "recorded source hash"
+        )
+
+
+def test_the_frozen_evaluation_config_is_covered():
+    from utils.reproducibility import _included_files
+    root = Path(__file__).resolve().parent.parent
+    target = "research/v4_1/FROZEN_EVALUATION_CONFIG.json"
+    if not (root / target).exists():
+        return
+    covered = {p.relative_to(root).as_posix() for p in _included_files(root)}
+    assert target in covered, "a file named FROZEN must be noticed if it moves"
+
+
+def test_changing_a_shell_script_changes_the_tree_hash(tmp_path):
+    from utils.reproducibility import source_tree_sha256
+    (tmp_path / "scripts").mkdir()
+    script = tmp_path / "scripts" / "run.sh"
+    script.write_text("echo one\n", encoding="utf-8")
+    before = source_tree_sha256(tmp_path)
+    script.write_text("echo two\n", encoding="utf-8")
+    assert source_tree_sha256(tmp_path) != before

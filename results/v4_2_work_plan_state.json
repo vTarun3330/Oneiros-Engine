@@ -134,10 +134,11 @@
       "phase": "P0",
       "detail": "Evaluation only, not training. Base and relearning, ablation_dev then locked val.",
       "uses_gpu": true,
-      "status": "pending",
+      "status": "in_progress",
       "progress": [],
       "artifacts": [],
-      "run_ids": []
+      "run_ids": [],
+      "started_utc": "2026-09-08T07:23:03Z"
     },
     {
       "id": "P4a-truncation-audit",
@@ -228,7 +229,7 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T07:14:04Z",
+  "updated_utc": "2026-09-08T07:23:03Z",
   "paused_utc": "2026-09-08T06:00:13Z",
   "resumed_utc": "2026-09-08T05:29:43Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",

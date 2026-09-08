@@ -107,3 +107,54 @@ def test_the_harness_deep_copies_arguments_for_each_call():
     assert "buggy_arguments = copy.deepcopy(arguments)" in source
     assert "reference(*reference_arguments)" in source
     assert "buggy(*buggy_arguments)" in source
+
+
+# --- the baseline must actually be coverage-guided -------------------------
+#
+# enable_python_coverage=True was set, so the harness LOOKED instrumented. It
+# was not: libFuzzer's counters come from Atheris bytecode instrumentation,
+# which a bare exec() of the target source never receives. The evidence was
+# sitting in the run logs the whole time - 740 of 757 warned "no interesting
+# inputs were found. Is the code instrumented for coverage?" and 697 finished
+# with the corpus still at 1 input of 1 byte.
+
+def test_the_target_function_is_instrumented():
+    """Pins the call, so the baseline cannot silently go blind again."""
+    from pathlib import Path
+    source = (Path(__file__).resolve().parent.parent
+              / "baseline" / "atheris_harness.py").read_text(encoding="utf-8")
+    assert "atheris.instrument_func(buggy)" in source, (
+        "without instrument_func the fuzzer is a blind random searcher and "
+        "must not be reported as coverage-guided Atheris"
+    )
+
+
+def test_instrumentation_status_is_recorded_in_every_result():
+    """A blind run must be visible in the artifact, not only in a log line."""
+    from pathlib import Path
+    source = (Path(__file__).resolve().parent.parent
+              / "baseline" / "atheris_harness.py").read_text(encoding="utf-8")
+    assert '"coverage_instrumented": state.get("coverage_instrumented")' in source
+    assert '"instrumentation_error"' in source
+
+
+def test_the_historical_logs_show_the_blind_runs():
+    """Keeps the evidence attached to the claim rather than to a memory."""
+    from pathlib import Path
+    directory = (Path(__file__).resolve().parent.parent
+                 / "results" / "atheris_val_20000_seed42")
+    if not directory.is_dir():
+        return
+    logs = sorted(directory.glob("*.log"))
+    if not logs:
+        return
+    warned = sum(
+        1 for log in logs
+        if "no interesting inputs were found" in log.read_text(
+            encoding="utf-8", errors="ignore")
+    )
+    assert warned > len(logs) // 2, (
+        "the historical Atheris sweep is the evidence that those runs were "
+        "not coverage-guided; if this no longer holds the claim needs "
+        "re-deriving before it is repeated"
+    )

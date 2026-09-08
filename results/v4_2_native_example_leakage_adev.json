@@ -8,6 +8,7 @@
   "records_with_a_parsed_example": 76,
   "examples_parsed": 282,
   "examples_unverifiable_on_the_reference": 108,
+  "examples_stating_a_value_the_reference_does_not_produce": 0,
   "examples_whose_value_the_mutant_does_not_produce": 98,
   "share_of_examples": 0.3475,
   "records_whose_prompt_states_a_killing_value": 52,

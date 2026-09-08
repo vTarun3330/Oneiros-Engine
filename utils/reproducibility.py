@@ -11,9 +11,23 @@ from typing import Dict, Iterable
 
 
 _SOURCE_DIRECTORIES = (
-    "baseline", "config", "engine", "harness", "metrics", "scripts", "tests", "utils",
+    "baseline", "config", "engine", "harness", "metrics", "research", "scripts",
+    "tests", "utils",
 )
-_ROOT_FILES = ("requirements.txt", "pytest.ini")
+_ROOT_FILES = (
+    "requirements.txt", "pytest.ini", "main.py",
+    "requirements-local-gpu.lock.txt",
+)
+
+#: Executable and configuration suffixes. .sh and .ps1 were omitted, so a
+#: change to scripts/run_atheris_wsl.sh - which launches the entire Atheris
+#: baseline - left the recorded source hash identical, and provenance would
+#: assert the tree was unchanged. "research" was omitted for the same reason:
+#: it holds FROZEN_EVALUATION_CONFIG.json, whose whole purpose is to be
+#: frozen and therefore to be noticed if it moves.
+_INCLUDED_SUFFIXES = frozenset({
+    ".py", ".json", ".toml", ".yaml", ".yml", ".ini", ".sh", ".ps1", ".txt",
+})
 
 
 def _included_files(project_root: Path) -> Iterable[Path]:
@@ -22,9 +36,8 @@ def _included_files(project_root: Path) -> Iterable[Path]:
         if not root.exists():
             continue
         for path in root.rglob("*"):
-            if path.is_file() and "__pycache__" not in path.parts and path.suffix in {
-                ".py", ".json", ".toml", ".yaml", ".yml", ".ini",
-            }:
+            if (path.is_file() and "__pycache__" not in path.parts
+                    and path.suffix in _INCLUDED_SUFFIXES):
                 yield path
     for name in _ROOT_FILES:
         path = project_root / name

@@ -148,3 +148,57 @@ def test_the_frozen_filename_is_unchanged(monkeypatch):
     monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "first_assertion")
     assert driver.evaluation_results_filename("base", 42) == \
         "base_validation_standard_seed_42.json"
+
+
+# --- the scoring protocol is part of the evaluation's identity -------------
+#
+# _adapter_evaluation_context returned identical output whether the run used
+# first_assertion or whole_output, retained raw output or not, and accepted
+# test functions or not. Progress recorded under one protocol could therefore
+# be adopted by a resume under the other, producing one artifact whose
+# candidates were scored by two different rules. The filename fix made this
+# latent rather than active; relying on a filename to carry an identity the
+# identity record omits is not a guarantee.
+
+def test_the_resume_identity_separates_the_two_protocols(monkeypatch):
+    import scripts.train_on_dataset as driver
+
+    arguments = ("dataset", "adapter", "sha", "ablation_dev", None, "scope", 1)
+
+    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "first_assertion")
+    monkeypatch.setattr(driver, "RETAIN_RAW_OUTPUT", False)
+    monkeypatch.setattr(driver, "ALLOW_TEST_FUNCTION_CANDIDATES", False)
+    legacy = driver._adapter_evaluation_context(*arguments)
+
+    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "whole_output")
+    monkeypatch.setattr(driver, "RETAIN_RAW_OUTPUT", True)
+    monkeypatch.setattr(driver, "ALLOW_TEST_FUNCTION_CANDIDATES", True)
+    successor = driver._adapter_evaluation_context(*arguments)
+
+    assert legacy != successor, (
+        "a successor resume could adopt legacy progress and score one "
+        "artifact's candidates by two different rules"
+    )
+    assert legacy["evaluation_profile_sha256"] != \
+        successor["evaluation_profile_sha256"]
+
+
+def test_each_protocol_setting_changes_the_identity_on_its_own(monkeypatch):
+    """One combined flag would hide a change to either of the others."""
+    import scripts.train_on_dataset as driver
+
+    arguments = ("dataset", "adapter", "sha", "ablation_dev", None, "scope", 1)
+    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "first_assertion")
+    monkeypatch.setattr(driver, "RETAIN_RAW_OUTPUT", False)
+    monkeypatch.setattr(driver, "ALLOW_TEST_FUNCTION_CANDIDATES", False)
+    baseline = driver._adapter_evaluation_context(*arguments)["evaluation_profile_sha256"]
+
+    for name, value in (("CANDIDATE_PARSE_MODE", "whole_output"),
+                        ("RETAIN_RAW_OUTPUT", True),
+                        ("ALLOW_TEST_FUNCTION_CANDIDATES", True)):
+        monkeypatch.setattr(driver, name, value)
+        changed = driver._adapter_evaluation_context(*arguments)["evaluation_profile_sha256"]
+        assert changed != baseline, f"{name} does not affect the resume identity"
+        monkeypatch.setattr(
+            driver, name,
+            "first_assertion" if name == "CANDIDATE_PARSE_MODE" else False)

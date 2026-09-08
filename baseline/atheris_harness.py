@@ -183,6 +183,21 @@ def fuzz_one_target(
     buggy = buggy_namespace[entry_point]
     reference = reference_namespace[entry_point]
 
+    # Coverage feedback does NOT come from enable_python_coverage alone.
+    # libFuzzer's counters are fed by Atheris's bytecode instrumentation,
+    # which is applied by instrument_imports() at import time or by
+    # instrument_func() on a function object. A target loaded with a bare
+    # exec() receives neither, so libFuzzer ran blind: across the 20,000-run
+    # validation sweep, 740 of 757 logs carried "no interesting inputs were
+    # found. Is the code instrumented for coverage?" and 697 finished with the
+    # corpus still at one input of one byte. That is random search, not
+    # coverage-guided fuzzing, and it was reported as Atheris.
+    instrumentation_error: str | None = None
+    try:
+        buggy = atheris.instrument_func(buggy)
+    except Exception as exc:  # pragma: no cover - depends on the atheris build
+        instrumentation_error = f"{type(exc).__name__}: {str(exc)[:200]}"
+
     kinds = infer_parameter_kinds(
         task["reference_code"], entry_point, task.get("example_assertions") or [],
     )
@@ -193,6 +208,8 @@ def fuzz_one_target(
     state: dict[str, Any] = {
         "outcome": "incomplete", "runs": 0, "witness": None,
         "kill_kind": None, "started": time.time(),
+        "coverage_instrumented": instrumentation_error is None,
+        "instrumentation_error": instrumentation_error,
     }
 
     def snapshot() -> dict[str, Any]:
@@ -206,6 +223,10 @@ def fuzz_one_target(
             "elapsed_seconds": round(time.time() - state["started"], 3),
             "witness": state["witness"],
             "harness_error": state.get("harness_error"),
+            # Carried into every result so a blind run is visible in the
+            # artifact rather than only in a libFuzzer warning nobody reads.
+            "coverage_instrumented": state.get("coverage_instrumented"),
+            "instrumentation_error": state.get("instrumentation_error"),
         }
 
     def checkpoint() -> None:

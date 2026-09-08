@@ -29,7 +29,9 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from harness.corpus import write_json
-from scripts.audit_native_example_leakage import _value, examples_in
+from scripts.audit_native_example_leakage import (
+    _value, examples_in, stated_matches_reference,
+)
 
 
 def _states_a_killing_value(record: dict[str, Any], timeout: float) -> bool | None:
@@ -52,6 +54,11 @@ def _states_a_killing_value(record: dict[str, Any], timeout: float) -> bool | No
         if not reference_ok:
             continue
         verified_any = True
+        if not stated_matches_reference(example["output"], reference_value):
+            # The prompt states a value the reference does not produce.
+            # Copying it fails on correct code, so it is a wrong example, not
+            # a handed-over killing assertion.
+            continue
         mutant_ok, mutant_value = _value(mutant, support, example["call"], timeout)
         if (not mutant_ok) or mutant_value != reference_value:
             return True
