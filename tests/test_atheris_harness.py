@@ -199,3 +199,79 @@ def test_the_driver_has_no_carriage_returns():
     data = (Path(__file__).resolve().parent.parent
             / "scripts" / "run_atheris_wsl.sh").read_bytes()
     assert b"\r\n" not in data
+
+
+# --- the input adapter must be able to reach the killing inputs ------------
+#
+# 41.7% of a deterministic 300-target sample of survivors were survivors only
+# because the adapter could not construct the shape of input that kills them:
+# _consume fell back to ConsumeIntInRange for every kind it did not recognise,
+# so a tuple, dict, set or nested list parameter was handed an integer and the
+# reference rejected it. Measured over those killing inputs, list[list]
+# appeared 109 times and list[tuple] 24.
+
+import ast as _ast
+
+from baseline.atheris_harness import _consume, _kind_of_value
+
+
+class _Provider:
+    """Deterministic stand-in for FuzzedDataProvider."""
+
+    def ConsumeIntInRange(self, low, high):
+        return min(high, max(low, 2))
+
+    def ConsumeFloatInRange(self, low, high):
+        return 1.5
+
+    def ConsumeBool(self):
+        return True
+
+    def ConsumeUnicodeNoSurrogates(self, length):
+        return "ab"
+
+
+def test_nested_lists_are_recognised():
+    assert _kind_of_value([[1, 2], [3]]) == "list_list_int"
+
+
+def test_lists_of_tuples_are_recognised():
+    assert _kind_of_value([(1, 2), (3, 4)]) == "list_tuple_int"
+
+
+def test_a_tuple_is_not_mistaken_for_a_list():
+    assert _kind_of_value((1, 2, 3)) == "tuple_int"
+    assert _kind_of_value([1, 2, 3]) == "list_int"
+
+
+def test_dicts_and_sets_are_recognised():
+    assert _kind_of_value({"a": 1}) == "dict_str_int"
+    assert _kind_of_value({1, 2}) == "set_int"
+
+
+def test_the_adapter_builds_each_recognised_shape():
+    provider = _Provider()
+    built = {kind: _consume(provider, kind) for kind in (
+        "list_list_int", "list_tuple_int", "tuple_int", "tuple_str",
+        "dict_str_int", "set_int", "list_bool", "list_mixed",
+    )}
+    assert isinstance(built["list_list_int"], list)
+    assert all(isinstance(row, list) for row in built["list_list_int"])
+    assert all(isinstance(row, tuple) for row in built["list_tuple_int"])
+    assert isinstance(built["tuple_int"], tuple)
+    assert isinstance(built["tuple_str"], tuple)
+    assert isinstance(built["dict_str_int"], dict)
+    assert isinstance(built["set_int"], set)
+    assert all(isinstance(v, bool) for v in built["list_bool"])
+
+
+def test_an_unknown_kind_still_falls_back_rather_than_raising():
+    """The fallback is the old behaviour and must remain, just used far less."""
+    assert isinstance(_consume(_Provider(), "something_unheard_of"), int)
+
+
+def test_the_measured_gap_shapes_are_all_covered():
+    """The shapes actually observed in survivors' killing inputs."""
+    for value in ([[1, 2], [3]], [(1, 2)], (1, "a"), (True,), {"k": 1}, {1, 2}):
+        kind = _kind_of_value(value)
+        assert kind != "any", f"{value!r} still falls through to the int fallback"

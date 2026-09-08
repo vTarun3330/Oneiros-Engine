@@ -1,0 +1,30 @@
+{
+  "schema_version": "oneiros_atheris_survivor_diagnosis_v1",
+  "set": "atheris_val_20000_seed42_adapter",
+  "sealed_final_test_accessed": false,
+  "survivors_examined": 259,
+  "sampling": "deterministic even stride over task ids, not random",
+  "verdicts": {
+    "reachable_but_not_found": 199,
+    "adapter_cannot_represent_the_killing_input": 60
+  },
+  "verdict_shares": {
+    "reachable_but_not_found": 0.7683,
+    "adapter_cannot_represent_the_killing_input": 0.2317
+  },
+  "one_example_per_verdict": {
+    "reachable_but_not_found": {
+      "task_id": "mutation::humaneval_HumanEval_144_mut_01402",
+      "verdict": "reachable_but_not_found",
+      "detail": "the adapter could build this input; the search did not find it",
+      "killing_call": "simplify('1/6', '2/1')"
+    },
+    "adapter_cannot_represent_the_killing_input": {
+      "task_id": "mutation::mbpp_104_mut_02596",
+      "verdict": "adapter_cannot_represent_the_killing_input",
+      "detail": "tuple_list_int!=tuple",
+      "killing_call": "sort_sublists((['green', 'orange'], ['black', 'white'], ['white', 'black', 'orange']))"
+    }
+  },
+  "gold_assertion_use": "reference assertions are executed here as a diagnostic oracle only. They are never placed in a model prompt and never enter training."
+}
