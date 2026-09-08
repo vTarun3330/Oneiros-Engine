@@ -2,9 +2,9 @@
   "schema_version": "oneiros_work_plan_v1",
   "name": "Phase B writeup, then Phase A value-prediction training",
   "created_utc": "2026-09-08T02:36:48Z",
-  "execution": "running",
-  "paused_mid_step": null,
-  "paused_reason": "",
+  "execution": "paused",
+  "paused_mid_step": "B3-leakage-section",
+  "paused_reason": "user asked to pause",
   "decided": "B before A: the 80% target is not reachable on this panel at 1.5B without contaminating it, and the negative results plus the prompt-copying finding are the substantive output.",
   "steps": [
     {
@@ -55,10 +55,16 @@
       "phase": "B",
       "detail": "The 46% of humaneval records stating a killing value, the 44-46% copied kills, and SFT doubling the copy rate.",
       "uses_gpu": false,
-      "status": "pending",
-      "progress": [],
+      "status": "in_progress",
+      "progress": [
+        {
+          "at": "2026-09-08T05:12:42Z",
+          "note": "paused before any B3 content was written; no partial draft exists to reconcile"
+        }
+      ],
       "artifacts": [],
-      "run_ids": []
+      "run_ids": [],
+      "started_utc": "2026-09-08T03:00:44Z"
     },
     {
       "id": "B4-report",
@@ -138,5 +144,6 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T03:00:43Z"
+  "updated_utc": "2026-09-08T05:12:43Z",
+  "paused_utc": "2026-09-08T05:12:43Z"
 }
