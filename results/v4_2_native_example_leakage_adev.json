@@ -1,0 +1,16 @@
+{
+  "schema_version": "oneiros_native_example_leakage_v1",
+  "corpus_dir": "v4_1_research_hardened_candidate",
+  "split": "ablation_dev",
+  "benchmark": "humaneval",
+  "sealed_final_test_accessed": false,
+  "records_examined": 112,
+  "records_with_a_parsed_example": 76,
+  "examples_parsed": 282,
+  "examples_unverifiable_on_the_reference": 108,
+  "examples_whose_value_the_mutant_does_not_produce": 98,
+  "share_of_examples": 0.3475,
+  "records_whose_prompt_states_a_killing_value": 52,
+  "share_of_records_with_examples": 0.6842,
+  "interpretation": "a record counted here has, in its own prompt, an input and the correct output for it, where the mutant produces something else. Asserting that stated pair kills the mutant without the model determining anything. This is a property of the upstream benchmark, not of a change made here, and it is measured so that humaneval and mbpp numbers are compared knowing it."
+}

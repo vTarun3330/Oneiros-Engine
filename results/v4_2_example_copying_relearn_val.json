@@ -1,0 +1,14 @@
+{
+  "schema_version": "oneiros_example_copying_v1",
+  "artifact": "local_sft_relearn_v2_seed42/sft_validation_standard_seed_42.json",
+  "evaluation_split": "val",
+  "sealed_final_test_accessed": false,
+  "benchmark": "humaneval",
+  "functions_killed": 53,
+  "killed_functions_whose_prompt_states_an_example": 17,
+  "killed_by_asserting_a_stated_example": 13,
+  "share_of_kills": 0.2453,
+  "share_of_kills_where_an_example_was_available": 0.7647,
+  "killing_candidates_not_a_simple_equality": 1,
+  "interpretation": "a floor, not a ceiling: only `assert call == value` candidates matching a stated pair exactly are counted, so paraphrases, reordered arguments and equivalent literals are missed. A kill counted here required no determination of the function's behaviour beyond reading the prompt."
+}
