@@ -1,0 +1,20 @@
+{
+  "schema_version": "oneiros_value_prediction_headroom_v1",
+  "artifact": "local_sft_relearn_v2_seed42/sft_validation_ablation-dev_seed_42.json",
+  "evaluation_split": "ablation_dev",
+  "sealed_final_test_accessed": false,
+  "benchmark": "mbpp",
+  "functions": 429,
+  "functions_killed": 307,
+  "kill_rate": 0.715618,
+  "unkilled_functions_examined": 122,
+  "wrong_expected_value_candidates_examined": 840,
+  "candidates_probing_a_distinguishing_input": 640,
+  "candidates_probing_an_agreeing_input": 200,
+  "candidates_erroring_on_both": 0,
+  "candidates_without_a_parseable_call": 0,
+  "distinguishing_share": 0.761905,
+  "functions_recoverable_by_correct_values": 108,
+  "upper_bound_kill_rate_with_perfect_values": 0.967366,
+  "interpretation": "an upper bound, not a forecast: it assumes every wrong expected value on an already-distinguishing input becomes correct, which no intervention will achieve. If this bound is close to the current kill rate, value prediction is not the lever and the model is probing the wrong inputs."
+}
