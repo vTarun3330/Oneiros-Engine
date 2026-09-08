@@ -1,0 +1,412 @@
+{
+  "schema_version": "oneiros_results_table_v1",
+  "seed": 42,
+  "sealed_final_test_accessed": false,
+  "metric": "kill@8 over synthetic mutation targets",
+  "panels": {
+    "val": "locked; never selected on; the number that counts",
+    "ablation_dev": "selection panel; overstates arms, measured at 3.2x",
+    "train": "first 900 train records; fit, not generalisation"
+  },
+  "base": {
+    "val": {
+      "kill_at_8": 0.620872,
+      "wilson_95": [
+        0.585782,
+        0.654741
+      ],
+      "targets": 781,
+      "by_benchmark": {
+        "humaneval": {
+          "functions": 56,
+          "killed": 47,
+          "kill_rate": 0.839286
+        },
+        "mbpp": {
+          "functions": 701,
+          "killed": 423,
+          "kill_rate": 0.603424
+        }
+      }
+    },
+    "ablation_dev": {
+      "kill_at_8": 0.595941,
+      "wilson_95": [
+        0.554094,
+        0.636437
+      ],
+      "targets": 580,
+      "by_benchmark": {
+        "humaneval": {
+          "functions": 112,
+          "killed": 75,
+          "kill_rate": 0.669643
+        },
+        "manual_curated_examples": {
+          "functions": 1,
+          "killed": 1,
+          "kill_rate": 1.0
+        },
+        "mbpp": {
+          "functions": 429,
+          "killed": 247,
+          "kill_rate": 0.575758
+        }
+      }
+    },
+    "train": {
+      "kill_at_8": 0.678889,
+      "wilson_95": [
+        0.64768,
+        0.708577
+      ],
+      "targets": 900,
+      "by_benchmark": {
+        "humaneval": {
+          "functions": 893,
+          "killed": 607,
+          "kill_rate": 0.679731
+        },
+        "manual_curated_examples": {
+          "functions": 7,
+          "killed": 4,
+          "kill_rate": 0.571429
+        }
+      }
+    }
+  },
+  "base_generalisation_gap_points": 5.8,
+  "arms": {
+    "full_density": {
+      "description": "multi-mutant supervision at full density",
+      "run": "local_sft_mm_full_v2_seed42",
+      "val": {
+        "kill_at_8": 0.635403,
+        "wilson_95": [
+          0.600512,
+          0.668927
+        ],
+        "targets": 781,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 56,
+            "killed": 48,
+            "kill_rate": 0.857143
+          },
+          "mbpp": {
+            "functions": 701,
+            "killed": 433,
+            "kill_rate": 0.617689
+          }
+        },
+        "gain_over_base": 0.014531
+      },
+      "train": {
+        "kill_at_8": 0.828889,
+        "wilson_95": [
+          0.802899,
+          0.852083
+        ],
+        "targets": 900,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 893,
+            "killed": 744,
+            "kill_rate": 0.833147
+          },
+          "manual_curated_examples": {
+            "functions": 7,
+            "killed": 2,
+            "kill_rate": 0.285714
+          }
+        },
+        "gain_over_base": 0.15
+      },
+      "generalisation_gap_points": 19.35
+    },
+    "relearning": {
+      "description": "hard-example relearning on train-split failures",
+      "run": "local_sft_relearn_v2_seed42",
+      "val": {
+        "kill_at_8": 0.659181,
+        "wilson_95": [
+          0.624688,
+          0.692066
+        ],
+        "targets": 781,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 56,
+            "killed": 53,
+            "kill_rate": 0.946429
+          },
+          "mbpp": {
+            "functions": 701,
+            "killed": 446,
+            "kill_rate": 0.636234
+          }
+        },
+        "gain_over_base": 0.038309
+      },
+      "ablation_dev": {
+        "kill_at_8": 0.717712,
+        "wilson_95": [
+          0.678389,
+          0.753971
+        ],
+        "targets": 580,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 112,
+            "killed": 81,
+            "kill_rate": 0.723214
+          },
+          "manual_curated_examples": {
+            "functions": 1,
+            "killed": 1,
+            "kill_rate": 1.0
+          },
+          "mbpp": {
+            "functions": 429,
+            "killed": 307,
+            "kill_rate": 0.715618
+          }
+        },
+        "gain_over_base": 0.121771
+      },
+      "train": {
+        "kill_at_8": 0.826667,
+        "wilson_95": [
+          0.800561,
+          0.849995
+        ],
+        "targets": 900,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 893,
+            "killed": 742,
+            "kill_rate": 0.830907
+          },
+          "manual_curated_examples": {
+            "functions": 7,
+            "killed": 2,
+            "kill_rate": 0.285714
+          }
+        },
+        "gain_over_base": 0.147778
+      },
+      "generalisation_gap_points": 16.75
+    },
+    "regularised_dropout_010_unpromoted": {
+      "description": "mild regularisation; failed the promotion gate, staged to be measurable",
+      "run": "local_sft_reg_mild_s42",
+      "val": {
+        "kill_at_8": 0.619551,
+        "wilson_95": [
+          0.584444,
+          0.65345
+        ],
+        "targets": 781,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 56,
+            "killed": 50,
+            "kill_rate": 0.892857
+          },
+          "mbpp": {
+            "functions": 701,
+            "killed": 419,
+            "kill_rate": 0.597718
+          }
+        },
+        "gain_over_base": -0.001321
+      },
+      "train": {
+        "kill_at_8": 0.83,
+        "wilson_95": [
+          0.804069,
+          0.853126
+        ],
+        "targets": 900,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 893,
+            "killed": 743,
+            "kill_rate": 0.832027
+          },
+          "manual_curated_examples": {
+            "functions": 7,
+            "killed": 4,
+            "kill_rate": 0.571429
+          }
+        },
+        "gain_over_base": 0.151111
+      },
+      "generalisation_gap_points": 21.04
+    },
+    "long_two_epoch": {
+      "description": "two epochs instead of one",
+      "run": "local_sft_long_s42",
+      "val": {
+        "kill_at_8": 0.61823,
+        "wilson_95": [
+          0.583107,
+          0.652159
+        ],
+        "targets": 781,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 56,
+            "killed": 51,
+            "kill_rate": 0.910714
+          },
+          "mbpp": {
+            "functions": 701,
+            "killed": 417,
+            "kill_rate": 0.594864
+          }
+        },
+        "gain_over_base": -0.002642
+      },
+      "train": {
+        "kill_at_8": 0.826667,
+        "wilson_95": [
+          0.800561,
+          0.849995
+        ],
+        "targets": 900,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 893,
+            "killed": 741,
+            "kill_rate": 0.829787
+          },
+          "manual_curated_examples": {
+            "functions": 7,
+            "killed": 3,
+            "kill_rate": 0.428571
+          }
+        },
+        "gain_over_base": 0.147778
+      },
+      "generalisation_gap_points": 20.84
+    },
+    "relearning_checkpoint_100": {
+      "description": "intermediate checkpoint of the relearning arm",
+      "run": "local_sft_relearn_ckpt100",
+      "val": {
+        "kill_at_8": 0.611625,
+        "wilson_95": [
+          0.576425,
+          0.645697
+        ],
+        "targets": 781,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 56,
+            "killed": 46,
+            "kill_rate": 0.821429
+          },
+          "mbpp": {
+            "functions": 701,
+            "killed": 417,
+            "kill_rate": 0.594864
+          }
+        },
+        "gain_over_base": -0.009247
+      },
+      "train": {
+        "kill_at_8": 0.812222,
+        "wilson_95": [
+          0.7854,
+          0.83639
+        ],
+        "targets": 900,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 893,
+            "killed": 728,
+            "kill_rate": 0.81523
+          },
+          "manual_curated_examples": {
+            "functions": 7,
+            "killed": 3,
+            "kill_rate": 0.428571
+          }
+        },
+        "gain_over_base": 0.133333
+      },
+      "generalisation_gap_points": 20.06
+    },
+    "v4_2_corpus": {
+      "description": "corpus grown with 26 verified humaneval records",
+      "run": "local_sft_v42_s42",
+      "val": {
+        "kill_at_8": 0.640687,
+        "wilson_95": [
+          0.605877,
+          0.674077
+        ],
+        "targets": 781,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 56,
+            "killed": 51,
+            "kill_rate": 0.910714
+          },
+          "mbpp": {
+            "functions": 701,
+            "killed": 434,
+            "kill_rate": 0.619116
+          }
+        },
+        "gain_over_base": 0.019815
+      },
+      "train": {
+        "kill_at_8": 0.838889,
+        "wilson_95": [
+          0.813438,
+          0.861459
+        ],
+        "targets": 900,
+        "by_benchmark": {
+          "humaneval": {
+            "functions": 893,
+            "killed": 752,
+            "kill_rate": 0.842105
+          },
+          "manual_curated_examples": {
+            "functions": 7,
+            "killed": 3,
+            "kill_rate": 0.428571
+          }
+        },
+        "gain_over_base": 0.16
+      },
+      "generalisation_gap_points": 19.82
+    }
+  },
+  "arms_missing": {
+    "full_density": [
+      "ablation_dev"
+    ],
+    "regularised_dropout_010_unpromoted": [
+      "ablation_dev"
+    ],
+    "long_two_epoch": [
+      "ablation_dev"
+    ],
+    "relearning_checkpoint_100": [
+      "ablation_dev"
+    ],
+    "v4_2_corpus": [
+      "ablation_dev"
+    ]
+  },
+  "repository_targets_evaluated": 0,
+  "caveats": [
+    "every kill@8 here is over SYNTHETIC targets; the 24 val repository targets are not evaluated and are excluded from all reported rates",
+    "humaneval figures carry the prompt-copying caveat: 46% of ablation_dev humaneval records state a value their mutant does not produce",
+    "ablation_dev gains are inflated ~3.2x relative to locked val"
+  ]
+}

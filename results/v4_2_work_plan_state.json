@@ -34,10 +34,20 @@
       "phase": "B",
       "detail": "Every arm, both panels, per benchmark, rebuilt from artifacts so no figure is retyped.",
       "uses_gpu": false,
-      "status": "pending",
-      "progress": [],
-      "artifacts": [],
-      "run_ids": []
+      "status": "done",
+      "progress": [
+        {
+          "at": "2026-09-08T03:00:43Z",
+          "note": "derived results table built; every arm, three panels, per-benchmark; gaps named"
+        }
+      ],
+      "artifacts": [
+        "results/v4_2_results_table.json"
+      ],
+      "run_ids": [],
+      "started_utc": "2026-09-08T02:53:56Z",
+      "finished_utc": "2026-09-08T03:00:43Z",
+      "summary": "scripts/build_results_table.py rebuilds every figure from artifacts; 7 tests pin derivation, missing-evaluation naming and sealed refusal"
     },
     {
       "id": "B3-leakage-section",
@@ -128,5 +138,5 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T02:52:51Z"
+  "updated_utc": "2026-09-08T03:00:43Z"
 }
