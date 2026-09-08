@@ -202,3 +202,45 @@ def test_each_protocol_setting_changes_the_identity_on_its_own(monkeypatch):
         monkeypatch.setattr(
             driver, name,
             "first_assertion" if name == "CANDIDATE_PARSE_MODE" else False)
+
+
+def test_the_completion_budget_appears_in_the_results_filename(monkeypatch):
+    """Two budgets are two measurements, not a collision.
+
+    The completion budget is already part of the evaluation scope hash, so a
+    256-token run was correctly REFUSED as a mismatch against the 128-token
+    artifact - but it shared that artifact's name, so a legitimate second
+    measurement read as an immutability violation.
+    """
+    import scripts.train_on_dataset as driver
+
+    monkeypatch.setattr(driver, "EVALUATION_SPLIT", "ablation_dev")
+    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "whole_output")
+
+    monkeypatch.setattr(driver, "MAX_NEW_TOKENS_OVERRIDE", 128)
+    default_budget = driver.evaluation_results_filename("sft", 42)
+    monkeypatch.setattr(driver, "MAX_NEW_TOKENS_OVERRIDE", 256)
+    raised_budget = driver.evaluation_results_filename("sft", 42)
+
+    assert default_budget != raised_budget
+    assert "completion256" in raised_budget
+    assert "completion" not in default_budget, (
+        "the default budget must not rename every historical artifact"
+    )
+
+
+def test_a_prompt_and_completion_that_cannot_share_a_sequence_are_refused():
+    """2048 prompt + 1024 completion does not fit a 2048-token sequence."""
+    import subprocess
+    import sys as _sys
+    from pathlib import Path as _Path
+
+    driver = _Path(__file__).resolve().parent.parent / "scripts" / "train_on_dataset.py"
+    result = subprocess.run(
+        [_sys.executable, str(driver), "--phase", "base_eval", "--run-name", "x",
+         "--sft-prompt-token-limit", "1024",
+         "--generation-completion-token-limit", "1500"],
+        capture_output=True, text=True,
+    )
+    assert result.returncode != 0
+    assert "does not fit" in (result.stdout + result.stderr)

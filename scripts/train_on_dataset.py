@@ -199,6 +199,9 @@ SFT_COMPLEX_TARGET_FRACTION_OVERRIDE = None
 SFT_SELECTION_PROMPT_TOKEN_LIMIT_OVERRIDE = None
 REQUIRE_SPLIT_ISOLATION = False
 MAX_NEW_TOKENS_OVERRIDE = 128
+#: The budget every reported result was produced under. Naming a run only
+#: when it differs keeps every historical filename exactly as written.
+DEFAULT_GENERATION_COMPLETION_TOKENS = 128
 PROMPT_TOKEN_LIMIT = training_config.sft_prompt_token_limit
 REPOSITORY_PROMPT_TOKEN_LIMIT = training_config.sft_repository_prompt_token_limit
 MAX_SFT_COMPLETION_TOKENS = 2048
@@ -242,6 +245,13 @@ def _evaluation_profile_slug() -> str:
     # either protocol - the confusion the successor receipt exists to refuse.
     if CANDIDATE_PARSE_MODE != "first_assertion":
         parts.append(f"parse-{CANDIDATE_PARSE_MODE.replace('_', '-')}")
+    # The completion budget is already part of the evaluation scope hash, so a
+    # differently-budgeted run is correctly refused as a mismatch against an
+    # existing artifact - but it shared that artifact's NAME, so the refusal
+    # read as a collision rather than as two legitimate measurements. Naming it
+    # lets both exist, which is the point of measuring two budgets.
+    if MAX_NEW_TOKENS_OVERRIDE != DEFAULT_GENERATION_COMPLETION_TOKENS:
+        parts.append(f"completion{MAX_NEW_TOKENS_OVERRIDE}")
     return "_".join(parts) or "standard"
 
 
@@ -4298,6 +4308,20 @@ if __name__ == "__main__":
         ),
     )
     parser.add_argument(
+        "--generation-completion-token-limit",
+        type=int,
+        default=None,
+        help=(
+            "Tokens a single generated candidate may use. The default of 128 "
+            "was set for one-line assertions. A multi-assertion test function "
+            "needs more: measured on ablation_dev, the relearning arm's p90 "
+            "completion length IS 128, and 462 of its 481 unparseable outputs "
+            "parse as soon as a trailing cut-off line is dropped. Raising it "
+            "changes the evaluation scope hash, so results land in their own "
+            "artifacts rather than overwriting a differently-budgeted run."
+        ),
+    )
+    parser.add_argument(
         "--sft-repository-completion-token-limit",
         type=int,
         default=None,
@@ -4539,6 +4563,9 @@ if __name__ == "__main__":
     LORA_DROPOUT_OVERRIDE = args.lora_dropout
     WEIGHT_DECAY_OVERRIDE = args.weight_decay
     CANDIDATE_PARSE_MODE = args.candidate_parse_mode
+    if args.generation_completion_token_limit is not None:
+        MAX_NEW_TOKENS_OVERRIDE = args.generation_completion_token_limit
+        MAX_SFT_GENERATION_COMPATIBLE_TOKENS = MAX_NEW_TOKENS_OVERRIDE
     RETAIN_RAW_OUTPUT = args.retain_raw_output
     if CANDIDATE_PARSE_MODE != "first_assertion":
         print(
@@ -4579,6 +4606,21 @@ if __name__ == "__main__":
         raise ValueError(
             "--sft-repository-completion-token-limit must be between 1 and 2047"
         )
+    if args.generation_completion_token_limit is not None:
+        if args.generation_completion_token_limit < 1:
+            raise ValueError("--generation-completion-token-limit must be at least one")
+        # Prompt and completion share one sequence, and the chat template adds
+        # more on top. A configuration that cannot fit is refused here rather
+        # than silently truncating the prompt at generation time.
+        prompt_budget = args.sft_prompt_token_limit or 1024
+        total = prompt_budget + args.generation_completion_token_limit
+        if total >= MAX_SFT_COMPLETION_TOKENS:
+            raise ValueError(
+                f"prompt budget {prompt_budget} plus completion budget "
+                f"{args.generation_completion_token_limit} is {total}, which "
+                f"does not fit the {MAX_SFT_COMPLETION_TOKENS}-token sequence "
+                "before chat-template overhead; choose an allocation that fits"
+            )
     if args.sft_real_target_fraction is not None and not 0.0 <= args.sft_real_target_fraction < 1.0:
         raise ValueError("--sft-real-target-fraction must be in [0, 1)")
     if args.sft_max_real_repeats is not None and args.sft_max_real_repeats < 1:

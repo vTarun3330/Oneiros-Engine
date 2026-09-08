@@ -135,8 +135,15 @@
       "detail": "Evaluation only, not training. Base and relearning, ablation_dev then locked val.",
       "uses_gpu": true,
       "status": "in_progress",
-      "progress": [],
-      "artifacts": [],
+      "progress": [
+        {
+          "at": "2026-09-08T09:00:29Z",
+          "note": "pilot analysed: model emits 2.87 assertions/output but successor scores worse; 97.6% of the gap is 128-token truncation"
+        }
+      ],
+      "artifacts": [
+        "results/v4_2_parser_pilot_relearn_adev.json"
+      ],
       "run_ids": [],
       "started_utc": "2026-09-08T07:23:03Z"
     },
@@ -229,7 +236,7 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T07:23:03Z",
+  "updated_utc": "2026-09-08T09:00:29Z",
   "paused_utc": "2026-09-08T06:00:13Z",
   "resumed_utc": "2026-09-08T05:29:43Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",
