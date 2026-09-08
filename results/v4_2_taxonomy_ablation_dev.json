@@ -1,0 +1,180 @@
+{
+  "schema_version": "oneiros_failure_taxonomy_by_benchmark_set_v1",
+  "sealed_final_test_accessed": false,
+  "artifacts": {
+    "local_base_qwen_adev_seed42/base_validation_ablation-dev_seed_42.json": {
+      "schema_version": "oneiros_failure_taxonomy_by_benchmark_v1",
+      "artifact": "local_base_qwen_adev_seed42/base_validation_ablation-dev_seed_42.json",
+      "evaluation_split": "ablation_dev",
+      "sealed_final_test_accessed": false,
+      "adapter": "base_model",
+      "by_benchmark": {
+        "humaneval": {
+          "functions": 112,
+          "functions_killed": 75,
+          "function_kill_rate": 0.669643,
+          "candidates": 896,
+          "counts": {
+            "killed": 227,
+            "wrong_expected_value": 181,
+            "logical_condition_miss": 149,
+            "passes_both": 136,
+            "boundary_miss": 132,
+            "indexing_miss": 28,
+            "off_by_one_miss": 25,
+            "syntax_invalid": 14,
+            "undefined_symbol": 3,
+            "reference_invalid": 1
+          },
+          "rates": {
+            "killed": 0.253348,
+            "wrong_expected_value": 0.202009,
+            "logical_condition_miss": 0.166295,
+            "passes_both": 0.151786,
+            "boundary_miss": 0.147321,
+            "indexing_miss": 0.03125,
+            "off_by_one_miss": 0.027902,
+            "syntax_invalid": 0.015625,
+            "undefined_symbol": 0.003348,
+            "reference_invalid": 0.001116
+          }
+        },
+        "manual_curated_examples": {
+          "functions": 1,
+          "functions_killed": 1,
+          "function_kill_rate": 1.0,
+          "candidates": 8,
+          "counts": {
+            "passes_both": 4,
+            "killed": 3,
+            "wrong_expected_value": 1
+          },
+          "rates": {
+            "passes_both": 0.5,
+            "killed": 0.375,
+            "wrong_expected_value": 0.125
+          }
+        },
+        "mbpp": {
+          "functions": 429,
+          "functions_killed": 247,
+          "function_kill_rate": 0.575758,
+          "candidates": 3432,
+          "counts": {
+            "wrong_expected_value": 1439,
+            "killed": 898,
+            "boundary_miss": 488,
+            "passes_both": 295,
+            "wrong_target_api": 129,
+            "off_by_one_miss": 85,
+            "logical_condition_miss": 54,
+            "syntax_invalid": 28,
+            "reference_invalid": 11,
+            "undefined_symbol": 3,
+            "indexing_miss": 2
+          },
+          "rates": {
+            "wrong_expected_value": 0.419289,
+            "killed": 0.261655,
+            "boundary_miss": 0.142191,
+            "passes_both": 0.085956,
+            "wrong_target_api": 0.037587,
+            "off_by_one_miss": 0.024767,
+            "logical_condition_miss": 0.015734,
+            "syntax_invalid": 0.008159,
+            "reference_invalid": 0.003205,
+            "undefined_symbol": 0.000874,
+            "indexing_miss": 0.000583
+          }
+        }
+      }
+    },
+    "local_sft_relearn_v2_seed42/sft_validation_ablation-dev_seed_42.json": {
+      "schema_version": "oneiros_failure_taxonomy_by_benchmark_v1",
+      "artifact": "local_sft_relearn_v2_seed42/sft_validation_ablation-dev_seed_42.json",
+      "evaluation_split": "ablation_dev",
+      "sealed_final_test_accessed": false,
+      "adapter": "sft_adapter",
+      "by_benchmark": {
+        "humaneval": {
+          "functions": 112,
+          "functions_killed": 81,
+          "function_kill_rate": 0.723214,
+          "candidates": 896,
+          "counts": {
+            "killed": 263,
+            "logical_condition_miss": 159,
+            "boundary_miss": 134,
+            "passes_both": 120,
+            "wrong_expected_value": 109,
+            "syntax_invalid": 50,
+            "off_by_one_miss": 24,
+            "indexing_miss": 15,
+            "reference_invalid": 13,
+            "undefined_symbol": 9
+          },
+          "rates": {
+            "killed": 0.293527,
+            "logical_condition_miss": 0.177455,
+            "boundary_miss": 0.149554,
+            "passes_both": 0.133929,
+            "wrong_expected_value": 0.121652,
+            "syntax_invalid": 0.055804,
+            "off_by_one_miss": 0.026786,
+            "indexing_miss": 0.016741,
+            "reference_invalid": 0.014509,
+            "undefined_symbol": 0.010045
+          }
+        },
+        "manual_curated_examples": {
+          "functions": 1,
+          "functions_killed": 1,
+          "function_kill_rate": 1.0,
+          "candidates": 8,
+          "counts": {
+            "passes_both": 5,
+            "killed": 2,
+            "wrong_expected_value": 1
+          },
+          "rates": {
+            "passes_both": 0.625,
+            "killed": 0.25,
+            "wrong_expected_value": 0.125
+          }
+        },
+        "mbpp": {
+          "functions": 429,
+          "functions_killed": 307,
+          "function_kill_rate": 0.715618,
+          "candidates": 3432,
+          "counts": {
+            "wrong_expected_value": 1909,
+            "killed": 1057,
+            "boundary_miss": 165,
+            "wrong_target_api": 112,
+            "passes_both": 90,
+            "logical_condition_miss": 31,
+            "syntax_invalid": 28,
+            "off_by_one_miss": 22,
+            "reference_invalid": 12,
+            "indexing_miss": 4,
+            "undefined_symbol": 2
+          },
+          "rates": {
+            "wrong_expected_value": 0.556235,
+            "killed": 0.307984,
+            "boundary_miss": 0.048077,
+            "wrong_target_api": 0.032634,
+            "passes_both": 0.026224,
+            "logical_condition_miss": 0.009033,
+            "syntax_invalid": 0.008159,
+            "off_by_one_miss": 0.00641,
+            "reference_invalid": 0.003497,
+            "indexing_miss": 0.001166,
+            "undefined_symbol": 0.000583
+          }
+        }
+      }
+    }
+  }
+}
