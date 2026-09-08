@@ -1,0 +1,64 @@
+{
+  "schema_version": "oneiros_parser_pilot_v1",
+  "protocol": "oneiros_whole_output_successor",
+  "artifact": "local_base_qwen_adev_seed42/base_validation_ablation-dev_parse-whole-output_seed_42.json",
+  "evaluation_split": "ablation_dev",
+  "sealed_final_test_accessed": false,
+  "paired": "both interpretations read the SAME retained raw outputs, so the difference carries no generation randomness",
+  "raw_output_stats": {
+    "raw_outputs": 4336,
+    "raw_outputs_retained": 4336,
+    "with_one_assertion": 4276,
+    "with_multiple_assertions": 23,
+    "with_no_assertion": 37,
+    "whole_output_parse_valid": 0,
+    "whole_output_policy_valid": 4261,
+    "legacy_parse_valid": 4302,
+    "valid_legacy_invalid_whole": 33,
+    "valid_whole_invalid_legacy": 0,
+    "incomplete_ast": 9,
+    "duplicate_raw_outputs": 2355
+  },
+  "assertion_count_histogram": {
+    "0": 37,
+    "1": 4276,
+    "2": 20,
+    "3": 2,
+    "8": 1
+  },
+  "output_shapes": {
+    "bare_assertion": 4294,
+    "other": 33,
+    "unparseable": 9
+  },
+  "completion_length_chars": {
+    "median": 56,
+    "p90": 77,
+    "max": 569
+  },
+  "interpretations": {
+    "legacy_first_assertion": {
+      "functions": 542,
+      "functions_killed": 323,
+      "function_kill_rate": 0.595941,
+      "requested_candidates": 4336,
+      "reference_valid_candidates": 2526,
+      "reference_valid_rate_per_requested": 0.582565,
+      "killing_candidates": 1128,
+      "candidate_kill_rate_per_valid": 0.446556
+    },
+    "successor_whole_output": {
+      "functions": 542,
+      "functions_killed": 323,
+      "function_kill_rate": 0.595941,
+      "requested_candidates": 4336,
+      "reference_valid_candidates": 2503,
+      "reference_valid_rate_per_requested": 0.57726,
+      "killing_candidates": 1121,
+      "candidate_kill_rate_per_valid": 0.447863
+    }
+  },
+  "functions_killed_only_under_successor": 0,
+  "functions_killed_only_under_legacy": 0,
+  "interpretation_note": "functions_killed_only_under_successor counts targets that die when assertions beyond the first are executed. If it is near zero the collapse cost nothing and the model was emitting single assertions regardless."
+}
