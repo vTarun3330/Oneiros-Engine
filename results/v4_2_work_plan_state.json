@@ -188,11 +188,20 @@
       "phase": "P5",
       "detail": "Every analysis runs one sandboxed subprocess at a time on a 32-core machine. The Atheris rerun is 4542 independent runs and is the largest remaining block. Pool the work locally - no Modal, no remote credits - keeping per-execution isolation and timeouts unchanged.",
       "uses_gpu": false,
-      "status": "in_progress",
-      "progress": [],
-      "artifacts": [],
+      "status": "done",
+      "progress": [
+        {
+          "at": "2026-09-08T12:19:35Z",
+          "note": "atheris driver parallelised across 30 workers; instrumentation fix confirmed (0/8 warnings, corpus grows)"
+        }
+      ],
+      "artifacts": [
+        "scripts/run_atheris_wsl.sh"
+      ],
       "run_ids": [],
-      "started_utc": "2026-09-08T12:14:55Z"
+      "started_utc": "2026-09-08T12:14:55Z",
+      "finished_utc": "2026-09-08T12:19:36Z",
+      "summary": "local CPU pool for both the Atheris driver and Python analyses; no Modal credits spent"
     },
     {
       "id": "P1-curriculum",
@@ -233,10 +242,11 @@
       "phase": "P5",
       "detail": "Why targets survive: branch not reached, wrong oracle, unsupported input shape, budget, timeout, harness defect, equivalent mutant.",
       "uses_gpu": false,
-      "status": "pending",
+      "status": "in_progress",
       "progress": [],
       "artifacts": [],
-      "run_ids": []
+      "run_ids": [],
+      "started_utc": "2026-09-08T12:19:37Z"
     },
     {
       "id": "B4-report",
@@ -261,7 +271,7 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T12:14:55Z",
+  "updated_utc": "2026-09-08T12:19:37Z",
   "paused_utc": "2026-09-08T11:50:47Z",
   "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",

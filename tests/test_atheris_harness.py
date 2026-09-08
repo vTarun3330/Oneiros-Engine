@@ -158,3 +158,44 @@ def test_the_historical_logs_show_the_blind_runs():
         "not coverage-guided; if this no longer holds the claim needs "
         "re-deriving before it is repeated"
     )
+
+
+# --- the driver must not depend on the caller's working directory ---------
+#
+# Each target now runs inside its own directory so concurrent libFuzzer
+# processes cannot overwrite one another's crash artifacts. That silently
+# broke relative OUTDIR and TASKS paths: every one of 4542 targets failed with
+# "no checkpoint (return code 1)" while the driver printed "complete" for all
+# six sets. The smoke test had used an absolute path and missed it entirely.
+
+def test_the_driver_resolves_paths_before_changing_directory():
+    from pathlib import Path
+
+    script = (Path(__file__).resolve().parent.parent
+              / "scripts" / "run_atheris_wsl.sh").read_text(encoding="utf-8")
+    resolve_at = script.index('OUTDIR="$(cd "$OUTDIR" && pwd)"')
+    first_cd = script.index('cd "$WORKDIR"')
+    assert resolve_at < first_cd, (
+        "OUTDIR and TASKS must be made absolute before any cd, or a relative "
+        "path stops resolving inside the per-task working directory"
+    )
+    assert 'TASKS="$(cd "$(dirname "$TASKS")" && pwd)/$(basename "$TASKS")"' in script
+
+
+def test_each_target_gets_its_own_working_directory():
+    """Concurrent libFuzzer runs must not share a crash-artifact directory."""
+    from pathlib import Path
+
+    script = (Path(__file__).resolve().parent.parent
+              / "scripts" / "run_atheris_wsl.sh").read_text(encoding="utf-8")
+    assert 'TASKDIR="$(mktemp -d "$WORKDIR/task_XXXXXX")"' in script
+    assert 'cd "$TASKDIR"' in script
+
+
+def test_the_driver_has_no_carriage_returns():
+    """A CRLF write made bash refuse to parse the function definition."""
+    from pathlib import Path
+
+    data = (Path(__file__).resolve().parent.parent
+            / "scripts" / "run_atheris_wsl.sh").read_bytes()
+    assert b"\r\n" not in data

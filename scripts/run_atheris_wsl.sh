@@ -27,6 +27,11 @@ PYTHON="${ATHERIS_PYTHON:-/opt/atheris311/bin/python}"
 HARNESS="${ATHERIS_HARNESS:-/mnt/c/Users/Student2/Desktop/Capstone/oneiros/baseline/atheris_harness.py}"
 
 mkdir -p "$OUTDIR"
+# Resolve to absolute paths BEFORE any cd. Each target now runs inside its own
+# working directory, so a relative OUTDIR or TASKS silently stops resolving and
+# every target fails with "no checkpoint" while the driver reports success.
+OUTDIR="$(cd "$OUTDIR" && pwd)"
+TASKS="$(cd "$(dirname "$TASKS")" && pwd)/$(basename "$TASKS")"
 # libFuzzer drops crash-* artifacts into the working directory; keep them out
 # of the repository.
 WORKDIR="$(mktemp -d)"
