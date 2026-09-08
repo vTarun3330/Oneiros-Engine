@@ -9,6 +9,8 @@ from __future__ import annotations
 import json
 import sys
 import time
+
+import pytest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -16,6 +18,22 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 import scripts.pipeline_health as health
+
+
+@pytest.fixture(autouse=True)
+def _isolate_the_work_plan(monkeypatch, tmp_path_factory):
+    """No test may read the REAL work plan.
+
+    check() asks the plan whether the open step uses the GPU, so an
+    idle-related test's verdict would otherwise depend on which step the
+    project happens to be on. That is the same environment-dependence that
+    made three tests here pass in the morning and fail in the afternoon, and
+    it is worth preventing by construction rather than case by case.
+    """
+    import scripts.work_plan as work_plan
+    absent = tmp_path_factory.mktemp("no-plan") / "absent.json"
+    monkeypatch.setattr(work_plan, "STATE", absent)
+
 
 
 def _log(tmp_path: Path, text: str, age_seconds: int = 0) -> Path:
@@ -309,3 +327,66 @@ def test_an_idle_card_long_after_the_last_job_is_reported(monkeypatch, tmp_path)
 
     report = health.check([], live_queues=0)
     assert any(problem.startswith("IDLE") for problem in report["problems"])
+
+
+# --- idle is a problem only when GPU work is supposed to be happening ------
+#
+# The watchdog reported IDLE continuously through the CPU-only writing phase.
+# It was right every time and useless every time: a watchdog that always
+# complains is one that gets ignored, which is the failure this checker exists
+# to prevent. It now asks the work plan whether the open step uses the GPU.
+
+def _plan_with(monkeypatch, tmp_path, uses_gpu, execution="running"):
+    import scripts.work_plan as work_plan
+    state = tmp_path / "plan.json"
+    plan = work_plan.initial_plan()
+    plan["execution"] = execution
+    plan["steps"] = [{
+        "id": "S1", "title": "t", "phase": "B", "detail": "d",
+        "uses_gpu": uses_gpu, "status": "in_progress",
+        "progress": [], "artifacts": [], "run_ids": [],
+    }]
+    work_plan.save(plan, state)
+    # Overrides the autouse isolation fixture, which points STATE at a path
+    # that does not exist.
+    monkeypatch.setattr(work_plan, "STATE", state)
+    return state
+
+
+def _idle_long_ago(monkeypatch):
+    monkeypatch.setattr(health, "_gpu_utilisation", lambda: 0)
+    monkeypatch.setattr(health, "_latest_run", lambda: {
+        "state": "completed", "name": "jobA", "settled_at": time.time() - 3_000,
+    })
+
+
+def test_idle_during_a_cpu_only_step_is_a_note_not_a_problem(tmp_path, monkeypatch):
+    _plan_with(monkeypatch, tmp_path, uses_gpu=False)
+    _idle_long_ago(monkeypatch)
+
+    report = health.check([], live_queues=0)
+
+    assert not any(p.startswith("IDLE") for p in report["problems"])
+    assert any("as expected" in w for w in report["warnings"]), (
+        "the idle card must stay VISIBLE; suppressing it entirely would hide "
+        "a genuinely stopped pipeline"
+    )
+
+
+def test_idle_during_a_gpu_step_is_still_a_problem(tmp_path, monkeypatch):
+    """The suppression must not swallow the failure it sits beside."""
+    _plan_with(monkeypatch, tmp_path, uses_gpu=True)
+    _idle_long_ago(monkeypatch)
+
+    report = health.check([], live_queues=0)
+
+    assert any(p.startswith("IDLE") for p in report["problems"])
+
+
+def test_idle_with_no_plan_at_all_is_a_problem(monkeypatch):
+    """Silence about an idle card is the worse error, so default to alarming."""
+    _idle_long_ago(monkeypatch)
+
+    report = health.check([], live_queues=0)
+
+    assert any(p.startswith("IDLE") for p in report["problems"])

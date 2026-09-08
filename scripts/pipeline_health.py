@@ -191,6 +191,31 @@ def _latest_run() -> dict[str, Any]:
     }
 
 
+def _gpu_work_expected() -> bool | None:
+    """Whether the open work-plan step is supposed to be using the GPU.
+
+    An idle card is a problem while a GPU step is open and merely a fact while
+    a CPU-only step is. Without this the watchdog reports IDLE continuously
+    through every writing and analysis phase, and a watchdog that is always
+    complaining is one that gets ignored - which is the failure mode this
+    checker was written to prevent.
+
+    None means there is no plan to consult, in which case idle is treated as a
+    problem, because silence about an idle card is the worse error.
+    """
+    try:
+        from scripts.work_plan import STATE, current, load
+        if not STATE.exists():
+            return None
+        plan = load(STATE)
+        if plan.get("execution") == "paused":
+            return False
+        step = current(plan)
+        return bool(step.get("uses_gpu")) if step else None
+    except Exception:
+        return None
+
+
 def check(queue_logs: list[Path], live_queues: int | None = None) -> dict[str, Any]:
     problems: list[str] = []
     warnings: list[str] = []
@@ -296,7 +321,15 @@ def check(queue_logs: list[Path], live_queues: int | None = None) -> dict[str, A
     within_handoff = (
         settled_for is not None and settled_for <= HANDOFF_GRACE_SECONDS
     )
+    gpu_expected = _gpu_work_expected()
     if (not active and run.get("state") in TERMINAL_STATES
+            and (gpu or 0) < 5 and not within_handoff
+            and gpu_expected is False):
+        warnings.append(
+            f"GPU idle, as expected: the open work-plan step is CPU-only. "
+            f"Last run '{run.get('name')}' is {run.get('state')}"
+        )
+    elif (not active and run.get("state") in TERMINAL_STATES
             and (gpu or 0) < 5 and not within_handoff):
         problems.append(
             f"IDLE: nothing is running. Last run '{run.get('name')}' is "
@@ -308,6 +341,7 @@ def check(queue_logs: list[Path], live_queues: int | None = None) -> dict[str, A
         "checked_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "gpu_utilisation_percent": gpu,
         "live_gpu_queue_processes": live_queues,
+        "gpu_work_expected_by_plan": _gpu_work_expected(),
         "queues": queues,
         "latest_run": run,
         "problems": problems,
