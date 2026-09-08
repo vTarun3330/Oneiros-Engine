@@ -1,0 +1,318 @@
+{
+  "schema_version": "oneiros_seed_power_analysis_v1",
+  "source_tree_sha256": "576b3f0ef2b6bcec78d38d18ba6f0211941807f033579197aed100ca960d1f61",
+  "sealed_final_test_accessed": false,
+  "arm": "relearning",
+  "base_run": "local_base_qwen_val_seed*",
+  "arm_run": "local_sft_relearn_v2_seed42",
+  "seeds_compared": [
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53
+  ],
+  "per_seed": [
+    {
+      "seed": 42,
+      "paired_functions": 757,
+      "base_kill_rate": 0.620872,
+      "base_kill_rate_wilson_95": [
+        0.585782,
+        0.654741
+      ],
+      "arm_kill_rate": 0.659181,
+      "arm_kill_rate_wilson_95": [
+        0.624688,
+        0.692066
+      ],
+      "delta": 0.038309,
+      "improved": 131,
+      "regressed": 102,
+      "functions_moved": 233,
+      "net_function_gain": 29,
+      "mcnemar_exact_p": 0.066373
+    },
+    {
+      "seed": 43,
+      "paired_functions": 757,
+      "base_kill_rate": 0.612946,
+      "base_kill_rate_wilson_95": [
+        0.577761,
+        0.64699
+      ],
+      "arm_kill_rate": 0.65786,
+      "arm_kill_rate_wilson_95": [
+        0.623343,
+        0.690783
+      ],
+      "delta": 0.044914,
+      "improved": 136,
+      "regressed": 102,
+      "functions_moved": 238,
+      "net_function_gain": 34,
+      "mcnemar_exact_p": 0.032212
+    },
+    {
+      "seed": 44,
+      "paired_functions": 757,
+      "base_kill_rate": 0.630119,
+      "base_kill_rate_wilson_95": [
+        0.595152,
+        0.663772
+      ],
+      "arm_kill_rate": 0.645971,
+      "arm_kill_rate_wilson_95": [
+        0.611246,
+        0.679222
+      ],
+      "delta": 0.015852,
+      "improved": 105,
+      "regressed": 93,
+      "functions_moved": 198,
+      "net_function_gain": 12,
+      "mcnemar_exact_p": 0.434446
+    },
+    {
+      "seed": 45,
+      "paired_functions": 757,
+      "base_kill_rate": 0.599736,
+      "base_kill_rate_wilson_95": [
+        0.564415,
+        0.63405
+      ],
+      "arm_kill_rate": 0.653897,
+      "arm_kill_rate_wilson_95": [
+        0.619308,
+        0.686932
+      ],
+      "delta": 0.054161,
+      "improved": 152,
+      "regressed": 111,
+      "functions_moved": 263,
+      "net_function_gain": 41,
+      "mcnemar_exact_p": 0.013492
+    },
+    {
+      "seed": 46,
+      "paired_functions": 757,
+      "base_kill_rate": 0.615588,
+      "base_kill_rate_wilson_95": [
+        0.580434,
+        0.649575
+      ],
+      "arm_kill_rate": 0.65786,
+      "arm_kill_rate_wilson_95": [
+        0.623343,
+        0.690783
+      ],
+      "delta": 0.042272,
+      "improved": 130,
+      "regressed": 98,
+      "functions_moved": 228,
+      "net_function_gain": 32,
+      "mcnemar_exact_p": 0.039835
+    },
+    {
+      "seed": 47,
+      "paired_functions": 757,
+      "base_kill_rate": 0.620872,
+      "base_kill_rate_wilson_95": [
+        0.585782,
+        0.654741
+      ],
+      "arm_kill_rate": 0.634082,
+      "arm_kill_rate_wilson_95": [
+        0.599171,
+        0.667638
+      ],
+      "delta": 0.01321,
+      "improved": 118,
+      "regressed": 108,
+      "functions_moved": 226,
+      "net_function_gain": 10,
+      "mcnemar_exact_p": 0.549488
+    },
+    {
+      "seed": 48,
+      "paired_functions": 757,
+      "base_kill_rate": 0.614267,
+      "base_kill_rate_wilson_95": [
+        0.579097,
+        0.648283
+      ],
+      "arm_kill_rate": 0.620872,
+      "arm_kill_rate_wilson_95": [
+        0.585782,
+        0.654741
+      ],
+      "delta": 0.006605,
+      "improved": 117,
+      "regressed": 112,
+      "functions_moved": 229,
+      "net_function_gain": 5,
+      "mcnemar_exact_p": 0.791597
+    },
+    {
+      "seed": 49,
+      "paired_functions": 757,
+      "base_kill_rate": 0.648613,
+      "base_kill_rate_wilson_95": [
+        0.613932,
+        0.681793
+      ],
+      "arm_kill_rate": 0.619551,
+      "arm_kill_rate_wilson_95": [
+        0.584444,
+        0.65345
+      ],
+      "delta": -0.029062,
+      "improved": 105,
+      "regressed": 127,
+      "functions_moved": 232,
+      "net_function_gain": -22,
+      "mcnemar_exact_p": 0.167845
+    },
+    {
+      "seed": 50,
+      "paired_functions": 757,
+      "base_kill_rate": 0.595773,
+      "base_kill_rate_wilson_95": [
+        0.560416,
+        0.630163
+      ],
+      "arm_kill_rate": 0.630119,
+      "arm_kill_rate_wilson_95": [
+        0.595152,
+        0.663772
+      ],
+      "delta": 0.034346,
+      "improved": 134,
+      "regressed": 108,
+      "functions_moved": 242,
+      "net_function_gain": 26,
+      "mcnemar_exact_p": 0.107849
+    },
+    {
+      "seed": 51,
+      "paired_functions": 757,
+      "base_kill_rate": 0.632761,
+      "base_kill_rate_wilson_95": [
+        0.597831,
+        0.66635
+      ],
+      "arm_kill_rate": 0.647292,
+      "arm_kill_rate_wilson_95": [
+        0.612589,
+        0.680508
+      ],
+      "delta": 0.014531,
+      "improved": 112,
+      "regressed": 101,
+      "functions_moved": 213,
+      "net_function_gain": 11,
+      "mcnemar_exact_p": 0.493316
+    },
+    {
+      "seed": 52,
+      "paired_functions": 757,
+      "base_kill_rate": 0.626156,
+      "base_kill_rate_wilson_95": [
+        0.591134,
+        0.659903
+      ],
+      "arm_kill_rate": 0.627477,
+      "arm_kill_rate_wilson_95": [
+        0.592473,
+        0.661193
+      ],
+      "delta": 0.001321,
+      "improved": 101,
+      "regressed": 100,
+      "functions_moved": 201,
+      "net_function_gain": 1,
+      "mcnemar_exact_p": 1.0
+    },
+    {
+      "seed": 53,
+      "paired_functions": 757,
+      "base_kill_rate": 0.622193,
+      "base_kill_rate_wilson_95": [
+        0.58712,
+        0.656032
+      ],
+      "arm_kill_rate": 0.640687,
+      "arm_kill_rate_wilson_95": [
+        0.605877,
+        0.674077
+      ],
+      "delta": 0.018494,
+      "improved": 128,
+      "regressed": 114,
+      "functions_moved": 242,
+      "net_function_gain": 14,
+      "mcnemar_exact_p": 0.403389
+    }
+  ],
+  "mean_delta": 0.021246,
+  "positive_in_every_seed": false,
+  "sign_test_over_seeds": {
+    "seeds_positive": 11,
+    "seeds_negative": 1,
+    "seeds_tied": 0,
+    "effective_trials": 12,
+    "p_value": 0.006348,
+    "smallest_reachable_p_at_this_n": 0.000488,
+    "note": "no tied seeds"
+  },
+  "holm_bonferroni": {
+    "method": "holm_bonferroni",
+    "hypotheses": 13,
+    "family": "every arm-seed McNemar test against the same base model",
+    "adjusted_p_values": {
+      "relearning_sign_test_over_seeds": 0.082524,
+      "relearning_seed_45": 0.161904,
+      "relearning_seed_43": 0.354332,
+      "relearning_seed_46": 0.39835,
+      "relearning_seed_42": 0.597357,
+      "relearning_seed_50": 0.862792,
+      "relearning_seed_49": 1.0,
+      "relearning_seed_53": 1.0,
+      "relearning_seed_44": 1.0,
+      "relearning_seed_51": 1.0,
+      "relearning_seed_47": 1.0,
+      "relearning_seed_48": 1.0,
+      "relearning_seed_52": 1.0
+    },
+    "significant_after_adjustment": [],
+    "note": "an unadjusted p below 0.05 that does not survive adjustment is reported as not significant, not as significant with a caveat"
+  },
+  "family_note": "the sign test is corrected in the same family as the per-seed tests. Correcting only the per-seed tests and reporting the sign test raw would be choosing the family after seeing the result.",
+  "preregistration_defect": {
+    "status": "RECORDED, NOT REPAIRED",
+    "defect": "the sign test over seeds is the primary hypothesis, and it was pre-registered into the same Holm family as its own per-seed decompositions. That family cannot resolve it at any affordable seed count.",
+    "reachability": {
+      "n=12": {
+        "sign_test_raw_p_if_all_positive": 0.000488,
+        "family_members": 13,
+        "holm_adjusted": 0.006348,
+        "could_ever_be_significant": true
+      },
+      "n=8": {
+        "sign_test_raw_p_if_all_positive": 0.007812,
+        "family_members": 9,
+        "holm_adjusted": 0.070312,
+        "could_ever_be_significant": false
+      }
+    },
+    "why_not_fixed_now": "the family was fixed in advance so it could not be re-chosen after a member crossed a threshold; re-choosing it at exactly that moment is the fishing the rule forbids",
+    "correct_design_for_a_successor": "pre-register the sign test over seeds as the sole primary hypothesis, and Holm-correct the per-seed McNemar tests among themselves as secondary. Decide this before running, not after."
+  }
+}
