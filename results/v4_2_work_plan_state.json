@@ -267,7 +267,14 @@
         "results/v4_2_atheris_failure_matrix.json",
         "results/v4_2_memorisation_gap.json"
       ],
-      "caveat": "The Phi-3 era predates this session's context. Reconstruct it from git history and committed artifacts, and say plainly where the record is thin rather than inventing a narrative."
+      "caveat": "The Phi-3 era predates this session's context. Reconstruct it from git history and committed artifacts, and say plainly where the record is thin rather than inventing a narrative.",
+      "must_include_results_of": [
+        "P5-atheris-audit",
+        "P2-relearning-inputs",
+        "P1-curriculum",
+        "P3-data-regularization"
+      ],
+      "ordering_rule": "B4 is written LAST, after P1, P2, P3 and P5 have produced their results, and must report each of them - including any that fail or are retired on evidence. A step that produced a negative result still gets its section; that is the point of the document."
     },
     {
       "id": "B5-publish",
@@ -281,7 +288,7 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-08T18:14:36Z",
+  "updated_utc": "2026-09-08T18:17:01Z",
   "paused_utc": "2026-09-08T11:50:47Z",
   "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",
