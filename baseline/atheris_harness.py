@@ -29,6 +29,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import copy
 import json
 import math
 import os
@@ -231,14 +232,22 @@ def fuzz_one_target(
             arguments = [_consume(provider, kind) for kind in kinds]
         except Exception:
             return
+        # Each implementation gets its OWN copy of the arguments. Sharing them
+        # means a function that mutates its input hands the second call a
+        # different value than the first received, so two IDENTICAL
+        # implementations disagree and the run is recorded as a semantic kill.
+        # That inflates the baseline's kill count on exactly the targets -
+        # list and dict arguments - where mutation is most common.
+        reference_arguments = copy.deepcopy(arguments)
+        buggy_arguments = copy.deepcopy(arguments)
         try:
-            expected = reference(*arguments)
+            expected = reference(*reference_arguments)
         except Exception:
             # The reference itself rejects this input, so it is out of contract
             # and any buggy-side behaviour on it proves nothing.
             return
         try:
-            actual = buggy(*arguments)
+            actual = buggy(*buggy_arguments)
         except Exception as exc:
             state["outcome"] = "killed"
             state["kill_kind"] = "crash_kill"

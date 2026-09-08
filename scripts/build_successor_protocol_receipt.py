@@ -34,10 +34,11 @@ if str(ROOT) not in sys.path:
 from harness.candidate_policy import (
     CANDIDATE_SHAPES, MAX_TEST_FUNCTION_ASSERTS,
 )
+from harness.safe_execution import DEFAULT_TIMEOUT_SECONDS
 from harness.corpus import write_json
 
 PROTOCOL_NAME = "oneiros_whole_output_successor"
-PROTOCOL_VERSION = "1.0.0"
+PROTOCOL_VERSION = "1.0.1"
 
 LEGACY_PROTOCOL_NAME = "oneiros_first_assertion_frozen"
 
@@ -145,8 +146,14 @@ def build(candidates: int, seeds: list[int], prompt_budget: int,
             ),
         },
         "timeout_policy": {
-            "per_candidate_seconds": 5.0,
+            # READ from the harness, never asserted here. The first version of
+            # this receipt claimed 5.0 while the evaluator actually used 0.5,
+            # a tenfold error in a field whose whole purpose is to say what
+            # the protocol did. A receipt that states a constant by hand is a
+            # second source of truth, which is how it went wrong.
+            "per_candidate_seconds": DEFAULT_TIMEOUT_SECONDS,
             "source": "harness.safe_execution.DEFAULT_TIMEOUT_SECONDS",
+            "read_from_source": True,
             "on_timeout": "recorded as a timeout outcome, never as a kill",
         },
         "raw_output": {

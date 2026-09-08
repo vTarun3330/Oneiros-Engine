@@ -1,7 +1,7 @@
 {
   "schema_version": "oneiros_successor_protocol_receipt_v1",
   "protocol_name": "oneiros_whole_output_successor",
-  "protocol_version": "1.0.0",
+  "protocol_version": "1.0.1",
   "supersedes": {
     "protocol_name": "oneiros_first_assertion_frozen",
     "status": "HISTORICAL, NOT INVALID. Every reported result to date was produced under it and remains a correct measurement of what it measured: eight single assertions. Legacy artifacts are never overwritten, never regenerated in place, and never compared to successor numbers as though they were the same metric."
@@ -45,8 +45,9 @@
     "note": "prompt + completion must fit the sequence budget before chat template overhead, which is additional. A configuration that does not fit is refused rather than silently truncated."
   },
   "timeout_policy": {
-    "per_candidate_seconds": 5.0,
+    "per_candidate_seconds": 0.5,
     "source": "harness.safe_execution.DEFAULT_TIMEOUT_SECONDS",
+    "read_from_source": true,
     "on_timeout": "recorded as a timeout outcome, never as a kill"
   },
   "raw_output": {
