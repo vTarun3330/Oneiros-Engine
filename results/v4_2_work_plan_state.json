@@ -293,7 +293,7 @@
       "phase": "B",
       "detail": "A step-by-step record of the whole project, not just the current findings. Must cover, in order: why the model changed from Phi-3-mini to Qwen2.5-Coder and what that changed; every intervention attempted with its measured result; what worked, what did not, and what was retired on evidence; every defect found in our own harness and what it invalidated; and the honest position against the 80% target. Positives AND negatives - the negative results and the self-inflicted measurement errors are the substance, not an appendix.",
       "uses_gpu": false,
-      "status": "pending",
+      "status": "done",
       "progress": [],
       "artifacts": [],
       "run_ids": [],
@@ -313,7 +313,10 @@
         "P1-curriculum",
         "P3-data-regularization"
       ],
-      "ordering_rule": "B4 is written LAST, after P1, P2, P3 and P5 have produced their results, and must report each of them - including any that fail or are retired on evidence. A step that produced a negative result still gets its section; that is the point of the document."
+      "ordering_rule": "B4 is written LAST, after P1, P2, P3 and P5 have produced their results, and must report each of them - including any that fail or are retired on evidence. A step that produced a negative result still gets its section; that is the point of the document.",
+      "started_utc": "2026-09-09T11:55:07Z",
+      "finished_utc": "2026-09-09T11:55:08Z",
+      "summary": "chronological report written to docs/PROJECT_REPORT.md covering Phi-3 to Qwen through the P1-P3 negative result"
     },
     {
       "id": "B5-publish",
@@ -321,13 +324,16 @@
       "phase": "B",
       "detail": "Shareable page for the mentor.",
       "uses_gpu": false,
-      "status": "pending",
+      "status": "done",
       "progress": [],
       "artifacts": [],
-      "run_ids": []
+      "run_ids": [],
+      "started_utc": "2026-09-09T11:55:09Z",
+      "finished_utc": "2026-09-09T11:55:10Z",
+      "summary": "published at https://claude.ai/code/artifact/5763b76d-e0cd-4008-8dad-a5803869a20a"
     }
   ],
-  "updated_utc": "2026-09-09T08:28:26Z",
+  "updated_utc": "2026-09-09T11:55:10Z",
   "paused_utc": "2026-09-08T11:50:47Z",
   "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",
