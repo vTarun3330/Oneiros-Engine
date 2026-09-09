@@ -251,10 +251,20 @@
       "phase": "P3",
       "detail": "Unique-lineage sampling, caps, bounded repetition, dedup, diversity monitoring. At most one predeclared parameter challenger after.",
       "uses_gpu": false,
-      "status": "pending",
-      "progress": [],
-      "artifacts": [],
-      "run_ids": []
+      "status": "done",
+      "progress": [
+        {
+          "at": "2026-09-09T08:28:25Z",
+          "note": "regularised view assembled; source cap does not bind because dedup removes all repetition - reported as a negative"
+        }
+      ],
+      "artifacts": [
+        "data/training_views/regularised_v1/view.json"
+      ],
+      "run_ids": [],
+      "started_utc": "2026-09-09T05:34:49Z",
+      "finished_utc": "2026-09-09T08:28:26Z",
+      "summary": "614 examples, fully deduplicated, every block mixed, no validation signal; but mbpp share is 83.6% and the repetition cap never fires"
     },
     {
       "id": "P5-atheris-audit",
@@ -317,7 +327,7 @@
       "run_ids": []
     }
   ],
-  "updated_utc": "2026-09-09T05:34:48Z",
+  "updated_utc": "2026-09-09T08:28:26Z",
   "paused_utc": "2026-09-08T11:50:47Z",
   "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",
