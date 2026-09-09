@@ -310,8 +310,49 @@ A control that is configured but not binding is worse than none. The remedy
 consistent with the standing instruction is more non-mbpp lineages, not fewer
 mbpp ones.
 
-> **§7 result pending.** The arm combining P1+P2+P3 is training now. Its
-> ablation_dev and locked-val results will be recorded here, whatever they show.
+### 7.1 The result: the rebuild made it worse
+
+The arm combining all three (`local_sft_curriculum_s42`, seed 42) was trained
+and evaluated on both panels.
+
+| arm | ablation_dev | locked val | vs base (val) |
+|---|---|---|---|
+| base (untrained) | 0.5959 | 0.6209 | — |
+| **curriculum (P1+P2+P3)** | 0.6550 | **0.5984** | **−0.0225** |
+| relearning | 0.7177 | 0.6592 | +0.0383 |
+
+**It is worse than the untrained base on locked validation**, and well below
+the relearning arm. Per benchmark: humaneval 0.9286, mbpp **0.5720** — the mbpp
+figure is below base's 0.6034, and mbpp is 92.6% of the panel.
+
+It also reproduces the selection-panel trap exactly: **+5.9 points on
+ablation_dev, −2.3 on locked val.** Judged on the panel it was built against,
+this arm looks like the second-best result in the project. Judged on the locked
+panel, it is the worst trained arm measured.
+
+**The prediction behind the decision did not hold.** Fewer, surer assertions
+was supposed to raise reference validity by removing the conjunction penalty.
+It did not: 0.3661 here against relearning's 0.3590 on the same panel — within
+noise of each other, and both far below the untrained base's 0.4536. Cutting
+assertions from 2.96 to 1.00 bought essentially nothing in validity and cost
+kill@8.
+
+**Confounds, stated plainly.** This is one seed, and three changes were made at
+once — single-assertion supervision, curriculum ordering, and deduplication —
+so no individual contribution can be attributed. More seriously, **I dropped
+`--relearning-dataset` from this arm's command**, so it lacks the relearning
+corrections entirely. The like-for-like comparison is therefore against
+`full_density` (multi-assertion supervision, also no relearning): 0.5984 against
+0.6354. Still worse, but by 3.7 points rather than 6.1.
+
+The supervision was also narrower: 4,414 keyed completions against
+multi_mutant_v1's 5,588.
+
+**What it does support.** The single-assertion decision, as implemented, is not
+an improvement, and section 6.2's finding should not be read as implying it
+would be. That the frozen parser scores multi-assertion output better than the
+successor does *not* mean training on single assertions produces a better model
+— those are different claims, and only the first is supported.
 
 ---
 
@@ -354,7 +395,8 @@ manufactured the threshold rather than reached it.
 a verified multi-mutant corpus that genuinely produces one test covering many
 defects; relearning as the one directionally positive intervention.
 
-**What does not:** six of seven interventions were flat or negative. The single
+**What does not:** seven of eight interventions were flat or negative,
+including the P1-P3 rebuild built specifically to address the diagnosis. The single
 positive one is **not statistically significant** after the correction it was
 pre-registered under. The 80% target is out of reach on this panel.
 
