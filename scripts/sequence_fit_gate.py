@@ -35,6 +35,7 @@ from engine.test_generation_prompt import (
     build_unified_user_prompt, format_chat_prompt,
 )
 from harness.corpus import write_json
+from harness.corpus_view import load_development_split
 
 SEALED_SPLIT = "test"
 
@@ -74,11 +75,15 @@ def run(split: str, corpus_dir: Path, model_name: str, revision: str,
 
     tokenizer = AutoTokenizer.from_pretrained(model_name, revision=revision)
 
-    records = json.loads(
-        (corpus_dir / "records.json").read_text(encoding="utf-8"))
-    splits = json.loads((corpus_dir / "splits.json").read_text(encoding="utf-8"))
+    # The hash-verified development shard for THIS split only. The canonical
+    # records.json holds all four splits including the sealed final test, so a
+    # train-only gate that opened it would have the sealed records in memory
+    # for no reason - an avoidable exposure, and one nothing in the output
+    # would reveal. load_development_split verifies the shard's hashes and the
+    # sealed split is never materialised into the view at all.
+    records = load_development_split(corpus_dir, split, include_excluded=True)
     by_id = {str(r["id"]): r for r in records}
-    ids = [str(i) for i in splits[split]]
+    ids = [str(r["id"]) for r in records]
 
     lengths: list[int] = []
     failures: list[dict[str, Any]] = []
@@ -130,9 +135,11 @@ def run(split: str, corpus_dir: Path, model_name: str, revision: str,
         return lengths[min(int(p * len(lengths)), len(lengths) - 1)]
 
     return {
-        "schema_version": "oneiros_sequence_fit_gate_v1",
+        "schema_version": "oneiros_sequence_fit_gate_v2",
         "split": split,
         "sealed_final_test_accessed": False,
+        "record_source": "hash-verified development view shard for this split only",
+        "canonical_records_json_opened": False,
         "model_name": model_name,
         "model_revision": revision,
         "prompt_token_limit": prompt_budget,

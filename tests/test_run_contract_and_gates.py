@@ -174,3 +174,59 @@ def test_the_sealed_split_is_refused(tmp_path):
                      evaluation_split="test")
     with pytest.raises(SystemExit, match="sealed"):
         verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+
+
+# --------------------------------------------------------------------------
+# Completion-truncation blocking. Predeclared before the run produced numbers.
+# --------------------------------------------------------------------------
+
+def _long(tokens=1200):
+    return "assert f(" + ("1, " * tokens) + "1) == 1"
+
+
+def test_outputs_at_the_completion_limit_are_flagged_and_block_the_build(tmp_path):
+    outcomes = [_raw(_long()) for _ in range(10)]
+    path = _artifact(tmp_path, outcomes=outcomes)
+    report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+    assert report["suspected_completion_truncation"] == 10
+    assert report["outputs_reaching_completion_limit_share"] == 1.0
+    assert report["completion_limit_threshold_exceeded"] is True
+    assert report["verified"] is False
+    assert any("completion" in p and "blocked" in p for p in report["problems"])
+
+
+def test_truncated_candidates_are_ineligible_for_oracle_labels(tmp_path):
+    path = _artifact(tmp_path, outcomes=[_raw(_long()), _raw("assert f(1) == 1")])
+    report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+    assert report["candidates_ineligible_for_oracle_labels"] == 1
+    assert "suspected_completion_truncation" in report["ineligible_reasons"]
+
+
+def test_unparseable_outputs_are_also_ineligible(tmp_path):
+    path = _artifact(tmp_path, outcomes=[_raw("assert f(1 =="), _raw("assert f(1) == 1")])
+    report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+    assert report["unparseable_outputs"] == 1
+    assert report["candidates_ineligible_for_oracle_labels"] == 1
+    assert "unparseable_raw_output" in report["ineligible_reasons"]
+
+
+def test_a_truncated_and_unparseable_output_is_counted_once(tmp_path):
+    """Truncation usually CAUSES the parse failure; double-counting would
+    overstate how much data is unusable."""
+    path = _artifact(tmp_path, outcomes=[_raw("assert f(" + ("1, " * 1200))])
+    report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+    assert report["candidates_ineligible_for_oracle_labels"] == 1
+
+
+def test_a_clean_run_below_the_threshold_verifies(tmp_path):
+    outcomes = [_raw(f"assert f({i}) == {i}") for i in range(100)]
+    path = _artifact(tmp_path, outcomes=outcomes)
+    report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+    assert report["completion_limit_threshold_exceeded"] is False
+    assert report["candidates_ineligible_for_oracle_labels"] == 0
+    assert report["verified"] is True, report["problems"]
+
+
+def test_the_threshold_is_predeclared_as_a_constant():
+    from scripts.verify_successor_generation import MAX_COMPLETION_LIMIT_HIT_RATE
+    assert 0 < MAX_COMPLETION_LIMIT_HIT_RATE < 0.10

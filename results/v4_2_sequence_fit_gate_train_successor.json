@@ -1,7 +1,9 @@
 {
-  "schema_version": "oneiros_sequence_fit_gate_v1",
+  "schema_version": "oneiros_sequence_fit_gate_v2",
   "split": "train",
   "sealed_final_test_accessed": false,
+  "record_source": "hash-verified development view shard for this split only",
+  "canonical_records_json_opened": false,
   "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
   "model_revision": "main",
   "prompt_token_limit": 1024,

@@ -53,6 +53,26 @@ REQUIRED_CONTRACT = {
 
 RAW_FIELDS = ("raw_output", "raw_text", "output_text")
 
+#: PREDECLARED, before the run produced a number. An output whose token count
+#: reaches the completion limit was cut off mid-sentence: the model had more to
+#: say and the budget ended it. A few such outputs are tolerable noise; many
+#: mean the 1024-token budget is itself too small for this panel, and a dataset
+#: mined from them would carry corrections for tests the model never finished.
+#:
+#: Set at 2%. The measured precedent is the 128-token budget, where raising it
+#: to 1024 cut incomplete ASTs from 481 to 49 of 4336 candidates - 1.1%. A rate
+#: above 2% at 1024 would mean this budget is failing worse than the old one
+#: did after its fix, which is a blocker rather than a footnote.
+MAX_COMPLETION_LIMIT_HIT_RATE = 0.02
+
+#: Candidates in these states may never supply an oracle-correction label. A
+#: truncated or unparseable output is not evidence of what the model would have
+#: written, so a "correction" built against it corrects nothing.
+INELIGIBLE_FOR_ORACLE_LABELS = (
+    "suspected_completion_truncation",
+    "unparseable_raw_output",
+)
+
 
 def _raw_of(outcome: dict[str, Any]) -> str | None:
     for field in RAW_FIELDS:
@@ -92,6 +112,7 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
     at_completion_limit = 0
     unparseable = 0
     missing_hash = 0
+    ineligible_ids: set[tuple[str, int]] = set()
     token_limit = int(contract.get("max_new_tokens") or 0)
 
     tokenizer = None
@@ -114,13 +135,20 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
                 missing_hash += 1
             elif hashlib.sha256(raw.encode("utf-8")).hexdigest() != recorded_hash:
                 hash_mismatch += 1
+            truncated = False
             if tokenizer is not None:
                 if len(tokenizer(raw, add_special_tokens=False)["input_ids"]) >= token_limit:
                     at_completion_limit += 1
+                    truncated = True
+                    ineligible_ids.add(
+                        (str(result.get("record_id")), int(outcome.get("rank") or 0)))
             try:
                 ast.parse(raw)
             except SyntaxError:
                 unparseable += 1
+                if not truncated:
+                    ineligible_ids.add(
+                        (str(result.get("record_id")), int(outcome.get("rank") or 0)))
 
     if candidates and with_raw == 0:
         problems.append(
@@ -140,6 +168,15 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
             f"{prompt_failures} functions failed the prompt budget: prompts "
             "were refused rather than sliced, so those records generated "
             "nothing")
+
+    limit_hit_rate = (at_completion_limit / candidates) if candidates else 0.0
+    if limit_hit_rate > MAX_COMPLETION_LIMIT_HIT_RATE:
+        problems.append(
+            f"{at_completion_limit} of {candidates} outputs "
+            f"({limit_hit_rate:.2%}) reached the {token_limit}-token completion "
+            f"limit, above the predeclared {MAX_COMPLETION_LIMIT_HIT_RATE:.0%} "
+            "threshold: the completion budget is too small for this panel and "
+            "the dataset build is blocked")
 
     completed = int(payload.get("function_validation_records") or 0)
     results_present = len(results)
@@ -161,10 +198,17 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
         "raw_output_hash_mismatches": hash_mismatch,
         "candidates_missing_recorded_hash": missing_hash,
         "outputs_reaching_completion_limit": at_completion_limit,
-        "outputs_reaching_completion_limit_share": round(
-            at_completion_limit / candidates, 6) if candidates else None,
+        "suspected_completion_truncation": at_completion_limit,
+        "outputs_reaching_completion_limit_share": round(limit_hit_rate, 6),
+        "completion_limit_hit_threshold": MAX_COMPLETION_LIMIT_HIT_RATE,
+        "completion_limit_threshold_exceeded": (
+            limit_hit_rate > MAX_COMPLETION_LIMIT_HIT_RATE),
         "unparseable_outputs": unparseable,
         "unparseable_share": round(unparseable / candidates, 6) if candidates else None,
+        "candidates_ineligible_for_oracle_labels": len(ineligible_ids),
+        "ineligible_reasons": list(INELIGIBLE_FOR_ORACLE_LABELS),
+        "ineligible_candidate_keys": sorted(
+            [list(k) for k in ineligible_ids])[:200],
         "prompt_budget_failed_functions": prompt_failures,
         "no_runtime_token_truncation": prompt_failures == 0,
         "function_kill_rate": payload.get("function_kill_rate"),
