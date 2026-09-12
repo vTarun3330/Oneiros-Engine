@@ -372,14 +372,19 @@
         {
           "at": "2026-09-12T16:16:46Z",
           "note": "BOOKKEEPING CORRECTION: the protocol-freeze note above is R2's work, not R3's. I opened R3 before doing R2, so the note landed on the wrong step - the same 'marked started before the work happened' error flagged earlier in this project. R2 will be opened and closed against these same artifacts rather than the record being silently rewritten."
+        },
+        {
+          "at": "2026-09-12T16:28:22Z",
+          "note": "GPU result, ablation_dev, base Qwen, prompt change only, no training: kill@8 0.5959 -> 0.6458 (+4.98pts). Paired McNemar on the same 542 targets: 75 gained / 48 lost, exact two-sided p=0.0187. mbpp +4.66, humaneval +6.25. Reference validity FELL 0.5826 -> 0.5381. MECHANISM CHECK CONTRADICTS THE INTENTION: relational assertions rose 0.28%->4.38% of candidates, but only 13 of the 75 newly-killed targets (17.3%) were killed by a relation; 57 were killed by a literal oracle, the form the prompt told the model to avoid. bounded collapsed 29.7%->9.7% while literal_oracle rose 67.6%->83.6% - the model became MORE committal, not less."
         }
       ],
       "artifacts": [
-        "docs/EVALUATION_PROTOCOL_FREEZE.md"
+        "docs/EVALUATION_PROTOCOL_FREEZE.md",
+        "results/local_base_qwen_adev_metamorphic_s42/base_validation_ablation-dev_instruction-metamorphic-allowed_seed_42.json"
       ]
     }
   ],
-  "updated_utc": "2026-09-12T16:16:46Z",
+  "updated_utc": "2026-09-12T16:28:22Z",
   "paused_utc": "2026-09-08T11:50:47Z",
   "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",

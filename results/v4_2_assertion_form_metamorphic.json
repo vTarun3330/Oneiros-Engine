@@ -1,0 +1,108 @@
+{
+  "reports": [
+    {
+      "schema_version": "oneiros_assertion_form_v1",
+      "artifact": "local_base_qwen_adev_metamorphic_s42/base_validation_ablation-dev_instruction-metamorphic-allowed_seed_42.json",
+      "evaluation_split": "ablation_dev",
+      "evaluation_protocol": "first_assertion",
+      "output_instruction_variant": null,
+      "sealed_final_test_accessed": false,
+      "candidates_classified": 4223,
+      "form_counts": {
+        "literal_oracle": 3530,
+        "bounded": 408,
+        "relational": 185,
+        "other": 100
+      },
+      "form_shares": {
+        "literal_oracle": 0.835899,
+        "bounded": 0.096614,
+        "relational": 0.043808,
+        "other": 0.02368
+      },
+      "killing_form_counts": {
+        "literal_oracle": 1167,
+        "relational": 95,
+        "bounded": 59,
+        "other": 12
+      },
+      "killing_form_shares": {
+        "literal_oracle": 0.875469,
+        "relational": 0.071268,
+        "bounded": 0.044261,
+        "other": 0.009002
+      },
+      "value_free_share": 0.140422,
+      "value_free_share_of_kills": 0.115529,
+      "per_benchmark_form_counts": {
+        "humaneval": {
+          "literal_oracle": 758,
+          "other": 72,
+          "bounded": 45,
+          "relational": 3
+        },
+        "manual_curated_examples": {
+          "literal_oracle": 8
+        },
+        "mbpp": {
+          "literal_oracle": 2764,
+          "bounded": 363,
+          "relational": 182,
+          "other": 28
+        }
+      },
+      "per_benchmark_killing_form_counts": {
+        "humaneval": {
+          "literal_oracle": 284,
+          "other": 8,
+          "bounded": 3,
+          "relational": 2
+        },
+        "manual_curated_examples": {
+          "literal_oracle": 2
+        },
+        "mbpp": {
+          "literal_oracle": 881,
+          "relational": 93,
+          "bounded": 56,
+          "other": 4
+        }
+      },
+      "examples": {
+        "literal_oracle": [
+          "assert format_string(\"hello,\") == \"hello\"",
+          "assert format_string(\"Hello,\") == \"Hello\"",
+          "assert format_string(\"hello,\") == \"hello\"",
+          "assert format_string(\"Hello,\") == \"Hello\"",
+          "assert format_string(\"hello,\") == \"hello\"",
+          "assert format_string(\"Hello,\") == \"Hello\""
+        ],
+        "relational": [
+          "assert monotonic([4, 1, 0, -10]) != monotonic([0, -1, -10, -4])",
+          "assert vowels_count(\"hello\") != vowels_count(\"world\")",
+          "assert check_dict_case({\"STATE\": \"NC\"}) != check_dict_case({})",
+          "assert sum_digits_twoparts(123456789) != sum_digits_twoparts(123456789)",
+          "assert sum_digits_twoparts(2345) != sum_digits_twoparts(2346)",
+          "assert sum_digits_twoparts(123456) != sum_digits_twoparts(123457)"
+        ],
+        "property": [],
+        "bounded": [
+          "assert factorize(8) != [4, 2, 2]",
+          "assert factorize(8) != [3, 3, 3]  # Test case where 8 is incorrectly factored into [3, 3, 3]",
+          "assert factorize(8) != [4, 2]",
+          "assert factorize(8) != [3, 3, 3]",
+          "assert factorize(8) != [3, 2, 2]  # Factorizing 8 should result in [2, 2, 2], not [3, 2, 2]",
+          "assert pairs_sum_to_zero([1]) is False"
+        ],
+        "other": [
+          "assert not is_sorted([1, 2, 2, 3, 3, 4])",
+          "assert not is_sorted([1, 2, 2, 3, 3, 4])",
+          "assert not is_sorted([1, 2, 2, 3, 3, 4])",
+          "assert not is_sorted([1, 2, 2, 3, 3, 4])",
+          "assert not is_sorted([1, 2, 2, 3, 3, 4])",
+          "assert not is_sorted([1, 2, 2, 3, 3, 4])"
+        ]
+      }
+    }
+  ]
+}
