@@ -402,6 +402,10 @@
         {
           "at": "2026-09-12T19:04:26Z",
           "note": "DEFECT FOUND while labelling: the TRAIN panel every train-side number is computed on (base_validation_train_smoke900_seed_42.json) is 893 humaneval + 7 curated and contains ZERO mbpp, while the full train split is 77% mbpp (4650/6052). So the report's 'generalisation gap' compares a humaneval-only train panel against a 92.6%-mbpp val panel. Reported base gap +5.80 pts; like-for-like on humaneval it is -15.96 pts, i.e. the train panel is HARDER, not easier. The 16-21 pt SFT gaps in section 3 are confounded with benchmark composition. Also affects build_memorisation_gap_report.py and the curriculum's base_failed difficulty signal (available for 900 lineages, all humaneval). The full-train GPU run now in flight fixes the input data for all of these."
+        },
+        {
+          "at": "2026-09-12T19:19:18Z",
+          "note": "HALTED before dataset build. Audit of the running full-train generation: conditions 1,2,3,5 PASS; condition 4 FAILS (retain_raw_output=false, only raw_output_sha256 kept) and is compounded by candidate_parse_mode=first_assertion, so only the FIRST assertion of each output is stored and the rest is unrecoverable; condition 6 PARTIAL (temperature/top_p not recorded anywhere, they are 0.7/0.9 from config). Run left to finish - it is still valid for correcting the train-panel composition defect under the legacy protocol - but it cannot source the oracle dataset."
         }
       ],
       "artifacts": [
@@ -424,7 +428,7 @@
       "status": "pending"
     }
   ],
-  "updated_utc": "2026-09-12T19:04:26Z",
+  "updated_utc": "2026-09-12T19:19:18Z",
   "paused_utc": "2026-09-08T11:50:47Z",
   "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",

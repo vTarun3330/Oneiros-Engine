@@ -2009,9 +2009,35 @@ def _evaluate_adapter_kill_rate(
             )
 
         research_summary = summarise_function_results(function_results)
+        # Recorded in the RESULT rather than in `context`. Progress resume
+        # compares the whole context dict for equality, so adding a field there
+        # would invalidate every checkpoint of any run already in flight and
+        # silently restart it from zero. The manifest still self-describes.
+        generation_settings = {
+            "temperature": generator.temperature,
+            "top_p": generator.top_p,
+            "do_sample": True,
+            "max_new_tokens": MAX_NEW_TOKENS_OVERRIDE,
+            "candidates_per_function": TESTS_PER_PAIR,
+            "batch_size": BATCH_GEN_SIZE,
+            "seed": SEED,
+            "base_model_name": resolved_base_model_name,
+            "base_model_revision": resolved_base_model_revision,
+            "candidate_parse_mode": CANDIDATE_PARSE_MODE,
+            "retain_raw_output": RETAIN_RAW_OUTPUT,
+            "allow_test_function_candidates": ALLOW_TEST_FUNCTION_CANDIDATES,
+            "prompt_token_limit": PROMPT_TOKEN_LIMIT,
+            "repository_prompt_token_limit": REPOSITORY_PROMPT_TOKEN_LIMIT,
+            "generation_completion_token_limit": MAX_NEW_TOKENS_OVERRIDE,
+            "max_sft_completion_tokens": MAX_SFT_COMPLETION_TOKENS,
+            "prompt_information_variant": PROMPT_INFORMATION_VARIANT,
+            "output_instruction_variant": OUTPUT_INSTRUCTION_VARIANT,
+            "prompt_schema_version": PROMPT_SCHEMA_VERSION,
+        }
         result = {
             "mode": f"{adapter_label}_validation_only",
             **context,
+            "generation_settings": generation_settings,
             "evaluation_split_records": len(all_eval_pairs),
             **research_summary,
             "function_results": function_results,
