@@ -331,9 +331,55 @@
       "started_utc": "2026-09-09T11:55:09Z",
       "finished_utc": "2026-09-09T11:55:10Z",
       "summary": "published at https://claude.ai/code/artifact/5763b76d-e0cd-4008-8dad-a5803869a20a"
+    },
+    {
+      "id": "R1-metamorphic-ceiling",
+      "title": "Measure how many unkilled MBPP targets admit a value-free killing assertion",
+      "status": "done",
+      "started_utc": "2026-09-12T15:57:43Z",
+      "progress": [
+        {
+          "at": "2026-09-12T16:06:27Z",
+          "note": "ablation_dev mbpp: 40/122 unkilled recovered by a value-free assertion (ceiling 0.8089 vs arm 0.7156). Strict tier - semantic relation, came out false - 27/122, ceiling 0.7786, gain +6.29pts, about double the best training arm (+3.3). Families: idempotence 19, argument_permutation 14, involution 8. Excluded from strict: self_consistency (a crash-finder) and type_preservation."
+        },
+        {
+          "at": "2026-09-12T16:09:17Z",
+          "note": "Locked panel is much weaker than the selection panel. mbpp strict gain: adev +6.29pts, locked val +2.71pts - ablation_dev overstated it 2.32x, the third time this project has caught that inflation, and the first time BEFORE acting on it. Broad ceiling on locked val is +6.85pts (0.6362 -> 0.7047), which does beat the best training arm (+3.3), but 29 of its 48 recoveries come from crash/type detection rather than a semantic relation."
+        }
+      ],
+      "artifacts": [
+        "results/v4_2_metamorphic_ceiling_relearn_adev.json",
+        "results/v4_2_metamorphic_ceiling_relearn_val.json"
+      ],
+      "finished_utc": "2026-09-12T16:09:17Z",
+      "summary": "Value-free assertions recover 48/255 unkilled locked-val mbpp targets (broad, +6.85pts) or 19/255 (strict semantic relation, +2.71pts). Ceiling only - assumes the model emits the right relation. Built harness/metamorphic_relations.py, scripts/measure_metamorphic_ceiling.py, a metamorphic_allowed prompt variant, and 10 tests."
+    },
+    {
+      "id": "R2-freeze-evaluator",
+      "title": "Freeze one evaluation protocol as THE baseline so later numbers are interpretable",
+      "status": "pending"
+    },
+    {
+      "id": "R3-next-step-decision",
+      "title": "Decide the next intervention from the R1 ceiling, and record the decision",
+      "status": "in_progress",
+      "started_utc": "2026-09-12T16:11:23Z",
+      "progress": [
+        {
+          "at": "2026-09-12T16:16:00Z",
+          "note": "Froze the protocol: legacy first_assertion is the protocol of record for the committed baseline, successor whole_output for new work. Built harness/evaluation_protocol.py - an ABSENT candidate_parse_mode resolves to legacy rather than unknown, an unrecognised mode raises, and assert_comparable refuses a cross-protocol delta. Wired into slice_kill_rate and build_results_table, with a test that the wiring exists rather than just the guard. Regenerated v4_2_results_table.json; committed figures unchanged."
+        },
+        {
+          "at": "2026-09-12T16:16:46Z",
+          "note": "BOOKKEEPING CORRECTION: the protocol-freeze note above is R2's work, not R3's. I opened R3 before doing R2, so the note landed on the wrong step - the same 'marked started before the work happened' error flagged earlier in this project. R2 will be opened and closed against these same artifacts rather than the record being silently rewritten."
+        }
+      ],
+      "artifacts": [
+        "docs/EVALUATION_PROTOCOL_FREEZE.md"
+      ]
     }
   ],
-  "updated_utc": "2026-09-09T11:55:10Z",
+  "updated_utc": "2026-09-12T16:16:46Z",
   "paused_utc": "2026-09-08T11:50:47Z",
   "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",
@@ -365,5 +411,6 @@
     "atheris": "All six Atheris result sets, 4542 runs, are invalid: the targets were never coverage-instrumented (740 of 757 logs warn, 697 ended at a 1-byte corpus) and reference/mutant shared argument objects so identical implementations could disagree. Both fixed; the runs are not redone. This is P5.",
     "not_invalidated": "Every Oneiros base and SFT evaluation. The audit defects touched provenance, the sealed-final freeze, the Atheris baseline and resume identity - none touched generation or scoring of those runs."
   },
-  "execution_note": "Local CPU only. Modal is present in the repo but deliberately unused: no credits are to be spent, and this machine has 32 cores and 137 GB of RAM sitting idle."
+  "execution_note": "Local CPU only. Modal is present in the repo but deliberately unused: no credits are to be spent, and this machine has 32 cores and 137 GB of RAM sitting idle.",
+  "plan": "Oracle-bottleneck follow-up: measure the value-free ceiling, freeze the evaluator, then decide"
 }

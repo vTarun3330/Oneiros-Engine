@@ -1,0 +1,145 @@
+{
+  "schema_version": "oneiros_metamorphic_ceiling_v1",
+  "artifact": "local_sft_relearn_v2_seed42/sft_validation_ablation-dev_seed_42.json",
+  "evaluation_split": "ablation_dev",
+  "sealed_final_test_accessed": false,
+  "method": {
+    "inputs": "argument tuples the model itself already used",
+    "relations": [
+      "argument_permutation",
+      "idempotence",
+      "involution",
+      "list_order_invariance",
+      "list_reversal_invariance",
+      "length_preservation",
+      "type_preservation",
+      "self_consistency_on_copy"
+    ],
+    "proposed": "blind, from argument shape; the reference is never consulted",
+    "accepted": "must pass the frozen candidate policy, be reference-valid, and kill",
+    "cap_per_target": 60
+  },
+  "proposals_rejected_by_frozen_policy": 0,
+  "unkilled_targets_with_no_usable_argument_tuple": 0,
+  "panel": 429,
+  "kill_rate": 0.715618,
+  "targets_recovered": 40,
+  "ceiling_kill_rate": 0.808858,
+  "interpretation": "a CEILING for a value-free strategy. It assumes the model emits the right relation, which no model does for free. If the ceiling is close to the current kill rate, this direction is dead.",
+  "per_benchmark": {
+    "mbpp": {
+      "panel": 429,
+      "killed_by_the_arm": 307,
+      "kill_rate": 0.715618,
+      "unkilled": 122,
+      "unkilled_targets_examined": 122,
+      "targets_recovered_by_a_value_free_assertion": 40,
+      "recovery_share_of_unkilled": 0.327869,
+      "ceiling_kill_rate": 0.808858,
+      "targets_recovered_by_a_false_relation": 30,
+      "targets_recovered_only_by_making_the_mutant_crash": 10,
+      "conservative_ceiling_kill_rate": 0.785548,
+      "targets_recovered_by_a_false_SEMANTIC_relation": 27,
+      "strict_ceiling_kill_rate": 0.778555,
+      "strict_gain_over_arm": 0.062937,
+      "relation_by_kill_mode": {
+        "argument_permutation / mutant_raised": 9,
+        "argument_permutation / relation_false": 19,
+        "idempotence / mutant_raised": 11,
+        "idempotence / relation_false": 31,
+        "involution / mutant_raised": 4,
+        "involution / relation_false": 4,
+        "length_preservation / relation_false": 2,
+        "list_order_invariance / relation_false": 5,
+        "list_reversal_invariance / relation_false": 6,
+        "self_consistency_on_copy / mutant_raised": 31,
+        "type_preservation / mutant_raised": 31,
+        "type_preservation / relation_false": 16
+      },
+      "relation_families_that_worked": {
+        "idempotence": 19,
+        "argument_permutation": 14,
+        "type_preservation": 8,
+        "involution": 8,
+        "self_consistency_on_copy": 5,
+        "list_reversal_invariance": 3,
+        "list_order_invariance": 3,
+        "length_preservation": 2
+      },
+      "examples": [
+        {
+          "record_id": "mutation::mbpp_148_mut_02976",
+          "entry_point": "sum_digits_twoparts",
+          "assertion": "assert sum_digits_twoparts(sum_digits_twoparts(79)) == sum_digits_twoparts(79)",
+          "relation": "idempotence"
+        },
+        {
+          "record_id": "mutation::mbpp_148_mut_02979",
+          "entry_point": "sum_digits_twoparts",
+          "assertion": "assert sum_digits_twoparts(sum_digits_twoparts(32)) == sum_digits_twoparts(32)",
+          "relation": "idempotence"
+        },
+        {
+          "record_id": "mutation::mbpp_148_mut_02980",
+          "entry_point": "sum_digits_twoparts",
+          "assertion": "assert sum_digits_twoparts(84) == sum_digits_twoparts(84)",
+          "relation": "self_consistency_on_copy"
+        },
+        {
+          "record_id": "mutation::mbpp_148_mut_02981",
+          "entry_point": "sum_digits_twoparts",
+          "assertion": "assert sum_digits_twoparts(28) == sum_digits_twoparts(28)",
+          "relation": "self_consistency_on_copy"
+        },
+        {
+          "record_id": "mutation::mbpp_148_mut_02982",
+          "entry_point": "sum_digits_twoparts",
+          "assertion": "assert sum_digits_twoparts(sum_digits_twoparts(24)) == sum_digits_twoparts(24)",
+          "relation": "idempotence"
+        },
+        {
+          "record_id": "mutation::mbpp_148_mut_02985",
+          "entry_point": "sum_digits_twoparts",
+          "assertion": "assert sum_digits_twoparts(sum_digits_twoparts(26)) == sum_digits_twoparts(26)",
+          "relation": "idempotence"
+        },
+        {
+          "record_id": "mutation::mbpp_148_mut_02986",
+          "entry_point": "sum_digits_twoparts",
+          "assertion": "assert sum_digits_twoparts(3425) == sum_digits_twoparts(3425)",
+          "relation": "self_consistency_on_copy"
+        },
+        {
+          "record_id": "mutation::mbpp_15_mut_01772",
+          "entry_point": "split_lowerstring",
+          "assertion": "assert len(split_lowerstring('abc')) == len('abc')",
+          "relation": "length_preservation"
+        },
+        {
+          "record_id": "mutation::mbpp_15_mut_01773",
+          "entry_point": "split_lowerstring",
+          "assertion": "assert len(split_lowerstring('abc')) == len('abc')",
+          "relation": "length_preservation"
+        },
+        {
+          "record_id": "mutation::mbpp_212_mut_03598",
+          "entry_point": "fourth_Power_Sum",
+          "assertion": "assert type(fourth_Power_Sum(2)) == type(2)",
+          "relation": "type_preservation"
+        },
+        {
+          "record_id": "mutation::mbpp_212_mut_03600",
+          "entry_point": "fourth_Power_Sum",
+          "assertion": "assert fourth_Power_Sum(fourth_Power_Sum(1)) == fourth_Power_Sum(1)",
+          "relation": "idempotence"
+        },
+        {
+          "record_id": "mutation::mbpp_212_mut_03601",
+          "entry_point": "fourth_Power_Sum",
+          "assertion": "assert type(fourth_Power_Sum(3)) == type(3)",
+          "relation": "type_preservation"
+        }
+      ]
+    }
+  }
+}

@@ -25,6 +25,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from harness.corpus import write_json
+from harness.evaluation_protocol import assert_comparable, protocol_of
 
 RESULTS = ROOT / "results"
 
@@ -90,6 +91,7 @@ def _summary(payload: dict[str, Any]) -> dict[str, Any]:
     for bucket in by_benchmark.values():
         bucket["kill_rate"] = round(bucket["killed"] / bucket["functions"], 6)
     return {
+        "evaluation_protocol": protocol_of(payload),
         "kill_at_8": round(float(entry["rate"]), 6),
         "wilson_95": [round(v, 6) for v in entry.get("wilson_95", [])],
         "targets": int(payload["evaluation_split_records"]),

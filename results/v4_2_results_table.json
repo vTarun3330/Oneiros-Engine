@@ -10,6 +10,7 @@
   },
   "base": {
     "val": {
+      "evaluation_protocol": "first_assertion",
       "kill_at_8": 0.620872,
       "wilson_95": [
         0.585782,
@@ -30,6 +31,7 @@
       }
     },
     "ablation_dev": {
+      "evaluation_protocol": "first_assertion",
       "kill_at_8": 0.595941,
       "wilson_95": [
         0.554094,
@@ -55,6 +57,7 @@
       }
     },
     "train": {
+      "evaluation_protocol": "first_assertion",
       "kill_at_8": 0.678889,
       "wilson_95": [
         0.64768,
@@ -81,6 +84,7 @@
       "description": "multi-mutant supervision at full density",
       "run": "local_sft_mm_full_v2_seed42",
       "val": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.635403,
         "wilson_95": [
           0.600512,
@@ -102,6 +106,7 @@
         "gain_over_base": 0.014531
       },
       "train": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.828889,
         "wilson_95": [
           0.802899,
@@ -128,6 +133,7 @@
       "description": "hard-example relearning on train-split failures",
       "run": "local_sft_relearn_v2_seed42",
       "val": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.659181,
         "wilson_95": [
           0.624688,
@@ -149,6 +155,7 @@
         "gain_over_base": 0.038309
       },
       "ablation_dev": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.717712,
         "wilson_95": [
           0.678389,
@@ -175,6 +182,7 @@
         "gain_over_base": 0.121771
       },
       "train": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.826667,
         "wilson_95": [
           0.800561,
@@ -201,6 +209,7 @@
       "description": "mild regularisation; failed the promotion gate, staged to be measurable",
       "run": "local_sft_reg_mild_s42",
       "val": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.619551,
         "wilson_95": [
           0.584444,
@@ -222,6 +231,7 @@
         "gain_over_base": -0.001321
       },
       "train": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.83,
         "wilson_95": [
           0.804069,
@@ -248,6 +258,7 @@
       "description": "two epochs instead of one",
       "run": "local_sft_long_s42",
       "val": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.61823,
         "wilson_95": [
           0.583107,
@@ -269,6 +280,7 @@
         "gain_over_base": -0.002642
       },
       "train": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.826667,
         "wilson_95": [
           0.800561,
@@ -295,6 +307,7 @@
       "description": "intermediate checkpoint of the relearning arm",
       "run": "local_sft_relearn_ckpt100",
       "val": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.611625,
         "wilson_95": [
           0.576425,
@@ -316,6 +329,7 @@
         "gain_over_base": -0.009247
       },
       "train": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.812222,
         "wilson_95": [
           0.7854,
@@ -342,6 +356,7 @@
       "description": "corpus grown with 26 verified humaneval records",
       "run": "local_sft_v42_s42",
       "val": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.640687,
         "wilson_95": [
           0.605877,
@@ -363,6 +378,7 @@
         "gain_over_base": 0.019815
       },
       "train": {
+        "evaluation_protocol": "first_assertion",
         "kill_at_8": 0.838889,
         "wilson_95": [
           0.813438,

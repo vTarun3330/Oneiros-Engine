@@ -1,0 +1,180 @@
+{
+  "schema_version": "oneiros_metamorphic_ceiling_v1",
+  "artifact": "local_sft_relearn_v2_seed42/sft_validation_standard_seed_42.json",
+  "evaluation_split": "val",
+  "sealed_final_test_accessed": false,
+  "method": {
+    "inputs": "argument tuples the model itself already used",
+    "relations": [
+      "argument_permutation",
+      "idempotence",
+      "involution",
+      "list_order_invariance",
+      "list_reversal_invariance",
+      "length_preservation",
+      "type_preservation",
+      "self_consistency_on_copy"
+    ],
+    "proposed": "blind, from argument shape; the reference is never consulted",
+    "accepted": "must pass the frozen candidate policy, be reference-valid, and kill",
+    "cap_per_target": 60
+  },
+  "proposals_rejected_by_frozen_policy": 0,
+  "unkilled_targets_with_no_usable_argument_tuple": 0,
+  "panel": 757,
+  "kill_rate": 0.659181,
+  "targets_recovered": 49,
+  "ceiling_kill_rate": 0.72391,
+  "interpretation": "a CEILING for a value-free strategy. It assumes the model emits the right relation, which no model does for free. If the ceiling is close to the current kill rate, this direction is dead.",
+  "per_benchmark": {
+    "humaneval": {
+      "panel": 56,
+      "killed_by_the_arm": 53,
+      "kill_rate": 0.946429,
+      "unkilled": 3,
+      "unkilled_targets_examined": 3,
+      "targets_recovered_by_a_value_free_assertion": 1,
+      "recovery_share_of_unkilled": 0.333333,
+      "ceiling_kill_rate": 0.964286,
+      "targets_recovered_by_a_false_relation": 1,
+      "targets_recovered_only_by_making_the_mutant_crash": 0,
+      "conservative_ceiling_kill_rate": 0.964286,
+      "targets_recovered_by_a_false_SEMANTIC_relation": 1,
+      "strict_ceiling_kill_rate": 0.964286,
+      "strict_gain_over_arm": 0.017857,
+      "relation_by_kill_mode": {
+        "involution / relation_false": 1,
+        "length_preservation / relation_false": 1
+      },
+      "relation_families_that_worked": {
+        "length_preservation": 1,
+        "involution": 1
+      },
+      "examples": [
+        {
+          "record_id": "mutation::humaneval_HumanEval_143_mut_01399",
+          "entry_point": "words_in_sentence",
+          "assertion": "assert words_in_sentence(words_in_sentence('Hello World')) == 'Hello World'",
+          "relation": "involution"
+        }
+      ]
+    },
+    "mbpp": {
+      "panel": 701,
+      "killed_by_the_arm": 446,
+      "kill_rate": 0.636234,
+      "unkilled": 255,
+      "unkilled_targets_examined": 255,
+      "targets_recovered_by_a_value_free_assertion": 48,
+      "recovery_share_of_unkilled": 0.188235,
+      "ceiling_kill_rate": 0.704708,
+      "targets_recovered_by_a_false_relation": 22,
+      "targets_recovered_only_by_making_the_mutant_crash": 26,
+      "conservative_ceiling_kill_rate": 0.667618,
+      "targets_recovered_by_a_false_SEMANTIC_relation": 19,
+      "strict_ceiling_kill_rate": 0.663338,
+      "strict_gain_over_arm": 0.027104,
+      "relation_by_kill_mode": {
+        "argument_permutation / mutant_raised": 13,
+        "argument_permutation / relation_false": 11,
+        "idempotence / mutant_raised": 17,
+        "idempotence / relation_false": 9,
+        "involution / mutant_raised": 19,
+        "involution / relation_false": 24,
+        "length_preservation / mutant_raised": 4,
+        "length_preservation / relation_false": 1,
+        "list_order_invariance / mutant_raised": 29,
+        "list_order_invariance / relation_false": 3,
+        "list_reversal_invariance / mutant_raised": 29,
+        "list_reversal_invariance / relation_false": 6,
+        "self_consistency_on_copy / mutant_raised": 68,
+        "type_preservation / mutant_raised": 28,
+        "type_preservation / relation_false": 10
+      },
+      "relation_families_that_worked": {
+        "involution": 23,
+        "idempotence": 21,
+        "self_consistency_on_copy": 18,
+        "type_preservation": 11,
+        "argument_permutation": 10,
+        "list_reversal_invariance": 9,
+        "list_order_invariance": 7,
+        "length_preservation": 3
+      },
+      "examples": [
+        {
+          "record_id": "mutation::mbpp_117_mut_02663",
+          "entry_point": "list_to_float",
+          "assertion": "assert list_to_float([('a', 'b'), ('c', 'd')]) == list_to_float([('a', 'b'), ('c', 'd')])",
+          "relation": "self_consistency_on_copy"
+        },
+        {
+          "record_id": "mutation::mbpp_121_mut_02676",
+          "entry_point": "check_triplet",
+          "assertion": "assert check_triplet([4, 3, 7, 8, 5, 9, 1, 0], 8, 6, 2) == check_triplet([4, 3, 7, 8, 5, 9, 1, 0], 8, 2, 6)",
+          "relation": "argument_permutation"
+        },
+        {
+          "record_id": "mutation::mbpp_121_mut_02679",
+          "entry_point": "check_triplet",
+          "assertion": "assert check_triplet([1, 4, 45, 6, 10, 11], 6, 0, 0) == check_triplet([1, 4, 45, 6, 10, 11], 0, 6, 0)",
+          "relation": "argument_permutation"
+        },
+        {
+          "record_id": "mutation::mbpp_121_mut_02694",
+          "entry_point": "check_triplet",
+          "assertion": "assert check_triplet([5, 3, 4, 1, 2], 5, 5, 0) == check_triplet([5, 3, 4, 1, 2], 5, 0, 5)",
+          "relation": "argument_permutation"
+        },
+        {
+          "record_id": "mutation::mbpp_129_mut_02800",
+          "entry_point": "magic_square_test",
+          "assertion": "assert magic_square_test([[8, 3, 4], [1, 5, 9], [6, 7, 2]]) == magic_square_test([[8, 3, 4], [1, 5, 9], [6, 7, 2]])",
+          "relation": "self_consistency_on_copy"
+        },
+        {
+          "record_id": "mutation::mbpp_155_mut_03068",
+          "entry_point": "even_bit_toggle_number",
+          "assertion": "assert even_bit_toggle_number(even_bit_toggle_number(-4)) == even_bit_toggle_number(-4)",
+          "relation": "idempotence"
+        },
+        {
+          "record_id": "mutation::mbpp_155_mut_03071",
+          "entry_point": "even_bit_toggle_number",
+          "assertion": "assert even_bit_toggle_number(13) == even_bit_toggle_number(13)",
+          "relation": "self_consistency_on_copy"
+        },
+        {
+          "record_id": "mutation::mbpp_155_mut_03073",
+          "entry_point": "even_bit_toggle_number",
+          "assertion": "assert even_bit_toggle_number(even_bit_toggle_number(123)) == 123",
+          "relation": "involution"
+        },
+        {
+          "record_id": "mutation::mbpp_155_mut_03074",
+          "entry_point": "even_bit_toggle_number",
+          "assertion": "assert even_bit_toggle_number(even_bit_toggle_number(4)) == 4",
+          "relation": "involution"
+        },
+        {
+          "record_id": "mutation::mbpp_342_mut_04725",
+          "entry_point": "find_minimum_range",
+          "assertion": "assert find_minimum_range([[2, 5, 10], [4, 7, 10], [8, 9, 10]]) == find_minimum_range([[2, 5, 10], [4, 7, 10], [8, 9, 10]])",
+          "relation": "self_consistency_on_copy"
+        },
+        {
+          "record_id": "mutation::mbpp_342_mut_04726",
+          "entry_point": "find_minimum_range",
+          "assertion": "assert find_minimum_range([[1, 3, 7], [2, 3, 5], [1, 4, 10]]) == find_minimum_range([[1, 3, 7], [2, 3, 5], [1, 4, 10]][::-1])",
+          "relation": "list_reversal_invariance"
+        },
+        {
+          "record_id": "mutation::mbpp_342_mut_04733",
+          "entry_point": "find_minimum_range",
+          "assertion": "assert find_minimum_range([[1, 2, 3], [4, 5, 6], [7, 8, 9]]) == find_minimum_range([[1, 2, 3], [4, 5, 6], [7, 8, 9]])",
+          "relation": "self_consistency_on_copy"
+        }
+      ]
+    }
+  }
+}

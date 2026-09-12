@@ -28,6 +28,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from harness.corpus import write_json
+from harness.evaluation_protocol import assert_comparable, protocol_of
 
 DIMENSIONS = ("dataset_name", "bug_family", "complexity_tier")
 
@@ -67,6 +68,9 @@ def build(artifact: Path, baseline: Path | None) -> dict[str, Any]:
     base_rows: list[dict[str, Any]] = []
     if baseline is not None:
         base_rows, base_payload = _rows(baseline)
+        # A legacy number minus a successor number is a seventeen-point
+        # delta that measures the parser rather than the model.
+        assert_comparable([payload, base_payload], ["artifact", "baseline"])
         if base_payload.get("evaluation_split") != payload.get("evaluation_split"):
             raise SystemExit(
                 "baseline is split " + str(base_payload.get("evaluation_split"))
@@ -101,6 +105,7 @@ def build(artifact: Path, baseline: Path | None) -> dict[str, Any]:
         "baseline": (baseline.as_posix().split("results/", 1)[-1]
                      if baseline else None),
         "evaluation_split": payload.get("evaluation_split"),
+        "evaluation_protocol": protocol_of(payload),
         "sealed_final_test_accessed": False,
         "functions": len(rows),
         "pooled_kill_rate": round(killed / len(rows), 6) if rows else None,

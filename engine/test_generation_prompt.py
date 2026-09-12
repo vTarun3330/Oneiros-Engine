@@ -20,6 +20,7 @@ PROMPT_INFORMATION_VARIANTS = (
 OUTPUT_INSTRUCTION_VARIANTS = (
     "legacy_exactly_one",
     "self_contained",
+    "metamorphic_allowed",
 )
 
 SYSTEM_PROMPT = """You are an expert Python software test engineer.
@@ -162,6 +163,26 @@ def build_unified_user_prompt(
         task_instruction = (
             "Generate exactly ONE executable Python test. Do not generate multiple "
             "tests, explanations, patches, or corrected code."
+        )
+    elif output_instruction_variant == "metamorphic_allowed":
+        # Added because measurement put ~73% of the dominant mbpp failure on
+        # wrong expected VALUES, against specifications too thin to determine
+        # a value from. This variant offers the model a way out that does not
+        # require knowing the answer. It names no value, no relation for any
+        # particular target, and nothing about the reference - it is generic
+        # advice, and is deliberately phrased as a fallback so a model that
+        # DOES know the expected value still states it.
+        task_instruction = (
+            "Generate one minimal, self-contained bug-revealing Python test case. The test\n"
+            "case may contain setup and assertions needed to demonstrate one behavioral\n"
+            "defect, but it must not contain multiple independent test cases.\n"
+            "\n"
+            "If the specification does not let you determine the exact value the function\n"
+            "should return, do not guess one. Assert a relationship that must hold\n"
+            "whatever the value is - for example that applying the function twice equals\n"
+            "applying it once, that reordering arguments cannot change the result, or that\n"
+            "the length or type of the result follows from the input. A relationship you\n"
+            "are confident about is worth more than a value you are not."
         )
     else:
         task_instruction = (
