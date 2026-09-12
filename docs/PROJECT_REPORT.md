@@ -618,3 +618,157 @@ exactly what MBPP's one-sentence specification withholds (§5.1) and what §6.1
 retired the synthetic route to, on the grounds that it would have manufactured
 the score rather than earned it. That tension is the real open problem, and
 naming it precisely is what this round of work bought.
+
+---
+
+## 12. Attacking the oracle problem from the other side (and mostly failing)
+
+Section 11 established the bottleneck: on mbpp, ~73% of the dominant failure is
+a *wrong value on an input that already reveals the bug*, and mbpp's
+one-sentence specification gives no way to determine that value. Every
+intervention before this point attacked the model. This section attacks **the
+form of the assertion** instead.
+
+A test can kill a mutant without predicting a value:
+
+```python
+assert max_of_three(1, 2, 3) == max_of_three(3, 2, 1)   # order cannot matter
+assert sort_list(x) == sort_list(sort_list(x))          # sorting twice is sorting
+assert len(split_lowerstring('abc')) == len('abc')      # length is preserved
+```
+
+If the mutant breaks ordering, the first kills it, and nothing had to know the
+answer is `3`. The frozen candidate policy accepts all three forms unchanged,
+so this needs no protocol change.
+
+### 12.1 Does a value-free killing assertion exist? (the ceiling)
+
+`scripts/measure_metamorphic_ceiling.py`. For every target the arm failed: take
+the argument tuples **the model itself already used**, propose relations blind
+from argument shape, require each to pass the frozen candidate policy, then
+verify — reference-valid *and* kills, the same bar as every other candidate.
+The reference is never consulted to *choose* a relation.
+
+| panel | unkilled examined | recovered (broad) | recovered (strict) | ceiling | strict ceiling |
+|---|---|---|---|---|---|
+| ablation_dev mbpp | 122 | 40 | 27 | 0.8089 | 0.7786 |
+| **locked val mbpp** | 255 | **48** | **19** | **0.7047** | **0.6634** |
+
+Against an arm at 0.6362, that is **+6.85 points** broad and **+2.71** strict.
+
+The strict tier requires a *semantic* relation that came out **false**,
+excluding two families that count in the headline but should not carry it:
+`self_consistency_on_copy` (`f(x) == f(x)`) asserts nothing and kills only when
+the mutant crashes, and `type_preservation` holds largely by coincidence.
+
+> **ablation_dev overstated the strict gain by 2.32×** (+6.29 against +2.71).
+> That is the third time this project has caught selection-panel inflation, and
+> the first time it was caught *before* acting on the inflated number.
+
+### 12.2 Can the model actually produce them? Yes. Does it help? Barely.
+
+A ceiling assumes the model emits the right relation. Measured on the control,
+it does not: the base model writes a relational assertion in **0.28%** of
+candidates. So a prompt variant `metamorphic_allowed` was added - generic
+advice naming no value, no target and nothing about the reference, offering the
+model a way out when it cannot determine the expected value.
+
+Base Qwen, **prompt change only, no training**, run on both panels:
+
+| | ablation_dev control | ablation_dev metamorphic | **locked val control** | **locked val metamorphic** |
+|---|---|---|---|---|
+| kill@8 | 0.5959 | 0.6458 | **0.6209** | **0.6367** |
+| delta | - | **+0.0498** | - | **+0.0159** |
+| paired McNemar | - | 75 / 48, **p = 0.0187** | - | 80 / 68, **p = 0.366** |
+| mbpp | 0.5758 | 0.6224 | 0.6034 | 0.6205 |
+| humaneval | 0.6696 | 0.7321 | 0.8393 | **0.8393** |
+| reference validity | 0.5826 | 0.5381 | 0.4536 | 0.4123 |
+
+**On the locked panel the effect is not significant.** 80 targets gained
+against 68 lost is close to a coin flip, humaneval moves by *exactly* zero, and
+reference validity falls by four points.
+
+> **ablation_dev overstated this effect by 3.1x** (+4.98 against +1.59), and
+> converted p = 0.366 into p = 0.0187. Together with 12.1's 2.32x, this is the
+> fourth and fifth time selection-panel inflation has been measured here. It is
+> no longer a caveat about this project; it is a stable property of this panel,
+> and any ablation_dev figure should be divided by roughly three before being
+> believed.
+
+The honest verdict: **a prompt-only intervention produced +1.59 points on the
+locked panel, indistinguishable from noise, while costing reference validity.**
+It is not a result. It is, however, free - it needs no training - which is why
+it was worth the twenty minutes of inference to find out.
+
+### 12.3 The mechanism is not the one on the tin
+
+`scripts/classify_assertion_form.py` sorts every candidate by the form of its
+assertion, and it was built *before* the result rather than after - precisely
+because "the prompt mentioned relations and the number went up" is the kind of
+reasoning that produced two retracted claims in section 6.
+
+Relations did rise sharply. On ablation_dev, 0.28% -> **4.38%** of candidates
+and 0.27% -> 7.13% of killing candidates. But of the **75 targets the prompt
+newly killed, only 13 (17.3%) were killed by a relation.** Fifty-seven were
+killed by a **literal oracle** - the exact form the instruction told the model
+not to use.
+
+The dominant shift runs the other way, and the locked panel shows the same
+thing:
+
+| form | val control | val metamorphic |
+|---|---|---|
+| literal_oracle | 0.732 | **0.854** |
+| bounded | 0.215 | **0.078** |
+| relational | 0.001 | 0.020 |
+
+**The prompt made the model more committal about exact values, not less.** It
+traded `bounded` assertions - which never need the exact value - for
+`literal_oracle` ones, which always do, and reference validity fell accordingly
+on both panels.
+
+That is a coherent story and it is not the story the instruction told. The
+gain, such as it is, comes from commitment rather than from relations:
+committing pays when the input is already discriminating, which section 11
+measured at 73% of mbpp failures. Publishing "+5 points from metamorphic
+prompting" would have been this project's third wrong mechanism - and on the
+locked panel there is no +5 to publish either.
+
+### 12.4 Protocol freeze
+
+Declared in `docs/EVALUATION_PROTOCOL_FREEZE.md` before any further training.
+
+Legacy artifacts predate `candidate_parse_mode` entirely, so they record
+nothing, and an absent field reads as "no reason for concern" rather than "this
+is the legacy protocol". Subtracting a successor number from a legacy one
+yields a seventeen-point delta that measures the parser rather than the model.
+
+`harness/evaluation_protocol.py` resolves an absent field to legacy, **raises**
+on an unrecognised mode rather than defaulting, and refuses a cross-protocol
+comparison while naming which side is which. The guard is wired into
+`slice_kill_rate.py` and `build_results_table.py`, with a test asserting the
+*wiring* rather than the availability, because a guard nobody calls is a
+comment. Committed figures are unchanged.
+
+Legacy remains the protocol of record for everything already committed; the
+successor is the protocol of record for new work; mixing them is refused.
+
+### 12.5 Two failures worth recording
+
+**A run that reported 0.0 and meant nothing.** The first metamorphic launch
+omitted `--base-model-name`, `--attention-implementation` and
+`--sft-prompt-token-limit`, so it silently fell back to the canonical Phi-3
+defaults — Phi-3-mini at a 512-token prompt budget rather than Qwen at 1024.
+The instruction adds about 90 tokens, all 542 prompts exceeded 512, and the
+artifact reported a kill rate of 0.0 that measured the misconfiguration.
+Quarantined as `results/INVALID_metamorphic_s42_ran_phi3_at_512_budget/` with a
+note, rather than deleted, so the failure stays on the record.
+
+**A classifier that hid the thing it was looking for.** The first version of
+the assertion-form classifier filed `assert f(3) > 0` as a `literal_oracle`
+because it compares against a constant. It does not require knowing *which*
+positive number the answer is, so it is value-free in the sense that matters.
+Checking the classifier's own output against hand-made cases caught it; a
+`bounded` form was added. Left uncorrected, it would have undercounted exactly
+the behaviour under investigation — and `bounded` turned out to be 29.7% of
+control candidates, so the error was not small.

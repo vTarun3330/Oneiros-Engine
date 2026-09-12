@@ -357,12 +357,15 @@
     {
       "id": "R2-freeze-evaluator",
       "title": "Freeze one evaluation protocol as THE baseline so later numbers are interpretable",
-      "status": "pending"
+      "status": "done",
+      "started_utc": "2026-09-12T16:49:45Z",
+      "finished_utc": "2026-09-12T16:49:46Z",
+      "summary": "Completed earlier in this session but recorded under R3 because I opened R3 before doing R2. Artifacts: harness/evaluation_protocol.py, tests/test_evaluation_protocol.py, docs/EVALUATION_PROTOCOL_FREEZE.md, guard wired into slice_kill_rate and build_results_table."
     },
     {
       "id": "R3-next-step-decision",
       "title": "Decide the next intervention from the R1 ceiling, and record the decision",
-      "status": "in_progress",
+      "status": "done",
       "started_utc": "2026-09-12T16:11:23Z",
       "progress": [
         {
@@ -376,15 +379,22 @@
         {
           "at": "2026-09-12T16:28:22Z",
           "note": "GPU result, ablation_dev, base Qwen, prompt change only, no training: kill@8 0.5959 -> 0.6458 (+4.98pts). Paired McNemar on the same 542 targets: 75 gained / 48 lost, exact two-sided p=0.0187. mbpp +4.66, humaneval +6.25. Reference validity FELL 0.5826 -> 0.5381. MECHANISM CHECK CONTRADICTS THE INTENTION: relational assertions rose 0.28%->4.38% of candidates, but only 13 of the 75 newly-killed targets (17.3%) were killed by a relation; 57 were killed by a literal oracle, the form the prompt told the model to avoid. bounded collapsed 29.7%->9.7% while literal_oracle rose 67.6%->83.6% - the model became MORE committal, not less."
+        },
+        {
+          "at": "2026-09-12T16:49:07Z",
+          "note": "LOCKED PANEL VERDICT: metamorphic prompt gives +0.0159 (0.6209 -> 0.6367), paired McNemar 80 gained / 68 lost, p=0.366 - NOT significant. humaneval delta exactly 0.0000. Reference validity fell 0.4536 -> 0.4123. ablation_dev overstated this by 3.1x and turned p=0.366 into p=0.0187. Decision: do NOT adopt, do NOT train on it. The value-free direction is recorded as measured-and-rejected rather than untried."
         }
       ],
       "artifacts": [
         "docs/EVALUATION_PROTOCOL_FREEZE.md",
-        "results/local_base_qwen_adev_metamorphic_s42/base_validation_ablation-dev_instruction-metamorphic-allowed_seed_42.json"
-      ]
+        "results/local_base_qwen_adev_metamorphic_s42/base_validation_ablation-dev_instruction-metamorphic-allowed_seed_42.json",
+        "results/local_base_qwen_val_metamorphic_s42/base_validation_instruction-metamorphic-allowed_seed_42.json"
+      ],
+      "finished_utc": "2026-09-12T16:49:44Z",
+      "summary": "DECISION: reject the value-free/metamorphic direction for adoption. The ceiling is real (+6.85 broad / +2.71 strict on locked val) but a model given the option produces only +1.59, p=0.366, while losing 4 points of reference validity - and 83% of what it did gain came from literal oracles, not relations. Recorded as measured-and-rejected rather than untried. Also rejects publishing the ablation_dev figure: it overstated by 3.1x."
     }
   ],
-  "updated_utc": "2026-09-12T16:28:22Z",
+  "updated_utc": "2026-09-12T16:49:46Z",
   "paused_utc": "2026-09-08T11:50:47Z",
   "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",

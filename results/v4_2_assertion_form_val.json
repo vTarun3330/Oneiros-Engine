@@ -1,0 +1,209 @@
+{
+  "reports": [
+    {
+      "schema_version": "oneiros_assertion_form_v1",
+      "artifact": "local_base_qwen_val_metamorphic_s42/base_validation_instruction-metamorphic-allowed_seed_42.json",
+      "evaluation_split": "val",
+      "evaluation_protocol": "first_assertion",
+      "output_instruction_variant": null,
+      "sealed_final_test_accessed": false,
+      "candidates_classified": 5926,
+      "form_counts": {
+        "literal_oracle": 5062,
+        "bounded": 461,
+        "other": 285,
+        "relational": 117,
+        "property": 1
+      },
+      "form_shares": {
+        "literal_oracle": 0.854202,
+        "bounded": 0.077793,
+        "other": 0.048093,
+        "relational": 0.019744,
+        "property": 0.000169
+      },
+      "killing_form_counts": {
+        "literal_oracle": 1371,
+        "other": 83,
+        "bounded": 58,
+        "relational": 43
+      },
+      "killing_form_shares": {
+        "literal_oracle": 0.881672,
+        "other": 0.053376,
+        "bounded": 0.037299,
+        "relational": 0.027653
+      },
+      "value_free_share": 0.097705,
+      "value_free_share_of_kills": 0.064952,
+      "per_benchmark_form_counts": {
+        "humaneval": {
+          "literal_oracle": 337,
+          "bounded": 95,
+          "relational": 12
+        },
+        "mbpp": {
+          "literal_oracle": 4725,
+          "bounded": 366,
+          "other": 285,
+          "relational": 105,
+          "property": 1
+        }
+      },
+      "per_benchmark_killing_form_counts": {
+        "humaneval": {
+          "literal_oracle": 190,
+          "relational": 6,
+          "bounded": 6
+        },
+        "mbpp": {
+          "literal_oracle": 1181,
+          "other": 83,
+          "bounded": 52,
+          "relational": 37
+        }
+      },
+      "examples": {
+        "literal_oracle": [
+          "assert words_in_sentence(\"This is a test\") == \"is\"",
+          "assert words_in_sentence(\"This is a test\") == \"is\"",
+          "assert words_in_sentence(\"This is a test\") == \"is\"",
+          "assert words_in_sentence(\"Hello world\") == \"\"",
+          "assert words_in_sentence(\"This is a test\") == \"is\"",
+          "assert words_in_sentence(\"This is a test\") == \"is\""
+        ],
+        "relational": [
+          "assert simplify(\"1/5\", \"5/1\") != simplify(\"1/6\", \"2/1\")",
+          "assert simplify(\"1/5\", \"5/1\") != simplify(\"1/6\", \"2/1\")",
+          "assert simplify(\"1/5\", \"5/1\") != simplify(\"1/6\", \"2/1\")  # Different results for different inputs",
+          "assert simplify(\"1/5\", \"5/1\") != simplify(\"1/5\", \"5/2\")",
+          "assert simplify(\"1/5\", \"5/1\") != simplify(\"3/10\", \"10/2\")",
+          "assert simplify(\"1/5\", \"5/1\") != simplify(\"1/6\", \"2/1\")"
+        ],
+        "property": [
+          "assert len(Extract([[1, 2], [3, 4], [5, 6]])) == 3"
+        ],
+        "bounded": [
+          "assert words_in_sentence(\"This is a test\") != \"is\"",
+          "assert words_in_sentence(\"This is a test\") != \"is\"",
+          "assert words_in_sentence(\"This is a test\") != \"is\"",
+          "assert words_in_sentence(\"This is a test\") != \"is\"",
+          "assert words_in_sentence(\"This is a test\") != \"is\"",
+          "assert words_in_sentence(\"This is a test\") != \"is\""
+        ],
+        "other": [
+          "assert check_triplet([2, 4, 5, 8], 4, 15, 0)",
+          "assert check_triplet([1, 2, 3, 4, 5], 5, 6, 0)",
+          "assert check_triplet([2, 4, 6, 8], 4, 18, 0)",
+          "assert check_triplet([1, 2, 3, 4, 5], 5, 6, 1)",
+          "assert check_triplet([2, 4, 6, 8, 10], 5, 0, 0)",
+          "assert check_triplet([2, 4, 6, 8, 10], 5, 20, 0)"
+        ]
+      }
+    },
+    {
+      "schema_version": "oneiros_assertion_form_v1",
+      "artifact": "local_base_qwen_val_seed42/base_validation_standard_seed_42.json",
+      "evaluation_split": "val",
+      "evaluation_protocol": "first_assertion",
+      "output_instruction_variant": null,
+      "sealed_final_test_accessed": false,
+      "candidates_classified": 6019,
+      "form_counts": {
+        "literal_oracle": 4406,
+        "bounded": 1296,
+        "other": 308,
+        "relational": 8,
+        "property": 1
+      },
+      "form_shares": {
+        "literal_oracle": 0.732015,
+        "bounded": 0.215318,
+        "other": 0.051171,
+        "relational": 0.001329,
+        "property": 0.000166
+      },
+      "killing_form_counts": {
+        "literal_oracle": 1183,
+        "bounded": 196,
+        "other": 80,
+        "relational": 1,
+        "property": 1
+      },
+      "killing_form_shares": {
+        "literal_oracle": 0.809719,
+        "bounded": 0.134155,
+        "other": 0.054757,
+        "relational": 0.000684,
+        "property": 0.000684
+      },
+      "value_free_share": 0.216813,
+      "value_free_share_of_kills": 0.135524,
+      "per_benchmark_form_counts": {
+        "humaneval": {
+          "literal_oracle": 276,
+          "bounded": 170,
+          "relational": 1,
+          "other": 1
+        },
+        "mbpp": {
+          "literal_oracle": 4130,
+          "bounded": 1126,
+          "other": 307,
+          "relational": 7,
+          "property": 1
+        }
+      },
+      "per_benchmark_killing_form_counts": {
+        "humaneval": {
+          "literal_oracle": 153,
+          "bounded": 15
+        },
+        "mbpp": {
+          "literal_oracle": 1030,
+          "bounded": 181,
+          "other": 80,
+          "relational": 1,
+          "property": 1
+        }
+      },
+      "examples": {
+        "literal_oracle": [
+          "assert words_in_sentence(\"This is a test\") == \"is\"",
+          "assert words_in_sentence(\"This is a test\") == \"is\"",
+          "assert words_in_sentence(\"This is a test\") == \"is\"",
+          "assert words_in_sentence(\"This is a test\") == \"is\"",
+          "assert words_in_sentence(\"This is a test\") == \"is\"",
+          "assert words_in_sentence(\"This is a test\") == \"is\""
+        ],
+        "relational": [
+          "assert simplify(\"1/5\", \"5/1\") != simplify(\"1/6\", \"2/1\")",
+          "assert frequency_Of_Largest(3, [10, 20, 30]) != frequency_Of_Largest(4, [10, 20, 30, 50])",
+          "assert frequency_Of_Largest(5, [3, 4, 6, 8, 9]) != frequency_Of_Largest(5, [1, 2, 3, 4, 5])",
+          "assert armstrong_number(370) != armstrong_number(9474)",
+          "assert geometric_sum(3) != 1/4 + geometric_sum(2)",
+          "assert geometric_sum(5) != 1/32 + geometric_sum(4)"
+        ],
+        "property": [
+          "assert tuple(zip_tuples(('a', 'b'), ('c', 'd'))) == (('a', 'c'), ('b', 'd'))"
+        ],
+        "bounded": [
+          "assert words_in_sentence(\"This is a test\") != \"is\"",
+          "assert words_in_sentence(\"This is a test\") != \"is\"",
+          "assert words_in_sentence(\"This is a test\") != \"is\"",
+          "assert words_in_sentence(\"This is a test\") != \"is\"",
+          "assert words_in_sentence(\"This is a test\") != \"is\"",
+          "assert words_in_sentence(\"This is a test\") != \"is\""
+        ],
+        "other": [
+          "assert simplify(\"2/3\", \"4/6\")",
+          "assert check_triplet([2, 4, -5, 3, 5, 7], 6, -9, 3)",
+          "assert check_triplet([1, 4, 5, 2], 4, 7, 1)",
+          "assert check_triplet([2, 4, 6, 7], 4, 15, 0)",
+          "assert check_triplet([1, 2, 3, 4], 4, 6, 0)",
+          "assert check_triplet([2, 4, 5, 6], 4, 8, 3)"
+        ]
+      }
+    }
+  ]
+}
