@@ -1,0 +1,107 @@
+{
+  "reports": [
+    {
+      "schema_version": "oneiros_assertion_form_v1",
+      "artifact": "local_base_qwen_adev_seed42/base_validation_ablation-dev_seed_42.json",
+      "evaluation_split": "ablation_dev",
+      "evaluation_protocol": "first_assertion",
+      "output_instruction_variant": null,
+      "sealed_final_test_accessed": false,
+      "candidates_classified": 4294,
+      "form_counts": {
+        "literal_oracle": 2904,
+        "bounded": 1276,
+        "other": 102,
+        "relational": 12
+      },
+      "form_shares": {
+        "literal_oracle": 0.676293,
+        "bounded": 0.297159,
+        "other": 0.023754,
+        "relational": 0.002795
+      },
+      "killing_form_counts": {
+        "literal_oracle": 923,
+        "bounded": 198,
+        "other": 4,
+        "relational": 3
+      },
+      "killing_form_shares": {
+        "literal_oracle": 0.818262,
+        "bounded": 0.175532,
+        "other": 0.003546,
+        "relational": 0.00266
+      },
+      "value_free_share": 0.299953,
+      "value_free_share_of_kills": 0.178191,
+      "per_benchmark_form_counts": {
+        "humaneval": {
+          "literal_oracle": 674,
+          "bounded": 109,
+          "other": 99
+        },
+        "manual_curated_examples": {
+          "literal_oracle": 7,
+          "bounded": 1
+        },
+        "mbpp": {
+          "literal_oracle": 2223,
+          "bounded": 1166,
+          "relational": 12,
+          "other": 3
+        }
+      },
+      "per_benchmark_killing_form_counts": {
+        "humaneval": {
+          "literal_oracle": 218,
+          "bounded": 6,
+          "other": 3
+        },
+        "manual_curated_examples": {
+          "literal_oracle": 3
+        },
+        "mbpp": {
+          "literal_oracle": 702,
+          "bounded": 192,
+          "relational": 3,
+          "other": 1
+        }
+      },
+      "examples": {
+        "literal_oracle": [
+          "assert format_string(\"Hello, \") == \"Hello\"",
+          "assert format_string(\"Hello,\") == \"Hello\"",
+          "assert format_string(\"hello,\") == \"hello\"",
+          "assert format_string(\"Hello,\") == \"Hello\"",
+          "assert format_string(\"hello,\") == \"hello\"",
+          "assert format_string(\"hello, \") == \"hello\""
+        ],
+        "relational": [
+          "assert sum_digits_twoparts(234567890) != sum_digits_twoparts(123456789)",
+          "assert sum_digits_twoparts(1234567890) != sum_digits_twoparts(1234567891)",
+          "assert sum_digits_twoparts(5678) != sum_digits_twoparts(5678)",
+          "assert sum_digits_twoparts(23456789) != sum_digits_twoparts(2345678)",
+          "assert binomial_probability(5, 3, 0.7) != binomial_probability(5, 4, 0.7)",
+          "assert binomial_probability(5, 3, 0.7) != binomial_probability(5, 3, 0.8)"
+        ],
+        "property": [],
+        "bounded": [
+          "assert format_string(\"Hello,\") != \"Hello\"",
+          "assert rounded_avg(20, 33) != \"0b11010\"",
+          "assert rounded_avg(10, 20) != \"0b1111\"  # Test case with an incorrect result",
+          "assert rounded_avg(20, 33) != \"0b11010\"",
+          "assert rounded_avg(20, 33) != \"0b11011\"  # Incorrect result for this input",
+          "assert rounded_avg(20, 33) != \"0b11010\""
+        ],
+        "other": [
+          "assert not is_sorted([1, 2, 2, 3, 3, 4])",
+          "assert not is_sorted([1, 2, 2, 3, 3, 4])",
+          "assert not is_sorted([1, 2, 2, 3, 3, 4])",
+          "assert not is_sorted([1, 2, 2, 2, 3, 4])",
+          "assert not is_sorted([1, 2, 2, 3, 3, 4])",
+          "assert not is_sorted([1, 2, 2, 3, 3, 4])"
+        ]
+      }
+    }
+  ]
+}
