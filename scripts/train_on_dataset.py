@@ -1684,9 +1684,56 @@ def _adapter_evaluation_context(
         "retain_raw_output": RETAIN_RAW_OUTPUT,
         "allow_test_function_candidates": ALLOW_TEST_FUNCTION_CANDIDATES,
     }
+    # THE IMMUTABLE RUN CONTRACT.
+    #
+    # `context` is compared for EQUALITY before any progress checkpoint is
+    # reused, so anything bound in here makes a resume under different settings
+    # impossible rather than merely detectable. A final manifest records what a
+    # run claimed; only this decides what a run may inherit.
+    #
+    # Every field below changes what the model emits or how the emission is
+    # scored. Sampling temperature and top_p were previously recorded NOWHERE,
+    # so two runs differing only in sampling produced interchangeable
+    # checkpoints. The parser mode, retention flag and test-function policy
+    # decide what is kept from each output. The budgets decide whether an
+    # output was truncated. The model revision and the evaluator/policy source
+    # hashes decide whether "the same" model and scorer were used at all.
+    run_contract = {
+        "contract_version": 1,
+        "candidate_parse_mode": CANDIDATE_PARSE_MODE,
+        "retain_raw_output": RETAIN_RAW_OUTPUT,
+        "allow_test_function_candidates": ALLOW_TEST_FUNCTION_CANDIDATES,
+        "temperature": model_config.temperature,
+        "top_p": model_config.top_p,
+        "do_sample": True,
+        "max_new_tokens": MAX_NEW_TOKENS_OVERRIDE,
+        "candidates_per_function": TESTS_PER_PAIR,
+        "prompt_token_limit": PROMPT_TOKEN_LIMIT,
+        "repository_prompt_token_limit": REPOSITORY_PROMPT_TOKEN_LIMIT,
+        "rendered_sequence_fit_policy": (
+            "compact whole semantic units before chat rendering; required "
+            "sections are never sliced; a record that cannot fit fails closed"
+        ),
+        "max_sft_completion_tokens": MAX_SFT_COMPLETION_TOKENS,
+        "base_model_name": resolved_base_model_name,
+        "base_model_revision": resolved_base_model_revision,
+        "prompt_schema_version": PROMPT_SCHEMA_VERSION,
+        "prompt_information_variant": PROMPT_INFORMATION_VARIANT,
+        "output_instruction_variant": OUTPUT_INSTRUCTION_VARIANT,
+        "evaluator_source_sha256": sha256_file(
+            Path(__file__).parent.parent / "metrics" / "research_evaluation.py"),
+        "candidate_policy_source_sha256": sha256_file(
+            Path(__file__).parent.parent / "harness" / "candidate_policy.py"),
+        "safe_execution_source_sha256": sha256_file(
+            Path(__file__).parent.parent / "harness" / "safe_execution.py"),
+        "prompt_builder_source_sha256": sha256_file(
+            Path(__file__).parent.parent / "engine" / "test_generation_prompt.py"),
+    }
     return {
         "format_version": 3,
         "validation_accounting_schema_version": VALIDATION_ACCOUNTING_SCHEMA_VERSION,
+        "run_contract": run_contract,
+        "run_contract_sha256": evaluation_profile_sha256(run_contract),
         "dataset_fingerprint": dataset_fingerprint,
         "adapter": adapter_label,
         "adapter_sha256": adapter_sha256,

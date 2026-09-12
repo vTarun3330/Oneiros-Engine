@@ -1,0 +1,29 @@
+{
+  "schema_version": "oneiros_sequence_fit_gate_v1",
+  "split": "train",
+  "sealed_final_test_accessed": false,
+  "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "model_revision": "main",
+  "prompt_token_limit": 1024,
+  "completion_token_limit": 1024,
+  "sequence_limit": 2048,
+  "max_rendered_prompt_plus_completion": 2023,
+  "records_considered": 6052,
+  "repository_records_held_not_generated_on": 457,
+  "generation_panel_size": 5595,
+  "records_measured": 5595,
+  "records_skipped": 0,
+  "records_compacted": 71,
+  "prompt_token_distribution": {
+    "min": 372,
+    "p50": 471,
+    "p90": 637,
+    "p99": 886,
+    "max": 999,
+    "mean": 502.8
+  },
+  "failures": [],
+  "failure_count": 0,
+  "gate_passed": true,
+  "policy": "the gate fails if ANY record cannot fit its prompt plus the FULL completion budget. Output length is never silently reduced."
+}
