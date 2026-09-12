@@ -113,3 +113,45 @@ def test_the_committed_curriculum_records_realised_not_requested_mixture():
     for block in report["blocks"]:
         assert "realised_mixture" in block and "requested_mixture" in block
         assert abs(sum(block["realised_mixture"].values()) - 1.0) < 0.01
+
+
+# ---------------------------------------------------------------------------
+# Schedule guards. Added after review raised hard-first curricula and replay
+# anchors: the schedule already satisfied both, and a comment saying so does
+# not survive someone editing the weights.
+# ---------------------------------------------------------------------------
+
+def test_the_shipped_schedule_is_progressive_and_mixed():
+    from scripts.build_progressive_curriculum import (
+        REPLAY_FLOOR, SCHEDULE, assert_schedule_is_progressive_and_mixed,
+    )
+    assert_schedule_is_progressive_and_mixed()
+    hard = [block["hard"] for block in SCHEDULE]
+    assert hard == sorted(hard)
+    assert hard[0] < hard[-1], "a flat schedule is not a curriculum"
+    for block in SCHEDULE:
+        assert block["easy"] + block["moderate"] >= REPLAY_FLOOR
+
+
+def test_a_hard_first_schedule_is_refused():
+    from scripts.build_progressive_curriculum import (
+        assert_schedule_is_progressive_and_mixed,
+    )
+    import pytest
+    with pytest.raises(ValueError, match="non-decreasing"):
+        assert_schedule_is_progressive_and_mixed((
+            {"block": 1, "easy": 0.10, "moderate": 0.20, "hard": 0.70},
+            {"block": 2, "easy": 0.40, "moderate": 0.40, "hard": 0.20},
+        ))
+
+
+def test_a_single_tier_final_block_is_refused():
+    from scripts.build_progressive_curriculum import (
+        assert_schedule_is_progressive_and_mixed,
+    )
+    import pytest
+    with pytest.raises(ValueError, match="replay floor"):
+        assert_schedule_is_progressive_and_mixed((
+            {"block": 1, "easy": 0.40, "moderate": 0.35, "hard": 0.25},
+            {"block": 2, "easy": 0.00, "moderate": 0.05, "hard": 0.95},
+        ))

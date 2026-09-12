@@ -1,0 +1,362 @@
+{
+  "schema_version": "oneiros_cross_split_near_duplicate_audit_v1",
+  "corpus": "v4_1_research_hardened_candidate",
+  "sealed_final_test_accessed": false,
+  "sealed_split_excluded": "test",
+  "method": {
+    "normalisation": "ast.unparse with docstrings removed",
+    "similarity": "exact Jaccard over 5-token shingles",
+    "near_duplicate_threshold": 0.8,
+    "candidate_generation": "inverted shingle index, exact scoring"
+  },
+  "records_unparsable_by_split": {},
+  "comparisons": {
+    "train_vs_ablation_dev": {
+      "exact_normalised_reference_collisions": 0,
+      "shared_group_id_lineages": 0,
+      "shared_lineage_examples": [],
+      "reference_code": {
+        "evaluation_records_scored": 594,
+        "max_similarity": 0.9111,
+        "threshold_sweep": {
+          "0.70": {
+            "records": 32,
+            "distinct_evaluation_functions": 5
+          },
+          "0.75": {
+            "records": 28,
+            "distinct_evaluation_functions": 4
+          },
+          "0.80": {
+            "records": 14,
+            "distinct_evaluation_functions": 2
+          },
+          "0.85": {
+            "records": 6,
+            "distinct_evaluation_functions": 1
+          },
+          "0.90": {
+            "records": 6,
+            "distinct_evaluation_functions": 1
+          },
+          "0.95": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          }
+        },
+        "near_duplicate_records_at_threshold": 14,
+        "near_duplicate_functions_at_threshold": 2,
+        "closest_pairs": [
+          {
+            "evaluation_record": "mutation::mbpp_296_mut_04289",
+            "nearest_training_record": "mutation::mbpp_841_mut_08978",
+            "jaccard": 0.9111
+          },
+          {
+            "evaluation_record": "mutation::mbpp_296_mut_04291",
+            "nearest_training_record": "mutation::mbpp_841_mut_08978",
+            "jaccard": 0.9111
+          },
+          {
+            "evaluation_record": "mutation::mbpp_296_mut_04292",
+            "nearest_training_record": "mutation::mbpp_841_mut_08978",
+            "jaccard": 0.9111
+          },
+          {
+            "evaluation_record": "mutation::mbpp_296_mut_04293",
+            "nearest_training_record": "mutation::mbpp_841_mut_08978",
+            "jaccard": 0.9111
+          },
+          {
+            "evaluation_record": "mutation::mbpp_296_mut_04294",
+            "nearest_training_record": "mutation::mbpp_841_mut_08978",
+            "jaccard": 0.9111
+          },
+          {
+            "evaluation_record": "mutation::mbpp_296_mut_04295",
+            "nearest_training_record": "mutation::mbpp_841_mut_08978",
+            "jaccard": 0.9111
+          },
+          {
+            "evaluation_record": "mutation::mbpp_922_mut_09761",
+            "nearest_training_record": "mutation::mbpp_415_mut_05355",
+            "jaccard": 0.8409
+          },
+          {
+            "evaluation_record": "mutation::mbpp_922_mut_09763",
+            "nearest_training_record": "mutation::mbpp_415_mut_05355",
+            "jaccard": 0.8409
+          },
+          {
+            "evaluation_record": "mutation::mbpp_922_mut_09765",
+            "nearest_training_record": "mutation::mbpp_415_mut_05355",
+            "jaccard": 0.8409
+          },
+          {
+            "evaluation_record": "mutation::mbpp_922_mut_09769",
+            "nearest_training_record": "mutation::mbpp_415_mut_05355",
+            "jaccard": 0.8409
+          }
+        ]
+      },
+      "specification_text": {
+        "evaluation_records_scored": 594,
+        "max_similarity": 0.75,
+        "threshold_sweep": {
+          "0.70": {
+            "records": 5,
+            "distinct_evaluation_functions": 1
+          },
+          "0.75": {
+            "records": 5,
+            "distinct_evaluation_functions": 1
+          },
+          "0.80": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          },
+          "0.85": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          },
+          "0.90": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          },
+          "0.95": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          }
+        },
+        "near_duplicate_records_at_threshold": 0,
+        "near_duplicate_functions_at_threshold": 0,
+        "closest_pairs": [
+          {
+            "evaluation_record": "mutation::mbpp_82_mut_02425",
+            "nearest_training_record": "mutation::mbpp_234_mut_03842",
+            "jaccard": 0.75
+          },
+          {
+            "evaluation_record": "mutation::mbpp_82_mut_02426",
+            "nearest_training_record": "mutation::mbpp_234_mut_03842",
+            "jaccard": 0.75
+          },
+          {
+            "evaluation_record": "mutation::mbpp_82_mut_02427",
+            "nearest_training_record": "mutation::mbpp_234_mut_03842",
+            "jaccard": 0.75
+          },
+          {
+            "evaluation_record": "mutation::mbpp_82_mut_02428",
+            "nearest_training_record": "mutation::mbpp_234_mut_03842",
+            "jaccard": 0.75
+          },
+          {
+            "evaluation_record": "mutation::mbpp_82_mut_02429",
+            "nearest_training_record": "mutation::mbpp_234_mut_03842",
+            "jaccard": 0.75
+          },
+          {
+            "evaluation_record": "mutation::mbpp_16_mut_01775",
+            "nearest_training_record": "mutation::mbpp_43_mut_02058",
+            "jaccard": 0.6923
+          },
+          {
+            "evaluation_record": "mutation::mbpp_16_mut_01776",
+            "nearest_training_record": "mutation::mbpp_43_mut_02058",
+            "jaccard": 0.6923
+          },
+          {
+            "evaluation_record": "mutation::mbpp_16_mut_01777",
+            "nearest_training_record": "mutation::mbpp_43_mut_02058",
+            "jaccard": 0.6923
+          },
+          {
+            "evaluation_record": "mutation::mbpp_16_mut_01778",
+            "nearest_training_record": "mutation::mbpp_43_mut_02058",
+            "jaccard": 0.6923
+          },
+          {
+            "evaluation_record": "mutation::mbpp_928_mut_09878",
+            "nearest_training_record": "mutation::mbpp_427_mut_05504",
+            "jaccard": 0.6429
+          }
+        ]
+      }
+    },
+    "train_vs_val": {
+      "exact_normalised_reference_collisions": 0,
+      "shared_group_id_lineages": 0,
+      "shared_lineage_examples": [],
+      "reference_code": {
+        "evaluation_records_scored": 781,
+        "max_similarity": 0.7971,
+        "threshold_sweep": {
+          "0.70": {
+            "records": 45,
+            "distinct_evaluation_functions": 3
+          },
+          "0.75": {
+            "records": 45,
+            "distinct_evaluation_functions": 3
+          },
+          "0.80": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          },
+          "0.85": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          },
+          "0.90": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          },
+          "0.95": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          }
+        },
+        "near_duplicate_records_at_threshold": 0,
+        "near_duplicate_functions_at_threshold": 0,
+        "closest_pairs": [
+          {
+            "evaluation_record": "mutation::mbpp_752_mut_08227",
+            "nearest_training_record": "mutation::mbpp_529_mut_06469",
+            "jaccard": 0.7971
+          },
+          {
+            "evaluation_record": "mutation::mbpp_752_mut_08228",
+            "nearest_training_record": "mutation::mbpp_529_mut_06469",
+            "jaccard": 0.7971
+          },
+          {
+            "evaluation_record": "mutation::mbpp_752_mut_08229",
+            "nearest_training_record": "mutation::mbpp_529_mut_06469",
+            "jaccard": 0.7971
+          },
+          {
+            "evaluation_record": "mutation::mbpp_752_mut_08230",
+            "nearest_training_record": "mutation::mbpp_529_mut_06469",
+            "jaccard": 0.7971
+          },
+          {
+            "evaluation_record": "mutation::mbpp_752_mut_08231",
+            "nearest_training_record": "mutation::mbpp_529_mut_06469",
+            "jaccard": 0.7971
+          },
+          {
+            "evaluation_record": "mutation::mbpp_752_mut_08232",
+            "nearest_training_record": "mutation::mbpp_529_mut_06469",
+            "jaccard": 0.7971
+          },
+          {
+            "evaluation_record": "mutation::mbpp_752_mut_08234",
+            "nearest_training_record": "mutation::mbpp_529_mut_06469",
+            "jaccard": 0.7971
+          },
+          {
+            "evaluation_record": "mutation::mbpp_752_mut_08236",
+            "nearest_training_record": "mutation::mbpp_529_mut_06469",
+            "jaccard": 0.7971
+          },
+          {
+            "evaluation_record": "mutation::mbpp_752_mut_08237",
+            "nearest_training_record": "mutation::mbpp_529_mut_06469",
+            "jaccard": 0.7971
+          },
+          {
+            "evaluation_record": "mutation::mbpp_752_mut_08238",
+            "nearest_training_record": "mutation::mbpp_529_mut_06469",
+            "jaccard": 0.7971
+          }
+        ]
+      },
+      "specification_text": {
+        "evaluation_records_scored": 781,
+        "max_similarity": 0.7778,
+        "threshold_sweep": {
+          "0.70": {
+            "records": 3,
+            "distinct_evaluation_functions": 1
+          },
+          "0.75": {
+            "records": 3,
+            "distinct_evaluation_functions": 1
+          },
+          "0.80": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          },
+          "0.85": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          },
+          "0.90": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          },
+          "0.95": {
+            "records": 0,
+            "distinct_evaluation_functions": 0
+          }
+        },
+        "near_duplicate_records_at_threshold": 0,
+        "near_duplicate_functions_at_threshold": 0,
+        "closest_pairs": [
+          {
+            "evaluation_record": "mutation::mbpp_85_mut_02462",
+            "nearest_training_record": "mutation::mbpp_379_mut_05023",
+            "jaccard": 0.7778
+          },
+          {
+            "evaluation_record": "mutation::mbpp_85_mut_02463",
+            "nearest_training_record": "mutation::mbpp_379_mut_05023",
+            "jaccard": 0.7778
+          },
+          {
+            "evaluation_record": "mutation::mbpp_85_mut_02464",
+            "nearest_training_record": "mutation::mbpp_379_mut_05023",
+            "jaccard": 0.7778
+          },
+          {
+            "evaluation_record": "mutation::mbpp_837_mut_08898",
+            "nearest_training_record": "mutation::mbpp_504_mut_06150",
+            "jaccard": 0.6429
+          },
+          {
+            "evaluation_record": "mutation::mbpp_837_mut_08899",
+            "nearest_training_record": "mutation::mbpp_504_mut_06150",
+            "jaccard": 0.6429
+          },
+          {
+            "evaluation_record": "mutation::mbpp_837_mut_08900",
+            "nearest_training_record": "mutation::mbpp_504_mut_06150",
+            "jaccard": 0.6429
+          },
+          {
+            "evaluation_record": "mutation::mbpp_837_mut_08901",
+            "nearest_training_record": "mutation::mbpp_504_mut_06150",
+            "jaccard": 0.6429
+          },
+          {
+            "evaluation_record": "mutation::mbpp_837_mut_08902",
+            "nearest_training_record": "mutation::mbpp_504_mut_06150",
+            "jaccard": 0.6429
+          },
+          {
+            "evaluation_record": "mutation::mbpp_837_mut_08903",
+            "nearest_training_record": "mutation::mbpp_504_mut_06150",
+            "jaccard": 0.6429
+          },
+          {
+            "evaluation_record": "mutation::mbpp_837_mut_08904",
+            "nearest_training_record": "mutation::mbpp_504_mut_06150",
+            "jaccard": 0.6429
+          }
+        ]
+      }
+    }
+  },
+  "reading": "a near-duplicate pair means a function in an EVALUATION panel has a near-copy in train. Those targets measure recall, not generalisation, and any kill rate should be reported with them held out as well as included."
+}

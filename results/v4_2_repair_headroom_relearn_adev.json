@@ -1,0 +1,93 @@
+{
+  "schema_version": "oneiros_repair_loop_headroom_v1",
+  "artifact": "local_sft_relearn_v2_seed42/sft_validation_ablation-dev_seed_42.json",
+  "evaluation_split": "ablation_dev",
+  "sealed_final_test_accessed": false,
+  "boundary": "every observation is produced by executing the candidate against the code the model was SHOWN. The reference is never executed and kill status is never observed.",
+  "failed_candidates_observed": 1224,
+  "observations": {
+    "fails_on_code_under_test": 719,
+    "passes_on_code_under_test": 348,
+    "raises_on_code_under_test": 147,
+    "policy_rejected": 10
+  },
+  "repairable_share": 0.412582,
+  "blind_spot_share": 0.587418,
+  "per_benchmark": {
+    "humaneval": {
+      "functions_in_panel": 112,
+      "failed_candidates_observed": 248,
+      "observations": {
+        "passes_on_code_under_test": 219,
+        "fails_on_code_under_test": 19,
+        "policy_rejected": 7,
+        "raises_on_code_under_test": 3
+      },
+      "repairable_candidates": 229,
+      "repairable_share": 0.923387,
+      "blind_spot_candidates": 19,
+      "blind_spot_share": 0.076613,
+      "unkilled_functions_observed": 31,
+      "functions_where_every_candidate_is_blind_spot": 0,
+      "coarse_by_observation": {
+        "fails_on_code_under_test": {
+          "wrong_expected_value": 19
+        },
+        "passes_on_code_under_test": {
+          "boundary_miss": 67,
+          "passes_both": 65,
+          "logical_condition_miss": 64,
+          "off_by_one_miss": 12,
+          "wrong_expected_value": 8,
+          "indexing_miss": 3
+        },
+        "policy_rejected": {
+          "syntax_invalid": 7
+        },
+        "raises_on_code_under_test": {
+          "reference_invalid": 2,
+          "wrong_expected_value": 1
+        }
+      }
+    },
+    "mbpp": {
+      "functions_in_panel": 429,
+      "failed_candidates_observed": 976,
+      "observations": {
+        "fails_on_code_under_test": 700,
+        "raises_on_code_under_test": 144,
+        "passes_on_code_under_test": 129,
+        "policy_rejected": 3
+      },
+      "repairable_candidates": 276,
+      "repairable_share": 0.282787,
+      "blind_spot_candidates": 700,
+      "blind_spot_share": 0.717213,
+      "unkilled_functions_observed": 122,
+      "functions_where_every_candidate_is_blind_spot": 49,
+      "coarse_by_observation": {
+        "fails_on_code_under_test": {
+          "wrong_expected_value": 699,
+          "reference_invalid": 1
+        },
+        "passes_on_code_under_test": {
+          "boundary_miss": 55,
+          "wrong_expected_value": 36,
+          "passes_both": 30,
+          "indexing_miss": 4,
+          "off_by_one_miss": 3,
+          "logical_condition_miss": 1
+        },
+        "policy_rejected": {
+          "syntax_invalid": 3
+        },
+        "raises_on_code_under_test": {
+          "wrong_expected_value": 105,
+          "wrong_target_api": 32,
+          "reference_invalid": 6,
+          "undefined_symbol": 1
+        }
+      }
+    }
+  }
+}

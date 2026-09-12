@@ -1,0 +1,123 @@
+{
+  "schema_version": "oneiros_kill_rate_slices_v1",
+  "artifact": "local_sft_relearn_v2_seed42/sft_validation_standard_seed_42.json",
+  "baseline": "local_base_qwen_val_seed42/base_validation_standard_seed_42.json",
+  "evaluation_split": "val",
+  "sealed_final_test_accessed": false,
+  "functions": 757,
+  "pooled_kill_rate": 0.659181,
+  "min_informative_slice": 20,
+  "slices": {
+    "dataset_name": {
+      "mbpp": {
+        "n": 701,
+        "killed": 446,
+        "kill_rate": 0.636234,
+        "baseline_kill_rate": 0.603424,
+        "delta": 0.03281,
+        "informative": true
+      },
+      "humaneval": {
+        "n": 56,
+        "killed": 53,
+        "kill_rate": 0.946429,
+        "baseline_kill_rate": 0.839286,
+        "delta": 0.107143,
+        "informative": true
+      }
+    },
+    "bug_family": {
+      "boundary": {
+        "n": 339,
+        "killed": 206,
+        "kill_rate": 0.60767,
+        "baseline_kill_rate": 0.584071,
+        "delta": 0.023599,
+        "informative": true
+      },
+      "arithmetic": {
+        "n": 201,
+        "killed": 133,
+        "kill_rate": 0.661692,
+        "baseline_kill_rate": 0.636816,
+        "delta": 0.024876,
+        "informative": true
+      },
+      "comparison": {
+        "n": 87,
+        "killed": 72,
+        "kill_rate": 0.827586,
+        "baseline_kill_rate": 0.747126,
+        "delta": 0.08046,
+        "informative": true
+      },
+      "off_by_one": {
+        "n": 56,
+        "killed": 34,
+        "kill_rate": 0.607143,
+        "baseline_kill_rate": 0.535714,
+        "delta": 0.071429,
+        "informative": true
+      },
+      "index": {
+        "n": 22,
+        "killed": 15,
+        "kill_rate": 0.681818,
+        "baseline_kill_rate": 0.590909,
+        "delta": 0.090909,
+        "informative": true
+      },
+      "logical": {
+        "n": 18,
+        "killed": 14,
+        "kill_rate": 0.777778,
+        "baseline_kill_rate": 0.666667,
+        "delta": 0.111111,
+        "informative": false
+      },
+      "return": {
+        "n": 14,
+        "killed": 11,
+        "kill_rate": 0.785714,
+        "baseline_kill_rate": 0.857143,
+        "delta": -0.071429,
+        "informative": false
+      },
+      "boolean": {
+        "n": 11,
+        "killed": 8,
+        "kill_rate": 0.727273,
+        "baseline_kill_rate": 0.545455,
+        "delta": 0.181818,
+        "informative": false
+      },
+      "negate_removal": {
+        "n": 7,
+        "killed": 4,
+        "kill_rate": 0.571429,
+        "baseline_kill_rate": 0.714286,
+        "delta": -0.142857,
+        "informative": false
+      },
+      "membership": {
+        "n": 2,
+        "killed": 2,
+        "kill_rate": 1.0,
+        "baseline_kill_rate": 0.5,
+        "delta": 0.5,
+        "informative": false
+      }
+    },
+    "complexity_tier": {
+      "unknown": {
+        "n": 757,
+        "killed": 499,
+        "kill_rate": 0.659181,
+        "baseline_kill_rate": 0.620872,
+        "delta": 0.038309,
+        "informative": true
+      }
+    }
+  },
+  "reading": "a delta on a slice below min_informative_slice is marked informative=false. Slices are paired on record id, so a delta compares the same targets rather than two similarly named groups."
+}

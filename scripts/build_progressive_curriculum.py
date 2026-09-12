@@ -40,14 +40,52 @@ from harness.corpus import write_json
 TIERS = ("easy", "moderate", "hard")
 
 #: Requested tier weights per block. Late blocks stay mixed on purpose.
+#:
+#: Block 1 opens at 40/35/25 rather than the original 50/35/15. The earlier
+#: opening was not wrong - it was easy-first and mixed, which is what the
+#: curriculum literature supports - but it spent half the first block on the
+#: tier the model already handles, and the realised mixture is measured below
+#: rather than assumed, so the change can be checked instead of argued.
+#:
+#: Block 4 keeps 35% non-hard. That is the replay anchor, and REPLAY_FLOOR
+#: below makes it a checked property rather than a comment: a final block of a
+#: single tier is how a model forgets what it could already do.
 SCHEDULE = (
-    {"block": 1, "easy": 0.50, "moderate": 0.35, "hard": 0.15},
+    {"block": 1, "easy": 0.40, "moderate": 0.35, "hard": 0.25},
     {"block": 2, "easy": 0.30, "moderate": 0.40, "hard": 0.30},
     {"block": 3, "easy": 0.15, "moderate": 0.35, "hard": 0.50},
     {"block": 4, "easy": 0.10, "moderate": 0.25, "hard": 0.65},
 )
 
+#: No block may fall below this share of non-hard examples. Checked against the
+#: REALISED mixture, because deduplication and the repetition cap can bend a
+#: requested mixture into a different one.
+REPLAY_FLOOR = 0.20
+
 MAX_REPEATS_PER_LINEAGE = 2
+
+
+def assert_schedule_is_progressive_and_mixed(schedule=SCHEDULE) -> None:
+    """A hard-first or single-tier schedule is refused at import time.
+
+    Stated as an executable rule because it is the one curriculum property
+    this project was explicitly instructed to preserve, and a comment does not
+    survive someone editing the weights.
+    """
+    hard = [block["hard"] for block in schedule]
+    if hard != sorted(hard):
+        raise ValueError(
+            "the hard share must be non-decreasing: a hard-first schedule asks "
+            "the model to learn the task and its hardest cases at once")
+    for block in schedule:
+        replay = block["easy"] + block["moderate"]
+        if replay < REPLAY_FLOOR:
+            raise ValueError(
+                f"block {block['block']} keeps only {replay:.0%} non-hard "
+                f"examples, below the {REPLAY_FLOOR:.0%} replay floor")
+
+
+assert_schedule_is_progressive_and_mixed()
 
 
 def _structural_complexity(code: str) -> int:
@@ -249,6 +287,22 @@ def build(view: Path, corpus_dir: Path, base_train: Path) -> dict[str, Any]:
         "never_single_tier_final_block": all(
             sum(1 for share in block["realised_mixture"].values() if share > 0) > 1
             for block in schedule["blocks"]
+        ),
+        "replay_floor": REPLAY_FLOOR,
+        "realised_replay_share_per_block": {
+            str(block["block"]): round(
+                block["realised_mixture"]["easy"]
+                + block["realised_mixture"]["moderate"], 4)
+            for block in schedule["blocks"]
+        },
+        "every_block_meets_replay_floor": all(
+            block["realised_mixture"]["easy"] + block["realised_mixture"]["moderate"]
+            >= REPLAY_FLOOR for block in schedule["blocks"]
+        ),
+        "hard_share_is_non_decreasing": [
+            block["realised_mixture"]["hard"] for block in schedule["blocks"]
+        ] == sorted(
+            block["realised_mixture"]["hard"] for block in schedule["blocks"]
         ),
     }
 

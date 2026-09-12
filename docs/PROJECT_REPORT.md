@@ -157,6 +157,24 @@ arm, 88.5% of the functions it fails already contain such a candidate.
 Upper bound under perfect value prediction: 0.7156 → 0.9674. That is a *bound*,
 not a forecast.
 
+**Correction — those two figures are `ablation_dev`, not locked validation.**
+Found while acting on external review (§11). This section otherwise reads as
+locked-panel, and ablation_dev overstates every arm on this project by ~3.2×.
+Recomputed on the **locked** panel, and reported per benchmark rather than
+pooled (`scripts/build_oracle_vs_input_taxonomy.py`):
+
+| arm | panel | MBPP oracle share | MBPP functions one value from a kill | upper bound |
+|---|---|---|---|---|
+| base | ablation_dev | 0.7560 | — | 0.8951 |
+| relearning | ablation_dev | 0.7619 | — | 0.9674 |
+| base | **locked val** | **0.7074** | 207 / 701 | 0.8983 |
+| relearning | **locked val** | **0.7310** | 216 / 701 | 0.9458 |
+
+The finding survives the correction — it is the *magnitude* that moves, by 3–5
+points. The locked-panel statement is: **216 of 701 MBPP validation functions
+(30.8%) already contain a candidate that probes a distinguishing input and
+fails only on its asserted value.**
+
 ---
 
 ## 6. Findings that changed the plan
@@ -413,3 +431,190 @@ The most defensible contribution here is not the kill rate. It is that
 measurement** — 46% of records contain the answer, and ~45% of kills take it —
 which we found by measuring rather than assuming, and which nothing in the
 surrounding literature appears to report.
+
+---
+
+## 11. Response to external review
+
+A review of §§1–10 proposed a diagnosis (an *oracle-and-distribution* problem
+rather than undertraining), five process criticisms, five next steps, and a
+ranking of alternatives to SFT. Each was checked against the repository rather
+than accepted, because two of them turned out to describe something this
+project already does, and one of them is contradicted by measurement.
+
+The headline conclusion of the review is **correct and is now better
+supported**: the bottleneck is oracle prediction, not training volume.
+
+### 11.1 The five process criticisms, checked
+
+| # | Criticism | Verdict |
+|---|---|---|
+| 1 | All kill failures treated as one learning problem | **Half right — now fixed** |
+| 2 | Optimising a misleading headline | **Already done, extended** |
+| 3 | Several interventions changed at once | **Correct, and already stated (§7)** |
+| 4 | Assuming hard-first prevents forgetting | **Mis-aimed — we never did this** |
+| 5 | Dropout treated as the whole overfitting solution | **Mis-aimed — it was one arm, reported flat** |
+
+**(1) is the substantive one.** §6.4 fixed a classifier that labelled every
+loser `no_kill`; it did not go far enough. `wrong_expected_value` was still one
+bucket holding two opposite failures: a candidate that probes an input where
+reference and mutant *differ* (one correct value from a kill), and one that
+probes an input where they *agree* (no oracle could ever have saved it).
+`harness/oracle_diagnosis.py` now separates them by re-executing the
+candidate's own call, and the split is measured in §5.2 above.
+
+**(4) and (5) are mis-aimed, and saying so matters** because acting on them
+would have replaced working code. The shipped schedule opens at 40% easy / 35%
+moderate / 25% hard and rises to 65% hard, with replay anchors in every block —
+easy-first and mixed, which is what the review recommends. It was already so
+before the review; §7 records "Do not use a hard-first/easy-last sequence" as
+the governing rule. What *was* missing is that the property lived in a comment,
+so it is now an executable guard
+(`assert_schedule_is_progressive_and_mixed`) that refuses a hard-first or
+single-tier schedule at import, with tests. The opening block moved from
+50/35/15 to 40/35/25 and the curriculum was rebuilt (`curriculum_v2`); realised
+mixtures are recorded per block, and every block clears a 20% replay floor.
+Dropout was one arm among eight, reported at −0.0013 and explicitly called out
+in §3 as *not* having reduced training fit.
+
+### 11.2 New measurements taken in response
+
+**Oracle errors and input errors are now separated** (locked validation, §5.2):
+
+| benchmark | arm | oracle share of decided failures |
+|---|---|---|
+| mbpp | base | 0.7074 |
+| mbpp | relearning | 0.7310 |
+| humaneval | base | **0.1556** |
+| humaneval | relearning | 0.2000 |
+
+The two benchmarks fail in opposite ways. MBPP failures are ~73% *wrong value
+on a bug-revealing input*. HumanEval failures are ~84% *wrong input entirely* —
+consistent with §6.1, since a prompt that hands over a worked example makes the
+value easy and leaves only input choice to get wrong. Nothing in this project
+had reported that inversion.
+
+**Cross-split near-duplication does not explain the train/val gap.**
+`scripts/audit_cross_split_near_duplicates.py` compares normalised references
+(AST-unparsed, docstrings stripped) by exact Jaccard over 5-token shingles. The
+sealed split is never read.
+
+| comparison | max similarity | at ≥0.80 | at ≥0.75 |
+|---|---|---|---|
+| train vs **locked val** | **0.7971** | 0 records / 0 functions | 45 records / **3 functions** |
+| train vs ablation_dev | 0.9111 | 14 records / **2 functions** | 28 records / 4 functions |
+
+Exact collisions: 0. Shared `group_id` lineages: 0. Specification
+near-duplicates: 0.
+
+This **refutes** the review's implied contamination route for the locked panel.
+The gap between 0.83 train and 0.66 validation is not memorised duplicates.
+
+> A note on how this was reported. The first run printed "0 near-duplicate
+> pairs in val" — true, and misleading, because the closest pair sat at 0.7971,
+> three thousandths under the cut. The script now reports a threshold sweep, a
+> max, and record counts separately from function counts (45 records were 3
+> functions). This is the same failure mode as the retracted claims in §6: a
+> threshold chosen after seeing the data flatters whoever chose it.
+
+**Verifier-guided repair is measurably NOT the highest-value next step here** —
+the review's strongest recommendation, and the one that does not survive
+contact with the panel. `harness/verifier_guided_repair.py` implements the loop
+under a strict boundary: it may execute the candidate against *the code the
+model was shown*, and may never reveal the reference, the mutation diff,
+sibling mutants, gold tests, or kill status — kill status is computed from the
+hidden reference, so it is evaluator information. `observe()` takes no
+reference parameter, which is the structural reason it cannot leak.
+
+That boundary is also its ceiling, and the ceiling was measured before spending
+any GPU (`scripts/measure_repair_loop_headroom.py`, ablation_dev):
+
+| arm | benchmark | repairable by execution feedback | blind spot |
+|---|---|---|---|
+| base | humaneval | 83.4% | 16.6% |
+| base | **mbpp** | 57.9% | 42.1% |
+| relearning | humaneval | 92.3% | 7.7% |
+| relearning | **mbpp** | **28.3%** | **71.7%** |
+
+The blind spot is the candidate that *already fails* on the shown code — the
+loop's only honest feedback is "keep that input, check your value", and whether
+the value is right requires the reference. On MBPP after relearning, **49 of
+122 unkilled functions have every failed candidate in the blind spot**: the
+loop has nothing to say about 40% of them.
+
+**And this is the sharpest new result in the project:**
+
+> **SFT converts input-selection failures into oracle failures.** The base
+> model's MBPP failures are 57.9% addressable by execution feedback; after
+> relearning SFT only 28.3% are. Training made the model better at finding a
+> bug-revealing input and no better at saying what the function should return
+> instead — the same conclusion §5.1 reached from validity rates, arrived at
+> independently.
+
+A repair loop would therefore help the **untrained base model more than the
+trained one**. That inversion is worth an experiment; it is not worth a
+full-panel run at the priority the review assigned it.
+
+**Gains are not uniform across bug families** (`scripts/slice_kill_rate.py`,
+relearning vs base, locked val, paired on record id):
+
+| bug family | n | kill@8 | delta |
+|---|---|---|---|
+| boundary | 339 | 0.6077 | +0.0236 |
+| arithmetic | 201 | 0.6617 | +0.0249 |
+| comparison | 87 | 0.8276 | +0.0805 |
+| off_by_one | 56 | 0.6071 | +0.0714 |
+| index | 22 | 0.6818 | +0.0909 |
+
+The +0.0383 headline is carried by the smaller families; the two that make up
+71% of the panel move by ~2.4 points. Slices under 20 targets are marked
+uninformative rather than quoted.
+
+**A gap this exposed:** `complexity_tier` is `unknown` for all 757 validation
+records, so the per-complexity slice the review asked for **cannot be produced**
+from current artifacts. Stated rather than substituted.
+
+### 11.3 What was not done, and why
+
+**DPO remains out of scope.** The review ranks it as a method to compare. The
+standing instruction on this project is explicit — *"This scope explicitly
+excludes DPO. Do not prepare, launch, debug, evaluate, or spend GPU time on
+DPO."* That instruction is not overridden by a review recommending it, so no
+DPO work was prepared. Lifting it is a decision for the project owner, and the
+one thing worth recording is that the review's own caveat is correct and now
+has a number behind it: DPO pairs need a *precise* loser reason, and until
+§11.2 the dominant loser reason was a bucket holding two opposite failures.
+Building DPO pairs before that split existed would have trained on noise.
+
+**RLVR was not attempted.** The review places it last and conditions it on a
+frozen verifier. The verifier is not frozen: §6.2's successor protocol is
+declared but legacy results remain the committed baseline.
+
+**No new training run was launched.** Every measurement above is CPU-only and
+runs on retained generations. The single-factor ablations that §7's confound
+calls for — curriculum, deduplication and single-assertion supervision varied
+one at a time, with `--relearning-dataset` present in all of them — are the
+correct next GPU spend, and they are a decision about hours on the RTX 4500,
+not a change to make silently.
+
+### 11.4 Where this leaves the diagnosis
+
+The review's framing is right and is now measured rather than argued:
+
+1. The failure is **oracle prediction**, not training volume. 73.1% of MBPP's
+   dominant failure is a wrong value on an input that already reveals the bug;
+   216 of 701 locked-validation functions are one correct value from a kill.
+2. It is **not** contamination. Locked validation has no near-duplicate of any
+   training function at any threshold the data supports.
+3. It is **not** fixable by execution feedback alone. The one signal available
+   without the reference — does this test fail on the code I was shown — is
+   already satisfied by 72% of the failures.
+4. SFT **actively shifts** failures toward the oracle bucket while leaving the
+   total roughly flat.
+
+What follows from 1–4 is that the next intervention has to put *behavioural
+evidence about the correct implementation* in front of the model, which is
+exactly what MBPP's one-sentence specification withholds (§5.1) and what §6.1
+retired the synthetic route to, on the grounds that it would have manufactured
+the score rather than earned it. That tension is the real open problem, and
+naming it precisely is what this round of work bought.
