@@ -1,0 +1,51 @@
+{
+  "schema_version": "oneiros_oracle_vs_input_taxonomy_v1",
+  "artifact": "local_base_qwen_train_seed42/base_validation_train_smoke900_seed_42.json",
+  "evaluation_split": "train",
+  "sealed_final_test_accessed": false,
+  "refinement": "wrong_expected_value is re-executed on the candidate's OWN call against reference and mutant. Every other coarse category is carried through unrefined so totals reconcile with committed taxonomy figures.",
+  "candidates_refined": 743,
+  "wrong_oracle_on_distinguishing_input": 393,
+  "wrong_input_reference_and_mutant_agree": 350,
+  "call_errors_on_both": 0,
+  "no_parseable_call": 0,
+  "oracle_share_of_decided": 0.528937,
+  "per_benchmark": {
+    "humaneval": {
+      "functions": 893,
+      "wrong_expected_value_candidates": 736,
+      "wrong_oracle_on_distinguishing_input": 393,
+      "wrong_input_reference_and_mutant_agree": 343,
+      "call_errors_on_both": 0,
+      "no_parseable_call": 0,
+      "oracle_share_of_decided": 0.533967,
+      "input_share_of_decided": 0.466033,
+      "functions_with_an_oracle_recoverable_candidate": 144,
+      "other_coarse_categories": {
+        "boundary_miss": 665,
+        "indexing_miss": 30,
+        "logical_condition_miss": 248,
+        "off_by_one_miss": 47,
+        "passes_both": 483,
+        "reference_invalid": 30,
+        "syntax_invalid": 44,
+        "timeout": 1,
+        "undefined_symbol": 4
+      }
+    },
+    "manual_curated_examples": {
+      "functions": 7,
+      "wrong_expected_value_candidates": 7,
+      "wrong_oracle_on_distinguishing_input": 0,
+      "wrong_input_reference_and_mutant_agree": 7,
+      "call_errors_on_both": 0,
+      "no_parseable_call": 0,
+      "oracle_share_of_decided": 0.0,
+      "input_share_of_decided": 1.0,
+      "functions_with_an_oracle_recoverable_candidate": 0,
+      "other_coarse_categories": {
+        "passes_both": 17
+      }
+    }
+  }
+}

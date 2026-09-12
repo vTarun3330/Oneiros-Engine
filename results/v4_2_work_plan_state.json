@@ -392,9 +392,39 @@
       ],
       "finished_utc": "2026-09-12T16:49:44Z",
       "summary": "DECISION: reject the value-free/metamorphic direction for adoption. The ceiling is real (+6.85 broad / +2.71 strict on locked val) but a model given the option produces only +1.59, p=0.366, while losing 4 points of reference validity - and 83% of what it did gain came from literal oracles, not relations. Recorded as measured-and-rejected rather than untried. Also rejects publishing the ablation_dev figure: it overstated by 3.1x."
+    },
+    {
+      "id": "O1-label-train-failures",
+      "title": "Label train-split failures with the refined oracle/input taxonomy",
+      "status": "in_progress",
+      "started_utc": "2026-09-12T19:02:58Z",
+      "progress": [
+        {
+          "at": "2026-09-12T19:04:26Z",
+          "note": "DEFECT FOUND while labelling: the TRAIN panel every train-side number is computed on (base_validation_train_smoke900_seed_42.json) is 893 humaneval + 7 curated and contains ZERO mbpp, while the full train split is 77% mbpp (4650/6052). So the report's 'generalisation gap' compares a humaneval-only train panel against a 92.6%-mbpp val panel. Reported base gap +5.80 pts; like-for-like on humaneval it is -15.96 pts, i.e. the train panel is HARDER, not easier. The 16-21 pt SFT gaps in section 3 are confounded with benchmark composition. Also affects build_memorisation_gap_report.py and the curriculum's base_failed difficulty signal (available for 900 lineages, all humaneval). The full-train GPU run now in flight fixes the input data for all of these."
+        }
+      ],
+      "artifacts": [
+        "results/v4_2_oracle_vs_input_train_s42.json"
+      ]
+    },
+    {
+      "id": "O2-structured-view",
+      "title": "Build the oracle-structured training view, balanced and capped",
+      "status": "pending"
+    },
+    {
+      "id": "O3-train-arm",
+      "title": "Train one arm on the structured view (single factor)",
+      "status": "pending"
+    },
+    {
+      "id": "O4-evaluate",
+      "title": "Evaluate on ablation_dev, then once on locked validation",
+      "status": "pending"
     }
   ],
-  "updated_utc": "2026-09-12T16:49:46Z",
+  "updated_utc": "2026-09-12T19:04:26Z",
   "paused_utc": "2026-09-08T11:50:47Z",
   "resumed_utc": "2026-09-08T12:14:55Z",
   "superseded_note": "B1-B3 are complete and retained. B4 (report) and B5 (publish) are deferred behind P0-P2 rather than cancelled; the report must describe the successor protocol, so writing it before P0 would date it.",
@@ -427,5 +457,5 @@
     "not_invalidated": "Every Oneiros base and SFT evaluation. The audit defects touched provenance, the sealed-final freeze, the Atheris baseline and resume identity - none touched generation or scoring of those runs."
   },
   "execution_note": "Local CPU only. Modal is present in the repo but deliberately unused: no credits are to be spent, and this machine has 32 cores and 137 GB of RAM sitting idle.",
-  "plan": "Oracle-bottleneck follow-up: measure the value-free ceiling, freeze the evaluator, then decide"
+  "plan": "Oracle-structured supervision: label, build, train once, measure once"
 }
