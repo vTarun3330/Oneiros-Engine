@@ -85,7 +85,7 @@ def test_the_gate_never_opens_the_canonical_corpus(refuse_canonical_reads):
     report = gate.run(
         split="train", corpus_dir=CORPUS,
         model_name="Qwen/Qwen2.5-Coder-1.5B-Instruct", revision="main",
-        prompt_budget=1024, completion_budget=1024, sequence_limit=2048,
+        prompt_budget=1024, completion_budget=1024, sequence_limit=3072,
         information_variant="full", instruction_variant="self_contained",
     )
     assert refuse_canonical_reads == [], (
@@ -101,7 +101,7 @@ def test_the_gate_refuses_the_sealed_split_outright():
         gate.run(split="test", corpus_dir=CORPUS,
                  model_name="Qwen/Qwen2.5-Coder-1.5B-Instruct", revision="main",
                  prompt_budget=1024, completion_budget=1024,
-                 sequence_limit=2048, information_variant="full",
+                 sequence_limit=3072, information_variant="full",
                  instruction_variant="self_contained")
 
 

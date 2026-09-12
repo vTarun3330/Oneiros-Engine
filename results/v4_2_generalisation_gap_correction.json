@@ -1,0 +1,52 @@
+{
+  "schema_version": "oneiros_generalisation_gap_correction_v1",
+  "sealed_final_test_accessed": false,
+  "evaluation_protocol": "first_assertion",
+  "protocol_note": "legacy on both sides on purpose: the committed arm table was measured under the first-assertion parser",
+  "train_artifact": "local_base_qwen_train_full_s42/base_validation_train_seed_42.json",
+  "val_artifact": "local_base_qwen_val_seed42/base_validation_standard_seed_42.json",
+  "train_composition": {
+    "manual_curated_examples": 7,
+    "humaneval": 938,
+    "mbpp": 4650
+  },
+  "val_composition": {
+    "humaneval": 56,
+    "mbpp": 701
+  },
+  "whole_panel": {
+    "train_kill_rate": 0.629133,
+    "train_n": 5595,
+    "val_kill_rate": 0.620872,
+    "val_n": 757,
+    "gap_points": 0.83
+  },
+  "like_for_like": {
+    "humaneval": {
+      "train_kill_rate": 0.678038,
+      "train_n": 938,
+      "val_kill_rate": 0.839286,
+      "val_n": 56,
+      "gap_points": -16.12
+    },
+    "mbpp": {
+      "train_kill_rate": 0.619355,
+      "train_n": 4650,
+      "val_kill_rate": 0.603424,
+      "val_n": 701,
+      "gap_points": 1.59
+    }
+  },
+  "superseded_measurement": {
+    "artifact": "local_base_qwen_train_seed42/base_validation_train_smoke900_seed_42.json",
+    "train_kill_rate": 0.678889,
+    "train_n": 900,
+    "composition": {
+      "manual_curated_examples": 7,
+      "humaneval": 893
+    },
+    "reported_gap_points": 5.8,
+    "defect": "the panel contains no mbpp at all, while validation is 92.6% mbpp, so this gap is a difference of mixtures"
+  },
+  "reading": "the whole-panel gap still depends on mixture; the mbpp row is the honest figure for a validation panel that is 92.6% mbpp. This corrects the BASE model only - every SFT arm's train@8 was also measured on the humaneval-only panel, so those gaps remain uncorrected and require a full-train evaluation per arm."
+}

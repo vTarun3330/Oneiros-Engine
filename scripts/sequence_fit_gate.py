@@ -127,6 +127,26 @@ def run(split: str, corpus_dir: Path, model_name: str, revision: str,
                            f"{completion_budget} exceeds sequence limit "
                            f"{sequence_limit}")})
 
+    # THE DECLARED-ALLOCATION RULE, replicated from train_on_dataset.py.
+    #
+    # The first version of this gate only checked MEASURED lengths - the
+    # longest rendered prompt plus the completion budget - and passed a
+    # configuration the pipeline then refused outright: 1024 + 1024 = 2048 is
+    # not less than a 2048-token sequence, whatever the actual prompts do. A
+    # gate that does not predict the pipeline's admission decision is not a
+    # gate, so both rules are checked and the stricter one governs.
+    declared_total = prompt_budget + completion_budget
+    declared_fits = declared_total < sequence_limit
+    if not declared_fits:
+        failures.append({
+            "record_id": "(configuration)",
+            "reason": (f"declared prompt budget {prompt_budget} plus completion "
+                       f"budget {completion_budget} is {declared_total}, which "
+                       f"does not fit the {sequence_limit}-token sequence "
+                       "before chat-template overhead. Raise the sequence "
+                       "budget; do NOT reduce the completion budget."),
+        })
+
     lengths.sort()
 
     def pct(p: float) -> int | None:
@@ -147,6 +167,8 @@ def run(split: str, corpus_dir: Path, model_name: str, revision: str,
         "sequence_limit": sequence_limit,
         "max_rendered_prompt_plus_completion": (
             (lengths[-1] + completion_budget) if lengths else None),
+        "declared_prompt_plus_completion": declared_total,
+        "declared_allocation_fits": declared_fits,
         "records_considered": len(ids),
         "repository_records_held_not_generated_on": held_repository,
         "generation_panel_size": len(lengths) + len(failures),

@@ -230,3 +230,62 @@ def test_a_clean_run_below_the_threshold_verifies(tmp_path):
 def test_the_threshold_is_predeclared_as_a_constant():
     from scripts.verify_successor_generation import MAX_COMPLETION_LIMIT_HIT_RATE
     assert 0 < MAX_COMPLETION_LIMIT_HIT_RATE < 0.10
+
+
+# --------------------------------------------------------------------------
+# The gate must predict the pipeline's admission decision, not merely measure
+# prompt lengths. 1024 + 1024 = 2048 is refused against a 2048-token sequence
+# whatever the actual prompts do, and the first gate passed that config.
+# --------------------------------------------------------------------------
+
+def test_the_gate_replicates_the_pipelines_declared_allocation_rule():
+    import re
+    from pathlib import Path
+    source = (Path(__file__).resolve().parent.parent
+              / "scripts" / "train_on_dataset.py").read_text(encoding="utf-8")
+    # The pipeline refuses when total >= sequence_budget.
+    assert "if total >= sequence_budget:" in source
+
+    gate_source = (Path(__file__).resolve().parent.parent
+                   / "scripts" / "sequence_fit_gate.py").read_text(encoding="utf-8")
+    assert "declared_fits = declared_total < sequence_limit" in gate_source
+
+
+def test_the_corrective_advice_never_suggests_shortening_the_output():
+    from pathlib import Path
+    gate_source = (Path(__file__).resolve().parent.parent
+                   / "scripts" / "sequence_fit_gate.py").read_text(encoding="utf-8")
+    assert "do NOT reduce the completion budget" in gate_source
+
+
+def test_the_queued_command_is_defined_once():
+    """Preflight validated a command the launch did not use: the flag was
+    added to one and not the other."""
+    from pathlib import Path
+    chain = (Path(__file__).resolve().parent.parent / "scripts"
+             / "queue_successor_train_generation_v2.sh").read_text(encoding="utf-8")
+    assert "RUN_ARGS=(" in chain
+    assert 'CMD="python scripts/train_on_dataset.py ${RUN_ARGS[*]}"' in chain
+    assert '"${RUN_ARGS[@]}"' in chain
+    # The settings must appear exactly once in EXECUTABLE content. Comment
+    # lines are stripped first: the comment explaining this very bug mentions
+    # the flag, and counting it would make the test fail on its own docstring.
+    executable = chr(10).join(
+        line for line in chain.splitlines() if not line.lstrip().startswith("#"))
+    for flag in ("--max-sequence-tokens", "--generation-completion-token-limit",
+                 "--candidate-parse-mode", "--retain-raw-output"):
+        assert executable.count(flag) == 1, f"{flag} is written more than once"
+
+
+def test_the_committed_gate_report_uses_an_admissible_allocation():
+    import json
+    from pathlib import Path
+    path = (Path(__file__).resolve().parent.parent / "results"
+            / "v4_2_sequence_fit_gate_train_successor.json")
+    if not path.exists():
+        return
+    report = json.loads(path.read_text(encoding="utf-8"))
+    assert report["declared_allocation_fits"] is True
+    assert report["declared_prompt_plus_completion"] < report["sequence_limit"]
+    assert report["completion_token_limit"] == 1024, "output length was reduced"
+    assert report["gate_passed"] is True
