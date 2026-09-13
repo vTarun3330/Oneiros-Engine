@@ -86,6 +86,23 @@ INELIGIBLE_FOR_ORACLE_LABELS = (
 #: that licenses a build has to fail when there is nothing left to build from.
 MAX_INELIGIBLE_RATE = 0.25
 
+#: Execution statuses that mean the HARNESS failed, not the candidate. A
+#: candidate recorded this way was never actually scored: the worker returned
+#: no parseable response, so "did it kill the mutant" has no answer for it.
+#:
+#: This was missed entirely by the first version of this gate, which checked
+#: that raw outputs existed and were untruncated and never asked whether they
+#: had been executed. It passed an artifact in which 23538 of 44760 candidates
+#: (52.6%) carried worker_error, while the legacy run over the identical panel
+#: carried zero. Replaying a failing function through the executor reproduced
+#: clean results, so the failures were transient rather than intrinsic.
+HARNESS_FAILURE_STATUSES = ("worker_error", "system_exit", "keyboard_interrupt")
+
+#: Above this share, the artifact does not describe the model - it describes a
+#: bad afternoon on the execution host. Set low because the comparison run
+#: achieved exactly zero.
+MAX_HARNESS_FAILURE_RATE = 0.01
+
 
 def _raw_of(outcome: dict[str, Any]) -> str | None:
     for field in RAW_FIELDS:
@@ -125,7 +142,9 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
     at_completion_limit = 0
     unparseable = 0
     missing_hash = 0
-    ineligible_ids: set[tuple[str, int]] = set()
+    ineligible_ids: set[tuple[str, int, int]] = set()
+    harness_failures = 0
+    harness_status_counts: dict[str, int] = {}
     token_limit = int(contract.get("max_new_tokens") or 0)
 
     tokenizer = None
@@ -142,6 +161,13 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
         # function with eighty unusable candidates counted as one.
         for position, outcome in enumerate(result.get("candidate_outcomes") or []):
             candidates += 1
+            status = str(outcome.get("reference_status") or "")
+            if status in HARNESS_FAILURE_STATUSES:
+                harness_failures += 1
+                harness_status_counts[status] = harness_status_counts.get(status, 0) + 1
+                ineligible_ids.add(
+                    (str(result.get("record_id")),
+                     int(outcome.get("rank") or 0), position))
             raw = _raw_of(outcome)
             recorded_hash = outcome.get("raw_output_sha256")
             if raw is None:
@@ -196,6 +222,16 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
             "threshold: the completion budget is too small for this panel and "
             "the dataset build is blocked")
 
+    harness_rate = (harness_failures / candidates) if candidates else 0.0
+    if harness_rate > MAX_HARNESS_FAILURE_RATE:
+        problems.append(
+            f"{harness_failures} of {candidates} candidates "
+            f"({harness_rate:.2%}) carry an execution-harness failure "
+            f"({', '.join(sorted(harness_status_counts))}), above the "
+            f"{MAX_HARNESS_FAILURE_RATE:.0%} ceiling. These candidates were "
+            "never scored, so their kill/no-kill outcome is unknown and they "
+            "cannot be labelled")
+
     ineligible_rate = (len(ineligible_ids) / candidates) if candidates else 0.0
     if ineligible_rate > MAX_INELIGIBLE_RATE:
         problems.append(
@@ -231,6 +267,12 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
             limit_hit_rate > MAX_COMPLETION_LIMIT_HIT_RATE),
         "unparseable_outputs": unparseable,
         "unparseable_share": round(unparseable / candidates, 6) if candidates else None,
+        "execution_harness_failures": harness_failures,
+        "execution_harness_failure_rate": round(harness_rate, 6),
+        "execution_harness_failure_statuses": harness_status_counts,
+        "max_execution_harness_failure_rate": MAX_HARNESS_FAILURE_RATE,
+        "execution_harness_ceiling_exceeded": (
+            harness_rate > MAX_HARNESS_FAILURE_RATE),
         "candidates_ineligible_for_oracle_labels": len(ineligible_ids),
         "ineligible_rate": round(ineligible_rate, 6),
         "max_ineligible_rate": MAX_INELIGIBLE_RATE,

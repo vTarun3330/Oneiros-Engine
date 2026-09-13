@@ -344,7 +344,13 @@ def test_the_ineligible_ceiling_is_predeclared():
     assert 0 < MAX_INELIGIBLE_RATE < 1
 
 
-def test_the_committed_verification_passed_on_real_numbers():
+def test_the_committed_verification_receipt_is_internally_coherent():
+    """Not "it passed" - a receipt must agree with its own numbers.
+
+    The first verifier reported verified=true while claiming 97.6% of outputs
+    were unparseable. Pinning a hardcoded verdict would have let that stand;
+    pinning coherence would not.
+    """
     import json
     from pathlib import Path
     path = (Path(__file__).resolve().parent.parent / "results"
@@ -352,14 +358,21 @@ def test_the_committed_verification_passed_on_real_numbers():
     if not path.exists():
         return
     report = json.loads(path.read_text(encoding="utf-8"))
-    assert report["verified"] is True
+
+    # Facts that hold regardless of the verdict.
     assert report["candidates"] == report["candidates_with_raw_output"]
     assert report["raw_output_hash_mismatches"] == 0
     assert report["prompt_budget_failed_functions"] == 0
-    assert report["completion_limit_threshold_exceeded"] is False
-    assert report["ineligible_ceiling_exceeded"] is False
     # The fence bug would put this near 0.98.
     assert report["unparseable_share"] < 0.01
+
+    # The verdict must follow from the ceilings, in both directions.
+    exceeded = (report["completion_limit_threshold_exceeded"]
+                or report["ineligible_ceiling_exceeded"]
+                or report["execution_harness_ceiling_exceeded"])
+    assert report["verified"] is (not exceeded and not report["problems"])
+    if report["problems"]:
+        assert report["verified"] is False
 
 
 def test_ineligible_candidates_are_counted_individually(tmp_path):
@@ -370,3 +383,49 @@ def test_ineligible_candidates_are_counted_individually(tmp_path):
     path = _artifact(tmp_path, outcomes=outcomes)
     report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
     assert report["candidates_ineligible_for_oracle_labels"] == 5
+
+
+# --------------------------------------------------------------------------
+# Execution validity. The first gate checked that raw outputs existed and were
+# untruncated, and never asked whether they had been EXECUTED. It passed an
+# artifact where 23538 of 44760 candidates carried worker_error while the
+# legacy run over the identical panel carried zero.
+# --------------------------------------------------------------------------
+
+def test_harness_failures_block_the_build(tmp_path):
+    outcomes = [dict(_raw(f"assert f({i}) == {i}"), reference_status="worker_error")
+                for i in range(60)]
+    outcomes += [dict(_raw(f"assert g({i}) == {i}"), reference_status="pass")
+                 for i in range(40)]
+    path = _artifact(tmp_path, outcomes=outcomes)
+    report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+    assert report["execution_harness_failures"] == 60
+    assert report["execution_harness_ceiling_exceeded"] is True
+    assert report["verified"] is False
+    assert any("never scored" in p for p in report["problems"])
+
+
+def test_a_never_scored_candidate_cannot_supply_a_label(tmp_path):
+    """Its kill/no-kill outcome has no answer, so it is not supervision."""
+    outcomes = [dict(_raw("assert f(1) == 1"), reference_status="worker_error")]
+    outcomes += [dict(_raw(f"assert f({i}) == {i}"), reference_status="pass")
+                 for i in range(99)]
+    path = _artifact(tmp_path, outcomes=outcomes)
+    report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+    assert report["candidates_ineligible_for_oracle_labels"] >= 1
+
+
+def test_a_clean_run_has_no_harness_failures(tmp_path):
+    outcomes = [dict(_raw(f"assert f({i}) == {i}"), reference_status="pass")
+                for i in range(50)]
+    path = _artifact(tmp_path, outcomes=outcomes)
+    report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+    assert report["execution_harness_failures"] == 0
+    assert report["verified"] is True, report["problems"]
+
+
+def test_the_harness_failure_ceiling_is_predeclared_and_strict():
+    from scripts.verify_successor_generation import (
+        HARNESS_FAILURE_STATUSES, MAX_HARNESS_FAILURE_RATE)
+    assert "worker_error" in HARNESS_FAILURE_STATUSES
+    assert 0 < MAX_HARNESS_FAILURE_RATE <= 0.02
