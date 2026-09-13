@@ -1,0 +1,33 @@
+{
+  "schema_version": "oneiros_rescore_probe_result_v1",
+  "artifact": "local_base_qwen_train_successor_s42/base_validation_train_parse-whole-output_completion1024_seed_42.json",
+  "selection_hash": "da5e8a9c2efb6b28c8fb5b587f60767049b5250b580345a94b077d3eea462ad3",
+  "sealed_final_test_accessed": false,
+  "record_source": "hash-verified development view train shard",
+  "canonical_records_json_opened": false,
+  "workers": 8,
+  "elapsed_seconds": 19.6,
+  "affected_probe_size": 600,
+  "affected_repaired": 600,
+  "affected_still_unscored": 0,
+  "post_retry_harness_failure_rate": 0.0,
+  "max_post_retry_harness_failure_rate": 0.01,
+  "affected_status_distribution": {
+    "pass": 296,
+    "assertion_error": 289,
+    "error": 15
+  },
+  "control_probe_size": 400,
+  "control_checked": 400,
+  "control_disagreements": 0,
+  "control_disagreement_rate": 0.0,
+  "max_control_disagreement_rate": 0.01,
+  "control_disagreement_examples": [],
+  "retried_statuses": [
+    "worker_error",
+    "system_exit",
+    "keyboard_interrupt"
+  ],
+  "gate_passed": true,
+  "evidence": "affected candidates re-scoring cleanly while controls reproduce their original outcomes supports transient executor failure. Control disagreement would indicate non-determinism instead, and the repair would be laundering noise."
+}
