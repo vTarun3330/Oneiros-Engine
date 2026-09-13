@@ -90,6 +90,29 @@ class DatasetConfig:
     ])
 
 
+#: Immutable Hugging Face snapshot commits, by model name.
+#:
+#: ``main`` is a moving branch pointer, not an identity. A run recording
+#: ``revision: main`` records nothing: the same string resolves to different
+#: weights and a different tokenizer once upstream pushes, and two arms of a
+#: controlled comparison separated by such a push are not comparable even
+#: though both receipts say "main".
+#:
+#: Every entry here was confirmed from two independent sources - the local
+#: Hugging Face cache's ``refs/main`` and the Hub's own model metadata.
+IMMUTABLE_MODEL_REVISIONS = {
+    "microsoft/Phi-3-mini-4k-instruct":
+        "f39ac1d28e925b323eae81227eaba4464caced4e",
+    "Qwen/Qwen2.5-Coder-1.5B-Instruct":
+        "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+}
+
+
+def immutable_revision_for(model_name: str) -> str | None:
+    """The pinned snapshot for a known model, or None if it has none."""
+    return IMMUTABLE_MODEL_REVISIONS.get(model_name)
+
+
 @dataclass
 class ModelConfig:
     """Configuration for the generative model."""

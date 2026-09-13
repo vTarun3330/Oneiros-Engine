@@ -18,9 +18,13 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from config import CANONICAL_CORPUS_VERSION, model_config, training_config
+from config import (
+    CANONICAL_CORPUS_VERSION, immutable_revision_for, model_config,
+    training_config,
+)
 from harness.candidate_policy import validate_function_assertion
 from harness.multi_mutant_examples import verified_completions_by_record
+from harness.o1_sidecar import append_o1_examples, load_o1_sidecar
 from harness.corpus import sha256_file, valid_corpus_version, verify_corpus
 from harness.corpus_view import (
     load_complexity_index,
@@ -145,15 +149,31 @@ RETAIN_RAW_OUTPUT = False
 MULTI_MUTANT_COMPLETIONS: Dict[str, str] = {}
 MULTI_MUTANT_DATASET_PATH = None
 BALANCED_SFT_DATASET_PATH = None
+#: The O1 oracle-supervision sidecar. Its own mechanism on purpose: the
+#: relearning path discards the correction text and the multi-mutant path
+#: only reaches records the bounded selection already chose.
+O1_SIDECAR_PATH = None
 
 
 def resolved_base_model_identity() -> Tuple[str, str]:
-    """Return the (name, revision) actually used to load and tokenize."""
+    """Return the (name, revision) actually used to load and tokenize.
+
+    A model named here but resolved to ``main`` records no identity at all:
+    the branch pointer moves, and two arms of a controlled comparison
+    separated by an upstream push differ in their weights while both
+    receipts claim the same revision. Any model with a pinned snapshot
+    therefore resolves to that snapshot, whichever way it was named.
+    """
     name = BASE_MODEL_NAME_OVERRIDE or model_config.model_name
+    pinned = immutable_revision_for(name)
     if BASE_MODEL_REVISION_OVERRIDE is not None:
         revision = BASE_MODEL_REVISION_OVERRIDE
+        if revision == "main" and pinned:
+            revision = pinned
     elif name == model_config.model_name:
         revision = model_config.model_revision
+    elif pinned:
+        revision = pinned
     else:
         revision = "main"
     return name, revision
@@ -163,10 +183,13 @@ def resolved_selection_tokenizer_identity() -> Tuple[str, str]:
     """Return the (name, revision) that decides supervision eligibility."""
     if SFT_SELECTION_TOKENIZER_NAME_OVERRIDE:
         name = SFT_SELECTION_TOKENIZER_NAME_OVERRIDE
-        revision = (
-            model_config.model_revision
-            if name == model_config.model_name else "main"
-        )
+        if name == model_config.model_name:
+            revision = model_config.model_revision
+        else:
+            # The tokenizer decides which records are eligible for
+            # supervision at all, so an unpinned one silently changes the
+            # dataset between runs. It gets the same pinning as the model.
+            revision = immutable_revision_for(name) or "main"
         return name, revision
     return resolved_base_model_identity()
 # Real repository records are rare in V2/V3.  Bound their deterministic
@@ -3526,6 +3549,55 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                         f"{sft_hyperparameters['real_target_fraction']:.2%} target. "
                         "The run will report the true share and will not inflate repeats."
                     )
+                # The O1 sidecar is appended LAST, after every baseline
+                # statistic above has been computed, so arm A's numbers
+                # describe arm A whether or not a sidecar is present and the
+                # sidecar rows are the only difference between the arms.
+                if O1_SIDECAR_PATH:
+                    o1_rows, o1_manifest = load_o1_sidecar(O1_SIDECAR_PATH)
+                    o1_pairs_by_id = {pair["id"]: pair for pair in train_pairs}
+
+                    def _o1_fits(pair, prompt, completion):
+                        limit = (
+                            sft_hyperparameters[
+                                "repository_generation_completion_token_limit"]
+                            if is_repository_execution_mode(
+                                pair.get("execution_mode",
+                                         FUNCTION_EXECUTION_MODE))
+                            else sft_hyperparameters[
+                                "generation_completion_token_limit"]
+                        )
+                        tokens = len(sft_preflight_tokenizer(
+                            completion.strip() + sft_preflight_tokenizer.eos_token,
+                            add_special_tokens=False)["input_ids"])
+                        return tokens <= limit
+
+                    baseline_only_examples = len(sft_data)
+                    sft_data, o1_report = append_o1_examples(
+                        sft_data, o1_rows, o1_pairs_by_id,
+                        make_data_point=make_sft_data_point,
+                        build_prompt=build_pair_prompt,
+                        completion_fits=_o1_fits,
+                    )
+                    o1_report["sidecar"] = str(O1_SIDECAR_PATH).replace("\\", "/")
+                    o1_report["sidecar_sha256"] = o1_manifest.get("sidecar_sha256")
+                    o1_report["source_positives_sha256"] = o1_manifest.get(
+                        "source_positives_sha256")
+                    o1_report["baseline_examples_before_sidecar"] = (
+                        baseline_only_examples)
+                    o1_report["achieved_share"] = round(
+                        o1_report["appended_examples"] / len(sft_data), 6
+                    ) if sft_data else 0.0
+                    sft_sampling_stats["o1_sidecar"] = o1_report
+                    print(
+                        f"[O1 SIDECAR] Appended {o1_report['appended_examples']:,} "
+                        f"verified completions to {baseline_only_examples:,} "
+                        f"baseline examples "
+                        f"({o1_report['achieved_share']:.2%} of the mixture). "
+                        "Baseline examples unchanged.",
+                        flush=True,
+                    )
+
                 random.shuffle(sft_data)
                 requested_sft_examples = len(sft_data)
                 if not requested_sft_examples:
@@ -4490,6 +4562,19 @@ if __name__ == "__main__":
         help="How many times each corrected record appears (default 3).",
     )
     parser.add_argument(
+        "--o1-sidecar", default=None,
+        help=(
+            "Directory holding train.sidecar.json and manifest.json from "
+            "scripts/emit_o1_sidecar.py. Its verified completions are APPENDED "
+            "as additional SFT examples, verbatim; no baseline example is "
+            "changed, reordered or substituted, and each row appears exactly "
+            "once. Do not use --relearning-dataset or --multi-mutant-dataset "
+            "for O1: the first discards the correction text and trains on the "
+            "corpus golden instead, and the second only reaches records the "
+            "bounded selection already chose."
+        ),
+    )
+    parser.add_argument(
         "--allow-test-function-candidates",
         action="store_true",
         help=(
@@ -4644,6 +4729,7 @@ if __name__ == "__main__":
         )
     RELEARNING_DATASET_PATH = args.relearning_dataset
     RELEARNING_REPEATS = args.relearning_repeats
+    O1_SIDECAR_PATH = args.o1_sidecar
     ALLOW_TEST_FUNCTION_CANDIDATES = args.allow_test_function_candidates
     LORA_DROPOUT_OVERRIDE = args.lora_dropout
     WEIGHT_DECAY_OVERRIDE = args.weight_decay

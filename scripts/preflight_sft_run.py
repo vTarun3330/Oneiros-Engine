@@ -24,7 +24,10 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from config import CANONICAL_CORPUS_VERSION, model_config, training_config
+from config import (
+    CANONICAL_CORPUS_VERSION, immutable_revision_for, model_config,
+    training_config,
+)
 from engine.prompt_budget import (
     PROMPT_COMPACTION_STRATEGY,
     PromptBudgetError,
@@ -56,6 +59,7 @@ from scripts.train_on_dataset import (
     is_repository_execution_mode,
     load_phase3_pairs,
     make_sft_data_point as _make_data_point,
+    resolved_selection_tokenizer_identity,
     select_bounded_train_pairs,
     supervision_exclusion_summary,
     summarize_train_pair_selection,
@@ -147,6 +151,26 @@ def audit_evaluation_panel_prompts(
         "failure_sources": _counts(item["source_name"] for item in failures),
         "examples": failures[:10],
     }
+
+
+def tokenizer_files_sha256(model_name: str, revision: str) -> dict[str, Any]:
+    """Hash the tokenizer files actually on disk for this exact snapshot.
+
+    Recording the revision string alone proves nothing if the cache holds
+    something else. These are the bytes that decide which records are
+    eligible for supervision, so they are hashed rather than described.
+    """
+    from huggingface_hub import try_to_load_from_cache
+    files: dict[str, str] = {}
+    for name in ("tokenizer.json", "tokenizer_config.json", "vocab.json",
+                 "merges.txt"):
+        path = try_to_load_from_cache(model_name, name, revision=revision)
+        if isinstance(path, str) and Path(path).exists():
+            files[name] = hashlib.sha256(Path(path).read_bytes()).hexdigest()
+    combined = hashlib.sha256(
+        json.dumps(files, sort_keys=True).encode("utf-8")).hexdigest()
+    return {"files": files, "combined_sha256": combined,
+            "files_found": len(files)}
 
 
 def build_preflight(
@@ -250,15 +274,26 @@ def build_preflight(
     from transformers import AutoTokenizer
 
     resolved_base_model_name = base_model_name or model_config.model_name
+    _pinned = immutable_revision_for(resolved_base_model_name)
     resolved_base_model_revision = (
         base_model_revision
         if base_model_revision is not None
         else (
             model_config.model_revision
             if resolved_base_model_name == model_config.model_name
-            else "main"
+            else (_pinned or "main")
         )
     )
+    # "main" is a moving pointer, not an identity. A receipt recording it
+    # describes whatever upstream happened to have pushed that day, and two
+    # arms separated by a push are not comparable though both say "main".
+    if resolved_base_model_revision == "main" and _pinned:
+        resolved_base_model_revision = _pinned
+    if resolved_base_model_revision == "main":
+        raise RuntimeError(
+            f"{resolved_base_model_name} has no immutable snapshot revision; "
+            "add one to config.IMMUTABLE_MODEL_REVISIONS rather than "
+            "recording a branch pointer as the model identity")
     tokenizer = AutoTokenizer.from_pretrained(
         resolved_base_model_name,
         revision=resolved_base_model_revision,
@@ -269,6 +304,21 @@ def build_preflight(
         tokenizer.pad_token = tokenizer.eos_token
     if not tokenizer.eos_token:
         raise RuntimeError("Tokenizer has no EOS token")
+    trainer.BASE_MODEL_NAME_OVERRIDE = resolved_base_model_name
+    trainer.BASE_MODEL_REVISION_OVERRIDE = resolved_base_model_revision
+    selection_tokenizer_name, selection_tokenizer_revision = (
+        resolved_selection_tokenizer_identity()
+    )
+    if selection_tokenizer_revision == "main":
+        raise RuntimeError(
+            "the selection tokenizer resolved to the moving 'main' pointer; "
+            "it decides supervision eligibility, so it must be pinned")
+    tokenizer_hashes = tokenizer_files_sha256(
+        resolved_base_model_name, resolved_base_model_revision)
+    if not tokenizer_hashes["files_found"]:
+        raise RuntimeError(
+            f"no tokenizer files found in cache for "
+            f"{resolved_base_model_name}@{resolved_base_model_revision}")
 
     source_pairs = load_phase3_pairs(corpus_dir, "train")
     if execution_mode:
@@ -757,6 +807,17 @@ def build_preflight(
         "tokenization": {
             "model_name": resolved_base_model_name,
             "model_revision": resolved_base_model_revision,
+            "model_revision_is_immutable": (
+                resolved_base_model_revision != "main"
+                and len(resolved_base_model_revision) == 40
+            ),
+            "selection_tokenizer_name": selection_tokenizer_name,
+            "selection_tokenizer_revision": selection_tokenizer_revision,
+            "selection_tokenizer_matches_base_model": (
+                selection_tokenizer_name == resolved_base_model_name
+                and selection_tokenizer_revision == resolved_base_model_revision
+            ),
+            "tokenizer_files_sha256": tokenizer_hashes,
             "prompt_information_variant": prompt_information_variant,
             "output_instruction_variant": output_instruction_variant,
             "prompt_token_limit": prompt_token_limit,

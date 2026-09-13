@@ -1,5 +1,6 @@
 from pathlib import Path
 
+from config import immutable_revision_for
 from scripts.preflight_sft_run import preflight_gates_pass
 from scripts.train_on_dataset import supervision_exclusion_summary
 
@@ -92,7 +93,12 @@ def test_supervision_eligibility_uses_the_run_s_own_tokenizer_by_default():
         trainer.SFT_SELECTION_TOKENIZER_NAME_OVERRIDE = None
         name, revision = trainer.resolved_selection_tokenizer_identity()
         assert name == "Qwen/Qwen2.5-Coder-1.5B-Instruct"
-        assert revision == "main"
+        # Was "main" until the revision pinning. The tokenizer that decides
+        # eligibility cannot be a moving branch pointer: upstream pushes and
+        # the selected records change underneath a comparison whose two
+        # receipts both still say "main".
+        assert revision == immutable_revision_for(name)
+        assert len(revision) == 40 and revision != "main"
 
         # A controlled comparison may pin both arms to one tokenizer, and that
         # pinning has to show up in the training scope, not be silent.

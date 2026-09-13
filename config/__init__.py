@@ -8,6 +8,8 @@ from .settings import (
     MBPP_DIR,
     BUGSINPY_DIR,
     CANONICAL_CORPUS_VERSION,
+    IMMUTABLE_MODEL_REVISIONS,
+    immutable_revision_for,
     dataset_config,
     model_config,
     memory_config,
