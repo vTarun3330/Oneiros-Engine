@@ -1,4 +1,20 @@
-"""Supervision that makes the ORACLE explicit, because the oracle is what fails.
+"""RETIRED - DO NOT RUN. Replaced by scripts/build_oracle_dataset.py.
+
+Kept for the record, renamed so it cannot be invoked by its old name. Four
+independently disqualifying defects, three of them in its core mechanisms:
+
+1. opened the canonical records.json (lines 157, 224), which materialises all
+   four splits including the sealed final test, behind a manifest asserting
+   sealed_final_test_accessed=false;
+2. balanced classes by DUPLICATING rows (MAX_REPEATS 3x / 2x);
+3. assigned one MAJORITY label per function (most_common(1)), discarding the
+   candidate-level detail the dataset exists to carry;
+4. structure() returned None unless the completion held exactly one assertion,
+   silently dropping every multi-assertion candidate - precisely the
+   whole-output information the successor protocol was run to capture.
+
+The original docstring follows.
+Supervision that makes the ORACLE explicit, because the oracle is what fails.
 
 Measured: on mbpp, ~73% of the dominant failure is a wrong expected VALUE on an
 input that already reveals the bug. Every training view so far has shown the

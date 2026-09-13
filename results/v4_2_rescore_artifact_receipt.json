@@ -1,0 +1,64 @@
+{
+  "schema_version": "oneiros_rescore_artifact_receipt_v1",
+  "source_commit": "4ce25c48eb8c9039049e7ab0011178cd83253931",
+  "branch": "experiment/research-eval-ablations",
+  "sealed_final_test_accessed": false,
+  "evaluation_split": "train",
+  "files": [
+    {
+      "role": "original_generation_artifact_immutable",
+      "path": "results/local_base_qwen_train_successor_s42/base_validation_train_parse-whole-output_completion1024_seed_42.json",
+      "sha256": "142326ce9bd4b1f7752b204b7dcc852ef4716494d1d812d5d5ce19d3030d3181",
+      "bytes": 38019234,
+      "megabytes": 36.26,
+      "git_ignored": true,
+      "git_ignore_rule": ".gitignore:64:results/**",
+      "tracked_in_git": false
+    },
+    {
+      "role": "derived_rescored_artifact",
+      "path": "results/local_base_qwen_train_successor_s42_rescored/base_validation_train_parse-whole-output_completion1024_seed_42.rescored.json",
+      "sha256": "dae750f1d0061f4dba0f8b8e727285c597a81598c1b88b6ab676766cebf32631",
+      "bytes": 37286330,
+      "megabytes": 35.56,
+      "git_ignored": true,
+      "git_ignore_rule": ".gitignore:64:results/**",
+      "tracked_in_git": false
+    },
+    {
+      "role": "rescore_overlay_all_attempts",
+      "path": "results/local_base_qwen_train_successor_s42/RESCORE_OVERLAY.json",
+      "sha256": "b7d1534ed51b3d7a57ee90d5bfc2935bc9038290e85992588eafe10004da2202",
+      "bytes": 20959830,
+      "megabytes": 19.99,
+      "git_ignored": true,
+      "git_ignore_rule": ".gitignore:64:results/**",
+      "tracked_in_git": false
+    }
+  ],
+  "parent_chain_verified": true,
+  "parent_chain_note": "the derived artifact's derived_from_sha256 matches the original file's actual SHA-256, checked here rather than trusted",
+  "execution_and_evaluator_hashes": {
+    "evaluator_source_sha256": "649e96fab00af35e172cdd0590f6b6c1241d03aa6aef71ede4fb2e731fad27c2",
+    "candidate_policy_source_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+    "safe_execution_source_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+    "prompt_builder_source_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+    "rescore_tool_sha256": "7bb2e8c9c59756981b7e3a697395dce9eba486a3d8739e01cfffc6a63219c52e",
+    "verifier_sha256": "7a04c6454a37fe0d1634d007ad958d8fee128f657b1f0a50722be1d930c8ab51"
+  },
+  "run_contract_sha256": "aad77b6709794421d8ed43b9434e4db2f6c876504fa5d868662ae0bc6d16d6a7",
+  "retention": {
+    "machine": "DESKTOP-A1EGVDN",
+    "directory": "C:/Users/Student2/Desktop/Capstone/oneiros/results",
+    "artifacts_are_git_ignored": true,
+    "git_ignored_paths": [
+      "results/local_base_qwen_train_successor_s42/base_validation_train_parse-whole-output_completion1024_seed_42.json",
+      "results/local_base_qwen_train_successor_s42_rescored/base_validation_train_parse-whole-output_completion1024_seed_42.rescored.json",
+      "results/local_base_qwen_train_successor_s42/RESCORE_OVERLAY.json"
+    ],
+    "git_alone_does_not_synchronise_these": true,
+    "consequence": "a clone or git pull on the laptop yields a checkout that looks complete and contains none of these files. Every script that consumes them will fail with a missing path, or - worse - a caller may silently fall back to a smaller artifact that does exist. They must be copied by some other means, and their SHA-256 above checked after the copy."
+  },
+  "protocol_note": "the successor kill@8 carried by the derived artifact is a TRAIN-ONLY whole_output diagnostic. It is not a validation or generalisation result, and it is not comparable with any legacy first_assertion number.",
+  "train_only_successor_kill_at_8": 0.632887
+}

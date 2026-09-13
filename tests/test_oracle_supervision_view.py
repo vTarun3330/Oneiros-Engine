@@ -1,4 +1,12 @@
-"""Structured supervision must stay legal, stay verified, and invent nothing.
+"""Tests for the RETIRED builder, kept running against the retired module.
+
+Its subject was replaced by scripts/build_oracle_dataset.py after four
+disqualifying defects. These tests are not deleted - the standing rule on this
+project is not to remove tests - and they still pass, which is worth knowing:
+the retired builder did the narrow thing it was tested for correctly. The
+defects were in what it was never tested for.
+
+Original docstring: structured supervision must stay legal, stay verified, and invent nothing.
 
 The risk in restating the expected value is that it becomes a place to write
 something that was never checked. So every test here is about provenance: the
@@ -11,7 +19,7 @@ from __future__ import annotations
 import pytest
 
 from harness.candidate_policy import count_assertions, validate_generated_test
-from scripts.build_oracle_supervision_view import (
+from scripts.RETIRED_build_oracle_supervision_view import (
     LABELS, MAX_REPEATS, MIN_CLEAN_SHARE, _verify, structure,
 )
 
