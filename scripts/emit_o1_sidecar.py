@@ -36,7 +36,7 @@ import json
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
@@ -102,7 +102,9 @@ def proportional_subsample(rows: list[dict[str, Any]], keep: int, key: str
 
 
 def build(dataset_dir: Path, corpus_dir: Path, baseline_pairs: int,
-          ratio: float) -> dict[str, Any]:
+          ratio: float,
+          completion_tokens: Callable[[str], int] | None = None,
+          max_completion_tokens: int | None = None) -> dict[str, Any]:
     manifest = json.loads((dataset_dir / "manifest.json").read_text(encoding="utf-8"))
     positives_path = dataset_dir / "positives.json"
 
@@ -142,9 +144,24 @@ def build(dataset_dir: Path, corpus_dir: Path, baseline_pairs: int,
             f"{len(outside)} sidecar records are outside the train shard, "
             f"first: {outside[:3]}")
 
+    # Token budget FIRST, then subsample. Filtering afterwards would make the
+    # achieved ratio depend on whether the draw happened to include an
+    # over-budget row, so the same requested ratio could yield a different
+    # count on a different day. Nothing is truncated to fit: a truncated
+    # assertion is not the assertion that was verified.
+    eligible = rows
+    over_budget: list[dict[str, Any]] = []
+    if completion_tokens is not None and max_completion_tokens:
+        measured = [(row, completion_tokens(row["sft_target"])) for row in rows]
+        over_budget = [{"record_id": row["record_id"], "tokens": count}
+                       for row, count in measured
+                       if count > max_completion_tokens]
+        eligible = [row for row, count in measured
+                    if count <= max_completion_tokens]
+
     # keep / (baseline + keep) = ratio
-    keep = min(len(rows), int(round(ratio * baseline_pairs / (1 - ratio))))
-    selected = proportional_subsample(rows, keep, "source_dataset")
+    keep = min(len(eligible), int(round(ratio * baseline_pairs / (1 - ratio))))
+    selected = proportional_subsample(eligible, keep, "source_dataset")
 
     by_record: dict[str, list[str]] = defaultdict(list)
     for row in selected:
@@ -185,6 +202,12 @@ def build(dataset_dir: Path, corpus_dir: Path, baseline_pairs: int,
             "canonical_records_json_opened": False,
             "all_records_in_train_shard": not outside,
             "available_positives": len(rows),
+            "token_budget_eligible_positives": len(eligible),
+            "max_completion_tokens": max_completion_tokens,
+            "dropped_over_token_budget": len(over_budget),
+            "dropped_over_token_budget_examples": over_budget[:5],
+            "completions_truncated": 0,
+            "unused_verified_positives": len(rows) - len(selected),
             "requested_sidecar_share": ratio,
             "baseline_pairs": baseline_pairs,
             "sidecar_rows": len(sidecar),
@@ -227,10 +250,36 @@ def main() -> int:
     parser.add_argument("--ratio", type=float, default=0.20,
                         help="sidecar share of the combined arm-B mixture")
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--max-completion-tokens", type=int, default=128,
+                        help="the arm's function-mode completion budget")
+    parser.add_argument("--model-name",
+                        default="Qwen/Qwen2.5-Coder-1.5B-Instruct")
+    parser.add_argument("--model-revision", default=None,
+                        help="defaults to the pinned immutable snapshot")
     arguments = parser.parse_args()
 
+    from config import immutable_revision_for
+    revision = arguments.model_revision or immutable_revision_for(
+        arguments.model_name)
+    if not revision or revision == "main":
+        print(f"REFUSED: {arguments.model_name} has no immutable revision; a "
+              "branch pointer cannot define which tokens were counted.")
+        return 1
+    from transformers import AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained(
+        arguments.model_name, revision=revision, trust_remote_code=True,
+        local_files_only=True)
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+
+    def _tokens(text: str) -> int:
+        return len(tokenizer(text.strip() + tokenizer.eos_token,
+                             add_special_tokens=False)["input_ids"])
+
     result = build(arguments.dataset_dir, arguments.corpus,
-                   arguments.baseline_pairs, arguments.ratio)
+                   arguments.baseline_pairs, arguments.ratio,
+                   completion_tokens=_tokens,
+                   max_completion_tokens=arguments.max_completion_tokens)
     if result["problems"]:
         print("REFUSED: the O1 sidecar cannot be emitted.")
         for problem in result["problems"]:
@@ -242,6 +291,8 @@ def main() -> int:
     sidecar_path.write_text(
         json.dumps(result["sidecar"], indent=2) + "\n", encoding="utf-8")
     report = dict(result["report"])
+    report["tokenizer_model_name"] = arguments.model_name
+    report["tokenizer_revision"] = revision
     report["sidecar_sha256"] = _sha_file(sidecar_path)
     (arguments.output_dir / "manifest.json").write_text(
         json.dumps(report, indent=2) + "\n", encoding="utf-8")

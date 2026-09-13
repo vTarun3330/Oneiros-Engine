@@ -232,3 +232,67 @@ def test_the_held_constant_list_covers_what_the_brief_named():
     names = {name for name, _ in HELD_CONSTANT}
     assert {"model_name", "learning_rate", "epochs", "prompt_token_limit",
             "completion_token_limit", "evaluation_split"} <= names
+
+
+# ------------------------------------------------- token budget, before draw
+
+def test_an_over_budget_row_is_dropped_before_the_subsample(tmp_path, train_shard):
+    """Filtering after the draw would make the ratio depend on the draw.
+
+    One long row in a 1,316-row supply either lands in the sample or does not.
+    Dropped afterwards it yields 1,304 rows on some days and 1,305 on others,
+    from the same requested ratio.
+    """
+    rows = [_row(i) for i in range(400)]
+    rows[7]["sft_target"] = "assert f(7) == " + ("9" * 400)
+    directory = _dataset(tmp_path, rows)
+    long_target = rows[7]["sft_target"]
+    result = build(directory, tmp_path, baseline_pairs=800, ratio=0.20,
+                   completion_tokens=lambda text: len(text),
+                   max_completion_tokens=100)
+    report = result["report"]
+    assert report["dropped_over_token_budget"] == 1
+    assert report["token_budget_eligible_positives"] == 399
+    assert report["sidecar_rows"] == 200
+    assert long_target not in {r["completion"] for r in result["sidecar"]}
+
+
+def test_nothing_is_ever_truncated_to_fit(tmp_path, train_shard):
+    rows = [_row(i) for i in range(60)]
+    rows[3]["sft_target"] = "assert f(3) == " + ("8" * 300)
+    directory = _dataset(tmp_path, rows)
+    result = build(directory, tmp_path, baseline_pairs=800, ratio=0.05,
+                   completion_tokens=lambda text: len(text),
+                   max_completion_tokens=80)
+    assert result["report"]["completions_truncated"] == 0
+    for row in result["sidecar"]:
+        assert len(row["completion"]) <= 80
+
+
+def test_the_exact_requested_count_survives_an_over_budget_row(tmp_path, train_shard):
+    """The 16.00% decision: 1,305 must be 1,305 regardless of which rows drew."""
+    rows = [_row(i) for i in range(300)]
+    rows[11]["sft_target"] = "assert f(11) == " + ("7" * 500)
+    directory = _dataset(tmp_path, rows)
+    result = build(directory, tmp_path, baseline_pairs=1000, ratio=0.10,
+                   completion_tokens=lambda text: len(text),
+                   max_completion_tokens=120)
+    # 0.10 * 1000 / 0.90 = 111.1 -> 111
+    assert result["report"]["sidecar_rows"] == 111
+    assert len(result["sidecar"]) == 111
+
+
+def test_unused_positives_are_counted(tmp_path, train_shard):
+    """Eleven rows are deliberately left on the table; that must be visible."""
+    directory = _dataset(tmp_path, [_row(i) for i in range(300)])
+    result = build(directory, tmp_path, baseline_pairs=800, ratio=0.10)
+    report = result["report"]
+    assert report["unused_verified_positives"] == \
+        report["available_positives"] - report["sidecar_rows"]
+
+
+def test_no_token_filter_means_no_rows_dropped_for_budget(tmp_path, train_shard):
+    directory = _dataset(tmp_path, [_row(i) for i in range(80)])
+    result = build(directory, tmp_path, baseline_pairs=800, ratio=0.05)
+    assert result["report"]["dropped_over_token_budget"] == 0
+    assert result["report"]["max_completion_tokens"] is None
