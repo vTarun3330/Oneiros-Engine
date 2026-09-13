@@ -153,6 +153,26 @@ def audit_evaluation_panel_prompts(
     }
 
 
+#: Files whose bytes define how a prompt is built, how a candidate is judged,
+#: and how long it may run. A receipt naming a setting but not these cannot
+#: tell whether the code behind the setting changed between two arms.
+CONTRACT_SOURCE_FILES = {
+    "prompt_builder_sha256": "engine/test_generation_prompt.py",
+    "prompt_budget_sha256": "engine/prompt_budget.py",
+    "evaluator_sha256": "metrics/research_evaluation.py",
+    "candidate_policy_sha256": "harness/candidate_policy.py",
+    "timeout_policy_sha256": "harness/safe_execution.py",
+    "sft_trainer_sha256": "engine/sft_trainer.py",
+}
+
+
+def contract_source_hashes() -> dict[str, str]:
+    return {
+        field: hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()
+        for field, relative in CONTRACT_SOURCE_FILES.items()
+    }
+
+
 def tokenizer_files_sha256(model_name: str, revision: str) -> dict[str, Any]:
     """Hash the tokenizer files actually on disk for this exact snapshot.
 
@@ -750,6 +770,7 @@ def build_preflight(
             "selected_generation_compatible_repository_pairs": (
                 selected_generation_compatible_repository_pairs
             ),
+            "selected_record_ids": [pair["id"] for pair in selected_pairs],
             "selected_repository_record_ids": [
                 pair["id"] for pair in selected_repository_pairs
             ],
@@ -837,6 +858,58 @@ def build_preflight(
             "retained_prompt_tokens": _token_summary(retained_prompt_lengths),
             "completion_tokens": _token_summary(completion_lengths),
             "sequence_overflow_examples": sequence_overflow_examples,
+        },
+        "run_identity": {
+            "seed": trainer.SEED,
+            "source_tree_sha256": current_source_sha256,
+            "contract_source_hashes": contract_source_hashes(),
+            "lora": {
+                "r": model_config.lora_r,
+                "alpha": model_config.lora_alpha,
+                "dropout": (
+                    trainer.LORA_DROPOUT_OVERRIDE
+                    if trainer.LORA_DROPOUT_OVERRIDE is not None
+                    else model_config.lora_dropout
+                ),
+                "target_modules": list(model_config.target_modules),
+            },
+            "quantization": {
+                "bnb_4bit_quant_type": model_config.bnb_4bit_quant_type,
+                "bnb_4bit_use_double_quant":
+                    model_config.bnb_4bit_use_double_quant,
+                "attention_implementation":
+                    model_config.attention_implementation,
+            },
+            "weight_decay": trainer.WEIGHT_DECAY_OVERRIDE,
+            "optimizer": "adamw_torch",
+            "max_grad_norm": training_config.max_grad_norm,
+            "gradient_accumulation_steps":
+                schedule.get("gradient_accumulation_steps"),
+            "samples_per_optimizer_step":
+                schedule.get("samples_per_optimizer_step"),
+        },
+        "future_generation_contract": {
+            "declared_not_executed": (
+                "these settings describe the evaluation this preflight "
+                "prepares for. No generation or evaluation was run here."
+            ),
+            "candidate_parse_mode": trainer.CANDIDATE_PARSE_MODE,
+            "retain_raw_output": trainer.RETAIN_RAW_OUTPUT,
+            "candidates_per_function": 8,
+            "temperature": model_config.temperature,
+            "top_p": model_config.top_p,
+            "generation_seed": trainer.SEED,
+            "generation_completion_token_limit": completion_token_limit,
+            "repository_generation_completion_token_limit":
+                repository_completion_token_limit,
+            "evaluator_sha256": contract_source_hashes()["evaluator_sha256"],
+            "timeout_policy_sha256":
+                contract_source_hashes()["timeout_policy_sha256"],
+            "candidate_policy_sha256":
+                contract_source_hashes()["candidate_policy_sha256"],
+            "evaluation_split_for_selection": evaluation_split,
+            "locked_validation_used": False,
+            "sealed_final_test_used": False,
         },
         "training": {
             "epochs": epochs,
