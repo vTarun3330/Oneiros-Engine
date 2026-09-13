@@ -289,3 +289,84 @@ def test_the_committed_gate_report_uses_an_admissible_allocation():
     assert report["declared_prompt_plus_completion"] < report["sequence_limit"]
     assert report["completion_token_limit"] == 1024, "output length was reduced"
     assert report["gate_passed"] is True
+
+
+# --------------------------------------------------------------------------
+# Fenced output. This exact mistake has now been made twice on this project:
+# once in the completion-truncation audit, once here. Parsing raw model text
+# without unwrapping the fence scored 43678 of 44760 outputs unparseable
+# (97.6%) against a pipeline parse rate of 97.37%.
+# --------------------------------------------------------------------------
+
+FENCED = "```python\nassert f(1) == 1\nassert f(2) == 2\n```"
+
+
+def test_a_fenced_output_is_not_counted_as_unparseable(tmp_path):
+    path = _artifact(tmp_path, outcomes=[_raw(FENCED)])
+    report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+    assert report["unparseable_outputs"] == 0
+    assert report["candidates_ineligible_for_oracle_labels"] == 0
+
+
+def test_genuinely_broken_output_is_still_counted(tmp_path):
+    """The unwrapper must not turn the check off altogether."""
+    path = _artifact(tmp_path, outcomes=[_raw("```python\nassert f(1 ==\n```")])
+    report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+    assert report["unparseable_outputs"] == 1
+
+
+def test_the_verifier_uses_the_successor_parsers_own_unwrapper():
+    """Not a private reimplementation that can drift from the real parser."""
+    from pathlib import Path
+    source = (Path(__file__).resolve().parent.parent
+              / "scripts" / "verify_successor_generation.py").read_text(encoding="utf-8")
+    assert "from scripts.analyze_parser_pilot import whole_output_of" in source
+    assert "ast.parse(whole_output_of(raw))" in source
+
+
+# --------------------------------------------------------------------------
+# An artifact with nothing usable left must not pass a gate that licenses a
+# build. The first verifier returned verified=true at a 97.6% ineligible rate.
+# --------------------------------------------------------------------------
+
+def test_a_mostly_ineligible_artifact_is_refused(tmp_path):
+    outcomes = [_raw("assert f(1 ==") for _ in range(80)]
+    outcomes += [_raw(f"assert f({i}) == {i}") for i in range(20)]
+    path = _artifact(tmp_path, outcomes=outcomes)
+    report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+    assert report["ineligible_ceiling_exceeded"] is True
+    assert report["verified"] is False
+    assert any("ineligible" in p for p in report["problems"])
+
+
+def test_the_ineligible_ceiling_is_predeclared():
+    from scripts.verify_successor_generation import MAX_INELIGIBLE_RATE
+    assert 0 < MAX_INELIGIBLE_RATE < 1
+
+
+def test_the_committed_verification_passed_on_real_numbers():
+    import json
+    from pathlib import Path
+    path = (Path(__file__).resolve().parent.parent / "results"
+            / "v4_2_successor_generation_verification.json")
+    if not path.exists():
+        return
+    report = json.loads(path.read_text(encoding="utf-8"))
+    assert report["verified"] is True
+    assert report["candidates"] == report["candidates_with_raw_output"]
+    assert report["raw_output_hash_mismatches"] == 0
+    assert report["prompt_budget_failed_functions"] == 0
+    assert report["completion_limit_threshold_exceeded"] is False
+    assert report["ineligible_ceiling_exceeded"] is False
+    # The fence bug would put this near 0.98.
+    assert report["unparseable_share"] < 0.01
+
+
+def test_ineligible_candidates_are_counted_individually(tmp_path):
+    """Keying on (record_id, rank) alone collapsed 80 unusable candidates
+    within one function into a single entry, because outcomes without a rank
+    all mapped to rank 0."""
+    outcomes = [_raw("assert f(1 ==") for _ in range(5)]
+    path = _artifact(tmp_path, outcomes=outcomes)
+    report = verify(path, "Qwen/Qwen2.5-Coder-1.5B-Instruct", "main")
+    assert report["candidates_ineligible_for_oracle_labels"] == 5

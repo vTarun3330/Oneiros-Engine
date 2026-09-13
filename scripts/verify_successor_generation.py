@@ -38,6 +38,12 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from harness.corpus import write_json
+# The successor parser's own unwrapper. Parsing raw text WITHOUT it makes a
+# chat model's ```python fence look like a syntax error: this verifier's
+# first run scored 43678 of 44760 outputs unparseable (97.6%) against a
+# pipeline parse rate of 97.37%, which cannot both be true. The identical
+# mistake was made once before, in the completion-truncation audit.
+from scripts.analyze_parser_pilot import whole_output_of
 
 REQUIRED_CONTRACT = {
     "candidate_parse_mode": "whole_output",
@@ -72,6 +78,13 @@ INELIGIBLE_FOR_ORACLE_LABELS = (
     "suspected_completion_truncation",
     "unparseable_raw_output",
 )
+
+#: An artifact where most candidates cannot supply a label is not a usable
+#: source, whatever else is in order. The first version of this verifier
+#: returned verified=true while 97.6% of candidates were ineligible - the
+#: threshold existed for truncation alone and nothing checked the total. A gate
+#: that licenses a build has to fail when there is nothing left to build from.
+MAX_INELIGIBLE_RATE = 0.25
 
 
 def _raw_of(outcome: dict[str, Any]) -> str | None:
@@ -124,7 +137,10 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
             problems.append(f"could not load tokenizer to measure truncation: {exc}")
 
     for result in results:
-        for outcome in result.get("candidate_outcomes") or []:
+        # The position is part of the key. Keying on (record_id, rank) alone
+        # collapsed every outcome missing a `rank` into one entry, so a
+        # function with eighty unusable candidates counted as one.
+        for position, outcome in enumerate(result.get("candidate_outcomes") or []):
             candidates += 1
             raw = _raw_of(outcome)
             recorded_hash = outcome.get("raw_output_sha256")
@@ -141,14 +157,16 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
                     at_completion_limit += 1
                     truncated = True
                     ineligible_ids.add(
-                        (str(result.get("record_id")), int(outcome.get("rank") or 0)))
+                        (str(result.get("record_id")),
+                         int(outcome.get("rank") or 0), position))
             try:
-                ast.parse(raw)
+                ast.parse(whole_output_of(raw))
             except SyntaxError:
                 unparseable += 1
                 if not truncated:
                     ineligible_ids.add(
-                        (str(result.get("record_id")), int(outcome.get("rank") or 0)))
+                        (str(result.get("record_id")),
+                         int(outcome.get("rank") or 0), position))
 
     if candidates and with_raw == 0:
         problems.append(
@@ -178,6 +196,14 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
             "threshold: the completion budget is too small for this panel and "
             "the dataset build is blocked")
 
+    ineligible_rate = (len(ineligible_ids) / candidates) if candidates else 0.0
+    if ineligible_rate > MAX_INELIGIBLE_RATE:
+        problems.append(
+            f"{len(ineligible_ids)} of {candidates} candidates "
+            f"({ineligible_rate:.2%}) are ineligible to supply oracle labels, "
+            f"above the {MAX_INELIGIBLE_RATE:.0%} ceiling: too little usable "
+            "supervision remains for a dataset build")
+
     completed = int(payload.get("function_validation_records") or 0)
     results_present = len(results)
     if completed and results_present != completed:
@@ -206,6 +232,9 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
         "unparseable_outputs": unparseable,
         "unparseable_share": round(unparseable / candidates, 6) if candidates else None,
         "candidates_ineligible_for_oracle_labels": len(ineligible_ids),
+        "ineligible_rate": round(ineligible_rate, 6),
+        "max_ineligible_rate": MAX_INELIGIBLE_RATE,
+        "ineligible_ceiling_exceeded": ineligible_rate > MAX_INELIGIBLE_RATE,
         "ineligible_reasons": list(INELIGIBLE_FOR_ORACLE_LABELS),
         "ineligible_candidate_keys": sorted(
             [list(k) for k in ineligible_ids])[:200],

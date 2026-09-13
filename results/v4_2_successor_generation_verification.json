@@ -1,0 +1,265 @@
+{
+  "schema_version": "oneiros_successor_generation_verification_v1",
+  "artifact": "local_base_qwen_train_successor_s42/base_validation_train_parse-whole-output_completion1024_seed_42.json",
+  "sealed_final_test_accessed": false,
+  "evaluation_split": "train",
+  "run_contract": {
+    "contract_version": 1,
+    "candidate_parse_mode": "whole_output",
+    "retain_raw_output": true,
+    "allow_test_function_candidates": true,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "do_sample": true,
+    "max_new_tokens": 1024,
+    "candidates_per_function": 8,
+    "prompt_token_limit": 1024,
+    "repository_prompt_token_limit": 1024,
+    "rendered_sequence_fit_policy": "compact whole semantic units before chat rendering; required sections are never sliced; a record that cannot fit fails closed",
+    "max_sft_completion_tokens": 3072,
+    "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_model_revision": "main",
+    "prompt_schema_version": "oneiros_unified_test_generation_v2",
+    "prompt_information_variant": "full",
+    "output_instruction_variant": "self_contained",
+    "evaluator_source_sha256": "649e96fab00af35e172cdd0590f6b6c1241d03aa6aef71ede4fb2e731fad27c2",
+    "candidate_policy_source_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+    "safe_execution_source_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+    "prompt_builder_source_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d"
+  },
+  "run_contract_sha256": "aad77b6709794421d8ed43b9434e4db2f6c876504fa5d868662ae0bc6d16d6a7",
+  "function_results": 5595,
+  "candidates": 44760,
+  "candidates_with_raw_output": 44760,
+  "raw_output_hash_mismatches": 0,
+  "candidates_missing_recorded_hash": 0,
+  "outputs_reaching_completion_limit": 16,
+  "suspected_completion_truncation": 16,
+  "outputs_reaching_completion_limit_share": 0.000357,
+  "completion_limit_hit_threshold": 0.02,
+  "completion_limit_threshold_exceeded": false,
+  "unparseable_outputs": 39,
+  "unparseable_share": 0.000871,
+  "candidates_ineligible_for_oracle_labels": 41,
+  "ineligible_rate": 0.000916,
+  "max_ineligible_rate": 0.25,
+  "ineligible_ceiling_exceeded": false,
+  "ineligible_reasons": [
+    "suspected_completion_truncation",
+    "unparseable_raw_output"
+  ],
+  "ineligible_candidate_keys": [
+    [
+      "mutation::humaneval_HumanEval_108_mut_00898",
+      7,
+      6
+    ],
+    [
+      "mutation::humaneval_HumanEval_109_mut_00911",
+      6,
+      5
+    ],
+    [
+      "mutation::humaneval_HumanEval_123_mut_01051",
+      8,
+      7
+    ],
+    [
+      "mutation::humaneval_HumanEval_123_mut_01064",
+      6,
+      5
+    ],
+    [
+      "mutation::humaneval_HumanEval_132_mut_01262",
+      7,
+      6
+    ],
+    [
+      "mutation::humaneval_HumanEval_132_mut_01271",
+      3,
+      2
+    ],
+    [
+      "mutation::humaneval_HumanEval_141_mut_01359",
+      1,
+      0
+    ],
+    [
+      "mutation::humaneval_HumanEval_141_mut_01360",
+      3,
+      2
+    ],
+    [
+      "mutation::humaneval_HumanEval_141_mut_01365",
+      4,
+      3
+    ],
+    [
+      "mutation::humaneval_HumanEval_141_mut_01368",
+      7,
+      6
+    ],
+    [
+      "mutation::humaneval_HumanEval_141_mut_01369",
+      7,
+      6
+    ],
+    [
+      "mutation::humaneval_HumanEval_1_mut_00008",
+      1,
+      0
+    ],
+    [
+      "mutation::humaneval_HumanEval_1_mut_00016",
+      3,
+      2
+    ],
+    [
+      "mutation::mbpp_241_mut_03932",
+      2,
+      1
+    ],
+    [
+      "mutation::mbpp_271_mut_04133",
+      7,
+      6
+    ],
+    [
+      "mutation::mbpp_321_mut_04568",
+      4,
+      3
+    ],
+    [
+      "mutation::mbpp_349_mut_04841",
+      6,
+      5
+    ],
+    [
+      "mutation::mbpp_401_mut_05231",
+      2,
+      1
+    ],
+    [
+      "mutation::mbpp_401_mut_05231",
+      4,
+      3
+    ],
+    [
+      "mutation::mbpp_482_mut_05904",
+      4,
+      3
+    ],
+    [
+      "mutation::mbpp_512_mut_06284",
+      8,
+      7
+    ],
+    [
+      "mutation::mbpp_512_mut_06285",
+      4,
+      3
+    ],
+    [
+      "mutation::mbpp_512_mut_06286",
+      1,
+      0
+    ],
+    [
+      "mutation::mbpp_512_mut_06286",
+      3,
+      2
+    ],
+    [
+      "mutation::mbpp_512_mut_06286",
+      7,
+      6
+    ],
+    [
+      "mutation::mbpp_538_mut_06533",
+      1,
+      0
+    ],
+    [
+      "mutation::mbpp_552_mut_06696",
+      4,
+      3
+    ],
+    [
+      "mutation::mbpp_554_mut_06700",
+      8,
+      7
+    ],
+    [
+      "mutation::mbpp_580_mut_06856",
+      4,
+      3
+    ],
+    [
+      "mutation::mbpp_629_mut_07314",
+      6,
+      5
+    ],
+    [
+      "mutation::mbpp_629_mut_07314",
+      8,
+      7
+    ],
+    [
+      "mutation::mbpp_659_mut_07456",
+      6,
+      5
+    ],
+    [
+      "mutation::mbpp_747_mut_08145",
+      8,
+      7
+    ],
+    [
+      "mutation::mbpp_747_mut_08195",
+      3,
+      2
+    ],
+    [
+      "mutation::mbpp_763_mut_08308",
+      4,
+      3
+    ],
+    [
+      "mutation::mbpp_771_mut_08405",
+      8,
+      7
+    ],
+    [
+      "mutation::mbpp_803_mut_08629",
+      5,
+      4
+    ],
+    [
+      "mutation::mbpp_839_mut_08965",
+      1,
+      0
+    ],
+    [
+      "mutation::mbpp_839_mut_08971",
+      2,
+      1
+    ],
+    [
+      "mutation::mbpp_849_mut_09080",
+      1,
+      0
+    ],
+    [
+      "mutation::mbpp_849_mut_09083",
+      3,
+      2
+    ]
+  ],
+  "prompt_budget_failed_functions": 0,
+  "no_runtime_token_truncation": true,
+  "function_kill_rate": 0.282216,
+  "dataset_fingerprint": "oneiros-corpus-v4.1-research-hardened-candidate:1:04940ee92c7eeef3efb0808e577470cfb5415c13612ecb25bd11eb00c2adfd50:4baaa7a6eb4069203691d5453d50d58a189eeee63feb0c3dfe236c139947ba2a:sft_scope=full_train_split:execution_mode=all:repository_completion_limit=3072:prompt_token_limit=1024:repository_prompt_token_limit=1024:prompt_compaction=section_aware_ast_units_before_chat_v4_1:prompt_schema=oneiros_unified_test_generation_v2:prompt_information=full:output_instruction=self_contained:dataset_identity=source.upstream_then_source.name_v1:complex_target_fraction=0.6:generation_completion_limit=1024:repository_generation_completion_limit=1024",
+  "evaluation_scope_sha256": "d69bad0ca92488f3a429292a9e5c1f027dbd11bf45b9ebe0a14c58a3aae99442",
+  "problems": [],
+  "verified": true
+}
