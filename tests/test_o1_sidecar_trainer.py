@@ -278,3 +278,46 @@ def test_the_real_sft_data_point_carries_the_completion_verbatim():
     point = make_sft_data_point(pair, "PROMPT", CORRECTED)
     assert point.completion == CORRECTED
     assert point.function_id == "mutation::rec_1"
+
+
+# ------------------------------------ force inclusion, the multi-mutant trap
+
+def test_a_record_outside_the_selection_still_receives_its_completion():
+    """836 of 1,305 real sidecar rows name unselected records.
+
+    Keyed to the bounded selection they would vanish silently and deliver
+    6.4% of a mixture declared at 16% -- the multi-mutant failure exactly.
+    """
+    baseline = [Example("p", "assert selected() == 1", "mutation::selected")]
+    all_train = _pairs("mutation::selected", "mutation::unselected")
+    combined, report = append_o1_examples(
+        baseline, [_row("mutation::unselected", CORRECTED)], all_train,
+        make_data_point=_make, build_prompt=_prompt)
+    assert report["appended_examples"] == 1
+    assert report["records_not_in_training_pairs_count"] == 0
+    assert combined[-1].completion == CORRECTED
+    assert combined[-1].function_id == "mutation::unselected"
+
+
+def test_keying_to_the_selection_alone_would_drop_most_rows():
+    """The bug this guards, demonstrated: the same rows against the two maps."""
+    rows = [_row(f"mutation::rec_{i}", f"assert f({i}) == {i}") for i in range(10)]
+    selection_only = _pairs("mutation::rec_0", "mutation::rec_1")
+    full_split = _pairs(*[f"mutation::rec_{i}" for i in range(10)])
+
+    _, narrow = append_o1_examples([], rows, selection_only,
+                                   make_data_point=_make, build_prompt=_prompt)
+    _, wide = append_o1_examples([], rows, full_split,
+                                 make_data_point=_make, build_prompt=_prompt)
+    assert narrow["appended_examples"] == 2
+    assert narrow["records_not_in_training_pairs_count"] == 8
+    assert wide["appended_examples"] == 10
+    assert wide["records_not_in_training_pairs_count"] == 0
+
+
+def test_the_trainer_resolves_o1_records_against_the_full_train_split():
+    source = Path(__file__).resolve().parent.parent / "scripts" / "train_on_dataset.py"
+    block = source.read_text(encoding="utf-8").split("if O1_SIDECAR_PATH:", 1)[1][:2000]
+    assert 'load_phase3_pairs(corpus_dir, "train")' in block, (
+        "O1 records must resolve against the full train split, not the "
+        "bounded selection")

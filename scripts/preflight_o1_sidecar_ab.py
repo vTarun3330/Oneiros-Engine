@@ -144,24 +144,39 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
     eligible_pairs, _ = _filter_overlong_repository_completions(source_pairs)
     selection = arm_a.get("selection") or {}
     sampling = arm_a.get("sampling") or {}
-    selected_pairs = select_bounded_train_pairs(
-        eligible_pairs,
-        int(selection["requested_pairs"]),
-        compatible_repository_ids=set(),
-        compatible_synthetic_ids=set(),
-        target_real_fraction=float(sampling["target_real_fraction"]),
-        max_real_repeats=int(sampling["max_real_repeats"]),
-        target_complex_fraction=float(sampling["target_complex_function_fraction"]),
-    )
-    selected_ids = [pair["id"] for pair in selected_pairs]
-    rebuilt_sha = _sha_json(selected_ids)
-    selection_reproduced = rebuilt_sha == selection.get("selection_sha256")
-    if not selection_reproduced:
+
+    # Arm A's selection depends on tokenizer-derived compatibility sets built
+    # over every eligible pair. Rebuilding those here would repeat arm A's
+    # whole 16-minute pass to re-derive a number arm A already recorded and
+    # gated, so the check is made against the recorded ID LIST instead: the
+    # SHA is recomputed from those IDs and must equal the SHA arm A recorded.
+    # That proves arm A's receipt is internally consistent and fixes exactly
+    # which 2,400 records arm B builds on. It is NOT an independent
+    # re-derivation of the selection, and the receipt says so.
+    selected_ids = [str(value) for value in selection.get("selected_record_ids") or []]
+    if not selected_ids:
         problems.append(
-            "arm A's selection did not reproduce from its own recorded "
-            f"configuration ({rebuilt_sha[:12]}... vs "
-            f"{str(selection.get('selection_sha256'))[:12]}...); the two arms "
-            "would not share a baseline")
+            "arm A recorded no selected_record_ids, so arm B cannot be shown "
+            "to build on the same records")
+    rebuilt_sha = _sha_json(selected_ids)
+    selection_reproduced = bool(selected_ids) and         rebuilt_sha == selection.get("selection_sha256")
+    if selected_ids and not selection_reproduced:
+        problems.append(
+            "arm A's recorded selection IDs do not hash to its recorded "
+            f"selection_sha256 ({rebuilt_sha[:12]}... vs "
+            f"{str(selection.get('selection_sha256'))[:12]}...); the receipt "
+            "is internally inconsistent")
+    if selected_ids and len(selected_ids) != int(selection.get("retained_pairs") or 0):
+        problems.append(
+            f"arm A recorded {len(selected_ids)} selection IDs but "
+            f"{selection.get('retained_pairs')} retained pairs")
+    eligible_ids = {pair["id"] for pair in eligible_pairs}
+    missing_from_corpus = [value for value in selected_ids
+                           if value not in eligible_ids]
+    if missing_from_corpus:
+        problems.append(
+            f"{len(missing_from_corpus)} of arm A's selected records are no "
+            "longer eligible in the corpus; the baseline has moved")
 
     # ------------------------------------------------------ coverage, exactly
     selected_id_set = set(selected_ids)
@@ -270,7 +285,17 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
             "retained_pairs": selection.get("retained_pairs"),
             "unique_records": len(selected_id_set),
             "selection_sha256": selection.get("selection_sha256"),
-            "selection_reproduced": selection_reproduced,
+            "selection_sha256_reproduced_from_recorded_ids": selection_reproduced,
+            "selection_ids_recorded": len(selected_ids),
+            "selection_ids_still_eligible_in_corpus": (
+                len(selected_ids) - len(missing_from_corpus)),
+            "selection_independently_rederived": False,
+            "selection_check_scope": (
+                "the SHA is recomputed from arm A's recorded selection IDs and "
+                "every ID is confirmed still eligible in the corpus. The "
+                "bounded selection itself is not re-run: it depends on "
+                "tokenizer-derived compatibility sets arm A already computed "
+                "under its own passing gates."),
             "effective_total_examples": baseline_examples,
             "effective_synthetic_examples":
                 sampling.get("effective_synthetic_examples"),

@@ -3555,7 +3555,19 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                 # sidecar rows are the only difference between the arms.
                 if O1_SIDECAR_PATH:
                     o1_rows, o1_manifest = load_o1_sidecar(O1_SIDECAR_PATH)
-                    o1_pairs_by_id = {pair["id"]: pair for pair in train_pairs}
+                    # The FULL train split, not the selected pairs. 836 of the
+                    # 1,305 sidecar rows name records the bounded selection did
+                    # not choose; keyed to the selection they would silently
+                    # vanish and deliver 6.4% of a mixture declared at 16%.
+                    # That is the multi-mutant failure exactly, and the
+                    # relearning path already reloads the split for the same
+                    # reason. The records are NOT added to train_pairs: the
+                    # pair only supplies the prompt, and the O1 example is
+                    # appended to sft_data, so the baseline stays untouched.
+                    o1_pairs_by_id = {
+                        pair["id"]: pair
+                        for pair in load_phase3_pairs(corpus_dir, "train")
+                    }
 
                     def _o1_fits(pair, prompt, completion):
                         limit = (
