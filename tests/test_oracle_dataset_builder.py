@@ -15,6 +15,8 @@ from pathlib import Path
 import pytest
 
 import scripts.build_oracle_dataset as builder
+from harness.corpus import sha256_file
+from harness.oracle_dataset_gates import CONTRACT_SOURCES
 from harness.oracle_labels import (
     FABRICATED_API, HARNESS_ENVIRONMENT_FAILURE, LABELS, NEVER_POSITIVE,
     SEMANTIC_EXECUTION_ERROR, SYNTAX_OR_POLICY_INVALID, UNCERTAIN,
@@ -151,7 +153,8 @@ def _positive(lineage, family, source="mbpp", target=None, i=0):
             "function_lineage": lineage, "bug_family": family,
             "source_dataset": source, "complexity_tier": "simple",
             "origin": "synthetic", "record_id": f"r{i}", "rank": 1,
-            "candidate_position": 0, "label": VALID_KILLING}
+            "candidate_position": 0, "label": VALID_KILLING,
+            "supervision_role": "positive_original"}
 
 
 def test_balancing_never_duplicates_a_row():
@@ -159,7 +162,7 @@ def test_balancing_never_duplicates_a_row():
     result = balance(rows)
     targets = [r["sft_target"] for r in result["selected"]]
     assert len(targets) == len(set(targets)), "a row was repeated to balance"
-    assert "unique-first" in result["balancing_method"]
+    assert "unique-first" in result["method"]
 
 
 def test_a_scarce_class_is_left_scarce_rather_than_padded():
@@ -175,7 +178,7 @@ def test_the_lineage_cap_drops_surplus_instead_of_repeating():
             for i in range(20)]
     result = balance(rows)
     assert result["max_rows_from_one_lineage"] <= builder.MAX_PER_FUNCTION_LINEAGE
-    assert result["dropped_by_cap"]["function_lineage_cap"] > 0
+    assert result["dropped"]["function_lineage_cap"] > 0
 
 
 def test_identical_targets_are_deduplicated():
@@ -183,25 +186,32 @@ def test_identical_targets_are_deduplicated():
             for i in range(5)]
     result = balance(rows)
     assert len(result["selected"]) == 1
-    assert result["dropped_by_cap"]["exact_duplicate_target"] == 4
+    assert result["dropped"]["exact_duplicate_target"] == 4
 
 
 def test_weights_are_metadata_not_repetition():
     rows = [_positive(f"L{i}", "common", i=i) for i in range(30)]
     rows += [_positive("Lr", "rare", target="assert rare() == 1", i=99)]
     result = balance(rows)
-    assert result["sampling_weights_by_bug_family"]["rare"] > \
-        result["sampling_weights_by_bug_family"]["common"]
+    families = result["sampling_weights"]["bug_family"]
+    assert families["rare"] > families["common"]
     assert len(result["selected"]) == len({r["sft_target"] for r in result["selected"]})
 
 
 # ------------------------------------------------------------ source refusal
 
+def _real_source_hashes():
+    """The current hashes, so drift only fires when a test means it to."""
+    return {field: sha256_file(ROOT / relative)
+            for field, relative in CONTRACT_SOURCES.items()}
+
+
 def _artifact(tmp_path, **over):
     body = {"evaluation_split": "train", "final_test_measurement": False,
             "derived_from_sha256": "deadbeef",
             "run_contract": {"candidate_parse_mode": "whole_output",
-                             "retain_raw_output": True},
+                             "retain_raw_output": True,
+                             **_real_source_hashes()},
             "function_results": []}
     body.update(over)
     path = tmp_path / "d.json"
@@ -209,31 +219,61 @@ def _artifact(tmp_path, **over):
     return path
 
 
+def receipt_for(tmp_path, derived, original, **over):
+    """A receipt that licenses `derived`, overridable one condition at a time."""
+    body = {
+        "schema_version": "oneiros_successor_generation_verification_v1",
+        "verified": True, "evaluation_split": "train",
+        "artifact_sha256": hashlib.sha256(derived.read_bytes()).hexdigest(),
+        "parent_artifact_sha256": hashlib.sha256(original.read_bytes()).hexdigest(),
+        "execution_harness_failures": 0, "raw_output_hash_mismatches": 0,
+        "prompt_budget_failed_functions": 0,
+        "completion_limit_threshold_exceeded": False,
+        "ineligible_ceiling_exceeded": False,
+        "execution_harness_ceiling_exceeded": False,
+    }
+    body.update(over)
+    path = tmp_path / "receipt.json"
+    path.write_text(json.dumps(body), encoding="utf-8")
+    return path
+
+
+def pair(tmp_path, **over):
+    original = tmp_path / "orig.json"
+    original.write_text("{}", encoding="utf-8")
+    derived = _artifact(
+        tmp_path, derived_from_sha256=hashlib.sha256(b"{}").hexdigest(), **over)
+    return derived, original
+
+
 def test_a_legacy_protocol_source_is_refused(tmp_path):
-    path = _artifact(tmp_path, run_contract={
+    derived, original = pair(tmp_path, run_contract={
         "candidate_parse_mode": "first_assertion", "retain_raw_output": False})
     with pytest.raises(SystemExit, match="whole_output"):
-        assert_source_artifact(path, tmp_path / "missing.json")
-
-
-def test_a_source_without_a_parent_chain_is_refused(tmp_path):
-    path = _artifact(tmp_path, derived_from_sha256=None)
-    with pytest.raises(SystemExit, match="provenance"):
-        assert_source_artifact(path, tmp_path / "missing.json")
+        assert_source_artifact(derived, original,
+                               receipt_for(tmp_path, derived, original))
 
 
 def test_a_broken_parent_chain_is_refused(tmp_path):
-    original = tmp_path / "orig.json"
-    original.write_text("{}", encoding="utf-8")
-    path = _artifact(tmp_path, derived_from_sha256="0" * 64)
+    derived, original = pair(tmp_path)
+    bad = _artifact(tmp_path, derived_from_sha256="0" * 64)
     with pytest.raises(SystemExit, match="parent chain broken"):
-        assert_source_artifact(path, original)
+        assert_source_artifact(bad, original,
+                               receipt_for(tmp_path, bad, original))
 
 
 def test_a_non_train_source_is_refused(tmp_path):
-    path = _artifact(tmp_path, evaluation_split="val")
+    derived, original = pair(tmp_path, evaluation_split="val")
     with pytest.raises(SystemExit, match="not train"):
-        assert_source_artifact(path, tmp_path / "missing.json")
+        assert_source_artifact(derived, original,
+                               receipt_for(tmp_path, derived, original))
+
+
+def test_a_good_receipt_and_clean_source_is_accepted(tmp_path):
+    derived, original = pair(tmp_path)
+    result = assert_source_artifact(derived, original,
+                                    receipt_for(tmp_path, derived, original))
+    assert result["payload"]["evaluation_split"] == "train"
 
 
 # ------------------------------------------------------------- leakage proof
@@ -271,12 +311,22 @@ def test_the_builder_never_opens_the_canonical_corpus(tmp_path, monkeypatch):
         "evaluation_split": "train", "final_test_measurement": False,
         "derived_from_sha256": digest,
         "run_contract": {"candidate_parse_mode": "whole_output",
-                         "retain_raw_output": True},
+                         "retain_raw_output": True, **_real_source_hashes()},
         "function_results": []}))
+    receipt = tmp_path / "receipt.json"
+    real_open(receipt, "w").write(json.dumps({
+        "schema_version": "oneiros_successor_generation_verification_v1",
+        "verified": True, "evaluation_split": "train",
+        "artifact_sha256": hashlib.sha256(derived.read_bytes()).hexdigest(),
+        "parent_artifact_sha256": digest,
+        "execution_harness_failures": 0, "raw_output_hash_mismatches": 0,
+        "prompt_budget_failed_functions": 0,
+        "completion_limit_threshold_exceeded": False,
+        "ineligible_ceiling_exceeded": False}))
 
     monkeypatch.setattr(builtins, "open", guarded_open)
     monkeypatch.setattr(Path, "read_text", guarded_read)
-    rows, context = builder.build(derived, original, CORPUS, workers=2)
+    rows, context = builder.build(derived, original, receipt, CORPUS, workers=2)
     assert opened == [], "the builder opened the canonical corpus"
     assert rows == []
 

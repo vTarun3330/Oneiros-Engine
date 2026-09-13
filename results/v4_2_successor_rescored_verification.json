@@ -1,6 +1,9 @@
 {
   "schema_version": "oneiros_successor_generation_verification_v1",
   "artifact": "local_base_qwen_train_successor_s42_rescored/base_validation_train_parse-whole-output_completion1024_seed_42.rescored.json",
+  "artifact_sha256": "dae750f1d0061f4dba0f8b8e727285c597a81598c1b88b6ab676766cebf32631",
+  "parent_artifact": "local_base_qwen_train_successor_s42/base_validation_train_parse-whole-output_completion1024_seed_42.json",
+  "parent_artifact_sha256": "142326ce9bd4b1f7752b204b7dcc852ef4716494d1d812d5d5ce19d3030d3181",
   "sealed_final_test_accessed": false,
   "evaluation_split": "train",
   "run_contract": {

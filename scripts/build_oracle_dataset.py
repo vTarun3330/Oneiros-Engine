@@ -45,7 +45,12 @@ from harness.candidate_policy import (
 )
 from harness.corpus import sha256_file, write_json
 from harness.corpus_view import load_development_split
+from harness.oracle_dataset_gates import (
+    assert_no_source_drift, assert_receipt, outcome_fields, sha256_text,
+    verify_raw_output,
+)
 from harness.oracle_diagnosis import BENIGN_INPUT, ORACLE_ERROR, call_expression, diagnose
+from harness.unique_first_balance import select as unique_first_select, weights
 from harness.oracle_labels import (
     FABRICATED_API, HARNESS_ENVIRONMENT_FAILURE, LABELS, NEVER_POSITIVE,
     SEMANTIC_EXECUTION_ERROR, SYNTAX_OR_POLICY_INVALID, UNCERTAIN,
@@ -85,30 +90,36 @@ def _tier(record: dict[str, Any]) -> str:
     return "simple" if lines <= 6 else "moderate" if lines <= 14 else "complex"
 
 
-def assert_source_artifact(derived: Path, original: Path) -> dict[str, Any]:
-    """The dataset may only be built from a verified, parent-bound artifact."""
+def assert_source_artifact(derived: Path, original: Path,
+                           receipt_path: Path) -> dict[str, Any]:
+    """The build may proceed only on a receipt-verified, drift-free source."""
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    problems = assert_receipt(receipt, derived, original)
+
     payload = json.loads(derived.read_text(encoding="utf-8"))
-    problems: list[str] = []
     if payload.get("evaluation_split") != "train":
         problems.append(f"split is {payload.get('evaluation_split')!r}, not train")
     if payload.get("final_test_measurement"):
         problems.append("artifact is a sealed final-test measurement")
     claimed = payload.get("derived_from_sha256")
     if not claimed:
-        problems.append("artifact does not record a parent; its provenance "
-                        "chain cannot be verified")
+        problems.append("artifact records no parent; provenance unverifiable")
     elif original.exists() and sha256_file(original) != claimed:
         problems.append(
             f"parent chain broken: artifact claims {claimed} but the original "
             f"hashes to {sha256_file(original)}")
+
     contract = payload.get("run_contract") or {}
     if contract.get("candidate_parse_mode") != "whole_output":
         problems.append("source is not a whole_output run")
     if not contract.get("retain_raw_output"):
         problems.append("source did not retain raw outputs")
+    problems.extend(assert_no_source_drift(contract, ROOT))
+
     if problems:
-        raise SystemExit("source artifact refused:\n  - " + "\n  - ".join(problems))
-    return payload
+        bullet = chr(10) + "  - "
+        raise SystemExit("source refused:" + bullet + bullet.join(problems))
+    return {"payload": payload, "receipt": receipt}
 
 
 def _replay(job: dict[str, Any]) -> dict[str, Any]:
@@ -165,9 +176,11 @@ def _verify_correction(job: dict[str, Any]) -> dict[str, Any]:
             "reason": "executed against the reference, policy-valid, kills"}
 
 
-def build(derived: Path, original: Path, corpus_dir: Path,
-          workers: int) -> tuple[list[dict[str, Any]], dict[str, Any]]:
-    payload = assert_source_artifact(derived, original)
+def build(derived: Path, original: Path, receipt: Path, corpus_dir: Path,
+          workers: int, sample_records: int | None = None
+          ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    verified = assert_source_artifact(derived, original, receipt)
+    payload = verified["payload"]
     parent_payload = json.loads(original.read_text(encoding="utf-8")) \
         if original.exists() else {"function_results": []}
     original_status = {
@@ -185,7 +198,28 @@ def build(derived: Path, original: Path, corpus_dir: Path,
     funnel = Counter()
     excluded = Counter()
 
-    for result in payload.get("function_results") or []:
+    function_results = payload.get("function_results") or []
+    if sample_records is not None:
+        # Deterministic AND stratified by source dataset. Taking the first N by
+        # record id is deterministic and useless: it returned 43 humaneval and
+        # 7 curated records with ZERO mbpp, on a panel that is 83% mbpp - the
+        # same defect as the humaneval-only train panel found earlier in this
+        # project. Proportional round-robin keeps the sample fixed and
+        # representative at once.
+        by_dataset: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for result in sorted(function_results,
+                             key=lambda r: str(r.get("record_id"))):
+            by_dataset[str(result.get("dataset_name") or "unknown")].append(result)
+        total = sum(len(v) for v in by_dataset.values()) or 1
+        picked: list[dict[str, Any]] = []
+        for dataset in sorted(by_dataset):
+            share = len(by_dataset[dataset]) / total
+            want = max(1, round(share * sample_records))
+            picked.extend(by_dataset[dataset][:want])
+        function_results = sorted(
+            picked, key=lambda r: str(r.get("record_id")))[:sample_records]
+
+    for result in function_results:
         record_id = str(result.get("record_id"))
         record = records.get(record_id)
         if record is None:
@@ -214,6 +248,14 @@ def build(derived: Path, original: Path, corpus_dir: Path,
             if outcome.get("reference_valid"):
                 funnel["reference_valid"] += 1
 
+            raw_problem = verify_raw_output(outcome)
+            if raw_problem is not None:
+                # A candidate whose text does not match its own hash cannot be
+                # trusted to be what was generated; it is excluded rather than
+                # labelled.
+                excluded[raw_problem] += 1
+                continue
+
             row = {
                 "record_id": record_id,
                 "rank": key[1],
@@ -236,13 +278,19 @@ def build(derived: Path, original: Path, corpus_dir: Path,
                 "original_reference_status": original_status.get(
                     (record_id, position)),
                 "rescored": bool(outcome.get("rescored")),
+                # Verbatim from the artifact. Nothing here is reconstructed:
+                # deriving policy_valid from a shape string labelled every
+                # policy-REJECTED candidate valid, because the policy returns an
+                # empty shape on rejection and "" is not None.
+                "recorded_outcome": outcome_fields(outcome),
                 "execution_evidence": {
                     "reference_status": outcome.get("reference_status"),
                     "mutant_status": outcome.get("mutant_status"),
                     "reference_error": outcome.get("reference_error"),
-                    "reference_valid": bool(outcome.get("reference_valid")),
-                    "execution_valid": bool(outcome.get("execution_valid")),
-                    "killed": bool(outcome.get("killed")),
+                    "reference_valid": outcome.get("reference_valid"),
+                    "execution_valid": outcome.get("execution_valid"),
+                    "killed": outcome.get("killed"),
+                    "failure_mode": outcome.get("failure_mode"),
                 },
             }
             rows.append(row)
@@ -259,10 +307,7 @@ def build(derived: Path, original: Path, corpus_dir: Path,
         key = (row["record_id"], row["rank"], row["candidate_position"])
         replay = replayed.get(key)
         verdict = classify_candidate(
-            {**row["execution_evidence"],
-             "parse_valid": row["candidate_code"] is not None,
-             "policy_valid": row["candidate_shape"] is not None,
-             "policy_error": None},
+            {**row["execution_evidence"], **row["recorded_outcome"]},
             distinguishing_call=(replay or {}).get("distinguishing"))
         row.update(verdict)
         row["call_replay"] = replay
@@ -301,80 +346,46 @@ def build(derived: Path, original: Path, corpus_dir: Path,
                    else "positive_original_eligible"] += 1
 
     return rows, {"funnel": funnel, "excluded": excluded,
-                  "payload": payload, "records": records}
+                  "payload": payload, "records": records,
+                  "receipt": verified["receipt"],
+                  "sampled_functions": len(function_results)}
 
 
 def balance(rows: list[dict[str, Any]]) -> dict[str, Any]:
-    """Unique-first caps. Surplus rows are DROPPED; nothing is repeated."""
+    """Unique-first selection over the audited selector.
+
+    The previous implementation checked each stratum's share BEFORE adding the
+    row and skipped checking entirely for the first 200 rows, so it could
+    report a cap beside a final share that exceeded it. The selector now tests
+    the PROSPECTIVE share and then re-enforces against the final selection, and
+    caps_satisfied reflects what was achieved rather than what was intended.
+    """
     positives = [r for r in rows if r["sft_target"] is not None]
-    kept: list[dict[str, Any]] = []
-    per_lineage: Counter = Counter()
-    per_source: Counter = Counter()
-    per_family: Counter = Counter()
-    dropped = Counter()
-    seen_targets: set[str] = set()
-
-    # Deterministic: rarer strata first, so a cap never starves them.
-    family_size = Counter(r["bug_family"] for r in positives)
-    ordered = sorted(positives, key=lambda r: (
-        family_size[r["bug_family"]], r["record_id"], r["rank"],
-        r["candidate_position"]))
-
-    for row in ordered:
-        target_hash = _sha(str(row["sft_target"]))
-        if target_hash in seen_targets:
-            dropped["exact_duplicate_target"] += 1
-            continue
-        if per_lineage[row["function_lineage"]] >= MAX_PER_FUNCTION_LINEAGE:
-            dropped["function_lineage_cap"] += 1
-            continue
-        total = len(kept)
-        if total >= 200:
-            if per_source[row["source_dataset"]] / total > MAX_PER_SOURCE_SHARE:
-                dropped["source_cap"] += 1
-                continue
-            if per_family[row["bug_family"]] / total > MAX_PER_BUG_FAMILY_SHARE:
-                dropped["bug_family_cap"] += 1
-                continue
-        seen_targets.add(target_hash)
-        per_lineage[row["function_lineage"]] += 1
-        per_source[row["source_dataset"]] += 1
-        per_family[row["bug_family"]] += 1
-        kept.append(row)
-
-    total = len(kept) or 1
-    # Weights are METADATA for a later sampler. Repeating a row to balance is
-    # how a scarce class comes to look plentiful while teaching nothing new.
-    family_counts = Counter(r["bug_family"] for r in kept)
-    weights = {family: round(total / (len(family_counts) * count), 4)
-               for family, count in family_counts.items()}
-    for row in kept:
-        row["sampling_weight"] = weights[row["bug_family"]]
-
-    return {
-        "selected": kept,
-        "dropped_by_cap": dict(dropped.most_common()),
-        "caps": {"per_function_lineage": MAX_PER_FUNCTION_LINEAGE,
-                 "max_source_share": MAX_PER_SOURCE_SHARE,
-                 "max_bug_family_share": MAX_PER_BUG_FAMILY_SHARE},
-        "balancing_method": (
-            "unique-first: surplus rows from over-represented strata are "
-            "dropped and scarce strata are left scarce. No row is repeated. "
-            "Residual imbalance is reported and handed to a later sampler as "
-            "weights rather than hidden by duplication."),
-        "sampling_weights_by_bug_family": weights,
-        "residual_shares": {
-            "source_dataset": {k: round(v / total, 4) for k, v in
-                               Counter(r["source_dataset"] for r in kept).most_common()},
-            "bug_family": {k: round(v / total, 4) for k, v in
-                           family_counts.most_common()},
-            "complexity_tier": {k: round(v / total, 4) for k, v in
-                                Counter(r["complexity_tier"] for r in kept).most_common()},
-            "origin": {k: round(v / total, 4) for k, v in
-                       Counter(r["origin"] for r in kept).most_common()},
-        },
-        "max_rows_from_one_lineage": max(per_lineage.values()) if per_lineage else 0,
+    result = unique_first_select(
+        positives,
+        target_of=lambda r: _sha(str(r["sft_target"])),
+        lineage_key="function_lineage",
+        max_per_lineage=MAX_PER_FUNCTION_LINEAGE,
+        share_caps={"source_dataset": MAX_PER_SOURCE_SHARE,
+                    "bug_family": MAX_PER_BUG_FAMILY_SHARE},
+    )
+    selected = result["selected"]
+    weight_map = weights(selected, ("source_dataset", "bug_family",
+                                    "complexity_tier", "supervision_role"))
+    for row in selected:
+        row["sampling_weights"] = {
+            dimension: weight_map[dimension][row[dimension]]
+            for dimension in weight_map if row.get(dimension) in weight_map[dimension]
+        }
+    result["sampling_weights"] = weight_map
+    result["residual_shares"] = {
+        dimension: {value: round(count / (len(selected) or 1), 4)
+                    for value, count in Counter(
+                        r[dimension] for r in selected).most_common()}
+        for dimension in ("source_dataset", "bug_family", "complexity_tier",
+                          "origin", "supervision_role")
     }
+    return result
 
 
 def main() -> int:
@@ -388,12 +399,18 @@ def main() -> int:
                         / "base_validation_train_parse-whole-output_completion1024_seed_42.json")
     parser.add_argument("--corpus", type=Path,
                         default=ROOT / "data" / "corpus" / "v4_1_research_hardened_candidate")
+    parser.add_argument("--receipt", type=Path, default=base
+                        / "v4_2_successor_rescored_verification.json",
+                        help="the R2 verification receipt that licenses this build")
+    parser.add_argument("--sample-records", type=int, default=None,
+                        help="deterministic dry run over the first N records")
     parser.add_argument("--workers", type=int, default=WORKERS)
     parser.add_argument("--output-dir", type=Path, required=True)
     arguments = parser.parse_args()
 
     rows, context = build(arguments.derived, arguments.original,
-                          arguments.corpus, arguments.workers)
+                          arguments.receipt, arguments.corpus,
+                          arguments.workers, arguments.sample_records)
     selection = balance(rows)
 
     labels = Counter(r["label"] for r in rows)
@@ -445,6 +462,12 @@ def main() -> int:
         "excluded": dict(context["excluded"].most_common()),
         "rows_total": len(rows),
         "selected_positive_rows": len(selection["selected"]),
+        "sampled_functions": context["sampled_functions"],
+        "dry_run": arguments.sample_records is not None,
+        "receipt_path": arguments.receipt.as_posix().split("results/", 1)[-1],
+        "receipt_artifact_sha256": context["receipt"].get("artifact_sha256"),
+        "source_drift_checked": True,
+        "outcome_fields_taken_verbatim": True,
         **{k: v for k, v in selection.items() if k != "selected"},
     }
 

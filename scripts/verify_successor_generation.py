@@ -37,7 +37,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from harness.corpus import write_json
+from harness.corpus import sha256_file, write_json
 # The successor parser's own unwrapper. Parsing raw text WITHOUT it makes a
 # chat model's ```python fence look like a syntax error: this verifier's
 # first run scored 43678 of 44760 outputs unparseable (97.6%) against a
@@ -250,6 +250,12 @@ def verify(artifact: Path, model_name: str, revision: str) -> dict[str, Any]:
     return {
         "schema_version": "oneiros_successor_generation_verification_v1",
         "artifact": artifact.as_posix().split("results/", 1)[-1],
+        # The path alone cannot bind a receipt to the bytes it describes: a
+        # consumer handed this receipt and a DIFFERENT file at the same path
+        # could not tell. Both ends of the provenance chain are recorded.
+        "artifact_sha256": sha256_file(artifact),
+        "parent_artifact": payload.get("derived_from"),
+        "parent_artifact_sha256": payload.get("derived_from_sha256"),
         "sealed_final_test_accessed": False,
         "evaluation_split": payload.get("evaluation_split"),
         "run_contract": contract,
