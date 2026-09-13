@@ -1,0 +1,187 @@
+{
+  "schema_version": "oneiros_oracle_dataset_v1",
+  "source_commit": "78a32524b45761d46de852c33406c839112f6cff",
+  "sealed_final_test_accessed": false,
+  "record_source": "hash-verified development view train shard",
+  "canonical_records_json_opened": false,
+  "evaluation_split": "train",
+  "source_derived_artifact": "local_base_qwen_train_successor_s42_rescored/base_validation_train_parse-whole-output_completion1024_seed_42.rescored.json",
+  "source_derived_sha256": "dae750f1d0061f4dba0f8b8e727285c597a81598c1b88b6ab676766cebf32631",
+  "source_parent_sha256": "142326ce9bd4b1f7752b204b7dcc852ef4716494d1d812d5d5ce19d3030d3181",
+  "parent_chain_verified": true,
+  "run_contract_sha256": "aad77b6709794421d8ed43b9434e4db2f6c876504fa5d868662ae0bc6d16d6a7",
+  "granularity": "one row per candidate; no function-level majority label",
+  "label_definitions": {
+    "valid_killing_test": "valid on the reference and distinguishes the mutant",
+    "valid_non_killing_test": "valid on the reference; the mutant survives",
+    "wrong_input": "call does not distinguish; no expected value could kill",
+    "wrong_oracle": "call distinguishes; only the asserted value is wrong",
+    "syntax_or_policy_invalid": "did not parse, or the policy refused it",
+    "fabricated_api": "NameError/AttributeError/arity/keyword: interface does not exist",
+    "semantic_execution_error": "valid interface call failing on a value or type",
+    "harness_environment_failure": "never scored by the executor",
+    "uncertain": "unresolvable; excluded from positive supervision"
+  },
+  "label_precedence": "harness > parse/policy > reference-valid > assertion failure (input before oracle) > raised. Where a candidate is both wrong_input and wrong_oracle, input is primary because no corrected value could make it kill.",
+  "eligibility_funnel": {
+    "candidates": 44760,
+    "raw_mining_eligible": 44760,
+    "parse_valid": 43581,
+    "policy_valid": 43581,
+    "execution_valid": 41928,
+    "reference_valid": 22576,
+    "positive_original_eligible": 11705,
+    "verified_correction_eligible": 14461
+  },
+  "label_counts": {
+    "wrong_oracle": 14553,
+    "valid_killing_test": 11705,
+    "valid_non_killing_test": 10871,
+    "wrong_input": 4795,
+    "syntax_or_policy_invalid": 1179,
+    "semantic_execution_error": 1141,
+    "fabricated_api": 512,
+    "uncertain": 4
+  },
+  "secondary_label_counts": {
+    "wrong_oracle": 4795
+  },
+  "supervision_roles": {
+    "positive_verified_correction": 14461,
+    "positive_original": 11705,
+    "neutral": 10871,
+    "negative": 7723
+  },
+  "positive_rule": "only a candidate already valid-and-killing, or a VERIFIED correction executed against the reference and proven to kill, may be a positive SFT target. Every other row is a marked negative.",
+  "whole_output_preserved": true,
+  "assertion_count_distribution": {
+    "1": 43576,
+    "5": 2,
+    "3": 1,
+    "2": 1,
+    "4": 1
+  },
+  "one_assertion_reduction_applied": false,
+  "excluded": {},
+  "rows_total": 44760,
+  "selected_positive_rows": 1316,
+  "sampled_functions": 5595,
+  "dry_run": false,
+  "receipt_path": "v4_2_successor_rescored_verification.json",
+  "receipt_artifact_sha256": "dae750f1d0061f4dba0f8b8e727285c597a81598c1b88b6ab676766cebf32631",
+  "source_drift_checked": true,
+  "outcome_fields_taken_verbatim": true,
+  "dropped": {
+    "source_dataset_cap": 9673,
+    "function_lineage_cap": 7123,
+    "exact_duplicate_target": 5440,
+    "bug_family_cap": 2614
+  },
+  "share_caps": {
+    "source_dataset": 0.7,
+    "bug_family": 0.35
+  },
+  "max_per_lineage": 4,
+  "min_denominator_for_share_caps": 20,
+  "enforcement_passes": 0,
+  "final_shares": {
+    "source_dataset": {
+      "manual_curated_examples": 0.0091,
+      "humaneval": 0.291,
+      "mbpp": 0.6998
+    },
+    "bug_family": {
+      "string_manipulation": 0.003,
+      "list_operations": 0.0015,
+      "data_validation": 0.0046,
+      "identity": 0.0091,
+      "string": 0.0091,
+      "negate_removal": 0.0144,
+      "membership": 0.022,
+      "return": 0.0342,
+      "index": 0.0524,
+      "boolean": 0.0805,
+      "logical": 0.1239,
+      "off_by_one": 0.1543,
+      "comparison": 0.2736,
+      "arithmetic": 0.1619,
+      "boundary": 0.0555
+    }
+  },
+  "cap_violations": {},
+  "caps_satisfied": true,
+  "max_rows_from_one_lineage": 4,
+  "method": "unique-first. Exact-duplicate targets and over-cap rows are DROPPED; no row is ever repeated. Share caps are tested on the prospective share and then re-enforced against the final selection, so caps_satisfied reflects the shares actually achieved rather than the ones intended.",
+  "sampling_weights": {
+    "source_dataset": {
+      "manual_curated_examples": 36.5556,
+      "humaneval": 1.1453,
+      "mbpp": 0.4763
+    },
+    "bug_family": {
+      "string_manipulation": 21.9333,
+      "list_operations": 43.8667,
+      "data_validation": 14.6222,
+      "identity": 7.3111,
+      "string": 7.3111,
+      "negate_removal": 4.6175,
+      "membership": 3.0253,
+      "return": 1.9496,
+      "index": 1.2715,
+      "boolean": 0.8277,
+      "logical": 0.5382,
+      "off_by_one": 0.4322,
+      "comparison": 0.2437,
+      "arithmetic": 0.4119,
+      "boundary": 1.2018
+    },
+    "complexity_tier": {
+      "simple": 1.1306,
+      "complex": 1.1394,
+      "moderate": 0.8079
+    },
+    "supervision_role": {
+      "positive_verified_correction": 1.1364,
+      "positive_original": 0.8928
+    }
+  },
+  "residual_shares": {
+    "source_dataset": {
+      "mbpp": 0.6998,
+      "humaneval": 0.291,
+      "manual_curated_examples": 0.0091
+    },
+    "bug_family": {
+      "comparison": 0.2736,
+      "arithmetic": 0.1619,
+      "off_by_one": 0.1543,
+      "logical": 0.1239,
+      "boolean": 0.0805,
+      "boundary": 0.0555,
+      "index": 0.0524,
+      "return": 0.0342,
+      "membership": 0.022,
+      "negate_removal": 0.0144,
+      "identity": 0.0091,
+      "string": 0.0091,
+      "data_validation": 0.0046,
+      "string_manipulation": 0.003,
+      "list_operations": 0.0015
+    },
+    "complexity_tier": {
+      "moderate": 0.4126,
+      "simple": 0.2948,
+      "complex": 0.2926
+    },
+    "origin": {
+      "synthetic": 0.9909,
+      "real_repository": 0.0091
+    },
+    "supervision_role": {
+      "positive_original": 0.56,
+      "positive_verified_correction": 0.44
+    }
+  },
+  "candidates_sha256": "b4a92fd7fa5c5d081204f41be348886501830c309bfe9bde869ff538fc152175",
+  "positives_sha256": "b2e79bf95bc474dc73682f01b920aa842310a64a3c4a6776855455836dbfd0e5"
+}

@@ -1,0 +1,159 @@
+{
+  "schema_version": "oneiros_oracle_dataset_v1",
+  "source_commit": "00b0dd4b224a12ddd64d8b11666cfda0b429f294",
+  "sealed_final_test_accessed": false,
+  "record_source": "hash-verified development view train shard",
+  "canonical_records_json_opened": false,
+  "evaluation_split": "train",
+  "source_derived_artifact": "local_base_qwen_train_successor_s42_rescored/base_validation_train_parse-whole-output_completion1024_seed_42.rescored.json",
+  "source_derived_sha256": "dae750f1d0061f4dba0f8b8e727285c597a81598c1b88b6ab676766cebf32631",
+  "source_parent_sha256": "142326ce9bd4b1f7752b204b7dcc852ef4716494d1d812d5d5ce19d3030d3181",
+  "parent_chain_verified": true,
+  "run_contract_sha256": "aad77b6709794421d8ed43b9434e4db2f6c876504fa5d868662ae0bc6d16d6a7",
+  "granularity": "one row per candidate; no function-level majority label",
+  "label_definitions": {
+    "valid_killing_test": "valid on the reference and distinguishes the mutant",
+    "valid_non_killing_test": "valid on the reference; the mutant survives",
+    "wrong_input": "call does not distinguish; no expected value could kill",
+    "wrong_oracle": "call distinguishes; only the asserted value is wrong",
+    "syntax_or_policy_invalid": "did not parse, or the policy refused it",
+    "fabricated_api": "NameError/AttributeError/arity/keyword: interface does not exist",
+    "semantic_execution_error": "valid interface call failing on a value or type",
+    "harness_environment_failure": "never scored by the executor",
+    "uncertain": "unresolvable; excluded from positive supervision"
+  },
+  "label_precedence": "harness > parse/policy > reference-valid > assertion failure (input before oracle) > raised. Where a candidate is both wrong_input and wrong_oracle, input is primary because no corrected value could make it kill.",
+  "eligibility_funnel": {
+    "candidates": 400,
+    "raw_mining_eligible": 400,
+    "parse_valid": 393,
+    "policy_valid": 393,
+    "execution_valid": 383,
+    "reference_valid": 164,
+    "verified_correction_eligible": 179,
+    "positive_original_eligible": 85
+  },
+  "label_counts": {
+    "wrong_oracle": 179,
+    "valid_killing_test": 85,
+    "valid_non_killing_test": 79,
+    "wrong_input": 40,
+    "semantic_execution_error": 10,
+    "syntax_or_policy_invalid": 7
+  },
+  "secondary_label_counts": {
+    "wrong_oracle": 40
+  },
+  "supervision_roles": {
+    "positive_verified_correction": 179,
+    "positive_original": 85,
+    "neutral": 79,
+    "negative": 57
+  },
+  "positive_rule": "only a candidate already valid-and-killing, or a VERIFIED correction executed against the reference and proven to kill, may be a positive SFT target. Every other row is a marked negative.",
+  "whole_output_preserved": true,
+  "assertion_count_distribution": {
+    "1": 393
+  },
+  "one_assertion_reduction_applied": false,
+  "excluded": {},
+  "rows_total": 400,
+  "selected_positive_rows": 23,
+  "sampled_functions": 50,
+  "dry_run": true,
+  "receipt_path": "v4_2_successor_rescored_verification.json",
+  "receipt_artifact_sha256": "dae750f1d0061f4dba0f8b8e727285c597a81598c1b88b6ab676766cebf32631",
+  "source_drift_checked": true,
+  "outcome_fields_taken_verbatim": true,
+  "dropped": {
+    "source_dataset_cap": 140,
+    "function_lineage_cap": 64,
+    "exact_duplicate_target": 36,
+    "source_dataset_cap_enforcement": 1
+  },
+  "share_caps": {
+    "source_dataset": 0.7,
+    "bug_family": 0.35
+  },
+  "max_per_lineage": 4,
+  "min_denominator_for_share_caps": 20,
+  "enforcement_passes": 1,
+  "final_shares": {
+    "source_dataset": {
+      "mbpp": 0.6957,
+      "humaneval": 0.3043
+    },
+    "bug_family": {
+      "boolean": 0.0435,
+      "membership": 0.1304,
+      "negate_removal": 0.1739,
+      "logical": 0.1739,
+      "return": 0.087,
+      "index": 0.2174,
+      "off_by_one": 0.0435,
+      "comparison": 0.0435,
+      "arithmetic": 0.087
+    }
+  },
+  "cap_violations": {},
+  "caps_satisfied": true,
+  "max_rows_from_one_lineage": 4,
+  "method": "unique-first. Exact-duplicate targets and over-cap rows are DROPPED; no row is ever repeated. Share caps are tested on the prospective share and then re-enforced against the final selection, so caps_satisfied reflects the shares actually achieved rather than the ones intended.",
+  "sampling_weights": {
+    "source_dataset": {
+      "mbpp": 0.7188,
+      "humaneval": 1.6429
+    },
+    "bug_family": {
+      "boolean": 2.5556,
+      "membership": 0.8519,
+      "negate_removal": 0.6389,
+      "logical": 0.6389,
+      "return": 1.2778,
+      "index": 0.5111,
+      "off_by_one": 2.5556,
+      "comparison": 2.5556,
+      "arithmetic": 1.2778
+    },
+    "complexity_tier": {
+      "moderate": 0.6389,
+      "complex": 0.9583,
+      "simple": 2.5556
+    },
+    "supervision_role": {
+      "positive_verified_correction": 1.0455,
+      "positive_original": 0.9583
+    }
+  },
+  "residual_shares": {
+    "source_dataset": {
+      "mbpp": 0.6957,
+      "humaneval": 0.3043
+    },
+    "bug_family": {
+      "index": 0.2174,
+      "negate_removal": 0.1739,
+      "logical": 0.1739,
+      "membership": 0.1304,
+      "return": 0.087,
+      "arithmetic": 0.087,
+      "boolean": 0.0435,
+      "off_by_one": 0.0435,
+      "comparison": 0.0435
+    },
+    "complexity_tier": {
+      "moderate": 0.5217,
+      "complex": 0.3478,
+      "simple": 0.1304
+    },
+    "origin": {
+      "synthetic": 1.0
+    },
+    "supervision_role": {
+      "positive_original": 0.5217,
+      "positive_verified_correction": 0.4783
+    }
+  },
+  "candidates_sha256": "e0d5b4dcb22c24cf39b01a738d9b5d86b79b936e01ac14f6d0ecb13e7adefbe8",
+  "positives_sha256": "3e7a82da8d08b07c4cae6f3c8d81ed11d9b831f4b003a339421e185d410ed9bb"
+}
