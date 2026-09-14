@@ -87,6 +87,16 @@ def test_the_driver_defaults_preserve_the_frozen_protocol():
     assert driver.RETAIN_RAW_OUTPUT is False
 
     source = (ROOT / "scripts" / "train_on_dataset.py").read_text(encoding="utf-8")
-    assert 'default="first_assertion"' in source
+    # The argparse default is now the None sentinel, so --successor-protocol
+    # can tell an unset flag from a deliberately conflicting one. The frozen
+    # contract is unchanged and is asserted on the RESOLUTION rather than the
+    # spelling of the default: absence still means first_assertion.
+    assert "if args.candidate_parse_mode is None:" in source
+    assert 'args.candidate_parse_mode = "first_assertion"' in source
     assert '"--retain-raw-output", action="store_true"' in source
     assert 'slot["raw_output"] = text' in source
+
+    # And the resolution actually runs before anything reads the value.
+    resolution = source.index("if args.candidate_parse_mode is None:")
+    assert resolution < source.index("if args.dry_run:"), (
+        "the legacy default must resolve before the run is described")

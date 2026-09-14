@@ -4368,7 +4368,11 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--candidate-parse-mode", choices=["first_assertion", "whole_output"],
-        default="first_assertion",
+        # None means "not supplied". It still resolves to first_assertion
+        # below, so absence continues to mean LEGACY exactly as before; the
+        # sentinel only lets --successor-protocol tell an unset flag from a
+        # deliberately conflicting one.
+        default=None,
         help=(
             "how a model output becomes a candidate. The frozen default scans "
             "for the first 'assert ' line and discards the rest, which cannot "
@@ -4574,6 +4578,20 @@ if __name__ == "__main__":
         help="How many times each corrected record appears (default 3).",
     )
     parser.add_argument(
+        "--successor-protocol", action="store_true",
+        help=(
+            "Run the named frozen successor protocol "
+            "(harness/successor_protocol.py). It SETS whole_output parsing, "
+            "raw-output retention, test-function candidates, 8 candidates per "
+            "function, seed 42, 1024-token function and repository generation "
+            "budgets and a 3072-token sequence budget. Passing any of the "
+            "options it owns alongside it is refused rather than merged: the "
+            "point of naming a protocol is that the name fixes every setting, "
+            "and a value typed beside it can disagree with the receipts that "
+            "cite the protocol."
+        ),
+    )
+    parser.add_argument(
         "--o1-sidecar", default=None,
         help=(
             "Directory holding train.sidecar.json and manifest.json from "
@@ -4699,6 +4717,68 @@ if __name__ == "__main__":
         help="Print local paths/options without opening the corpus or loading a model",
     )
     args = parser.parse_args()
+    if args.successor_protocol:
+        _parse_mode_supplied = args.candidate_parse_mode is not None
+        from harness.successor_protocol import (
+            OWNED_CLI_OPTIONS, SUCCESSOR_PROTOCOL, assert_runtime_matches,
+        )
+        # A CONFLICTING value is refused; a redundant one that already agrees
+        # with the protocol is not. argparse cannot distinguish "--seed 42"
+        # from an unsupplied seed, so the test is what the value IS, not
+        # whether it was typed.
+        conflicts = []
+        if (_parse_mode_supplied
+                and args.candidate_parse_mode
+                != SUCCESSOR_PROTOCOL["candidate_parse_mode"]):
+            conflicts.append(
+                f"{OWNED_CLI_OPTIONS['candidate_parse_mode']}="
+                f"{args.candidate_parse_mode}")
+        if args.seed != SUCCESSOR_PROTOCOL["generation_seed"]:
+            conflicts.append(f"{OWNED_CLI_OPTIONS['seed']}={args.seed}")
+        if (args.generation_completion_token_limit is not None
+                and args.generation_completion_token_limit != SUCCESSOR_PROTOCOL[
+                    "function_generation_completion_limit"]):
+            conflicts.append(
+                f"{OWNED_CLI_OPTIONS['generation_completion_token_limit']}="
+                f"{args.generation_completion_token_limit}")
+        if (args.max_sequence_tokens is not None
+                and args.max_sequence_tokens != SUCCESSOR_PROTOCOL[
+                    "max_sequence_tokens"]):
+            conflicts.append(
+                f"{OWNED_CLI_OPTIONS['max_sequence_tokens']}="
+                f"{args.max_sequence_tokens}")
+        if conflicts:
+            parser.error(
+                "--successor-protocol conflicts with " + ", ".join(conflicts)
+                + "; remove them rather than setting them beside it. A value "
+                "typed next to a named protocol can disagree with every "
+                "receipt that cites the protocol by name.")
+        runtime_problems = assert_runtime_matches(
+            Path(__file__).resolve().parent.parent)
+        if runtime_problems:
+            parser.error(
+                "the successor protocol disagrees with the code it names: "
+                + "; ".join(runtime_problems))
+        args.candidate_parse_mode = SUCCESSOR_PROTOCOL["candidate_parse_mode"]
+        args.retain_raw_output = SUCCESSOR_PROTOCOL["retain_raw_output"]
+        args.allow_test_function_candidates = SUCCESSOR_PROTOCOL[
+            "allow_test_function_candidates"]
+        args.seed = SUCCESSOR_PROTOCOL["generation_seed"]
+        args.generation_completion_token_limit = SUCCESSOR_PROTOCOL[
+            "function_generation_completion_limit"]
+        args.max_sequence_tokens = SUCCESSOR_PROTOCOL["max_sequence_tokens"]
+        print(
+            "[SUCCESSOR PROTOCOL] "
+            + SUCCESSOR_PROTOCOL["protocol_name"]
+            + ": parse=" + str(args.candidate_parse_mode)
+            + " raw_output=" + str(args.retain_raw_output)
+            + " candidates=" + str(TESTS_PER_PAIR)
+            + " seed=" + str(args.seed)
+            + " completion=" + str(args.generation_completion_token_limit)
+            + " sequence=" + str(args.max_sequence_tokens),
+            flush=True,
+        )
+
     from utils.local_run import local_run_paths
 
     try:
@@ -4707,6 +4787,9 @@ if __name__ == "__main__":
         )
     except ValueError as exc:
         parser.error(str(exc))
+    if args.candidate_parse_mode is None:
+        # Unchanged contract: absence of the flag means legacy.
+        args.candidate_parse_mode = "first_assertion"
     if args.dry_run:
         print(json.dumps({
             "backend": "local_cuda",

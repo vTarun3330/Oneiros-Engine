@@ -149,3 +149,79 @@ def test_the_recorded_contract_hashes_real_files():
 def test_every_named_contract_source_exists():
     for relative in CONTRACT_SOURCES.values():
         assert (ROOT / relative).is_file(), relative
+
+
+# ------------------------------- the protocol controls the launch path
+
+def test_the_sequence_limit_is_in_the_protocol_and_raised():
+    assert SUCCESSOR_PROTOCOL["max_sequence_tokens"] == 3072
+
+
+def test_the_declared_allocation_clears_the_launch_guard():
+    """train_on_dataset rejects prompt + completion >= max_sequence_tokens."""
+    prompt_budget = 1024
+    total = prompt_budget + SUCCESSOR_PROTOCOL["function_generation_completion_limit"]
+    assert total < SUCCESSOR_PROTOCOL["max_sequence_tokens"], (
+        f"{total} would be refused by the launch guard")
+
+
+def test_the_internal_sequence_limit_matches_the_protocol():
+    from engine.sft_trainer import MAX_SFT_SEQUENCE_LENGTH
+    assert MAX_SFT_SEQUENCE_LENGTH == SUCCESSOR_PROTOCOL["max_sequence_tokens"]
+
+
+def test_the_flags_carry_every_generation_setting():
+    flags = training_command_flags()
+    text = " ".join(flags)
+    assert "--generation-completion-token-limit 1024" in text
+    assert "--max-sequence-tokens 3072" in text
+    assert "--candidate-parse-mode whole_output" in text
+
+
+def test_the_protocol_agrees_with_the_code_it_names():
+    """A named protocol that only describes settings is a comment."""
+    from harness.successor_protocol import assert_runtime_matches
+    assert assert_runtime_matches(ROOT) == []
+
+
+def test_the_parser_identity_is_the_production_parser():
+    """analyze_parser_pilot reimplements the split; nothing generates through it."""
+    assert CONTRACT_SOURCES["parser_source_sha256"] == "engine/generator.py"
+    assert "analyze_parser_pilot" not in str(CONTRACT_SOURCES)
+    generator = (ROOT / "engine" / "generator.py").read_text(encoding="utf-8")
+    assert "_parse_whole_output" in generator and "parse_mode" in generator
+
+
+def test_the_production_generation_path_is_hashed():
+    for relative in ("engine/generator.py", "engine/model_runtime.py",
+                     "scripts/train_on_dataset.py",
+                     "engine/test_generation_prompt.py"):
+        assert relative in CONTRACT_SOURCES.values(), relative
+
+
+def test_the_launch_option_exists_and_owns_its_flags():
+    from harness.successor_protocol import OWNED_CLI_OPTIONS
+    source = (ROOT / "scripts" / "train_on_dataset.py").read_text(encoding="utf-8")
+    assert '"--successor-protocol"' in source
+    assert "args.successor_protocol" in source
+    for option in OWNED_CLI_OPTIONS.values():
+        assert option in source, option
+
+
+def test_the_launch_option_sets_rather_than_only_records():
+    source = (ROOT / "scripts" / "train_on_dataset.py").read_text(encoding="utf-8")
+    block = source.split("if args.successor_protocol:", 1)[1][:3000]
+    for assignment in ("args.candidate_parse_mode = ",
+                       "args.retain_raw_output = ",
+                       "args.allow_test_function_candidates = ",
+                       "args.seed = ",
+                       "args.generation_completion_token_limit = ",
+                       "args.max_sequence_tokens = "):
+        assert assignment in block, assignment
+
+
+def test_absence_of_the_flag_still_means_legacy():
+    """The frozen contract: no candidate_parse_mode means first_assertion."""
+    source = (ROOT / "scripts" / "train_on_dataset.py").read_text(encoding="utf-8")
+    assert 'args.candidate_parse_mode = "first_assertion"' in source
+    assert "if args.candidate_parse_mode is None:" in source

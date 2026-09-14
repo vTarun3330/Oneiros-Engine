@@ -52,7 +52,13 @@ from engine.prompt_budget import (
 from engine.test_generation_prompt import format_chat_prompt
 
 
-MAX_SFT_SEQUENCE_LENGTH = 2048
+#: Raised from 2048 for the successor protocol. The launch guard refuses a
+#: prompt budget plus a generation completion budget that reaches this value,
+#: so 1024 + 1024 was rejected at 2048 before chat-template overhead was even
+#: counted. The completion budget is never what gets reduced: the model
+#: supports max_position_embeddings=32768 and 2048 was only ever a project
+#: constant chosen when candidates were one-line assertions.
+MAX_SFT_SEQUENCE_LENGTH = 3072
 SFT_GRADIENT_ACCUMULATION_STEPS = 16
 
 

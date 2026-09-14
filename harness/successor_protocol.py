@@ -41,6 +41,12 @@ SUCCESSOR_PROTOCOL: dict[str, Any] = {
     "generation_seed": 42,
     "function_generation_completion_limit": 1024,
     "repository_generation_completion_limit": 1024,
+    # Raised from the 2048 project default. The launch guard in
+    # train_on_dataset.py refuses prompt + completion >= this value, so a
+    # 1024 prompt budget beside a 1024 completion budget is rejected at 2048
+    # before chat-template overhead is even counted. The completion budget is
+    # never the thing that gets reduced.
+    "max_sequence_tokens": 3072,
 }
 
 #: Fields Arm B compares between the arms. A difference in any of them makes
@@ -53,7 +59,16 @@ CONTRACT_FIELDS = tuple(
 #: timed out. A receipt naming "whole_output" cannot tell whether the parser
 #: changed between two arms; the hash of the file can.
 CONTRACT_SOURCES = {
-    "parser_source_sha256": "scripts/analyze_parser_pilot.py",
+    # The PRODUCTION parser. Phi3Generator._parse_output and
+    # _parse_whole_output are what actually turn a model output into a
+    # candidate at generation time. scripts/analyze_parser_pilot.py is an
+    # analysis script that happens to reimplement the same split; hashing it
+    # would pin the identity of a tool nothing generates through.
+    "parser_source_sha256": "engine/generator.py",
+    "generation_runtime_source_sha256": "engine/model_runtime.py",
+    "generation_orchestration_source_sha256": "scripts/train_on_dataset.py",
+    "prompt_builder_source_sha256": "engine/test_generation_prompt.py",
+    "prompt_budget_source_sha256": "engine/prompt_budget.py",
     "candidate_policy_source_sha256": "harness/candidate_policy.py",
     "evaluator_source_sha256": "metrics/research_evaluation.py",
     "timeout_policy_source_sha256": "harness/safe_execution.py",
@@ -102,8 +117,75 @@ def training_command_flags() -> list[str]:
         flags.append("--retain-raw-output")
     if SUCCESSOR_PROTOCOL["allow_test_function_candidates"]:
         flags.append("--allow-test-function-candidates")
-    flags += ["--seed", str(SUCCESSOR_PROTOCOL["generation_seed"])]
+    flags += [
+        "--seed", str(SUCCESSOR_PROTOCOL["generation_seed"]),
+        "--generation-completion-token-limit",
+        str(SUCCESSOR_PROTOCOL["function_generation_completion_limit"]),
+        "--max-sequence-tokens", str(SUCCESSOR_PROTOCOL["max_sequence_tokens"]),
+    ]
     return flags
+
+
+#: CLI options the protocol owns. Passing one of these beside
+#: --successor-protocol is a conflict, not an override: the protocol exists so
+#: that a single name fixes every generation setting, and a value typed beside
+#: it can silently disagree with the receipts that name the protocol.
+OWNED_CLI_OPTIONS = {
+    "candidate_parse_mode": "--candidate-parse-mode",
+    "retain_raw_output": "--retain-raw-output",
+    "allow_test_function_candidates": "--allow-test-function-candidates",
+    "seed": "--seed",
+    "generation_completion_token_limit": "--generation-completion-token-limit",
+    "max_sequence_tokens": "--max-sequence-tokens",
+}
+
+
+def assert_runtime_matches(root) -> list[str]:
+    """The protocol must agree with the constants the code actually uses.
+
+    A named protocol that only describes settings is a comment. These are the
+    values the generator and policy enforce at runtime, checked against the
+    protocol so the two cannot drift apart silently.
+    """
+    import sys
+    from pathlib import Path
+    root = Path(root)
+    if str(root) not in sys.path:
+        sys.path.insert(0, str(root))
+
+    problems: list[str] = []
+    from config import model_config
+    from harness.candidate_policy import MAX_TEST_FUNCTION_ASSERTS
+
+    if MAX_TEST_FUNCTION_ASSERTS != SUCCESSOR_PROTOCOL["max_assertions"]:
+        problems.append(
+            f"candidate policy allows {MAX_TEST_FUNCTION_ASSERTS} assertions, "
+            f"the protocol declares {SUCCESSOR_PROTOCOL['max_assertions']}")
+    if model_config.temperature != SUCCESSOR_PROTOCOL["temperature"]:
+        problems.append(
+            f"model_config.temperature is {model_config.temperature}, the "
+            f"protocol declares {SUCCESSOR_PROTOCOL['temperature']}")
+    if model_config.top_p != SUCCESSOR_PROTOCOL["top_p"]:
+        problems.append(
+            f"model_config.top_p is {model_config.top_p}, the protocol "
+            f"declares {SUCCESSOR_PROTOCOL['top_p']}")
+
+    from scripts import train_on_dataset as trainer
+    if trainer.TESTS_PER_PAIR != SUCCESSOR_PROTOCOL["candidates_per_function"]:
+        problems.append(
+            f"TESTS_PER_PAIR is {trainer.TESTS_PER_PAIR}, the protocol "
+            f"declares {SUCCESSOR_PROTOCOL['candidates_per_function']}")
+
+    declared = (SUCCESSOR_PROTOCOL["function_generation_completion_limit"]
+                + 1024)
+    if declared >= SUCCESSOR_PROTOCOL["max_sequence_tokens"]:
+        problems.append(
+            f"a 1024 prompt budget plus the "
+            f"{SUCCESSOR_PROTOCOL['function_generation_completion_limit']} "
+            f"completion budget is {declared}, which the launch guard refuses "
+            f"against max_sequence_tokens "
+            f"{SUCCESSOR_PROTOCOL['max_sequence_tokens']}")
+    return problems
 
 
 def assert_matches(recorded: dict[str, Any] | None, root
