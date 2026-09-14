@@ -1,0 +1,38 @@
+{
+  "effective_total_examples": 6889,
+  "effective_synthetic_examples": 5511,
+  "effective_repository_examples": 1378,
+  "selection_sha256": "598eef61c18e3e394d73a4fc2b72aa91309c7bf5a97a06eddb20be5f372eef23",
+  "training_view_content_sha256": "3f5f39937c8b2429965bc0d9c79de95777682b52075cda013e5efd8322b3622a",
+  "training_view_order_independent_sha256": "1350b6341c304901ec58caf53f7d541d8c148431d6fe2c64b433090212b2c3b9",
+  "unique_examples": 5735,
+  "unique_completions": 1793,
+  "records_outside_train": [],
+  "records_outside_train_count": 0,
+  "records_in_ablation_dev": 0,
+  "per_dataset": {
+    "mbpp": 4384,
+    "humaneval": 1119,
+    "SWE-bench Verified": 786,
+    "BugsInPy": 592,
+    "manual_curated_examples": 8
+  },
+  "repeat_histogram": {
+    "4": 96,
+    "5": 10,
+    "8": 118
+  },
+  "dedup_synthetic": {
+    "input_examples": 5511,
+    "retained_examples": 5511,
+    "exact_duplicates_excluded": 0
+  },
+  "dedup_repository": {
+    "input_examples": 224,
+    "retained_examples": 224,
+    "exact_duplicates_excluded": 0
+  },
+  "budget_excluded_total": 0,
+  "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+}
