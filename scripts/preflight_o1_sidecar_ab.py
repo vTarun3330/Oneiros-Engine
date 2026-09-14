@@ -231,6 +231,28 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
             "re-derived selection")
 
     selected_ids = rederived_ids
+
+    # ------------------------------------------------------ coverage, exactly
+    selected_id_set = set(selected_ids)
+    sidecar_ids = {row["record_id"] for row in sidecar}
+    inside = sidecar_ids & selected_id_set
+    outside = sidecar_ids - selected_id_set
+    rows_inside = [r for r in sidecar if r["record_id"] in inside]
+    rows_outside = [r for r in sidecar if r["record_id"] in outside]
+
+    # EVERY row must resolve through the FULL train split, which is the map
+    # the trainer uses. Keyed to the bounded selection instead, 836 of these
+    # rows would vanish and deliver 6.4% of a mixture declared at 16% - the
+    # multi-mutant failure. Proving it here means the trainer's own lookup is
+    # checked against the same set before any GPU time is spent.
+    full_split_ids = {pair["id"] for pair in eligible_pairs}
+    unresolvable = sorted(sidecar_ids - full_split_ids)
+    if unresolvable:
+        problems.append(
+            f"{len(unresolvable)} sidecar records do not resolve through the "
+            f"full train split and could never be appended, first: "
+            f"{unresolvable[:3]}")
+
     # ------------------------------------------------------- leakage / splits
     train_ids = {str(r["id"]) for r in load_development_split(
         corpus_dir, "train", include_excluded=True)}
@@ -390,6 +412,13 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
             "override_only_coverage_of_arm_a": round(
                 len(inside) / max(len(selected_id_set), 1), 6),
             "force_inclusion_required": bool(outside),
+            "rows_resolving_through_full_train_split": (
+                len(sidecar) - len(unresolvable)),
+            "rows_unresolvable": len(unresolvable),
+            "all_rows_resolve_and_would_be_appended": not unresolvable,
+            "trainer_lookup_map": (
+                "the full train split, as load_phase3_pairs(corpus_dir, "
+                "'train') returns it - not the bounded selection"),
         },
         "mixing": {
             "baseline_examples": baseline_examples,
