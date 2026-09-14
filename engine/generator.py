@@ -28,7 +28,13 @@ except ImportError:
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from config import model_config, training_config
+from config import immutable_revision_for, model_config, training_config
+import re
+
+#: A revision identifies a model only if it names one immutable commit.
+_IMMUTABLE_REVISION = re.compile(r"^[0-9a-f]{40}$")
+_MOVING_REFS = {"main", "master", "latest", "head", "HEAD", ""}
+
 from engine.model_runtime import (
     build_4bit_quantization_config,
     runtime_profile,
@@ -89,15 +95,27 @@ class Phi3Generator:
             raise ImportError("transformers is required. Install with: pip install transformers")
 
         self.model_name = model_name or model_config.model_name
-        if model_revision is not None:
-            self.model_revision = model_revision
+        # The revision reaches from_pretrained for the tokenizer, the config
+        # AND the weights, so a moving reference here is not a metadata
+        # problem - it is what gets loaded. This previously fell back to a
+        # branch name for any non-canonical model_name, which is how a Qwen
+        # evaluation ran and recorded itself against a pointer.
+        pinned = immutable_revision_for(self.model_name)
+        if model_revision is not None and str(model_revision) not in _MOVING_REFS:
+            self.model_revision = str(model_revision)
+        elif pinned:
+            self.model_revision = pinned
         elif self.model_name == model_config.model_name:
             self.model_revision = model_config.model_revision
         else:
-            # A non-canonical model_name with no explicit revision has no
-            # pinned snapshot to fall back to; resolve "main" and record the
-            # actual snapshot hash after loading for diagnostic reproducibility.
-            self.model_revision = "main"
+            self.model_revision = ""
+        if not _IMMUTABLE_REVISION.match(str(self.model_revision or "")):
+            raise ValueError(
+                f"{self.model_name} resolved to revision "
+                f"{self.model_revision!r}, which is not an immutable "
+                "40-character snapshot SHA. Add it to "
+                "config.IMMUTABLE_MODEL_REVISIONS rather than loading and "
+                "recording a moving reference.")
         self.attention_implementation = (
             attention_implementation or model_config.attention_implementation
         )

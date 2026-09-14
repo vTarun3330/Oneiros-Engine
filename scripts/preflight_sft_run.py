@@ -62,6 +62,7 @@ from scripts.train_on_dataset import (
     is_repository_execution_mode,
     load_phase3_pairs,
     make_sft_data_point as _make_data_point,
+    resolved_base_model_identity,
     resolved_selection_tokenizer_identity,
     select_bounded_train_pairs,
     supervision_exclusion_summary,
@@ -374,27 +375,14 @@ def build_preflight(
 
     from transformers import AutoTokenizer
 
-    resolved_base_model_name = base_model_name or model_config.model_name
-    _pinned = immutable_revision_for(resolved_base_model_name)
-    resolved_base_model_revision = (
-        base_model_revision
-        if base_model_revision is not None
-        else (
-            model_config.model_revision
-            if resolved_base_model_name == model_config.model_name
-            else (_pinned or "main")
-        )
+    # ONE resolver, shared with the trainer. A second copy here is exactly
+    # how three inline copies drifted in train_on_dataset.py and quarantined
+    # a completed GPU evaluation.
+    trainer.BASE_MODEL_NAME_OVERRIDE = base_model_name or model_config.model_name
+    trainer.BASE_MODEL_REVISION_OVERRIDE = base_model_revision
+    resolved_base_model_name, resolved_base_model_revision = (
+        resolved_base_model_identity()
     )
-    # "main" is a moving pointer, not an identity. A receipt recording it
-    # describes whatever upstream happened to have pushed that day, and two
-    # arms separated by a push are not comparable though both say "main".
-    if resolved_base_model_revision == "main" and _pinned:
-        resolved_base_model_revision = _pinned
-    if resolved_base_model_revision == "main":
-        raise RuntimeError(
-            f"{resolved_base_model_name} has no immutable snapshot revision; "
-            "add one to config.IMMUTABLE_MODEL_REVISIONS rather than "
-            "recording a branch pointer as the model identity")
     tokenizer = AutoTokenizer.from_pretrained(
         resolved_base_model_name,
         revision=resolved_base_model_revision,
@@ -405,8 +393,6 @@ def build_preflight(
         tokenizer.pad_token = tokenizer.eos_token
     if not tokenizer.eos_token:
         raise RuntimeError("Tokenizer has no EOS token")
-    trainer.BASE_MODEL_NAME_OVERRIDE = resolved_base_model_name
-    trainer.BASE_MODEL_REVISION_OVERRIDE = resolved_base_model_revision
     selection_tokenizer_name, selection_tokenizer_revision = (
         resolved_selection_tokenizer_identity()
     )

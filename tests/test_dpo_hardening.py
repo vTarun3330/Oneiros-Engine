@@ -72,6 +72,22 @@ def test_train_on_dataset_passes_the_override_into_dpo():
     source = inspect.getsource(train_on_dataset.run_training)
     start = source.index("dpo_trainer = DPOTrainer(")
     call = source[start:start + 400]
-    assert "BASE_MODEL_NAME_OVERRIDE" in call
-    assert "BASE_MODEL_REVISION_OVERRIDE" in call
+    # The name and revision now arrive through the one shared resolver, which
+    # reads the same overrides and additionally refuses a moving reference.
+    # Passing the raw override is what let a None fall through to a branch
+    # name inside the loader and quarantined a completed GPU evaluation.
+    assert "resolved_base_model_identity()[0]" in call
+    assert "resolved_base_model_identity()[1]" in call
     assert "BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE" in call
+
+    # The resolver must still honour the override rather than ignore it.
+    from scripts import train_on_dataset as trainer
+    original = trainer.BASE_MODEL_NAME_OVERRIDE
+    try:
+        trainer.BASE_MODEL_NAME_OVERRIDE = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+        trainer.BASE_MODEL_REVISION_OVERRIDE = None
+        name, revision = trainer.resolved_base_model_identity()
+        assert name == "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+        assert revision == "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+    finally:
+        trainer.BASE_MODEL_NAME_OVERRIDE = original

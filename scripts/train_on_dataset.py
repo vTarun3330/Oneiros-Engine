@@ -155,27 +155,51 @@ BALANCED_SFT_DATASET_PATH = None
 O1_SIDECAR_PATH = None
 
 
-def resolved_base_model_identity() -> Tuple[str, str]:
-    """Return the (name, revision) actually used to load and tokenize.
+#: A revision is an identity only if it names one immutable commit. A branch
+#: or tag moves, so two runs citing it can differ in weights and tokenizer
+#: while both receipts agree; a shortened SHA is ambiguous by construction.
+_IMMUTABLE_REVISION = re.compile(r"^[0-9a-f]{40}$")
+_MOVING_REFS = {"main", "master", "latest", "head", "HEAD", ""}
 
-    A model named here but resolved to ``main`` records no identity at all:
-    the branch pointer moves, and two arms of a controlled comparison
-    separated by an upstream push differ in their weights while both
-    receipts claim the same revision. Any model with a pinned snapshot
-    therefore resolves to that snapshot, whichever way it was named.
+
+def is_immutable_revision(revision: object) -> bool:
+    """True only for a full 40-character lowercase commit SHA."""
+    return bool(_IMMUTABLE_REVISION.match(str(revision or "")))
+
+
+def resolved_base_model_identity() -> Tuple[str, str]:
+    """THE resolver. Every loading and recording path calls this one.
+
+    A model resolved to ``main`` records no identity at all: the branch
+    pointer moves, and two arms of a controlled comparison separated by an
+    upstream push differ in their weights while both receipts claim the same
+    revision. That is not hypothetical here - three inline copies of this
+    logic each ended with a bare branch-name fallback, and they were what
+    wrote the run
+    contract, the reproducibility manifest and the generation settings, so
+    a completed GPU evaluation had to be quarantined for citing a pointer.
+
+    So this refuses rather than falls back. A model with no pinned snapshot
+    is a configuration error to be fixed in config.IMMUTABLE_MODEL_REVISIONS,
+    not something to paper over with a branch name at run time.
     """
     name = BASE_MODEL_NAME_OVERRIDE or model_config.model_name
     pinned = immutable_revision_for(name)
-    if BASE_MODEL_REVISION_OVERRIDE is not None:
-        revision = BASE_MODEL_REVISION_OVERRIDE
-        if revision == "main" and pinned:
-            revision = pinned
-    elif name == model_config.model_name:
-        revision = model_config.model_revision
+    if BASE_MODEL_REVISION_OVERRIDE is not None and str(
+            BASE_MODEL_REVISION_OVERRIDE) not in _MOVING_REFS:
+        revision = str(BASE_MODEL_REVISION_OVERRIDE)
     elif pinned:
         revision = pinned
+    elif name == model_config.model_name:
+        revision = model_config.model_revision
     else:
-        revision = "main"
+        revision = ""
+    if not is_immutable_revision(revision):
+        raise RuntimeError(
+            f"{name} resolved to revision {revision!r}, which is not an "
+            "immutable 40-character snapshot SHA. Add the model to "
+            "config.IMMUTABLE_MODEL_REVISIONS rather than recording a moving "
+            "reference as the model identity.")
     return name, revision
 
 
@@ -188,8 +212,14 @@ def resolved_selection_tokenizer_identity() -> Tuple[str, str]:
         else:
             # The tokenizer decides which records are eligible for
             # supervision at all, so an unpinned one silently changes the
-            # dataset between runs. It gets the same pinning as the model.
-            revision = immutable_revision_for(name) or "main"
+            # dataset between runs. It gets the same pinning as the model,
+            # and the same refusal rather than a fallback.
+            revision = immutable_revision_for(name) or ""
+        if not is_immutable_revision(revision):
+            raise RuntimeError(
+                f"selection tokenizer {name} resolved to {revision!r}, which "
+                "is not an immutable snapshot SHA; it decides supervision "
+                "eligibility and must be pinned")
         return name, revision
     return resolved_base_model_identity()
 # Real repository records are rare in V2/V3.  Bound their deterministic
@@ -1675,15 +1705,8 @@ def _adapter_evaluation_context(
     function_count: int,
 ) -> Dict:
     """Identity fields that make validation progress safe to resume."""
-    resolved_base_model_name = BASE_MODEL_NAME_OVERRIDE or model_config.model_name
-    resolved_base_model_revision = (
-        BASE_MODEL_REVISION_OVERRIDE
-        if BASE_MODEL_REVISION_OVERRIDE is not None
-        else (
-            model_config.model_revision
-            if resolved_base_model_name == model_config.model_name
-            else "main"
-        )
+    resolved_base_model_name, resolved_base_model_revision = (
+        resolved_base_model_identity()
     )
     reproducibility = build_reproducibility_manifest(
         Path(__file__).parent.parent,
@@ -1910,15 +1933,8 @@ def _evaluate_adapter_kill_rate(
     adapter_file = adapter_dir / "adapter_model.safetensors" if adapter_dir else None
     if adapter_file is not None and not adapter_file.exists():
         raise RuntimeError(f"{adapter_label} validation requires its frozen adapter")
-    resolved_base_model_name = BASE_MODEL_NAME_OVERRIDE or model_config.model_name
-    resolved_base_model_revision = (
-        BASE_MODEL_REVISION_OVERRIDE
-        if BASE_MODEL_REVISION_OVERRIDE is not None
-        else (
-            model_config.model_revision
-            if resolved_base_model_name == model_config.model_name
-            else "main"
-        )
+    resolved_base_model_name, resolved_base_model_revision = (
+        resolved_base_model_identity()
     )
     adapter_sha256 = (
         sha256_file(adapter_file)
@@ -1933,9 +1949,13 @@ def _evaluate_adapter_kill_rate(
         torch.cuda.manual_seed_all(SEED)
 
     started = time.time()
+    # The SAME resolver that writes the receipts supplies the revision that
+    # is loaded. Passing the raw override here is what let a None fall through
+    # to a branch name inside the generator while the contract said nothing.
+    _gen_name, _gen_revision = resolved_base_model_identity()
     generator = Phi3Generator(
-        model_name=BASE_MODEL_NAME_OVERRIDE,
-        model_revision=BASE_MODEL_REVISION_OVERRIDE,
+        model_name=_gen_name,
+        model_revision=_gen_revision,
         attention_implementation=BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE,
     )
     try:
@@ -3123,15 +3143,8 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
             else SFT_COMPLEX_TARGET_FRACTION
         ),
     }
-    resolved_base_model_name = BASE_MODEL_NAME_OVERRIDE or model_config.model_name
-    resolved_base_model_revision = (
-        BASE_MODEL_REVISION_OVERRIDE
-        if BASE_MODEL_REVISION_OVERRIDE is not None
-        else (
-            model_config.model_revision
-            if resolved_base_model_name == model_config.model_name
-            else "main"
-        )
+    resolved_base_model_name, resolved_base_model_revision = (
+        resolved_base_model_identity()
     )
     resolved_attention_implementation = (
         BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE
@@ -3672,8 +3685,8 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
                     warmup_steps=sft_hyperparameters["warmup_steps"],
                     checkpoint_steps=sft_hyperparameters["checkpoint_save_steps"],
                     lr_scheduler_type=sft_hyperparameters["lr_scheduler_type"],
-                    model_name=BASE_MODEL_NAME_OVERRIDE,
-                    model_revision=BASE_MODEL_REVISION_OVERRIDE,
+                    model_name=resolved_base_model_identity()[0],
+                    model_revision=resolved_base_model_identity()[1],
                     attention_implementation=BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE,
                     lora_dropout=LORA_DROPOUT_OVERRIDE,
                     weight_decay=WEIGHT_DECAY_OVERRIDE,
@@ -3981,8 +3994,8 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
         try:
             dpo_trainer = DPOTrainer(
                 output_dir=ADAPTER_DIR,
-                model_name=BASE_MODEL_NAME_OVERRIDE,
-                model_revision=BASE_MODEL_REVISION_OVERRIDE,
+                model_name=resolved_base_model_identity()[0],
+                model_revision=resolved_base_model_identity()[1],
                 attention_implementation=BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE,
             )
             dpo_trainer.setup_model()
