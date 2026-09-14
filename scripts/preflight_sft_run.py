@@ -43,6 +43,9 @@ from engine.sft_trainer import (
     sft_prompt_limit_for_execution_mode,
 )
 from harness.corpus_view import verify_development_view
+from harness.successor_protocol import (
+    SUCCESSOR_PROTOCOL, as_recorded_contract, training_command_flags,
+)
 from scripts.train_on_dataset import (
     FUNCTION_EXECUTION_MODE,
     REPOSITORY_EXECUTION_MODE,
@@ -170,6 +173,84 @@ def contract_source_hashes() -> dict[str, str]:
     return {
         field: hashlib.sha256((ROOT / relative).read_bytes()).hexdigest()
         for field, relative in CONTRACT_SOURCE_FILES.items()
+    }
+
+
+def compute_selection_compatibility(
+    eligible_pairs, tokenizer, *, selection_prompt_token_limit: int,
+    repository_prompt_token_limit: int,
+    repository_completion_token_limit: int,
+) -> dict[str, Any]:
+    """Which pairs the bounded selection may draw from, and why.
+
+    Shared so the Arm A preflight and the Arm B independent re-derivation
+    cannot disagree. Two copies of this loop drifting apart would make an
+    identical selection SHA impossible to reproduce and impossible to
+    explain - the same reason harness.multi_mutant_examples exists.
+    """
+    compatible_repository_ids: set[str] = set()
+    compatible_synthetic_ids: set[str] = set()
+    compatible_repository_completion_counts: Counter[str] = Counter()
+    repository_budget_incompatibilities: list[dict[str, Any]] = []
+    context_eligible_repository_pairs = 0
+    for pair in eligible_pairs:
+        mode = pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
+        pair_prompt = build_pair_prompt(pair)
+        if not is_repository_execution_mode(mode):
+            try:
+                compact_unified_user_prompt(
+                    tokenizer,
+                    pair_prompt,
+                    selection_prompt_token_limit,
+                    format_chat_prompt,
+                )
+            except (PromptBudgetError, ValueError):
+                continue
+            compatible_synthetic_ids.add(pair["id"])
+            continue
+        context_eligible_repository_pairs += 1
+        compatible = 0
+        for completion in _repository_fragment_tests(pair.get("test_cases", []))[:3]:
+            completion_tokens = len(
+                tokenizer(
+                    completion.strip() + tokenizer.eos_token,
+                    add_special_tokens=False,
+                )["input_ids"]
+            )
+            if completion_tokens > repository_completion_token_limit:
+                continue
+            allowed_prompt_tokens = min(
+                repository_prompt_token_limit,
+                MAX_SFT_SEQUENCE_LENGTH - completion_tokens,
+            )
+            try:
+                compact_unified_user_prompt(
+                    tokenizer,
+                    pair_prompt,
+                    allowed_prompt_tokens,
+                    format_chat_prompt,
+                )
+            except (PromptBudgetError, ValueError) as exc:
+                repository_budget_incompatibilities.append({
+                    "record_id": pair["id"],
+                    "completion_tokens": completion_tokens,
+                    "prompt_limit_tokens": max(0, allowed_prompt_tokens),
+                    "reason": "required_prompt_sections_exceed_mode_budget",
+                    "detail": str(exc),
+                })
+                break
+            compatible += 1
+        if compatible:
+            compatible_repository_ids.add(pair["id"])
+            compatible_repository_completion_counts[pair["id"]] = compatible
+    return {
+        "compatible_repository_ids": compatible_repository_ids,
+        "compatible_synthetic_ids": compatible_synthetic_ids,
+        "compatible_repository_completion_counts":
+            compatible_repository_completion_counts,
+        "repository_budget_incompatibilities":
+            repository_budget_incompatibilities,
+        "context_eligible_repository_pairs": context_eligible_repository_pairs,
     }
 
 
@@ -357,61 +438,20 @@ def build_preflight(
             "Production context gate disagrees with the locked readiness audit"
         )
 
-    compatible_repository_ids: set[str] = set()
-    compatible_synthetic_ids: set[str] = set()
-    compatible_repository_completion_counts: Counter[str] = Counter()
-    repository_budget_incompatibilities: list[dict[str, Any]] = []
-    context_eligible_repository_pairs = 0
-    for pair in eligible_pairs:
-        mode = pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
-        pair_prompt = build_pair_prompt(pair)
-        if not is_repository_execution_mode(mode):
-            try:
-                compact_unified_user_prompt(
-                    tokenizer,
-                    pair_prompt,
-                    selection_prompt_token_limit,
-                    format_chat_prompt,
-                )
-            except (PromptBudgetError, ValueError):
-                continue
-            compatible_synthetic_ids.add(pair["id"])
-            continue
-        context_eligible_repository_pairs += 1
-        compatible = 0
-        for completion in _repository_fragment_tests(pair.get("test_cases", []))[:3]:
-            completion_tokens = len(
-                tokenizer(
-                    completion.strip() + tokenizer.eos_token,
-                    add_special_tokens=False,
-                )["input_ids"]
-            )
-            if completion_tokens > repository_completion_token_limit:
-                continue
-            allowed_prompt_tokens = min(
-                repository_prompt_token_limit,
-                MAX_SFT_SEQUENCE_LENGTH - completion_tokens,
-            )
-            try:
-                compact_unified_user_prompt(
-                    tokenizer,
-                    pair_prompt,
-                    allowed_prompt_tokens,
-                    format_chat_prompt,
-                )
-            except (PromptBudgetError, ValueError) as exc:
-                repository_budget_incompatibilities.append({
-                    "record_id": pair["id"],
-                    "completion_tokens": completion_tokens,
-                    "prompt_limit_tokens": max(0, allowed_prompt_tokens),
-                    "reason": "required_prompt_sections_exceed_mode_budget",
-                    "detail": str(exc),
-                })
-                break
-            compatible += 1
-        if compatible:
-            compatible_repository_ids.add(pair["id"])
-            compatible_repository_completion_counts[pair["id"]] = compatible
+    _compatibility = compute_selection_compatibility(
+        eligible_pairs, tokenizer,
+        selection_prompt_token_limit=selection_prompt_token_limit,
+        repository_prompt_token_limit=repository_prompt_token_limit,
+        repository_completion_token_limit=repository_completion_token_limit,
+    )
+    compatible_repository_ids = _compatibility['compatible_repository_ids']
+    compatible_synthetic_ids = _compatibility['compatible_synthetic_ids']
+    compatible_repository_completion_counts = _compatibility[
+        'compatible_repository_completion_counts']
+    repository_budget_incompatibilities = _compatibility[
+        'repository_budget_incompatibilities']
+    context_eligible_repository_pairs = _compatibility[
+        'context_eligible_repository_pairs']
 
     selected_pairs = select_bounded_train_pairs(
         eligible_pairs,
@@ -893,20 +933,14 @@ def build_preflight(
                 "these settings describe the evaluation this preflight "
                 "prepares for. No generation or evaluation was run here."
             ),
-            "candidate_parse_mode": trainer.CANDIDATE_PARSE_MODE,
-            "retain_raw_output": trainer.RETAIN_RAW_OUTPUT,
-            "candidates_per_function": 8,
-            "temperature": model_config.temperature,
-            "top_p": model_config.top_p,
-            "generation_seed": trainer.SEED,
-            "generation_completion_token_limit": completion_token_limit,
-            "repository_generation_completion_token_limit":
+            **as_recorded_contract(ROOT),
+            # The SFT training completion budget is a DIFFERENT quantity from
+            # the generation completion budget above. Recorded beside it so
+            # the two are never read as one.
+            "sft_training_completion_token_limit": completion_token_limit,
+            "sft_repository_training_completion_token_limit":
                 repository_completion_token_limit,
-            "evaluator_sha256": contract_source_hashes()["evaluator_sha256"],
-            "timeout_policy_sha256":
-                contract_source_hashes()["timeout_policy_sha256"],
-            "candidate_policy_sha256":
-                contract_source_hashes()["candidate_policy_sha256"],
+            "training_command_flags": training_command_flags(),
             "evaluation_split_for_selection": evaluation_split,
             "locked_validation_used": False,
             "sealed_final_test_used": False,

@@ -1,246 +1,151 @@
-"""Successor and legacy artifacts must not be confusable.
+"""The successor protocol must be impossible to run by accident or omission.
 
-The successor judges the whole output; the legacy protocol scored the first
-assertion. Both write files named `*_validation_*.json` with a field called
-`function_kill_rate`, so a directory holding both would contain two different
-metrics under one name, and a reader could not tell which they had.
+Absence of ``candidate_parse_mode`` means LEGACY. That is why a forgotten flag
+is not a neutral event here: it silently selects the old protocol and produces
+a number that cannot be compared with any successor measurement. The two such
+numbers already in this project - first_assertion Kill@8 0.629133 and
+whole_output Kill@8 0.282216 - differ by a flag, not by a model.
 """
 from __future__ import annotations
 
-import json
-import sys
 from pathlib import Path
 
 import pytest
 
-ROOT = Path(__file__).resolve().parent.parent
-if str(ROOT) not in sys.path:
-    sys.path.insert(0, str(ROOT))
-
-from scripts.build_successor_protocol_receipt import (
-    DEFINING_SOURCES, LEGACY_PROTOCOL_NAME, PROTOCOL_NAME, build,
-    results_directory_conflict,
+from harness.successor_protocol import (
+    CONTRACT_FIELDS, CONTRACT_SOURCES, NAME, SUCCESSOR_PROTOCOL,
+    as_recorded_contract, assert_matches, contract_source_hashes,
+    protocol_sha256, training_command_flags,
 )
 
-RECEIPT = ROOT / "results" / "v4_2_successor_protocol_receipt.json"
+ROOT = Path(__file__).resolve().parent.parent
 
 
-def _receipt(**overrides):
-    kwargs = dict(candidates=8, seeds=[42], prompt_budget=1024,
-                  completion_budget=128, sequence_budget=2048,
-                  raw_output_dir="results/{run}/raw_generations")
-    kwargs.update(overrides)
-    return build(**kwargs)
+def _clean():
+    return as_recorded_contract(ROOT)
 
 
-def test_a_directory_holding_legacy_artifacts_is_refused(tmp_path):
-    run = tmp_path / "local_sft_relearn_v2_seed42"
-    run.mkdir()
-    (run / "sft_validation_standard_seed_42.json").write_text("{}", encoding="utf-8")
+# ------------------------------------------------- the settings themselves
 
-    conflict = results_directory_conflict(run)
-
-    assert conflict is not None
-    assert "own run directory" in conflict
-
-
-def test_a_fresh_directory_is_allowed(tmp_path):
-    assert results_directory_conflict(tmp_path / "successor_run") is None
-
-
-def test_a_directory_of_successor_artifacts_is_not_a_conflict(tmp_path):
-    run = tmp_path / "successor_run"
-    run.mkdir()
-    (run / "sft_validation_successor_seed_42.json").write_text("{}", encoding="utf-8")
-
-    assert results_directory_conflict(run) is None
+def test_every_required_setting_has_the_required_value():
+    """The values the protocol was specified with, asserted literally."""
+    assert SUCCESSOR_PROTOCOL["candidate_parse_mode"] == "whole_output"
+    assert SUCCESSOR_PROTOCOL["retain_raw_output"] is True
+    assert SUCCESSOR_PROTOCOL["allow_test_function_candidates"] is True
+    assert SUCCESSOR_PROTOCOL["max_assertions"] == 24
+    assert SUCCESSOR_PROTOCOL["candidates_per_function"] == 8
+    assert SUCCESSOR_PROTOCOL["temperature"] == 0.7
+    assert SUCCESSOR_PROTOCOL["top_p"] == 0.9
+    assert SUCCESSOR_PROTOCOL["generation_seed"] == 42
+    assert SUCCESSOR_PROTOCOL["function_generation_completion_limit"] == 1024
+    assert SUCCESSOR_PROTOCOL["repository_generation_completion_limit"] == 1024
 
 
-def test_the_receipt_names_the_protocol_and_what_it_supersedes():
-    receipt = _receipt()
-    assert receipt["protocol_name"] == PROTOCOL_NAME
-    assert receipt["supersedes"]["protocol_name"] == LEGACY_PROTOCOL_NAME
-    assert "HISTORICAL, NOT INVALID" in receipt["supersedes"]["status"]
+def test_the_protocol_is_never_legacy():
+    assert SUCCESSOR_PROTOCOL["candidate_parse_mode"] != "first_assertion"
 
 
-def test_the_receipt_hashes_every_source_that_defines_behaviour():
-    """A silent edit to the evaluator would change what a number means."""
-    receipt = _receipt()
-    for name in DEFINING_SOURCES:
-        entry = receipt["defining_sources"][name]
-        assert len(entry["sha256"]) == 64
-        assert (ROOT / entry["path"]).exists()
+def test_the_protocol_carries_no_sft_training_budget():
+    """Two completion budgets share a unit and are different quantities."""
+    for field in SUCCESSOR_PROTOCOL:
+        assert "sft" not in field, (
+            f"{field} belongs to training, not to the generation protocol")
 
 
-def test_a_budget_that_does_not_fit_is_reported_as_not_fitting():
-    """2048 prompt + 1024 completion cannot fit a 2048 sequence."""
-    receipt = _receipt(prompt_budget=2048, completion_budget=1024,
-                       sequence_budget=2048)
-    assert receipt["budgets"]["fits"] is False
+def test_the_hash_changes_when_a_setting_changes(monkeypatch):
+    before = protocol_sha256()
+    monkeypatch.setitem(SUCCESSOR_PROTOCOL, "temperature", 0.8)
+    assert protocol_sha256() != before
 
 
-def test_a_budget_that_fits_is_reported_as_fitting():
-    assert _receipt()["budgets"]["fits"] is True
+def test_the_command_flags_are_derived_not_retyped():
+    """A flag typed twice is a flag that can disagree with itself."""
+    flags = training_command_flags()
+    assert "--candidate-parse-mode" in flags
+    assert flags[flags.index("--candidate-parse-mode") + 1] == "whole_output"
+    assert "--retain-raw-output" in flags
+    assert "--allow-test-function-candidates" in flags
+    assert flags[flags.index("--seed") + 1] == "42"
 
 
-def test_the_receipt_records_generation_and_scoring_rules():
-    receipt = _receipt()
-    generation = receipt["generation"]
-    assert generation["candidate_parse_mode"] == "whole_output"
-    assert generation["retain_raw_output"] is True
-    assert generation["no_reranking"] is True
-    assert "SAME retained raw output" in generation["generated_once"]
+def test_the_flags_follow_the_settings(monkeypatch):
+    monkeypatch.setitem(SUCCESSOR_PROTOCOL, "retain_raw_output", False)
+    assert "--retain-raw-output" not in training_command_flags()
 
 
-def test_the_receipt_states_the_locked_validation_policy():
-    receipt = _receipt()
-    policy = receipt["locked_validation_policy"]
-    assert "ablation_dev only" in policy
-    assert "frozen" in policy
+# ------------------------------------------------------- the refusal matrix
+
+def test_a_clean_contract_is_accepted():
+    assert assert_matches(_clean(), ROOT) == []
 
 
-def test_the_committed_receipt_matches_the_current_sources():
-    """A source edited after the receipt was written invalidates it."""
-    if not RECEIPT.exists():
-        return
-    committed = json.loads(RECEIPT.read_text(encoding="utf-8"))
-    rebuilt = _receipt()
-    assert committed["defining_sources"] == rebuilt["defining_sources"], (
-        "a file defining the protocol changed after the receipt was written; "
-        "rebuild the receipt before running anything under it"
-    )
+def test_an_absent_contract_is_refused():
+    problems = assert_matches(None, ROOT)
+    assert any("absence of candidate_parse_mode means LEGACY" in p
+               for p in problems)
 
 
-# --- the successor must not overwrite the legacy artifact ------------------
-#
-# The evaluation profile slug encodes split, smoke size, feedback rounds,
-# diversity, holdout and prompt/instruction variants - but not the parse mode.
-# A whole_output run on ablation_dev therefore wrote
-# sft_validation_ablation-dev_seed_42.json: byte-for-byte the legacy
-# artifact's name, silently replacing a different metric under the same field
-# names.
-
-def test_the_parse_mode_appears_in_the_results_filename(monkeypatch):
-    import scripts.train_on_dataset as driver
-
-    monkeypatch.setattr(driver, "EVALUATION_SPLIT", "ablation_dev")
-    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "whole_output")
-    successor = driver.evaluation_results_filename("sft", 42)
-
-    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "first_assertion")
-    legacy = driver.evaluation_results_filename("sft", 42)
-
-    assert successor != legacy, (
-        "a successor run would overwrite the legacy artifact it is meant to "
-        "be compared against"
-    )
-    assert "parse-whole-output" in successor
-    assert "parse-" not in legacy, (
-        "the frozen protocol's filenames must not change, or every historical "
-        "artifact stops being found by the name it was written under"
-    )
+def test_a_first_assertion_contract_is_refused():
+    contract = dict(_clean(), candidate_parse_mode="first_assertion")
+    assert any("candidate_parse_mode" in p for p in assert_matches(contract, ROOT))
 
 
-def test_the_frozen_filename_is_unchanged(monkeypatch):
-    import scripts.train_on_dataset as driver
-
-    monkeypatch.setattr(driver, "EVALUATION_SPLIT", "val")
-    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "first_assertion")
-    assert driver.evaluation_results_filename("base", 42) == \
-        "base_validation_standard_seed_42.json"
+def test_a_raw_output_mismatch_is_refused():
+    contract = dict(_clean(), retain_raw_output=False)
+    assert any("retain_raw_output" in p for p in assert_matches(contract, ROOT))
 
 
-# --- the scoring protocol is part of the evaluation's identity -------------
-#
-# _adapter_evaluation_context returned identical output whether the run used
-# first_assertion or whole_output, retained raw output or not, and accepted
-# test functions or not. Progress recorded under one protocol could therefore
-# be adopted by a resume under the other, producing one artifact whose
-# candidates were scored by two different rules. The filename fix made this
-# latent rather than active; relying on a filename to carry an identity the
-# identity record omits is not a guarantee.
-
-def test_the_resume_identity_separates_the_two_protocols(monkeypatch):
-    import scripts.train_on_dataset as driver
-
-    arguments = ("dataset", "adapter", "sha", "ablation_dev", None, "scope", 1)
-
-    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "first_assertion")
-    monkeypatch.setattr(driver, "RETAIN_RAW_OUTPUT", False)
-    monkeypatch.setattr(driver, "ALLOW_TEST_FUNCTION_CANDIDATES", False)
-    legacy = driver._adapter_evaluation_context(*arguments)
-
-    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "whole_output")
-    monkeypatch.setattr(driver, "RETAIN_RAW_OUTPUT", True)
-    monkeypatch.setattr(driver, "ALLOW_TEST_FUNCTION_CANDIDATES", True)
-    successor = driver._adapter_evaluation_context(*arguments)
-
-    assert legacy != successor, (
-        "a successor resume could adopt legacy progress and score one "
-        "artifact's candidates by two different rules"
-    )
-    assert legacy["evaluation_profile_sha256"] != \
-        successor["evaluation_profile_sha256"]
+@pytest.mark.parametrize("field,wrong", [
+    ("max_assertions", 1),
+    ("candidates_per_function", 4),
+    ("temperature", 1.0),
+    ("top_p", 0.95),
+    ("generation_seed", 43),
+    ("function_generation_completion_limit", 128),
+    ("repository_generation_completion_limit", 512),
+    ("allow_test_function_candidates", False),
+])
+def test_every_contract_field_mismatch_is_refused(field, wrong):
+    contract = dict(_clean())
+    contract[field] = wrong
+    assert any(field in problem for problem in assert_matches(contract, ROOT)), \
+        f"{field} mismatch was not refused"
 
 
-def test_each_protocol_setting_changes_the_identity_on_its_own(monkeypatch):
-    """One combined flag would hide a change to either of the others."""
-    import scripts.train_on_dataset as driver
-
-    arguments = ("dataset", "adapter", "sha", "ablation_dev", None, "scope", 1)
-    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "first_assertion")
-    monkeypatch.setattr(driver, "RETAIN_RAW_OUTPUT", False)
-    monkeypatch.setattr(driver, "ALLOW_TEST_FUNCTION_CANDIDATES", False)
-    baseline = driver._adapter_evaluation_context(*arguments)["evaluation_profile_sha256"]
-
-    for name, value in (("CANDIDATE_PARSE_MODE", "whole_output"),
-                        ("RETAIN_RAW_OUTPUT", True),
-                        ("ALLOW_TEST_FUNCTION_CANDIDATES", True)):
-        monkeypatch.setattr(driver, name, value)
-        changed = driver._adapter_evaluation_context(*arguments)["evaluation_profile_sha256"]
-        assert changed != baseline, f"{name} does not affect the resume identity"
-        monkeypatch.setattr(
-            driver, name,
-            "first_assertion" if name == "CANDIDATE_PARSE_MODE" else False)
+def test_the_field_list_covers_everything_but_the_name():
+    assert set(CONTRACT_FIELDS) == set(SUCCESSOR_PROTOCOL) - {"protocol_name"}
+    assert SUCCESSOR_PROTOCOL["protocol_name"] == NAME
 
 
-def test_the_completion_budget_appears_in_the_results_filename(monkeypatch):
-    """Two budgets are two measurements, not a collision.
-
-    The completion budget is already part of the evaluation scope hash, so a
-    256-token run was correctly REFUSED as a mismatch against the 128-token
-    artifact - but it shared that artifact's name, so a legitimate second
-    measurement read as an immutability violation.
-    """
-    import scripts.train_on_dataset as driver
-
-    monkeypatch.setattr(driver, "EVALUATION_SPLIT", "ablation_dev")
-    monkeypatch.setattr(driver, "CANDIDATE_PARSE_MODE", "whole_output")
-
-    monkeypatch.setattr(driver, "MAX_NEW_TOKENS_OVERRIDE", 128)
-    default_budget = driver.evaluation_results_filename("sft", 42)
-    monkeypatch.setattr(driver, "MAX_NEW_TOKENS_OVERRIDE", 256)
-    raised_budget = driver.evaluation_results_filename("sft", 42)
-
-    assert default_budget != raised_budget
-    assert "completion256" in raised_budget
-    assert "completion" not in default_budget, (
-        "the default budget must not rename every historical artifact"
-    )
+@pytest.mark.parametrize("field", sorted(CONTRACT_SOURCES))
+def test_a_changed_contract_source_is_refused(field):
+    """The parser can change while the setting naming it stays identical."""
+    contract = dict(_clean())
+    contract[field] = "0" * 64
+    problems = assert_matches(contract, ROOT)
+    assert any(CONTRACT_SOURCES[field] in problem for problem in problems)
 
 
-def test_a_prompt_and_completion_that_cannot_share_a_sequence_are_refused():
-    """2048 prompt + 1024 completion does not fit a 2048-token sequence."""
-    import subprocess
-    import sys as _sys
-    from pathlib import Path as _Path
+@pytest.mark.parametrize("field", sorted(CONTRACT_SOURCES))
+def test_a_missing_contract_source_hash_is_refused(field):
+    contract = dict(_clean())
+    contract.pop(field)
+    assert any(f"records no {field}" in p for p in assert_matches(contract, ROOT))
 
-    driver = _Path(__file__).resolve().parent.parent / "scripts" / "train_on_dataset.py"
-    result = subprocess.run(
-        [_sys.executable, str(driver), "--phase", "base_eval", "--run-name", "x",
-         "--sft-prompt-token-limit", "1024",
-         "--generation-completion-token-limit", "1500"],
-        capture_output=True, text=True,
-    )
-    assert result.returncode != 0
-    assert "does not fit" in (result.stdout + result.stderr)
+
+def test_a_stale_protocol_hash_is_refused():
+    contract = dict(_clean(), protocol_sha256="0" * 64)
+    assert any("protocol_sha256" in p for p in assert_matches(contract, ROOT))
+
+
+def test_the_recorded_contract_hashes_real_files():
+    recorded = _clean()
+    actual = contract_source_hashes(ROOT)
+    for field in CONTRACT_SOURCES:
+        assert recorded[field] == actual[field]
+        assert len(recorded[field]) == 64
+
+
+def test_every_named_contract_source_exists():
+    for relative in CONTRACT_SOURCES.values():
+        assert (ROOT / relative).is_file(), relative

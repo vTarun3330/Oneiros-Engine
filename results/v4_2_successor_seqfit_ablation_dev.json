@@ -1,0 +1,38 @@
+{
+  "schema_version": "oneiros_sequence_fit_gate_v2",
+  "split": "ablation_dev",
+  "sealed_final_test_accessed": false,
+  "record_source": "hash-verified development view shard for this split only",
+  "canonical_records_json_opened": false,
+  "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+  "prompt_token_limit": 1024,
+  "completion_token_limit": 1024,
+  "sequence_limit": 2048,
+  "max_rendered_prompt_plus_completion": 1920,
+  "declared_prompt_plus_completion": 2048,
+  "declared_allocation_fits": false,
+  "records_considered": 594,
+  "repository_records_held_not_generated_on": 52,
+  "generation_panel_size": 543,
+  "records_measured": 542,
+  "records_skipped": 0,
+  "records_compacted": 0,
+  "prompt_token_distribution": {
+    "min": 384,
+    "p50": 466,
+    "p90": 637,
+    "p99": 896,
+    "max": 896,
+    "mean": 505.8
+  },
+  "failures": [
+    {
+      "record_id": "(configuration)",
+      "reason": "declared prompt budget 1024 plus completion budget 1024 is 2048, which does not fit the 2048-token sequence before chat-template overhead. Raise the sequence budget; do NOT reduce the completion budget."
+    }
+  ],
+  "failure_count": 1,
+  "gate_passed": false,
+  "policy": "the gate fails if ANY record cannot fit its prompt plus the FULL completion budget. Output length is never silently reduced."
+}

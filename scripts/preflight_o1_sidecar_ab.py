@@ -36,6 +36,10 @@ if str(ROOT) not in sys.path:
 
 from engine.sft_trainer import MAX_SFT_SEQUENCE_LENGTH
 from harness.corpus_view import load_development_split, verify_development_view
+from harness.successor_protocol import (
+    CONTRACT_FIELDS, CONTRACT_SOURCES, SUCCESSOR_PROTOCOL, assert_matches,
+    protocol_sha256,
+)
 
 SCHEMA = "oneiros_o1_sidecar_ab_preflight_v1"
 
@@ -128,6 +132,34 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
         if value is None:
             problems.append(f"arm A records no {name}; it cannot be held constant")
 
+    # The generation/evaluation half of the contract. Model and SFT
+    # hyperparameters alone are not enough: two arms agreeing on every
+    # training setting and disagreeing on the parser produce two numbers that
+    # cannot be compared, which is how first_assertion 0.629133 and
+    # whole_output 0.282216 came to sit in the same table.
+    arm_a_contract = arm_a.get("future_generation_contract") or {}
+    contract_problems = assert_matches(arm_a_contract, ROOT)
+    problems.extend("arm A " + problem for problem in contract_problems)
+    if arm_a_contract.get("candidate_parse_mode") == "first_assertion":
+        problems.append(
+            "arm A's contract is the LEGACY first_assertion protocol; its "
+            "results would be protocol-noncomparable with every successor "
+            "measurement and must not be used as this comparison's baseline")
+    held_generation = {field: arm_a_contract.get(field)
+                       for field in CONTRACT_FIELDS}
+    # The SFT training completion budget is a different quantity from the
+    # generation completion budget and must not be silently read as one.
+    sft_training_completion = arm_a_contract.get(
+        "sft_training_completion_token_limit")
+    if sft_training_completion is None:
+        problems.append(
+            "arm A does not record its SFT training completion budget "
+            "separately from the generation completion budget")
+    elif sft_training_completion == arm_a_contract.get(
+            "function_generation_completion_limit"):
+        # Not an error, but it must be stated rather than inferred.
+        pass
+
     # ----------------------------------------- rebuild arm A's own selection
     verify_development_view(corpus_dir, ["train"])
     from scripts import train_on_dataset as trainer
@@ -139,53 +171,66 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
         build_pair_prompt, is_repository_execution_mode, load_phase3_pairs,
         select_bounded_train_pairs,
     )
+    from scripts.preflight_sft_run import compute_selection_compatibility
 
     source_pairs = load_phase3_pairs(corpus_dir, "train")
     eligible_pairs, _ = _filter_overlong_repository_completions(source_pairs)
     selection = arm_a.get("selection") or {}
     sampling = arm_a.get("sampling") or {}
 
-    # Arm A's selection depends on tokenizer-derived compatibility sets built
-    # over every eligible pair. Rebuilding those here would repeat arm A's
-    # whole 16-minute pass to re-derive a number arm A already recorded and
-    # gated, so the check is made against the recorded ID LIST instead: the
-    # SHA is recomputed from those IDs and must equal the SHA arm A recorded.
-    # That proves arm A's receipt is internally consistent and fixes exactly
-    # which 2,400 records arm B builds on. It is NOT an independent
-    # re-derivation of the selection, and the receipt says so.
-    selected_ids = [str(value) for value in selection.get("selected_record_ids") or []]
-    if not selected_ids:
-        problems.append(
-            "arm A recorded no selected_record_ids, so arm B cannot be shown "
-            "to build on the same records")
-    rebuilt_sha = _sha_json(selected_ids)
-    selection_reproduced = bool(selected_ids) and         rebuilt_sha == selection.get("selection_sha256")
-    if selected_ids and not selection_reproduced:
-        problems.append(
-            "arm A's recorded selection IDs do not hash to its recorded "
-            f"selection_sha256 ({rebuilt_sha[:12]}... vs "
-            f"{str(selection.get('selection_sha256'))[:12]}...); the receipt "
-            "is internally inconsistent")
-    if selected_ids and len(selected_ids) != int(selection.get("retained_pairs") or 0):
-        problems.append(
-            f"arm A recorded {len(selected_ids)} selection IDs but "
-            f"{selection.get('retained_pairs')} retained pairs")
-    eligible_ids = {pair["id"] for pair in eligible_pairs}
-    missing_from_corpus = [value for value in selected_ids
-                           if value not in eligible_ids]
-    if missing_from_corpus:
-        problems.append(
-            f"{len(missing_from_corpus)} of arm A's selected records are no "
-            "longer eligible in the corpus; the baseline has moved")
+    # INDEPENDENT re-derivation. Hashing the IDs arm A already recorded only
+    # proves its receipt is self-consistent; it would pass just as happily on
+    # a selection built by different code. So the bounded selection is run
+    # again here, from arm A's own recorded configuration, through the same
+    # shared compatibility function arm A used, and the resulting SHA must
+    # equal arm A's. Two copies of that loop drifting apart is exactly what
+    # sharing the function prevents.
+    from transformers import AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained(
+        held["model_name"], revision=held["model_revision"],
+        trust_remote_code=True, local_files_only=local_files_only)
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
 
-    # ------------------------------------------------------ coverage, exactly
-    selected_id_set = set(selected_ids)
-    sidecar_ids = {row["record_id"] for row in sidecar}
-    inside = sidecar_ids & selected_id_set
-    outside = sidecar_ids - selected_id_set
-    rows_inside = [r for r in sidecar if r["record_id"] in inside]
-    rows_outside = [r for r in sidecar if r["record_id"] in outside]
+    compatibility = compute_selection_compatibility(
+        eligible_pairs, tokenizer,
+        selection_prompt_token_limit=int(
+            selection.get("selection_prompt_token_limit")
+            or held["prompt_token_limit"]),
+        repository_prompt_token_limit=int(
+            _dig(arm_a, ("tokenization", "repository_prompt_token_limit"))
+            or held["prompt_token_limit"]),
+        repository_completion_token_limit=int(
+            _dig(arm_a, ("tokenization", "repository_completion_token_limit"))
+            or held["completion_token_limit"]),
+    )
+    rederived_pairs = select_bounded_train_pairs(
+        eligible_pairs,
+        int(selection["requested_pairs"]),
+        compatible_repository_ids=compatibility["compatible_repository_ids"],
+        compatible_synthetic_ids=compatibility["compatible_synthetic_ids"],
+        target_real_fraction=float(sampling["target_real_fraction"]),
+        max_real_repeats=int(sampling["max_real_repeats"]),
+        target_complex_fraction=float(sampling["target_complex_function_fraction"]),
+    )
+    rederived_ids = [pair["id"] for pair in rederived_pairs]
+    rebuilt_sha = _sha_json(rederived_ids)
+    recorded_sha = str(selection.get("selection_sha256") or "")
+    selection_reproduced = bool(recorded_sha) and rebuilt_sha == recorded_sha
+    if not selection_reproduced:
+        problems.append(
+            "arm A's bounded selection did not reproduce independently "
+            f"({rebuilt_sha[:12]}... vs {recorded_sha[:12]}...); the two arms "
+            "would not share a baseline")
 
+    recorded_ids = [str(value) for value in
+                    selection.get("selected_record_ids") or []]
+    if recorded_ids and recorded_ids != rederived_ids:
+        problems.append(
+            "arm A's recorded selection IDs differ from the independently "
+            "re-derived selection")
+
+    selected_ids = rederived_ids
     # ------------------------------------------------------- leakage / splits
     train_ids = {str(r["id"]) for r in load_development_split(
         corpus_dir, "train", include_excluded=True)}
@@ -203,13 +248,6 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
             "self-referential")
 
     # ------------------------------------------------- token budget, measured
-    from transformers import AutoTokenizer
-    tokenizer = AutoTokenizer.from_pretrained(
-        held["model_name"], revision=held["model_revision"],
-        trust_remote_code=True, local_files_only=local_files_only)
-    if tokenizer.pad_token is None:
-        tokenizer.pad_token = tokenizer.eos_token
-
     pairs_by_id = {pair["id"]: pair for pair in eligible_pairs}
     prompt_lengths: list[int] = []
     completion_lengths: list[int] = []
@@ -274,6 +312,15 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
             "arm_b": "identical corpus and configuration plus the O1 sidecar",
             "only_difference": "the O1 sidecar rows",
             "held_constant": held,
+            "held_constant_generation": held_generation,
+            "successor_protocol_name": SUCCESSOR_PROTOCOL["protocol_name"],
+            "successor_protocol_sha256": protocol_sha256(),
+            "contract_source_hashes": {
+                field: arm_a_contract.get(field) for field in CONTRACT_SOURCES
+            },
+            "sft_training_completion_token_limit": sft_training_completion,
+            "sft_budget_is_separate_from_generation_budget": True,
+            "arm_a_contract_problems": contract_problems,
             "held_constant_source": str(arm_a_path).replace("\\", "/"),
             "held_constant_enforced_by": (
                 "arm B reads these values from arm A's own report; this "
@@ -285,17 +332,18 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
             "retained_pairs": selection.get("retained_pairs"),
             "unique_records": len(selected_id_set),
             "selection_sha256": selection.get("selection_sha256"),
-            "selection_sha256_reproduced_from_recorded_ids": selection_reproduced,
-            "selection_ids_recorded": len(selected_ids),
-            "selection_ids_still_eligible_in_corpus": (
-                len(selected_ids) - len(missing_from_corpus)),
-            "selection_independently_rederived": False,
+            "selection_independently_rederived": True,
+            "selection_sha256_rederived": rebuilt_sha,
+            "selection_sha256_matches": selection_reproduced,
+            "rederived_pairs": len(rederived_ids),
+            "recorded_ids_match_rederived": (
+                not recorded_ids or recorded_ids == rederived_ids),
             "selection_check_scope": (
-                "the SHA is recomputed from arm A's recorded selection IDs and "
-                "every ID is confirmed still eligible in the corpus. The "
-                "bounded selection itself is not re-run: it depends on "
-                "tokenizer-derived compatibility sets arm A already computed "
-                "under its own passing gates."),
+                "the bounded selection is re-run from arm A's recorded "
+                "configuration through the same shared compatibility function "
+                "arm A used, and the resulting SHA must equal arm A's. Hashing "
+                "the recorded IDs alone would pass on a selection built by "
+                "different code."),
             "effective_total_examples": baseline_examples,
             "effective_synthetic_examples":
                 sampling.get("effective_synthetic_examples"),
