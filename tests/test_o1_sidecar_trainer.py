@@ -321,3 +321,83 @@ def test_the_trainer_resolves_o1_records_against_the_full_train_split():
     assert 'load_phase3_pairs(corpus_dir, "train")' in block, (
         "O1 records must resolve against the full train split, not the "
         "bounded selection")
+
+
+# --------------------- the baseline-collision failure, as actually observed
+
+def test_a_row_that_resolves_and_fits_can_still_be_dropped_as_a_duplicate():
+    """The observed failure: 94 of 1,312 rows vanished at training time.
+
+    Each resolved through the full train split and fitted the 1024-token
+    budget -- the two things the preflight checked -- and each duplicated a
+    completion already in the baseline, so the trainer correctly refused to
+    repeat it. A preflight that checks only resolution and budget declares a
+    ratio the run will not deliver.
+    """
+    shared = "assert bell_Number(3) == 5"
+    baseline = [Example("p", shared, "mutation::already_here")]
+    rows = [_row("mutation::rec_1", shared),          # resolves, fits, duplicate
+            _row("mutation::rec_2", "assert f(2) == 2")]
+    combined, report = append_o1_examples(
+        baseline, rows, _pairs("mutation::rec_1", "mutation::rec_2"),
+        make_data_point=_make, build_prompt=_prompt,
+        completion_fits=lambda pair, prompt, completion: True)
+    assert report["records_not_in_training_pairs_count"] == 0   # it resolved
+    assert report["dropped"].get("token_budget") is None        # it fitted
+    assert report["dropped"]["duplicate_completion"] == 1       # and still went
+    assert report["appended_examples"] == 1
+    assert len(combined) == 2
+
+
+def test_the_delivered_ratio_is_lower_than_the_offered_ratio():
+    """Offering N rows does not mean a mixture of N rows."""
+    baseline = [Example(f"p{i}", f"assert dup{i}() == {i}", f"rec_{i}")
+                for i in range(90)]
+    rows = [_row(f"mutation::rec_{i}", f"assert dup{i}() == {i}") for i in range(10)]
+    rows += [_row(f"mutation::new_{i}", f"assert fresh{i}() == {i}") for i in range(10)]
+    pairs = _pairs(*[r["record_id"] for r in rows])
+    combined, report = append_o1_examples(
+        baseline, rows, pairs, make_data_point=_make, build_prompt=_prompt)
+    offered_ratio = len(rows) / (len(baseline) + len(rows))
+    delivered_ratio = report["appended_examples"] / report["combined_examples"]
+    assert report["appended_examples"] == 10
+    assert report["dropped"]["duplicate_completion"] == 10
+    assert delivered_ratio < offered_ratio
+
+
+def test_the_preflight_blocks_a_declared_ratio_it_cannot_deliver():
+    source = (Path(__file__).resolve().parent.parent / "scripts"
+              / "preflight_o1_sidecar_ab.py").read_text(encoding="utf-8")
+    assert "declares a ratio of" in source
+    assert "rows survive deduplication against" in source
+    assert "declared_matches_delivered" in source
+
+
+def test_the_preflight_simulates_the_real_append_not_an_approximation():
+    source = (Path(__file__).resolve().parent.parent / "scripts"
+              / "preflight_o1_sidecar_ab.py").read_text(encoding="utf-8")
+    assert "from harness.o1_sidecar import append_o1_examples" in source
+    assert "combined_view, append_report = append_o1_examples(" in source
+    assert "build_arm_a_baseline(" in source
+    # The baseline must come from the trainer's own functions.
+    for canonical in ("evaluate_pair", "filter_generation_compatible_sft_examples",
+                      "deduplicate_sft_examples", "balanced_repeat_examples"):
+        assert canonical in source, canonical
+
+
+def test_the_preflight_reports_every_required_append_field():
+    source = (Path(__file__).resolve().parent.parent / "scripts"
+              / "preflight_o1_sidecar_ab.py").read_text(encoding="utf-8")
+    for field in ("offered_rows", "appended_rows", "dropped_by_reason",
+                  "baseline_completion_collisions",
+                  "baseline_completion_set_sha256", "combined_examples",
+                  "delivered_ratio", "appended_completion_set_sha256"):
+        assert f'"{field}"' in source, field
+
+
+def test_the_emitter_can_exclude_baseline_collisions():
+    source = (Path(__file__).resolve().parent.parent / "scripts"
+              / "emit_o1_sidecar.py").read_text(encoding="utf-8")
+    assert "excluded_completion_sha256" in source
+    assert '"--exclude-baseline-completions"' in source
+    assert '"baseline_collisions_removed"' in source

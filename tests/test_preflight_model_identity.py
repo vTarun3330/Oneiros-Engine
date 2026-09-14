@@ -176,9 +176,38 @@ def test_the_arm_b_preflight_builds_its_own_block_and_checks_arm_a():
     assert '"arm_a_preflight_sha256"' in source
 
 
-def test_the_arm_b_preflight_refuses_a_stale_arm_a_tree():
+def test_the_arm_b_preflight_refuses_runtime_drift_not_tooling_edits():
+    """A whole-tree hash is the wrong test and was replaced.
+
+    Editing preflight, emitter or test code moves the tree hash without
+    changing a byte the trainer executes. Failing on that either blocks
+    honest tooling fixes or teaches people to wave the difference through -
+    and a real runtime change could then hide inside the same delta. So the
+    comparison is made file by file over the components that decide what a
+    training run does.
+    """
     source = (ROOT / "scripts" / "preflight_o1_sidecar_ab.py").read_text(encoding="utf-8")
-    assert "no longer matches the current contract" in source
+    assert "RUNTIME COMPONENTS CHANGED SINCE ARM A" in source
+    assert "Arm A must be retrained" in source
+    assert "RUNTIME_COMPONENTS" in source
+    # The tree difference is still recorded, just not fatal by itself.
+    assert '"source_trees_identical"' in source
+    assert '"runtime_components_identical"' in source
+    # Tooling files must NOT be in the runtime list.
+    from scripts.preflight_o1_sidecar_ab import RUNTIME_COMPONENTS
+    for tooling in ("scripts/preflight_o1_sidecar_ab.py",
+                    "scripts/preflight_sft_run.py",
+                    "scripts/emit_o1_sidecar.py"):
+        assert tooling not in RUNTIME_COMPONENTS, tooling
+    # The files the trainer actually executes must be.
+    for runtime in ("scripts/train_on_dataset.py", "engine/generator.py",
+                    "engine/sft_trainer.py", "harness/o1_sidecar.py"):
+        assert runtime in RUNTIME_COMPONENTS, runtime
+
+
+def test_arm_a_records_the_runtime_component_hashes_it_was_built_on():
+    source = (ROOT / "scripts" / "preflight_sft_run.py").read_text(encoding="utf-8")
+    assert '"runtime_component_hashes"' in source
 
 
 @pytest.mark.parametrize("receipt,label", [

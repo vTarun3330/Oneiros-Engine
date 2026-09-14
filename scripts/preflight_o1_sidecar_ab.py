@@ -36,6 +36,7 @@ if str(ROOT) not in sys.path:
 
 from engine.sft_trainer import MAX_SFT_SEQUENCE_LENGTH
 from harness.corpus_view import load_development_split, verify_development_view
+from harness.o1_sidecar import append_o1_examples, load_o1_sidecar
 from harness.model_identity import (
     build as build_model_identity, disagreements as identity_disagreements,
     is_immutable_revision, problems as identity_problems,
@@ -47,6 +48,38 @@ from harness.successor_protocol import (
 )
 
 SCHEMA = "oneiros_o1_sidecar_ab_preflight_v1"
+
+#: Field separator for content hashing. A literal NUL cannot be
+#: written into source, so it is built rather than typed.
+SEP = chr(0)
+
+#: Files that decide what a TRAINING RUN does. A change to any of these makes
+#: two arms incomparable and requires Arm A to be retrained. Preflight,
+#: emitter and test code are deliberately absent: editing them moves the
+#: whole-tree hash without changing a single byte the trainer executes, and
+#: failing on the tree hash would either block honest tooling fixes or, worse,
+#: invite someone to wave the difference through. The comparison is made
+#: file by file so a real runtime change cannot hide inside a tree delta.
+RUNTIME_COMPONENTS = (
+    "scripts/train_on_dataset.py",
+    "engine/generator.py",
+    "engine/sft_trainer.py",
+    "engine/model_runtime.py",
+    "engine/prompt_budget.py",
+    "engine/test_generation_prompt.py",
+    "harness/o1_sidecar.py",
+    "harness/candidate_policy.py",
+    "harness/safe_execution.py",
+    "harness/corpus_view.py",
+    "harness/successor_protocol.py",
+    "metrics/research_evaluation.py",
+    "config/settings.py",
+)
+
+
+def runtime_component_hashes(root: Path) -> dict[str, str]:
+    return {name: hashlib.sha256((root / name).read_bytes()).hexdigest()
+            for name in RUNTIME_COMPONENTS}
 
 #: Held constant between the arms. A difference in any of these makes the
 #: comparison uninterpretable, so it is a refusal rather than a warning.
@@ -108,8 +141,97 @@ def _token_summary(lengths: list[int]) -> dict[str, int]:
             "maximum": ordered[-1]}
 
 
+def build_arm_a_baseline(eligible_pairs, selected_ids, tokenizer, *,
+                         prompt_limit: int, completion_limit: int,
+                         repository_completion_limit: int,
+                         real_target_fraction: float, max_real_repeats: int,
+                         ) -> tuple[list[Any], dict[str, Any]]:
+    """Rebuild Arm A's exact training view with the trainer's own functions.
+
+    The preflight used to check that every sidecar row resolved through the
+    train split and fitted the completion budget - both true for all 1,312
+    rows of the last sidecar - and then declare a ratio. The trainer then
+    dropped 94 of them because their completion already existed in the
+    baseline, delivering a 15.02% mixture under a 15.998% label.
+
+    The only way a preflight can know that is to build the baseline the
+    trainer builds, so this does, through ``evaluate_pair``,
+    ``filter_generation_compatible_sft_examples``,
+    ``deduplicate_sft_examples`` and ``balanced_repeat_examples`` - the same
+    canonical functions, not a reimplementation of them.
+    """
+    import math
+
+    from scripts.train_on_dataset import (
+        FUNCTION_EXECUTION_MODE, _repository_fragment_tests,
+        balanced_repeat_examples, build_pair_prompt, deduplicate_sft_examples,
+        evaluate_pair, extract_dataset_tests,
+        filter_generation_compatible_sft_examples, is_repository_execution_mode,
+        make_sft_data_point,
+    )
+
+    wanted = set(selected_ids)
+    selected = [pair for pair in eligible_pairs if pair["id"] in wanted]
+    synthetic: list[Any] = []
+    repository: list[Any] = []
+    for pair in selected:
+        mode = pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
+        if is_repository_execution_mode(mode):
+            winners = _repository_fragment_tests(pair.get("test_cases", []))
+        else:
+            winners, _ = evaluate_pair(
+                extract_dataset_tests(pair.get("test_cases", []),
+                                      pair["entry_point"]),
+                pair["golden_code"], pair["mutant_code"], pair["entry_point"])
+        if not winners:
+            continue
+        prompt = build_pair_prompt(pair)
+        for test in winners[:3]:
+            point = make_sft_data_point(pair, prompt, test)
+            (repository if is_repository_execution_mode(mode)
+             else synthetic).append(point)
+
+    synthetic, synthetic_budget = filter_generation_compatible_sft_examples(
+        synthetic, tokenizer, completion_limit, repository_completion_limit,
+        prompt_limit, prompt_limit)
+    repository, repository_budget = filter_generation_compatible_sft_examples(
+        repository, tokenizer, completion_limit, repository_completion_limit,
+        prompt_limit, prompt_limit)
+    synthetic, synthetic_dedup = deduplicate_sft_examples(synthetic)
+    repository, repository_dedup = deduplicate_sft_examples(repository)
+
+    desired = math.ceil(len(synthetic) * real_target_fraction
+                        / (1.0 - real_target_fraction))
+    repository, repository_balance = balanced_repeat_examples(
+        repository, desired, max_real_repeats, "project")
+
+    baseline = [*synthetic, *repository]
+    completions = {str(item.completion) for item in baseline}
+    return baseline, {
+        "baseline_examples": len(baseline),
+        "baseline_synthetic_examples": len(synthetic),
+        "baseline_repository_examples": len(repository),
+        "baseline_unique_completions": len(completions),
+        "baseline_completion_set_sha256": hashlib.sha256(
+            "".join(sorted(hashlib.sha256(c.encode("utf-8")).hexdigest()
+                           for c in completions)).encode("utf-8")).hexdigest(),
+        "baseline_view_content_sha256": hashlib.sha256(
+            b"".join(hashlib.sha256(
+                SEP.join((i.function_id, i.prompt, i.completion)).encode("utf-8")
+            ).digest() for i in baseline)).hexdigest(),
+        "budget_excluded": len(synthetic_budget) + len(repository_budget),
+        "dedup": {"synthetic": synthetic_dedup, "repository": repository_dedup},
+        "repeat_histogram": repository_balance["repeat_histogram"],
+        "built_with": (
+            "the trainer's own evaluate_pair, "
+            "filter_generation_compatible_sft_examples, "
+            "deduplicate_sft_examples and balanced_repeat_examples"),
+    }
+
+
 def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
-        local_files_only: bool) -> dict[str, Any]:
+        local_files_only: bool,
+        dump_baseline_completions: Path | None = None) -> dict[str, Any]:
     started = time.time()
     problems: list[str] = []
     corpus_dir = ROOT / "data" / "corpus" / corpus_version
@@ -137,6 +259,7 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
     problems.extend(identity_problems(arm_a_identity, label="arm A"))
 
     arm_b_source_tree = source_tree_sha256(ROOT)
+    runtime_now = runtime_component_hashes(ROOT)
     if not arm_b_source_tree:
         problems.append(
             "this preflight cannot compute its own source-tree SHA, so it "
@@ -187,11 +310,12 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
     from scripts.train_on_dataset import (
         FUNCTION_EXECUTION_MODE, _filter_overlong_repository_completions,
         build_pair_prompt, is_repository_execution_mode, load_phase3_pairs,
-        select_bounded_train_pairs,
+        make_sft_data_point, select_bounded_train_pairs,
     )
     from scripts.preflight_sft_run import compute_selection_compatibility
 
     source_pairs = load_phase3_pairs(corpus_dir, "train")
+    all_train_pairs = source_pairs
     eligible_pairs, _ = _filter_overlong_repository_completions(source_pairs)
     selection = arm_a.get("selection") or {}
     sampling = arm_a.get("sampling") or {}
@@ -236,12 +360,19 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
     problems.extend(identity_problems(arm_b_identity, label="arm B"))
     if arm_a_identity:
         problems.extend(identity_disagreements(arm_a_identity, arm_b_identity))
-        if arm_a_identity.get("source_tree_sha256") != arm_b_source_tree:
+        # A whole-tree difference is reported, never silently accepted and
+        # never treated as fatal on its own: it moves when preflight or test
+        # code is edited. What must not differ is the runtime.
+        arm_a_runtime = (arm_a.get("run_identity") or {}).get(
+            "runtime_component_hashes") or {}
+        drifted = sorted(
+            name for name, digest in arm_a_runtime.items()
+            if runtime_now.get(name) != digest)
+        if drifted:
             problems.append(
-                "arm A was produced from source tree "
-                f"{str(arm_a_identity.get('source_tree_sha256'))[:12]}... but "
-                f"this preflight runs on {arm_b_source_tree[:12]}...; the "
-                "linked receipt no longer matches the current contract")
+                "RUNTIME COMPONENTS CHANGED SINCE ARM A: " + ", ".join(drifted)
+                + ". Arm A must be retrained before the comparison is valid; "
+                "this is not a tooling-only edit.")
     if not is_immutable_revision(held.get("model_revision")):
         problems.append(
             f"the held-constant model revision {held.get('model_revision')!r} "
@@ -357,9 +488,86 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
             f"{len(over_completion)} sidecar completions exceed the "
             f"{held['completion_token_limit']}-token completion budget")
 
-    baseline_examples = int(
+    # ---------------------------------- the trainer's OWN append, simulated
+    # Declaring a ratio without running this is what produced a 15.02%
+    # mixture wearing a 15.998% label: every row resolved and fitted the
+    # budget, and 94 were still dropped for duplicating a baseline
+    # completion. The baseline is therefore built and the real
+    # append_o1_examples run against it.
+    baseline_view, baseline_stats = build_arm_a_baseline(
+        eligible_pairs, selected_ids, tokenizer,
+        prompt_limit=int(held["prompt_token_limit"]),
+        completion_limit=int(held["completion_token_limit"]),
+        repository_completion_limit=int(
+            _dig(arm_a, ("tokenization", "repository_completion_token_limit"))
+            or held["completion_token_limit"]),
+        real_target_fraction=float(sampling["target_real_fraction"]),
+        max_real_repeats=int(sampling["max_real_repeats"]),
+    )
+    declared_baseline = int(
         (arm_a.get("sampling") or {}).get("effective_total_examples") or 0)
-    arm_b_examples = baseline_examples + len(sidecar)
+    if baseline_stats["baseline_examples"] != declared_baseline:
+        problems.append(
+            f"the rebuilt baseline has {baseline_stats['baseline_examples']} "
+            f"examples but arm A declares {declared_baseline}")
+
+    pairs_by_id = {pair["id"]: pair for pair in all_train_pairs}
+
+    def _fits(pair, prompt, completion):
+        limit = int(
+            _dig(arm_a, ("tokenization", "repository_completion_token_limit"))
+            or held["completion_token_limit"]
+        ) if is_repository_execution_mode(
+            pair.get("execution_mode", FUNCTION_EXECUTION_MODE)
+        ) else int(held["completion_token_limit"])
+        return len(tokenizer(str(completion).strip() + tokenizer.eos_token,
+                             add_special_tokens=False)["input_ids"]) <= limit
+
+    combined_view, append_report = append_o1_examples(
+        baseline_view, sidecar, pairs_by_id,
+        make_data_point=make_sft_data_point, build_prompt=build_pair_prompt,
+        completion_fits=_fits)
+
+    baseline_completions = {str(item.completion) for item in baseline_view}
+    if dump_baseline_completions is not None:
+        dump_baseline_completions.parent.mkdir(parents=True, exist_ok=True)
+        dump_baseline_completions.write_text(json.dumps({
+            "baseline_examples": baseline_stats["baseline_examples"],
+            "baseline_completion_set_sha256":
+                baseline_stats["baseline_completion_set_sha256"],
+            "completion_sha256": sorted(
+                hashlib.sha256(c.encode("utf-8")).hexdigest()
+                for c in baseline_completions),
+        }, indent=1) + chr(10), encoding="utf-8")
+    collisions = sorted({row["completion"] for row in sidecar
+                         if row["completion"] in baseline_completions})
+    appended_rows = combined_view[len(baseline_view):]
+    appended_hashes = [
+        hashlib.sha256(str(item.completion).encode("utf-8")).hexdigest()
+        for item in appended_rows]
+    appended_set_sha = hashlib.sha256(
+        "".join(sorted(appended_hashes)).encode("utf-8")).hexdigest()
+
+    baseline_examples = baseline_stats["baseline_examples"]
+    arm_b_examples = append_report["combined_examples"]
+    appended = append_report["appended_examples"]
+    delivered_ratio = round(appended / arm_b_examples, 6) if arm_b_examples else 0.0
+    declared_ratio = sidecar_manifest.get("achieved_sidecar_share")
+
+    # The declared ratio must be the DELIVERED ratio. This is the check that
+    # was missing, and the only one that would have caught the 94 drops.
+    if declared_ratio is not None and abs(
+            float(declared_ratio) - delivered_ratio) > 0.0005:
+        problems.append(
+            f"the sidecar declares a ratio of {declared_ratio} but only "
+            f"{appended} of {len(sidecar)} rows survive deduplication against "
+            f"the baseline, delivering {delivered_ratio}. Emit a sidecar whose "
+            "rows do not collide with baseline completions rather than "
+            "declaring a ratio the trainer will not deliver.")
+    if appended != len(sidecar):
+        problems.append(
+            f"{len(sidecar) - appended} sidecar rows would not be appended: "
+            f"{append_report['dropped']}")
 
     return {
         "schema_version": SCHEMA,
@@ -375,6 +583,24 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
         "model_identity": arm_b_identity,
         "arm_a_model_identity": arm_a_identity,
         "source_tree_sha256": arm_b_source_tree,
+        "runtime_identity": {
+            "runtime_component_hashes": runtime_now,
+            "arm_a_source_tree_sha256":
+                (arm_a_identity or {}).get("source_tree_sha256"),
+            "arm_b_source_tree_sha256": arm_b_source_tree,
+            "source_trees_identical": (
+                (arm_a_identity or {}).get("source_tree_sha256")
+                == arm_b_source_tree),
+            "runtime_components_identical": not [
+                name for name, digest in
+                (((arm_a.get("run_identity") or {}).get(
+                    "runtime_component_hashes")) or {}).items()
+                if runtime_now.get(name) != digest],
+            "why_this_is_the_right_test": (
+                "a whole-tree hash moves when preflight, emitter or test code "
+                "is edited, none of which the trainer executes. Only these "
+                "files change what a training run does."),
+        },
         "comparison": {
             "arm_a": "frozen baseline corpus and configuration",
             "arm_b": "identical corpus and configuration plus the O1 sidecar",
@@ -466,13 +692,38 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
                 "the full train split, as load_phase3_pairs(corpus_dir, "
                 "'train') returns it - not the bounded selection"),
         },
+        "append_simulation": {
+            "method": (
+                "harness.o1_sidecar.append_o1_examples, the function the "
+                "trainer itself calls, run against the rebuilt baseline"),
+            **baseline_stats,
+            "offered_rows": append_report["sidecar_rows_offered"],
+            "appended_rows": appended,
+            "dropped_by_reason": append_report["dropped"],
+            "records_not_in_training_pairs":
+                append_report["records_not_in_training_pairs_count"],
+            "baseline_completion_collisions": len(collisions),
+            "collision_examples": collisions[:5],
+            "combined_examples": arm_b_examples,
+            "delivered_ratio": delivered_ratio,
+            "declared_ratio": declared_ratio,
+            "declared_matches_delivered": (
+                declared_ratio is None
+                or abs(float(declared_ratio) - delivered_ratio) <= 0.0005),
+            "appended_completion_set_sha256": appended_set_sha,
+            "appended_completion_hashes_sample": appended_hashes[:5],
+            "baseline_unchanged_by_append": (
+                append_report["baseline_examples"] == baseline_examples
+                and append_report["baseline_unchanged"] is True),
+            "golden_substituted": append_report["golden_substituted"],
+        },
         "mixing": {
             "baseline_examples": baseline_examples,
             "sidecar_examples": len(sidecar),
+            "appended_examples": appended,
             "arm_b_examples": arm_b_examples,
             "requested_ratio": sidecar_manifest.get("requested_sidecar_share"),
-            "achieved_ratio": round(len(sidecar) / arm_b_examples, 6)
-            if arm_b_examples else 0.0,
+            "achieved_ratio": delivered_ratio,
             "auxiliary_ceiling": sidecar_manifest.get("auxiliary_ceiling"),
             "o1_is_the_whole_corpus": False,
         },
@@ -535,11 +786,17 @@ def main() -> int:
                         default="v4_1_research_hardened_candidate")
     parser.add_argument("--allow-tokenizer-download", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--dump-baseline-completions", type=Path, default=None,
+        help=(
+            "write the sha256 of every baseline completion here, so a sidecar "
+            "can be emitted that excludes the ones the trainer would drop"))
     arguments = parser.parse_args()
 
     report = run(arguments.arm_a, arguments.sidecar_dir,
                  arguments.corpus_version,
-                 local_files_only=not arguments.allow_tokenizer_download)
+                 local_files_only=not arguments.allow_tokenizer_download,
+                 dump_baseline_completions=arguments.dump_baseline_completions)
     arguments.output.parent.mkdir(parents=True, exist_ok=True)
     arguments.output.write_text(
         json.dumps(report, indent=2) + "\n", encoding="utf-8")

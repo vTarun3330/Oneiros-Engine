@@ -897,6 +897,19 @@ def build_preflight(
         ),
         "run_identity": {
             "seed": trainer.SEED,
+            "runtime_component_hashes": {
+                name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+                for name in (
+                    "scripts/train_on_dataset.py", "engine/generator.py",
+                    "engine/sft_trainer.py", "engine/model_runtime.py",
+                    "engine/prompt_budget.py",
+                    "engine/test_generation_prompt.py",
+                    "harness/o1_sidecar.py", "harness/candidate_policy.py",
+                    "harness/safe_execution.py", "harness/corpus_view.py",
+                    "harness/successor_protocol.py",
+                    "metrics/research_evaluation.py", "config/settings.py",
+                )
+            },
             "source_tree_sha256": current_source_sha256,
             "contract_source_hashes": contract_source_hashes(),
             "lora": {

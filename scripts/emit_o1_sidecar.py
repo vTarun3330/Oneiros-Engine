@@ -104,7 +104,9 @@ def proportional_subsample(rows: list[dict[str, Any]], keep: int, key: str
 def build(dataset_dir: Path, corpus_dir: Path, baseline_pairs: int,
           ratio: float,
           completion_tokens: Callable[[str], int] | None = None,
-          max_completion_tokens: int | None = None) -> dict[str, Any]:
+          max_completion_tokens: int | None = None,
+          excluded_completion_sha256: set[str] | None = None,
+          ) -> dict[str, Any]:
     manifest = json.loads((dataset_dir / "manifest.json").read_text(encoding="utf-8"))
     positives_path = dataset_dir / "positives.json"
 
@@ -149,6 +151,19 @@ def build(dataset_dir: Path, corpus_dir: Path, baseline_pairs: int,
     # over-budget row, so the same requested ratio could yield a different
     # count on a different day. Nothing is truncated to fit: a truncated
     # assertion is not the assertion that was verified.
+    # Rows whose completion already exists in the frozen baseline are
+    # removed HERE. The trainer drops them anyway - correctly, since
+    # appending one would repeat a training target - so a sidecar that
+    # contains them declares a ratio it cannot deliver. That is exactly what
+    # produced a 15.02% mixture labelled 15.998%.
+    rows_before_collision_filter = len(rows)
+    collisions_removed = 0
+    if excluded_completion_sha256:
+        kept = [row for row in rows
+                if _sha_text(row["sft_target"]) not in excluded_completion_sha256]
+        collisions_removed = len(rows) - len(kept)
+        rows = kept
+
     eligible = rows
     over_budget: list[dict[str, Any]] = []
     if completion_tokens is not None and max_completion_tokens:
@@ -201,7 +216,9 @@ def build(dataset_dir: Path, corpus_dir: Path, baseline_pairs: int,
             "sealed_final_test_accessed": False,
             "canonical_records_json_opened": False,
             "all_records_in_train_shard": not outside,
-            "available_positives": len(rows),
+            "available_positives": rows_before_collision_filter,
+            "baseline_collisions_removed": collisions_removed,
+            "collision_filtered_positives": len(rows),
             "token_budget_eligible_positives": len(eligible),
             "max_completion_tokens": max_completion_tokens,
             "dropped_over_token_budget": len(over_budget),
@@ -256,6 +273,13 @@ def main() -> int:
                         default="Qwen/Qwen2.5-Coder-1.5B-Instruct")
     parser.add_argument("--model-revision", default=None,
                         help="defaults to the pinned immutable snapshot")
+    parser.add_argument(
+        "--exclude-baseline-completions", type=Path, default=None,
+        help=(
+            "a baseline-completions dump from the Arm B preflight. Rows whose "
+            "completion already exists in the baseline are removed, because "
+            "the trainer would drop them and the declared ratio would then "
+            "exceed the delivered one."))
     arguments = parser.parse_args()
 
     from config import immutable_revision_for
@@ -276,10 +300,19 @@ def main() -> int:
         return len(tokenizer(text.strip() + tokenizer.eos_token,
                              add_special_tokens=False)["input_ids"])
 
+    excluded: set[str] | None = None
+    if arguments.exclude_baseline_completions:
+        payload = json.loads(
+            arguments.exclude_baseline_completions.read_text(encoding="utf-8"))
+        excluded = set(payload["completion_sha256"])
+        print(f"excluding {len(excluded)} baseline completions "
+              f"(set sha {payload['baseline_completion_set_sha256'][:16]}...)")
+
     result = build(arguments.dataset_dir, arguments.corpus,
                    arguments.baseline_pairs, arguments.ratio,
                    completion_tokens=_tokens,
-                   max_completion_tokens=arguments.max_completion_tokens)
+                   max_completion_tokens=arguments.max_completion_tokens,
+                   excluded_completion_sha256=excluded)
     if result["problems"]:
         print("REFUSED: the O1 sidecar cannot be emitted.")
         for problem in result["problems"]:
