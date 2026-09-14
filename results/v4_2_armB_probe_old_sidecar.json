@@ -1,0 +1,349 @@
+{
+  "schema_version": "oneiros_o1_sidecar_ab_preflight_v1",
+  "ready": false,
+  "problems": [
+    "the sidecar declares a ratio of 0.16 but only 1218 of 1312 rows survive deduplication against the baseline, delivering 0.150241. Emit a sidecar whose rows do not collide with baseline completions rather than declaring a ratio the trainer will not deliver.",
+    "94 sidecar rows would not be appended: {'duplicate_completion': 94}"
+  ],
+  "gpu_model_loaded": false,
+  "gpu_used": false,
+  "training_launched": false,
+  "canonical_records_json_opened": false,
+  "validation_split_read": false,
+  "sealed_final_test_accessed": false,
+  "elapsed_seconds": 445.77,
+  "model_identity": {
+    "schema_version": "oneiros_model_identity_v1",
+    "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "base_model_revision_is_immutable": true,
+    "selection_tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "selection_tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "selection_tokenizer_revision_is_immutable": true,
+    "model_and_tokenizer_identical": true,
+    "source_tree_sha256": "f91416c91805929676599473ace6a6265fdebd6a0cc23f90662e0e729e110752",
+    "successor_protocol_name": "oneiros_successor_generation_protocol_v1",
+    "successor_protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
+    "expected_training_model_identity": {
+      "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+    }
+  },
+  "arm_a_model_identity": {
+    "schema_version": "oneiros_model_identity_v1",
+    "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "base_model_revision_is_immutable": true,
+    "selection_tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "selection_tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "selection_tokenizer_revision_is_immutable": true,
+    "model_and_tokenizer_identical": true,
+    "source_tree_sha256": "f91416c91805929676599473ace6a6265fdebd6a0cc23f90662e0e729e110752",
+    "successor_protocol_name": "oneiros_successor_generation_protocol_v1",
+    "successor_protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
+    "expected_training_model_identity": {
+      "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+    }
+  },
+  "source_tree_sha256": "f91416c91805929676599473ace6a6265fdebd6a0cc23f90662e0e729e110752",
+  "runtime_identity": {
+    "runtime_component_hashes": {
+      "scripts/train_on_dataset.py": "19f568d91b1ddfc4ee476eaad9d7354c98747ae6a2726f65497df897f640cdd7",
+      "engine/generator.py": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
+      "engine/sft_trainer.py": "fdceed4a34a9e6d5c51805e5eadb52c11957bca16ab582de65b9d4b84974b623",
+      "engine/model_runtime.py": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
+      "engine/prompt_budget.py": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
+      "engine/test_generation_prompt.py": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+      "harness/o1_sidecar.py": "96bd32832d0127e9e5a4b25237c5b37c917f93f39e4147c91e5d01d4f47eacec",
+      "harness/candidate_policy.py": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+      "harness/safe_execution.py": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+      "harness/corpus_view.py": "b8dd0b014a288a758af3583572472f3396a9aad66944ef41390126b946ccd375",
+      "harness/successor_protocol.py": "fc3aadc575b8b5e31b5900ee422814666f52cc760b9443f951a7dd993ea906bc",
+      "metrics/research_evaluation.py": "649e96fab00af35e172cdd0590f6b6c1241d03aa6aef71ede4fb2e731fad27c2",
+      "config/settings.py": "6b849133ff916b61481073e07d13843baec6ae390590891456e377e04c53decd"
+    },
+    "arm_a_source_tree_sha256": "f91416c91805929676599473ace6a6265fdebd6a0cc23f90662e0e729e110752",
+    "arm_b_source_tree_sha256": "f91416c91805929676599473ace6a6265fdebd6a0cc23f90662e0e729e110752",
+    "source_trees_identical": true,
+    "runtime_components_identical": true,
+    "why_this_is_the_right_test": "a whole-tree hash moves when preflight, emitter or test code is edited, none of which the trainer executes. Only these files change what a training run does."
+  },
+  "comparison": {
+    "arm_a": "frozen baseline corpus and configuration",
+    "arm_b": "identical corpus and configuration plus the O1 sidecar",
+    "only_difference": "the O1 sidecar rows",
+    "held_constant": {
+      "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "prompt_token_limit": 1024,
+      "completion_token_limit": 1024,
+      "sequence_token_limit": 3072,
+      "prompt_information_variant": "full",
+      "output_instruction_variant": "self_contained",
+      "prompt_compaction_strategy": "section_aware_ast_units_before_chat_v4_1",
+      "epochs": 1,
+      "batch_size": 1,
+      "learning_rate": 1e-05,
+      "lr_scheduler_type": "constant_with_warmup",
+      "warmup_steps": 25,
+      "checkpoint_steps": 50,
+      "evaluation_split": "ablation_dev"
+    },
+    "held_constant_generation": {
+      "candidate_parse_mode": "whole_output",
+      "retain_raw_output": true,
+      "allow_test_function_candidates": true,
+      "max_assertions": 24,
+      "candidates_per_function": 8,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "generation_seed": 42,
+      "function_generation_completion_limit": 1024,
+      "repository_generation_completion_limit": 1024,
+      "max_sequence_tokens": 3072
+    },
+    "successor_protocol_name": "oneiros_successor_generation_protocol_v1",
+    "successor_protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
+    "contract_source_hashes": {
+      "parser_source_sha256": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
+      "generation_runtime_source_sha256": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
+      "generation_orchestration_source_sha256": "19f568d91b1ddfc4ee476eaad9d7354c98747ae6a2726f65497df897f640cdd7",
+      "prompt_builder_source_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+      "prompt_budget_source_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
+      "candidate_policy_source_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+      "evaluator_source_sha256": "649e96fab00af35e172cdd0590f6b6c1241d03aa6aef71ede4fb2e731fad27c2",
+      "timeout_policy_source_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+      "evaluation_protocol_source_sha256": "0b6204c7782b7597b41f46cd8fb8c7d67ed436823930371f054f751a517272af"
+    },
+    "sft_training_completion_token_limit": 1024,
+    "sft_budget_is_separate_from_generation_budget": true,
+    "arm_a_contract_problems": [],
+    "held_constant_source": "results/v4_2_armA_successor_preflight_c1024.json",
+    "held_constant_enforced_by": "arm B reads these values from arm A's own report; this preflight refuses if any is absent, so neither arm can be given a different one by hand"
+  },
+  "arm_a": {
+    "requested_pairs": 2400,
+    "retained_pairs": 2400,
+    "unique_records": 2400,
+    "selection_sha256": "598eef61c18e3e394d73a4fc2b72aa91309c7bf5a97a06eddb20be5f372eef23",
+    "selection_independently_rederived": true,
+    "selection_sha256_rederived": "598eef61c18e3e394d73a4fc2b72aa91309c7bf5a97a06eddb20be5f372eef23",
+    "selection_sha256_matches": true,
+    "rederived_pairs": 2400,
+    "recorded_ids_match_rederived": true,
+    "selection_check_scope": "the bounded selection is re-run from arm A's recorded configuration through the same shared compatibility function arm A used, and the resulting SHA must equal arm A's. Hashing the recorded IDs alone would pass on a selection built by different code.",
+    "effective_total_examples": 6889,
+    "effective_synthetic_examples": 5511,
+    "effective_repository_examples": 1378,
+    "actual_real_fraction": 0.200029,
+    "prompt_tokens": {
+      "minimum": 377,
+      "median": 511,
+      "p95": 1012,
+      "maximum": 1024
+    },
+    "completion_tokens": {
+      "minimum": 7,
+      "median": 28,
+      "p95": 438,
+      "maximum": 985
+    }
+  },
+  "sidecar": {
+    "directory": "results/v4_2_o1_sidecar_r16_b6889",
+    "sidecar_sha256": "1e7d80838eae440cb97fee13e28a45bb206d61e48ab9e417dcc0d664c0831332",
+    "source_positives_sha256": "b2e79bf95bc474dc73682f01b920aa842310a64a3c4a6776855455836dbfd0e5",
+    "source_candidates_sha256": "b4a92fd7fa5c5d081204f41be348886501830c309bfe9bde869ff538fc152175",
+    "source_derived_artifact_sha256": "dae750f1d0061f4dba0f8b8e727285c597a81598c1b88b6ab676766cebf32631",
+    "rows": 1312,
+    "unique_records": 887,
+    "unique_completions": 1312,
+    "distinct_lineages": 509,
+    "repeats_per_row": 1,
+    "duplicated_rows": 0,
+    "repository_execution_mode_rows": 0,
+    "real_repository_rows": 12,
+    "shares": {
+      "source_dataset": {
+        "mbpp": 0.6997,
+        "humaneval": 0.2912,
+        "manual_curated_examples": 0.0091
+      },
+      "bug_family": {
+        "comparison": 0.2744,
+        "arithmetic": 0.1623,
+        "off_by_one": 0.154,
+        "logical": 0.1242,
+        "boolean": 0.0808,
+        "boundary": 0.0556,
+        "index": 0.0526,
+        "return": 0.0343,
+        "membership": 0.0221,
+        "negate_removal": 0.0145,
+        "string": 0.0084,
+        "identity": 0.0076,
+        "data_validation": 0.0046,
+        "string_manipulation": 0.003,
+        "list_operations": 0.0015
+      },
+      "complexity_tier": {
+        "moderate": 0.4139,
+        "simple": 0.2934,
+        "complex": 0.2927
+      },
+      "origin": {
+        "synthetic": 0.9909,
+        "real_repository": 0.0091
+      },
+      "supervision_role": {
+        "positive_original": 0.5595,
+        "positive_verified_correction": 0.4405
+      }
+    }
+  },
+  "coverage": {
+    "why_this_matters": "a sidecar keyed by displayed record only reaches records the trainer selects. The multi-mutant run delivered its named supervision to 76 of 800 pairs and measured almost nothing.",
+    "sidecar_records_already_in_arm_a": 321,
+    "sidecar_records_requiring_force_inclusion": 566,
+    "rows_landing_on_selected_pairs": 472,
+    "rows_requiring_force_inclusion": 840,
+    "override_only_coverage_of_arm_a": 0.13375,
+    "force_inclusion_required": true,
+    "rows_resolving_through_full_train_split": 1312,
+    "rows_unresolvable": 0,
+    "all_rows_resolve_and_would_be_appended": true,
+    "trainer_lookup_map": "the full train split, as load_phase3_pairs(corpus_dir, 'train') returns it - not the bounded selection"
+  },
+  "append_simulation": {
+    "method": "harness.o1_sidecar.append_o1_examples, the function the trainer itself calls, run against the rebuilt baseline",
+    "baseline_examples": 6889,
+    "baseline_synthetic_examples": 5511,
+    "baseline_repository_examples": 1378,
+    "baseline_unique_completions": 1793,
+    "baseline_completion_set_sha256": "50a6da890d89b922e41faca599c966cff45793731314410a145a75ec64b0193b",
+    "baseline_view_content_sha256": "3f5f39937c8b2429965bc0d9c79de95777682b52075cda013e5efd8322b3622a",
+    "budget_excluded": 0,
+    "dedup": {
+      "synthetic": {
+        "input_examples": 5511,
+        "retained_examples": 5511,
+        "exact_duplicates_excluded": 0
+      },
+      "repository": {
+        "input_examples": 224,
+        "retained_examples": 224,
+        "exact_duplicates_excluded": 0
+      }
+    },
+    "repeat_histogram": {
+      "4": 96,
+      "5": 10,
+      "8": 118
+    },
+    "built_with": "the trainer's own evaluate_pair, filter_generation_compatible_sft_examples, deduplicate_sft_examples and balanced_repeat_examples",
+    "offered_rows": 1312,
+    "appended_rows": 1218,
+    "dropped_by_reason": {
+      "duplicate_completion": 94
+    },
+    "records_not_in_training_pairs": 0,
+    "baseline_completion_collisions": 94,
+    "collision_examples": [
+      "assert No_of_Triangle(4, 2) == 7",
+      "assert No_of_cubes(5, 2) == 64",
+      "assert Split([1, 2, 3, 4, 5]) == [2, 4]",
+      "assert bell_Number(3) == 5",
+      "assert cal_electbill(75) == 246.25"
+    ],
+    "combined_examples": 8107,
+    "delivered_ratio": 0.150241,
+    "declared_ratio": 0.16,
+    "declared_matches_delivered": false,
+    "appended_completion_set_sha256": "b614262a00b3a2044181b08982f1594f2d72847318f08af2ca833fa96ae68eb4",
+    "appended_completion_hashes_sample": [
+      "71104a8599c19080e00c3bd9fc6bbbb42f9acacfe9191b26378b1270ea643273",
+      "da1823c4d793a736fb09bf867a7547a4a0b218f71cc95018f7431f837561be53",
+      "2222b4287d93918287bf1656452b266ae6de0acca3b1302fbff5246c590af258",
+      "35fccc57b3540b7a368f94c83a095fd6c14fab3c009c72d6ce7e28a19261b8e3",
+      "31fbb7188de763118317bdcfa612af57c28459960300c33320e89efb7cc65dcb"
+    ],
+    "baseline_unchanged_by_append": true,
+    "golden_substituted": false
+  },
+  "mixing": {
+    "baseline_examples": 6889,
+    "sidecar_examples": 1312,
+    "appended_examples": 1218,
+    "arm_b_examples": 8107,
+    "requested_ratio": 0.16,
+    "achieved_ratio": 0.150241,
+    "auxiliary_ceiling": 0.35,
+    "o1_is_the_whole_corpus": false
+  },
+  "token_budget": {
+    "prompt_token_limit": 1024,
+    "completion_token_limit": 1024,
+    "sequence_token_limit": 3072,
+    "declared_total": 2048,
+    "declared_fits": true,
+    "sidecar_prompt_tokens": {
+      "count": 1312,
+      "minimum": 182,
+      "median": 271,
+      "p95": 575,
+      "maximum": 1074
+    },
+    "sidecar_completion_tokens": {
+      "count": 1312,
+      "minimum": 6,
+      "median": 18,
+      "p95": 44,
+      "maximum": 141
+    },
+    "sidecar_prompt_plus_completion": {
+      "count": 1312,
+      "minimum": 194,
+      "median": 293,
+      "p95": 608,
+      "maximum": 1115
+    },
+    "sequence_overflow_rows": 0,
+    "sequence_overflow_examples": [],
+    "completion_budget_overflow_rows": 0
+  },
+  "leakage": {
+    "record_source": "hash-verified development view train shard",
+    "canonical_records_json_opened": false,
+    "sealed_final_test_accessed": false,
+    "validation_split_read": false,
+    "sidecar_records_outside_train": 0,
+    "sidecar_records_in_ablation_dev": 0,
+    "ablation_dev_is_the_checkpoint_selection_panel": true,
+    "arm_a_leakage_gates": {
+      "semantic_split_overlap_zero": true,
+      "ablation_dev_validation_overlap_zero": true,
+      "ablation_dev_test_overlap_zero": true,
+      "prohibited_prompt_lineage_zero": true,
+      "verbatim_reference_leaks_zero": true
+    }
+  },
+  "hashes": {
+    "arm_a_preflight_sha256": "abf9934e6041094572bbbae07a1f065b53da5962730aee452f12c17ff9e59ed3",
+    "arm_a_selection_sha256": "598eef61c18e3e394d73a4fc2b72aa91309c7bf5a97a06eddb20be5f372eef23",
+    "arm_a_selection_rebuilt_sha256": "598eef61c18e3e394d73a4fc2b72aa91309c7bf5a97a06eddb20be5f372eef23",
+    "sidecar_sha256": "1e7d80838eae440cb97fee13e28a45bb206d61e48ab9e417dcc0d664c0831332",
+    "o1_positives_sha256": "b2e79bf95bc474dc73682f01b920aa842310a64a3c4a6776855455836dbfd0e5",
+    "o1_candidates_sha256": "b4a92fd7fa5c5d081204f41be348886501830c309bfe9bde869ff538fc152175"
+  },
+  "interpretation": [
+    "This is a preflight. No training was launched and no GPU was used.",
+    "O1 is train-only supervision. Nothing here is a generalization result or a model improvement.",
+    "The repaired successor Kill@8 of 0.632887 remains a train-only whole-output diagnostic and is not comparable to the legacy first_assertion figure.",
+    "No real-repository claim follows from either arm: the sidecar carries a handful of real-repository rows at most."
+  ]
+}
