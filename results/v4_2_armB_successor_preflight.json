@@ -8,7 +8,7 @@
   "canonical_records_json_opened": false,
   "validation_split_read": false,
   "sealed_final_test_accessed": false,
-  "elapsed_seconds": 129.841,
+  "elapsed_seconds": 129.723,
   "comparison": {
     "arm_a": "frozen baseline corpus and configuration",
     "arm_b": "identical corpus and configuration plus the O1 sidecar",
@@ -46,9 +46,9 @@
     "successor_protocol_name": "oneiros_successor_generation_protocol_v1",
     "successor_protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
     "contract_source_hashes": {
-      "parser_source_sha256": "7347f59ae698aba7b7edbd96c3923cbba7d6aad819cf44b609951330c0f7dee1",
+      "parser_source_sha256": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
       "generation_runtime_source_sha256": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
-      "generation_orchestration_source_sha256": "63d366db4ca6720f646a4786c643a2452e79699086a7c08f798210de44bf6ca8",
+      "generation_orchestration_source_sha256": "19f568d91b1ddfc4ee476eaad9d7354c98747ae6a2726f65497df897f640cdd7",
       "prompt_builder_source_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
       "prompt_budget_source_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
       "candidate_policy_source_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
@@ -212,7 +212,7 @@
     }
   },
   "hashes": {
-    "arm_a_preflight_sha256": "6b572784fc4a56c678959b46ef680a736430153cfec19dc9d52990300952f5eb",
+    "arm_a_preflight_sha256": "e98d7022e2da54386648fa05545f80e2f4041a6d81b72148e254913ed3b83971",
     "arm_a_selection_sha256": "598eef61c18e3e394d73a4fc2b72aa91309c7bf5a97a06eddb20be5f372eef23",
     "arm_a_selection_rebuilt_sha256": "598eef61c18e3e394d73a4fc2b72aa91309c7bf5a97a06eddb20be5f372eef23",
     "sidecar_sha256": "5feea2dfc16933f3d3025c8832ecd67d417289819ccbec5c0bcefc5ee85ad7a9",
