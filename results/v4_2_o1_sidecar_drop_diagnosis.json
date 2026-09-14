@@ -1,0 +1,27 @@
+{
+  "baseline_examples": 6889,
+  "baseline_unique_completions": 1793,
+  "sidecar_rows_offered": 1312,
+  "appended": 1218,
+  "dropped": {
+    "duplicate_completion": 94
+  },
+  "combined": 8107,
+  "achieved_share": 0.150241,
+  "records_not_in_training_pairs": 0,
+  "sidecar_completions_colliding_with_baseline": 94,
+  "distinct_colliding_completions": 94,
+  "duplicate_completions_within_sidecar": 0,
+  "appendable_from_this_sidecar": 1218,
+  "o1_positives_total": 1316,
+  "o1_positives_unique_completions": 1316,
+  "max_appendable_from_all_positives": 1222,
+  "max_achievable_share_all_positives": 0.15066,
+  "collision_examples": [
+    "assert No_of_Triangle(4, 2) == 7",
+    "assert No_of_cubes(5, 2) == 64",
+    "assert Split([1, 2, 3, 4, 5]) == [2, 4]",
+    "assert bell_Number(3) == 5",
+    "assert cal_electbill(75) == 246.25"
+  ]
+}
