@@ -43,6 +43,7 @@ from engine.sft_trainer import (
     sft_prompt_limit_for_execution_mode,
 )
 from harness.corpus_view import verify_development_view
+from harness.model_identity import build as build_model_identity
 from harness.successor_protocol import (
     SUCCESSOR_PROTOCOL, as_recorded_contract, training_command_flags,
 )
@@ -885,6 +886,15 @@ def build_preflight(
             "completion_tokens": _token_summary(completion_lengths),
             "sequence_overflow_examples": sequence_overflow_examples,
         },
+        "model_identity": build_model_identity(
+            model_name=resolved_base_model_name,
+            model_revision=resolved_base_model_revision,
+            tokenizer_name=selection_tokenizer_name,
+            tokenizer_revision=selection_tokenizer_revision,
+            source_tree_sha256=current_source_sha256,
+            protocol_name=SUCCESSOR_PROTOCOL["protocol_name"],
+            protocol_sha256=as_recorded_contract(ROOT)["protocol_sha256"],
+        ),
         "run_identity": {
             "seed": trainer.SEED,
             "source_tree_sha256": current_source_sha256,

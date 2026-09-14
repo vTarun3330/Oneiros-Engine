@@ -36,6 +36,11 @@ if str(ROOT) not in sys.path:
 
 from engine.sft_trainer import MAX_SFT_SEQUENCE_LENGTH
 from harness.corpus_view import load_development_split, verify_development_view
+from harness.model_identity import (
+    build as build_model_identity, disagreements as identity_disagreements,
+    is_immutable_revision, problems as identity_problems,
+)
+from utils.reproducibility import source_tree_sha256
 from harness.successor_protocol import (
     CONTRACT_FIELDS, CONTRACT_SOURCES, SUCCESSOR_PROTOCOL, assert_matches,
     protocol_sha256,
@@ -124,6 +129,19 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
     if arm_a.get("gpu_model_loaded"):
         problems.append("arm A's preflight reports a loaded model")
 
+    # --------------------------------------------------- model identity
+    # Arm B states what IT used rather than pointing at Arm A. A receipt that
+    # only links to another receipt cannot be checked on its own, and the link
+    # is exactly what an audit cannot verify after the fact.
+    arm_a_identity = arm_a.get("model_identity")
+    problems.extend(identity_problems(arm_a_identity, label="arm A"))
+
+    arm_b_source_tree = source_tree_sha256(ROOT)
+    if not arm_b_source_tree:
+        problems.append(
+            "this preflight cannot compute its own source-tree SHA, so it "
+            "cannot record which source produced it")
+
     # ------------------------------------------------ held-constant contract
     held: dict[str, Any] = {}
     for name, path in HELD_CONSTANT:
@@ -204,6 +222,31 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
             _dig(arm_a, ("tokenization", "repository_completion_token_limit"))
             or held["completion_token_limit"]),
     )
+    arm_b_identity = build_model_identity(
+        model_name=held["model_name"],
+        model_revision=held["model_revision"],
+        tokenizer_name=(arm_a_identity or {}).get("selection_tokenizer_name")
+        or held["model_name"],
+        tokenizer_revision=(arm_a_identity or {}).get(
+            "selection_tokenizer_revision") or held["model_revision"],
+        source_tree_sha256=arm_b_source_tree,
+        protocol_name=SUCCESSOR_PROTOCOL["protocol_name"],
+        protocol_sha256=protocol_sha256(),
+    )
+    problems.extend(identity_problems(arm_b_identity, label="arm B"))
+    if arm_a_identity:
+        problems.extend(identity_disagreements(arm_a_identity, arm_b_identity))
+        if arm_a_identity.get("source_tree_sha256") != arm_b_source_tree:
+            problems.append(
+                "arm A was produced from source tree "
+                f"{str(arm_a_identity.get('source_tree_sha256'))[:12]}... but "
+                f"this preflight runs on {arm_b_source_tree[:12]}...; the "
+                "linked receipt no longer matches the current contract")
+    if not is_immutable_revision(held.get("model_revision")):
+        problems.append(
+            f"the held-constant model revision {held.get('model_revision')!r} "
+            "is not an immutable snapshot SHA")
+
     rederived_pairs = select_bounded_train_pairs(
         eligible_pairs,
         int(selection["requested_pairs"]),
@@ -329,6 +372,9 @@ def run(arm_a_path: Path, sidecar_dir: Path, corpus_version: str,
         "validation_split_read": False,
         "sealed_final_test_accessed": False,
         "elapsed_seconds": round(time.time() - started, 3),
+        "model_identity": arm_b_identity,
+        "arm_a_model_identity": arm_a_identity,
+        "source_tree_sha256": arm_b_source_tree,
         "comparison": {
             "arm_a": "frozen baseline corpus and configuration",
             "arm_b": "identical corpus and configuration plus the O1 sidecar",
