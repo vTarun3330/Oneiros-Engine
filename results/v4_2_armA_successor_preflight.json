@@ -5,7 +5,7 @@
   "gpu_model_loaded": false,
   "corpus_modified": false,
   "checkpoint_modified": false,
-  "elapsed_seconds": 961.651,
+  "elapsed_seconds": 985.205,
   "corpus": {
     "version": "v4_1_research_hardened_candidate",
     "corpus_id": "oneiros-corpus-v4.1-research-hardened-candidate",
@@ -188,7 +188,7 @@
   },
   "local_test_status": {
     "schema_version": "oneiros_v4_1_local_test_status_v1",
-    "timestamp_utc": "2026-09-14T10:36:06.721839+00:00",
+    "timestamp_utc": "2026-09-14T11:48:17.604579+00:00",
     "command": [
       "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Scripts\\python.exe",
       "-m",
@@ -196,12 +196,12 @@
       "-q"
     ],
     "returncode": 0,
-    "passed": 980,
+    "passed": 1023,
     "failed": 0,
-    "source_tree_sha256": "43250787467580e8a6c7527ec2ddf9412a9217754e02a17263a063ce98d71fc0",
+    "source_tree_sha256": "4a05fff06849b21c12209598a681ff36c2c2698b8d1dd34181d88e1deea2e3f0",
     "completion_only_masking_verified": true,
     "sealed_final_test_accessed": false,
-    "output_tail": "........................................................................ [  7%]\n........................................................................ [ 14%]\n........................................................................ [ 22%]\n........................................................................ [ 29%]\n........................................................................ [ 36%]\n........................................................................ [ 44%]\n........................................................................ [ 51%]\n........................................................................ [ 58%]\n........................................................................ [ 66%]\n........................................................................ [ 73%]\n........................................................................ [ 80%]\n........................................................................ [ 88%]\n........................................................................ [ 95%]\n............................................                             [100%]\n============================== warnings summary ===============================\n.venv-gpu\\Lib\\site-packages\\faiss\\loader.py:49\n  C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Lib\\site-packages\\faiss\\loader.py:49: DeprecationWarning: numpy.core._multiarray_umath is deprecated and has been renamed to numpy._core._multiarray_umath. The numpy._core namespace contains private NumPy internals and its use is discouraged, as NumPy internals can change without warning in any release. In practice, most real-world usage of numpy.core is to access functionality in the public NumPy API. If that is the case, use the public NumPy API. If not, you are using NumPy internals. If you would still like to access an internal attribute, use numpy._core._multiarray_umath.__cpu_features__.\n    from numpy.core._multiarray_umath import __cpu_features__\n\ntests/test_canonical_corpus_default.py::test_phase3_entry_points_share_the_canonical_corpus_default\n  C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\tests\\test_canonical_corpus_default.py:12: DeprecationError: 2026-08-26: `Function.get_raw_f` is deprecated and will be removed in `modal` version 1.6.0\n    inspect.signature(modal_train.run_cloud_training.get_raw_f())\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n980 passed, 2 warnings in 35.50s"
+    "output_tail": "........................................................................ [  7%]\n........................................................................ [ 14%]\n........................................................................ [ 21%]\n........................................................................ [ 28%]\n........................................................................ [ 35%]\n........................................................................ [ 42%]\n........................................................................ [ 49%]\n.................................................................ss..... [ 56%]\n........................................................................ [ 63%]\n........................................................................ [ 70%]\n........................................................................ [ 77%]\n........................................................................ [ 84%]\n........................................................................ [ 91%]\n........................................................................ [ 98%]\n.................                                                        [100%]\n============================== warnings summary ===============================\n.venv-gpu\\Lib\\site-packages\\faiss\\loader.py:49\n  C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Lib\\site-packages\\faiss\\loader.py:49: DeprecationWarning: numpy.core._multiarray_umath is deprecated and has been renamed to numpy._core._multiarray_umath. The numpy._core namespace contains private NumPy internals and its use is discouraged, as NumPy internals can change without warning in any release. In practice, most real-world usage of numpy.core is to access functionality in the public NumPy API. If that is the case, use the public NumPy API. If not, you are using NumPy internals. If you would still like to access an internal attribute, use numpy._core._multiarray_umath.__cpu_features__.\n    from numpy.core._multiarray_umath import __cpu_features__\n\ntests/test_canonical_corpus_default.py::test_phase3_entry_points_share_the_canonical_corpus_default\n  C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\tests\\test_canonical_corpus_default.py:12: DeprecationError: 2026-08-26: `Function.get_raw_f` is deprecated and will be removed in `modal` version 1.6.0\n    inspect.signature(modal_train.run_cloud_training.get_raw_f())\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n1023 passed, 2 skipped, 2 warnings in 36.69s"
   },
   "selection": {
     "execution_mode_filter": null,
@@ -4768,9 +4768,28 @@
     },
     "sequence_overflow_examples": []
   },
+  "model_identity": {
+    "schema_version": "oneiros_model_identity_v1",
+    "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "base_model_revision_is_immutable": true,
+    "selection_tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "selection_tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "selection_tokenizer_revision_is_immutable": true,
+    "model_and_tokenizer_identical": true,
+    "source_tree_sha256": "4a05fff06849b21c12209598a681ff36c2c2698b8d1dd34181d88e1deea2e3f0",
+    "successor_protocol_name": "oneiros_successor_generation_protocol_v1",
+    "successor_protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
+    "expected_training_model_identity": {
+      "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+    }
+  },
   "run_identity": {
     "seed": 42,
-    "source_tree_sha256": "43250787467580e8a6c7527ec2ddf9412a9217754e02a17263a063ce98d71fc0",
+    "source_tree_sha256": "4a05fff06849b21c12209598a681ff36c2c2698b8d1dd34181d88e1deea2e3f0",
     "contract_source_hashes": {
       "prompt_builder_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
       "prompt_budget_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",

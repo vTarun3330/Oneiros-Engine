@@ -8,7 +8,46 @@
   "canonical_records_json_opened": false,
   "validation_split_read": false,
   "sealed_final_test_accessed": false,
-  "elapsed_seconds": 129.723,
+  "elapsed_seconds": 138.522,
+  "model_identity": {
+    "schema_version": "oneiros_model_identity_v1",
+    "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "base_model_revision_is_immutable": true,
+    "selection_tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "selection_tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "selection_tokenizer_revision_is_immutable": true,
+    "model_and_tokenizer_identical": true,
+    "source_tree_sha256": "4a05fff06849b21c12209598a681ff36c2c2698b8d1dd34181d88e1deea2e3f0",
+    "successor_protocol_name": "oneiros_successor_generation_protocol_v1",
+    "successor_protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
+    "expected_training_model_identity": {
+      "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+    }
+  },
+  "arm_a_model_identity": {
+    "schema_version": "oneiros_model_identity_v1",
+    "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "base_model_revision_is_immutable": true,
+    "selection_tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "selection_tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "selection_tokenizer_revision_is_immutable": true,
+    "model_and_tokenizer_identical": true,
+    "source_tree_sha256": "4a05fff06849b21c12209598a681ff36c2c2698b8d1dd34181d88e1deea2e3f0",
+    "successor_protocol_name": "oneiros_successor_generation_protocol_v1",
+    "successor_protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
+    "expected_training_model_identity": {
+      "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+    }
+  },
+  "source_tree_sha256": "4a05fff06849b21c12209598a681ff36c2c2698b8d1dd34181d88e1deea2e3f0",
   "comparison": {
     "arm_a": "frozen baseline corpus and configuration",
     "arm_b": "identical corpus and configuration plus the O1 sidecar",
@@ -212,7 +251,7 @@
     }
   },
   "hashes": {
-    "arm_a_preflight_sha256": "e98d7022e2da54386648fa05545f80e2f4041a6d81b72148e254913ed3b83971",
+    "arm_a_preflight_sha256": "d7e5965bb505ac8a3cfe33f1ca0249fa096bd0202d547f966f4fe7a2b97bb3d3",
     "arm_a_selection_sha256": "598eef61c18e3e394d73a4fc2b72aa91309c7bf5a97a06eddb20be5f372eef23",
     "arm_a_selection_rebuilt_sha256": "598eef61c18e3e394d73a4fc2b72aa91309c7bf5a97a06eddb20be5f372eef23",
     "sidecar_sha256": "5feea2dfc16933f3d3025c8832ecd67d417289819ccbec5c0bcefc5ee85ad7a9",
