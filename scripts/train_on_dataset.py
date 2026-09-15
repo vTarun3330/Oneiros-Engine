@@ -75,6 +75,12 @@ EXECUTION_MODE_FILTER = None
 TRAINING_PHASE = "sft"
 RESTART_DPO = False
 CONFIRM_FINAL_TEST = False
+#: An adapter evaluated where it already lives, rather than one produced by
+#: this run directory. Set only by --adapter-dir, only for --phase sft_eval,
+#: and never consulted by any training path. See resolve_external_adapter.
+EXTERNAL_ADAPTER_DIR = None
+EXTERNAL_ADAPTER_SHA256 = None
+EXTERNAL_ADAPTER_SOURCE_RUN = None
 EVAL_FEEDBACK_ROUNDS = 0
 EVAL_DIVERSITY_MODE = "none"
 HOLDOUT_BUG_FAMILY = None
@@ -201,6 +207,107 @@ def resolved_base_model_identity() -> Tuple[str, str]:
             "config.IMMUTABLE_MODEL_REVISIONS rather than recording a moving "
             "reference as the model identity.")
     return name, revision
+
+
+#: Files that must be present for a directory to be a loadable LoRA adapter.
+EXTERNAL_ADAPTER_REQUIRED_FILES = ("adapter_model.safetensors", "adapter_config.json")
+
+
+def _adapter_resolution_source_sha256() -> str:
+    """Hash of the code that decides which adapter is loaded.
+
+    Narrower than the whole-file hash beside it and harder to satisfy by
+    accident: this moves when, and only when, the resolution rules change.
+    """
+    import inspect
+    source = "".join((
+        inspect.getsource(resolve_external_adapter),
+        inspect.getsource(external_adapter_provenance),
+        repr(EXTERNAL_ADAPTER_REQUIRED_FILES),
+    ))
+    return hashlib.sha256(source.encode("utf-8")).hexdigest()
+
+
+def resolve_external_adapter(adapter_dir, expected_sha256: str):
+    """Resolve an adapter that is evaluated where it already lives.
+
+    The alternative this replaces was worse than ugly. ``--phase sft_eval``
+    evaluated ``<run>/sft_adapter`` and nothing else, so measuring a checkpoint
+    that was not the run's own final adapter meant building a directory that
+    *looked* like a finished training run: a copy of the weights, a
+    ``dataset_manifest.sha256``, an ``sft_metadata.json``, and an
+    ``sft_complete.marker`` whose literal meaning - that training completed
+    here - was false. Three provenance gates were satisfied one at a time by
+    manufacturing the evidence each one asked for. Every file was individually
+    accurate and the result was still a directory that lied about its own
+    history.
+
+    This path exists so that never has to happen again. It reads the adapter
+    where it already is, writes nothing to it, and refuses before a single
+    weight is loaded if the bytes are not the bytes that were promised.
+
+    The hash is required rather than optional because an unverified path is
+    just a different way to evaluate the wrong checkpoint, and "which weights
+    did this number come from" is the one question a measurement must never
+    have to guess at.
+
+    Returns (resolved_path, sha256). Raises RuntimeError on every refusal.
+    """
+    if not expected_sha256:
+        raise RuntimeError(
+            "--adapter-dir requires --expected-adapter-sha256. An adapter "
+            "loaded without a declared hash cannot be tied to a receipt.")
+    expected = str(expected_sha256).strip().lower()
+    if not re.fullmatch(r"[0-9a-f]{64}", expected):
+        raise RuntimeError(
+            f"--expected-adapter-sha256 must be a 64-character hex SHA-256, got "
+            f"{expected_sha256!r}")
+
+    path = Path(adapter_dir).expanduser().resolve()
+    if not path.is_dir():
+        raise RuntimeError(f"--adapter-dir is not a directory: {path}")
+    missing = [name for name in EXTERNAL_ADAPTER_REQUIRED_FILES
+               if not (path / name).is_file()]
+    if missing:
+        raise RuntimeError(
+            f"--adapter-dir {path} is not a loadable LoRA adapter; missing: "
+            f"{', '.join(missing)}")
+
+    actual = sha256_file(path / "adapter_model.safetensors")
+    if actual != expected:
+        raise RuntimeError(
+            "Adapter hash mismatch; refusing before the model is loaded.\n"
+            f"  adapter : {path / 'adapter_model.safetensors'}\n"
+            f"  expected: {expected}\n"
+            f"  found   : {actual}")
+    return path, actual
+
+
+def external_adapter_provenance(results_dir, run_name: str) -> Dict:
+    """What the artifact must say about an externally supplied adapter.
+
+    Recorded so that a reader of the result never has to infer where the
+    weights came from, and so that this arm can never be mistaken for a
+    training run that happened in its own output directory.
+    """
+    _name, revision = resolved_base_model_identity()
+    return {
+        "adapter_provenance": "external_evaluation_adapter",
+        "adapter_source_path": str(EXTERNAL_ADAPTER_DIR),
+        "adapter_sha256": EXTERNAL_ADAPTER_SHA256,
+        "expected_base_model_revision": revision,
+        "source_training_run": EXTERNAL_ADAPTER_SOURCE_RUN,
+        "evaluation_run_name": run_name,
+        "evaluation_output_directory": str(results_dir),
+        "inference_only": True,
+        "training_forbidden_with_this_adapter": True,
+        "source_directory_modified": False,
+        "note": (
+            "The adapter was read in place. Nothing was copied into this output "
+            "directory, and no marker or metadata file was written to the source "
+            "directory. This is an evaluation of an existing checkpoint, not a "
+            "training run."),
+    }
 
 
 def resolved_selection_tokenizer_identity() -> Tuple[str, str]:
@@ -1774,8 +1881,16 @@ def _adapter_evaluation_context(
             Path(__file__).parent.parent / "harness" / "safe_execution.py"),
         "prompt_builder_source_sha256": sha256_file(
             Path(__file__).parent.parent / "engine" / "test_generation_prompt.py"),
+        # The runner decides which weights are loaded at all. An evaluator
+        # hash says how a candidate was scored; it says nothing about whether
+        # the intended adapter was the one on the GPU. Binding the entrypoint
+        # and the adapter-resolution logic closes that gap, and does it for
+        # every phase rather than only the one that happens to use an
+        # external adapter.
+        "runner_source_sha256": sha256_file(Path(__file__).resolve()),
+        "adapter_resolution_source_sha256": _adapter_resolution_source_sha256(),
     }
-    return {
+    context = {
         "format_version": 3,
         "validation_accounting_schema_version": VALIDATION_ACCOUNTING_SCHEMA_VERSION,
         "run_contract": run_contract,
@@ -1796,6 +1911,13 @@ def _adapter_evaluation_context(
         "evaluation_profile_sha256": evaluation_profile_sha256(profile),
         "reproducibility": reproducibility,
     }
+    # Added only when an external adapter is in use, so that a run without one
+    # keeps a byte-identical context and its progress checkpoints stay
+    # resumable.
+    if EXTERNAL_ADAPTER_DIR is not None:
+        context["external_adapter"] = external_adapter_provenance(
+            RESULTS_DIR, RESULTS_DIR.name)
+    return context
 
 
 def _save_adapter_evaluation_progress(
@@ -3196,6 +3318,40 @@ def run_training(use_mock: bool = False, fresh: bool = False) -> Dict:
             None,
             "base_model",
             evaluation_results_filename("base", SEED),
+            evaluation_split=EVALUATION_SPLIT,
+        )
+
+    # An externally supplied adapter is evaluated where it lives. This returns
+    # before the marker/metadata gates below, which exist to stop DPO or a
+    # resumed SFT from starting off an unaccounted adapter in THIS directory.
+    # Neither applies here: nothing trains, and the adapter's identity is
+    # established by a hash checked before the model was loaded, which is a
+    # stronger claim than a marker file asserts.
+    if EXTERNAL_ADAPTER_DIR is not None:
+        if TRAINING_PHASE != "sft_eval":
+            raise RuntimeError(
+                "--adapter-dir is valid only with --phase sft_eval; it is an "
+                "evaluation path and must never seed training.")
+        if use_mock:
+            raise RuntimeError("External adapter validation requires real model inference")
+        if HOLDOUT_BUG_FAMILY and (
+            f":holdout_bug_family={HOLDOUT_BUG_FAMILY}" not in dataset_fingerprint
+        ):
+            raise RuntimeError(
+                "Leave-one-family-out evaluation requires an adapter trained with the same "
+                "--holdout-bug-family setting."
+            )
+        print(
+            "[EXTERNAL ADAPTER] evaluating in place, nothing written to the source\n"
+            f"  source : {EXTERNAL_ADAPTER_DIR}\n"
+            f"  sha256 : {EXTERNAL_ADAPTER_SHA256}\n"
+            f"  run    : {EXTERNAL_ADAPTER_SOURCE_RUN or 'not supplied'}",
+            flush=True,
+        )
+        return _evaluate_adapter_kill_rate(
+            corpus_dir, dataset_fingerprint, EXTERNAL_ADAPTER_DIR,
+            "external_evaluation_adapter",
+            sft_validation_results_filename(SEED),
             evaluation_split=EVALUATION_SPLIT,
         )
 
@@ -4709,6 +4865,28 @@ if __name__ == "__main__":
         help="Run SFT, locked adapter validation, DPO from a verified SFT adapter, or the combined legacy flow",
     )
     parser.add_argument(
+        "--adapter-dir", "--adapter-path", dest="adapter_dir", default=None,
+        help=(
+            "Evaluate a LoRA adapter where it already lives, instead of the one this "
+            "run directory produced. Valid ONLY with --phase sft_eval. Requires "
+            "--expected-adapter-sha256. The source directory is read and never "
+            "written to: no copy is made, and no marker or metadata file is created "
+            "in it or in the output directory."),
+    )
+    parser.add_argument(
+        "--expected-adapter-sha256", default=None,
+        help=(
+            "Required with --adapter-dir: the SHA-256 of the adapter's "
+            "adapter_model.safetensors. Checked before the model is loaded; a "
+            "mismatch refuses the run."),
+    )
+    parser.add_argument(
+        "--adapter-source-run", default=None,
+        help=(
+            "Optional. The training run that produced the external adapter, recorded "
+            "in the result artifact for provenance."),
+    )
+    parser.add_argument(
         "--execution-mode", default="",
         choices=["", FUNCTION_EXECUTION_MODE, *sorted(REPOSITORY_EXECUTION_MODES)],
         help="Optionally train only one canonical execution mode (useful for targeted smoke tests)",
@@ -4988,6 +5166,25 @@ if __name__ == "__main__":
     TRAINING_PHASE = args.phase
     if TRAINING_PHASE in {"dpo", "dpo_eval", "sft_then_dpo"} and EVALUATION_SPLIT != "val":
         raise ValueError("DPO gating and final comparison require the locked val split")
+    # Resolve and verify the external adapter here, in argument handling,
+    # so a wrong or missing adapter costs nothing: the refusal lands before
+    # CUDA is touched and before any corpus is read.
+    if args.adapter_dir is not None:
+        if TRAINING_PHASE != "sft_eval":
+            parser.error(
+                "--adapter-dir is valid only with --phase sft_eval "
+                f"(got --phase {TRAINING_PHASE}). It is an evaluation path and "
+                "must never seed training.")
+        try:
+            EXTERNAL_ADAPTER_DIR, EXTERNAL_ADAPTER_SHA256 = resolve_external_adapter(
+                args.adapter_dir, args.expected_adapter_sha256)
+        except RuntimeError as exc:
+            parser.error(str(exc))
+        EXTERNAL_ADAPTER_SOURCE_RUN = args.adapter_source_run
+    elif args.expected_adapter_sha256 is not None:
+        parser.error("--expected-adapter-sha256 requires --adapter-dir")
+    elif args.adapter_source_run is not None:
+        parser.error("--adapter-source-run requires --adapter-dir")
     RESTART_DPO = args.restart_dpo
     CONFIRM_FINAL_TEST = args.confirm_final_test
     if not args.mock:

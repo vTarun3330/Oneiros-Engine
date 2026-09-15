@@ -43,14 +43,20 @@ def test_the_contract_source_binds_every_generation_defining_setting():
 
 
 def test_the_contract_is_inside_the_resume_identity_not_beside_it():
-    """If it is not in `context`, resume does not compare it."""
-    from pathlib import Path
-    source = (Path(__file__).resolve().parent.parent
-              / "scripts" / "train_on_dataset.py").read_text(encoding="utf-8")
-    returned = source.split("def _adapter_evaluation_context", 1)[1]
-    returned = returned.split("return {", 1)[1].split("\n\n", 1)[0]
-    assert '"run_contract": run_contract' in returned
-    assert '"run_contract_sha256"' in returned
+    """If it is not in `context`, resume does not compare it.
+
+    Asserted against the dict the builder actually returns rather than against
+    the shape of its source. The previous version split on ``return {``, which
+    made a plain refactor - naming the dict before returning it - look like the
+    contract had left the resume identity.
+    """
+    from scripts import train_on_dataset as trainer
+    context = trainer._adapter_evaluation_context(
+        "fingerprint", "base_model", "a" * 64, "val", None, "b" * 64, 700)
+    assert context["run_contract"], "run_contract is absent from the resume identity"
+    assert len(context["run_contract_sha256"]) == 64
+    for field in MUST_BE_BOUND:
+        assert field in context["run_contract"], field
 
 
 def test_resume_compares_the_whole_context():

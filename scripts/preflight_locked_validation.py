@@ -67,8 +67,13 @@ RUNTIME_COMPONENTS = (
 #: Arm B of this measurement. Selected by the frozen four-arm development
 #: experiment; its adapter hash is pinned so a different checkpoint cannot be
 #: substituted after the rule was written.
+#:
+#: It is evaluated WHERE IT LIVES, through --adapter-dir. Nothing is copied,
+#: moved, or written into this directory, and no marker or metadata file is
+#: created anywhere to make an evaluation look like a training run.
 ARM_A_431_RUN = "local_sft_armA_baseline_successor_s42"
-ARM_A_431_ADAPTER = f"checkpoints/{ARM_A_431_RUN}/sft_adapter/adapter_model.safetensors"
+ARM_A_431_ADAPTER_DIR = f"checkpoints/{ARM_A_431_RUN}/sft_adapter"
+ARM_A_431_ADAPTER = f"{ARM_A_431_ADAPTER_DIR}/adapter_model.safetensors"
 ARM_A_431_ADAPTER_SHA256 = (
     "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7"
 )
@@ -184,10 +189,22 @@ def view_problems(view: dict) -> list[str]:
     return found
 
 
-def evaluation_command(run_name: str, *, adapter_run: str | None) -> list[str]:
-    """The exact command for one arm. Built here so it cannot drift."""
+def evaluation_command(run_name: str, *, adapter_run: str | None,
+                       revision: str) -> list[str]:
+    """The exact command for one arm. Built here so it cannot drift.
+
+    Every option the protocol does not own is written out, including the model
+    and tokenizer revision, which the development commands left to the pinned
+    default. The options the protocol DOES own - parse mode, raw-output
+    retention, seed, completion limit, sequence limit - are deliberately absent:
+    SUCCESSOR_PROTOCOL.OWNED_CLI_OPTIONS makes passing them beside
+    --successor-protocol a conflict rather than an override, precisely so a
+    value typed twice cannot disagree with the receipt that names the protocol.
+    Those values are resolved and recorded in `resolved_generation_settings`
+    instead, and checked against the runtime by assert_runtime_matches().
+    """
     phase = "sft_eval" if adapter_run else "base_eval"
-    return [
+    command = [
         ".venv-gpu/Scripts/python.exe", "scripts/train_on_dataset.py",
         "--phase", phase,
         "--run-name", run_name,
@@ -196,9 +213,17 @@ def evaluation_command(run_name: str, *, adapter_run: str | None) -> list[str]:
         "--prompt-information-variant", "full",
         "--output-instruction-variant", "self_contained",
         "--base-model-name", BASE_MODEL,
+        "--base-model-revision", revision,
         "--attention-implementation", "sdpa",
         "--sft-prompt-token-limit", "1024",
     ]
+    if adapter_run:
+        command += [
+            "--adapter-dir", ARM_A_431_ADAPTER_DIR,
+            "--expected-adapter-sha256", ARM_A_431_ADAPTER_SHA256,
+            "--adapter-source-run", adapter_run,
+        ]
+    return command
 
 
 def collect(problems: list[str]) -> dict:
@@ -268,6 +293,66 @@ def collect(problems: list[str]) -> dict:
     contracts = contract_source_hashes(ROOT)
     runtime = {name: sha256_file(ROOT / name) for name in RUNTIME_COMPONENTS}
 
+    # ---- the runner decides which weights are loaded ---------------------
+    from scripts import train_on_dataset as runner
+    from harness.successor_protocol import assert_runtime_matches
+    from config import model_config
+
+    runtime_drift = assert_runtime_matches(ROOT)
+    problems.extend(runtime_drift)
+
+    # Values the protocol owns are not passed as flags (that would be a
+    # conflict); they are resolved from the code that will execute and
+    # recorded here, so nothing is left to a silent default.
+    resolved_generation_settings = {
+        "seed": SUCCESSOR_PROTOCOL["generation_seed"],
+        "candidates_per_function": runner.TESTS_PER_PAIR,
+        "candidate_parse_mode": SUCCESSOR_PROTOCOL["candidate_parse_mode"],
+        "retain_raw_output": SUCCESSOR_PROTOCOL["retain_raw_output"],
+        "allow_test_function_candidates": SUCCESSOR_PROTOCOL["allow_test_function_candidates"],
+        "temperature": model_config.temperature,
+        "top_p": model_config.top_p,
+        "do_sample": True,
+        "generation_completion_token_limit": SUCCESSOR_PROTOCOL["function_generation_completion_limit"],
+        "prompt_token_limit": 1024,
+        "max_sequence_tokens": SUCCESSOR_PROTOCOL["max_sequence_tokens"],
+        "max_assertions": SUCCESSOR_PROTOCOL["max_assertions"],
+        "base_model_name": BASE_MODEL,
+        "base_model_revision": revision,
+        "tokenizer_name": BASE_MODEL,
+        "tokenizer_revision": revision,
+        "attention_implementation": "sdpa",
+        "resolution": (
+            "Options owned by the named protocol are set by --successor-protocol "
+            "and verified against the runtime by assert_runtime_matches(); every "
+            "other option is written out explicitly in the commands above."
+        ),
+    }
+    expected = {
+        "seed": 42, "candidates_per_function": 8, "candidate_parse_mode": "whole_output",
+        "retain_raw_output": True, "temperature": 0.7, "top_p": 0.9,
+        "generation_completion_token_limit": 1024, "prompt_token_limit": 1024,
+        "max_sequence_tokens": 3072,
+    }
+    for key, want in expected.items():
+        if resolved_generation_settings[key] != want:
+            problems.append(
+                f"resolved generation setting {key} is "
+                f"{resolved_generation_settings[key]!r}, expected {want!r}")
+
+    runner_binding = {
+        "entrypoint": "scripts/train_on_dataset.py",
+        "runner_source_sha256": sha256_file(ROOT / "scripts" / "train_on_dataset.py"),
+        "adapter_resolution_source_sha256": runner._adapter_resolution_source_sha256(),
+        "adapter_required_files": list(runner.EXTERNAL_ADAPTER_REQUIRED_FILES),
+        "why": (
+            "The evaluator hash says how a candidate was scored. It says nothing "
+            "about whether the intended adapter was the one on the GPU. The runner "
+            "and the adapter-resolution logic decide that, so both are frozen here "
+            "and both are written into every run contract."
+        ),
+    }
+
     frozen_dev_path = ROOT / FROZEN_DEVELOPMENT_RECEIPT
     dev_contract_drift = []
     if frozen_dev_path.is_file():
@@ -310,27 +395,36 @@ def collect(problems: list[str]) -> dict:
                 "model_name": BASE_MODEL,
                 "model_revision": revision,
                 "adapter": None,
-                "command": evaluation_command(BASE_RUN_NAME, adapter_run=None),
+                "command": evaluation_command(BASE_RUN_NAME, adapter_run=None,
+                                              revision=revision or ""),
             },
             "B_arm_a_checkpoint_431": {
                 "kind": "selected development SFT candidate",
                 "run_name": ARM_A_RUN_NAME,
                 "model_name": BASE_MODEL,
                 "model_revision": revision,
+                "adapter_provenance": "external_evaluation_adapter",
                 "adapter_source_run": ARM_A_431_RUN,
+                "adapter_source_path": ARM_A_431_ADAPTER_DIR,
                 "adapter_checkpoint_step": 431,
                 "adapter_sha256_expected": ARM_A_431_ADAPTER_SHA256,
                 "adapter_sha256_found": adapter_sha,
-                "command": evaluation_command(ARM_A_RUN_NAME, adapter_run=ARM_A_431_RUN),
+                "command": evaluation_command(ARM_A_RUN_NAME, adapter_run=ARM_A_431_RUN,
+                                              revision=revision or ""),
                 "note": (
-                    "The adapter must be staged into "
-                    f"checkpoints/{ARM_A_RUN_NAME}/sft_adapter before this command runs, "
-                    "because --phase sft_eval evaluates <run>/sft_adapter and there is no "
-                    "flag for an arbitrary adapter path. Staging must copy, never move, "
-                    "and must not modify the development checkpoint."
+                    "The adapter is read where it already lives, through --adapter-dir. "
+                    "Nothing is copied or moved, the source directory is not written to, "
+                    "and no marker or metadata file is created in it or in the output "
+                    "directory. --expected-adapter-sha256 is checked before the model is "
+                    "loaded, so the wrong weights are refused rather than measured."
                 ),
+                "staging_required": False,
+                "source_directory_modified": False,
             },
         },
+        "resolved_generation_settings": resolved_generation_settings,
+        "runner_binding": runner_binding,
+        "protocol_runtime_drift": runtime_drift,
         "protocol": dict(
             SUCCESSOR_PROTOCOL,
             protocol_sha256=protocol_sha256(),

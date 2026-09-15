@@ -220,14 +220,116 @@ def test_the_commands_carry_the_successor_protocol_flag(receipt):
         assert cmd[cmd.index("--evaluation-split") + 1] == "val"
 
 
-def test_both_arms_use_an_identical_command_apart_from_phase_and_run_name(receipt):
+def test_both_arms_use_an_identical_command_apart_from_phase_run_and_adapter(receipt):
     built, _ = receipt
     a = list(built["arms"]["A_base_control"]["command"])
     b = list(built["arms"]["B_arm_a_checkpoint_431"]["command"])
     for cmd in (a, b):
         del cmd[cmd.index("--run-name"): cmd.index("--run-name") + 2]
         del cmd[cmd.index("--phase"): cmd.index("--phase") + 2]
+    for flag in ("--adapter-dir", "--expected-adapter-sha256", "--adapter-source-run"):
+        assert flag in b
+        del b[b.index(flag): b.index(flag) + 2]
     assert a == b
+
+
+# ------------------------------------- explicit resolution, no silent defaults
+
+def test_the_model_and_tokenizer_revision_are_written_into_both_commands(receipt):
+    built, _ = receipt
+    for arm in built["arms"].values():
+        cmd = arm["command"]
+        assert "--base-model-revision" in cmd
+        assert cmd[cmd.index("--base-model-revision") + 1] == SHA
+        assert cmd[cmd.index("--base-model-name") + 1] == QWEN
+
+
+@pytest.mark.parametrize("key,want", [
+    ("seed", 42), ("candidates_per_function", 8),
+    ("candidate_parse_mode", "whole_output"), ("retain_raw_output", True),
+    ("temperature", 0.7), ("top_p", 0.9),
+    ("generation_completion_token_limit", 1024), ("prompt_token_limit", 1024),
+    ("max_sequence_tokens", 3072),
+])
+def test_every_generation_setting_is_resolved_and_recorded(receipt, key, want):
+    built, _ = receipt
+    assert built["resolved_generation_settings"][key] == want
+
+
+def test_the_resolved_tokenizer_revision_is_the_immutable_sha(receipt):
+    built, _ = receipt
+    settings = built["resolved_generation_settings"]
+    assert settings["tokenizer_revision"] == SHA
+    assert settings["base_model_revision"] == SHA
+    assert settings["tokenizer_name"] == settings["base_model_name"] == QWEN
+
+
+def test_protocol_owned_options_are_not_passed_twice(receipt):
+    """Passing them beside --successor-protocol is a conflict, by design."""
+    from harness.successor_protocol import OWNED_CLI_OPTIONS
+    built, _ = receipt
+    for arm in built["arms"].values():
+        assert "--successor-protocol" in arm["command"]
+        for flag in OWNED_CLI_OPTIONS.values():
+            assert flag not in arm["command"], flag
+
+
+def test_the_protocol_agrees_with_the_runtime_it_will_execute(receipt):
+    built, _ = receipt
+    assert built["protocol_runtime_drift"] == []
+
+
+# ------------------------------------------------- the runner is part of the contract
+
+def test_the_runner_and_adapter_resolution_are_bound(receipt):
+    built, _ = receipt
+    binding = built["runner_binding"]
+    assert binding["entrypoint"] == "scripts/train_on_dataset.py"
+    assert binding["runner_source_sha256"] == hashlib.sha256(
+        (ROOT / "scripts" / "train_on_dataset.py").read_bytes()).hexdigest()
+    assert len(binding["adapter_resolution_source_sha256"]) == 64
+
+
+def test_the_bound_runner_hash_is_what_the_run_contract_will_record():
+    """Preflight and run contract must name the same runner, or neither binds."""
+    from scripts import train_on_dataset as runner
+    built = json.loads(
+        (ROOT / "results" / "v4_2_locked_validation_preflight.json").read_text(encoding="utf-8")
+    ) if (ROOT / "results" / "v4_2_locked_validation_preflight.json").exists() else None
+    if built is None:
+        pytest.skip("preflight receipt not yet generated")
+    assert built["runner_binding"]["adapter_resolution_source_sha256"] == \
+        runner._adapter_resolution_source_sha256()
+
+
+# ---------------------------------------------------- no staging, no fabrication
+
+def test_the_adapter_is_evaluated_in_place(receipt):
+    built, _ = receipt
+    arm = built["arms"]["B_arm_a_checkpoint_431"]
+    assert arm["staging_required"] is False
+    assert arm["source_directory_modified"] is False
+    assert arm["adapter_provenance"] == "external_evaluation_adapter"
+    assert arm["adapter_source_path"] == pf.ARM_A_431_ADAPTER_DIR
+    cmd = arm["command"]
+    assert cmd[cmd.index("--adapter-dir") + 1] == pf.ARM_A_431_ADAPTER_DIR
+    assert cmd[cmd.index("--expected-adapter-sha256") + 1] == pf.ARM_A_431_ADAPTER_SHA256
+
+
+def test_the_command_points_at_the_original_immutable_location(receipt):
+    built, _ = receipt
+    cmd = built["arms"]["B_arm_a_checkpoint_431"]["command"]
+    assert cmd[cmd.index("--adapter-dir") + 1] == (
+        "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter")
+
+
+def test_the_source_adapter_directory_holds_no_fabricated_run_files():
+    """If this ever fails, someone went back to manufacturing provenance."""
+    source = ROOT / pf.ARM_A_431_ADAPTER_DIR
+    if not source.is_dir():
+        pytest.skip("Arm A checkpoint not present on this machine")
+    for forbidden in ("sft_complete.marker", "sft_metadata.json", "dataset_manifest.sha256"):
+        assert not (source / forbidden).exists(), forbidden
 
 
 # --------------------------------------------- evaluator drift since dev run

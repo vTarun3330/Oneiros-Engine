@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_locked_validation_preflight_v1",
-  "created_utc": "2026-09-15T13:52:37Z",
+  "created_utc": "2026-09-15T14:18:54Z",
   "purpose": "Freeze the locked-validation measurement of exactly two arms before it runs. The sealed final test remains closed.",
   "launched": false,
   "cpu_only_preflight": true,
@@ -13,7 +13,7 @@
     "selection_tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
     "selection_tokenizer_revision_is_immutable": true,
     "model_and_tokenizer_identical": true,
-    "source_tree_sha256": "cd0a1a861acb4ccd58808c4af99f736ed5c059ca0d1df4b8fdd55bfdd192494e",
+    "source_tree_sha256": "da8e463695c7ab7da642d73f3a25264eb33f0d91bf625a88adb0b60691fa0ec8",
     "successor_protocol_name": "oneiros_successor_generation_protocol_v1",
     "successor_protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
     "expected_training_model_identity": {
@@ -46,6 +46,8 @@
         "self_contained",
         "--base-model-name",
         "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+        "--base-model-revision",
+        "2e1fd397ee46e1388853d2af2c993145b0f1098a",
         "--attention-implementation",
         "sdpa",
         "--sft-prompt-token-limit",
@@ -57,7 +59,9 @@
       "run_name": "locked_val_armA_ckpt431_s42",
       "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
       "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "adapter_provenance": "external_evaluation_adapter",
       "adapter_source_run": "local_sft_armA_baseline_successor_s42",
+      "adapter_source_path": "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter",
       "adapter_checkpoint_step": 431,
       "adapter_sha256_expected": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
       "adapter_sha256_found": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
@@ -77,14 +81,55 @@
         "self_contained",
         "--base-model-name",
         "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+        "--base-model-revision",
+        "2e1fd397ee46e1388853d2af2c993145b0f1098a",
         "--attention-implementation",
         "sdpa",
         "--sft-prompt-token-limit",
-        "1024"
+        "1024",
+        "--adapter-dir",
+        "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter",
+        "--expected-adapter-sha256",
+        "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+        "--adapter-source-run",
+        "local_sft_armA_baseline_successor_s42"
       ],
-      "note": "The adapter must be staged into checkpoints/locked_val_armA_ckpt431_s42/sft_adapter before this command runs, because --phase sft_eval evaluates <run>/sft_adapter and there is no flag for an arbitrary adapter path. Staging must copy, never move, and must not modify the development checkpoint."
+      "note": "The adapter is read where it already lives, through --adapter-dir. Nothing is copied or moved, the source directory is not written to, and no marker or metadata file is created in it or in the output directory. --expected-adapter-sha256 is checked before the model is loaded, so the wrong weights are refused rather than measured.",
+      "staging_required": false,
+      "source_directory_modified": false
     }
   },
+  "resolved_generation_settings": {
+    "seed": 42,
+    "candidates_per_function": 8,
+    "candidate_parse_mode": "whole_output",
+    "retain_raw_output": true,
+    "allow_test_function_candidates": true,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "do_sample": true,
+    "generation_completion_token_limit": 1024,
+    "prompt_token_limit": 1024,
+    "max_sequence_tokens": 3072,
+    "max_assertions": 24,
+    "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "attention_implementation": "sdpa",
+    "resolution": "Options owned by the named protocol are set by --successor-protocol and verified against the runtime by assert_runtime_matches(); every other option is written out explicitly in the commands above."
+  },
+  "runner_binding": {
+    "entrypoint": "scripts/train_on_dataset.py",
+    "runner_source_sha256": "5df1f827a11a8d0085556de8024e19105a32e789feb54476fb1900c51696217b",
+    "adapter_resolution_source_sha256": "a3eaaf8aa97281e966bd35709bdd62476419400ea18e33bc155a046b4349a4b3",
+    "adapter_required_files": [
+      "adapter_model.safetensors",
+      "adapter_config.json"
+    ],
+    "why": "The evaluator hash says how a candidate was scored. It says nothing about whether the intended adapter was the one on the GPU. The runner and the adapter-resolution logic decide that, so both are frozen here and both are written into every run contract."
+  },
+  "protocol_runtime_drift": [],
   "protocol": {
     "protocol_name": "oneiros_successor_generation_protocol_v1",
     "candidate_parse_mode": "whole_output",
@@ -108,7 +153,7 @@
   "contract_source_hashes": {
     "parser_source_sha256": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
     "generation_runtime_source_sha256": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
-    "generation_orchestration_source_sha256": "19f568d91b1ddfc4ee476eaad9d7354c98747ae6a2726f65497df897f640cdd7",
+    "generation_orchestration_source_sha256": "5df1f827a11a8d0085556de8024e19105a32e789feb54476fb1900c51696217b",
     "prompt_builder_source_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
     "prompt_budget_source_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
     "candidate_policy_source_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
@@ -117,7 +162,7 @@
     "evaluation_protocol_source_sha256": "0b6204c7782b7597b41f46cd8fb8c7d67ed436823930371f054f751a517272af"
   },
   "runtime_component_hashes": {
-    "scripts/train_on_dataset.py": "19f568d91b1ddfc4ee476eaad9d7354c98747ae6a2726f65497df897f640cdd7",
+    "scripts/train_on_dataset.py": "5df1f827a11a8d0085556de8024e19105a32e789feb54476fb1900c51696217b",
     "engine/generator.py": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
     "engine/model_runtime.py": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
     "engine/prompt_budget.py": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
@@ -221,10 +266,10 @@
     ]
   },
   "reproducibility": {
-    "git_commit": "6925c15d96851ef8f31ac66cff6101345555dba5",
+    "git_commit": "2271fe8f9b835343d2447bf5f1af6205fd52b3cf",
     "git_dirty": true,
-    "git_status_porcelain_sha256": "5a958e3bfb1a4af4bd8b2a4380f6a331ee5f4795e912b3f883b8b817abfff4a9",
-    "source_tree_sha256": "cd0a1a861acb4ccd58808c4af99f736ed5c059ca0d1df4b8fdd55bfdd192494e",
+    "git_status_porcelain_sha256": "dec4225e6d56b10dd0370d43e6c209dbd2014afb6283bfacf8367b83235fbbd6",
+    "source_tree_sha256": "da8e463695c7ab7da642d73f3a25264eb33f0d91bf625a88adb0b60691fa0ec8",
     "python_version": "3.12.14"
   },
   "expected_gpu_time": {
