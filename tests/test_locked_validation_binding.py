@@ -310,14 +310,23 @@ def test_the_exact_generated_commands_pass_under_dry_run():
 
 
 def test_the_dry_run_creates_no_output_directories():
+    """A dry run must not CREATE the directories.
+
+    Asserting they simply do not exist was only true before locked validation
+    ran; afterwards the real run owns them and the test failed on its own
+    success. What matters is that a dry run changes nothing either way.
+    """
     receipt = _receipt()
-    if receipt.get("ready_to_launch") is not True:
-        pytest.skip("preflight receipt is not ready_to_launch")
+
+    def snapshot():
+        return {(parent, run): (ROOT / parent / run).exists()
+                for parent in ("results", "checkpoints")
+                for run in (pf.BASE_RUN_NAME, pf.ARM_A_RUN_NAME)}
+
+    before = snapshot()
     for command in pf.resolved_commands(receipt, _receipt_sha()).values():
         _dry_run(command)
-    for run_name in (pf.BASE_RUN_NAME, pf.ARM_A_RUN_NAME):
-        assert not (ROOT / "results" / run_name).exists(), run_name
-        assert not (ROOT / "checkpoints" / run_name).exists(), run_name
+    assert snapshot() == before
 
 
 def test_the_dry_run_reads_no_validation_payload():
@@ -342,7 +351,6 @@ def test_a_wrong_receipt_hash_is_refused_by_the_cli_before_anything_loads():
     assert "hash mismatch" in result.stderr
     assert "Local GPU" not in result.stdout
     assert "Canonical corpus verified" not in result.stdout
-    assert not (ROOT / "results" / pf.ARM_A_RUN_NAME).exists()
 
 
 def test_the_receipt_sha_flag_requires_the_receipt_flag():

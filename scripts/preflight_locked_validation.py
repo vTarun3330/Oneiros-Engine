@@ -608,6 +608,21 @@ def main() -> int:
     out = ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
 
+    # A refused preflight must not overwrite the receipt already on disk.
+    # Running this after locked validation completed - the runs' output
+    # directories now exist, so it refuses - previously still wrote the refusal
+    # over the committed receipt that the locked-validation result receipt
+    # points at, destroying immutable evidence as a side effect of a read-only
+    # question. A refusal now reports and writes nothing.
+    if problems and out.exists():
+        print("=" * 96)
+        print("LOCKED-VALIDATION PREFLIGHT - REFUSED, existing receipt left untouched")
+        print("=" * 96)
+        print(f"receipt : {args.output} (unchanged, sha256 {sha256_file(out)})")
+        for p in problems:
+            print(f"  - {p}")
+        return 1
+
     # The commands must quote this receipt's SHA-256, and a file cannot contain
     # its own hash: writing the digest changes the bytes being hashed, so no
     # fixed point exists. Pretending otherwise - iterating until the numbers

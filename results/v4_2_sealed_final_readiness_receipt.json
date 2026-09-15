@@ -1,0 +1,192 @@
+{
+  "schema_version": "oneiros_sealed_final_readiness_v1",
+  "created_utc": "2026-09-15T18:45:02Z",
+  "purpose": "Freeze the one-time sealed final measurement of the selected final candidate. This preflight opens nothing and authorizes nothing.",
+  "sealed_split_accessed": false,
+  "sealed_records_read": 0,
+  "sealed_ids_enumerated": 0,
+  "sealed_payload_hashed": false,
+  "split_identity_binding": "Split membership is bound by the corpus manifest digests over records.json and splits.json, which cover every split at once. No sealed record was read, no sealed id enumerated, and no sealed payload hashed.",
+  "authorization_token_issued": false,
+  "token_policy": "A preflight that minted its own token would defeat the one-time protection it exists to set up. Authorization is a separate explicit act, performed once, against this bundle hash.",
+  "final_candidate": {
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "tokenizer": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "adapter": null,
+    "adapter_identity_digest": "320a87cc423b34ed8bb26502dbc503d163076b76edc4078a6d62089aa9d480e0",
+    "why": "Locked validation retained the base model. Arm A@431 is rejected for promotion; the O1 sidecar / Arm B was rejected on development."
+  },
+  "frozen_bundle": {
+    "fields": {
+      "adapter_path": "none - the immutable base model is the final candidate",
+      "adapter_sha256": "320a87cc423b34ed8bb26502dbc503d163076b76edc4078a6d62089aa9d480e0",
+      "adapter_source_tree_sha256": "448ac383238633dc5f0ddf9888ce50e8022730c0",
+      "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "corpus_version": "v4_1_research_hardened_candidate",
+      "corpus_records_sha256": "04940ee92c7eeef3efb0808e577470cfb5415c13612ecb25bd11eb00c2adfd50",
+      "split_ids_sha256": "4baaa7a6eb4069203691d5453d50d58a189eeee63feb0c3dfe236c139947ba2a",
+      "prompt_schema_version": "oneiros_unified_test_generation_v2",
+      "prompt_budgets": {
+        "prompt_token_limit": 1024,
+        "repository_prompt_token_limit": 1024,
+        "generation_completion_token_limit": 1024,
+        "max_sequence_tokens": 3072
+      },
+      "candidates_per_target": 8,
+      "seeds": {
+        "generation_seed": 42
+      },
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.9,
+        "do_sample": true,
+        "candidate_parse_mode": "whole_output",
+        "retain_raw_output": true,
+        "reranking": "none",
+        "feedback_rounds": 0,
+        "diversity_mode": "none"
+      },
+      "timeout_seconds": {
+        "policy_source_canonical_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35"
+      },
+      "evaluator_version": {
+        "protocol_name": "oneiros_successor_generation_protocol_v1",
+        "protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
+        "evaluator_canonical_sha256": "4ae24c7ed3aced80f50f4a1bf1e3d30facffb327a4c8cef9e3bb6ce748717b7f",
+        "source_identity_scheme": "oneiros_portable_source_identity_v1"
+      },
+      "baseline_versions": {
+        "results/v4_2_baseline_bundle_val.json": "3e48d9ea1d01ab9f659b9a2af39222a8c4db9a7abaa74ac7e06527095cb22abd",
+        "results/v4_2_atheris_tasks_val.manifest.json": "6361f603853ca1c74e123aefbf188b023ad634d788ee201fc33c8a9ff4424ad4"
+      },
+      "checkpoint_selection_rule": "No checkpoint is selected. Locked validation retained the immutable base model: Arm A@431 gained +3.4346 Kill@8 points on val with McNemar exact p=0.0783 against a required p<0.01, and lost 11.8726 points of reference validity. The final candidate is therefore the base model with no adapter, per results/v4_2_locked_validation_result_receipt.json."
+    },
+    "created_utc": "2026-09-15T18:45:02+00:00",
+    "bundle_sha256": "022164172ad043fd326fce5c867482ffe6dc1a76de18428775833e344df7580c",
+    "missing_fields": [],
+    "frozen": true
+  },
+  "bundle_sha256": "022164172ad043fd326fce5c867482ffe6dc1a76de18428775833e344df7580c",
+  "evaluation_defining_sources": {
+    "candidate_policy": {
+      "path": "harness/candidate_policy.py",
+      "raw_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+      "canonical_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+      "git_blob_sha1": "2a3c1f45760810467b8ba384d91a6a630b3e87d2"
+    },
+    "evaluation_entrypoint": {
+      "path": "scripts/train_on_dataset.py",
+      "raw_sha256": "d5fb6a08a5ca421d8c2729e3c2d67e1d61cefd9a1182cd1ab772f99607dc89e8",
+      "canonical_sha256": "122767f29ab9a5fb623e9b267d05bf2f27ae3abc19e29a7896b3f34cae67c64e",
+      "git_blob_sha1": "fce70aa197362a06fce615ab3b305613ea7e799d"
+    },
+    "evaluator": {
+      "path": "metrics/research_evaluation.py",
+      "raw_sha256": "649e96fab00af35e172cdd0590f6b6c1241d03aa6aef71ede4fb2e731fad27c2",
+      "canonical_sha256": "4ae24c7ed3aced80f50f4a1bf1e3d30facffb327a4c8cef9e3bb6ce748717b7f",
+      "git_blob_sha1": "083f48601256d510facc95753d8ab711ce7ac751"
+    },
+    "generator": {
+      "path": "engine/generator.py",
+      "raw_sha256": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
+      "canonical_sha256": "c4c16c7de07e82f226bd77d2e980339b13844a4418ad428e6c41158eb1938330",
+      "git_blob_sha1": "42750f256c5fd061069925f66a8f5e3ee5d53453"
+    },
+    "model_runtime": {
+      "path": "engine/model_runtime.py",
+      "raw_sha256": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
+      "canonical_sha256": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
+      "git_blob_sha1": "2ab0a8b72630d565f1c8a1620cce0c0416eadb5b"
+    },
+    "prompt_budget": {
+      "path": "engine/prompt_budget.py",
+      "raw_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
+      "canonical_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
+      "git_blob_sha1": "4064548418578da862304d600a257b40b8c0cdd9"
+    },
+    "prompt_builder": {
+      "path": "engine/test_generation_prompt.py",
+      "raw_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+      "canonical_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+      "git_blob_sha1": "0553b6d1957fed6acb723d1520ce1085827e1afd"
+    },
+    "timeout_policy_safe_execution": {
+      "path": "harness/safe_execution.py",
+      "raw_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+      "canonical_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+      "git_blob_sha1": "5283b6a958a2bf54d1741a9dd09466d42232205f"
+    }
+  },
+  "source_identity_scheme": "oneiros_portable_source_identity_v1",
+  "decision_evidence": {
+    "results/v4_2_frozen_development_evaluation_receipt.json": "062774028693cfcbf5346eafeed232027748720940af7a47b5ac1a591055c4fe",
+    "results/v4_2_development_selection_receipt.json": "0188324fe9eb2a51eebef71bbd4cc3ed45584f12393bf0fa6539817a09e58969",
+    "results/v4_2_locked_validation_preflight.json": "97be6855d41b1186a5c8a59a8a89efa71e1f40f5e1c7f29ab387402b7598912c",
+    "results/v4_2_locked_validation_result_receipt.json": "f7cdf84df8e65c51bd22410759c6fd54952ace3bfa80c6ab620674b53e288af9"
+  },
+  "protected_run_names": [
+    "local_base_qwen_ablationdev_successor_s42_v3",
+    "local_sft_armA_baseline_successor_s42",
+    "local_sft_armB_o1_nocollide_s42",
+    "local_eval_armA_ckpt150_matched",
+    "locked_val_base_qwen_s42",
+    "locked_val_armA_ckpt431_s42"
+  ],
+  "output_isolation": {
+    "final_run_name": "sealed_final_base_qwen_s42",
+    "results_dir": "results/sealed_final_base_qwen_s42",
+    "checkpoints_dir": "checkpoints/sealed_final_base_qwen_s42",
+    "collides_with_existing_runs": false,
+    "may_not_write_into": [
+      "local_base_qwen_ablationdev_successor_s42_v3",
+      "local_sft_armA_baseline_successor_s42",
+      "local_sft_armB_o1_nocollide_s42",
+      "local_eval_armA_ckpt150_matched",
+      "locked_val_base_qwen_s42",
+      "locked_val_armA_ckpt431_s42"
+    ]
+  },
+  "authorized_entrypoint": {
+    "path": "scripts/run_sealed_final_test.py",
+    "canonical_sha256": "b4140e1b2a891eb4067fd238bf4499600e06b338a1638f4a5c9cb3dcc94bb0a4",
+    "raw_sha256": "b4140e1b2a891eb4067fd238bf4499600e06b338a1638f4a5c9cb3dcc94bb0a4",
+    "separate_from_development_entrypoint": true,
+    "development_entrypoint": "scripts/train_on_dataset.py"
+  },
+  "mock_guard_rehearsal": {
+    "unfrozen_bundle_refused": true,
+    "missing_token_refused": true,
+    "unknown_token_refused": true,
+    "valid_token_granted_once": true,
+    "spent_token_refused": true,
+    "bundle_edited_after_authorization_refused": true,
+    "development_command_refused": true,
+    "development_split_needs_no_token": true,
+    "audit_entries_written": 7,
+    "all_refusals_hold": true
+  },
+  "prohibited_after_execution": [
+    "retraining of any kind",
+    "prompt changes",
+    "threshold changes",
+    "adding, reweighting or re-selecting data",
+    "selecting a different checkpoint or model",
+    "re-running the sealed final test",
+    "re-scoring the sealed final result under a different parser or policy"
+  ],
+  "interpretation_limits": [
+    "The sealed final test measures the immutable base model. No SFT model was promoted, so no Oneiros SFT generalization claim follows from it.",
+    "Repository records are excluded from every kill rate; no real native repository result is claimed.",
+    "SFT improved development Kill@8 and produced a positive but statistically insufficient locked-validation Kill@8 result, alongside a large reference-validity regression."
+  ],
+  "reproducibility": {
+    "git_commit": "448ac383238633dc5f0ddf9888ce50e8022730c0",
+    "git_dirty": true,
+    "python_version": "3.12.14"
+  },
+  "preflight_problems": [],
+  "ready_for_authorization": true
+}

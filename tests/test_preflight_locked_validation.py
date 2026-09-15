@@ -33,8 +33,23 @@ def receipt():
 
 # --------------------------------------------------------- it actually passes
 
+def _locked_runs_already_executed() -> bool:
+    return any((ROOT / "results" / name).exists()
+               for name in (pf.BASE_RUN_NAME, pf.ARM_A_RUN_NAME))
+
+
 def test_the_preflight_passes_on_the_real_repository(receipt):
+    """Green before the run; afterwards the preflight correctly refuses.
+
+    Once locked validation has executed, its output directories exist and the
+    preflight refuses to re-freeze them. That refusal is the anti-rerun
+    protection working, not a regression - so the assertion applies only while
+    the run is still ahead of us.
+    """
     built, problems = receipt
+    if _locked_runs_already_executed():
+        assert all("already exists" in p for p in problems), problems
+        pytest.skip("locked validation has run; the preflight now refuses a rerun")
     assert problems == [], problems
     assert built["ready_to_launch"] is True
 
