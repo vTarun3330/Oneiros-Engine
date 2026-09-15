@@ -1,0 +1,159 @@
+{
+  "schema_version": "oneiros_locked_validation_result_receipt_v1",
+  "created_utc": "2026-09-15T16:22:16Z",
+  "decision": "RETAIN the immutable base model",
+  "promote_arm_a_431": false,
+  "frozen_preflight_receipt": {
+    "path": "results/v4_2_locked_validation_preflight.json",
+    "sha256": "97be6855d41b1186a5c8a59a8a89efa71e1f40f5e1c7f29ab387402b7598912c",
+    "decision_rule_unchanged": true
+  },
+  "arms": {
+    "base_control": {
+      "run_name": "locked_val_base_qwen_s42",
+      "artifact": "results/locked_val_base_qwen_s42/base_validation_parse-whole-output_completion1024_seed_42.json",
+      "artifact_sha256": "64beb7d83ea234c46813553abe9d590a19558edd24cbe9d161a36923d3541b46",
+      "adapter": null,
+      "metrics": {
+        "k1": 0.23646,
+        "k1n": 179,
+        "k2": 0.365918,
+        "k2n": 277,
+        "k4": 0.472919,
+        "k4n": 358,
+        "k8": 0.594452,
+        "k8n": 450,
+        "wilson": [
+          0.559083,
+          0.628867
+        ],
+        "parse": 0.987285,
+        "ex": 0.928336,
+        "ref": 0.452114,
+        "fnref": 0.891678,
+        "fnrefn": 675,
+        "red": 0.677419,
+        "dex": 0.811963,
+        "dast": 0.360084,
+        "din": 0.155869,
+        "dom": 2.240423,
+        "pbf": 0,
+        "n": 757
+      }
+    },
+    "arm_a_checkpoint_431": {
+      "run_name": "locked_val_armA_ckpt431_s42",
+      "artifact": "results/locked_val_armA_ckpt431_s42/sft_validation_parse-whole-output_completion1024_seed_42.json",
+      "artifact_sha256": "700a233b509ad2dc22b11b1849a568de5849c7d2f9cea0e484013367e405bfc2",
+      "adapter_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+      "adapter_provenance": "external_evaluation_adapter",
+      "adapter_source_path": "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\checkpoints\\local_sft_armA_baseline_successor_s42\\sft_adapter",
+      "metrics": {
+        "k1": 0.239102,
+        "k1n": 181,
+        "k2": 0.347424,
+        "k2n": 263,
+        "k4": 0.479524,
+        "k4n": 363,
+        "k8": 0.628798,
+        "k8n": 476,
+        "wilson": [
+          0.593812,
+          0.662483
+        ],
+        "parse": 0.988771,
+        "ex": 0.942206,
+        "ref": 0.333388,
+        "fnref": 0.747688,
+        "fnrefn": 566,
+        "red": 0.675749,
+        "dex": 0.864503,
+        "dast": 0.372606,
+        "din": 0.141418,
+        "dom": 1.984148,
+        "pbf": 0,
+        "n": 757
+      }
+    }
+  },
+  "contract_identity": {
+    "run_contract_sha256_base": "43038334f75c1d6ac99a0211f2280447bb64efb2d991544173613e0c8ca59b28",
+    "run_contract_sha256_arm_a": "f1ccb6ce556ebb6808251f9ef95200e9974cf9f66740c632ab4f95e711df734d",
+    "identical": false,
+    "evaluation_scope_sha256": "51ae08b64e602ce4f50c24d35f7e5fd1126edeb18b52353d23fb6a5edce772c5",
+    "scope_identical": true,
+    "git_head_at_launch": "350c7d7e21f4595951916af73c1ac22da8bfa0b2",
+    "git_commit_recorded_in_preflight_receipt": "1927a86eb98b82bb1c0536c5f1bb62636022d865"
+  },
+  "paired_comparison": {
+    "n": 757,
+    "functions_gained": 114,
+    "functions_lost": 88,
+    "net_functions": 26,
+    "killed_by_both": 362,
+    "killed_by_neither": 193,
+    "mcnemar_exact_two_sided_p": 0.07832001079866063,
+    "kill_at_8_delta_points": 3.4345999999999988,
+    "reference_validity_delta_points": -11.8726,
+    "parse_delta_points": 0.14859999999999873,
+    "execution_delta_points": 1.3869999999999938,
+    "diversity_exact_relative": 0.06470738198661774,
+    "diversity_input_relative": -0.0927124700870604,
+    "redundancy_relative": -0.0024652393865538524
+  },
+  "promotion_criteria": {
+    "1_practical_kill_gain": {
+      "kill_at_8_points": 3.4345999999999988,
+      "required": ">= +3.0",
+      "passed_kill": true,
+      "net_functions": 26,
+      "required_net": ">= +15",
+      "passed_net": true,
+      "mcnemar_p": 0.07832001079866063,
+      "required_p": "< 0.01",
+      "passed_p": false,
+      "passed": false
+    },
+    "2_reference_validity": {
+      "delta_points": -11.8726,
+      "max_drop": 12.0,
+      "passed": true
+    },
+    "3_execution_and_parse": {
+      "parse_delta_points": 0.14859999999999873,
+      "execution_delta_points": 1.3869999999999938,
+      "max_drop_each": 1.0,
+      "passed": true
+    },
+    "4_diversity": {
+      "exact_relative": 0.06470738198661774,
+      "input_shape_relative": -0.0927124700870604,
+      "redundancy_relative": -0.0024652393865538524,
+      "passed": true
+    },
+    "5_integrity": {
+      "prompt_budget_failures_base": 0,
+      "prompt_budget_failures_arm_a": 0,
+      "shared_run_contract": false,
+      "shared_evaluation_scope": true,
+      "passed": false,
+      "why_it_failed": "The sub-condition both_arms_share_run_contract_sha256 became unsatisfiable AFTER it was frozen, through a later change of mine. The final hardening step put locked_validation_binding - which contains adapter_sha256 - inside run_contract. The only difference between the two arms' run contracts is that one field: base 320a87cc..., Arm A e67dd599..., and an arm with an adapter can never match one without. In the four-arm development experiment the adapter hash sat outside run_contract, which is why all four arms shared it there. This is a defect in my implementation, not evidence of drift between the arms. It is recorded as FAIL rather than reinterpreted, because a frozen criterion that gets reinterpreted once it becomes inconvenient was never frozen. The decision does not depend on it: criterion 1 fails independently on McNemar p=0.0783 against a required p<0.01.",
+      "substantive_integrity_properties_that_do_hold": {
+        "prompt_budget_failures": "0 in both arms",
+        "evaluation_scope_sha256_identical": true,
+        "raw_output_hash_integrity": "6056/6056 in both arms, 0 missing, 0 mismatched",
+        "run_contracts_differ_only_in": "locked_validation_binding.adapter_sha256"
+      }
+    },
+    "all_passed": false
+  },
+  "interpretation_limits": [
+    "val is the locked development-side split. It was never used to select a checkpoint, tune a prompt, or set a threshold, so this is a generalization measurement in a way the ablation_dev four-arm experiment was not.",
+    "The sealed final test was not opened and is not measured here.",
+    "24 repository records are held out of every rate reported.",
+    "No result here may be used to retrain, tune, rerun, or reselect."
+  ],
+  "reproducibility": {
+    "git_commit": "350c7d7e21f4595951916af73c1ac22da8bfa0b2"
+  }
+}
