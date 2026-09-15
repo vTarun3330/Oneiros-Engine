@@ -1,0 +1,109 @@
+{
+  "schema_version": "oneiros_frozen_development_evaluation_v1",
+  "frozen_at_utc": "2026-09-15T12:11:01.032662+00:00",
+  "frozen_before_any_evaluation_ran": true,
+  "purpose": "Frozen controlled evaluation on the full 542-function ablation_dev panel. ablation_dev was the checkpoint-selection panel for both arms, so NOTHING here is generalization evidence.",
+  "git_commit": "f8e55850f11ef16804567ab3e8cc4e484b622a17",
+  "source_tree_sha256": "f91416c91805929676599473ace6a6265fdebd6a0cc23f90662e0e729e110752",
+  "arms": {
+    "base_control": {
+      "kind": "reused accepted artifact, not re-run",
+      "artifact": "results/local_base_qwen_ablationdev_successor_s42_v3/base_validation_ablation-dev_parse-whole-output_completion1024_seed_42.json",
+      "artifact_sha256": "ec9831b7354380c9975bc5ab493ace43af771f61c491b1c6e58d0232ecbd1826",
+      "source_tree_sha256": "4a05fff06849b21c12209598a681ff36c2c2698b8d1dd34181d88e1deea2e3f0",
+      "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "kill_at_8": 0.605166
+    },
+    "arm_a_selected": {
+      "run": "local_sft_armA_baseline_successor_s42",
+      "checkpoint_step": 431,
+      "adapter_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+      "training_steps": 431,
+      "selected_by": "monitor rule, final step, no early stop"
+    },
+    "arm_b_selected": {
+      "run": "local_sft_armB_o1_nocollide_s42",
+      "checkpoint_step": 150,
+      "adapter_sha256": "08b6d71c239c517ca350f0de21fafec084cb8f04a7185d0dab4f0769fedc2ad8",
+      "training_steps": 150,
+      "selected_by": "monitor rule, early stop at 400 after patience 5"
+    },
+    "arm_a_matched_step": {
+      "run": "local_sft_armA_baseline_successor_s42",
+      "checkpoint_step": 150,
+      "adapter_sha256": "0cd79173ecee03829f0f2059db030d9220fdb424e34b15879c550e321398c882",
+      "training_steps": 150,
+      "why": "Arm B's selected checkpoint is 150 steps and Arm A's is 431. Without this arm, any B-vs-A difference confounds the O1 sidecar with 281 extra training steps."
+    }
+  },
+  "protocol": {
+    "protocol_name": "oneiros_successor_generation_protocol_v1",
+    "candidate_parse_mode": "whole_output",
+    "retain_raw_output": true,
+    "allow_test_function_candidates": true,
+    "max_assertions": 24,
+    "candidates_per_function": 8,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "generation_seed": 42,
+    "function_generation_completion_limit": 1024,
+    "repository_generation_completion_limit": 1024,
+    "max_sequence_tokens": 3072,
+    "protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
+    "evaluation_split": "ablation_dev",
+    "final_test_measurement": false,
+    "reranking": "none - candidates are judged as generated",
+    "feedback_rounds": 0,
+    "diversity_mode": "none",
+    "panel_functions": 542
+  },
+  "contract_source_hashes": {
+    "evaluator": "649e96fab00af35e172cdd0590f6b6c1241d03aa6aef71ede4fb2e731fad27c2",
+    "candidate_policy": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+    "timeout_policy_safe_execution": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+    "prompt_builder": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+    "prompt_budget": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
+    "generator": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
+    "model_runtime": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf"
+  },
+  "base_control_contract_verified": true,
+  "promotion_rule": {
+    "frozen_before_results": true,
+    "primary_comparison": "arm_b_selected (B@150) vs arm_a_matched_step (A@150)",
+    "secondary_comparison": "arm_b_selected (B@150) vs arm_a_selected (A@431)",
+    "all_criteria_must_hold": true,
+    "criteria": {
+      "1_practical_kill_gain": {
+        "kill_at_8_absolute_points": ">= +2.0",
+        "net_functions_gained": ">= +10 of 542",
+        "paired_mcnemar_two_sided_p": "< 0.05",
+        "why": "a Kill@8 gain alone can come from a handful of functions flipping; the paired test and the net count make a real improvement distinguishable from noise."
+      },
+      "2_reference_validity": {
+        "max_absolute_drop_points": 2.0,
+        "why": "O1 exists to improve oracle correctness. Buying kills by degrading reference validity is the failure this whole line of work is about."
+      },
+      "3_parse_and_execution": {
+        "max_absolute_drop_points_each": 1.0
+      },
+      "4_diversity": {
+        "max_relative_drop_exact_unique": 0.1,
+        "max_relative_drop_input_shape_unique": 0.1,
+        "max_relative_increase_redundancy": 0.1
+      },
+      "5_integrity": {
+        "raw_output_present_and_hash_matching": "100%",
+        "prompt_budget_failures": 0,
+        "max_completion_limit_rate": 0.01
+      }
+    },
+    "if_any_criterion_fails": "do not promote; keep Arm A; report the negative result",
+    "thresholds_chosen_before_seeing_results": true
+  },
+  "interpretation_limits": [
+    "ablation_dev selected the checkpoints for both arms, so these numbers are optimistically biased for the checkpoints they chose and are NOT generalization evidence.",
+    "Locked validation is not read and the sealed final test is not opened.",
+    "No repository-native claim: 38 repository records are held out of every kill rate.",
+    "Interim results must not change prompts, data, thresholds or checkpoints."
+  ]
+}
