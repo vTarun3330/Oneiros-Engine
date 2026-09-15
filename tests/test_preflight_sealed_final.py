@@ -245,11 +245,18 @@ def test_the_entrypoint_is_separate_from_the_development_entrypoint(built):
 
 
 def test_the_entrypoint_refuses_with_no_arguments():
+    """Refusal, and — since the ordering fix — an explicit no-token claim.
+
+    This previously asserted an exact sentence from the entrypoint's help text,
+    which broke when that text was rewritten. What matters is that it refuses
+    and that no token was presented or spent.
+    """
     result = subprocess.run([PY, "scripts/run_sealed_final_test.py"],
                             capture_output=True, text=True, cwd=ROOT)
     assert result.returncode == 2
     assert "REFUSED" in result.stdout
-    assert "one measurement in this project that cannot" in result.stdout
+    assert "No token was presented" in result.stdout
+    assert not (ROOT / "results" / "sealed_final_state.json").exists()
 
 
 def test_the_entrypoint_refuses_without_the_acknowledgement():

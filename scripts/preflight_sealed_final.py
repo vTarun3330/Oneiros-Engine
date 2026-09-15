@@ -56,14 +56,27 @@ from harness.source_identity import (  # noqa: E402
     EVALUATION_DEFINING_SOURCES, HASH_SCHEME_VERSION, canonical_sha256,
     git_blob_sha1, raw_sha256,
 )
+from harness.sealed_final_evaluator import (  # noqa: E402
+    EVALUATOR_VERSION, environment_problems, evaluator_source_hashes,
+)
 from harness.successor_protocol import SUCCESSOR_PROTOCOL, protocol_sha256  # noqa: E402
 
-SCHEMA_VERSION = "oneiros_sealed_final_readiness_v1"
+SCHEMA_VERSION = "oneiros_sealed_final_readiness_v2"
+
+#: v1 receipts were emitted before the final evaluator existed. The first
+#: sealed entrypoint called the guard, spent the token, and only then reached
+#: a comment saying the measurement was unimplemented - so a v1 receipt could
+#: have been read as executable authorization for a run that could not produce
+#: a result. v2 states executability explicitly and the entrypoint refuses any
+#: receipt that does not.
+SUPERSEDED_SCHEMA_VERSIONS = ("oneiros_sealed_final_readiness_v1",)
 
 BASE_MODEL = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
 CORPUS_VERSION = "v4_1_research_hardened_candidate"
 FINAL_RUN_NAME = "sealed_final_base_qwen_s42"
 FINAL_ENTRYPOINT = "scripts/run_sealed_final_test.py"
+FINAL_EVALUATOR = "harness/sealed_final_evaluator.py"
+SEALED_LOADER = "harness/sealed_final_loader.py"
 
 #: Committed evidence this decision rests on. Hashed, not summarised.
 DECISION_ARTIFACTS = (
@@ -305,6 +318,55 @@ def collect(problems: list[str]) -> dict:
     if not rehearsal.get("all_refusals_hold"):
         problems.append(f"mock guard rehearsal did not hold: {rehearsal}")
 
+    # ---- is the measurement actually runnable? ---------------------------
+    evaluator_problems: list[str] = []
+    try:
+        evaluator_source = evaluator_source_hashes()
+        evaluator_source["loader_module"] = SEALED_LOADER
+        evaluator_source["loader_canonical_sha256"] = canonical_sha256(ROOT / SEALED_LOADER)
+        evaluator_source["loader_raw_sha256"] = raw_sha256(ROOT / SEALED_LOADER)
+        evaluator_source["entrypoint_canonical_sha256"] = canonical_sha256(ROOT / FINAL_ENTRYPOINT)
+    except Exception as exc:  # noqa: BLE001
+        evaluator_source = {}
+        evaluator_problems.append(f"final evaluator source is unavailable: {exc!r}")
+
+    try:
+        from harness import sealed_final_loader as _loader
+        for symbol in ("sealed_records", "sealed_generator"):
+            if not callable(getattr(_loader, symbol, None)):
+                evaluator_problems.append(f"sealed loader is missing {symbol}")
+    except Exception as exc:  # noqa: BLE001
+        evaluator_problems.append(f"sealed loader is not importable: {exc!r}")
+
+    # A dry environment check with injected stubs: proves the pre-authorization
+    # gate runs and reports, without a GPU, a model, or any sealed access.
+    probe = environment_problems(
+        output_dir=ROOT / "results" / FINAL_RUN_NAME,
+        model_name=BASE_MODEL,
+        model_revision=bundle.fields["base_model_revision"] or "",
+        expected_candidates=int(bundle.fields["candidates_per_target"]),
+        model_files_present=None, cuda_available=None, free_disk_bytes=None,
+        require_cuda=False,
+    )
+    if probe:
+        evaluator_problems.extend(f"environment gate (dry): {item}" for item in probe)
+
+    evaluator_executable = not evaluator_problems
+    evaluator_status = (
+        "executable - the final evaluator is implemented, importable and tested"
+        if evaluator_executable else
+        "NOT EXECUTABLE - authorization must be refused while this state holds")
+    if not evaluator_executable:
+        problems.extend(evaluator_problems)
+
+    exact_command = [
+        ".venv-gpu/Scripts/python.exe", FINAL_ENTRYPOINT,
+        "--executable-receipt", "results/v4_2_sealed_final_executable_receipt.json",
+        "--expected-receipt-sha256", "<this receipt's sha256, printed on generation>",
+        "--authorization-token", "<issued once, separately, against the bundle hash>",
+        "--i-understand-this-is-one-time-and-irreversible",
+    ]
+
     porcelain = git("status", "--porcelain")
     return {
         "schema_version": SCHEMA_VERSION,
@@ -350,6 +412,22 @@ def collect(problems: list[str]) -> dict:
             "collides_with_existing_runs": False,
             "may_not_write_into": list(PROTECTED_RUN_NAMES),
         },
+        "final_evaluator_executable": evaluator_executable,
+        "final_evaluator_status": evaluator_status,
+        "final_evaluator_source": evaluator_source,
+        "supersedes": {
+            "schema_versions": list(SUPERSEDED_SCHEMA_VERSIONS),
+            "artifact": "results/v4_2_sealed_final_readiness_receipt.json",
+            "why": (
+                "The v1 readiness receipt was emitted before the final evaluator "
+                "existed, and the first sealed entrypoint called the guard before "
+                "reaching any measurement. A valid token could therefore have been "
+                "spent to discover that evaluation was unavailable. v1 is retained "
+                "as evidence and is explicitly NOT executable authorization; the "
+                "entrypoint refuses any receipt that does not declare "
+                "final_evaluator_executable true."),
+        },
+        "exact_command": exact_command,
         "authorized_entrypoint": {
             "path": FINAL_ENTRYPOINT,
             "canonical_sha256": canonical_sha256(entry) if entry.is_file() else None,
