@@ -30,6 +30,14 @@ from harness.source_identity import (
     canonical_text_sha256,
     scheme_block as source_identity_scheme_block,
 )
+from harness.locked_validation_binding import (
+    contract_block as locked_validation_contract_block,
+    load_receipt as load_frozen_preflight_receipt,
+    verification_problems as locked_validation_problems,
+)
+from harness.successor_protocol import (
+    SUCCESSOR_PROTOCOL, protocol_sha256 as successor_protocol_sha256,
+)
 from harness.corpus_view import (
     load_complexity_index,
     load_development_split,
@@ -85,6 +93,11 @@ CONFIRM_FINAL_TEST = False
 EXTERNAL_ADAPTER_DIR = None
 EXTERNAL_ADAPTER_SHA256 = None
 EXTERNAL_ADAPTER_SOURCE_RUN = None
+#: The frozen preflight receipt a locked-validation run is bound to. Set only
+#: by --frozen-preflight-receipt; absent for every other kind of run.
+FROZEN_PREFLIGHT_RECEIPT_PATH = None
+FROZEN_PREFLIGHT_RECEIPT_SHA256 = None
+FROZEN_PREFLIGHT_RECEIPT = None
 EVAL_FEEDBACK_ROUNDS = 0
 EVAL_DIVERSITY_MODE = "none"
 HOLDOUT_BUG_FAMILY = None
@@ -215,6 +228,18 @@ def resolved_base_model_identity() -> Tuple[str, str]:
 
 #: Files that must be present for a directory to be a loadable LoRA adapter.
 EXTERNAL_ADAPTER_REQUIRED_FILES = ("adapter_model.safetensors", "adapter_config.json")
+
+
+def _git_head() -> str:
+    """The commit checked out when this run started, or "" if unavailable."""
+    import subprocess
+    try:
+        return subprocess.run(
+            ["git", "rev-parse", "HEAD"], capture_output=True, text=True,
+            cwd=Path(__file__).resolve().parent.parent,
+        ).stdout.strip()
+    except OSError:
+        return ""
 
 
 def _adapter_resolution_source() -> str:
@@ -1913,6 +1938,19 @@ def _adapter_evaluation_context(
         "adapter_resolution_source_canonical_sha256":
             _adapter_resolution_source_canonical_sha256(),
     }
+    # Locked-validation runs additionally name the receipt that froze them and
+    # the HEAD they launched from. Absent for every other run, so an ordinary
+    # evaluation's contract is unchanged.
+    if FROZEN_PREFLIGHT_RECEIPT_PATH is not None:
+        run_contract["locked_validation_binding"] = locked_validation_contract_block(
+            root=Path(__file__).resolve().parent.parent,
+            receipt_path=FROZEN_PREFLIGHT_RECEIPT_PATH,
+            receipt_sha256=FROZEN_PREFLIGHT_RECEIPT_SHA256,
+            receipt=FROZEN_PREFLIGHT_RECEIPT or {},
+            git_head_at_launch=_git_head(),
+            adapter_sha256=adapter_sha256,
+            model_revision=resolved_base_model_revision,
+        )
     context = {
         "format_version": 3,
         "validation_accounting_schema_version": VALIDATION_ACCOUNTING_SCHEMA_VERSION,
@@ -4910,6 +4948,18 @@ if __name__ == "__main__":
             "in the result artifact for provenance."),
     )
     parser.add_argument(
+        "--frozen-preflight-receipt", default=None,
+        help=(
+            "Locked validation only. Path to the frozen preflight receipt this run "
+            "must match. Requires --expected-preflight-receipt-sha256. Verified "
+            "before CUDA is loaded, before any corpus record is read and before any "
+            "output directory is created."),
+    )
+    parser.add_argument(
+        "--expected-preflight-receipt-sha256", default=None,
+        help="Required with --frozen-preflight-receipt: that receipt's SHA-256.",
+    )
+    parser.add_argument(
         "--execution-mode", default="",
         choices=["", FUNCTION_EXECUTION_MODE, *sorted(REPOSITORY_EXECUTION_MODES)],
         help="Optionally train only one canonical execution mode (useful for targeted smoke tests)",
@@ -5208,6 +5258,61 @@ if __name__ == "__main__":
         parser.error("--expected-adapter-sha256 requires --adapter-dir")
     elif args.adapter_source_run is not None:
         parser.error("--adapter-source-run requires --adapter-dir")
+
+    # Bind this run to the receipt that froze it. Placed here deliberately:
+    # local_run_paths() only validates names and creates nothing, the corpus is
+    # untouched until run_training(), and the CUDA check is further below - so
+    # every refusal below costs nothing and leaves no trace on disk.
+    if args.frozen_preflight_receipt is not None:
+        if TRAINING_PHASE not in {"base_eval", "sft_eval"}:
+            parser.error(
+                "--frozen-preflight-receipt is for locked-validation evaluation "
+                f"(--phase base_eval or sft_eval), got --phase {TRAINING_PHASE}")
+        _receipt, _problems = load_frozen_preflight_receipt(
+            args.frozen_preflight_receipt, args.expected_preflight_receipt_sha256)
+        if not _problems:
+            from config import model_config as _model_config
+            _problems = locked_validation_problems(
+                root=Path(__file__).resolve().parent.parent,
+                receipt=_receipt,
+                run_name=args.run_name,
+                phase=TRAINING_PHASE,
+                evaluation_split=EVALUATION_SPLIT,
+                model_revision=resolved_base_model_identity()[1],
+                adapter_sha256=EXTERNAL_ADAPTER_SHA256,
+                protocol_name=SUCCESSOR_PROTOCOL["protocol_name"],
+                protocol_sha256=successor_protocol_sha256(),
+                resolved_settings={
+                    "seed": SEED,
+                    "candidates_per_function": TESTS_PER_PAIR,
+                    "candidate_parse_mode": CANDIDATE_PARSE_MODE,
+                    "retain_raw_output": RETAIN_RAW_OUTPUT,
+                    "temperature": _model_config.temperature,
+                    "top_p": _model_config.top_p,
+                    "generation_completion_token_limit": MAX_NEW_TOKENS_OVERRIDE,
+                    "prompt_token_limit": PROMPT_TOKEN_LIMIT,
+                    "max_sequence_tokens": MAX_SFT_COMPLETION_TOKENS,
+                },
+            )
+        if _problems:
+            parser.error(
+                "frozen preflight receipt verification failed; refusing to launch "
+                "before CUDA, corpus access or output creation:\n  - "
+                + "\n  - ".join(_problems))
+        FROZEN_PREFLIGHT_RECEIPT_PATH = args.frozen_preflight_receipt
+        FROZEN_PREFLIGHT_RECEIPT_SHA256 = str(
+            args.expected_preflight_receipt_sha256).strip().lower()
+        FROZEN_PREFLIGHT_RECEIPT = _receipt
+        print(
+            "[LOCKED VALIDATION] bound to frozen preflight receipt\n"
+            f"  receipt : {FROZEN_PREFLIGHT_RECEIPT_PATH}\n"
+            f"  sha256  : {FROZEN_PREFLIGHT_RECEIPT_SHA256}\n"
+            f"  arm     : {args.run_name}",
+            flush=True,
+        )
+    elif args.expected_preflight_receipt_sha256 is not None:
+        parser.error(
+            "--expected-preflight-receipt-sha256 requires --frozen-preflight-receipt")
     RESTART_DPO = args.restart_dpo
     CONFIRM_FINAL_TEST = args.confirm_final_test
     if not args.mock:

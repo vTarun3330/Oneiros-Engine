@@ -193,8 +193,33 @@ def view_problems(view: dict) -> list[str]:
     return found
 
 
+#: Placeholder written into the commands on the first pass, then replaced once
+#: the receipt's own hash is known. A receipt whose commands must quote that
+#: receipt's SHA-256 cannot state it in one pass: writing the hash changes the
+#: bytes being hashed. So the file is written once with this marker, hashed,
+#: and rewritten with the marker replaced - which leaves the final file's hash
+#: equal to the value its own commands carry.
+RECEIPT_SHA_PLACEHOLDER = "<<FROZEN_PREFLIGHT_RECEIPT_SHA256>>"
+
+
+def resolved_commands(receipt: dict, receipt_sha256: str) -> dict[str, list[str]]:
+    """The stored commands with the receipt's own digest substituted in.
+
+    A receipt cannot state its own SHA-256 - writing the digest changes the
+    bytes being hashed - so the stored command carries a placeholder and this
+    puts the real value in. Every consumer goes through here, so the launch
+    command and the tested command are the same string.
+    """
+    return {
+        name: [receipt_sha256 if part == RECEIPT_SHA_PLACEHOLDER else part
+               for part in arm["command"]]
+        for name, arm in (receipt.get("arms") or {}).items()
+    }
+
+
 def evaluation_command(run_name: str, *, adapter_run: str | None,
-                       revision: str) -> list[str]:
+                       revision: str, receipt_path: str,
+                       receipt_sha256: str) -> list[str]:
     """The exact command for one arm. Built here so it cannot drift.
 
     Every option the protocol does not own is written out, including the model
@@ -220,6 +245,8 @@ def evaluation_command(run_name: str, *, adapter_run: str | None,
         "--base-model-revision", revision,
         "--attention-implementation", "sdpa",
         "--sft-prompt-token-limit", "1024",
+        "--frozen-preflight-receipt", receipt_path,
+        "--expected-preflight-receipt-sha256", receipt_sha256,
     ]
     if adapter_run:
         command += [
@@ -230,7 +257,7 @@ def evaluation_command(run_name: str, *, adapter_run: str | None,
     return command
 
 
-def collect(problems: list[str]) -> dict:
+def collect(problems: list[str], receipt_path: str = "results/v4_2_locked_validation_preflight.json") -> dict:
     """Build the receipt, appending to ``problems`` for anything that refuses."""
     revision = immutable_revision_for(BASE_MODEL)
     if not mid.is_immutable_revision(revision):
@@ -450,8 +477,9 @@ def collect(problems: list[str]) -> dict:
                 "model_name": BASE_MODEL,
                 "model_revision": revision,
                 "adapter": None,
-                "command": evaluation_command(BASE_RUN_NAME, adapter_run=None,
-                                              revision=revision or ""),
+                "command": evaluation_command(
+                    BASE_RUN_NAME, adapter_run=None, revision=revision or "",
+                    receipt_path=receipt_path, receipt_sha256=RECEIPT_SHA_PLACEHOLDER),
             },
             "B_arm_a_checkpoint_431": {
                 "kind": "selected development SFT candidate",
@@ -464,8 +492,9 @@ def collect(problems: list[str]) -> dict:
                 "adapter_checkpoint_step": 431,
                 "adapter_sha256_expected": ARM_A_431_ADAPTER_SHA256,
                 "adapter_sha256_found": adapter_sha,
-                "command": evaluation_command(ARM_A_RUN_NAME, adapter_run=ARM_A_431_RUN,
-                                              revision=revision or ""),
+                "command": evaluation_command(
+                    ARM_A_RUN_NAME, adapter_run=ARM_A_431_RUN, revision=revision or "",
+                    receipt_path=receipt_path, receipt_sha256=RECEIPT_SHA_PLACEHOLDER),
                 "note": (
                     "The adapter is read where it already lives, through --adapter-dir. "
                     "Nothing is copied or moved, the source directory is not written to, "
@@ -476,6 +505,19 @@ def collect(problems: list[str]) -> dict:
                 "staging_required": False,
                 "source_directory_modified": False,
             },
+        },
+        "receipt_self_reference": {
+            "placeholder": RECEIPT_SHA_PLACEHOLDER,
+            "note": (
+                "Each arm's command carries --expected-preflight-receipt-sha256 with "
+                "this placeholder in place of a digest. A file cannot contain its own "
+                "SHA-256, because writing the digest changes the bytes being hashed, so "
+                "no fixed point exists. Substitute this receipt's SHA-256 - the value "
+                "the preflight prints, and the hash of this file as written - for the "
+                "placeholder before running. scripts/preflight_locked_validation.py's "
+                "resolved_commands() does exactly that, and is what the tests execute, "
+                "so the tested command and the launch command are the same string."
+            ),
         },
         "resolved_generation_settings": resolved_generation_settings,
         "runner_binding": runner_binding,
@@ -561,17 +603,28 @@ def main() -> int:
     args = parser.parse_args()
 
     problems: list[str] = []
-    receipt = collect(problems)
+    receipt = collect(problems, receipt_path=args.output)
 
     out = ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
+
+    # The commands must quote this receipt's SHA-256, and a file cannot contain
+    # its own hash: writing the digest changes the bytes being hashed, so no
+    # fixed point exists. Pretending otherwise - iterating until the numbers
+    # "settle" - would just be a loop that never converges.
+    #
+    # So the stored commands carry a placeholder, and the digest is substituted
+    # when the command is used. resolved_commands() below does that
+    # substitution, main() prints the runnable form, and the tests run it. The
+    # receipt says plainly that this is what the placeholder means.
     out.write_bytes((json.dumps(receipt, indent=2) + "\n").encode("utf-8"))
+    receipt_sha = sha256_file(out)
 
     print("=" * 96)
     print("LOCKED-VALIDATION PREFLIGHT (CPU only; nothing was launched)")
     print("=" * 96)
     print(f"receipt : {args.output}")
-    print(f"sha256  : {sha256_file(out)}")
+    print(f"sha256  : {receipt_sha}")
     print()
     print(f"base model      : {BASE_MODEL} @ {receipt['model_identity']['base_model_revision']}")
     print(f"arm A adapter   : {receipt['arms']['B_arm_a_checkpoint_431']['adapter_sha256_found']}")
@@ -588,6 +641,11 @@ def main() -> int:
             print(f"  - {p}")
         return 1
     print("ALL GATES PASSED - ready to launch on explicit approval.")
+    print()
+    print("Exact commands (receipt digest substituted for the stored placeholder):")
+    for name, command in resolved_commands(receipt, receipt_sha).items():
+        print(f"\n# {name}")
+        print("  " + " \\\n    ".join(command))
     return 0
 
 
