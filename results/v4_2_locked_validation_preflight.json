@@ -1,0 +1,245 @@
+{
+  "schema_version": "oneiros_locked_validation_preflight_v1",
+  "created_utc": "2026-09-15T13:52:37Z",
+  "purpose": "Freeze the locked-validation measurement of exactly two arms before it runs. The sealed final test remains closed.",
+  "launched": false,
+  "cpu_only_preflight": true,
+  "model_identity": {
+    "schema_version": "oneiros_model_identity_v1",
+    "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "base_model_revision_is_immutable": true,
+    "selection_tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "selection_tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "selection_tokenizer_revision_is_immutable": true,
+    "model_and_tokenizer_identical": true,
+    "source_tree_sha256": "cd0a1a861acb4ccd58808c4af99f736ed5c059ca0d1df4b8fdd55bfdd192494e",
+    "successor_protocol_name": "oneiros_successor_generation_protocol_v1",
+    "successor_protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
+    "expected_training_model_identity": {
+      "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+    }
+  },
+  "arms": {
+    "A_base_control": {
+      "kind": "immutable base model, no adapter",
+      "run_name": "locked_val_base_qwen_s42",
+      "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "adapter": null,
+      "command": [
+        ".venv-gpu/Scripts/python.exe",
+        "scripts/train_on_dataset.py",
+        "--phase",
+        "base_eval",
+        "--run-name",
+        "locked_val_base_qwen_s42",
+        "--successor-protocol",
+        "--evaluation-split",
+        "val",
+        "--prompt-information-variant",
+        "full",
+        "--output-instruction-variant",
+        "self_contained",
+        "--base-model-name",
+        "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+        "--attention-implementation",
+        "sdpa",
+        "--sft-prompt-token-limit",
+        "1024"
+      ]
+    },
+    "B_arm_a_checkpoint_431": {
+      "kind": "selected development SFT candidate",
+      "run_name": "locked_val_armA_ckpt431_s42",
+      "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "adapter_source_run": "local_sft_armA_baseline_successor_s42",
+      "adapter_checkpoint_step": 431,
+      "adapter_sha256_expected": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+      "adapter_sha256_found": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+      "command": [
+        ".venv-gpu/Scripts/python.exe",
+        "scripts/train_on_dataset.py",
+        "--phase",
+        "sft_eval",
+        "--run-name",
+        "locked_val_armA_ckpt431_s42",
+        "--successor-protocol",
+        "--evaluation-split",
+        "val",
+        "--prompt-information-variant",
+        "full",
+        "--output-instruction-variant",
+        "self_contained",
+        "--base-model-name",
+        "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+        "--attention-implementation",
+        "sdpa",
+        "--sft-prompt-token-limit",
+        "1024"
+      ],
+      "note": "The adapter must be staged into checkpoints/locked_val_armA_ckpt431_s42/sft_adapter before this command runs, because --phase sft_eval evaluates <run>/sft_adapter and there is no flag for an arbitrary adapter path. Staging must copy, never move, and must not modify the development checkpoint."
+    }
+  },
+  "protocol": {
+    "protocol_name": "oneiros_successor_generation_protocol_v1",
+    "candidate_parse_mode": "whole_output",
+    "retain_raw_output": true,
+    "allow_test_function_candidates": true,
+    "max_assertions": 24,
+    "candidates_per_function": 8,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "generation_seed": 42,
+    "function_generation_completion_limit": 1024,
+    "repository_generation_completion_limit": 1024,
+    "max_sequence_tokens": 3072,
+    "protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
+    "evaluation_split": "val",
+    "final_test_measurement": false,
+    "reranking": "none - candidates are judged as generated",
+    "feedback_rounds": 0,
+    "diversity_mode": "none"
+  },
+  "contract_source_hashes": {
+    "parser_source_sha256": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
+    "generation_runtime_source_sha256": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
+    "generation_orchestration_source_sha256": "19f568d91b1ddfc4ee476eaad9d7354c98747ae6a2726f65497df897f640cdd7",
+    "prompt_builder_source_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+    "prompt_budget_source_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
+    "candidate_policy_source_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+    "evaluator_source_sha256": "649e96fab00af35e172cdd0590f6b6c1241d03aa6aef71ede4fb2e731fad27c2",
+    "timeout_policy_source_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+    "evaluation_protocol_source_sha256": "0b6204c7782b7597b41f46cd8fb8c7d67ed436823930371f054f751a517272af"
+  },
+  "runtime_component_hashes": {
+    "scripts/train_on_dataset.py": "19f568d91b1ddfc4ee476eaad9d7354c98747ae6a2726f65497df897f640cdd7",
+    "engine/generator.py": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
+    "engine/model_runtime.py": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
+    "engine/prompt_budget.py": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
+    "engine/test_generation_prompt.py": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+    "harness/candidate_policy.py": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+    "harness/safe_execution.py": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+    "harness/corpus_view.py": "b8dd0b014a288a758af3583572472f3396a9aad66944ef41390126b946ccd375",
+    "harness/successor_protocol.py": "fc3aadc575b8b5e31b5900ee422814666f52cc760b9443f951a7dd993ea906bc",
+    "metrics/research_evaluation.py": "649e96fab00af35e172cdd0590f6b6c1241d03aa6aef71ede4fb2e731fad27c2",
+    "config/settings.py": "6b849133ff916b61481073e07d13843baec6ae390590891456e377e04c53decd"
+  },
+  "contract_sources_match_development_measurement": true,
+  "corpus": {
+    "corpus_version": "v4_1_research_hardened_candidate",
+    "source_corpus_id": "oneiros-corpus-v4.1-research-hardened-candidate",
+    "source_records_sha256": "04940ee92c7eeef3efb0808e577470cfb5415c13612ecb25bd11eb00c2adfd50",
+    "source_splits_sha256": "4baaa7a6eb4069203691d5453d50d58a189eeee63feb0c3dfe236c139947ba2a",
+    "included_splits": [
+      "train",
+      "ablation_dev",
+      "val"
+    ],
+    "sealed_splits_excluded": [
+      "test"
+    ]
+  },
+  "evaluation_split_identity": {
+    "split": "val",
+    "shard_filename": "val.records.json",
+    "shard_sha256": "2e67ad983627dd4970c5ed16b914b2feeb1592d77ce35990d9461904726cf14a",
+    "record_ids_sha256": "97fc26f995aaba08f48009b86df38b45956037ca92ffc3311cd0fcc2b24b6c0c",
+    "record_count": 781,
+    "records_read_by_this_preflight": 0,
+    "binding_method": "split identity is bound through the development view manifest's content and record-id hashes, which are metadata about the shard. No validation record was opened."
+  },
+  "sealed_final_test": {
+    "accessed": false,
+    "split": "test",
+    "status": "sealed - not opened, not inspected, absent from the development view"
+  },
+  "output_isolation": {
+    "base_run_name": "locked_val_base_qwen_s42",
+    "arm_a_run_name": "locked_val_armA_ckpt431_s42",
+    "development_run_names_that_must_not_be_touched": [
+      "local_base_qwen_ablationdev_successor_s42_v3",
+      "local_sft_armA_baseline_successor_s42",
+      "local_sft_armB_o1_nocollide_s42",
+      "local_eval_armA_ckpt150_matched"
+    ],
+    "collides_with_development_artifacts": false
+  },
+  "inherited_development_decision": {
+    "receipt": "results/v4_2_development_selection_receipt.json",
+    "receipt_sha256": "0188324fe9eb2a51eebef71bbd4cc3ed45584f12393bf0fa6539817a09e58969",
+    "selected_candidate": "Arm A checkpoint 431",
+    "arm_b_rejected": "REJECTED"
+  },
+  "decision_rule": {
+    "frozen_before_results": true,
+    "comparison": "Arm A checkpoint 431 vs the immutable base model, paired on the val panel",
+    "all_criteria_must_hold": true,
+    "criteria": {
+      "1_practical_kill_gain": {
+        "kill_at_8_absolute_points": ">= +3.0",
+        "net_functions_gained": ">= +15",
+        "paired_mcnemar_two_sided_p": "< 0.01",
+        "why": "On development, A@431 beat base by +9.04 Kill@8 points with p=8.2e-05. A genuine effect of that size must survive an unseen split comfortably. The bar is set above the development-stage +2.0/+10/p<0.05 because this is the promotion decision, not a screening decision, and because ablation_dev selected this checkpoint and so flattered it."
+      },
+      "2_reference_validity": {
+        "max_absolute_drop_points": 12.0,
+        "why": "This is the criterion that matters most and the one most likely to fail. Every SFT arm lost about 11 points of reference validity against base on development: A@431 -11.05, A@150 -10.70, B@150 -11.67. The threshold is set at 12.0 so that the known regression does not by itself block promotion, while a materially worse one does. This is a deliberate, declared tolerance of a real defect, not a claim that the defect is acceptable in the finished system. If A@431 is promoted, it is promoted WITH this regression and the regression must be reported every time the model is described."
+      },
+      "3_execution_and_parse": {
+        "max_absolute_drop_points_each": 1.0,
+        "why": "A model that emits less runnable code than base is not an improvement."
+      },
+      "4_diversity": {
+        "max_relative_drop_exact_unique": 0.1,
+        "max_relative_drop_input_shape_unique": 0.1,
+        "max_relative_increase_redundancy": 0.1,
+        "why": "Kills bought by emitting the same assertion repeatedly are not kills."
+      },
+      "5_integrity": {
+        "raw_output_present_and_hash_matching": "100%",
+        "prompt_budget_failures": 0,
+        "max_completion_limit_rate": 0.01,
+        "both_arms_share_run_contract_sha256": true,
+        "both_arms_share_evaluation_scope_sha256": true
+      }
+    },
+    "if_all_criteria_hold": "Promote Arm A checkpoint 431 as the final candidate.",
+    "if_any_criterion_fails": "Retain the immutable base model as the final candidate. Do not retrain, do not tune prompts, do not change thresholds, do not add data, and do not select a different checkpoint.",
+    "forbidden_after_seeing_results": [
+      "retraining of any kind",
+      "prompt changes",
+      "threshold changes",
+      "adding or reweighting data",
+      "selecting a different checkpoint",
+      "re-running an arm to obtain a different sample",
+      "opening the sealed final test"
+    ]
+  },
+  "reproducibility": {
+    "git_commit": "6925c15d96851ef8f31ac66cff6101345555dba5",
+    "git_dirty": true,
+    "git_status_porcelain_sha256": "5a958e3bfb1a4af4bd8b2a4380f6a331ee5f4795e912b3f883b8b817abfff4a9",
+    "source_tree_sha256": "cd0a1a861acb4ccd58808c4af99f736ed5c059ca0d1df4b8fdd55bfdd192494e",
+    "python_version": "3.12.14"
+  },
+  "expected_gpu_time": {
+    "development_panel_reference": "542 functions took 643-884 s per arm on an RTX 4500 Ada",
+    "val_shard_record_count": 781,
+    "note": "The evaluated function count is decided at run time after repository records and ineligible records are held out; on ablation_dev, 594 shard records yielded 542 evaluated functions. It is NOT predicted here.",
+    "estimate_per_arm_seconds": [
+      900,
+      1300
+    ],
+    "estimate_total_minutes": [
+      30,
+      45
+    ]
+  },
+  "preflight_problems": [],
+  "ready_to_launch": true
+}
