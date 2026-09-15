@@ -37,6 +37,10 @@ from harness import model_identity as mid  # noqa: E402
 from harness.successor_protocol import (  # noqa: E402
     SUCCESSOR_PROTOCOL, contract_source_hashes, protocol_sha256,
 )
+from harness.source_identity import (  # noqa: E402
+    EVALUATION_DEFINING_SOURCES, HASH_SCHEME_VERSION, canonical_sha256,
+    scheme_block as source_identity_scheme_block,
+)
 from utils.reproducibility import source_tree_sha256  # noqa: E402
 
 SCHEMA_VERSION = "oneiros_locked_validation_preflight_v1"
@@ -343,7 +347,11 @@ def collect(problems: list[str]) -> dict:
     runner_binding = {
         "entrypoint": "scripts/train_on_dataset.py",
         "runner_source_sha256": sha256_file(ROOT / "scripts" / "train_on_dataset.py"),
+        "runner_source_canonical_sha256": canonical_sha256(
+            ROOT / "scripts" / "train_on_dataset.py"),
         "adapter_resolution_source_sha256": runner._adapter_resolution_source_sha256(),
+        "adapter_resolution_source_canonical_sha256":
+            runner._adapter_resolution_source_canonical_sha256(),
         "adapter_required_files": list(runner.EXTERNAL_ADAPTER_REQUIRED_FILES),
         "why": (
             "The evaluator hash says how a candidate was scored. It says nothing "
@@ -352,6 +360,53 @@ def collect(problems: list[str]) -> dict:
             "and both are written into every run contract."
         ),
     }
+
+    # ---- portable source binding -----------------------------------------
+    # Raw hashes prove which bytes this GPU machine loaded; canonical hashes
+    # can be re-derived from any checkout. Three evaluation-defining files are
+    # CRLF here and LF in Git, so without the second family a fresh clone
+    # would appear to disagree with this receipt about code that never changed.
+    source_binding = source_identity_scheme_block(ROOT)
+    git_blob_mismatches = []
+    for role, relative in sorted(EVALUATION_DEFINING_SOURCES.items()):
+        stored = git("rev-parse", f"HEAD:{relative}")
+        computed = source_binding["sources"][role]["git_blob_sha1"]
+        source_binding["sources"][role]["git_blob_sha1_committed"] = stored or None
+        matches = bool(stored) and stored == computed
+        source_binding["sources"][role]["matches_committed_content"] = matches
+        if not matches:
+            git_blob_mismatches.append(relative)
+    source_binding["working_tree_matches_committed_content"] = not git_blob_mismatches
+    source_binding["uncommitted_or_divergent_sources"] = git_blob_mismatches
+    # Everything needed to re-identify this measurement's code and weights, in
+    # one place, so a reader never has to assemble it from three sections.
+    source_binding["git_commit"] = git("rev-parse", "HEAD")
+    source_binding["adapter_sha256"] = adapter_sha
+    source_binding["adapter_source_path"] = ARM_A_431_ADAPTER_DIR
+    source_binding["base_model_revision"] = revision
+    source_binding["historical_artifacts_use_the_earlier_raw_only_scheme"] = {
+        "applies_to": [
+            FROZEN_DEVELOPMENT_RECEIPT,
+            DEVELOPMENT_SELECTION_RECEIPT,
+            "results/local_base_qwen_ablationdev_successor_s42_v3/",
+            "results/local_sft_armA_baseline_successor_s42/",
+            "results/local_sft_armB_o1_nocollide_s42/",
+            "results/local_eval_armA_ckpt150_matched/",
+        ],
+        "note": (
+            "Development artifacts predate this scheme and record raw on-machine "
+            "SHA-256 only. They are not rewritten: their hashes are correct for the "
+            "machine that produced them, and altering a frozen receipt to adopt a "
+            "newer convention would destroy the thing that made it evidence. Read "
+            "them as raw-only, and compare them against a working tree with the "
+            "same line endings."
+        ),
+    }
+    if git_blob_mismatches:
+        problems.append(
+            "evaluation-defining sources differ from committed content (or are "
+            f"uncommitted): {git_blob_mismatches}. Locked validation must run from "
+            "code that can be recovered from the repository.")
 
     frozen_dev_path = ROOT / FROZEN_DEVELOPMENT_RECEIPT
     dev_contract_drift = []
@@ -424,6 +479,7 @@ def collect(problems: list[str]) -> dict:
         },
         "resolved_generation_settings": resolved_generation_settings,
         "runner_binding": runner_binding,
+        "source_identity": source_binding,
         "protocol_runtime_drift": runtime_drift,
         "protocol": dict(
             SUCCESSOR_PROTOCOL,

@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -288,6 +289,51 @@ def test_the_runner_and_adapter_resolution_are_bound(receipt):
     assert binding["runner_source_sha256"] == hashlib.sha256(
         (ROOT / "scripts" / "train_on_dataset.py").read_bytes()).hexdigest()
     assert len(binding["adapter_resolution_source_sha256"]) == 64
+    assert len(binding["runner_source_canonical_sha256"]) == 64
+    assert len(binding["adapter_resolution_source_canonical_sha256"]) == 64
+
+
+# ------------------------------------------------- portable source binding
+
+def test_the_receipt_records_both_hash_families(receipt):
+    from harness.source_identity import EVALUATION_DEFINING_SOURCES, HASH_SCHEME_VERSION
+    built, _ = receipt
+    binding = built["source_identity"]
+    assert binding["hash_scheme_version"] == HASH_SCHEME_VERSION
+    assert set(binding["sources"]) == set(EVALUATION_DEFINING_SOURCES)
+    for role, item in binding["sources"].items():
+        assert len(item["raw_sha256"]) == 64, role
+        assert len(item["canonical_sha256"]) == 64, role
+        assert len(item["git_blob_sha1"]) == 40, role
+
+
+def test_the_crlf_sources_are_named_in_the_receipt(receipt):
+    """A reader should not have to discover which hashes are machine-specific."""
+    built, _ = receipt
+    assert set(built["source_identity"]["portable_hashes_differ_from_raw"]) == {
+        "evaluation_entrypoint", "evaluator", "generator"}
+
+
+def test_the_receipt_binds_commit_adapter_and_revision(receipt):
+    built, _ = receipt
+    binding = built["source_identity"]
+    assert re.fullmatch(r"[0-9a-f]{40}", binding["git_commit"])
+    assert binding["adapter_sha256"] == pf.ARM_A_431_ADAPTER_SHA256
+    assert binding["base_model_revision"] == SHA
+    assert binding["adapter_source_path"] == pf.ARM_A_431_ADAPTER_DIR
+
+
+def test_uncommitted_evaluation_sources_are_refused(receipt):
+    built, _ = receipt
+    assert built["source_identity"]["working_tree_matches_committed_content"] is True
+    assert built["source_identity"]["uncommitted_or_divergent_sources"] == []
+
+
+def test_the_receipt_says_historical_artifacts_keep_the_old_scheme(receipt):
+    built, _ = receipt
+    historical = built["source_identity"]["historical_artifacts_use_the_earlier_raw_only_scheme"]
+    assert "results/v4_2_frozen_development_evaluation_receipt.json" in historical["applies_to"]
+    assert "not rewritten" in historical["note"]
 
 
 def test_the_bound_runner_hash_is_what_the_run_contract_will_record():

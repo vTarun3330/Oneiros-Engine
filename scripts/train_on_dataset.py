@@ -26,6 +26,10 @@ from harness.candidate_policy import validate_function_assertion
 from harness.multi_mutant_examples import verified_completions_by_record
 from harness.o1_sidecar import append_o1_examples, load_o1_sidecar
 from harness.corpus import sha256_file, valid_corpus_version, verify_corpus
+from harness.source_identity import (
+    canonical_text_sha256,
+    scheme_block as source_identity_scheme_block,
+)
 from harness.corpus_view import (
     load_complexity_index,
     load_development_split,
@@ -213,19 +217,28 @@ def resolved_base_model_identity() -> Tuple[str, str]:
 EXTERNAL_ADAPTER_REQUIRED_FILES = ("adapter_model.safetensors", "adapter_config.json")
 
 
-def _adapter_resolution_source_sha256() -> str:
-    """Hash of the code that decides which adapter is loaded.
+def _adapter_resolution_source() -> str:
+    """The exact code that decides which adapter is loaded.
 
     Narrower than the whole-file hash beside it and harder to satisfy by
     accident: this moves when, and only when, the resolution rules change.
     """
     import inspect
-    source = "".join((
+    return "".join((
         inspect.getsource(resolve_external_adapter),
         inspect.getsource(external_adapter_provenance),
         repr(EXTERNAL_ADAPTER_REQUIRED_FILES),
     ))
-    return hashlib.sha256(source.encode("utf-8")).hexdigest()
+
+
+def _adapter_resolution_source_sha256() -> str:
+    """Raw hash: the fragment as this machine's interpreter read it."""
+    return hashlib.sha256(_adapter_resolution_source().encode("utf-8")).hexdigest()
+
+
+def _adapter_resolution_source_canonical_sha256() -> str:
+    """Portable hash: the same fragment with line endings normalized."""
+    return canonical_text_sha256(_adapter_resolution_source())
 
 
 def resolve_external_adapter(adapter_dir, expected_sha256: str):
@@ -1889,6 +1902,16 @@ def _adapter_evaluation_context(
         # external adapter.
         "runner_source_sha256": sha256_file(Path(__file__).resolve()),
         "adapter_resolution_source_sha256": _adapter_resolution_source_sha256(),
+        # Raw hashes above prove which bytes this machine loaded. They are not
+        # portable: three of these files are CRLF here and LF in Git, so a
+        # fresh clone re-derives a different digest from identical code. The
+        # block below records the same sources under a documented
+        # line-ending-normalized scheme that any checkout reproduces, without
+        # touching a single file to get there.
+        "source_identity": source_identity_scheme_block(
+            Path(__file__).resolve().parent.parent),
+        "adapter_resolution_source_canonical_sha256":
+            _adapter_resolution_source_canonical_sha256(),
     }
     context = {
         "format_version": 3,
