@@ -5054,18 +5054,6 @@ if __name__ == "__main__":
     if args.candidate_parse_mode is None:
         # Unchanged contract: absence of the flag means legacy.
         args.candidate_parse_mode = "first_assertion"
-    if args.dry_run:
-        print(json.dumps({
-            "backend": "local_cuda",
-            "adapter_dir": str(ADAPTER_DIR),
-            "results_dir": str(RESULTS_DIR),
-            "options": vars(args),
-            "training_launched": False,
-            "corpus_opened": False,
-            "readiness_checked": False,
-            "warning": "Execution requires research preflight and sealed-data access isolation",
-        }, indent=2))
-        sys.exit(0)
     if args.seed < 0:
         raise ValueError("--seed must be non-negative")
     SEED = args.seed
@@ -5315,6 +5303,23 @@ if __name__ == "__main__":
             "--expected-preflight-receipt-sha256 requires --frozen-preflight-receipt")
     RESTART_DPO = args.restart_dpo
     CONFIRM_FINAL_TEST = args.confirm_final_test
+    # Placed after every launch gate rather than before them. A dry run whose
+    # purpose is to prove a command is launchable must exercise the checks that
+    # command will face: the adapter hash, the frozen receipt, the source blob
+    # identities. Exiting earlier made --dry-run report success for a command
+    # that would have been refused a second later.
+    if args.dry_run:
+        print(json.dumps({
+            "backend": "local_cuda",
+            "adapter_dir": str(ADAPTER_DIR),
+            "results_dir": str(RESULTS_DIR),
+            "options": vars(args),
+            "training_launched": False,
+            "corpus_opened": False,
+            "readiness_checked": False,
+            "warning": "Execution requires research preflight and sealed-data access isolation",
+        }, indent=2))
+        sys.exit(0)
     if not args.mock:
         import torch
 
