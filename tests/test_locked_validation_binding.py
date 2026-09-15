@@ -264,6 +264,10 @@ def test_the_run_contract_records_head_and_receipt_hash(monkeypatch):
                         "results/v4_2_locked_validation_preflight.json")
     monkeypatch.setattr(trainer, "FROZEN_PREFLIGHT_RECEIPT_SHA256", _receipt_sha())
     monkeypatch.setattr(trainer, "FROZEN_PREFLIGHT_RECEIPT", receipt)
+    # A locked-validation run always passes --base-model-name; without it the
+    # resolver returns the module default (Phi-3), which no arm here uses.
+    monkeypatch.setattr(trainer, "BASE_MODEL_NAME_OVERRIDE",
+                        "Qwen/Qwen2.5-Coder-1.5B-Instruct")
     contract = trainer._adapter_evaluation_context(
         "fingerprint", "external_evaluation_adapter", ADAPTER_SHA, "val", None,
         "b" * 64, 700)["run_contract"]

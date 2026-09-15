@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_locked_validation_preflight_v1",
-  "created_utc": "2026-09-15T14:58:13Z",
+  "created_utc": "2026-09-15T15:28:22Z",
   "purpose": "Freeze the locked-validation measurement of exactly two arms before it runs. The sealed final test remains closed.",
   "launched": false,
   "cpu_only_preflight": true,
@@ -13,7 +13,7 @@
     "selection_tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
     "selection_tokenizer_revision_is_immutable": true,
     "model_and_tokenizer_identical": true,
-    "source_tree_sha256": "c71e1262f9c1d64aeaa1601c74189b53fb2559a0efd1041c4163fcc20c1f2e06",
+    "source_tree_sha256": "b62e610390ca407db5fb232c3dd6b9433169dcc2d8da2bdd0a9ce1d1c7a232df",
     "successor_protocol_name": "oneiros_successor_generation_protocol_v1",
     "successor_protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
     "expected_training_model_identity": {
@@ -51,7 +51,11 @@
         "--attention-implementation",
         "sdpa",
         "--sft-prompt-token-limit",
-        "1024"
+        "1024",
+        "--frozen-preflight-receipt",
+        "results/v4_2_locked_validation_preflight.json",
+        "--expected-preflight-receipt-sha256",
+        "<<FROZEN_PREFLIGHT_RECEIPT_SHA256>>"
       ]
     },
     "B_arm_a_checkpoint_431": {
@@ -87,6 +91,10 @@
         "sdpa",
         "--sft-prompt-token-limit",
         "1024",
+        "--frozen-preflight-receipt",
+        "results/v4_2_locked_validation_preflight.json",
+        "--expected-preflight-receipt-sha256",
+        "<<FROZEN_PREFLIGHT_RECEIPT_SHA256>>",
         "--adapter-dir",
         "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter",
         "--expected-adapter-sha256",
@@ -98,6 +106,10 @@
       "staging_required": false,
       "source_directory_modified": false
     }
+  },
+  "receipt_self_reference": {
+    "placeholder": "<<FROZEN_PREFLIGHT_RECEIPT_SHA256>>",
+    "note": "Each arm's command carries --expected-preflight-receipt-sha256 with this placeholder in place of a digest. A file cannot contain its own SHA-256, because writing the digest changes the bytes being hashed, so no fixed point exists. Substitute this receipt's SHA-256 - the value the preflight prints, and the hash of this file as written - for the placeholder before running. scripts/preflight_locked_validation.py's resolved_commands() does exactly that, and is what the tests execute, so the tested command and the launch command are the same string."
   },
   "resolved_generation_settings": {
     "seed": 42,
@@ -121,8 +133,8 @@
   },
   "runner_binding": {
     "entrypoint": "scripts/train_on_dataset.py",
-    "runner_source_sha256": "51ec9b280dab7982e687e43524ac32909fe7455b3db99918364e96bce261fe7b",
-    "runner_source_canonical_sha256": "5183c1881681d2b72ec2f587f0b3df1e110e8466a66d6b70c1d7c78fd793f14e",
+    "runner_source_sha256": "d5fb6a08a5ca421d8c2729e3c2d67e1d61cefd9a1182cd1ab772f99607dc89e8",
+    "runner_source_canonical_sha256": "122767f29ab9a5fb623e9b267d05bf2f27ae3abc19e29a7896b3f34cae67c64e",
     "adapter_resolution_source_sha256": "a3eaaf8aa97281e966bd35709bdd62476419400ea18e33bc155a046b4349a4b3",
     "adapter_resolution_source_canonical_sha256": "a3eaaf8aa97281e966bd35709bdd62476419400ea18e33bc155a046b4349a4b3",
     "adapter_required_files": [
@@ -147,12 +159,12 @@
       },
       "evaluation_entrypoint": {
         "path": "scripts/train_on_dataset.py",
-        "raw_sha256": "51ec9b280dab7982e687e43524ac32909fe7455b3db99918364e96bce261fe7b",
-        "canonical_sha256": "5183c1881681d2b72ec2f587f0b3df1e110e8466a66d6b70c1d7c78fd793f14e",
-        "git_blob_sha1": "128c19fda56c2fd6a170a3477622ba8be88602d5",
+        "raw_sha256": "d5fb6a08a5ca421d8c2729e3c2d67e1d61cefd9a1182cd1ab772f99607dc89e8",
+        "canonical_sha256": "122767f29ab9a5fb623e9b267d05bf2f27ae3abc19e29a7896b3f34cae67c64e",
+        "git_blob_sha1": "fce70aa197362a06fce615ab3b305613ea7e799d",
         "raw_and_canonical_agree": false,
-        "bytes": 245946,
-        "git_blob_sha1_committed": "128c19fda56c2fd6a170a3477622ba8be88602d5",
+        "bytes": 251561,
+        "git_blob_sha1_committed": "fce70aa197362a06fce615ab3b305613ea7e799d",
         "matches_committed_content": true
       },
       "evaluator": {
@@ -223,7 +235,7 @@
     ],
     "working_tree_matches_committed_content": true,
     "uncommitted_or_divergent_sources": [],
-    "git_commit": "6688605b266aed222561460b630e2270438250b5",
+    "git_commit": "1927a86eb98b82bb1c0536c5f1bb62636022d865",
     "adapter_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
     "adapter_source_path": "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter",
     "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
@@ -263,7 +275,7 @@
   "contract_source_hashes": {
     "parser_source_sha256": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
     "generation_runtime_source_sha256": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
-    "generation_orchestration_source_sha256": "51ec9b280dab7982e687e43524ac32909fe7455b3db99918364e96bce261fe7b",
+    "generation_orchestration_source_sha256": "d5fb6a08a5ca421d8c2729e3c2d67e1d61cefd9a1182cd1ab772f99607dc89e8",
     "prompt_builder_source_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
     "prompt_budget_source_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
     "candidate_policy_source_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
@@ -272,7 +284,7 @@
     "evaluation_protocol_source_sha256": "0b6204c7782b7597b41f46cd8fb8c7d67ed436823930371f054f751a517272af"
   },
   "runtime_component_hashes": {
-    "scripts/train_on_dataset.py": "51ec9b280dab7982e687e43524ac32909fe7455b3db99918364e96bce261fe7b",
+    "scripts/train_on_dataset.py": "d5fb6a08a5ca421d8c2729e3c2d67e1d61cefd9a1182cd1ab772f99607dc89e8",
     "engine/generator.py": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
     "engine/model_runtime.py": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
     "engine/prompt_budget.py": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
@@ -376,10 +388,10 @@
     ]
   },
   "reproducibility": {
-    "git_commit": "6688605b266aed222561460b630e2270438250b5",
-    "git_dirty": false,
-    "git_status_porcelain_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "source_tree_sha256": "c71e1262f9c1d64aeaa1601c74189b53fb2559a0efd1041c4163fcc20c1f2e06",
+    "git_commit": "1927a86eb98b82bb1c0536c5f1bb62636022d865",
+    "git_dirty": true,
+    "git_status_porcelain_sha256": "eb928fcb12b0cd4b3fdfddff5455f63c259e5de692be79483345d551095c546a",
+    "source_tree_sha256": "b62e610390ca407db5fb232c3dd6b9433169dcc2d8da2bdd0a9ce1d1c7a232df",
     "python_version": "3.12.14"
   },
   "expected_gpu_time": {
