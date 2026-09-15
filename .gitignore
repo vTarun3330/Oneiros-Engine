@@ -70,6 +70,10 @@ results/**
 # are the same class of artifact: small, structured, and required to be
 # reproducible from the repository.
 !results/v4_2_*.json
+# Selection reports belong with the receipts they summarise. A receipt that
+# records a decision is worth little if the comparison that justified it lives
+# only on one machine.
+!results/v4_2_*.md
 logs/
 wandb/
 runs/
