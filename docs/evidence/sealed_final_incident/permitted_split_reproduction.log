@@ -1,0 +1,32 @@
+required record fields: ('id', 'entry_point', 'reference_code', 'code_under_test', 'specification', 'task_type', 'tests')
+
+=== val ===
+  ids in split            : 781
+  execution modes         : {'function_assertion': 757, 'repository_pytest_fragment': 24}
+  function-mode records   : 757
+  repository-mode records : 24
+  records failing the check: 27
+  blank-by-field          : {'specification': 26, 'entry_point': 24}
+  keys genuinely absent   : 0   (0 means blank, not missing)
+  select_split_records    : REJECTED -> 27 record(s) are missing required fields; first: <id redacted>
+  historical _record_to_pair: ACCEPTED all 781 records
+  historical kill-rate scope: 757 function records (24 repository records excluded)
+
+=== ablation_dev ===
+  ids in split            : 594
+  execution modes         : {'function_assertion': 542, 'repository_unittest_fragment': 35, 'repository_pytest_fragment': 17}
+  function-mode records   : 542
+  repository-mode records : 52
+  records failing the check: 52
+  blank-by-field          : {'entry_point': 52, 'specification': 35}
+  keys genuinely absent   : 0   (0 means blank, not missing)
+  select_split_records    : REJECTED -> 52 record(s) are missing required fields; first: <id redacted>
+  historical _record_to_pair: ACCEPTED all 594 records
+  historical kill-rate scope: 542 function records (52 repository records excluded)
+
+Historical scoping rule: scripts/train_on_dataset.py:2102-2105
+  load every pair in the split, THEN filter to execution_mode ==
+  FUNCTION_EXECUTION_MODE for the kill rate.
+Sealed loader rule    : harness/sealed_final_loader.py:92-99
+  require all 7 fields non-empty on EVERY record BEFORE loading, so
+  the repository records are refused before filtering can drop them.

@@ -1,0 +1,7 @@
+Loading Qwen/Qwen2.5-Coder-1.5B-Instruct...
+Model loaded successfully!
+Running required pre-authorization two-record model smoke on synthetic records (no sealed data, no token)...
+The authorized run FAILED after the token was spent: SplitSchemaError("60 record(s) are missing required fields; first: ('<sealed record id redacted>', ['entry_point', 'specification'])")
+Run state recorded at results/sealed_final_run_state.json. The sealed split may not be reopened; do not retry.
+
+[exited with code 0]

@@ -1,0 +1,96 @@
+{
+  "authorization_spent": true,
+  "bundle_sha256": "c16b13eb6abc2bdab40cd2004c78902092faaf10fed82baa76506af78430d0a9",
+  "ended_utc": "2026-09-16T18:11:52Z",
+  "error": "SplitSchemaError(\"60 record(s) are missing required fields; first: ('<sealed record id redacted>', ['entry_point', 'specification'])\")",
+  "evaluator_source": {
+    "canonical_sha256": "56869a08e9e4ae618d883e2caae86868630dfcb88736d57f127aca9068e7becf",
+    "evaluator_version": "oneiros_sealed_final_evaluator_v1",
+    "measurement_logic_canonical_sha256": "776aab410ebd989fda7ef042b7dd98cd875c8e170f4e94b5ae9154dee14d6213",
+    "module": "harness/sealed_final_evaluator.py",
+    "raw_sha256": "56869a08e9e4ae618d883e2caae86868630dfcb88736d57f127aca9068e7becf"
+  },
+  "executable_receipt_sha256": "4a2bc52ae1448e12ba31fd2ad68ff0b26b54dd9507456574ea66cb3936af7c8e",
+  "may_never_run_again": true,
+  "pre_authorization_smoke": {
+    "adapter_source": {
+      "adapter_version": "oneiros_generation_adapter_v1",
+      "canonical_sha256": "39583f39acdfb885286a406d65f5d90e7547ea9069760870f610eafd09c6a8f7",
+      "module": "harness/generation_adapter.py",
+      "raw_sha256": "39583f39acdfb885286a406d65f5d90e7547ea9069760870f610eafd09c6a8f7",
+      "seed_application_version": "oneiros_generation_rng_v1"
+    },
+    "adapter_version": "oneiros_generation_adapter_v1",
+    "candidate_slots_total": 16,
+    "candidates_requested_per_target": 8,
+    "executed_candidates": 16,
+    "generator_identity": {
+      "attention_implementation": "sdpa",
+      "is_loaded": true,
+      "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "parse_mode": "whole_output",
+      "python_object_id": 2223430234000
+    },
+    "killing_candidates": 8,
+    "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "observed_parse_mode": "whole_output",
+    "passed": true,
+    "per_record": [
+      {
+        "candidate_slots": 8,
+        "parsed_candidates": 8,
+        "record_id": "synthetic-smoke-add-two",
+        "scored_candidates": 8
+      },
+      {
+        "candidate_slots": 8,
+        "parsed_candidates": 8,
+        "record_id": "synthetic-smoke-scale-by",
+        "scored_candidates": 8
+      }
+    ],
+    "prompts_generated_together": 2,
+    "ran_utc": "2026-09-16T18:11:50Z",
+    "raw_output_hashes_verified": true,
+    "raw_outputs_retained": 16,
+    "record_ids": [
+      "synthetic-smoke-add-two",
+      "synthetic-smoke-scale-by"
+    ],
+    "records_are_synthetic": true,
+    "records_in_batch": 2,
+    "scored_candidates": 16,
+    "sealed_authorization_granted": false,
+    "sealed_data_touched": false,
+    "sealed_loader_imported_by_smoke": false,
+    "seed": 42,
+    "seed_application_version": "oneiros_generation_rng_v1",
+    "seed_applied": true,
+    "settings": {
+      "allow_test_function_candidates": true,
+      "attention_implementation": "sdpa",
+      "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "candidate_parse_mode": "whole_output",
+      "candidates_per_function": 8,
+      "generation_batch_size": 2,
+      "generation_completion_token_limit": 1024,
+      "max_sequence_tokens": 3072,
+      "output_instruction_variant": "self_contained",
+      "prompt_information_variant": "full",
+      "prompt_schema_version": "oneiros_unified_test_generation_v2",
+      "prompt_token_limit": 1024,
+      "retain_raw_output": true,
+      "seed": 42,
+      "temperature": 0.7,
+      "top_p": 0.9
+    },
+    "smoke_version": "oneiros_sealed_final_smoke_v2"
+  },
+  "result": {},
+  "schema_version": "oneiros_sealed_final_run_state_v2",
+  "started_utc": "2026-09-16T18:11:52Z",
+  "status": "failed_after_authorization"
+}

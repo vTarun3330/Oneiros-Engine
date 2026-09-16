@@ -174,12 +174,26 @@ Token-redacted, id-redacted copies were produced for quotation and handoff:
 | `sealed_final_run_console.REDACTED.log` | `03d17bc75dff5295e7f3cc4c5a18eec421a5edba2db894f6f20a65dc95085b0e` |
 | `permitted_split_reproduction.log` | `0f44e9ce85d8a88d809e6f8677dcebfd5951e12dfefdb1b4658cbcb38ee6baf3` |
 
-Location: session scratchpad,
-`…/531cd266-1819-47da-8691-f9ba27ee2a33/scratchpad/sealed_final_evidence/redacted/`.
+**Durable location: `docs/evidence/sealed_final_incident/`**, committed. Each
+file was verified before staging to contain no authorization token, no sealed
+record identifier, no sealed source, test code, payload or split membership, and
+to hash to the value recorded above. The three `.log` files are covered by the
+`*.log` rule in `.gitignore` and were force-added deliberately. A
+`.gitattributes` in that directory sets `* -text`, so Git stores these files
+byte-for-byte: without it, line-ending normalisation would make a fresh clone
+fail the hash check this report asks a reader to perform.
 
-These are session-scoped and will not survive indefinitely. If this evidence is
-to be retained, it needs a durable home outside `results/**`; that is a decision
-for the project owner, not something taken here.
+They were produced in the session scratchpad at
+`…/531cd266-1819-47da-8691-f9ba27ee2a33/scratchpad/sealed_final_evidence/redacted/`,
+which is session-scoped; the committed copies are the retained record.
+
+One residual disclosure, recorded rather than removed: the failure message
+preserved in `sealed_final_run_console.REDACTED.log` and in the `error` field of
+`sealed_final_run_state.REDACTED.json` states how many records failed the
+admission check. That is a count, not an identifier and not membership, and it
+is kept because these files are the verbatim evidence of the run and their
+hashes are cited above. It is noted here so the disclosure is deliberate and
+visible rather than overlooked.
 
 Unredacted originals, for reference only, at their guard-written paths:
 

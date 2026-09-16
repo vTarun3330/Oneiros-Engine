@@ -1,0 +1,21 @@
+{
+  "issued": [
+    {
+      "bundle_sha256": "c16b13eb6abc2bdab40cd2004c78902092faaf10fed82baa76506af78430d0a9",
+      "issued_by": "venkattarun3330 - explicit user authorization",
+      "issued_utc": "2026-09-16T18:11:36+00:00",
+      "reason": "One irreversible sealed-final measurement under the v6 receipt (sha256 4a2bc52a). Oneiros immutable base model only, no SFT adapter, no baseline comparison; the result may not claim comparative superiority over Atheris or any other baseline.",
+      "token": "<one-time token redacted>"
+    }
+  ],
+  "runs": [
+    {
+      "bundle_sha256": "c16b13eb6abc2bdab40cd2004c78902092faaf10fed82baa76506af78430d0a9",
+      "caller": "run_sealed_final_test.py:sealed_final_base_qwen_s42",
+      "utc": "2026-09-16T18:11:52+00:00"
+    }
+  ],
+  "spent_tokens": [
+    "<one-time token redacted>"
+  ]
+}

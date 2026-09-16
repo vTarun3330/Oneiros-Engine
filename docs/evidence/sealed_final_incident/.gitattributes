@@ -1,0 +1,5 @@
+# Byte-exact evidence. These files are cited by SHA-256 in
+# docs/SEALED_FINAL_INCIDENT.md, so Git must not normalise their line
+# endings - normalisation would make a clone fail the hash check the report
+# asks a reader to perform.
+* -text
