@@ -29,7 +29,12 @@ ROOT = Path(__file__).resolve().parent.parent
 PY = sys.executable
 QWEN = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
 REV = "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+#: The v1 receipt, kept as evidence and refused by schema version. Used below
+#: to exercise refusals against a real file rather than a synthetic one.
 RECEIPT = ROOT / "results" / "v4_2_sealed_final_readiness_receipt.json"
+#: The receipt that may actually authorize a run.
+CURRENT_RECEIPT = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v6.json"
+CURRENT_RECEIPT_ARG = "results/v4_2_sealed_final_executable_receipt_v6.json"
 
 
 @pytest.fixture(scope="module")
@@ -279,10 +284,11 @@ def test_the_entrypoint_refuses_without_the_acknowledgement():
 
 
 def test_the_entrypoint_refuses_a_wrong_receipt_hash():
-    if not RECEIPT.exists():
-        pytest.skip("readiness receipt not generated")
+    if not CURRENT_RECEIPT.exists():
+        pytest.skip("executable receipt not generated")
     result = subprocess.run(
         [PY, "scripts/run_sealed_final_test.py",
+         "--executable-receipt", CURRENT_RECEIPT_ARG,
          "--expected-receipt-sha256", "b" * 64,
          "--authorization-token", "whatever",
          "--i-understand-this-is-one-time-and-irreversible"],
@@ -291,20 +297,40 @@ def test_the_entrypoint_refuses_a_wrong_receipt_hash():
     assert "hash mismatch" in result.stdout
 
 
-def test_the_entrypoint_refuses_an_unknown_token_with_the_right_receipt():
+def test_a_superseded_receipt_with_a_correct_hash_is_still_refused():
+    """A correct hash proves the file is unedited, not that it may authorize.
+
+    The v1 receipt was emitted before the final evaluator existed. Presenting it
+    with a valid token must fail on schema, before the guard is ever reached -
+    otherwise an old but intact file could spend the one authorization.
+    """
     if not RECEIPT.exists():
         pytest.skip("readiness receipt not generated")
     digest = hashlib.sha256(RECEIPT.read_bytes()).hexdigest()
     result = subprocess.run(
         [PY, "scripts/run_sealed_final_test.py",
+         "--executable-receipt", "results/v4_2_sealed_final_readiness_receipt.json",
          "--expected-receipt-sha256", digest,
          "--authorization-token", "not-a-real-token",
          "--i-understand-this-is-one-time-and-irreversible"],
         capture_output=True, text=True, cwd=ROOT)
     assert result.returncode == 1
     assert "REFUSED" in result.stdout
+    assert "oneiros_sealed_final_readiness_v1" in result.stdout
     # and it must not have created guard state in the repository
     assert not (ROOT / "results" / "sealed_final_state.json").exists()
+
+
+def test_a_run_without_an_explicit_receipt_is_refused():
+    """No default for an irreversible run; the operator names the file."""
+    result = subprocess.run(
+        [PY, "scripts/run_sealed_final_test.py",
+         "--expected-receipt-sha256", "b" * 64,
+         "--authorization-token", "whatever",
+         "--i-understand-this-is-one-time-and-irreversible"],
+        capture_output=True, text=True, cwd=ROOT)
+    assert result.returncode == 2
+    assert "missing: --executable-receipt" in result.stdout
 
 
 def test_the_entrypoint_lists_the_post_execution_prohibitions():

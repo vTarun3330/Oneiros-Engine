@@ -34,7 +34,7 @@ import scripts.run_sealed_final_test as entry
 
 ROOT = Path(__file__).resolve().parent.parent
 PY = sys.executable
-EXEC_RECEIPT = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v5.json"
+EXEC_RECEIPT = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v6.json"
 SUPERSEDED_V2 = ROOT / "results" / "v4_2_sealed_final_executable_receipt.json"
 
 GOLDEN = "def add(a, b):\n    return a + b\n"
@@ -370,7 +370,7 @@ def test_the_executable_receipt_declares_executability():
     if not EXEC_RECEIPT.exists():
         pytest.skip("executable receipt absent")
     receipt = json.loads(EXEC_RECEIPT.read_text(encoding="utf-8"))
-    assert receipt["schema_version"] == "oneiros_sealed_final_readiness_v5"
+    assert receipt["schema_version"] == "oneiros_sealed_final_readiness_v6"
     assert receipt["final_evaluator_executable"] is True
     assert "executable" in receipt["final_evaluator_status"]
     assert receipt["sealed_split_accessed"] is False
@@ -378,7 +378,8 @@ def test_the_executable_receipt_declares_executability():
     assert receipt["supersedes"]["schema_versions"] == [
         "oneiros_sealed_final_readiness_v1", "oneiros_sealed_final_readiness_v2",
         "oneiros_sealed_final_readiness_v3",
-        "oneiros_sealed_final_readiness_v4"]
+        "oneiros_sealed_final_readiness_v4",
+        "oneiros_sealed_final_readiness_v5"]
     assert receipt["exact_command"][1] == "scripts/run_sealed_final_test.py"
 
 

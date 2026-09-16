@@ -26,7 +26,7 @@ def _fields(**overrides):
     payload = {
         "adapter_path": "checkpoints/final",
         "adapter_sha256": "d" * 64,
-        "adapter_source_tree_sha256": "a" * 64,
+        "candidate_source_tree_git_commit": "a" * 40,
         "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
         "base_model_revision": "2e1fd397",
         "corpus_version": "v4_1_research_hardened_candidate",
@@ -212,7 +212,7 @@ def test_the_adapter_weights_are_part_of_the_frozen_bundle():
     """adapter_path pinned WHERE the model was, not WHICH model it was.
 
     Retraining into the same directory left adapter_path and
-    adapter_source_tree_sha256 unchanged, so the bundle hash was identical for
+    candidate_source_tree_git_commit unchanged, so the bundle hash was identical for
     two different sets of weights - and the sealed measurement's single most
     important dependency was the one thing not frozen.
     """

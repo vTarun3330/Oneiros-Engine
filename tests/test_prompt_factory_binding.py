@@ -34,7 +34,7 @@ from harness.prompt_factory import (
 import scripts.train_on_dataset as trainer
 
 ROOT = Path(__file__).resolve().parent.parent
-V5 = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v5.json"
+V6 = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v6.json"
 
 
 def _record():
@@ -245,14 +245,14 @@ def test_an_absent_binding_is_refused():
 
 # --------------------------------------------------------------- v5 receipt
 
-def _v5() -> dict:
-    if not V5.exists():
+def _v6() -> dict:
+    if not V6.exists():
         pytest.skip("v5 receipt not generated")
-    return json.loads(V5.read_text(encoding="utf-8"))
+    return json.loads(V6.read_text(encoding="utf-8"))
 
 
 def test_the_v5_receipt_binds_the_prompt_sources():
-    source = _v5()["final_evaluator_source"]
+    source = _v6()["final_evaluator_source"]
     assert source["prompt_factory_version"] == PROMPT_FACTORY_VERSION
     assert source["frozen_prompt_settings"] == frozen_prompt_settings().to_dict()
     assert prompt_binding_problems(source["prompt_binding"], ROOT) == []
@@ -264,18 +264,18 @@ def test_the_v5_receipt_refuses_v4_and_earlier():
     import scripts.run_sealed_final_test as entry
     for version in ("v1", "v2", "v3", "v4"):
         assert f"oneiros_sealed_final_readiness_{version}" in entry.REFUSED_SCHEMA_VERSIONS
-    assert entry.REQUIRED_SCHEMA_VERSION == "oneiros_sealed_final_readiness_v5"
-    assert _v5()["schema_version"] == "oneiros_sealed_final_readiness_v5"
+    assert entry.REQUIRED_SCHEMA_VERSION == "oneiros_sealed_final_readiness_v6"
+    assert _v6()["schema_version"] == "oneiros_sealed_final_readiness_v6"
 
 
 def test_the_v5_binding_matches_the_runtime():
     import scripts.run_sealed_final_test as entry
-    assert entry.evaluator_binding_problems(_v5()) == []
-    assert entry.settings_binding_problems(_v5()) == []
+    assert entry.evaluator_binding_problems(_v6()) == []
+    assert entry.settings_binding_problems(_v6()) == []
 
 
 def test_scope_b_is_still_explicit_in_v5():
-    receipt = _v5()
+    receipt = _v6()
     scope = receipt["baseline_scope"]
     assert scope["comparative_claims_supported"] is False
     assert scope["option_chosen"].startswith("B")

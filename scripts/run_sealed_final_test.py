@@ -49,7 +49,10 @@ from harness.sealed_final_evaluator import (  # noqa: E402
 )
 from harness.source_identity import canonical_sha256  # noqa: E402
 
-EXECUTABLE_RECEIPT = "results/v4_2_sealed_final_executable_receipt_v5.json"
+#: The only receipt that may authorize a run. It is a fallback for --check-only
+#: convenience ONLY: an actual irreversible run must name its receipt
+#: explicitly, so a stale file can never be selected by omission.
+EXECUTABLE_RECEIPT = "results/v4_2_sealed_final_executable_receipt_v6.json"
 
 #: Receipt schema versions this entrypoint refuses outright.
 #:   v1 predates the final evaluator entirely.
@@ -67,8 +70,13 @@ REFUSED_SCHEMA_VERSIONS = (
     #      imported a trainer helper that read mutable prompt globals, and the
     #      prompt-defining sources were not bound by hash.
     "oneiros_sealed_final_readiness_v4",
+    #   v5 bound the prompt, but its own exact_command named the v4 receipt -
+    #      which this entrypoint refuses - so the one-time operator instruction
+    #      pointed at a file that could not authorize anything; and its frozen
+    #      bundle recorded a Git commit id under adapter_source_tree_sha256.
+    "oneiros_sealed_final_readiness_v5",
 )
-REQUIRED_SCHEMA_VERSION = "oneiros_sealed_final_readiness_v5"
+REQUIRED_SCHEMA_VERSION = "oneiros_sealed_final_readiness_v6"
 
 STATE_PATH = "results/sealed_final_state.json"
 AUDIT_LOG_PATH = "results/sealed_final_audit.log"
@@ -200,7 +208,10 @@ def frozen_settings_from(receipt: dict):
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--executable-receipt", default=EXECUTABLE_RECEIPT)
+    # No default for a real run. A receipt selected by omission is a receipt
+    # nobody looked at, and the file that would have been selected is exactly
+    # the one a version bump leaves stale.
+    parser.add_argument("--executable-receipt", default=None)
     parser.add_argument("--expected-receipt-sha256", default=None)
     parser.add_argument("--authorization-token", default=None)
     parser.add_argument(
@@ -215,13 +226,14 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     required_missing = [name for name, value in (
+        ("--executable-receipt", args.executable_receipt),
         ("--expected-receipt-sha256", args.expected_receipt_sha256),
         ("--authorization-token", args.authorization_token),
     ) if not value]
     if not args.check_only and (required_missing or not args.acknowledged):
         print("REFUSED: the sealed final test was not run. No token was presented.\n")
         print("This opens the one measurement that cannot be repeated. It requires:\n")
-        print(f"  --executable-receipt                             (default: {EXECUTABLE_RECEIPT})")
+        print("  --executable-receipt <path>   (no default; name it explicitly)")
         print("  --expected-receipt-sha256 <sha256>")
         print("  --authorization-token <token>")
         print("  --i-understand-this-is-one-time-and-irreversible")
@@ -240,8 +252,11 @@ def main(argv: list[str] | None = None) -> int:
 
     # ---- PHASE 1: every non-sealed prerequisite, before any token ---------
     problems: list[str] = []
+    # --check-only is allowed to fall back, because it authorizes nothing; a
+    # real run reached this line only by naming its receipt above.
+    receipt_path = args.executable_receipt or EXECUTABLE_RECEIPT
     receipt, receipt_issues = receipt_problems(
-        ROOT / args.executable_receipt, args.expected_receipt_sha256 or "")
+        ROOT / receipt_path, args.expected_receipt_sha256 or "")
     problems.extend(receipt_issues)
 
     settings = None

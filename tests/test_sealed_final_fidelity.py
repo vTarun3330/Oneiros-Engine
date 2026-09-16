@@ -38,7 +38,7 @@ from harness.sealed_final_smoke import (
 import scripts.run_sealed_final_test as entry
 
 ROOT = Path(__file__).resolve().parent.parent
-V4 = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v5.json"
+V6 = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v6.json"
 
 
 # ------------------------------------------------------------ 1. seed fidelity
@@ -354,7 +354,7 @@ def test_every_superseded_schema_is_refused(version):
 
 
 def test_the_required_schema_is_v5():
-    assert entry.REQUIRED_SCHEMA_VERSION == "oneiros_sealed_final_readiness_v5"
+    assert entry.REQUIRED_SCHEMA_VERSION == "oneiros_sealed_final_readiness_v6"
 
 
 def test_the_v3_receipt_is_preserved_and_marked_superseded():
@@ -375,9 +375,9 @@ def test_the_v3_receipt_is_preserved_and_marked_superseded():
 # ------------------------------------------------------- the v4 receipt
 
 def _v4() -> dict:
-    if not V4.exists():
+    if not V6.exists():
         pytest.skip("v4 executable receipt not generated")
-    return json.loads(V4.read_text(encoding="utf-8"))
+    return json.loads(V6.read_text(encoding="utf-8"))
 
 
 @pytest.mark.parametrize("field", [
@@ -397,7 +397,7 @@ def test_the_v5_binding_matches_the_runtime():
 
 def test_the_v4_receipt_is_ready_and_untouched_by_sealed_data():
     receipt = _v4()
-    assert receipt["schema_version"] == "oneiros_sealed_final_readiness_v5"
+    assert receipt["schema_version"] == "oneiros_sealed_final_readiness_v6"
     assert receipt["preflight_problems"] == []
     assert receipt["ready_for_authorization"] is True
     assert receipt["final_evaluator_executable"] is True

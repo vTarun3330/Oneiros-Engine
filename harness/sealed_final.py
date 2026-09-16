@@ -48,7 +48,12 @@ REQUIRED_BUNDLE_FIELDS = (
     # the same directory produced a byte-identical bundle hash, so the one
     # thing a final measurement most depends on was the one thing not frozen.
     "adapter_sha256",
-    "adapter_source_tree_sha256",
+    # The Git commit the candidate's evaluation code sat at. This was named
+    # ``adapter_source_tree_sha256`` while being filled from ``git rev-parse
+    # HEAD`` - a 40-hex SHA-1 commit id, not a SHA-256 digest of a source tree.
+    # A field whose name asserts a hash function it does not use is a false
+    # label on a frozen contract, so it is named for what it actually holds.
+    "candidate_source_tree_git_commit",
     "base_model_name",
     "base_model_revision",
     "corpus_version",

@@ -64,7 +64,13 @@ from harness.generation_rng import (  # noqa: E402
 )
 from harness.successor_protocol import SUCCESSOR_PROTOCOL, protocol_sha256  # noqa: E402
 
-SCHEMA_VERSION = "oneiros_sealed_final_readiness_v5"
+SCHEMA_VERSION = "oneiros_sealed_final_readiness_v6"
+
+#: Where this preflight writes by default, and the only receipt the entrypoint
+#: accepts. It is derived from, never independent of, the version above: the v5
+#: receipt shipped an ``exact_command`` naming the v4 file because that path was
+#: hardcoded in one place and the schema bumped in another.
+DEFAULT_RECEIPT_PATH = "results/v4_2_sealed_final_executable_receipt_v6.json"
 
 #: v1 receipts were emitted before the final evaluator existed. The first
 #: sealed entrypoint called the guard, spent the token, and only then reached
@@ -77,9 +83,13 @@ SUPERSEDED_SCHEMA_VERSIONS = (
     "oneiros_sealed_final_readiness_v2",
     "oneiros_sealed_final_readiness_v3",
     "oneiros_sealed_final_readiness_v4",
+    #: v5 bound the prompt correctly, but its own ``exact_command`` named the v4
+    #: receipt - a path the entrypoint refuses - and its frozen bundle carried a
+    #: Git commit id in a field called ``adapter_source_tree_sha256``.
+    "oneiros_sealed_final_readiness_v5",
 )
 
-BASE_MODEL = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+BASE_MODEL ="Qwen/Qwen2.5-Coder-1.5B-Instruct"
 CORPUS_VERSION = "v4_1_research_hardened_candidate"
 FINAL_RUN_NAME = "sealed_final_base_qwen_s42"
 FINAL_ENTRYPOINT = "scripts/run_sealed_final_test.py"
@@ -169,7 +179,10 @@ def build_bundle(problems: list[str]) -> tuple[FinalBundle, dict]:
         # The candidate. No adapter: the base model is the final candidate.
         "adapter_path": "none - the immutable base model is the final candidate",
         "adapter_sha256": base_model_adapter_identity(BASE_MODEL, revision or ""),
-        "adapter_source_tree_sha256": git("rev-parse", "HEAD"),
+        # A Git commit id, named as one. Filling a ``*_sha256`` field from
+        # ``git rev-parse HEAD`` labelled a 40-hex SHA-1 as a SHA-256 digest of
+        # a source tree, which it never was.
+        "candidate_source_tree_git_commit": git("rev-parse", "HEAD"),
         "base_model_name": BASE_MODEL,
         "base_model_revision": revision,
         # Corpus and split membership, bound by manifest digests rather than by
@@ -316,7 +329,13 @@ def rehearse_with_mocks() -> dict:
     return results
 
 
-def collect(problems: list[str]) -> dict:
+def collect(problems: list[str], output_path: str = DEFAULT_RECEIPT_PATH) -> dict:
+    """Build the receipt that will be written to ``output_path``.
+
+    The path is threaded in rather than assumed, so the receipt's own
+    ``exact_command`` can name the file it is about to become.
+    """
+    output_path = str(output_path).replace("\\", "/")
     bundle, view = build_bundle(problems)
 
     sources = {
@@ -475,9 +494,13 @@ def collect(problems: list[str]) -> dict:
     if not evaluator_executable:
         problems.extend(evaluator_problems)
 
+    # The command names THIS receipt, at the path it is actually being written
+    # to. A hardcoded version string here is how v5 came to instruct an operator
+    # to present the v4 receipt: the schema moved, the literal did not, and no
+    # test looked past argv[1]. The path is a parameter for exactly that reason.
     exact_command = [
         ".venv-gpu/Scripts/python.exe", FINAL_ENTRYPOINT,
-        "--executable-receipt", "results/v4_2_sealed_final_executable_receipt_v4.json",
+        "--executable-receipt", output_path,
         "--expected-receipt-sha256", "<this receipt's sha256, printed on generation>",
         "--authorization-token", "<issued once, separately, against the bundle hash>",
         "--i-understand-this-is-one-time-and-irreversible",
@@ -536,6 +559,9 @@ def collect(problems: list[str]) -> dict:
             "artifacts": [
                 "results/v4_2_sealed_final_readiness_receipt.json",
                 "results/v4_2_sealed_final_executable_receipt.json",
+                "results/v4_2_sealed_final_executable_receipt_v3.json",
+                "results/v4_2_sealed_final_executable_receipt_v4.json",
+                "results/v4_2_sealed_final_executable_receipt_v5.json",
             ],
             "why": (
                 "v1 was emitted before the final evaluator existed, and its "
@@ -547,9 +573,21 @@ def collect(problems: list[str]) -> dict:
                 "never set parse_mode, which defaults to first_assertion; the sealed "
                 "run would therefore have been scored by the legacy parser while "
                 "claiming the successor protocol, and no test caught it because every "
-                "test injected a mock generator. Both are retained as evidence and "
-                "neither is executable authorization. The entrypoint refuses both "
-                "schema versions outright."),
+                "test injected a mock generator. v3 fixed the nonexistent APIs but "
+                "never applied the frozen seed, generated one target at a time, and "
+                "loaded a second model after the token was spent. v4 fixed those but "
+                "its sealed loader still imported a trainer helper that read mutable "
+                "prompt globals. v5 bound the prompt correctly, but a read-only audit "
+                "found two receipt defects: its own exact_command named the v4 "
+                "receipt, which the entrypoint refuses, so the one-time operator "
+                "instruction selected a file that could not authorize anything; and "
+                "its frozen bundle carried a 40-hex Git commit id in a field named "
+                "adapter_source_tree_sha256, labelling a SHA-1 commit as a SHA-256 "
+                "source-tree digest. v6 derives exact_command from the receipt's own "
+                "output path and renames the field to "
+                "candidate_source_tree_git_commit. All five are retained as evidence, "
+                "none is executable authorization, and the entrypoint refuses every "
+                "one of their schema versions outright."),
         },
         "exact_command": exact_command,
         "baseline_scope": {
@@ -589,11 +627,11 @@ def collect(problems: list[str]) -> dict:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", default="results/v4_2_sealed_final_readiness_receipt.json")
+    parser.add_argument("--output", default=DEFAULT_RECEIPT_PATH)
     args = parser.parse_args()
 
     problems: list[str] = []
-    receipt = collect(problems)
+    receipt = collect(problems, args.output)
     out = ROOT / args.output
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_bytes((json.dumps(receipt, indent=2) + "\n").encode("utf-8"))
