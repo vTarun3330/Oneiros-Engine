@@ -61,7 +61,7 @@ from harness.sealed_final_evaluator import (  # noqa: E402
 )
 from harness.successor_protocol import SUCCESSOR_PROTOCOL, protocol_sha256  # noqa: E402
 
-SCHEMA_VERSION = "oneiros_sealed_final_readiness_v2"
+SCHEMA_VERSION = "oneiros_sealed_final_readiness_v3"
 
 #: v1 receipts were emitted before the final evaluator existed. The first
 #: sealed entrypoint called the guard, spent the token, and only then reached
@@ -69,7 +69,10 @@ SCHEMA_VERSION = "oneiros_sealed_final_readiness_v2"
 #: have been read as executable authorization for a run that could not produce
 #: a result. v2 states executability explicitly and the entrypoint refuses any
 #: receipt that does not.
-SUPERSEDED_SCHEMA_VERSIONS = ("oneiros_sealed_final_readiness_v1",)
+SUPERSEDED_SCHEMA_VERSIONS = (
+    "oneiros_sealed_final_readiness_v1",
+    "oneiros_sealed_final_readiness_v2",
+)
 
 BASE_MODEL = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
 CORPUS_VERSION = "v4_1_research_hardened_candidate"
@@ -77,6 +80,8 @@ FINAL_RUN_NAME = "sealed_final_base_qwen_s42"
 FINAL_ENTRYPOINT = "scripts/run_sealed_final_test.py"
 FINAL_EVALUATOR = "harness/sealed_final_evaluator.py"
 SEALED_LOADER = "harness/sealed_final_loader.py"
+GENERATION_ADAPTER = "harness/generation_adapter.py"
+SMOKE_MODULE = "harness/sealed_final_smoke.py"
 
 #: Committed evidence this decision rests on. Hashed, not summarised.
 DECISION_ARTIFACTS = (
@@ -326,17 +331,59 @@ def collect(problems: list[str]) -> dict:
         evaluator_source["loader_canonical_sha256"] = canonical_sha256(ROOT / SEALED_LOADER)
         evaluator_source["loader_raw_sha256"] = raw_sha256(ROOT / SEALED_LOADER)
         evaluator_source["entrypoint_canonical_sha256"] = canonical_sha256(ROOT / FINAL_ENTRYPOINT)
+        evaluator_source["adapter_module"] = GENERATION_ADAPTER
+        evaluator_source["adapter_canonical_sha256"] = canonical_sha256(ROOT / GENERATION_ADAPTER)
+        evaluator_source["smoke_module"] = SMOKE_MODULE
+        evaluator_source["smoke_canonical_sha256"] = canonical_sha256(ROOT / SMOKE_MODULE)
+        from harness.generation_adapter import ADAPTER_VERSION, successor_settings
+        evaluator_source["adapter_version"] = ADAPTER_VERSION
+        _settings = successor_settings()
+        evaluator_source["frozen_generation_settings"] = _settings.to_dict()
+        if _settings.candidate_parse_mode != "whole_output":
+            evaluator_problems.append(
+                "frozen settings do not use whole_output parsing")
+        if _settings.problems():
+            evaluator_problems.append(f"frozen settings invalid: {_settings.problems()}")
     except Exception as exc:  # noqa: BLE001
         evaluator_source = {}
         evaluator_problems.append(f"final evaluator source is unavailable: {exc!r}")
 
     try:
         from harness import sealed_final_loader as _loader
-        for symbol in ("sealed_records", "sealed_generator"):
+        for symbol in ("sealed_records", "sealed_generator", "select_split_records",
+                       "adapt_records", "build_sealed_generator"):
             if not callable(getattr(_loader, symbol, None)):
                 evaluator_problems.append(f"sealed loader is missing {symbol}")
     except Exception as exc:  # noqa: BLE001
         evaluator_problems.append(f"sealed loader is not importable: {exc!r}")
+
+    # Resolve every symbol the generation path will call. Importability of the
+    # loader proved nothing before, because the broken imports sat inside a
+    # function body and would only have raised after the token was spent.
+    try:
+        from engine.generator import Phi3Generator
+        from engine.prompt_budget import compact_unified_user_prompt
+        from engine.test_generation_prompt import build_unified_user_prompt, format_chat_prompt
+        from scripts.train_on_dataset import build_pair_prompt, _record_to_pair
+        from harness.generation_adapter import generate_candidate_slots
+        from harness.sealed_final_smoke import run_model_smoke, smoke_problems
+        for name, obj in (("Phi3Generator._parse_output", getattr(Phi3Generator, "_parse_output", None)),
+                          ("compact_unified_user_prompt", compact_unified_user_prompt),
+                          ("build_unified_user_prompt", build_unified_user_prompt),
+                          ("format_chat_prompt", format_chat_prompt),
+                          ("build_pair_prompt", build_pair_prompt),
+                          ("_record_to_pair", _record_to_pair),
+                          ("generate_candidate_slots", generate_candidate_slots),
+                          ("run_model_smoke", run_model_smoke),
+                          ("smoke_problems", smoke_problems)):
+            if not callable(obj):
+                evaluator_problems.append(f"real generation symbol is missing: {name}")
+        if hasattr(Phi3Generator, "generate_candidates"):
+            evaluator_problems.append(
+                "Phi3Generator.generate_candidates reappeared; the sealed path must "
+                "not depend on an API the locked-validation path does not use")
+    except Exception as exc:  # noqa: BLE001
+        evaluator_problems.append(f"real generation path does not resolve: {exc!r}")
 
     # A dry environment check with injected stubs: proves the pre-authorization
     # gate runs and reports, without a GPU, a model, or any sealed access.
@@ -361,7 +408,7 @@ def collect(problems: list[str]) -> dict:
 
     exact_command = [
         ".venv-gpu/Scripts/python.exe", FINAL_ENTRYPOINT,
-        "--executable-receipt", "results/v4_2_sealed_final_executable_receipt.json",
+        "--executable-receipt", "results/v4_2_sealed_final_executable_receipt_v3.json",
         "--expected-receipt-sha256", "<this receipt's sha256, printed on generation>",
         "--authorization-token", "<issued once, separately, against the bundle hash>",
         "--i-understand-this-is-one-time-and-irreversible",
@@ -417,15 +464,23 @@ def collect(problems: list[str]) -> dict:
         "final_evaluator_source": evaluator_source,
         "supersedes": {
             "schema_versions": list(SUPERSEDED_SCHEMA_VERSIONS),
-            "artifact": "results/v4_2_sealed_final_readiness_receipt.json",
+            "artifacts": [
+                "results/v4_2_sealed_final_readiness_receipt.json",
+                "results/v4_2_sealed_final_executable_receipt.json",
+            ],
             "why": (
-                "The v1 readiness receipt was emitted before the final evaluator "
-                "existed, and the first sealed entrypoint called the guard before "
-                "reaching any measurement. A valid token could therefore have been "
-                "spent to discover that evaluation was unavailable. v1 is retained "
-                "as evidence and is explicitly NOT executable authorization; the "
-                "entrypoint refuses any receipt that does not declare "
-                "final_evaluator_executable true."),
+                "v1 was emitted before the final evaluator existed, and its "
+                "entrypoint called the guard before reaching any measurement, so a "
+                "valid token could have been spent to discover that evaluation was "
+                "unavailable. v2 implemented the evaluator but its loader imported "
+                "build_test_generation_prompt and called "
+                "Phi3Generator.generate_candidates - neither of which exists - and "
+                "never set parse_mode, which defaults to first_assertion; the sealed "
+                "run would therefore have been scored by the legacy parser while "
+                "claiming the successor protocol, and no test caught it because every "
+                "test injected a mock generator. Both are retained as evidence and "
+                "neither is executable authorization. The entrypoint refuses both "
+                "schema versions outright."),
         },
         "exact_command": exact_command,
         "authorized_entrypoint": {

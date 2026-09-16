@@ -34,7 +34,8 @@ import scripts.run_sealed_final_test as entry
 
 ROOT = Path(__file__).resolve().parent.parent
 PY = sys.executable
-EXEC_RECEIPT = ROOT / "results" / "v4_2_sealed_final_executable_receipt.json"
+EXEC_RECEIPT = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v3.json"
+SUPERSEDED_V2 = ROOT / "results" / "v4_2_sealed_final_executable_receipt.json"
 
 GOLDEN = "def add(a, b):\n    return a + b\n"
 MUTANT = "def add(a, b):\n    return a - b\n"
@@ -247,18 +248,27 @@ def test_no_arguments_refuses_without_presenting_a_token():
     assert not (ROOT / "results" / "sealed_final_state.json").exists()
 
 
-def test_a_pre_implementation_receipt_cannot_authorize(tmp_path):
-    """A v1 receipt presented to the entrypoint must be refused outright."""
-    v1 = ROOT / "results" / "v4_2_sealed_final_readiness_receipt.json"
-    if not v1.exists():
-        pytest.skip("v1 readiness receipt absent")
-    digest = hashlib.sha256(v1.read_bytes()).hexdigest()
-    result = _run("--executable-receipt", str(v1.relative_to(ROOT)),
+@pytest.mark.parametrize("relative", [
+    "results/v4_2_sealed_final_readiness_receipt.json",
+    "results/v4_2_sealed_final_executable_receipt.json",
+])
+def test_superseded_receipts_cannot_authorize(relative):
+    """v1 and v2 must both be refused outright, by schema version.
+
+    v1 predates the evaluator. v2 declared itself executable but described a
+    loader calling two functions that do not exist, with parse_mode left at its
+    legacy default - so it must be refused despite that declaration.
+    """
+    path = ROOT / relative
+    if not path.exists():
+        pytest.skip(f"{relative} absent")
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    result = _run("--executable-receipt", relative,
                   "--expected-receipt-sha256", digest,
                   "--authorization-token", "irrelevant",
                   "--i-understand-this-is-one-time-and-irreversible")
     assert result.returncode == 1
-    assert "does not declare the final evaluator executable" in result.stdout
+    assert "is refused" in result.stdout
     assert "REFUSED before authorization" in result.stdout
     assert not (ROOT / "results" / "sealed_final_state.json").exists()
 
@@ -349,12 +359,13 @@ def test_the_executable_receipt_declares_executability():
     if not EXEC_RECEIPT.exists():
         pytest.skip("executable receipt absent")
     receipt = json.loads(EXEC_RECEIPT.read_text(encoding="utf-8"))
-    assert receipt["schema_version"] == "oneiros_sealed_final_readiness_v2"
+    assert receipt["schema_version"] == "oneiros_sealed_final_readiness_v3"
     assert receipt["final_evaluator_executable"] is True
     assert "executable" in receipt["final_evaluator_status"]
     assert receipt["sealed_split_accessed"] is False
     assert receipt["authorization_token_issued"] is False
-    assert receipt["supersedes"]["schema_versions"] == ["oneiros_sealed_final_readiness_v1"]
+    assert receipt["supersedes"]["schema_versions"] == [
+        "oneiros_sealed_final_readiness_v1", "oneiros_sealed_final_readiness_v2"]
     assert receipt["exact_command"][1] == "scripts/run_sealed_final_test.py"
 
 
@@ -371,6 +382,19 @@ def test_a_changed_evaluator_is_refused(monkeypatch):
 def test_a_receipt_without_evaluator_identity_is_refused():
     assert entry.evaluator_binding_problems({}) == [
         "receipt records no final evaluator source identity"]
+
+
+def test_the_superseded_v2_receipt_is_preserved():
+    if not SUPERSEDED_V2.exists():
+        pytest.skip("v2 receipt absent")
+    assert hashlib.sha256(SUPERSEDED_V2.read_bytes()).hexdigest() ==         "a1cafebac4f2de657f08b91d896492877b0902739597a4f7cab8600185a40353"
+    marker = ROOT / "results" / "v4_2_sealed_final_executable_receipt.SUPERSEDED.md"
+    assert marker.exists()
+    text = marker.read_text(encoding="utf-8")
+    assert "NOT executable authorization" in text
+    assert "build_test_generation_prompt" in text
+    assert "generate_candidates" in text
+    assert "first_assertion" in text
 
 
 def test_the_v1_receipt_is_preserved_and_marked_superseded():

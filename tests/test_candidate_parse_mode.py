@@ -94,7 +94,12 @@ def test_the_driver_defaults_preserve_the_frozen_protocol():
     assert "if args.candidate_parse_mode is None:" in source
     assert 'args.candidate_parse_mode = "first_assertion"' in source
     assert '"--retain-raw-output", action="store_true"' in source
-    assert 'slot["raw_output"] = text' in source
+    # Raw-output retention now lives in the shared generation adapter, which
+    # the trainer delegates to and the sealed final path also uses. The
+    # property is unchanged; only its address is.
+    adapter = (ROOT / "harness" / "generation_adapter.py").read_text(encoding="utf-8")
+    assert 'slot["raw_output"] = text' in adapter
+    assert "generate_candidate_slots(" in source, "the trainer must delegate, not duplicate"
 
     # And the resolution actually runs before anything reads the value.
     resolution = source.index("if args.candidate_parse_mode is None:")

@@ -46,7 +46,18 @@ from harness.sealed_final_evaluator import (  # noqa: E402
     environment_problems, evaluator_source_hashes, run_final_evaluation,
 )
 
-EXECUTABLE_RECEIPT = "results/v4_2_sealed_final_executable_receipt.json"
+EXECUTABLE_RECEIPT = "results/v4_2_sealed_final_executable_receipt_v3.json"
+
+#: Receipt schema versions this entrypoint refuses outright.
+#:   v1 predates the final evaluator entirely.
+#:   v2 described a loader that called two functions which do not exist and
+#:      never set parse_mode, so it would have measured under the legacy
+#:      parser while claiming the successor protocol.
+REFUSED_SCHEMA_VERSIONS = (
+    "oneiros_sealed_final_readiness_v1",
+    "oneiros_sealed_final_readiness_v2",
+)
+REQUIRED_SCHEMA_VERSION = "oneiros_sealed_final_readiness_v3"
 STATE_PATH = "results/sealed_final_state.json"
 AUDIT_LOG_PATH = "results/sealed_final_audit.log"
 RUN_STATE_PATH = "results/sealed_final_run_state.json"
@@ -74,6 +85,14 @@ def receipt_problems(receipt_path: Path, expected_sha256: str) -> tuple[dict, li
         return {}, [f"executable receipt is not valid JSON: {exc}"]
 
     problems: list[str] = []
+    schema = receipt.get("schema_version")
+    if schema in REFUSED_SCHEMA_VERSIONS:
+        problems.append(
+            f"receipt schema {schema} is refused: it predates the verified real "
+            "generation path. Only " + REQUIRED_SCHEMA_VERSION + " may authorize a run.")
+    elif schema != REQUIRED_SCHEMA_VERSION:
+        problems.append(
+            f"receipt schema {schema!r} is not {REQUIRED_SCHEMA_VERSION!r}")
     if receipt.get("final_evaluator_executable") is not True:
         problems.append(
             "this receipt does not declare the final evaluator executable; it is a "
@@ -96,6 +115,16 @@ def evaluator_binding_problems(receipt: dict) -> list[str]:
         problems.append(
             f"evaluator version differs: receipt {recorded.get('evaluator_version')!r}, "
             f"runtime {EVALUATOR_VERSION!r}")
+    from harness.generation_adapter import adapter_source_hashes
+    from harness.source_identity import canonical_sha256
+    adapter = recorded.get("adapter_canonical_sha256")
+    if adapter != adapter_source_hashes()["canonical_sha256"]:
+        problems.append(
+            "shared generation adapter differs from the approved receipt: "
+            f"{adapter} vs {adapter_source_hashes()['canonical_sha256']}")
+    smoke = recorded.get("smoke_canonical_sha256")
+    if smoke != canonical_sha256(ROOT / "harness" / "sealed_final_smoke.py"):
+        problems.append("smoke module differs from the approved receipt")
     for field in ("canonical_sha256", "measurement_logic_canonical_sha256"):
         if recorded.get(field) != current.get(field):
             problems.append(
@@ -216,6 +245,29 @@ def main(argv: list[str] | None = None) -> int:
             free_disk_bytes=default_free_disk_bytes,
         ))
 
+    # ---- PHASE 1b: the real model/prompt/parser path, on synthetic data ---
+    # Nothing here may be skipped. Every sealed defect so far survived because
+    # the real path was never executed: a nonexistent prompt function, a
+    # nonexistent generator method, and a parse mode left at its legacy
+    # default. Mocks cannot catch any of those; only running the model can.
+    smoke_result = None
+    if not problems:
+        try:
+            from harness.generation_adapter import successor_settings
+            from harness.sealed_final_smoke import run_model_smoke, smoke_problems
+            settings = successor_settings()
+            print("Running required pre-authorization model smoke on a synthetic "
+                  "record (no sealed data, no token)...", flush=True)
+            smoke_result = run_model_smoke(
+                model_name=(receipt.get("final_candidate") or {}).get("model") or "",
+                model_revision=(receipt.get("final_candidate") or {}).get(
+                    "model_revision") or "",
+                settings=settings,
+            )
+            problems.extend(smoke_problems(smoke_result, settings))
+        except Exception as exc:  # noqa: BLE001
+            problems.append(f"pre-authorization model smoke failed: {exc!r}")
+
     if problems:
         print("REFUSED before authorization. No token was presented and none was spent.\n")
         for item in problems:
@@ -223,7 +275,12 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     if args.check_only:
-        print("PRE-AUTHORIZATION CHECKS PASSED.")
+        print("PRE-AUTHORIZATION CHECKS PASSED, including the real model smoke.")
+        if smoke_result:
+            print(f"smoke    : {smoke_result['candidate_slots']} candidates, "
+                  f"parse_mode={smoke_result['observed_parse_mode']}, "
+                  f"killed={smoke_result['killing_candidates']}, "
+                  f"sealed_data_touched={smoke_result['sealed_data_touched']}")
         print("No token was presented. Nothing was opened. No state was written.")
         print(f"evaluator: {EVALUATOR_VERSION}")
         print(f"bundle   : {receipt.get('bundle_sha256')}")

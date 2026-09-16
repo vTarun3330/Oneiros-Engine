@@ -60,8 +60,15 @@ def _pair(record_id: str) -> dict:
 
 
 def test_unpromptable_record_is_recorded_not_raised(monkeypatch):
+    # Compaction is now invoked by harness.generation_adapter, which the
+    # trainer delegates to and the sealed final path shares. Patching it on the
+    # trainer no longer intercepts anything, so the refusal is injected at the
+    # module it actually comes from. The property under test is unchanged: a
+    # fail-closed budget refusal must be recorded, never raised.
+    import engine.prompt_budget as prompt_budget
+
     monkeypatch.setattr(
-        trainer,
+        prompt_budget,
         "compact_unified_user_prompt",
         lambda *args, **kwargs: (_ for _ in ()).throw(
             PromptBudgetError("Required prompt sections exceed the declared budget")

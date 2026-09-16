@@ -1372,128 +1372,41 @@ def generate_tests_ai_batched(
     prompt_additions: Optional[Dict[int, str]] = None,
     rank_offset: int = 0,
 ):
-    """Generate multiple samples per pair using the same chat prompt as training."""
-    # Keep corpus/audit imports lightweight.  CUDA/PyTorch is required only
-    # when this live model-generation path is actually invoked.
-    import torch
+    """Generate multiple samples per pair using the same chat prompt as training.
 
-    if any(pair.get("execution_mode", FUNCTION_EXECUTION_MODE) != FUNCTION_EXECUTION_MODE for pair in pairs_chunk):
+    Delegates to harness.generation_adapter, which holds the body this function
+    used to carry. The sealed final path calls that same adapter, so there is
+    one generation implementation rather than two that can disagree. The module
+    globals are passed in explicitly as settings: a second path that inherited
+    a default parse mode instead of stating one is exactly the defect this
+    sharing exists to prevent.
+    """
+    from harness.generation_adapter import GenerationSettings, generate_candidate_slots
+
+    if any(pair.get("execution_mode", FUNCTION_EXECUTION_MODE) != FUNCTION_EXECUTION_MODE
+           for pair in pairs_chunk):
         raise ValueError("Live assertion generation only supports function_assertion records")
-    if not generator.is_loaded:
-        generator.load_model()
 
-    tokenizer = generator.tokenizer
-    prompt_additions = prompt_additions or {}
-    compacted_prompt_ids = []
-    # Section-aware compaction is fail-closed: it refuses to slice a target
-    # function in half.  A record whose required sections cannot fit the mode
-    # budget must therefore be recorded as an unusable evaluation prompt, not
-    # allowed to abort the whole batch.  Its candidate slots stay in the
-    # accounting so requested-candidate counts and Kill@k denominators remain
-    # exact.
-    generable_indexes: List[int] = []
-    prompt_budget_failures: Dict[int, str] = {}
-    for index, pair in enumerate(pairs_chunk):
-        prompt = build_pair_prompt(pair)
-        addition = prompt_additions.get(index, "").strip()
-        if addition:
-            prompt = f"{prompt}\n\n{addition}"
-        try:
-            compaction = compact_unified_user_prompt(
-                tokenizer,
-                prompt,
-                PROMPT_TOKEN_LIMIT,
-                format_chat_prompt,
-            )
-        except (PromptBudgetError, ValueError) as exc:
-            prompt_budget_failures[index] = str(exc)
-            continue
-        compacted_prompt_ids.append(compaction.token_ids)
-        generable_indexes.append(index)
-
-    outputs: List[Any] = []
-    input_length = 0
-    if compacted_prompt_ids:
-        original_padding_side = tokenizer.padding_side
-        tokenizer.padding_side = "left"
-        if tokenizer.pad_token_id is None:
-            tokenizer.pad_token_id = tokenizer.eos_token_id
-        try:
-            inputs = tokenizer.pad(
-                [
-                    {
-                        "input_ids": token_ids,
-                        "attention_mask": [1] * len(token_ids),
-                    }
-                    for token_ids in compacted_prompt_ids
-                ],
-                padding=True,
-                return_tensors="pt",
-            ).to(generator.model.device)
-            input_length = inputs.input_ids.shape[1]
-            generator.model.eval()
-            with torch.inference_mode():
-                outputs = generator.model.generate(
-                    **inputs,
-                    max_new_tokens=MAX_NEW_TOKENS_OVERRIDE,
-                    temperature=generator.temperature,
-                    top_p=generator.top_p,
-                    do_sample=True,
-                    num_return_sequences=num,
-                    pad_token_id=tokenizer.pad_token_id,
-                    use_cache=True,
-                )
-        finally:
-            tokenizer.padding_side = original_padding_side
-
+    settings = GenerationSettings(
+        candidate_parse_mode=CANDIDATE_PARSE_MODE,
+        retain_raw_output=RETAIN_RAW_OUTPUT,
+        candidates_per_function=num,
+        temperature=generator.temperature,
+        top_p=generator.top_p,
+        prompt_token_limit=PROMPT_TOKEN_LIMIT,
+        generation_completion_token_limit=MAX_NEW_TOKENS_OVERRIDE,
+        max_sequence_tokens=MAX_SFT_COMPLETION_TOKENS,
+        seed=SEED,
+    )
+    accounting = generate_candidate_slots(
+        generator, pairs_chunk, settings, build_pair_prompt,
+        prompt_additions=prompt_additions, rank_offset=rank_offset,
+    )
     results: Dict[int, List[str]] = {}
-    accounting = {
-        index: {
-            "requested_candidates": num,
-            "raw_generated_sequences": 0,
-            "parsed_candidates": 0,
-            "generation_invalid_candidates": num,
-            "candidate_slots": [
-                {
-                    "rank": rank_offset + rank + 1,
-                    "parse_valid": False,
-                    "code": None,
-                    "raw_output_sha256": None,
-                }
-                for rank in range(num)
-            ],
-            "prompt_budget_failure": index in prompt_budget_failures,
-            "prompt_budget_failure_reason": prompt_budget_failures.get(index),
-        }
-        for index in range(len(pairs_chunk))
-    }
-    for sequence_index, output in enumerate(outputs):
-        generable_position = sequence_index // num
-        if generable_position >= len(generable_indexes):
-            break
-        pair_index = generable_indexes[generable_position]
-        accounting[pair_index]["raw_generated_sequences"] += 1
-        text = tokenizer.decode(output[input_length:], skip_special_tokens=True)
-        local_rank = sequence_index % num
-        slot = accounting[pair_index]["candidate_slots"][local_rank]
-        slot["raw_output_sha256"] = hashlib.sha256(text.encode("utf-8")).hexdigest()
-        if RETAIN_RAW_OUTPUT:
-            # The hash alone proves an output existed but cannot say what it
-            # was. Without the text there is no way to tell whether a model
-            # trained on multi-assertion completions actually emits them, so
-            # the question stays unanswerable no matter how many seeds run.
-            slot["raw_output"] = text
-        generator.parse_mode = CANDIDATE_PARSE_MODE
-        parsed = generator._parse_output(text, pairs_chunk[pair_index]["entry_point"])
-        if parsed.is_valid:
-            results.setdefault(pair_index, []).append(parsed.input_code)
-            accounting[pair_index]["parsed_candidates"] += 1
-            slot["parse_valid"] = True
-            slot["code"] = parsed.input_code
-    for item in accounting.values():
-        item["generation_invalid_candidates"] = max(
-            0, item["requested_candidates"] - item["parsed_candidates"]
-        )
+    for index, item in accounting.items():
+        codes = item.pop("parsed_codes", [])
+        if codes:
+            results[index] = codes
     return (results, accounting) if return_accounting else results
 
 
