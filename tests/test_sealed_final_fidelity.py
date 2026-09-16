@@ -38,7 +38,7 @@ from harness.sealed_final_smoke import (
 import scripts.run_sealed_final_test as entry
 
 ROOT = Path(__file__).resolve().parent.parent
-V4 = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v4.json"
+V4 = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v5.json"
 
 
 # ------------------------------------------------------------ 1. seed fidelity
@@ -353,8 +353,8 @@ def test_every_superseded_schema_is_refused(version):
     assert version in entry.REFUSED_SCHEMA_VERSIONS
 
 
-def test_the_required_schema_is_v4():
-    assert entry.REQUIRED_SCHEMA_VERSION == "oneiros_sealed_final_readiness_v4"
+def test_the_required_schema_is_v5():
+    assert entry.REQUIRED_SCHEMA_VERSION == "oneiros_sealed_final_readiness_v5"
 
 
 def test_the_v3_receipt_is_preserved_and_marked_superseded():
@@ -390,14 +390,14 @@ def test_the_v4_receipt_binds_every_module(field):
     assert field in _v4()["final_evaluator_source"], field
 
 
-def test_the_v4_binding_matches_the_runtime():
+def test_the_v5_binding_matches_the_runtime():
     assert entry.evaluator_binding_problems(_v4()) == []
     assert entry.settings_binding_problems(_v4()) == []
 
 
 def test_the_v4_receipt_is_ready_and_untouched_by_sealed_data():
     receipt = _v4()
-    assert receipt["schema_version"] == "oneiros_sealed_final_readiness_v4"
+    assert receipt["schema_version"] == "oneiros_sealed_final_readiness_v5"
     assert receipt["preflight_problems"] == []
     assert receipt["ready_for_authorization"] is True
     assert receipt["final_evaluator_executable"] is True

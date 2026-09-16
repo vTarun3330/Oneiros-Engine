@@ -34,7 +34,7 @@ import scripts.run_sealed_final_test as entry
 
 ROOT = Path(__file__).resolve().parent.parent
 PY = sys.executable
-EXEC_RECEIPT = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v4.json"
+EXEC_RECEIPT = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v5.json"
 SUPERSEDED_V2 = ROOT / "results" / "v4_2_sealed_final_executable_receipt.json"
 
 GOLDEN = "def add(a, b):\n    return a + b\n"
@@ -261,6 +261,7 @@ def test_no_arguments_refuses_without_presenting_a_token():
     "results/v4_2_sealed_final_readiness_receipt.json",
     "results/v4_2_sealed_final_executable_receipt.json",
     "results/v4_2_sealed_final_executable_receipt_v3.json",
+    "results/v4_2_sealed_final_executable_receipt_v4.json",
 ])
 def test_superseded_receipts_cannot_authorize(relative):
     """v1 and v2 must both be refused outright, by schema version.
@@ -369,14 +370,15 @@ def test_the_executable_receipt_declares_executability():
     if not EXEC_RECEIPT.exists():
         pytest.skip("executable receipt absent")
     receipt = json.loads(EXEC_RECEIPT.read_text(encoding="utf-8"))
-    assert receipt["schema_version"] == "oneiros_sealed_final_readiness_v4"
+    assert receipt["schema_version"] == "oneiros_sealed_final_readiness_v5"
     assert receipt["final_evaluator_executable"] is True
     assert "executable" in receipt["final_evaluator_status"]
     assert receipt["sealed_split_accessed"] is False
     assert receipt["authorization_token_issued"] is False
     assert receipt["supersedes"]["schema_versions"] == [
         "oneiros_sealed_final_readiness_v1", "oneiros_sealed_final_readiness_v2",
-        "oneiros_sealed_final_readiness_v3"]
+        "oneiros_sealed_final_readiness_v3",
+        "oneiros_sealed_final_readiness_v4"]
     assert receipt["exact_command"][1] == "scripts/run_sealed_final_test.py"
 
 

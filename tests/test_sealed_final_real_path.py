@@ -367,9 +367,9 @@ def test_check_only_includes_the_smoke():
 
 def test_superseded_receipts_are_refused():
     import scripts.run_sealed_final_test as entry
-    for version in ("v1", "v2", "v3"):
+    for version in ("v1", "v2", "v3", "v4"):
         assert f"oneiros_sealed_final_readiness_{version}" in entry.REFUSED_SCHEMA_VERSIONS
-    assert entry.REQUIRED_SCHEMA_VERSION == "oneiros_sealed_final_readiness_v4"
+    assert entry.REQUIRED_SCHEMA_VERSION == "oneiros_sealed_final_readiness_v5"
 
 
 def test_the_adapter_identity_is_recorded():

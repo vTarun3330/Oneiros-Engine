@@ -140,7 +140,6 @@ def evaluator_binding_problems(receipt: dict) -> list[str]:
         "smoke_canonical_sha256": canonical_sha256(ROOT / "harness/sealed_final_smoke.py"),
         "loader_canonical_sha256": canonical_sha256(ROOT / "harness/sealed_final_loader.py"),
         "rng_canonical_sha256": canonical_sha256(ROOT / "harness/generation_rng.py"),
-        "prompt_factory_canonical_sha256": canonical_sha256(ROOT / "harness/prompt_factory.py"),
         "entrypoint_canonical_sha256": canonical_sha256(ROOT / "scripts/run_sealed_final_test.py"),
     }
     for field, value in expected.items():
@@ -149,7 +148,10 @@ def evaluator_binding_problems(receipt: dict) -> list[str]:
                 f"{field} differs from the approved receipt: "
                 f"{recorded.get(field)} vs {value}")
 
-    # Every source that can change a rendered prompt. A prompt that changed
+    # Every source that can change a rendered prompt. The prompt factory's own
+    # hash is checked here too, via prompt_binding, rather than being repeated
+    # as a top-level field - two copies of one fact are two facts that can
+    # disagree. A prompt that changed
     # between freeze and run would change the measurement without changing any
     # recorded setting.
     from harness.prompt_factory import prompt_binding_problems
