@@ -22,7 +22,11 @@ Periodic SFT checkpoints and the actual terminal optimizer step are evaluated ex
 
 ## Experimental partitions
 
-The `ablation_dev` split is hash-frozen from training groups only. Its semantic groups do not appear in remaining training, locked validation, or final test. Prompt/data/model decisions use `ablation_dev`; locked validation is used only after those choices are frozen. The final test remains sealed until the reported adapter and protocol are frozen.
+The `ablation_dev` split is hash-frozen from training groups only. Its semantic groups do not appear in remaining training, locked validation, or the `test` split. Prompt/data/model decisions use `ablation_dev`; locked validation is used only after those choices are frozen.
+
+**The `test` split is consumed and yielded nothing.** The sealed final evaluation was authorized and attempted once, on 2026-09-16, under a frozen receipt. It **failed after authorization** while admitting records, before any generation: **zero sealed candidates, zero reportable metrics**. The one-time authorization is spent and **the consumed split must not be rerun**.
+
+The empirical evidence supporting every claim in this methodology is therefore **locked validation and development evaluation only**. **No final-test result exists**, so no final-test claim for Oneiros and no Oneiros-versus-Atheris comparison is supported. See [`../../docs/SEALED_FINAL_INCIDENT.md`](../../docs/SEALED_FINAL_INCIDENT.md) and [`../../docs/POST_INCIDENT_RESEARCH_STATUS.md`](../../docs/POST_INCIDENT_RESEARCH_STATUS.md).
 
 ## Metrics and decision rule
 

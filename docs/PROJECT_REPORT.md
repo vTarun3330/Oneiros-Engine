@@ -1,7 +1,7 @@
 # Oneiros: a chronological record
 
 **Branch:** `experiment/research-eval-ablations`
-**Panels:** train / ablation_dev (selection) / val (locked) / test (sealed, never opened)
+**Panels:** train / ablation_dev (selection) / val (locked) / test (**consumed — opened once, produced nothing**)
 **Model:** Qwen2.5-Coder-1.5B-Instruct @ `2e1fd397`, QLoRA NF4 4-bit, LoRA r=16 α=32
 **Task:** given a specification and a mutated function, generate a test that
 distinguishes the mutant from the correct implementation. Scored as **kill@8**.
@@ -13,6 +13,21 @@ measuring wrong in a way that flattered us.
 
 Every figure here is rebuilt from committed artifacts. Where the record is
 thin, the document says so rather than filling the gap with a plausible story.
+
+> **The sealed final test was attempted on 2026-09-16 and failed after
+> authorization.** The evaluator loaded the corpus and traversed sealed records,
+> then raised while admitting them — before any generation. It produced **zero
+> sealed candidates and zero reportable metrics**. The single authorization is
+> spent and **the consumed `test` split must not be rerun**.
+>
+> Every empirical claim in this report therefore rests on **locked validation
+> and development evaluation only**. **No final-test result exists**, so
+> nothing here supports a final-test claim for Oneiros, and nothing supports an
+> Oneiros-versus-Atheris comparison on a final set. The Atheris figures in §6.3
+> are development-panel comparisons and were never final-test evidence.
+>
+> Account: [`SEALED_FINAL_INCIDENT.md`](SEALED_FINAL_INCIDENT.md) ·
+> Standing of each result: [`POST_INCIDENT_RESEARCH_STATUS.md`](POST_INCIDENT_RESEARCH_STATUS.md)
 
 ---
 
@@ -49,7 +64,8 @@ handicapped.
 ## 2. The corpus and the supervision
 
 - **V4.1** — the immutable research corpus. 8,237 records across train,
-  ablation_dev, val and a sealed test split.
+  ablation_dev, val and a held-out `test` split (since consumed, see the notice
+  above).
 - **V4.2** — a versioned successor adding 26 verified HumanEval records, with
   its own hashes and manifest. V4.1 was never overwritten.
 - **Multi-mutant supervision** — one broad test per lineage, built by
@@ -403,7 +419,11 @@ manufactured the threshold rather than reached it.
   Atheris figure is invalid.
 - **Monitor kill rates are not generalisation.** The 2-epoch arm reached 81% on
   the monitor and came in below the untrained base on locked validation.
-- **The sealed test split has never been opened.**
+- **The `test` split is consumed and yielded no result.** It was opened once,
+  under authorization, on 2026-09-16. The run failed before generating
+  anything: zero sealed candidates, zero metrics. It must not be rerun, and no
+  final-test claim — for Oneiros or against any baseline — is available. See
+  [`SEALED_FINAL_INCIDENT.md`](SEALED_FINAL_INCIDENT.md).
 
 ---
 

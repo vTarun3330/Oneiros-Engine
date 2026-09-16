@@ -62,10 +62,19 @@ Safe inspection only (this does not launch training or access corpus records):
 ```
 
 Retain `--dry-run` until the blockers below are resolved. Its output is a plan,
-not scientific preflight evidence or permission to use the sealed test.
+not scientific preflight evidence or permission to use the `test` split.
 For eventual local SFT/validation/DPO, use the native entry point and the same
-run identity/options; final testing retains its existing explicit gate.
-No final-test command is provided here.
+run identity/options.
+
+**No final-test command is provided here, and none may be constructed.** The
+`test` split is **consumed**: the sealed final evaluation was authorized and
+attempted once, on 2026-09-16, and **failed after authorization** with **zero
+sealed candidates and zero reportable metrics**. The single authorization is
+spent and **the consumed split must not be rerun**. The project's valid
+empirical evidence is **locked validation and development evaluation only**, and
+**no final-test Oneiros claim or Oneiros-versus-Atheris claim is supported**.
+See [`SEALED_FINAL_INCIDENT.md`](SEALED_FINAL_INCIDENT.md) and
+[`POST_INCIDENT_RESEARCH_STATUS.md`](POST_INCIDENT_RESEARCH_STATUS.md).
 
 Verified: Python CUDA access, synthetic CUDA matrix multiplication, BF16 support,
 bitsandbytes NF4 quantize/dequantize, ML imports, and `pip check`. All 11 synthetic
@@ -87,11 +96,14 @@ all installed package versions. No model download, training or evaluation ran.
 3. Keep ordinary local data/checkpoint/result paths and a persistent local
    Hugging Face cache. Do not reuse Modal's `/root/oneiros` paths, symlink
    replacement helpers, volume upload/download, or periodic volume commits.
-4. Resolve sealed-data access before invoking training or readiness commands.
+4. Resolve held-out-data access before invoking training or readiness commands.
    `harness/corpus.py:verify_corpus` hashes and deserializes the combined
    `records.json`, then checks all splits. `load_corpus_split` also loads the
    combined records before selecting IDs. A train/ablation_dev flag therefore
-   does NOT prevent opening sealed-test records. Provision an independently
+   does NOT prevent opening `test` records. This is the same
+   load-everything-then-scope shape that the sealed-final incident turned on, so
+   it remains worth fixing even though `test` is now consumed. Provision an
+   independently
    verified development-only corpus view and split-aware verification, with
    immutable provenance retained, before local runs under a strict no-access
    rule. Do not weaken existing integrity gates or silently edit the corpus.

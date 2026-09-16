@@ -2,6 +2,22 @@
 
 Generated from committed artifacts by `scripts/emit_final_research_summary.py`. Every figure is read from a receipt listed under *Sources*; none is transcribed.
 
+> **POST-GENERATION AMENDMENT (2026-09-17).** This document was generated on
+> 2026-09-15, before the sealed final test was attempted. The attempt was made
+> on 2026-09-16 and **failed after authorization**, producing **zero sealed
+> candidates and zero reportable metrics**. The one-time authorization is spent
+> and **the consumed `test` split must not be rerun**.
+>
+> Every figure below is unchanged and remains correct — all of it is locked
+> validation and development evaluation, which is now the project's **only**
+> valid empirical evidence. **No final-test result exists**, so no final-test
+> Oneiros claim and no Oneiros-versus-Atheris claim is supported.
+>
+> This amendment was written by hand and is not produced by
+> `scripts/emit_final_research_summary.py`; regenerating this file would drop
+> it. See [`../docs/SEALED_FINAL_INCIDENT.md`](../docs/SEALED_FINAL_INCIDENT.md)
+> and [`../docs/POST_INCIDENT_RESEARCH_STATUS.md`](../docs/POST_INCIDENT_RESEARCH_STATUS.md).
+
 ## Final selection
 
 | | |
@@ -79,7 +95,7 @@ These bound every claim made above.
 3. **Repository records are excluded from every kill rate reported.** 38 were held out on the development panel, per the selection receipt. The locked panel likewise excluded its repository records; that count is recorded in the locked run artifacts rather than in the committed receipt, so it is not restated here.
 4. **No real native repository result.** No repository-native execution was performed; no real-repository performance is claimed.
 5. **Development-panel figures are not generalization evidence.** ablation_dev selected the checkpoints it scored. The locked val split did not, which is why the +9.04 development gain became +3.43 under locking.
-6. **The sealed final test has not been opened.**
+6. ~~**The sealed final test has not been opened.**~~ **Superseded 2026-09-17:** it was opened once, on 2026-09-16, and the run failed after authorization with zero sealed candidates and zero metrics. The split is consumed and must not be rerun. No final-test evidence exists.
 
 ## Sources
 

@@ -277,9 +277,30 @@ provisioned checkouts and the historical interpreters from
 a real-repository kill rate; report `executed_candidates` alongside
 `inconclusive_candidates` so the coverage is visible.
 
-## 9b. Final test stop point
+## 9b. Final test stop point — the `test` split is CONSUMED
 
-The final test remains sealed because the current CLI exposes the explicit final DPO measurement only after model selection. Do not run `--phase dpo_eval --confirm-final-test` during development. Add the final command to the signed experiment record only after the selected adapter, evaluator, candidate count, generation configuration, and one-time-test policy are frozen.
+**Do not plan a final test against `test`. There is no longer one to run.**
+
+The sealed final evaluation was authorized and attempted once, on 2026-09-16.
+It **failed after authorization**, raising while admitting records and before
+any generation, and produced **zero sealed candidates and zero reportable
+metrics**. The single one-time authorization is spent. **The consumed split
+must not be rerun** — not with a different receipt, not with a fixed loader,
+not under any circumstances.
+
+Do not run `--phase dpo_eval --confirm-final-test`, and do not add any final
+command against `test` to the experiment record.
+
+The project's valid empirical evidence is **locked validation and development
+evaluation only**. **No final-test result exists**, so no final-test Oneiros
+claim and no Oneiros-versus-Atheris claim is supported by anything in this
+runbook.
+
+Any future final measurement requires a **new, independently constructed set**
+and an explicit decision by the project owner. None has been created.
+
+See [`docs/SEALED_FINAL_INCIDENT.md`](docs/SEALED_FINAL_INCIDENT.md) and
+[`docs/POST_INCIDENT_RESEARCH_STATUS.md`](docs/POST_INCIDENT_RESEARCH_STATUS.md).
 
 ## 10. Remaining CPU preparation
 

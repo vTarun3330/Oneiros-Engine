@@ -23,8 +23,17 @@ locked validation (seeds 42/43/44, 8 ordered candidates)
         ↓
 DPO only if SFT reaches 58% on every completed locked seed
         ↓
-one sealed final-test evaluation after all choices are frozen
+one sealed final-test evaluation after all choices are frozen  [CONSUMED - see below]
 ```
+
+> **The sealed final test was attempted on 2026-09-16 and failed after
+> authorization.** It generated **zero sealed candidates and zero reportable
+> metrics**. The one-time authorization is spent and **the consumed `test`
+> split must not be rerun**. The project's valid empirical evidence is locked
+> validation and development evaluation only. **No final-test result exists, so
+> no final-test claim for Oneiros — and no Oneiros-versus-Atheris claim — is
+> supported.** Full account: [`docs/SEALED_FINAL_INCIDENT.md`](docs/SEALED_FINAL_INCIDENT.md).
+> Current standing of every result: [`docs/POST_INCIDENT_RESEARCH_STATUS.md`](docs/POST_INCIDENT_RESEARCH_STATUS.md).
 
 The canonical corpus is `data/corpus/v4_1_research_hardened_candidate`. V4 remains frozen at commit `1d2cca8` and is identified by `research/baselines/V4_BASELINE_1d2cca8.json`; V4.1 never overwrites it.
 
@@ -39,11 +48,11 @@ Reference code, gold patches, official test bodies, expected completions, oracle
 - `train`: model fitting only.
 - `ablation_dev`: fixed, semantic-group-disjoint subset removed from training and used for design choices.
 - `val`: locked model selection and the unchanged 58% SFT gate.
-- `test`: sealed until the final adapter, prompt, generation configuration, candidate count, and evaluator are frozen.
+- `test`: **consumed.** It was opened once under authorization on 2026-09-16; the run failed before generating anything and produced no metrics. It may not be rerun, and it is no longer a sealed panel available for any future measurement.
 - Candidates remain in raw generation order. Reports separate requested, parse-valid, execution-valid, reference-valid, and killing candidates and include Kill@1/2/4/8.
 - A partial seed is never a completed result.
 
-The final test must not be inspected, debugged against, or rerun after retraining for the reported model.
+The consumed `test` split must not be inspected, debugged against, or rerun — the prohibition is now absolute rather than conditional, because its single authorization has been spent. Any future final measurement requires a new, independently constructed set and an explicit decision by the project owner; none has been created.
 
 ## Training policy
 
