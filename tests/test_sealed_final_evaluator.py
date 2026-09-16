@@ -287,7 +287,9 @@ def test_superseded_receipts_cannot_authorize(relative):
 def test_a_wrong_receipt_hash_refuses_before_authorization():
     if not EXEC_RECEIPT.exists():
         pytest.skip("executable receipt absent")
-    result = _run("--expected-receipt-sha256", "b" * 64,
+    result = _run("--executable-receipt",
+                  "results/v4_2_sealed_final_executable_receipt_v6.json",
+                  "--expected-receipt-sha256", "b" * 64,
                   "--authorization-token", "irrelevant",
                   "--i-understand-this-is-one-time-and-irreversible")
     assert result.returncode == 1

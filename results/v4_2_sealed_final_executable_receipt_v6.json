@@ -1,0 +1,326 @@
+{
+  "schema_version": "oneiros_sealed_final_readiness_v6",
+  "created_utc": "2026-09-16T17:14:31Z",
+  "purpose": "Freeze the one-time sealed final measurement of the selected final candidate. This preflight opens nothing and authorizes nothing.",
+  "sealed_split_accessed": false,
+  "sealed_records_read": 0,
+  "sealed_ids_enumerated": 0,
+  "sealed_payload_hashed": false,
+  "split_identity_binding": "Split membership is bound by the corpus manifest digests over records.json and splits.json, which cover every split at once. No sealed record was read, no sealed id enumerated, and no sealed payload hashed.",
+  "authorization_token_issued": false,
+  "token_policy": "A preflight that minted its own token would defeat the one-time protection it exists to set up. Authorization is a separate explicit act, performed once, against this bundle hash.",
+  "final_candidate": {
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "tokenizer": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "adapter": null,
+    "adapter_identity_digest": "320a87cc423b34ed8bb26502dbc503d163076b76edc4078a6d62089aa9d480e0",
+    "why": "Locked validation retained the base model. Arm A@431 is rejected for promotion; the O1 sidecar / Arm B was rejected on development."
+  },
+  "frozen_bundle": {
+    "fields": {
+      "adapter_path": "none - the immutable base model is the final candidate",
+      "adapter_sha256": "320a87cc423b34ed8bb26502dbc503d163076b76edc4078a6d62089aa9d480e0",
+      "candidate_source_tree_git_commit": "f16d2181f35bdb1e55dc10b7c84201ebce207264",
+      "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "corpus_version": "v4_1_research_hardened_candidate",
+      "corpus_records_sha256": "04940ee92c7eeef3efb0808e577470cfb5415c13612ecb25bd11eb00c2adfd50",
+      "split_ids_sha256": "4baaa7a6eb4069203691d5453d50d58a189eeee63feb0c3dfe236c139947ba2a",
+      "prompt_schema_version": "oneiros_unified_test_generation_v2",
+      "prompt_budgets": {
+        "prompt_token_limit": 1024,
+        "repository_prompt_token_limit": 1024,
+        "generation_completion_token_limit": 1024,
+        "max_sequence_tokens": 3072
+      },
+      "candidates_per_target": 8,
+      "generation_batch_size": 2,
+      "allow_test_function_candidates": true,
+      "prompt_information_variant": "full",
+      "output_instruction_variant": "self_contained",
+      "attention_implementation": "sdpa",
+      "tokenizer_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "seeds": {
+        "generation_seed": 42,
+        "seed_application_version": "oneiros_generation_rng_v1",
+        "seeded_generators": [
+          "python_random",
+          "torch_cpu",
+          "torch_cuda_all"
+        ],
+        "applied_immediately_before_generation": true
+      },
+      "baseline_scope": "oneiros_immutable_base_only_no_comparative_baseline",
+      "sampling": {
+        "temperature": 0.7,
+        "top_p": 0.9,
+        "do_sample": true,
+        "candidate_parse_mode": "whole_output",
+        "retain_raw_output": true,
+        "reranking": "none",
+        "feedback_rounds": 0,
+        "diversity_mode": "none"
+      },
+      "timeout_seconds": {
+        "policy_source_canonical_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35"
+      },
+      "evaluator_version": {
+        "protocol_name": "oneiros_successor_generation_protocol_v1",
+        "protocol_sha256": "4c703a7572733475bb565c2a57aaab533387838b7cfaa9ab0ba1e9c5beab54a8",
+        "evaluator_canonical_sha256": "4ae24c7ed3aced80f50f4a1bf1e3d30facffb327a4c8cef9e3bb6ce748717b7f",
+        "source_identity_scheme": "oneiros_portable_source_identity_v1"
+      },
+      "baseline_versions": {
+        "baseline_scope": "oneiros_immutable_base_only_no_comparative_baseline",
+        "baselines_bundled": [],
+        "comparative_claims_supported": false,
+        "statement": "This sealed final test measures the immutable-base Oneiros candidate only. No baseline runner is included in the bundle and none is executed on the sealed targets. The result therefore CANNOT support any comparative claim against Atheris or any other baseline. Development and locked-validation baseline artifacts exist for other splits and must not be presented alongside this result as if they were sealed-final comparisons."
+      },
+      "checkpoint_selection_rule": "No checkpoint is selected. Locked validation retained the immutable base model: Arm A@431 gained +3.4346 Kill@8 points on val with McNemar exact p=0.0783 against a required p<0.01, and lost 11.8726 points of reference validity. The final candidate is therefore the base model with no adapter, per results/v4_2_locked_validation_result_receipt.json."
+    },
+    "created_utc": "2026-09-16T17:14:31+00:00",
+    "bundle_sha256": "c16b13eb6abc2bdab40cd2004c78902092faaf10fed82baa76506af78430d0a9",
+    "missing_fields": [],
+    "frozen": true
+  },
+  "bundle_sha256": "c16b13eb6abc2bdab40cd2004c78902092faaf10fed82baa76506af78430d0a9",
+  "evaluation_defining_sources": {
+    "candidate_policy": {
+      "path": "harness/candidate_policy.py",
+      "raw_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+      "canonical_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+      "git_blob_sha1": "2a3c1f45760810467b8ba384d91a6a630b3e87d2"
+    },
+    "evaluation_entrypoint": {
+      "path": "scripts/train_on_dataset.py",
+      "raw_sha256": "565cd2f5281db32e6000682ec1bd1bc4ecca043117724cee69e88343f917de46",
+      "canonical_sha256": "ead8b2853d4331b389d54e897defb2966e4686114b17aba53f2ff068b5105afd",
+      "git_blob_sha1": "f7df8a1e5335eeb4a83b6ddc6fb105c3e0744151"
+    },
+    "evaluator": {
+      "path": "metrics/research_evaluation.py",
+      "raw_sha256": "649e96fab00af35e172cdd0590f6b6c1241d03aa6aef71ede4fb2e731fad27c2",
+      "canonical_sha256": "4ae24c7ed3aced80f50f4a1bf1e3d30facffb327a4c8cef9e3bb6ce748717b7f",
+      "git_blob_sha1": "083f48601256d510facc95753d8ab711ce7ac751"
+    },
+    "generator": {
+      "path": "engine/generator.py",
+      "raw_sha256": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
+      "canonical_sha256": "c4c16c7de07e82f226bd77d2e980339b13844a4418ad428e6c41158eb1938330",
+      "git_blob_sha1": "42750f256c5fd061069925f66a8f5e3ee5d53453"
+    },
+    "model_runtime": {
+      "path": "engine/model_runtime.py",
+      "raw_sha256": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
+      "canonical_sha256": "b83751dfd9a08b5528102583175c400aec31a60c89002b7810d359333a103caf",
+      "git_blob_sha1": "2ab0a8b72630d565f1c8a1620cce0c0416eadb5b"
+    },
+    "prompt_budget": {
+      "path": "engine/prompt_budget.py",
+      "raw_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
+      "canonical_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
+      "git_blob_sha1": "4064548418578da862304d600a257b40b8c0cdd9"
+    },
+    "prompt_builder": {
+      "path": "engine/test_generation_prompt.py",
+      "raw_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+      "canonical_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+      "git_blob_sha1": "0553b6d1957fed6acb723d1520ce1085827e1afd"
+    },
+    "timeout_policy_safe_execution": {
+      "path": "harness/safe_execution.py",
+      "raw_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+      "canonical_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+      "git_blob_sha1": "5283b6a958a2bf54d1741a9dd09466d42232205f"
+    }
+  },
+  "source_identity_scheme": "oneiros_portable_source_identity_v1",
+  "decision_evidence": {
+    "results/v4_2_frozen_development_evaluation_receipt.json": "062774028693cfcbf5346eafeed232027748720940af7a47b5ac1a591055c4fe",
+    "results/v4_2_development_selection_receipt.json": "0188324fe9eb2a51eebef71bbd4cc3ed45584f12393bf0fa6539817a09e58969",
+    "results/v4_2_locked_validation_preflight.json": "97be6855d41b1186a5c8a59a8a89efa71e1f40f5e1c7f29ab387402b7598912c",
+    "results/v4_2_locked_validation_result_receipt.json": "f7cdf84df8e65c51bd22410759c6fd54952ace3bfa80c6ab620674b53e288af9"
+  },
+  "protected_run_names": [
+    "local_base_qwen_ablationdev_successor_s42_v3",
+    "local_sft_armA_baseline_successor_s42",
+    "local_sft_armB_o1_nocollide_s42",
+    "local_eval_armA_ckpt150_matched",
+    "locked_val_base_qwen_s42",
+    "locked_val_armA_ckpt431_s42"
+  ],
+  "output_isolation": {
+    "final_run_name": "sealed_final_base_qwen_s42",
+    "results_dir": "results/sealed_final_base_qwen_s42",
+    "checkpoints_dir": "checkpoints/sealed_final_base_qwen_s42",
+    "collides_with_existing_runs": false,
+    "may_not_write_into": [
+      "local_base_qwen_ablationdev_successor_s42_v3",
+      "local_sft_armA_baseline_successor_s42",
+      "local_sft_armB_o1_nocollide_s42",
+      "local_eval_armA_ckpt150_matched",
+      "locked_val_base_qwen_s42",
+      "locked_val_armA_ckpt431_s42"
+    ]
+  },
+  "final_evaluator_executable": true,
+  "final_evaluator_status": "executable - the final evaluator is implemented, importable and tested",
+  "final_evaluator_source": {
+    "module": "harness/sealed_final_evaluator.py",
+    "evaluator_version": "oneiros_sealed_final_evaluator_v1",
+    "raw_sha256": "56869a08e9e4ae618d883e2caae86868630dfcb88736d57f127aca9068e7becf",
+    "canonical_sha256": "56869a08e9e4ae618d883e2caae86868630dfcb88736d57f127aca9068e7becf",
+    "measurement_logic_canonical_sha256": "776aab410ebd989fda7ef042b7dd98cd875c8e170f4e94b5ae9154dee14d6213",
+    "loader_module": "harness/sealed_final_loader.py",
+    "loader_canonical_sha256": "47e2398db0c49ba9d271569adf0716762dea99ed1db1a51bb59731a52ce63162",
+    "loader_raw_sha256": "47e2398db0c49ba9d271569adf0716762dea99ed1db1a51bb59731a52ce63162",
+    "entrypoint_canonical_sha256": "cfe6b795566207ef37d54db1b0e85bf8edf634e37084e5e1c20f8b0adf4efe15",
+    "adapter_module": "harness/generation_adapter.py",
+    "adapter_canonical_sha256": "39583f39acdfb885286a406d65f5d90e7547ea9069760870f610eafd09c6a8f7",
+    "smoke_module": "harness/sealed_final_smoke.py",
+    "smoke_canonical_sha256": "cea744edf2f80c085507ca474f13ea44fca80bdfbbb5c3ce5d5cd2d56238754c",
+    "rng_module": "harness/generation_rng.py",
+    "rng_canonical_sha256": "1282a2c463cdee272742dbe8c630680841b6489b16bb0695789786e9fb403f5c",
+    "seed_application_version": "oneiros_generation_rng_v1",
+    "smoke_version": "oneiros_sealed_final_smoke_v2",
+    "prompt_factory_module": "harness/prompt_factory.py",
+    "prompt_factory_version": "oneiros_prompt_factory_v1",
+    "prompt_binding": {
+      "prompt_factory_version": "oneiros_prompt_factory_v1",
+      "prompt_schema_version": "oneiros_unified_test_generation_v2",
+      "information_variants": [
+        "code_only",
+        "code_specification",
+        "full"
+      ],
+      "output_instruction_variants": [
+        "legacy_exactly_one",
+        "self_contained",
+        "metamorphic_allowed"
+      ],
+      "prompt_compaction": {
+        "path": "engine/prompt_budget.py",
+        "raw_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
+        "canonical_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a"
+      },
+      "prompt_engine": {
+        "path": "engine/test_generation_prompt.py",
+        "raw_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+        "canonical_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d"
+      },
+      "prompt_factory": {
+        "path": "harness/prompt_factory.py",
+        "raw_sha256": "29c05789161522ea5581995f7e66ccb79f7e524ead5edc4745f4795822fbe565",
+        "canonical_sha256": "29c05789161522ea5581995f7e66ccb79f7e524ead5edc4745f4795822fbe565"
+      },
+      "record_adaptation": {
+        "path": "scripts/train_on_dataset.py",
+        "raw_sha256": "565cd2f5281db32e6000682ec1bd1bc4ecca043117724cee69e88343f917de46",
+        "canonical_sha256": "ead8b2853d4331b389d54e897defb2966e4686114b17aba53f2ff068b5105afd"
+      }
+    },
+    "frozen_prompt_settings": {
+      "information_variant": "full",
+      "output_instruction_variant": "self_contained",
+      "prompt_schema_version": "oneiros_unified_test_generation_v2"
+    },
+    "adapter_version": "oneiros_generation_adapter_v1",
+    "frozen_generation_settings": {
+      "candidate_parse_mode": "whole_output",
+      "retain_raw_output": true,
+      "candidates_per_function": 8,
+      "generation_batch_size": 2,
+      "allow_test_function_candidates": true,
+      "prompt_information_variant": "full",
+      "output_instruction_variant": "self_contained",
+      "prompt_schema_version": "oneiros_unified_test_generation_v2",
+      "attention_implementation": "sdpa",
+      "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "prompt_token_limit": 1024,
+      "generation_completion_token_limit": 1024,
+      "max_sequence_tokens": 3072,
+      "seed": 42
+    }
+  },
+  "supersedes": {
+    "schema_versions": [
+      "oneiros_sealed_final_readiness_v1",
+      "oneiros_sealed_final_readiness_v2",
+      "oneiros_sealed_final_readiness_v3",
+      "oneiros_sealed_final_readiness_v4",
+      "oneiros_sealed_final_readiness_v5"
+    ],
+    "artifacts": [
+      "results/v4_2_sealed_final_readiness_receipt.json",
+      "results/v4_2_sealed_final_executable_receipt.json",
+      "results/v4_2_sealed_final_executable_receipt_v3.json",
+      "results/v4_2_sealed_final_executable_receipt_v4.json",
+      "results/v4_2_sealed_final_executable_receipt_v5.json"
+    ],
+    "why": "v1 was emitted before the final evaluator existed, and its entrypoint called the guard before reaching any measurement, so a valid token could have been spent to discover that evaluation was unavailable. v2 implemented the evaluator but its loader imported build_test_generation_prompt and called Phi3Generator.generate_candidates - neither of which exists - and never set parse_mode, which defaults to first_assertion; the sealed run would therefore have been scored by the legacy parser while claiming the successor protocol, and no test caught it because every test injected a mock generator. v3 fixed the nonexistent APIs but never applied the frozen seed, generated one target at a time, and loaded a second model after the token was spent. v4 fixed those but its sealed loader still imported a trainer helper that read mutable prompt globals. v5 bound the prompt correctly, but a read-only audit found two receipt defects: its own exact_command named the v4 receipt, which the entrypoint refuses, so the one-time operator instruction selected a file that could not authorize anything; and its frozen bundle carried a 40-hex Git commit id in a field named adapter_source_tree_sha256, labelling a SHA-1 commit as a SHA-256 source-tree digest. v6 derives exact_command from the receipt's own output path and renames the field to candidate_source_tree_git_commit. All five are retained as evidence, none is executable authorization, and the entrypoint refuses every one of their schema versions outright."
+  },
+  "exact_command": [
+    ".venv-gpu/Scripts/python.exe",
+    "scripts/run_sealed_final_test.py",
+    "--executable-receipt",
+    "results/v4_2_sealed_final_executable_receipt_v6.json",
+    "--expected-receipt-sha256",
+    "<this receipt's sha256, printed on generation>",
+    "--authorization-token",
+    "<issued once, separately, against the bundle hash>",
+    "--i-understand-this-is-one-time-and-irreversible"
+  ],
+  "baseline_scope": {
+    "scope": "oneiros_immutable_base_only_no_comparative_baseline",
+    "baselines_bundled": [],
+    "comparative_claims_supported": false,
+    "statement": "This sealed final test measures the immutable-base Oneiros candidate only. No baseline runner is included in the bundle and none is executed on the sealed targets. The result therefore CANNOT support any comparative claim against Atheris or any other baseline. Development and locked-validation baseline artifacts exist for other splits and must not be presented alongside this result as if they were sealed-final comparisons.",
+    "option_chosen": "B - scope the sealed final test to immutable-base Oneiros only"
+  },
+  "authorized_entrypoint": {
+    "path": "scripts/run_sealed_final_test.py",
+    "canonical_sha256": "cfe6b795566207ef37d54db1b0e85bf8edf634e37084e5e1c20f8b0adf4efe15",
+    "raw_sha256": "cfe6b795566207ef37d54db1b0e85bf8edf634e37084e5e1c20f8b0adf4efe15",
+    "separate_from_development_entrypoint": true,
+    "development_entrypoint": "scripts/train_on_dataset.py"
+  },
+  "mock_guard_rehearsal": {
+    "unfrozen_bundle_refused": true,
+    "missing_token_refused": true,
+    "unknown_token_refused": true,
+    "valid_token_granted_once": true,
+    "spent_token_refused": true,
+    "bundle_edited_after_authorization_refused": true,
+    "development_command_refused": true,
+    "development_split_needs_no_token": true,
+    "audit_entries_written": 7,
+    "all_refusals_hold": true
+  },
+  "prohibited_after_execution": [
+    "retraining of any kind",
+    "prompt changes",
+    "threshold changes",
+    "adding, reweighting or re-selecting data",
+    "selecting a different checkpoint or model",
+    "re-running the sealed final test",
+    "re-scoring the sealed final result under a different parser or policy"
+  ],
+  "interpretation_limits": [
+    "The sealed final test measures the immutable base model. No SFT model was promoted, so no Oneiros SFT generalization claim follows from it.",
+    "Repository records are excluded from every kill rate; no real native repository result is claimed.",
+    "SFT improved development Kill@8 and produced a positive but statistically insufficient locked-validation Kill@8 result, alongside a large reference-validity regression."
+  ],
+  "reproducibility": {
+    "git_commit": "f16d2181f35bdb1e55dc10b7c84201ebce207264",
+    "git_dirty": false,
+    "python_version": "3.12.14"
+  },
+  "preflight_problems": [],
+  "ready_for_authorization": true
+}
