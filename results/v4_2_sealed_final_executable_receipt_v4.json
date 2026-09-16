@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_sealed_final_readiness_v4",
-  "created_utc": "2026-09-16T15:06:11Z",
+  "created_utc": "2026-09-16T15:08:22Z",
   "purpose": "Freeze the one-time sealed final measurement of the selected final candidate. This preflight opens nothing and authorizes nothing.",
   "sealed_split_accessed": false,
   "sealed_records_read": 0,
@@ -22,7 +22,7 @@
     "fields": {
       "adapter_path": "none - the immutable base model is the final candidate",
       "adapter_sha256": "320a87cc423b34ed8bb26502dbc503d163076b76edc4078a6d62089aa9d480e0",
-      "adapter_source_tree_sha256": "03f1fc15a96fa536c427cd2a5c2ac299ab03551b",
+      "adapter_source_tree_sha256": "3049920e9077fa3c4d59a845b929bda696a47654",
       "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
       "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
       "corpus_version": "v4_1_research_hardened_candidate",
@@ -81,12 +81,12 @@
       },
       "checkpoint_selection_rule": "No checkpoint is selected. Locked validation retained the immutable base model: Arm A@431 gained +3.4346 Kill@8 points on val with McNemar exact p=0.0783 against a required p<0.01, and lost 11.8726 points of reference validity. The final candidate is therefore the base model with no adapter, per results/v4_2_locked_validation_result_receipt.json."
     },
-    "created_utc": "2026-09-16T15:06:08+00:00",
-    "bundle_sha256": "7a4c66cb2b08c740ec4a6f7e8b997aeca296585f699a356ed0a7b8aaf679232b",
+    "created_utc": "2026-09-16T15:08:19+00:00",
+    "bundle_sha256": "1692b9a168b2ca87ca5d129d7e13d5ee169605719fc940c5d1be0b1b4e5c36e1",
     "missing_fields": [],
     "frozen": true
   },
-  "bundle_sha256": "7a4c66cb2b08c740ec4a6f7e8b997aeca296585f699a356ed0a7b8aaf679232b",
+  "bundle_sha256": "1692b9a168b2ca87ca5d129d7e13d5ee169605719fc940c5d1be0b1b4e5c36e1",
   "evaluation_defining_sources": {
     "candidate_policy": {
       "path": "harness/candidate_policy.py",
@@ -271,12 +271,10 @@
     "SFT improved development Kill@8 and produced a positive but statistically insufficient locked-validation Kill@8 result, alongside a large reference-validity regression."
   ],
   "reproducibility": {
-    "git_commit": "03f1fc15a96fa536c427cd2a5c2ac299ab03551b",
-    "git_dirty": true,
+    "git_commit": "3049920e9077fa3c4d59a845b929bda696a47654",
+    "git_dirty": false,
     "python_version": "3.12.14"
   },
-  "preflight_problems": [
-    "evaluation-defining sources differ from committed content: ['scripts/train_on_dataset.py']"
-  ],
-  "ready_for_authorization": false
+  "preflight_problems": [],
+  "ready_for_authorization": true
 }

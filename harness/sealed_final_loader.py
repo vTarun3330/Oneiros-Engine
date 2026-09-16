@@ -156,12 +156,18 @@ def sealed_records(corpus_version: str = CORPUS_VERSION) -> List[Dict[str, Any]]
 def build_sealed_generator(receipt: Mapping[str, Any]):
     """Construct the frozen generator described by an approved receipt.
 
-    Returns (generator, settings, build_prompt). Nothing is loaded at import
-    time; the model is loaded when this is called, which happens only after
-    every pre-authorization check has passed.
+    Returns (generator, settings, build_prompt) with the model NOT yet loaded,
+    so the caller loads it once, smoke-tests it, and reuses that same object
+    after authorization. Building a second generator post-token was how a
+    failed load could have wasted the single authorization.
+
+    Settings come from the receipt's frozen_generation_settings - the exact set
+    that was approved - rather than being reassembled field by field from the
+    bundle. Reassembling meant every new semantic had to be remembered in two
+    places, and the one that was forgotten was the parse mode.
     """
     from engine.generator import Phi3Generator
-    from harness.generation_adapter import GenerationSettings, successor_settings
+    from harness.generation_adapter import GenerationSettings
 
     candidate = receipt["final_candidate"]
     if candidate.get("adapter") is not None:
@@ -169,34 +175,36 @@ def build_sealed_generator(receipt: Mapping[str, Any]):
             "the approved final candidate is the base model with no adapter; "
             "refusing to load one")
 
-    fields = receipt["frozen_bundle"]["fields"]
-    settings = successor_settings()
-    # The receipt is authoritative over the protocol module: if they disagree,
-    # the approved thing is what was approved.
-    settings = GenerationSettings(
-        candidate_parse_mode=fields["sampling"]["candidate_parse_mode"],
-        retain_raw_output=bool(fields["sampling"]["retain_raw_output"]),
-        candidates_per_function=int(fields["candidates_per_target"]),
-        temperature=float(fields["sampling"]["temperature"]),
-        top_p=float(fields["sampling"]["top_p"]),
-        prompt_token_limit=int(fields["prompt_budgets"]["prompt_token_limit"]),
-        generation_completion_token_limit=int(
-            fields["prompt_budgets"]["generation_completion_token_limit"]),
-        max_sequence_tokens=int(fields["prompt_budgets"]["max_sequence_tokens"]),
-        seed=int(fields["seeds"]["generation_seed"]),
-    )
+    frozen = (receipt.get("final_evaluator_source") or {}).get(
+        "frozen_generation_settings")
+    if not frozen:
+        raise SealedAccessError("the receipt records no frozen generation settings")
+    try:
+        settings = GenerationSettings(**frozen)
+    except TypeError as exc:
+        raise SealedAccessError(
+            f"frozen generation settings do not match the settings contract: {exc}")
+
     problems = settings.problems()
     if problems:
         raise SealedAccessError(f"approved generation settings are invalid: {problems}")
     if settings.candidate_parse_mode != "whole_output":
         raise SealedAccessError(
-            f"the frozen successor protocol requires whole_output parsing, the "
+            "the frozen successor protocol requires whole_output parsing, the "
             f"receipt declares {settings.candidate_parse_mode!r}")
+    if settings.generation_batch_size != 2:
+        raise SealedAccessError(
+            f"the frozen batch size is {settings.generation_batch_size}; locked "
+            "validation used 2 and batch shape changes sampling")
+    if settings.base_model_name != candidate["model"]:
+        raise SealedAccessError("settings and candidate disagree about the model")
+    if settings.base_model_revision != candidate["model_revision"]:
+        raise SealedAccessError("settings and candidate disagree about the revision")
 
     generator = Phi3Generator(
-        model_name=candidate["model"],
-        model_revision=candidate["model_revision"],
-        attention_implementation="sdpa",
+        model_name=settings.base_model_name,
+        model_revision=settings.base_model_revision,
+        attention_implementation=settings.attention_implementation,
     )
     generator.temperature = settings.temperature
     generator.top_p = settings.top_p
