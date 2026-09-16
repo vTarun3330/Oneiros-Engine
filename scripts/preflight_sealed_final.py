@@ -387,7 +387,8 @@ def collect(problems: list[str]) -> dict:
         evaluator_source["prompt_factory_module"] = PROMPT_FACTORY_MODULE
         evaluator_source["prompt_factory_version"] = PROMPT_FACTORY_VERSION
         evaluator_source["prompt_binding"] = prompt_factory_source_hashes(ROOT)
-        _prompt_settings = _settings.prompt_settings()
+        from harness.generation_adapter import successor_settings as _succ
+        _prompt_settings = _succ().prompt_settings()
         evaluator_source["frozen_prompt_settings"] = _prompt_settings.to_dict()
         if _prompt_settings.problems():
             evaluator_problems.append(
