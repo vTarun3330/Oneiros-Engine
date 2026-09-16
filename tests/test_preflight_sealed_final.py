@@ -155,13 +155,22 @@ def test_the_selection_rule_records_that_no_checkpoint_was_selected(built):
     assert "base model with no adapter" in rule
 
 
-def test_baselines_are_pinned_by_hash(built):
+def test_no_baseline_is_bundled_and_no_comparison_is_claimed(built):
+    """Scope B, chosen explicitly.
+
+    An earlier version of this test asserted that val baseline artifacts were
+    pinned by hash inside the sealed-final bundle. That was the defect: those
+    baselines were never run on sealed targets under the sealed budget, so
+    their presence implied a comparison the measurement cannot support.
+    """
     receipt, _ = built
     baselines = receipt["frozen_bundle"]["fields"]["baseline_versions"]
-    assert baselines
-    for path, digest in baselines.items():
-        assert len(digest) == 64
-        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == digest
+    assert baselines["baselines_bundled"] == []
+    assert baselines["comparative_claims_supported"] is False
+    assert "CANNOT support any comparative claim" in baselines["statement"]
+    text = json.dumps(receipt["frozen_bundle"])
+    assert "v4_2_atheris_tasks_val.manifest.json" not in text
+    assert "v4_2_baseline_bundle_val.json" not in text
 
 
 def test_the_evidence_the_decision_rests_on_is_hashed(built):

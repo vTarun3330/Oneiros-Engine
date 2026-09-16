@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_sealed_final_readiness_v4",
-  "created_utc": "2026-09-16T15:08:22Z",
+  "created_utc": "2026-09-16T15:09:05Z",
   "purpose": "Freeze the one-time sealed final measurement of the selected final candidate. This preflight opens nothing and authorizes nothing.",
   "sealed_split_accessed": false,
   "sealed_records_read": 0,
@@ -22,7 +22,7 @@
     "fields": {
       "adapter_path": "none - the immutable base model is the final candidate",
       "adapter_sha256": "320a87cc423b34ed8bb26502dbc503d163076b76edc4078a6d62089aa9d480e0",
-      "adapter_source_tree_sha256": "3049920e9077fa3c4d59a845b929bda696a47654",
+      "adapter_source_tree_sha256": "ab01f0b96b4e018f9854ae1637770afe1d1f6893",
       "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
       "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
       "corpus_version": "v4_1_research_hardened_candidate",
@@ -81,12 +81,12 @@
       },
       "checkpoint_selection_rule": "No checkpoint is selected. Locked validation retained the immutable base model: Arm A@431 gained +3.4346 Kill@8 points on val with McNemar exact p=0.0783 against a required p<0.01, and lost 11.8726 points of reference validity. The final candidate is therefore the base model with no adapter, per results/v4_2_locked_validation_result_receipt.json."
     },
-    "created_utc": "2026-09-16T15:08:19+00:00",
-    "bundle_sha256": "1692b9a168b2ca87ca5d129d7e13d5ee169605719fc940c5d1be0b1b4e5c36e1",
+    "created_utc": "2026-09-16T15:09:01+00:00",
+    "bundle_sha256": "cb1b720a302f94ac860a9255c7a1b97956a6db90ef38ab5b3c8d158115dd2d0d",
     "missing_fields": [],
     "frozen": true
   },
-  "bundle_sha256": "1692b9a168b2ca87ca5d129d7e13d5ee169605719fc940c5d1be0b1b4e5c36e1",
+  "bundle_sha256": "cb1b720a302f94ac860a9255c7a1b97956a6db90ef38ab5b3c8d158115dd2d0d",
   "evaluation_defining_sources": {
     "candidate_policy": {
       "path": "harness/candidate_policy.py",
@@ -175,8 +175,8 @@
     "canonical_sha256": "56869a08e9e4ae618d883e2caae86868630dfcb88736d57f127aca9068e7becf",
     "measurement_logic_canonical_sha256": "776aab410ebd989fda7ef042b7dd98cd875c8e170f4e94b5ae9154dee14d6213",
     "loader_module": "harness/sealed_final_loader.py",
-    "loader_canonical_sha256": "0a797c26ff925aa865fa23c5f4f8bad8bfebd16af7e29fc445d4ffbb5d5fd577",
-    "loader_raw_sha256": "0a797c26ff925aa865fa23c5f4f8bad8bfebd16af7e29fc445d4ffbb5d5fd577",
+    "loader_canonical_sha256": "59cc7542bfc1c96f429099c86ca2f1cd41be395b2a6db3eee05835fc39681d67",
+    "loader_raw_sha256": "59cc7542bfc1c96f429099c86ca2f1cd41be395b2a6db3eee05835fc39681d67",
     "entrypoint_canonical_sha256": "3091dc2b10e40f2668b2ecf1284d4668acce05a052d011e55bd99ccc408f72f4",
     "adapter_module": "harness/generation_adapter.py",
     "adapter_canonical_sha256": "5b54593c8c50de7924f7b757bd6fb6d811a353be73ff706746ff957e4e0820fb",
@@ -271,7 +271,7 @@
     "SFT improved development Kill@8 and produced a positive but statistically insufficient locked-validation Kill@8 result, alongside a large reference-validity regression."
   ],
   "reproducibility": {
-    "git_commit": "3049920e9077fa3c4d59a845b929bda696a47654",
+    "git_commit": "ab01f0b96b4e018f9854ae1637770afe1d1f6893",
     "git_dirty": false,
     "python_version": "3.12.14"
   },

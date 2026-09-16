@@ -34,7 +34,7 @@ import scripts.run_sealed_final_test as entry
 
 ROOT = Path(__file__).resolve().parent.parent
 PY = sys.executable
-EXEC_RECEIPT = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v3.json"
+EXEC_RECEIPT = ROOT / "results" / "v4_2_sealed_final_executable_receipt_v4.json"
 SUPERSEDED_V2 = ROOT / "results" / "v4_2_sealed_final_executable_receipt.json"
 
 GOLDEN = "def add(a, b):\n    return a + b\n"
@@ -51,12 +51,21 @@ def mock_records(n: int = 4):
     } for i in range(n)]
 
 
-def mock_generator(record, candidates):
+def mock_generator(record, candidates=8):
     out = []
     for rank in range(candidates):
         code = KILLER if rank % 2 == 0 else SURVIVOR
         out.append({"raw_output": code, "code": code})
     return out
+
+
+def mock_batch(records):
+    """The batch contract the evaluator now takes.
+
+    Generation moved from one target per call to a padded batch, because
+    locked validation padded two and batch shape changes sampling.
+    """
+    return [mock_generator(record) for record in records]
 
 
 def frozen_settings():
@@ -68,7 +77,7 @@ def frozen_settings():
 def test_mock_evaluation_produces_a_complete_final_artifact(tmp_path):
     outcome = run_final_evaluation(
         load_records=lambda: mock_records(6),
-        generate=mock_generator,
+        generate_batch=mock_batch,
         output_dir=tmp_path / "run",
         bundle_sha256="a" * 64,
         frozen_settings=frozen_settings(),
@@ -87,7 +96,7 @@ def test_mock_evaluation_produces_a_complete_final_artifact(tmp_path):
 
 def test_raw_outputs_and_hashes_are_retained(tmp_path):
     outcome = run_final_evaluation(
-        load_records=lambda: mock_records(2), generate=mock_generator,
+        load_records=lambda: mock_records(2), generate_batch=mock_batch,
         output_dir=tmp_path / "run", bundle_sha256="a" * 64,
         frozen_settings=frozen_settings())
     artifact = json.loads(Path(outcome["artifact_path"]).read_text(encoding="utf-8"))
@@ -103,7 +112,7 @@ def test_raw_outputs_and_hashes_are_retained(tmp_path):
 
 def test_execution_evidence_is_retained(tmp_path):
     outcome = run_final_evaluation(
-        load_records=lambda: mock_records(1), generate=mock_generator,
+        load_records=lambda: mock_records(1), generate_batch=mock_batch,
         output_dir=tmp_path / "run", bundle_sha256="a" * 64,
         frozen_settings=frozen_settings())
     artifact = json.loads(Path(outcome["artifact_path"]).read_text(encoding="utf-8"))
@@ -118,7 +127,7 @@ def test_execution_evidence_is_retained(tmp_path):
 
 def test_durable_progress_is_written(tmp_path):
     run_final_evaluation(
-        load_records=lambda: mock_records(6), generate=mock_generator,
+        load_records=lambda: mock_records(6), generate_batch=mock_batch,
         output_dir=tmp_path / "run", bundle_sha256="a" * 64,
         frozen_settings=frozen_settings(), progress_every=2)
     files = sorted((tmp_path / "run" / "progress").glob("progress.*.json"))
@@ -130,7 +139,7 @@ def test_durable_progress_is_written(tmp_path):
 def test_an_empty_scope_is_refused(tmp_path):
     with pytest.raises(FinalEvaluationError, match="empty"):
         run_final_evaluation(
-            load_records=list, generate=mock_generator, output_dir=tmp_path / "r",
+            load_records=list, generate_batch=mock_batch, output_dir=tmp_path / "r",
             bundle_sha256="a" * 64, frozen_settings=frozen_settings())
 
 
@@ -138,7 +147,7 @@ def test_a_generator_returning_the_wrong_count_is_refused(tmp_path):
     with pytest.raises(FinalEvaluationError, match="expected 8"):
         run_final_evaluation(
             load_records=lambda: mock_records(1),
-            generate=lambda record, n: mock_generator(record, 3),
+            generate_batch=lambda records: [mock_generator(r, 3) for r in records],
             output_dir=tmp_path / "r", bundle_sha256="a" * 64,
             frozen_settings=frozen_settings())
 
@@ -251,6 +260,7 @@ def test_no_arguments_refuses_without_presenting_a_token():
 @pytest.mark.parametrize("relative", [
     "results/v4_2_sealed_final_readiness_receipt.json",
     "results/v4_2_sealed_final_executable_receipt.json",
+    "results/v4_2_sealed_final_executable_receipt_v3.json",
 ])
 def test_superseded_receipts_cannot_authorize(relative):
     """v1 and v2 must both be refused outright, by schema version.
@@ -359,13 +369,14 @@ def test_the_executable_receipt_declares_executability():
     if not EXEC_RECEIPT.exists():
         pytest.skip("executable receipt absent")
     receipt = json.loads(EXEC_RECEIPT.read_text(encoding="utf-8"))
-    assert receipt["schema_version"] == "oneiros_sealed_final_readiness_v3"
+    assert receipt["schema_version"] == "oneiros_sealed_final_readiness_v4"
     assert receipt["final_evaluator_executable"] is True
     assert "executable" in receipt["final_evaluator_status"]
     assert receipt["sealed_split_accessed"] is False
     assert receipt["authorization_token_issued"] is False
     assert receipt["supersedes"]["schema_versions"] == [
-        "oneiros_sealed_final_readiness_v1", "oneiros_sealed_final_readiness_v2"]
+        "oneiros_sealed_final_readiness_v1", "oneiros_sealed_final_readiness_v2",
+        "oneiros_sealed_final_readiness_v3"]
     assert receipt["exact_command"][1] == "scripts/run_sealed_final_test.py"
 
 

@@ -130,40 +130,36 @@ def test_the_frozen_successor_settings_are_whole_output():
 
 
 def test_a_loader_receipt_that_is_not_whole_output_is_refused():
-    receipt = _receipt_stub()
-    receipt["frozen_bundle"]["fields"]["sampling"]["candidate_parse_mode"] = "first_assertion"
     with pytest.raises(SealedAccessError, match="whole_output"):
-        build_sealed_generator(receipt)
+        build_sealed_generator(_receipt_stub(candidate_parse_mode="first_assertion"))
+
+
+def test_a_loader_receipt_with_the_wrong_batch_size_is_refused():
+    with pytest.raises(SealedAccessError, match="batch size"):
+        build_sealed_generator(_receipt_stub(generation_batch_size=1))
 
 
 def test_settings_that_do_not_fit_the_sequence_budget_are_refused():
-    bad = GenerationSettings(
-        candidate_parse_mode="whole_output", retain_raw_output=True,
-        candidates_per_function=8, temperature=0.7, top_p=0.9,
-        prompt_token_limit=2048, generation_completion_token_limit=1024,
-        max_sequence_tokens=3072, seed=42)
+    bad = GenerationSettings(**dict(successor_settings().to_dict(),
+                                    prompt_token_limit=2048))
     assert any("does not fit" in p for p in bad.problems())
 
 
-def _receipt_stub():
-    settings = successor_settings()
+def _receipt_stub(**overrides):
+    """A receipt carrying the frozen settings whole.
+
+    build_sealed_generator now reads
+    final_evaluator_source.frozen_generation_settings rather than
+    reassembling settings field by field from the bundle - reassembly meant
+    every new semantic had to be remembered twice, and the forgotten one was
+    the parse mode.
+    """
+    settings = dict(successor_settings().to_dict(), **overrides)
     return {
         "final_candidate": {"model": QWEN, "model_revision": REV, "adapter": None},
+        "final_evaluator_source": {"frozen_generation_settings": settings},
         "frozen_bundle": {"fields": {
-            "candidates_per_target": settings.candidates_per_function,
-            "seeds": {"generation_seed": settings.seed},
-            "prompt_budgets": {
-                "prompt_token_limit": settings.prompt_token_limit,
-                "generation_completion_token_limit":
-                    settings.generation_completion_token_limit,
-                "max_sequence_tokens": settings.max_sequence_tokens,
-            },
-            "sampling": {
-                "candidate_parse_mode": settings.candidate_parse_mode,
-                "retain_raw_output": settings.retain_raw_output,
-                "temperature": settings.temperature, "top_p": settings.top_p,
-            },
-        }},
+            "candidates_per_target": settings["candidates_per_function"]}},
     }
 
 
@@ -303,35 +299,49 @@ def test_the_smoke_record_is_synthetic_and_self_contained():
 def test_smoke_problems_catch_each_regression():
     settings = successor_settings()
     good = {
-        "candidate_slots": 8, "observed_parse_mode": "whole_output",
-        "raw_output_hashes_verified": True, "scored_candidates": 8,
-        "sealed_loader_imported": False, "model_revision": REV,
-        "record_is_synthetic": True,
+        "records_in_batch": 2, "prompts_generated_together": 2,
+        "candidate_slots_total": 16,
+        "per_record": [
+            {"record_id": "a", "candidate_slots": 8, "scored_candidates": 8},
+            {"record_id": "b", "candidate_slots": 8, "scored_candidates": 8},
+        ],
+        "observed_parse_mode": "whole_output",
+        "raw_output_hashes_verified": True, "raw_outputs_retained": 16,
+        "scored_candidates": 16, "seed_applied": True, "seed": 42,
+        "sealed_loader_imported_by_smoke": False,
+        "sealed_authorization_granted": False,
+        "model_revision": REV, "records_are_synthetic": True,
+        "generator_identity": {"is_loaded": True},
     }
     assert smoke_problems(good, settings) == []
 
     assert any("not the frozen whole_output" in p for p in smoke_problems(
         dict(good, observed_parse_mode="first_assertion"), settings))
-    assert any("slots" in p for p in smoke_problems(
-        dict(good, candidate_slots=4), settings))
+    assert any("expected 16" in p for p in smoke_problems(
+        dict(good, candidate_slots_total=8), settings))
     assert any("raw-output hashes" in p for p in smoke_problems(
         dict(good, raw_output_hashes_verified=False), settings))
     assert any("imported the sealed loader" in p for p in smoke_problems(
-        dict(good, sealed_loader_imported=True), settings))
+        dict(good, sealed_loader_imported_by_smoke=True), settings))
     assert any("non-immutable model revision" in p for p in smoke_problems(
         dict(good, model_revision="main"), settings))
-    assert any("synthetic record" in p for p in smoke_problems(
-        dict(good, record_is_synthetic=False), settings))
+    assert any("synthetic records" in p for p in smoke_problems(
+        dict(good, records_are_synthetic=False), settings))
 
 
 def test_the_smoke_refuses_a_non_successor_parse_mode():
-    settings = GenerationSettings(
-        candidate_parse_mode="first_assertion", retain_raw_output=True,
-        candidates_per_function=8, temperature=0.7, top_p=0.9,
-        prompt_token_limit=1024, generation_completion_token_limit=1024,
-        max_sequence_tokens=3072, seed=42)
+    settings = GenerationSettings(**dict(successor_settings().to_dict(),
+                                         candidate_parse_mode="first_assertion"))
     with pytest.raises(RuntimeError, match="successor protocol"):
-        run_model_smoke(model_name=QWEN, model_revision=REV, settings=settings)
+        run_model_smoke(settings=settings)
+
+
+def test_the_smoke_refuses_a_one_record_batch_shape():
+    """Locked validation padded two; a one-record smoke proves the wrong thing."""
+    settings = GenerationSettings(**dict(successor_settings().to_dict(),
+                                         generation_batch_size=1))
+    with pytest.raises(RuntimeError, match="frozen batch shape"):
+        run_model_smoke(settings=settings)
 
 
 def test_the_smoke_never_imports_the_sealed_loader():
@@ -355,11 +365,11 @@ def test_check_only_includes_the_smoke():
     assert source.index("run_model_smoke(") < source.index("if args.check_only:")
 
 
-def test_v1_and_v2_receipts_are_refused():
+def test_superseded_receipts_are_refused():
     import scripts.run_sealed_final_test as entry
-    assert "oneiros_sealed_final_readiness_v1" in entry.REFUSED_SCHEMA_VERSIONS
-    assert "oneiros_sealed_final_readiness_v2" in entry.REFUSED_SCHEMA_VERSIONS
-    assert entry.REQUIRED_SCHEMA_VERSION == "oneiros_sealed_final_readiness_v3"
+    for version in ("v1", "v2", "v3"):
+        assert f"oneiros_sealed_final_readiness_{version}" in entry.REFUSED_SCHEMA_VERSIONS
+    assert entry.REQUIRED_SCHEMA_VERSION == "oneiros_sealed_final_readiness_v4"
 
 
 def test_the_adapter_identity_is_recorded():
