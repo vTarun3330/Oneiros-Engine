@@ -219,6 +219,65 @@ against Atheris or any other baseline. A failed run supports less than that.
 The project's standing empirical result is unchanged and rests where it already
 rested: locked validation on `val`, which retained the base model.
 
+## 8a. Addendum (redacted) — a second, unintended access on 2026-09-17
+
+**One further in-process read and traversal of the consumed split occurred
+after the failed attempt.** It was not authorized work, not a measurement, and
+not deliberate. It is recorded here because an access that goes unrecorded is
+worse than one that happened.
+
+**What happened.** An obsolete test in the suite called the old sealed loader
+expecting a refusal. The loader gated on *authorization*, and an authorization
+had been granted once on 2026-09-16 — a grant that never expires. The gate was
+therefore permanently permissive, so the call proceeded: the corpus files were
+opened, the split's records were resolved in memory, and the records were
+iterated field by field. It then raised the same admission error as the
+original attempt.
+
+**What did not happen.** No new token was issued, presented or spent. No
+authorization event was recorded. No model was loaded, no prompt rendered, no
+candidate generated, executed or scored, and no metric produced. Nothing was
+written to any result directory.
+
+**What was exposed.** Nothing committed and nothing durable. The traversal was
+in-process and transient; no sealed content, identifier or payload was written
+to disk, logged, or added to the repository by it. The access is described here
+without split membership, identifiers or payload, consistent with the rest of
+this report.
+
+**Why it was possible.** Authorization answers "was this permitted once". It
+cannot answer "is there anything left to measure". Using the first question as
+the gate for the second was the defect, and it was latent from the moment the
+grant was recorded.
+
+**The repair.** `harness/sealed_final_loader.py` now refuses permanently and
+unconditionally:
+
+- `sealed_records()` raises `SealedAccessError` as its first statement, before
+  any corpus file is opened.
+- `select_split_records(..., <consumed split>)` refuses before the split
+  mapping is indexed and before a single id is read.
+- The refusal consults no guard, token, receipt or argument, and there is no
+  flag, keyword or environment variable that re-enables it.
+- `authorization_granted()` still reports the truth — a grant *was* made — and
+  is no longer a permission check. History is not falsified to obtain safety.
+- The old loader has no reactivation path. A future independent final set
+  requires a separately authorized protocol, not this module.
+
+**Pinned by tests.** `tests/test_consumed_split_refusal.py` proves the refusal
+is the first executed statement (by AST, not by grep), that it holds with guard
+state true, false and absent, that sabotaging every file read and every id
+iteration still yields the refusal rather than an access, and that no override
+parameter or environment lookup exists in the module. The stale assertions that
+demanded "this never happened" were rewritten to assert the real invariant:
+exactly one attempt, permanently blocked from becoming two.
+
+**Side effect, recorded deliberately.** Changing the loader changes its hash, so
+the v6 receipt's `loader_canonical_sha256` binding is now stale and the runtime
+guard refuses on it. The receipt was **not** regenerated. That staleness is a
+second, independent reason it can never authorize a run, and it is asserted as
+such rather than repaired.
+
 ## 9. Standing instruction
 
 The sealed split is consumed. Do not present any receipt to

@@ -21,6 +21,11 @@ from pathlib import Path
 
 import pytest
 
+from tests.sealed_history import (
+    assert_no_new_authorization, assert_old_output_is_empty,
+    assert_re_execution_is_blocked, guard_fingerprint,
+)
+
 from harness.sealed_final import (
     REQUIRED_BUNDLE_FIELDS, SEALED_SPLIT, FinalBundle, SealedAccessError,
     SealedFinalGuard, issue_authorization,
@@ -254,7 +259,7 @@ def test_no_arguments_refuses_without_presenting_a_token():
     result = _run()
     assert result.returncode == 2
     assert "No token was presented" in result.stdout
-    assert not (ROOT / "results" / "sealed_final_state.json").exists()
+    assert_no_new_authorization()
 
 
 @pytest.mark.parametrize("relative", [
@@ -281,7 +286,7 @@ def test_superseded_receipts_cannot_authorize(relative):
     assert result.returncode == 1
     assert "is refused" in result.stdout
     assert "REFUSED before authorization" in result.stdout
-    assert not (ROOT / "results" / "sealed_final_state.json").exists()
+    assert_no_new_authorization()
 
 
 def test_a_wrong_receipt_hash_refuses_before_authorization():
@@ -297,36 +302,56 @@ def test_a_wrong_receipt_hash_refuses_before_authorization():
     assert "REFUSED before authorization" in result.stdout
 
 
-def test_check_only_presents_no_token_and_writes_nothing():
+def test_check_only_now_refuses_before_loading_a_model():
+    """It used to pass. It must not any more, and it must refuse early.
+
+    A run state exists, so the entrypoint refuses in phase 1 - before the
+    receipt's model is loaded and before any corpus file is opened. The exit
+    code changes from 0 to 1 and that is the correct change: there is nothing
+    left to check for.
+    """
     if not EXEC_RECEIPT.exists():
         pytest.skip("executable receipt absent")
     digest = hashlib.sha256(EXEC_RECEIPT.read_bytes()).hexdigest()
-    before = (ROOT / "results" / "sealed_final_audit.log").exists() and \
-        (ROOT / "results" / "sealed_final_audit.log").read_bytes()
+    audit_path = ROOT / "results" / "sealed_final_audit.log"
+    before = audit_path.exists() and audit_path.read_bytes()
+    fingerprint = guard_fingerprint()
+
     result = _run("--check-only", "--expected-receipt-sha256", digest)
-    assert result.returncode == 0
-    assert "No token was presented" in result.stdout
-    assert not (ROOT / "results" / "sealed_final_state.json").exists()
-    after = (ROOT / "results" / "sealed_final_audit.log").exists() and \
-        (ROOT / "results" / "sealed_final_audit.log").read_bytes()
-    assert before == after, "check-only must not append to the audit log"
+
+    assert result.returncode == 1
+    assert "already been executed" in result.stdout
+    assert "Loading" not in result.stdout, "a model was loaded on a refused path"
+    assert_no_new_authorization(fingerprint)
+    after = audit_path.exists() and audit_path.read_bytes()
+    assert before == after, "a refused check-only must not append to the audit log"
 
 
-# ---------------------------------------------- the real split is untouched
+# ------------------------------------- the consumed split is unreachable now
 
-def test_the_loader_refuses_without_a_granted_authorization():
-    with pytest.raises(SealedAccessError, match="without a granted authorization"):
+def test_the_loader_refuses_because_the_split_is_consumed():
+    """The refusal no longer depends on authorization.
+
+    It used to raise "without a granted authorization". Once a grant was
+    recorded that gate went permanently permissive, and this call reached the
+    split a second time. The refusal is now unconditional.
+    """
+    with pytest.raises(SealedAccessError, match="consumed"):
         loader.sealed_records()
 
 
-def test_no_authorization_has_ever_been_granted():
-    assert not (ROOT / "results" / "sealed_final_state.json").exists()
-    assert loader.authorization_granted() is False
+def test_exactly_one_authorization_was_granted_and_it_is_spent():
+    assert_no_new_authorization()
+    assert_re_execution_is_blocked()
+    # Historically truthful: a grant happened. Safety comes from the permanent
+    # consumed-split refusal, not from pretending it did not.
+    assert loader.authorization_granted() is True
     audit = ROOT / "results" / "sealed_final_audit.log"
     if audit.exists():
         events = [json.loads(line) for line in
                   audit.read_text(encoding="utf-8").splitlines() if line.strip()]
-        assert [e for e in events if e.get("event") == "sealed_access_granted"] == []
+        granted = [e for e in events if e.get("event") == "sealed_access_granted"]
+        assert len(granted) == 1
 
 
 def test_tests_never_reference_the_real_sealed_shard():
@@ -363,8 +388,12 @@ def test_the_executable_receipt_binds_the_evaluator_source():
     assert recorded["canonical_sha256"] == current["canonical_sha256"]
     assert recorded["measurement_logic_canonical_sha256"] == \
         current["measurement_logic_canonical_sha256"]
+    # The loader binding is deliberately STALE. The receipt froze the loader as
+    # it was before the run; the loader has since been permanently disabled, so
+    # the recorded hash no longer matches and the guard refuses on it. That is
+    # a second, independent reason this receipt can never authorize anything.
     from harness.source_identity import canonical_sha256
-    assert recorded["loader_canonical_sha256"] == canonical_sha256(
+    assert recorded["loader_canonical_sha256"] != canonical_sha256(
         ROOT / "harness" / "sealed_final_loader.py")
 
 

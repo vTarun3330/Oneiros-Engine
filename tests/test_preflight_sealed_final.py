@@ -19,6 +19,11 @@ from pathlib import Path
 
 import pytest
 
+from tests.sealed_history import (
+    assert_no_new_authorization, assert_old_output_is_empty,
+    assert_re_execution_is_blocked, guard_fingerprint,
+)
+
 from harness.sealed_final import (
     REQUIRED_BUNDLE_FIELDS, SEALED_SPLIT, FinalBundle, SealedAccessError,
     SealedFinalGuard, issue_authorization,
@@ -45,10 +50,18 @@ def built():
 
 # ------------------------------------------------------ nothing was opened
 
-def test_the_preflight_is_ready_and_clean(built):
+def test_the_preflight_now_refuses_because_the_attempt_already_happened(built):
+    """It was ready. It ran. It must never report ready again.
+
+    The preflight checks that the final output directory does not exist, and
+    that directory was created by the failed attempt of 2026-09-16. So the one
+    remaining problem it reports is the correct one, and a clean bill of health
+    here would mean the gate had stopped noticing that the run has happened.
+    """
     receipt, problems = built
-    assert problems == [], problems
-    assert receipt["ready_for_authorization"] is True
+    assert problems == [f"final output directory already exists: "
+                        f"results/{pf.FINAL_RUN_NAME}"], problems
+    assert receipt["ready_for_authorization"] is False
 
 
 def test_the_sealed_split_was_not_touched(built):
@@ -82,15 +95,16 @@ def test_no_authorization_token_is_minted_by_the_preflight(built):
     assert "defeat the one-time protection" in receipt["token_policy"]
 
 
-def test_no_authorization_has_ever_been_spent():
-    """No state file means no token was ever spent and the split never opened.
+def test_exactly_one_authorization_was_ever_spent():
+    """Exactly one, on 2026-09-16, and the audit log says so.
 
-    The audit log is a different matter and may well exist: the guard records
-    every attempt, refusals included, and a refused attempt SHOULD leave a
-    trace. An earlier version of this test asserted the log's absence, which
-    would have made correct auditing look like a failure.
+    This asserted absence until the attempt happened. Absence was never the
+    property worth protecting: the property is that the count is one and
+    nothing can raise it. A second granted event would mean the consumed split
+    had been reopened.
     """
-    assert not (ROOT / "results" / "sealed_final_state.json").exists()
+    assert_no_new_authorization()
+    assert_re_execution_is_blocked()
 
     audit = ROOT / "results" / "sealed_final_audit.log"
     if not audit.exists():
@@ -98,9 +112,10 @@ def test_no_authorization_has_ever_been_spent():
     events = [json.loads(line) for line in
               audit.read_text(encoding="utf-8").splitlines() if line.strip()]
     granted = [e for e in events if e.get("event") == "sealed_access_granted"]
-    assert granted == [], f"the sealed split was opened: {granted}"
-    assert all(e.get("event") in {"sealed_access_refused", "authorization_issued"}
-               for e in events), events
+    assert len(granted) == 1, f"expected exactly one grant, found {len(granted)}"
+    assert all(e.get("event") in {"sealed_access_refused", "authorization_issued",
+                                  "sealed_access_granted"}
+               for e in events), [e.get("event") for e in events]
 
 
 # ------------------------------------------------- the frozen final candidate
@@ -198,9 +213,15 @@ def test_the_final_run_name_cannot_overwrite_any_prior_run(built):
         assert run in isolation["may_not_write_into"]
 
 
-def test_the_final_output_directories_do_not_exist_yet():
-    for parent in ("results", "checkpoints"):
-        assert not (ROOT / parent / pf.FINAL_RUN_NAME).exists()
+def test_the_old_output_directory_exists_and_stayed_empty():
+    """The attempt created it and never wrote into it.
+
+    An empty directory is the evidence: the run reached output setup and failed
+    before producing a single result file. Nothing may appear in it later.
+    """
+    assert_old_output_is_empty()
+    # Checkpoints were never touched - the final run trains nothing.
+    assert not (ROOT / "checkpoints" / pf.FINAL_RUN_NAME).exists()
 
 
 # -------------------------------------------------- the mock guard rehearsal
@@ -270,7 +291,7 @@ def test_the_entrypoint_refuses_with_no_arguments():
     assert result.returncode == 2
     assert "REFUSED" in result.stdout
     assert "No token was presented" in result.stdout
-    assert not (ROOT / "results" / "sealed_final_state.json").exists()
+    assert_no_new_authorization()
 
 
 def test_the_entrypoint_refuses_without_the_acknowledgement():
@@ -318,7 +339,7 @@ def test_a_superseded_receipt_with_a_correct_hash_is_still_refused():
     assert "REFUSED" in result.stdout
     assert "oneiros_sealed_final_readiness_v1" in result.stdout
     # and it must not have created guard state in the repository
-    assert not (ROOT / "results" / "sealed_final_state.json").exists()
+    assert_no_new_authorization()
 
 
 def test_a_run_without_an_explicit_receipt_is_refused():

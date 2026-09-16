@@ -31,6 +31,11 @@ from pathlib import Path
 
 import pytest
 
+from tests.sealed_history import (
+    assert_no_new_authorization, assert_old_output_is_empty,
+    assert_re_execution_is_blocked, guard_fingerprint,
+)
+
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
@@ -321,21 +326,17 @@ def test_the_fallback_used_by_check_only_points_at_v6(entry):
 # The command in the receipt, with the real SHA, must actually pass.
 # --------------------------------------------------------------------------
 
-def test_the_receipts_own_command_passes_check_only(receipt):
-    """The end-to-end form of defect 1.
+def test_the_receipts_own_command_reaches_the_receipt_it_names(receipt):
+    """What survives of defect 1, now that the run has happened.
 
-    Take the command the receipt prints, substitute the real SHA for its
-    placeholder, drop the token and acknowledgement, add --check-only, and run
-    it. Under v5 this would have loaded the v4 receipt and been refused.
+    This used to run the receipt's own command end-to-end through --check-only
+    and require exit 0. It cannot any more: a run state exists, so the
+    entrypoint refuses in phase 1. The defect being guarded against is still
+    checked - the command must select the v6 receipt and be refused *for the
+    right reason*, not for naming a file the entrypoint rejects by schema.
 
-    This runs the full pre-authorization path including the model smoke, so it
-    is skipped unless the GPU environment is present. Nothing is authorized:
-    --check-only returns before the guard is constructed.
+    No GPU is needed now, because the refusal precedes model loading.
     """
-    torch = pytest.importorskip("torch")
-    if not torch.cuda.is_available():
-        pytest.skip("no GPU available for the pre-authorization smoke")
-
     command = list(receipt["exact_command"])
     sha_index = command.index("--expected-receipt-sha256") + 1
     command[sha_index] = __import__("hashlib").sha256(
@@ -346,16 +347,21 @@ def test_the_receipts_own_command_passes_check_only(receipt):
     command.remove("--i-understand-this-is-one-time-and-irreversible")
     command.append("--check-only")
 
+    fingerprint = guard_fingerprint()
     interpreter = ROOT / command[0]
     result = subprocess.run(
         [str(interpreter) if interpreter.exists() else sys.executable, *command[1:]],
-        capture_output=True, text=True, cwd=ROOT, timeout=1800)
+        capture_output=True, text=True, cwd=ROOT, timeout=300)
 
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert "PRE-AUTHORIZATION CHECKS PASSED" in result.stdout
-    assert "No token was presented" in result.stdout
-    assert not (ROOT / "results" / "sealed_final_state.json").exists()
-    assert not (ROOT / "results" / "sealed_final_run_state.json").exists()
+    assert result.returncode == 1
+    # Refused because the run already happened - NOT because the command names
+    # a receipt the entrypoint rejects. That distinction is defect 1.
+    assert "already been executed" in result.stdout
+    for wrong_reason in ("is refused", "hash mismatch", "not found"):
+        assert wrong_reason not in result.stdout, result.stdout
+    assert "Loading" not in result.stdout, "a model was loaded on a refused path"
+    assert_no_new_authorization(fingerprint)
+    assert_re_execution_is_blocked()
 
 
 def test_check_only_on_the_receipt_writes_no_sealed_state(receipt):

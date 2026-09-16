@@ -22,9 +22,23 @@ Split parsing is factored into a pure function that can be rehearsed against a
 non-sealed split, because the schema assumption was the other thing nobody had
 ever executed.
 
-Importing this module reads nothing. Only ``sealed_records`` touches the sealed
-shard, and it refuses unless the guard has already recorded a granted
-authorization.
+**This loader is permanently disabled.** The split it was written for was
+consumed by the failed authorized attempt of 2026-09-16, and gating on
+*authorization* turned out to be the wrong guarantee: once the guard recorded a
+granted authorization, that grant never expired, so an obsolete test path
+reached the split a second time. Authorization answers "was this permitted
+once"; it cannot answer "is there anything left to measure".
+
+So the refusal here is unconditional and comes first. It does not consult the
+guard, the token, the receipt, or any argument, and there is deliberately no
+override, flag or environment variable that re-enables it. A future independent
+final set must be measured by a separately authorized protocol, not by
+reactivating this file.
+
+``authorization_granted`` still reports the truth - an authorization *was*
+granted, once - because falsifying history to obtain safety would leave the
+record lying about what happened. Safety comes from the separate permanent
+refusal below.
 """
 from __future__ import annotations
 
@@ -49,6 +63,28 @@ REQUIRED_RECORD_FIELDS = (
 )
 
 
+#: Why this loader refuses, permanently and unconditionally.
+CONSUMED_SPLIT_REFUSAL = (
+    f"the {SEALED_SPLIT!r} split was consumed by the failed authorized attempt "
+    "of 2026-09-16 and may never be read again. A split that has been opened is "
+    "no longer held out, whatever it produced. This refusal is permanent: it "
+    "does not consult the guard, the token or any receipt, and it has no "
+    "override. A future independent final set requires a separately authorized "
+    "protocol, not this loader. See docs/SEALED_FINAL_INCIDENT.md."
+)
+
+
+def refuse_consumed_split(split_name: str = SEALED_SPLIT) -> None:
+    """Refuse the consumed split. Call before opening or iterating anything.
+
+    Deliberately takes no override and reads no state. The second unintended
+    access happened because the only gate was ``authorization_granted()``,
+    which is permanently true and therefore permanently permissive.
+    """
+    if str(split_name) == SEALED_SPLIT:
+        raise SealedAccessError(CONSUMED_SPLIT_REFUSAL)
+
+
 class SplitSchemaError(RuntimeError):
     """Raised when a split or its records do not have the expected shape."""
 
@@ -68,7 +104,12 @@ def select_split_records(
     Split order is preserved deliberately: the evaluation scope hash is taken
     over the id sequence, so a set-ordered result would produce a different
     scope digest for identical content.
+
+    The consumed split is refused here, before ``splits`` is indexed and before
+    a single id is read, so a caller that reaches this function with the wrong
+    split name still touches nothing.
     """
+    refuse_consumed_split(split_name)
     if split_name not in splits:
         raise SplitSchemaError(
             f"split {split_name!r} is absent; available: {sorted(splits)}")
@@ -121,7 +162,18 @@ def adapt_records(records: Sequence[Mapping[str, Any]]) -> List[Dict[str, Any]]:
 # --------------------------------------------------------------------------
 
 def authorization_granted() -> bool:
-    """True only once the guard has actually granted and spent an authorization."""
+    """Whether the guard ever granted an authorization. A historical fact.
+
+    This is **true** now, and will stay true: one authorization was granted and
+    spent on 2026-09-16. It is deliberately not falsified to obtain safety -
+    the state file is the record of what happened, and a record that lies about
+    history is worse than an unsafe gate.
+
+    It is also no longer a permission check. It answers "was this permitted
+    once", which is exactly the question that let an obsolete caller through a
+    second time. Permission now comes from ``refuse_consumed_split``, which
+    always says no.
+    """
     if not STATE_PATH.is_file():
         return False
     try:
@@ -141,8 +193,14 @@ def _require_authorization() -> None:
 
 
 def sealed_records(corpus_version: str = CORPUS_VERSION) -> List[Dict[str, Any]]:
-    """Load the sealed split. Refuses without a granted authorization."""
-    _require_authorization()
+    """Permanently refuses. The split it read is consumed.
+
+    The refusal is the first statement and consults nothing, so no corpus file
+    is opened on any path through this function. ``_require_authorization`` is
+    now unreachable from here by design: authorization was the gate that
+    failed, because a grant recorded once stays recorded forever.
+    """
+    refuse_consumed_split()
     corpus_dir = ROOT / "data" / "corpus" / corpus_version
     splits = json.loads((corpus_dir / "splits.json").read_text(encoding="utf-8"))
     records = json.loads((corpus_dir / "records.json").read_text(encoding="utf-8"))

@@ -23,6 +23,11 @@ from pathlib import Path
 
 import pytest
 
+from tests.sealed_history import (
+    assert_no_new_authorization, assert_old_output_is_empty,
+    assert_re_execution_is_blocked, guard_fingerprint,
+)
+
 from harness.generation_adapter import (
     GenerationSettings, chunked, generate_candidate_slots, successor_settings,
 )
@@ -390,8 +395,19 @@ def test_the_v4_receipt_binds_every_module(field):
     assert field in _v4()["final_evaluator_source"], field
 
 
-def test_the_v5_binding_matches_the_runtime():
-    assert entry.evaluator_binding_problems(_v4()) == []
+def test_the_v6_binding_now_refuses_because_the_loader_was_disabled():
+    """The binding guard must notice that the loader changed.
+
+    It matched exactly when the receipt was frozen. The loader has since been
+    permanently disabled, so the recorded hash is stale on purpose and
+    evaluator_binding_problems must say so. A receipt that still validated
+    would mean the guard had stopped watching the module it binds.
+
+    The settings binding is untouched by that change and must still pass.
+    """
+    problems = entry.evaluator_binding_problems(_v4())
+    assert len(problems) == 1
+    assert "loader_canonical_sha256" in problems[0]
     assert entry.settings_binding_problems(_v4()) == []
 
 
@@ -406,11 +422,18 @@ def test_the_v4_receipt_is_ready_and_untouched_by_sealed_data():
     assert receipt["sealed_records_read"] == 0
 
 
-def test_no_authorization_has_ever_been_granted():
-    assert not (ROOT / "results" / "sealed_final_state.json").exists()
-    assert not (ROOT / "results" / "sealed_final_run_state.json").exists()
+def test_exactly_one_authorization_was_granted_and_never_another():
+    """One grant, on 2026-09-16. The count may never rise.
+
+    This asserted zero grants until the attempt happened. Zero was the right
+    number then and is the wrong assertion now; what must hold permanently is
+    that the count stays at one.
+    """
+    assert_no_new_authorization()
+    assert_re_execution_is_blocked()
     audit = ROOT / "results" / "sealed_final_audit.log"
     if audit.exists():
         events = [json.loads(line) for line in
                   audit.read_text(encoding="utf-8").splitlines() if line.strip()]
-        assert [e for e in events if e.get("event") == "sealed_access_granted"] == []
+        granted = [e for e in events if e.get("event") == "sealed_access_granted"]
+        assert len(granted) == 1, f"expected one grant, found {len(granted)}"

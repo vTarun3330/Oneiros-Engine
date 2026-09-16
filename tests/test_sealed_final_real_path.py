@@ -25,6 +25,11 @@ from pathlib import Path
 
 import pytest
 
+from tests.sealed_history import (
+    assert_no_new_authorization, assert_old_output_is_empty,
+    assert_re_execution_is_blocked, guard_fingerprint,
+)
+
 from harness.generation_adapter import (
     ADAPTER_VERSION, GenerationSettings, adapter_source_hashes, empty_slots,
     generate_candidate_slots, successor_settings,
@@ -279,10 +284,17 @@ def test_the_rehearsal_never_touches_the_sealed_split():
     assert "ablation_dev.records.json" in source
 
 
-def test_the_loader_still_refuses_sealed_access_without_authorization():
+def test_the_loader_refuses_because_the_split_is_consumed():
+    """Authorization is no longer the gate, and no longer needs to be.
+
+    ``authorization_granted`` is permanently true - one grant was recorded and
+    spent - so it stopped being a refusal. The refusal is now unconditional and
+    reached before any corpus file is opened.
+    """
     from harness import sealed_final_loader
-    assert sealed_final_loader.authorization_granted() is False
-    with pytest.raises(SealedAccessError, match="without a granted authorization"):
+
+    assert sealed_final_loader.authorization_granted() is True
+    with pytest.raises(SealedAccessError, match="consumed"):
         sealed_final_loader.sealed_records()
 
 
