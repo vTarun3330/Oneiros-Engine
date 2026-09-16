@@ -25,7 +25,9 @@ from __future__ import annotations
 import hashlib
 import re
 from dataclasses import dataclass, asdict
-from typing import Any, Callable, Dict, List, Optional, Sequence
+from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence
+
+from harness.generation_rng import SEED_APPLICATION_VERSION, seed_generation_rngs
 
 ADAPTER_VERSION = "oneiros_generation_adapter_v1"
 
@@ -37,6 +39,14 @@ class GenerationSettings:
     candidate_parse_mode: str
     retain_raw_output: bool
     candidates_per_function: int
+    generation_batch_size: int
+    allow_test_function_candidates: bool
+    prompt_information_variant: str
+    output_instruction_variant: str
+    prompt_schema_version: str
+    attention_implementation: str
+    base_model_name: str
+    base_model_revision: str
     temperature: float
     top_p: float
     prompt_token_limit: int
@@ -50,6 +60,20 @@ class GenerationSettings:
             found.append(f"unknown candidate_parse_mode {self.candidate_parse_mode!r}")
         if self.candidates_per_function < 1:
             found.append("candidates_per_function must be positive")
+        if self.generation_batch_size < 1:
+            found.append("generation_batch_size must be positive")
+        if self.prompt_information_variant not in {"full", "minimal"}:
+            found.append(
+                f"unknown prompt_information_variant {self.prompt_information_variant!r}")
+        if self.output_instruction_variant not in {"self_contained", "bare"}:
+            found.append(
+                f"unknown output_instruction_variant {self.output_instruction_variant!r}")
+        if self.attention_implementation not in {"sdpa", "eager", "flash_attention_2"}:
+            found.append(
+                f"unknown attention_implementation {self.attention_implementation!r}")
+        if len(str(self.base_model_revision)) != 40:
+            found.append(
+                f"base_model_revision is not an immutable SHA: {self.base_model_revision!r}")
         if not 0.0 < self.temperature <= 2.0:
             found.append(f"temperature out of range: {self.temperature}")
         if not 0.0 < self.top_p <= 1.0:
@@ -69,10 +93,23 @@ def successor_settings() -> GenerationSettings:
     """The frozen successor protocol, read from its single definition."""
     from harness.successor_protocol import SUCCESSOR_PROTOCOL as P
     from config import model_config
+    from config.settings import immutable_revision_for
+    name = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
     return GenerationSettings(
         candidate_parse_mode=P["candidate_parse_mode"],
         retain_raw_output=P["retain_raw_output"],
         candidates_per_function=P["candidates_per_function"],
+        # Locked validation generated two targets per padded batch. A sealed run
+        # that generated one at a time would pad differently and therefore
+        # sample differently, so the number would not be comparable.
+        generation_batch_size=2,
+        allow_test_function_candidates=P["allow_test_function_candidates"],
+        prompt_information_variant="full",
+        output_instruction_variant="self_contained",
+        prompt_schema_version="oneiros_unified_test_generation_v2",
+        attention_implementation="sdpa",
+        base_model_name=name,
+        base_model_revision=immutable_revision_for(name) or "",
         temperature=model_config.temperature,
         top_p=model_config.top_p,
         prompt_token_limit=1024,
@@ -139,6 +176,7 @@ def generate_candidate_slots(
     build_pair_prompt: Callable[[Dict[str, Any]], str],
     prompt_additions: Optional[Dict[int, str]] = None,
     rank_offset: int = 0,
+    seed_before_generation: bool = False,
 ) -> Dict[int, Dict[str, Any]]:
     """Generate and parse candidates for a batch of records.
 
@@ -153,6 +191,11 @@ def generate_candidate_slots(
         raise ValueError(f"invalid generation settings: {bad}")
     if not generator.is_loaded:
         generator.load_model()
+    if seed_before_generation:
+        # Applied here, immediately before generation, by the one shared
+        # initializer. A seed recorded in a receipt but never applied asserts a
+        # reproducibility that does not exist.
+        seed_generation_rngs(settings.seed)
 
     tokenizer = generator.tokenizer
     num = settings.candidates_per_function
@@ -231,6 +274,25 @@ def generate_candidate_slots(
     return accounting
 
 
+def chunked(records: Sequence[Dict[str, Any]], size: int) -> Iterator[List[Dict[str, Any]]]:
+    """Split records into generation batches of exactly ``size`` where possible.
+
+    The final batch may be shorter. Batch composition affects left-padding and
+    therefore sampling, so this is part of the measured protocol rather than a
+    performance detail.
+    """
+    if size < 1:
+        raise ValueError("batch size must be positive")
+    batch: List[Dict[str, Any]] = []
+    for record in records:
+        batch.append(dict(record))
+        if len(batch) == size:
+            yield batch
+            batch = []
+    if batch:
+        yield batch
+
+
 def adapter_source_hashes() -> Dict[str, str]:
     """Identity of the shared generation path."""
     from pathlib import Path
@@ -239,6 +301,7 @@ def adapter_source_hashes() -> Dict[str, str]:
     return {
         "module": "harness/generation_adapter.py",
         "adapter_version": ADAPTER_VERSION,
+        "seed_application_version": SEED_APPLICATION_VERSION,
         "raw_sha256": raw_sha256(path),
         "canonical_sha256": canonical_sha256(path),
     }

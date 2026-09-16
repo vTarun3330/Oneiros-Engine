@@ -4,24 +4,26 @@ Separate from ``scripts/train_on_dataset.py`` on purpose: the development
 entrypoint refuses the sealed split outright, and this is the only path that
 can open it.
 
-**The ordering here is the whole design.** The first version of this file
-called the guard, the guard spent the token, and control then reached a comment
-saying the measurement was not implemented. A real authorization would have
-been consumed irreversibly with nothing to show for it, and the one split that
-cannot be measured twice would have been marked opened.
+**The ordering is the whole design, and it has been wrong twice.** The first
+version called the guard, spent the token, and only then reached a comment
+saying the measurement was unimplemented. The second implemented it but through
+a loader calling two functions that do not exist, with the parse mode left at
+its legacy default. Both would have cost the single authorization, and the
+second would not even have raised - it would have produced a plausible number
+under the wrong parser.
 
-So the token is now the *last* thing presented, not the first. In order:
+So the token is the last thing presented, and everything it depends on is
+proven first, on the real path:
 
-1. every non-sealed prerequisite is checked - receipt hash, bundle freeze,
-   evaluator presence and source identity, model files, revision, output path,
-   disk, CUDA;
-2. the evaluator is proven importable and callable;
-3. only then is the token presented to the guard;
-4. the measurement runs immediately, on the already-checked code path;
-5. an irreversible run-state receipt is persisted.
-
-A valid token must never be spent to discover that evaluation is unavailable.
-Every refusal below happens before ``open_sealed_split`` is reached.
+1. receipt hash, schema, bundle freeze, evaluator/adapter/loader/smoke/RNG
+   identity, prior-run state, model files, revision, output path, disk, CUDA;
+2. the model is loaded **once** and a two-record synthetic batch is generated,
+   scored and hash-checked through the same adapter the sealed run uses;
+3. only then is the token presented;
+4. the RNG is reset to the frozen seed and the **same prepared generator** runs
+   the sealed batch immediately - no second model load, because a load that
+   failed after the token would waste an authorization on code never proven;
+5. an irreversible run-state receipt is persisted either way.
 
 This file refuses by default and is committed so the procedure is reviewable in
 advance, not so it is convenient to execute.
@@ -45,19 +47,25 @@ from harness.sealed_final_evaluator import (  # noqa: E402
     EVALUATOR_VERSION, FinalEvaluationError, default_free_disk_bytes,
     environment_problems, evaluator_source_hashes, run_final_evaluation,
 )
+from harness.source_identity import canonical_sha256  # noqa: E402
 
-EXECUTABLE_RECEIPT = "results/v4_2_sealed_final_executable_receipt_v3.json"
+EXECUTABLE_RECEIPT = "results/v4_2_sealed_final_executable_receipt_v4.json"
 
 #: Receipt schema versions this entrypoint refuses outright.
 #:   v1 predates the final evaluator entirely.
-#:   v2 described a loader that called two functions which do not exist and
-#:      never set parse_mode, so it would have measured under the legacy
-#:      parser while claiming the successor protocol.
+#:   v2 described a loader calling two functions that do not exist, and never
+#:      set parse_mode.
+#:   v3 fixed those but never applied the frozen seed, generated one target at
+#:      a time where locked validation used two, left several generation
+#:      semantics unbound, loaded the model a second time after the token was
+#:      spent, and implied a baseline comparison it could not support.
 REFUSED_SCHEMA_VERSIONS = (
     "oneiros_sealed_final_readiness_v1",
     "oneiros_sealed_final_readiness_v2",
+    "oneiros_sealed_final_readiness_v3",
 )
-REQUIRED_SCHEMA_VERSION = "oneiros_sealed_final_readiness_v3"
+REQUIRED_SCHEMA_VERSION = "oneiros_sealed_final_readiness_v4"
+
 STATE_PATH = "results/sealed_final_state.json"
 AUDIT_LOG_PATH = "results/sealed_final_audit.log"
 RUN_STATE_PATH = "results/sealed_final_run_state.json"
@@ -88,15 +96,15 @@ def receipt_problems(receipt_path: Path, expected_sha256: str) -> tuple[dict, li
     schema = receipt.get("schema_version")
     if schema in REFUSED_SCHEMA_VERSIONS:
         problems.append(
-            f"receipt schema {schema} is refused: it predates the verified real "
-            "generation path. Only " + REQUIRED_SCHEMA_VERSION + " may authorize a run.")
+            f"receipt schema {schema} is refused: it predates the verified "
+            f"seed/batch/generator-reuse corrections. Only "
+            f"{REQUIRED_SCHEMA_VERSION} may authorize a run.")
     elif schema != REQUIRED_SCHEMA_VERSION:
-        problems.append(
-            f"receipt schema {schema!r} is not {REQUIRED_SCHEMA_VERSION!r}")
+        problems.append(f"receipt schema {schema!r} is not {REQUIRED_SCHEMA_VERSION!r}")
     if receipt.get("final_evaluator_executable") is not True:
         problems.append(
-            "this receipt does not declare the final evaluator executable; it is a "
-            "pre-implementation readiness artifact and cannot authorize a run")
+            "this receipt does not declare the final evaluator executable; it "
+            "cannot authorize a run")
     if receipt.get("ready_for_authorization") is not True:
         problems.append("receipt is not marked ready_for_authorization")
     if receipt.get("sealed_split_accessed") is not False:
@@ -105,32 +113,67 @@ def receipt_problems(receipt_path: Path, expected_sha256: str) -> tuple[dict, li
 
 
 def evaluator_binding_problems(receipt: dict) -> list[str]:
-    """The evaluator that will run must be the evaluator that was approved."""
+    """Every module that decides the number must be the approved one."""
     problems: list[str] = []
     recorded = receipt.get("final_evaluator_source") or {}
     if not recorded:
         return ["receipt records no final evaluator source identity"]
+
+    from harness.generation_adapter import adapter_source_hashes
+
     current = evaluator_source_hashes()
     if recorded.get("evaluator_version") != EVALUATOR_VERSION:
         problems.append(
             f"evaluator version differs: receipt {recorded.get('evaluator_version')!r}, "
             f"runtime {EVALUATOR_VERSION!r}")
-    from harness.generation_adapter import adapter_source_hashes
-    from harness.source_identity import canonical_sha256
-    adapter = recorded.get("adapter_canonical_sha256")
-    if adapter != adapter_source_hashes()["canonical_sha256"]:
-        problems.append(
-            "shared generation adapter differs from the approved receipt: "
-            f"{adapter} vs {adapter_source_hashes()['canonical_sha256']}")
-    smoke = recorded.get("smoke_canonical_sha256")
-    if smoke != canonical_sha256(ROOT / "harness" / "sealed_final_smoke.py"):
-        problems.append("smoke module differs from the approved receipt")
     for field in ("canonical_sha256", "measurement_logic_canonical_sha256"):
         if recorded.get(field) != current.get(field):
             problems.append(
-                f"final evaluator {field} differs from the approved receipt: "
-                f"{recorded.get(field)} vs {current.get(field)}")
+                f"final evaluator {field} differs from the approved receipt")
+
+    expected = {
+        "adapter_canonical_sha256": adapter_source_hashes()["canonical_sha256"],
+        "smoke_canonical_sha256": canonical_sha256(ROOT / "harness/sealed_final_smoke.py"),
+        "loader_canonical_sha256": canonical_sha256(ROOT / "harness/sealed_final_loader.py"),
+        "rng_canonical_sha256": canonical_sha256(ROOT / "harness/generation_rng.py"),
+        "entrypoint_canonical_sha256": canonical_sha256(ROOT / "scripts/run_sealed_final_test.py"),
+    }
+    for field, value in expected.items():
+        if recorded.get(field) != value:
+            problems.append(
+                f"{field} differs from the approved receipt: "
+                f"{recorded.get(field)} vs {value}")
     return problems
+
+
+def settings_binding_problems(receipt: dict) -> list[str]:
+    """The frozen generation semantics must match the runtime's, field by field."""
+    from harness.generation_adapter import GenerationSettings
+
+    frozen = (receipt.get("final_evaluator_source") or {}).get("frozen_generation_settings")
+    if not frozen:
+        return ["receipt records no frozen generation settings"]
+    try:
+        settings = GenerationSettings(**frozen)
+    except TypeError as exc:
+        return [f"frozen generation settings do not match the settings contract: {exc}"]
+
+    problems = list(settings.problems())
+    if settings.candidate_parse_mode != "whole_output":
+        problems.append("frozen settings do not use whole_output parsing")
+    if settings.generation_batch_size != 2:
+        problems.append(
+            f"frozen generation_batch_size is {settings.generation_batch_size}; "
+            "locked validation used 2 and batch shape changes sampling")
+    if settings.seed != 42:
+        problems.append(f"frozen seed is {settings.seed}, expected 42")
+    return problems
+
+
+def frozen_settings_from(receipt: dict):
+    from harness.generation_adapter import GenerationSettings
+    return GenerationSettings(
+        **receipt["final_evaluator_source"]["frozen_generation_settings"])
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -144,8 +187,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--run-name", default=FINAL_RUN_NAME)
     parser.add_argument(
         "--check-only", action="store_true",
-        help="Run every pre-authorization check and stop. Presents no token, "
-             "opens nothing, writes no state.")
+        help="Run every pre-authorization check, including the real two-record "
+             "model smoke, and stop. Presents no token, opens nothing, writes "
+             "no state.")
     args = parser.parse_args(argv)
 
     required_missing = [name for name, value in (
@@ -178,8 +222,12 @@ def main(argv: list[str] | None = None) -> int:
         ROOT / args.executable_receipt, args.expected_receipt_sha256 or "")
     problems.extend(receipt_issues)
 
+    settings = None
     if receipt and not receipt_issues:
         problems.extend(evaluator_binding_problems(receipt))
+        problems.extend(settings_binding_problems(receipt))
+        if not problems:
+            settings = frozen_settings_from(receipt)
 
         bundle = FinalBundle(fields=receipt.get("frozen_bundle", {}).get("fields", {}))
         if bundle.missing_fields():
@@ -193,6 +241,16 @@ def main(argv: list[str] | None = None) -> int:
             problems.append(
                 f"a final run state already exists at {RUN_STATE_PATH}; the sealed "
                 "final test has already been executed and must never run twice")
+
+        try:
+            from harness import sealed_final_loader
+            for symbol in ("sealed_records", "sealed_batch_generator",
+                           "build_sealed_generator", "select_split_records",
+                           "adapt_records"):
+                if not callable(getattr(sealed_final_loader, symbol, None)):
+                    problems.append(f"sealed loader is missing {symbol}")
+        except Exception as exc:  # noqa: BLE001
+            problems.append(f"sealed loader is not importable: {exc!r}")
 
         candidate = receipt.get("final_candidate") or {}
         try:
@@ -209,30 +267,6 @@ def main(argv: list[str] | None = None) -> int:
             except Exception:
                 return False
 
-        # The loader must exist and be importable BEFORE the token is
-        # presented. Its absence was the original defect in a second guise: a
-        # spent authorization followed by an ImportError is exactly the outcome
-        # this whole redesign exists to make impossible.
-        try:
-            from harness import sealed_final_loader
-            for symbol in ("sealed_records", "sealed_generator"):
-                if not callable(getattr(sealed_final_loader, symbol, None)):
-                    problems.append(f"sealed loader is missing {symbol}")
-        except Exception as exc:  # noqa: BLE001
-            problems.append(f"sealed loader is not importable: {exc!r}")
-
-        recorded_loader = (receipt.get("final_evaluator_source") or {}).get(
-            "loader_canonical_sha256")
-        if recorded_loader:
-            from harness.source_identity import canonical_sha256 as _canonical
-            current_loader = _canonical(ROOT / "harness" / "sealed_final_loader.py")
-            if recorded_loader != current_loader:
-                problems.append(
-                    "sealed loader source differs from the approved receipt: "
-                    f"{recorded_loader} vs {current_loader}")
-        else:
-            problems.append("receipt records no sealed loader source identity")
-
         problems.extend(environment_problems(
             output_dir=ROOT / "results" / args.run_name,
             model_name=candidate.get("model") or "",
@@ -245,25 +279,25 @@ def main(argv: list[str] | None = None) -> int:
             free_disk_bytes=default_free_disk_bytes,
         ))
 
-    # ---- PHASE 1b: the real model/prompt/parser path, on synthetic data ---
-    # Nothing here may be skipped. Every sealed defect so far survived because
-    # the real path was never executed: a nonexistent prompt function, a
-    # nonexistent generator method, and a parse mode left at its legacy
-    # default. Mocks cannot catch any of those; only running the model can.
+    # ---- PHASE 1b: load the model ONCE and prove the real path -----------
+    # The generator built here is the generator the sealed run uses. Building a
+    # second one after the token was spent meant a failure in that load would
+    # waste the single authorization on code that had never been proven.
     smoke_result = None
-    if not problems:
+    prepared = None
+    build_prompt = None
+    if not problems and settings is not None:
         try:
-            from harness.generation_adapter import successor_settings
+            from harness.sealed_final_loader import build_sealed_generator
             from harness.sealed_final_smoke import run_model_smoke, smoke_problems
-            settings = successor_settings()
-            print("Running required pre-authorization model smoke on a synthetic "
-                  "record (no sealed data, no token)...", flush=True)
+
+            prepared, settings, build_prompt = build_sealed_generator(receipt)
+            prepared.load_model()
+            print("Running required pre-authorization two-record model smoke on "
+                  "synthetic records (no sealed data, no token)...", flush=True)
             smoke_result = run_model_smoke(
-                model_name=(receipt.get("final_candidate") or {}).get("model") or "",
-                model_revision=(receipt.get("final_candidate") or {}).get(
-                    "model_revision") or "",
-                settings=settings,
-            )
+                settings=settings, build_pair_prompt=build_prompt,
+                generator=prepared)
             problems.extend(smoke_problems(smoke_result, settings))
         except Exception as exc:  # noqa: BLE001
             problems.append(f"pre-authorization model smoke failed: {exc!r}")
@@ -275,12 +309,12 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     if args.check_only:
-        print("PRE-AUTHORIZATION CHECKS PASSED, including the real model smoke.")
-        if smoke_result:
-            print(f"smoke    : {smoke_result['candidate_slots']} candidates, "
-                  f"parse_mode={smoke_result['observed_parse_mode']}, "
-                  f"killed={smoke_result['killing_candidates']}, "
-                  f"sealed_data_touched={smoke_result['sealed_data_touched']}")
+        print("PRE-AUTHORIZATION CHECKS PASSED, including the real two-record smoke.")
+        print(f"smoke    : {smoke_result['records_in_batch']} records padded together, "
+              f"{smoke_result['candidate_slots_total']} slots, "
+              f"parse_mode={smoke_result['observed_parse_mode']}, "
+              f"seed_applied={smoke_result['seed_applied']}, "
+              f"sealed_data_touched={smoke_result['sealed_data_touched']}")
         print("No token was presented. Nothing was opened. No state was written.")
         print(f"evaluator: {EVALUATOR_VERSION}")
         print(f"bundle   : {receipt.get('bundle_sha256')}")
@@ -297,42 +331,63 @@ def main(argv: list[str] | None = None) -> int:
         print(f"REFUSED: {exc}")
         return 1
 
-    # ---- PHASE 3: measure immediately, on the already-checked path -------
+    # ---- PHASE 3: measure immediately, on the already-proven generator ---
     output_dir = ROOT / "results" / args.run_name
     started = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     try:
-        from harness.sealed_final_loader import (  # type: ignore
-            sealed_generator, sealed_records,
-        )
+        from harness.generation_rng import rng_state_fingerprint, seed_generation_rngs
+        from harness.sealed_final_loader import sealed_batch_generator, sealed_records
+        from harness.sealed_final_smoke import generator_identity
+
+        # The smoke consumed randomness. Reset to the frozen seed immediately
+        # before real generation, and record that the reset actually moved the
+        # state rather than asserting a reset that no-oped.
+        before = rng_state_fingerprint()
+        seed_record = seed_generation_rngs(settings.seed)
+        seed_record["rng_state_before_reset"] = before
+        seed_record["rng_state_after_reset"] = rng_state_fingerprint()
+        seed_record["reset_immediately_before_sealed_generation"] = True
+
+        identity = generator_identity(prepared, settings)
+        identity["reused_from_pre_authorization_smoke"] = True
+        identity["smoke_generator_object_id"] = (
+            smoke_result["generator_identity"]["python_object_id"])
+        identity["same_object_as_smoke"] = (
+            identity["python_object_id"] == identity["smoke_generator_object_id"])
+
         outcome = run_final_evaluation(
             load_records=sealed_records,
-            generate=sealed_generator(receipt),
+            generate_batch=sealed_batch_generator(prepared, settings, build_prompt),
             output_dir=output_dir,
             bundle_sha256=receipt["bundle_sha256"],
-            frozen_settings=receipt["frozen_bundle"]["fields"],
-            candidates_per_target=int(
-                receipt["frozen_bundle"]["fields"]["candidates_per_target"]),
+            frozen_settings=settings.to_dict(),
+            candidates_per_target=settings.candidates_per_function,
+            generation_batch_size=settings.generation_batch_size,
+            allow_test_function=settings.allow_test_function_candidates,
             log=lambda message: print(message, flush=True),
+            seed_record=seed_record,
+            generator_identity=identity,
         )
         status = "completed"
         error = None
-    except (FinalEvaluationError, ImportError, Exception) as exc:  # noqa: BLE001
+    except Exception as exc:  # noqa: BLE001
         outcome, status, error = {}, "failed_after_authorization", repr(exc)
 
     # ---- PHASE 4: the run is irreversible either way ----------------------
     (ROOT / RUN_STATE_PATH).write_text(json.dumps({
-        "schema_version": "oneiros_sealed_final_run_state_v1",
+        "schema_version": "oneiros_sealed_final_run_state_v2",
         "status": status,
         "started_utc": started,
         "ended_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "bundle_sha256": receipt["bundle_sha256"],
         "executable_receipt_sha256": args.expected_receipt_sha256,
         "evaluator_source": evaluator_source_hashes(),
+        "pre_authorization_smoke": smoke_result,
         "authorization_spent": True,
         "may_never_run_again": True,
         "result": outcome,
         "error": error,
-    }, indent=2) + "\n", encoding="utf-8")
+    }, indent=2, default=str) + "\n", encoding="utf-8")
 
     if status != "completed":
         print(f"The authorized run FAILED after the token was spent: {error}")

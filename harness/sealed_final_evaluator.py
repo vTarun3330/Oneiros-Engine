@@ -163,15 +163,29 @@ def _slots_from_outputs(raw_outputs: Sequence[str], parsed: Sequence[Optional[st
     return slots
 
 
+def _chunked(records: Sequence[Mapping[str, Any]], size: int):
+    """Generation batches of exactly ``size`` where possible."""
+    if size < 1:
+        raise FinalEvaluationError("generation_batch_size must be positive")
+    batch: List[Mapping[str, Any]] = []
+    for record in records:
+        batch.append(record)
+        if len(batch) == size:
+            yield batch
+            batch = []
+    if batch:
+        yield batch
+
+
 def _evaluate_one_record(
     record: Mapping[str, Any],
-    generate: Callable[[Mapping[str, Any], int], Sequence[Mapping[str, Any]]],
+    generated: Sequence[Mapping[str, Any]],
     candidates_per_target: int,
     allow_test_function: bool,
 ) -> Dict[str, Any]:
-    """Generate for one target and score it with the frozen evaluator."""
+    """Score one target's already-generated candidates with the frozen evaluator."""
     entry_point = str(record.get("entry_point") or "")
-    generated = list(generate(record, candidates_per_target))
+    generated = list(generated)
     if len(generated) != candidates_per_target:
         raise FinalEvaluationError(
             f"generator returned {len(generated)} candidates for "
@@ -221,15 +235,18 @@ def _evaluate_one_record(
 def run_final_evaluation(
     *,
     load_records: Callable[[], Sequence[Mapping[str, Any]]],
-    generate: Callable[[Mapping[str, Any], int], Sequence[Mapping[str, Any]]],
+    generate_batch: Callable[[Sequence[Mapping[str, Any]]], Sequence[Sequence[Mapping[str, Any]]]],
     output_dir: Path,
     bundle_sha256: str,
     frozen_settings: Mapping[str, Any],
     candidates_per_target: int = 8,
+    generation_batch_size: int = 2,
     allow_test_function: bool = True,
     k_values: Sequence[int] = (1, 2, 4, 8),
     progress_every: int = 2,
     log: Optional[Callable[[str], None]] = None,
+    seed_record: Optional[Mapping[str, Any]] = None,
+    generator_identity: Optional[Mapping[str, Any]] = None,
 ) -> Dict[str, Any]:
     """Run the one-time final measurement and persist a complete artifact.
 
@@ -251,15 +268,31 @@ def run_final_evaluation(
     progress_dir = output_dir / "progress"
     progress_dir.mkdir(exist_ok=True)
 
-    for index, record in enumerate(records, start=1):
-        results.append(_evaluate_one_record(
-            record, generate, candidates_per_target, allow_test_function))
+    # Generated in batches, scored per target. Locked validation padded two
+    # targets per generate() call; a sealed run that generated one at a time
+    # would pad differently and therefore sample differently, so its number
+    # would not be comparable with the one it is meant to extend.
+    index = 0
+    batches = 0
+    for batch in _chunked(records, generation_batch_size):
+        outputs = list(generate_batch(batch))
+        batches += 1
+        if len(outputs) != len(batch):
+            raise FinalEvaluationError(
+                f"batch generation returned {len(outputs)} results for "
+                f"{len(batch)} targets")
+        for record, generated in zip(batch, outputs):
+            index += 1
+            results.append(_evaluate_one_record(
+                record, generated, candidates_per_target, allow_test_function))
         if index % progress_every == 0 or index == len(records):
             killed = sum(bool(item.get("killed")) for item in results)
             (progress_dir / f"progress.{index:06d}.json").write_text(
                 json.dumps({
                     "completed": index, "total": len(records), "killed": killed,
                     "elapsed_seconds": round(time.time() - started, 3),
+                    "batches": batches,
+                    "generation_batch_size": generation_batch_size,
                     "bundle_sha256": bundle_sha256,
                 }, indent=2) + "\n", encoding="utf-8")
             say(f"final evaluation progress={index}/{len(records)} killed={killed}")
@@ -295,6 +328,10 @@ def run_final_evaluation(
         "evaluation_scope_sha256": scope_sha256,
         "function_validation_records": len(records),
         "candidates_per_target": candidates_per_target,
+        "generation_batch_size": generation_batch_size,
+        "generation_batches": batches,
+        "seed_application": dict(seed_record) if seed_record else None,
+        "generator_identity": dict(generator_identity) if generator_identity else None,
         "raw_output_integrity": {
             "candidates": total, "missing": missing, "mismatched": mismatched,
             "complete": missing == 0 and mismatched == 0,
@@ -318,6 +355,7 @@ def run_final_evaluation(
         "function_validation_records": len(records),
         "evaluation_scope_sha256": scope_sha256,
         "kill_at_k": summary.get("kill_at_k"),
+        "generation_batches": batches,
         "raw_output_integrity": artifact["raw_output_integrity"],
         "wall_time_seconds": artifact["wall_time_seconds"],
     }

@@ -59,9 +59,12 @@ from harness.source_identity import (  # noqa: E402
 from harness.sealed_final_evaluator import (  # noqa: E402
     EVALUATOR_VERSION, environment_problems, evaluator_source_hashes,
 )
+from harness.generation_rng import (  # noqa: E402
+    SEED_APPLICATION_VERSION, SEEDED_GENERATORS,
+)
 from harness.successor_protocol import SUCCESSOR_PROTOCOL, protocol_sha256  # noqa: E402
 
-SCHEMA_VERSION = "oneiros_sealed_final_readiness_v3"
+SCHEMA_VERSION = "oneiros_sealed_final_readiness_v4"
 
 #: v1 receipts were emitted before the final evaluator existed. The first
 #: sealed entrypoint called the guard, spent the token, and only then reached
@@ -72,6 +75,7 @@ SCHEMA_VERSION = "oneiros_sealed_final_readiness_v3"
 SUPERSEDED_SCHEMA_VERSIONS = (
     "oneiros_sealed_final_readiness_v1",
     "oneiros_sealed_final_readiness_v2",
+    "oneiros_sealed_final_readiness_v3",
 )
 
 BASE_MODEL = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
@@ -82,6 +86,7 @@ FINAL_EVALUATOR = "harness/sealed_final_evaluator.py"
 SEALED_LOADER = "harness/sealed_final_loader.py"
 GENERATION_ADAPTER = "harness/generation_adapter.py"
 SMOKE_MODULE = "harness/sealed_final_smoke.py"
+RNG_MODULE = "harness/generation_rng.py"
 
 #: Committed evidence this decision rests on. Hashed, not summarised.
 DECISION_ARTIFACTS = (
@@ -91,10 +96,27 @@ DECISION_ARTIFACTS = (
     "results/v4_2_locked_validation_result_receipt.json",
 )
 
-#: Baselines the final measurement is reported against.
-BASELINE_ARTIFACTS = (
-    "results/v4_2_baseline_bundle_val.json",
-    "results/v4_2_atheris_tasks_val.manifest.json",
+#: Baseline scope, chosen explicitly. Option B of the two offered.
+#:
+#: The v3 bundle pinned val baseline artifacts - Atheris task manifests and a
+#: baseline bundle - inside a SEALED-FINAL freeze. Those baselines were never
+#: run on sealed targets under the sealed budget, so retaining them there would
+#: have implied a comparison the measurement cannot support. That is exactly the
+#: silent retention that turns a single-arm result into an apparent benchmark.
+#:
+#: So the sealed final test is scoped to the immutable-base Oneiros candidate
+#: alone. No baseline is bundled, none is claimed, and the receipt says so.
+#: Running frozen baseline runners on the sealed targets would be option A and
+#: would require its own freeze, its own rehearsals, and its own authorization.
+BASELINE_SCOPE = "oneiros_immutable_base_only_no_comparative_baseline"
+BASELINE_ARTIFACTS: tuple = ()
+BASELINE_SCOPE_STATEMENT = (
+    "This sealed final test measures the immutable-base Oneiros candidate only. "
+    "No baseline runner is included in the bundle and none is executed on the "
+    "sealed targets. The result therefore CANNOT support any comparative claim "
+    "against Atheris or any other baseline. Development and locked-validation "
+    "baseline artifacts exist for other splits and must not be presented "
+    "alongside this result as if they were sealed-final comparisons."
 )
 
 #: Run names that must never be written by the sealed run.
@@ -129,6 +151,8 @@ def git(*args: str) -> str:
 
 def build_bundle(problems: list[str]) -> tuple[FinalBundle, dict]:
     """The frozen configuration, assembled without touching the sealed split."""
+    from harness.generation_adapter import successor_settings
+    _settings = successor_settings()
     revision = immutable_revision_for(BASE_MODEL)
     if not revision or len(revision) != 40:
         problems.append(f"base model revision is not an immutable SHA: {revision!r}")
@@ -160,7 +184,20 @@ def build_bundle(problems: list[str]) -> tuple[FinalBundle, dict]:
             "max_sequence_tokens": protocol["max_sequence_tokens"],
         },
         "candidates_per_target": protocol["candidates_per_function"],
-        "seeds": {"generation_seed": protocol["generation_seed"]},
+        "generation_batch_size": _settings.generation_batch_size,
+        "allow_test_function_candidates": _settings.allow_test_function_candidates,
+        "prompt_information_variant": _settings.prompt_information_variant,
+        "output_instruction_variant": _settings.output_instruction_variant,
+        "attention_implementation": _settings.attention_implementation,
+        "tokenizer_name": BASE_MODEL,
+        "tokenizer_revision": revision,
+        "seeds": {
+            "generation_seed": protocol["generation_seed"],
+            "seed_application_version": SEED_APPLICATION_VERSION,
+            "seeded_generators": list(SEEDED_GENERATORS),
+            "applied_immediately_before_generation": True,
+        },
+        "baseline_scope": BASELINE_SCOPE,
         "sampling": {
             "temperature": protocol["temperature"],
             "top_p": protocol["top_p"],
@@ -183,8 +220,10 @@ def build_bundle(problems: list[str]) -> tuple[FinalBundle, dict]:
             "source_identity_scheme": HASH_SCHEME_VERSION,
         },
         "baseline_versions": {
-            rel: sha256_file(ROOT / rel) for rel in BASELINE_ARTIFACTS
-            if (ROOT / rel).is_file()
+            "baseline_scope": BASELINE_SCOPE,
+            "baselines_bundled": [],
+            "comparative_claims_supported": False,
+            "statement": BASELINE_SCOPE_STATEMENT,
         },
         "checkpoint_selection_rule": (
             "No checkpoint is selected. Locked validation retained the immutable "
@@ -199,8 +238,8 @@ def build_bundle(problems: list[str]) -> tuple[FinalBundle, dict]:
     missing = bundle.missing_fields()
     if missing:
         problems.append(f"bundle is not fully frozen; missing: {missing}")
-    if not fields["baseline_versions"]:
-        problems.append("no baseline artifacts were found to pin")
+    if fields["baseline_versions"].get("comparative_claims_supported") is not False:
+        problems.append("the bundle must not claim comparative baseline support")
     return bundle, view
 
 
@@ -335,6 +374,11 @@ def collect(problems: list[str]) -> dict:
         evaluator_source["adapter_canonical_sha256"] = canonical_sha256(ROOT / GENERATION_ADAPTER)
         evaluator_source["smoke_module"] = SMOKE_MODULE
         evaluator_source["smoke_canonical_sha256"] = canonical_sha256(ROOT / SMOKE_MODULE)
+        evaluator_source["rng_module"] = RNG_MODULE
+        evaluator_source["rng_canonical_sha256"] = canonical_sha256(ROOT / RNG_MODULE)
+        evaluator_source["seed_application_version"] = SEED_APPLICATION_VERSION
+        from harness.sealed_final_smoke import SMOKE_VERSION
+        evaluator_source["smoke_version"] = SMOKE_VERSION
         from harness.generation_adapter import ADAPTER_VERSION, successor_settings
         evaluator_source["adapter_version"] = ADAPTER_VERSION
         _settings = successor_settings()
@@ -342,6 +386,12 @@ def collect(problems: list[str]) -> dict:
         if _settings.candidate_parse_mode != "whole_output":
             evaluator_problems.append(
                 "frozen settings do not use whole_output parsing")
+        if _settings.generation_batch_size != 2:
+            evaluator_problems.append(
+                f"frozen generation_batch_size is {_settings.generation_batch_size}; "
+                "locked validation used 2 and batch shape changes sampling")
+        if _settings.seed != 42:
+            evaluator_problems.append(f"frozen seed is {_settings.seed}, expected 42")
         if _settings.problems():
             evaluator_problems.append(f"frozen settings invalid: {_settings.problems()}")
     except Exception as exc:  # noqa: BLE001
@@ -350,7 +400,7 @@ def collect(problems: list[str]) -> dict:
 
     try:
         from harness import sealed_final_loader as _loader
-        for symbol in ("sealed_records", "sealed_generator", "select_split_records",
+        for symbol in ("sealed_records", "sealed_batch_generator", "select_split_records",
                        "adapt_records", "build_sealed_generator"):
             if not callable(getattr(_loader, symbol, None)):
                 evaluator_problems.append(f"sealed loader is missing {symbol}")
@@ -366,7 +416,9 @@ def collect(problems: list[str]) -> dict:
         from engine.test_generation_prompt import build_unified_user_prompt, format_chat_prompt
         from scripts.train_on_dataset import build_pair_prompt, _record_to_pair
         from harness.generation_adapter import generate_candidate_slots
-        from harness.sealed_final_smoke import run_model_smoke, smoke_problems
+        from harness.sealed_final_smoke import (
+            prepare_generator, run_model_smoke, smoke_problems, synthetic_batch)
+        from harness.generation_rng import seed_generation_rngs
         for name, obj in (("Phi3Generator._parse_output", getattr(Phi3Generator, "_parse_output", None)),
                           ("compact_unified_user_prompt", compact_unified_user_prompt),
                           ("build_unified_user_prompt", build_unified_user_prompt),
@@ -375,7 +427,10 @@ def collect(problems: list[str]) -> dict:
                           ("_record_to_pair", _record_to_pair),
                           ("generate_candidate_slots", generate_candidate_slots),
                           ("run_model_smoke", run_model_smoke),
-                          ("smoke_problems", smoke_problems)):
+                          ("smoke_problems", smoke_problems),
+                          ("prepare_generator", prepare_generator),
+                          ("synthetic_batch", synthetic_batch),
+                          ("seed_generation_rngs", seed_generation_rngs)):
             if not callable(obj):
                 evaluator_problems.append(f"real generation symbol is missing: {name}")
         if hasattr(Phi3Generator, "generate_candidates"):
@@ -408,7 +463,7 @@ def collect(problems: list[str]) -> dict:
 
     exact_command = [
         ".venv-gpu/Scripts/python.exe", FINAL_ENTRYPOINT,
-        "--executable-receipt", "results/v4_2_sealed_final_executable_receipt_v3.json",
+        "--executable-receipt", "results/v4_2_sealed_final_executable_receipt_v4.json",
         "--expected-receipt-sha256", "<this receipt's sha256, printed on generation>",
         "--authorization-token", "<issued once, separately, against the bundle hash>",
         "--i-understand-this-is-one-time-and-irreversible",
@@ -483,6 +538,13 @@ def collect(problems: list[str]) -> dict:
                 "schema versions outright."),
         },
         "exact_command": exact_command,
+        "baseline_scope": {
+            "scope": BASELINE_SCOPE,
+            "baselines_bundled": [],
+            "comparative_claims_supported": False,
+            "statement": BASELINE_SCOPE_STATEMENT,
+            "option_chosen": "B - scope the sealed final test to immutable-base Oneiros only",
+        },
         "authorized_entrypoint": {
             "path": FINAL_ENTRYPOINT,
             "canonical_sha256": canonical_sha256(entry) if entry.is_file() else None,

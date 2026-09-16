@@ -26,6 +26,7 @@ from harness.candidate_policy import validate_function_assertion
 from harness.multi_mutant_examples import verified_completions_by_record
 from harness.o1_sidecar import append_o1_examples, load_o1_sidecar
 from harness.corpus import sha256_file, valid_corpus_version, verify_corpus
+from harness.generation_rng import seed_generation_rngs
 from harness.source_identity import (
     canonical_text_sha256,
     scheme_block as source_identity_scheme_block,
@@ -1387,10 +1388,20 @@ def generate_tests_ai_batched(
            for pair in pairs_chunk):
         raise ValueError("Live assertion generation only supports function_assertion records")
 
+    _name, _revision = resolved_base_model_identity()
     settings = GenerationSettings(
         candidate_parse_mode=CANDIDATE_PARSE_MODE,
         retain_raw_output=RETAIN_RAW_OUTPUT,
         candidates_per_function=num,
+        generation_batch_size=BATCH_GEN_SIZE,
+        allow_test_function_candidates=ALLOW_TEST_FUNCTION_CANDIDATES,
+        prompt_information_variant=PROMPT_INFORMATION_VARIANT,
+        output_instruction_variant=OUTPUT_INSTRUCTION_VARIANT,
+        prompt_schema_version=PROMPT_SCHEMA_VERSION,
+        attention_implementation=(
+            BASE_MODEL_ATTENTION_IMPLEMENTATION_OVERRIDE or "sdpa"),
+        base_model_name=_name,
+        base_model_revision=_revision,
         temperature=generator.temperature,
         top_p=generator.top_p,
         prompt_token_limit=PROMPT_TOKEN_LIMIT,
@@ -2040,9 +2051,10 @@ def _evaluate_adapter_kill_rate(
         ).hexdigest()
     )
 
-    torch.manual_seed(SEED)
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(SEED)
+    # One shared initializer, also used by the sealed final path. Inline
+    # seeding here is what let that path inherit the claim of a seed
+    # without the act of seeding.
+    seed_generation_rngs(SEED)
 
     started = time.time()
     # The SAME resolver that writes the receipts supplies the revision that
@@ -2319,10 +2331,7 @@ def _evaluate_loaded_sft_monitor(
     _, dtype_name = resolve_compute_dtype(torch)
     generator.runtime_profile = runtime_profile(dtype_name)
     try:
-        random.seed(SEED)
-        torch.manual_seed(SEED)
-        if torch.cuda.is_available():
-            torch.cuda.manual_seed_all(SEED)
+        seed_generation_rngs(SEED)
         if original_use_cache is not None:
             model.config.use_cache = True
 

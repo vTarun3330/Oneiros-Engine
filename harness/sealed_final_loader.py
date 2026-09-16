@@ -206,27 +206,27 @@ def build_sealed_generator(receipt: Mapping[str, Any]):
     return generator, settings, build_pair_prompt
 
 
-def sealed_generator(receipt: Mapping[str, Any]) -> Callable[
-        [Mapping[str, Any], int], Sequence[Dict[str, Any]]]:
-    """A per-record generate callable for the final evaluator.
+def sealed_batch_generator(generator, settings, build_prompt):
+    """A batch generate callable over an ALREADY PREPARED generator.
 
-    Wraps the shared adapter so the sealed run and locked validation execute
-    the same generation body.
+    Takes the loaded generator rather than building one, because the model that
+    was smoke-tested before authorization must be the model that runs after it.
+    Constructing a second one post-token meant a failure there would waste the
+    single authorization on a load that had never been proven.
     """
     from harness.generation_adapter import generate_candidate_slots
 
-    generator, settings, build_prompt = build_sealed_generator(receipt)
-    generator.load_model()
-
-    def generate(record: Mapping[str, Any], candidates: int) -> List[Dict[str, Any]]:
-        if candidates != settings.candidates_per_function:
-            raise SealedAccessError(
-                f"asked for {candidates} candidates, the frozen protocol declares "
-                f"{settings.candidates_per_function}")
+    def generate_batch(records: Sequence[Mapping[str, Any]]):
+        batch = [dict(record) for record in records]
         accounting = generate_candidate_slots(
-            generator, [dict(record)], settings, build_prompt)
-        slots = accounting[0]["candidate_slots"]
-        return [{"raw_output": slot.get("raw_output", ""), "code": slot.get("code")}
-                for slot in slots]
+            generator, batch, settings, build_prompt, seed_before_generation=False)
+        outputs = []
+        for index in range(len(batch)):
+            slots = accounting[index]["candidate_slots"]
+            outputs.append([
+                {"raw_output": slot.get("raw_output", ""), "code": slot.get("code")}
+                for slot in slots
+            ])
+        return outputs
 
-    return generate
+    return generate_batch
