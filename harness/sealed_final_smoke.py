@@ -95,6 +95,14 @@ def run_model_smoke(
 
     record = synthetic_record()
     started = datetime.now(timezone.utc)
+
+    # Whether the SMOKE pulls in the sealed loader, not whether anything ever
+    # did. The entrypoint legitimately imports it earlier to verify its symbols
+    # resolve, so an absolute "never imported" check fires on correct
+    # behaviour. What must stay true is that this code path does not reach for
+    # it.
+    import sys as _sys
+    loader_already_imported = "harness.sealed_final_loader" in _sys.modules
     accounting = generate_candidate_slots(
         generator, [record], settings, build_pair_prompt)
     slots = accounting[0]["candidate_slots"]
@@ -129,7 +137,15 @@ def run_model_smoke(
             "expected 'whole_output'")
 
     import sys
-    sealed_loader_imported = "harness.sealed_final_loader" in sys.modules
+    loader_imported_now = "harness.sealed_final_loader" in sys.modules
+    sealed_loader_imported = loader_imported_now and not loader_already_imported
+
+    # Belt and braces: even if it were imported, it cannot have returned sealed
+    # records, because it refuses without a granted authorization.
+    sealed_authorization_granted = False
+    if loader_imported_now:
+        sealed_authorization_granted = bool(
+            sys.modules["harness.sealed_final_loader"].authorization_granted())
 
     return {
         "smoke_version": SMOKE_VERSION,
@@ -150,6 +166,8 @@ def run_model_smoke(
         "executed_candidates": sum(bool(o.get("execution_valid")) for o in outcomes),
         "killing_candidates": sum(bool(o.get("killed")) for o in outcomes),
         "sealed_loader_imported": sealed_loader_imported,
+        "sealed_loader_already_imported_by_caller": loader_already_imported,
+        "sealed_authorization_granted": sealed_authorization_granted,
         "sealed_data_touched": False,
         "settings": settings.to_dict(),
         "passed": True,
@@ -172,7 +190,9 @@ def smoke_problems(result: Dict[str, Any], settings: GenerationSettings) -> list
     if result.get("scored_candidates") != settings.candidates_per_function:
         found.append("smoke did not score every candidate slot")
     if result.get("sealed_loader_imported"):
-        found.append("the sealed loader was imported during the smoke test")
+        found.append("the smoke test itself imported the sealed loader")
+    if result.get("sealed_authorization_granted"):
+        found.append("a sealed authorization is already granted before the smoke")
     if result.get("model_revision") and len(str(result["model_revision"])) != 40:
         found.append("smoke ran against a non-immutable model revision")
     if not result.get("record_is_synthetic"):

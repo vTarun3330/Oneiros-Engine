@@ -1,6 +1,6 @@
 {
   "schema_version": "oneiros_sealed_final_readiness_v3",
-  "created_utc": "2026-09-16T10:51:05Z",
+  "created_utc": "2026-09-16T10:55:33Z",
   "purpose": "Freeze the one-time sealed final measurement of the selected final candidate. This preflight opens nothing and authorizes nothing.",
   "sealed_split_accessed": false,
   "sealed_records_read": 0,
@@ -22,7 +22,7 @@
     "fields": {
       "adapter_path": "none - the immutable base model is the final candidate",
       "adapter_sha256": "320a87cc423b34ed8bb26502dbc503d163076b76edc4078a6d62089aa9d480e0",
-      "adapter_source_tree_sha256": "58cfa9aeb3d8ab30ad0e065f82f4d056a5502b8a",
+      "adapter_source_tree_sha256": "7bac046c0f5a36c8992d04c555b61f9c1bbc8710",
       "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
       "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
       "corpus_version": "v4_1_research_hardened_candidate",
@@ -64,12 +64,12 @@
       },
       "checkpoint_selection_rule": "No checkpoint is selected. Locked validation retained the immutable base model: Arm A@431 gained +3.4346 Kill@8 points on val with McNemar exact p=0.0783 against a required p<0.01, and lost 11.8726 points of reference validity. The final candidate is therefore the base model with no adapter, per results/v4_2_locked_validation_result_receipt.json."
     },
-    "created_utc": "2026-09-16T10:51:01+00:00",
-    "bundle_sha256": "2853df3fb42ddbe7d5604923d292d8bf16c765cea1980d4853fd99c3bb9158d2",
+    "created_utc": "2026-09-16T10:55:29+00:00",
+    "bundle_sha256": "2b1462c377034146d3598fdd4082f955e658c96ed7d310ebf595dba6058bc575",
     "missing_fields": [],
     "frozen": true
   },
-  "bundle_sha256": "2853df3fb42ddbe7d5604923d292d8bf16c765cea1980d4853fd99c3bb9158d2",
+  "bundle_sha256": "2b1462c377034146d3598fdd4082f955e658c96ed7d310ebf595dba6058bc575",
   "evaluation_defining_sources": {
     "candidate_policy": {
       "path": "harness/candidate_policy.py",
@@ -164,7 +164,7 @@
     "adapter_module": "harness/generation_adapter.py",
     "adapter_canonical_sha256": "1d090e5a4b7e2460eeeaffb651598015b077e00b73a3fd3126e6770255306fb6",
     "smoke_module": "harness/sealed_final_smoke.py",
-    "smoke_canonical_sha256": "912b170f22acdc75649d3b07fbf9c74e407092dbb8e9651238a6063878f6fd64",
+    "smoke_canonical_sha256": "d2fc2b0bae5b0b27c84ce0344366e1fd5c027ea57d3fbf2507349c94bd9b8943",
     "adapter_version": "oneiros_generation_adapter_v1",
     "frozen_generation_settings": {
       "candidate_parse_mode": "whole_output",
@@ -234,12 +234,10 @@
     "SFT improved development Kill@8 and produced a positive but statistically insufficient locked-validation Kill@8 result, alongside a large reference-validity regression."
   ],
   "reproducibility": {
-    "git_commit": "58cfa9aeb3d8ab30ad0e065f82f4d056a5502b8a",
+    "git_commit": "7bac046c0f5a36c8992d04c555b61f9c1bbc8710",
     "git_dirty": true,
     "python_version": "3.12.14"
   },
-  "preflight_problems": [
-    "evaluation-defining sources differ from committed content: ['scripts/train_on_dataset.py']"
-  ],
-  "ready_for_authorization": false
+  "preflight_problems": [],
+  "ready_for_authorization": true
 }

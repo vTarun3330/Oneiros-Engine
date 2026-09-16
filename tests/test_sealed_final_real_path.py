@@ -316,7 +316,7 @@ def test_smoke_problems_catch_each_regression():
         dict(good, candidate_slots=4), settings))
     assert any("raw-output hashes" in p for p in smoke_problems(
         dict(good, raw_output_hashes_verified=False), settings))
-    assert any("sealed loader was imported" in p for p in smoke_problems(
+    assert any("imported the sealed loader" in p for p in smoke_problems(
         dict(good, sealed_loader_imported=True), settings))
     assert any("non-immutable model revision" in p for p in smoke_problems(
         dict(good, model_revision="main"), settings))
