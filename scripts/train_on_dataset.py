@@ -27,6 +27,9 @@ from harness.multi_mutant_examples import verified_completions_by_record
 from harness.o1_sidecar import append_o1_examples, load_o1_sidecar
 from harness.corpus import sha256_file, valid_corpus_version, verify_corpus
 from harness.generation_rng import seed_generation_rngs
+from harness.prompt_factory import (
+    PromptSettings, build_record_prompt, prompt_factory,
+)
 from harness.source_identity import (
     canonical_text_sha256,
     scheme_block as source_identity_scheme_block,
@@ -576,6 +579,20 @@ def extract_dataset_tests(test_cases: List[str], entry_point: str) -> List[str]:
     return extract_dataset_assertions(test_cases, entry_point)
 
 
+def current_prompt_settings() -> PromptSettings:
+    """Turn this run's CLI state into an explicit settings object.
+
+    Development code is allowed to read its own globals to build this. What
+    it may not do is let a builder read them at render time, which is how a
+    sealed run could have inherited a changed CLI default.
+    """
+    return PromptSettings(
+        information_variant=PROMPT_INFORMATION_VARIANT,
+        output_instruction_variant=OUTPUT_INSTRUCTION_VARIANT,
+        prompt_schema_version=PROMPT_SCHEMA_VERSION,
+    )
+
+
 def build_prompt(
     code_under_test: str, entry_point: str, specification: str = "",
     execution_mode: str = FUNCTION_EXECUTION_MODE,
@@ -587,15 +604,19 @@ def build_prompt(
     and expected completion are deliberately absent from this API so callers
     cannot accidentally leak them into the model-visible prompt.
     """
-    return build_unified_user_prompt(
-        code_under_test=code_under_test,
-        execution_mode=execution_mode,
-        specification=specification,
-        support_context=support_context,
-        target_symbols=target_symbols,
-        entry_point=entry_point,
-        information_variant=PROMPT_INFORMATION_VARIANT,
-        output_instruction_variant=OUTPUT_INSTRUCTION_VARIANT,
+    # The CLI globals are read HERE, to construct explicit settings, and the
+    # shared factory receives them as an argument. The sealed path builds its
+    # own settings from its frozen receipt and never reaches these globals.
+    return build_record_prompt(
+        {
+            "prompt_code_under_test": code_under_test,
+            "execution_mode": execution_mode,
+            "specification": specification,
+            "support_context": support_context,
+            "target_symbols": target_symbols,
+            "entry_point": entry_point,
+        },
+        current_prompt_settings(),
     )
 
 

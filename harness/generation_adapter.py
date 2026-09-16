@@ -28,6 +28,7 @@ from dataclasses import dataclass, asdict
 from typing import Any, Callable, Dict, Iterator, List, Optional, Sequence
 
 from harness.generation_rng import SEED_APPLICATION_VERSION, seed_generation_rngs
+from harness.prompt_factory import PromptSettings
 
 ADAPTER_VERSION = "oneiros_generation_adapter_v1"
 
@@ -62,12 +63,15 @@ class GenerationSettings:
             found.append("candidates_per_function must be positive")
         if self.generation_batch_size < 1:
             found.append("generation_batch_size must be positive")
-        if self.prompt_information_variant not in {"full", "minimal"}:
-            found.append(
-                f"unknown prompt_information_variant {self.prompt_information_variant!r}")
-        if self.output_instruction_variant not in {"self_contained", "bare"}:
-            found.append(
-                f"unknown output_instruction_variant {self.output_instruction_variant!r}")
+        # Validated against the prompt engine's own constants. The hand-written
+        # sets these replace were wrong in both directions: they invented
+        # "minimal" and "bare", which the engine rejects, and refused four
+        # variants it accepts.
+        found.extend(PromptSettings(
+            information_variant=self.prompt_information_variant,
+            output_instruction_variant=self.output_instruction_variant,
+            prompt_schema_version=self.prompt_schema_version,
+        ).problems())
         if self.attention_implementation not in {"sdpa", "eager", "flash_attention_2"}:
             found.append(
                 f"unknown attention_implementation {self.attention_implementation!r}")
@@ -88,12 +92,21 @@ class GenerationSettings:
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
 
+    def prompt_settings(self) -> PromptSettings:
+        """The prompt half of these settings, as an explicit object."""
+        return PromptSettings(
+            information_variant=self.prompt_information_variant,
+            output_instruction_variant=self.output_instruction_variant,
+            prompt_schema_version=self.prompt_schema_version,
+        )
+
 
 def successor_settings() -> GenerationSettings:
     """The frozen successor protocol, read from its single definition."""
     from harness.successor_protocol import SUCCESSOR_PROTOCOL as P
     from config import model_config
     from config.settings import immutable_revision_for
+    from engine.test_generation_prompt import PROMPT_SCHEMA_VERSION
     name = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
     return GenerationSettings(
         candidate_parse_mode=P["candidate_parse_mode"],
@@ -106,7 +119,7 @@ def successor_settings() -> GenerationSettings:
         allow_test_function_candidates=P["allow_test_function_candidates"],
         prompt_information_variant="full",
         output_instruction_variant="self_contained",
-        prompt_schema_version="oneiros_unified_test_generation_v2",
+        prompt_schema_version=PROMPT_SCHEMA_VERSION,
         attention_implementation="sdpa",
         base_model_name=name,
         base_model_revision=immutable_revision_for(name) or "",

@@ -49,7 +49,7 @@ from harness.sealed_final_evaluator import (  # noqa: E402
 )
 from harness.source_identity import canonical_sha256  # noqa: E402
 
-EXECUTABLE_RECEIPT = "results/v4_2_sealed_final_executable_receipt_v4.json"
+EXECUTABLE_RECEIPT = "results/v4_2_sealed_final_executable_receipt_v5.json"
 
 #: Receipt schema versions this entrypoint refuses outright.
 #:   v1 predates the final evaluator entirely.
@@ -63,8 +63,12 @@ REFUSED_SCHEMA_VERSIONS = (
     "oneiros_sealed_final_readiness_v1",
     "oneiros_sealed_final_readiness_v2",
     "oneiros_sealed_final_readiness_v3",
+    #   v4 bound seed, batch and generator reuse, but the sealed loader still
+    #      imported a trainer helper that read mutable prompt globals, and the
+    #      prompt-defining sources were not bound by hash.
+    "oneiros_sealed_final_readiness_v4",
 )
-REQUIRED_SCHEMA_VERSION = "oneiros_sealed_final_readiness_v4"
+REQUIRED_SCHEMA_VERSION = "oneiros_sealed_final_readiness_v5"
 
 STATE_PATH = "results/sealed_final_state.json"
 AUDIT_LOG_PATH = "results/sealed_final_audit.log"
@@ -136,6 +140,7 @@ def evaluator_binding_problems(receipt: dict) -> list[str]:
         "smoke_canonical_sha256": canonical_sha256(ROOT / "harness/sealed_final_smoke.py"),
         "loader_canonical_sha256": canonical_sha256(ROOT / "harness/sealed_final_loader.py"),
         "rng_canonical_sha256": canonical_sha256(ROOT / "harness/generation_rng.py"),
+        "prompt_factory_canonical_sha256": canonical_sha256(ROOT / "harness/prompt_factory.py"),
         "entrypoint_canonical_sha256": canonical_sha256(ROOT / "scripts/run_sealed_final_test.py"),
     }
     for field, value in expected.items():
@@ -143,6 +148,12 @@ def evaluator_binding_problems(receipt: dict) -> list[str]:
             problems.append(
                 f"{field} differs from the approved receipt: "
                 f"{recorded.get(field)} vs {value}")
+
+    # Every source that can change a rendered prompt. A prompt that changed
+    # between freeze and run would change the measurement without changing any
+    # recorded setting.
+    from harness.prompt_factory import prompt_binding_problems
+    problems.extend(prompt_binding_problems(recorded.get("prompt_binding"), ROOT))
     return problems
 
 
@@ -167,6 +178,15 @@ def settings_binding_problems(receipt: dict) -> list[str]:
             "locked validation used 2 and batch shape changes sampling")
     if settings.seed != 42:
         problems.append(f"frozen seed is {settings.seed}, expected 42")
+
+    prompt_settings = settings.prompt_settings()
+    problems.extend(prompt_settings.problems())
+    recorded_prompt = (receipt.get("final_evaluator_source") or {}).get(
+        "frozen_prompt_settings")
+    if recorded_prompt != prompt_settings.to_dict():
+        problems.append(
+            "frozen prompt settings differ from the approved receipt: "
+            f"{recorded_prompt} vs {prompt_settings.to_dict()}")
     return problems
 
 

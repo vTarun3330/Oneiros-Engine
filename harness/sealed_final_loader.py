@@ -210,8 +210,11 @@ def build_sealed_generator(receipt: Mapping[str, Any]):
     generator.top_p = settings.top_p
     generator.parse_mode = settings.candidate_parse_mode
 
-    from scripts.train_on_dataset import build_pair_prompt
-    return generator, settings, build_pair_prompt
+    # A builder closed over the FROZEN settings, not over trainer module
+    # defaults. Importing the trainer helper meant the sealed run rendered
+    # prompts under whatever the CLI globals held at call time.
+    from harness.prompt_factory import prompt_factory
+    return generator, settings, prompt_factory(settings.prompt_settings())
 
 
 def sealed_batch_generator(generator, settings, build_prompt):

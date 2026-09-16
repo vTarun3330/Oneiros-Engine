@@ -64,7 +64,7 @@ from harness.generation_rng import (  # noqa: E402
 )
 from harness.successor_protocol import SUCCESSOR_PROTOCOL, protocol_sha256  # noqa: E402
 
-SCHEMA_VERSION = "oneiros_sealed_final_readiness_v4"
+SCHEMA_VERSION = "oneiros_sealed_final_readiness_v5"
 
 #: v1 receipts were emitted before the final evaluator existed. The first
 #: sealed entrypoint called the guard, spent the token, and only then reached
@@ -76,6 +76,7 @@ SUPERSEDED_SCHEMA_VERSIONS = (
     "oneiros_sealed_final_readiness_v1",
     "oneiros_sealed_final_readiness_v2",
     "oneiros_sealed_final_readiness_v3",
+    "oneiros_sealed_final_readiness_v4",
 )
 
 BASE_MODEL = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
@@ -87,6 +88,7 @@ SEALED_LOADER = "harness/sealed_final_loader.py"
 GENERATION_ADAPTER = "harness/generation_adapter.py"
 SMOKE_MODULE = "harness/sealed_final_smoke.py"
 RNG_MODULE = "harness/generation_rng.py"
+PROMPT_FACTORY_MODULE = "harness/prompt_factory.py"
 
 #: Committed evidence this decision rests on. Hashed, not summarised.
 DECISION_ARTIFACTS = (
@@ -379,6 +381,17 @@ def collect(problems: list[str]) -> dict:
         evaluator_source["seed_application_version"] = SEED_APPLICATION_VERSION
         from harness.sealed_final_smoke import SMOKE_VERSION
         evaluator_source["smoke_version"] = SMOKE_VERSION
+        from harness.prompt_factory import (
+            PROMPT_FACTORY_VERSION, prompt_factory_source_hashes,
+        )
+        evaluator_source["prompt_factory_module"] = PROMPT_FACTORY_MODULE
+        evaluator_source["prompt_factory_version"] = PROMPT_FACTORY_VERSION
+        evaluator_source["prompt_binding"] = prompt_factory_source_hashes(ROOT)
+        _prompt_settings = _settings.prompt_settings()
+        evaluator_source["frozen_prompt_settings"] = _prompt_settings.to_dict()
+        if _prompt_settings.problems():
+            evaluator_problems.append(
+                f"frozen prompt settings invalid: {_prompt_settings.problems()}")
         from harness.generation_adapter import ADAPTER_VERSION, successor_settings
         evaluator_source["adapter_version"] = ADAPTER_VERSION
         _settings = successor_settings()
