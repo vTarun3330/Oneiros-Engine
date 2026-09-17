@@ -277,6 +277,32 @@ provisioned checkouts and the historical interpreters from
 a real-repository kill rate; report `executed_candidates` alongside
 `inconclusive_candidates` so the coverage is visible.
 
+## 9a. Execution path: demonstrated at full scale (2026-09-17)
+
+**The full-scale permitted-split execution path is now demonstrated: admission,
+scoping, base-model loading, generation, whole-output parsing, safe execution,
+raw-output integrity, progress artifacts, and scoring reproduced the historical
+base result exactly. This validates pipeline operation, not model quality.**
+
+One operational rehearsal, `ablation_dev` only, base model, no adapter, seed 42,
+542 targets, 4,336 candidates, exit 0 in 577.8 s. Kill@8 `0.605166`, matching the
+recorded development base figure exactly.
+
+Commands, for reference — **do not rerun**; one rehearsal was authorized and it
+completed:
+
+```
+.venv-gpu/Scripts/python.exe scripts/build_rehearsal_receipt.py
+.venv-gpu/Scripts/python.exe scripts/run_rehearsal_evaluation.py \
+    --receipt results/v4_2_rehearsal_receipt.json \
+    --expected-receipt-sha256 <sha> --dry-run        # CPU gate
+```
+
+The rehearsal produced **no model-performance claim**. It is not a
+generalization result, not a selection result, not a baseline comparison, and
+not a final test. Sanitised receipt:
+`results/v4_2_rehearsal_execution_receipt.json`.
+
 ## 9b. Final test stop point — the `test` split is CONSUMED
 
 **Do not plan a final test against `test`. There is no longer one to run.**

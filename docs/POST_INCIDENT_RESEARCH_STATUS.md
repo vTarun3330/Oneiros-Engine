@@ -69,6 +69,32 @@ Receipts: `results/v4_2_frozen_development_evaluation_receipt.json`
 
 ---
 
+### The execution path is demonstrated at full scale (2026-09-17)
+
+**The full-scale permitted-split execution path is now demonstrated: admission,
+scoping, base-model loading, generation, whole-output parsing, safe execution,
+raw-output integrity, progress artifacts, and scoring reproduced the historical
+base result exactly. This validates pipeline operation, not model quality.**
+
+One GPU operational rehearsal on `ablation_dev`, base Qwen at the immutable
+revision, no adapter, seed 42, 542 targets, 4,336 candidates, 577.8 s, exit 0.
+Kill@8 came out at **0.605166** — bit-for-bit the figure the four-arm
+development evaluation recorded for the base model on the same split.
+
+That exact match is the finding, and it is a finding about *code*: the rehearsal
+path is not a lookalike of the measured pipeline, it computes the same number.
+It says nothing about the model. `ablation_dev` selected the checkpoints it
+scored, so the rehearsal's Kill@k values are operational facts and **not** a
+generalization result, a model-performance result, a basis for selection, an
+Oneiros-versus-Atheris comparison, or a final-test result.
+
+This is what the sealed final test never got: the path executed end to end, on
+real data, at full scale, before anything irreversible depended on it.
+
+Sanitised evidence: `results/v4_2_rehearsal_execution_receipt.json`. The raw
+artifact is retained locally, Git-ignored, and referenced by SHA-256
+`3d72891452c586820300079ae83bf998415975eb808bea425e1a0a4d859e5c77`.
+
 ## 2. Inconclusive results
 
 - **Whether SFT generalizes.** Locked validation produced a **positive but not
