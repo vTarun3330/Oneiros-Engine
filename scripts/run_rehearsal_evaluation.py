@@ -44,6 +44,9 @@ from harness.rehearsal_evaluator import (  # noqa: E402
 )
 
 DEFAULT_RECEIPT = "results/v4_2_rehearsal_receipt.json"
+#: The count ablation_dev must resolve to. Stated here as well as in the
+#: receipt so a receipt froze the wrong number cannot simply assert itself.
+EXPECTED_TARGETS = 542
 DEFAULT_SPLIT = "ablation_dev"
 DEFAULT_RUN_NAME = "rehearsal_ablationdev_base_qwen_s42"
 CORPUS_VERSION = "v4_1_research_hardened_candidate"
@@ -70,11 +73,18 @@ def load_scope(split: str, corpus_version: str = CORPUS_VERSION):
 
 
 def receipt_problems(receipt_path: Path, expected_sha256: str):
-    """Load the rehearsal receipt, refusing anything that is not exactly it."""
+    """Load the rehearsal receipt, refusing anything that is not exactly it.
+
+    The SHA is **required**, on the dry run as much as on the real one. A dry
+    run that accepts an absent or unverified receipt proves the pipeline works
+    under settings nobody froze, which is the opposite of what a gate is for.
+    """
+    if not str(expected_sha256 or "").strip():
+        return {}, ["--expected-receipt-sha256 is required"]
     if not receipt_path.is_file():
         return {}, [f"rehearsal receipt not found: {receipt_path}"]
     actual = sha256_file(receipt_path)
-    if expected_sha256 and actual != str(expected_sha256).strip().lower():
+    if actual != str(expected_sha256).strip().lower():
         return {}, [
             "rehearsal receipt hash mismatch\n"
             f"  expected: {expected_sha256}\n  found   : {actual}"]
@@ -87,22 +97,71 @@ def receipt_problems(receipt_path: Path, expected_sha256: str):
     if receipt.get("schema_version") != REHEARSAL_VERSION:
         problems.append(
             f"receipt schema {receipt.get('schema_version')!r} is not {REHEARSAL_VERSION!r}")
-    if receipt.get("operational_rehearsal") is not True:
-        problems.append("receipt does not declare itself an operational rehearsal")
-    if receipt.get("eligible_for_model_selection") is not False:
-        problems.append("receipt does not disclaim model selection")
+    if receipt.get("ready_for_rehearsal") is not True:
+        problems.append("receipt is not marked ready_for_rehearsal")
+    if receipt.get("receipt_problems"):
+        problems.append(f"receipt records its own problems: {receipt['receipt_problems']}")
+
+    # The three denials. A rehearsal receipt that does not disclaim these is
+    # not a rehearsal receipt.
+    for field, expected in (
+        ("operational_rehearsal", True),
+        ("final_test_measurement", False),
+        ("eligible_for_model_selection", False),
+        ("supports_performance_claim", False),
+    ):
+        if receipt.get(field) is not expected:
+            problems.append(f"receipt {field} is {receipt.get(field)!r}, expected {expected!r}")
+
     split = receipt.get("input_split")
     if split in REFUSED_SPLITS:
         problems.append(f"receipt names a refused split: {split!r}")
+    if receipt.get("expected_target_count") != EXPECTED_TARGETS:
+        problems.append(
+            f"receipt freezes {receipt.get('expected_target_count')!r} targets, "
+            f"expected {EXPECTED_TARGETS}")
+    if receipt.get("candidate", {}).get("adapter") is not None:
+        problems.append("receipt names an adapter; this rehearsal is base-model only")
+
     problems.extend(admission_binding_problems(
         (receipt.get("source_hashes") or {}).get("admission"), ROOT))
+    problems.extend(source_binding_problems(receipt))
     return receipt, problems
+
+
+def source_binding_problems(receipt) -> list:
+    """Every rehearsal-defining source must still hash to what was frozen.
+
+    Checked before the model is opened, so a changed prompt, adapter, admission
+    rule or scorer stops the run rather than silently changing what it measures.
+    """
+    from harness.source_identity import canonical_sha256
+
+    recorded = receipt.get("source_hashes") or {}
+    if not recorded:
+        return ["receipt records no source hashes"]
+    problems = []
+    for role, entry in sorted(recorded.items()):
+        if not isinstance(entry, dict) or "path" not in entry:
+            continue  # nested binding blocks are checked by their own verifier
+        path = ROOT / entry["path"]
+        if not path.is_file():
+            problems.append(f"bound source {role} is missing: {entry['path']}")
+            continue
+        now = canonical_sha256(path)
+        if entry.get("canonical_sha256") != now:
+            problems.append(
+                f"bound source {role} ({entry['path']}) changed since the "
+                f"receipt was frozen: {entry.get('canonical_sha256')} vs {now}")
+    return problems
 
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    # Required on BOTH paths. The dry run is a gate, not a convenience.
     parser.add_argument("--receipt", default=DEFAULT_RECEIPT)
-    parser.add_argument("--expected-receipt-sha256", default=None)
+    parser.add_argument("--expected-receipt-sha256", default=None,
+                        help="Required. The exact SHA-256 of --receipt.")
     parser.add_argument("--split", default=DEFAULT_SPLIT)
     parser.add_argument("--run-name", default=DEFAULT_RUN_NAME)
     parser.add_argument(
@@ -123,21 +182,25 @@ def main(argv=None) -> int:
         print(f"REFUSED: {exc}")
         return 2
 
-    problems = []
-    receipt = {}
-    receipt_sha = ""
+    # The receipt gate, on BOTH paths. A dry run that skipped it would prove
+    # the pipeline works under settings nobody froze.
     receipt_path = ROOT / args.receipt
-    if receipt_path.is_file():
-        receipt, problems = receipt_problems(
-            receipt_path, args.expected_receipt_sha256 or "")
-        receipt_sha = sha256_file(receipt_path)
-    elif not args.dry_run:
-        problems.append(f"rehearsal receipt not found: {args.receipt}")
+    receipt, problems = receipt_problems(
+        receipt_path, args.expected_receipt_sha256 or "")
+    receipt_sha = sha256_file(receipt_path) if receipt_path.is_file() else ""
 
-    if receipt and receipt.get("input_split") and receipt["input_split"] != args.split:
+    if receipt and receipt.get("input_split") != args.split:
         problems.append(
-            f"receipt freezes split {receipt['input_split']!r}, "
+            f"receipt freezes split {receipt.get('input_split')!r}, "
             f"--split says {args.split!r}")
+
+    if problems:
+        print(f"split                 : {args.split}")
+        print(f"receipt               : {args.receipt}")
+        print("\nRECEIPT GATE FAILED - nothing was opened, no model was loaded:")
+        for item in problems:
+            print(f"  - {item}")
+        return 1
 
     # ---- scope resolution -------------------------------------------------
     try:
@@ -146,10 +209,16 @@ def main(argv=None) -> int:
         print(f"REFUSED: {exc}")
         return 1
 
-    expected = (receipt.get("expected_target_count") if receipt else None)
-    if expected is not None and scope.target_count != expected:
+    # The receipt froze a count and a scope digest. Both must still resolve to
+    # the same thing, or the corpus moved under a frozen receipt.
+    if scope.target_count != receipt["expected_target_count"]:
         problems.append(
-            f"scope resolved {scope.target_count} targets, receipt froze {expected}")
+            f"scope resolved {scope.target_count} targets, receipt froze "
+            f"{receipt['expected_target_count']}")
+    if scope.scope_sha256() != receipt.get("evaluation_scope_sha256"):
+        problems.append(
+            "the resolved scope digest differs from the receipt's: the split "
+            "membership or its order changed after the freeze")
 
     budget_failures = sum(
         1 for r in scope.eligible if r.get("prompt_budget_failure"))

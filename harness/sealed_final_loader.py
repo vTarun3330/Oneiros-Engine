@@ -44,7 +44,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Mapping, Sequence
+from typing import Any, Callable, Dict, List, Mapping, NoReturn, Sequence
 
 from harness.sealed_final import SEALED_SPLIT, SealedAccessError
 
@@ -192,19 +192,21 @@ def _require_authorization() -> None:
             "select_split_records against a permitted split or a fixture.")
 
 
-def sealed_records(corpus_version: str = CORPUS_VERSION) -> List[Dict[str, Any]]:
-    """Permanently refuses. The split it read is consumed.
+def sealed_records(corpus_version: str = CORPUS_VERSION) -> NoReturn:
+    """Permanently refuses. Nothing follows the refusal.
 
-    The refusal is the first statement and consults nothing, so no corpus file
-    is opened on any path through this function. ``_require_authorization`` is
-    now unreachable from here by design: authorization was the gate that
-    failed, because a grant recorded once stays recorded forever.
+    The body that opened the corpus and resolved the split has been **deleted**,
+    not left behind as unreachable code. An unreachable read is still a read
+    someone can reach again - by moving one line, by catching the exception, by
+    restoring a gate that once looked sufficient. The way to guarantee this
+    function never opens a corpus file is for it to contain no code that opens
+    one.
+
+    ``corpus_version`` is kept only so existing callers fail with the refusal
+    rather than a TypeError, which would say the wrong thing about why.
     """
     refuse_consumed_split()
-    corpus_dir = ROOT / "data" / "corpus" / corpus_version
-    splits = json.loads((corpus_dir / "splits.json").read_text(encoding="utf-8"))
-    records = json.loads((corpus_dir / "records.json").read_text(encoding="utf-8"))
-    return adapt_records(select_split_records(splits, records, SEALED_SPLIT))
+    raise AssertionError("unreachable: refuse_consumed_split always raises")
 
 
 # --------------------------------------------------------------------------
