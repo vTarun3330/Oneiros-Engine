@@ -1,0 +1,154 @@
+{
+  "schema_version": "oneiros_operational_rehearsal_v1",
+  "label": "operational rehearsal - not eligible for model selection or final-performance claims",
+  "operational_rehearsal": true,
+  "final_test_measurement": false,
+  "eligible_for_model_selection": false,
+  "supports_performance_claim": false,
+  "purpose": "Execute the stages a future independent final protocol would use - admission and scoping, generation, parsing, safe execution, raw-output retention, progress writing and scoring - against a real permitted split at full scale. It measures the pipeline, not the model.",
+  "interpretation_limits": [
+    "ablation_dev selected the checkpoints it scored, so no number from this run is a generalization estimate.",
+    "No model is selected, promoted, tuned or compared on the basis of this run.",
+    "No baseline is bundled or executed; no Oneiros-versus-Atheris or any other comparison is supported."
+  ],
+  "created_utc": "2026-09-17T03:33:11Z",
+  "input_split": "ablation_dev",
+  "refused_splits": [
+    "test"
+  ],
+  "consumed_split_policy": "The consumed split is refused before any corpus file is opened. This rehearsal never reads it and cannot be pointed at it.",
+  "corpus_version": "v4_1_research_hardened_candidate",
+  "expected_target_count": 542,
+  "admission_scope": {
+    "admission_version": "oneiros_evaluation_admission_v1",
+    "split": "ablation_dev",
+    "requested_records": 594,
+    "function_mode_targets": 542,
+    "excluded_repository_records": 52,
+    "excluded_unknown_mode_records": 0,
+    "repository_exclusion_reason": "excluded from function Kill@k: scoring a repository fragment requires a native project environment, and no validated native repository evaluator exists. Excluded, never failed.",
+    "evaluation_scope_sha256": "d37f75d6f44e7f25f8ec0b38ef1be46efd77c85c31cda115e81f7a77fb91f6ca"
+  },
+  "evaluation_scope_sha256": "d37f75d6f44e7f25f8ec0b38ef1be46efd77c85c31cda115e81f7a77fb91f6ca",
+  "repository_exclusions": {
+    "count": 52,
+    "unknown_mode_count": 0,
+    "reason": "excluded from function Kill@k: scoring a repository fragment requires a native project environment, and no validated native repository evaluator exists. Excluded, never failed."
+  },
+  "prompt_budget_failures": 0,
+  "candidate": {
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "tokenizer": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "tokenizer_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "adapter": null,
+    "adapter_note": "base model only; no adapter is loaded and none exists to load",
+    "training": "none - this run updates no weights"
+  },
+  "frozen_generation_settings": {
+    "candidate_parse_mode": "whole_output",
+    "retain_raw_output": true,
+    "candidates_per_function": 8,
+    "generation_batch_size": 2,
+    "allow_test_function_candidates": true,
+    "prompt_information_variant": "full",
+    "output_instruction_variant": "self_contained",
+    "prompt_schema_version": "oneiros_unified_test_generation_v2",
+    "attention_implementation": "sdpa",
+    "base_model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "prompt_token_limit": 1024,
+    "generation_completion_token_limit": 1024,
+    "max_sequence_tokens": 3072,
+    "seed": 42
+  },
+  "source_hashes": {
+    "admission": {
+      "path": "harness/evaluation_admission.py",
+      "raw_sha256": "9c8d1c835d95d1d188ccaeb2b73f8359aae1c97b619270b711d6835553e6f575",
+      "canonical_sha256": "9c8d1c835d95d1d188ccaeb2b73f8359aae1c97b619270b711d6835553e6f575"
+    },
+    "candidate_policy": {
+      "path": "harness/candidate_policy.py",
+      "raw_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+      "canonical_sha256": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426"
+    },
+    "generation_adapter": {
+      "path": "harness/generation_adapter.py",
+      "raw_sha256": "39583f39acdfb885286a406d65f5d90e7547ea9069760870f610eafd09c6a8f7",
+      "canonical_sha256": "39583f39acdfb885286a406d65f5d90e7547ea9069760870f610eafd09c6a8f7"
+    },
+    "generation_rng": {
+      "path": "harness/generation_rng.py",
+      "raw_sha256": "1282a2c463cdee272742dbe8c630680841b6489b16bb0695789786e9fb403f5c",
+      "canonical_sha256": "1282a2c463cdee272742dbe8c630680841b6489b16bb0695789786e9fb403f5c"
+    },
+    "prompt_compaction": {
+      "path": "engine/prompt_budget.py",
+      "raw_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
+      "canonical_sha256": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a"
+    },
+    "prompt_engine": {
+      "path": "engine/test_generation_prompt.py",
+      "raw_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+      "canonical_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d"
+    },
+    "prompt_factory": {
+      "path": "harness/prompt_factory.py",
+      "raw_sha256": "29c05789161522ea5581995f7e66ccb79f7e524ead5edc4745f4795822fbe565",
+      "canonical_sha256": "29c05789161522ea5581995f7e66ccb79f7e524ead5edc4745f4795822fbe565"
+    },
+    "receipt_builder": {
+      "path": "scripts/build_rehearsal_receipt.py",
+      "raw_sha256": "db3083e891136c1a487bc67043342b8f227daaae69a84829ce5b736d09ccca66",
+      "canonical_sha256": "db3083e891136c1a487bc67043342b8f227daaae69a84829ce5b736d09ccca66"
+    },
+    "record_adaptation": {
+      "path": "scripts/train_on_dataset.py",
+      "raw_sha256": "565cd2f5281db32e6000682ec1bd1bc4ecca043117724cee69e88343f917de46",
+      "canonical_sha256": "ead8b2853d4331b389d54e897defb2966e4686114b17aba53f2ff068b5105afd"
+    },
+    "rehearsal_evaluator": {
+      "path": "harness/rehearsal_evaluator.py",
+      "raw_sha256": "ed16b84dec441f5e9d4474f3d300d02ff6af7671cbfa6afab0f2f26fa248eeda",
+      "canonical_sha256": "ed16b84dec441f5e9d4474f3d300d02ff6af7671cbfa6afab0f2f26fa248eeda"
+    },
+    "runner": {
+      "path": "scripts/run_rehearsal_evaluation.py",
+      "raw_sha256": "6f2ebfa1ffadf453824ec469e45ab17bd5bdec994ac9b757389e9eb1ae71dcdc",
+      "canonical_sha256": "82954fb3112fa8bbd897c3496df590696e2c06d59d55338537eb9022cc3bf658"
+    },
+    "safe_execution": {
+      "path": "harness/safe_execution.py",
+      "raw_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+      "canonical_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35"
+    },
+    "scoring": {
+      "path": "harness/sealed_final_evaluator.py",
+      "raw_sha256": "56869a08e9e4ae618d883e2caae86868630dfcb88736d57f127aca9068e7becf",
+      "canonical_sha256": "56869a08e9e4ae618d883e2caae86868630dfcb88736d57f127aca9068e7becf"
+    }
+  },
+  "admission_binding": {
+    "admission_version": "oneiros_evaluation_admission_v1",
+    "admission": {
+      "path": "harness/evaluation_admission.py",
+      "raw_sha256": "9c8d1c835d95d1d188ccaeb2b73f8359aae1c97b619270b711d6835553e6f575",
+      "canonical_sha256": "9c8d1c835d95d1d188ccaeb2b73f8359aae1c97b619270b711d6835553e6f575"
+    },
+    "historical_scoping": {
+      "path": "scripts/train_on_dataset.py",
+      "raw_sha256": "565cd2f5281db32e6000682ec1bd1bc4ecca043117724cee69e88343f917de46",
+      "canonical_sha256": "ead8b2853d4331b389d54e897defb2966e4686114b17aba53f2ff068b5105afd"
+    }
+  },
+  "reproducibility": {
+    "git_commit": "6d27848a3348c82b0c7f031e32596f4bd86ceeb5",
+    "git_dirty": false,
+    "python_version": "3.12.14"
+  },
+  "receipt_problems": [],
+  "ready_for_rehearsal": true
+}
