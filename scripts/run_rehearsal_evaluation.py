@@ -116,15 +116,28 @@ def receipt_problems(receipt_path: Path, expected_sha256: str):
     split = receipt.get("input_split")
     if split in REFUSED_SPLITS:
         problems.append(f"receipt names a refused split: {split!r}")
+    elif split != DEFAULT_SPLIT:
+        # Only ablation_dev is frozen for rehearsal. val is spent on selection;
+        # naming it here would put a selection panel through a full generation
+        # run for operational reasons, which is not a trade worth making.
+        problems.append(
+            f"receipt freezes split {split!r}; this rehearsal is "
+            f"{DEFAULT_SPLIT!r} only")
     if receipt.get("expected_target_count") != EXPECTED_TARGETS:
         problems.append(
             f"receipt freezes {receipt.get('expected_target_count')!r} targets, "
             f"expected {EXPECTED_TARGETS}")
     if receipt.get("candidate", {}).get("adapter") is not None:
         problems.append("receipt names an adapter; this rehearsal is base-model only")
+    # A receipt frozen against uncommitted work names a source state nobody can
+    # return to. The bound hashes would still verify, and the commit they claim
+    # to describe would not contain them.
+    if receipt.get("reproducibility", {}).get("git_dirty") is not False:
+        problems.append(
+            "receipt was built from a dirty working tree; regenerate it from "
+            "committed source")
 
-    problems.extend(admission_binding_problems(
-        (receipt.get("source_hashes") or {}).get("admission"), ROOT))
+    problems.extend(admission_binding_problems(receipt.get("admission_binding"), ROOT))
     problems.extend(source_binding_problems(receipt))
     return receipt, problems
 
@@ -241,8 +254,11 @@ def main(argv=None) -> int:
         return 1
 
     if args.dry_run:
-        print("\nCPU GATE PASSED. No model was loaded, nothing was generated, "
-              "nothing was written.")
+        print("\nCPU GATE PASSED.")
+        print("  model loads      : 0")
+        print("  generations      : 0")
+        print("  consumed-split   : 0 reads")
+        print("  files written    : 0")
         return 0
 
     # ---- GPU rehearsal ----------------------------------------------------

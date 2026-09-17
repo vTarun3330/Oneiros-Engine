@@ -181,10 +181,13 @@ def build(split: str = REHEARSAL_SPLIT, problems=None) -> dict:
             "training": "none - this run updates no weights",
         },
         "frozen_generation_settings": frozen,
-        "source_hashes": {
-            **source_hashes(),
-            "admission": admission_source_hashes(ROOT),
-        },
+        # Two different things, under two different keys. Merging the nested
+        # admission binding in under "admission" silently replaced that role's
+        # own file entry, so harness/evaluation_admission.py was skipped by the
+        # file-level verifier - the one source whose change most directly
+        # changes which records get measured.
+        "source_hashes": source_hashes(),
+        "admission_binding": admission_source_hashes(ROOT),
         "reproducibility": {
             "git_commit": git("rev-parse", "HEAD"),
             "git_dirty": bool(git("status", "--porcelain")),

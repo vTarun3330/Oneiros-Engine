@@ -183,6 +183,20 @@ def test_every_defining_source_is_bound_by_hash(receipt, role):
     assert entry["canonical_sha256"] == canonical_sha256(ROOT / entry["path"])
 
 
+def test_the_admission_binding_has_its_own_key(receipt):
+    """It is a nested block, not a file entry, and must not displace one.
+
+    Merging it in under "admission" replaced that role's file entry, so the
+    file-level verifier skipped harness/evaluation_admission.py - the source
+    whose change most directly changes which records get measured.
+    """
+    assert "admission_binding" in receipt
+    assert receipt["admission_binding"]["admission_version"]
+    assert "path" not in receipt["admission_binding"]
+    assert receipt["source_hashes"]["admission"]["path"] == \
+        "harness/evaluation_admission.py"
+
+
 def test_the_receipt_is_ready_and_has_no_problems(receipt):
     assert receipt["receipt_problems"] == []
     assert receipt["ready_for_rehearsal"] is True
@@ -340,3 +354,25 @@ def test_both_flags_are_required_for_a_real_run():
 
     _, problems = runner.receipt_problems(RECEIPT, "")
     assert problems == ["--expected-receipt-sha256 is required"]
+
+
+def test_a_receipt_built_from_a_dirty_tree_is_refused(receipt, tmp_path):
+    """The bound hashes would verify; the commit would not contain them.
+
+    A receipt frozen against uncommitted work names a source state nobody can
+    return to, so it cannot support the claim that a rehearsal ran the code a
+    reader can check out.
+    """
+    tampered = json.loads(json.dumps(receipt))
+    tampered["reproducibility"]["git_dirty"] = True
+    path = tmp_path / "dirty.json"
+    path.write_text(json.dumps(tampered, indent=2) + "\n", encoding="utf-8")
+
+    _, problems = runner.receipt_problems(path, _sha(path))
+
+    assert any("dirty working tree" in item for item in problems)
+
+
+def test_the_committed_receipt_was_built_from_a_clean_tree(receipt):
+    assert receipt["reproducibility"]["git_dirty"] is False
+    assert len(receipt["reproducibility"]["git_commit"]) == 40
