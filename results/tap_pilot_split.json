@@ -1,0 +1,35 @@
+{
+  "schema_version": "oneiros_tap_pilot_split_v1",
+  "note": "The a431_sysprompt arm was defined after observing the first 16 items in a smoke run. Those 16 are therefore pilot/design data. The remaining 584 are the fixed primary comparison set. All 600 is a secondary descriptive figure only.",
+  "items_file": "results/tap_train_items.jsonl",
+  "items_file_sha256": "c15398bdee5f1486a09d2f6338f426407470ba686dcc3ae8d99900364999f413",
+  "pilot_n": 16,
+  "primary_n": 584,
+  "pilot_ids": [
+    "curated::bugsinpy_fastapi_1::0",
+    "curated::bugsinpy_fastapi_1::1",
+    "curated::bugsinpy_httpie_1::2",
+    "curated::bugsinpy_httpie_1::3",
+    "curated::bugsinpy_pandas_1::4",
+    "curated::bugsinpy_pandas_1::5",
+    "curated::bugsinpy_requests_1::6",
+    "curated::bugsinpy_requests_1::7",
+    "curated::bugsinpy_thefuck_1::8",
+    "curated::bugsinpy_thefuck_1::9",
+    "curated::bugsinpy_tornado_1::10",
+    "curated::bugsinpy_youtube_dl_1::11",
+    "mutation::humaneval_HumanEval_100_mut_00797::12",
+    "mutation::humaneval_HumanEval_100_mut_00797::13",
+    "mutation::humaneval_HumanEval_101_mut_00801::14",
+    "mutation::humaneval_HumanEval_101_mut_00801::15"
+  ],
+  "pilot_benchmarks": {
+    "other": 12,
+    "humaneval": 4
+  },
+  "primary_benchmarks": {
+    "humaneval": 165,
+    "mbpp": 419
+  },
+  "frozen_before_primary_results_existed": true
+}

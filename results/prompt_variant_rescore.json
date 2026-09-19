@@ -1,0 +1,82 @@
+{
+  "schema_version": "oneiros_prompt_variant_rescore_v1",
+  "label": "development-only rescore - not model selection, not a generalization result",
+  "split": "ablation_dev",
+  "evaluation_scope_sha256": "d37f75d6f44e7f25f8ec0b38ef1be46efd77c85c31cda115e81f7a77fb91f6ca",
+  "extraction_rule": "whole_output; where that yields no policy-valid candidate, the first line beginning 'assert '",
+  "additive": "verified: no policy-valid candidate in either arm holds >1 assertion",
+  "model_loaded": false,
+  "weights_written": false,
+  "arms": {
+    "baseline": {
+      "frozen": {
+        "1": 0.234317,
+        "2": 0.348708,
+        "4": 0.483395,
+        "8": 0.605166
+      },
+      "rescored": {
+        "1": 0.234317,
+        "2": 0.350554,
+        "4": 0.487085,
+        "8": 0.607011
+      },
+      "frozen_taxonomy": {
+        "generation_invalid": 72,
+        "killed_assertion_error": 761,
+        "killed_error": 304,
+        "killed_timeout": 43,
+        "reference_assertion_error": 1661,
+        "reference_error": 151,
+        "survived": 1344
+      },
+      "rescored_taxonomy": {
+        "generation_invalid": 27,
+        "killed_assertion_error": 774,
+        "killed_error": 305,
+        "killed_timeout": 43,
+        "policy_invalid": 7,
+        "reference_assertion_error": 1663,
+        "reference_error": 162,
+        "survived": 1355
+      },
+      "candidates_recovered": 45,
+      "candidates": 4336
+    },
+    "oracle_first": {
+      "frozen": {
+        "1": 0.315498,
+        "2": 0.422509,
+        "4": 0.5369,
+        "8": 0.640221
+      },
+      "rescored": {
+        "1": 0.339483,
+        "2": 0.450185,
+        "4": 0.553506,
+        "8": 0.649446
+      },
+      "frozen_taxonomy": {
+        "generation_invalid": 446,
+        "killed_assertion_error": 1030,
+        "killed_error": 245,
+        "killed_timeout": 27,
+        "reference_assertion_error": 1820,
+        "reference_error": 134,
+        "survived": 634
+      },
+      "rescored_taxonomy": {
+        "generation_invalid": 57,
+        "killed_assertion_error": 1104,
+        "killed_error": 261,
+        "killed_timeout": 27,
+        "policy_invalid": 18,
+        "reference_assertion_error": 1959,
+        "reference_error": 184,
+        "survived": 726
+      },
+      "candidates_recovered": 389,
+      "candidates": 4336
+    }
+  }
+}

@@ -74,6 +74,14 @@ results/**
 # records a decision is worth little if the comparison that justified it lives
 # only on one machine.
 !results/v4_2_*.md
+# Diagnostic receipts, the pilot/primary split and the small rescore summaries
+# are the same class again: a few KB of hashes, item IDs and configuration that
+# a later reader needs to check a number. The multi-MB run artifacts they point
+# at stay ignored and live only in local result storage.
+!results/*_receipt.json
+!results/tap_pilot_split.json
+!results/tap_capacity_gate_analysis.json
+!results/prompt_variant_rescore*.json
 logs/
 wandb/
 runs/

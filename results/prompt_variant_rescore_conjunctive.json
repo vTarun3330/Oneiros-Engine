@@ -1,0 +1,83 @@
+{
+  "schema_version": "oneiros_prompt_variant_rescore_v1",
+  "label": "development-only rescore - not model selection, not a generalization result",
+  "split": "ablation_dev",
+  "evaluation_scope_sha256": "d37f75d6f44e7f25f8ec0b38ef1be46efd77c85c31cda115e81f7a77fb91f6ca",
+  "extraction_mode": "conjunctive",
+  "additive": "verified: no policy-valid candidate in either arm holds >1 assertion",
+  "model_loaded": false,
+  "weights_written": false,
+  "arms": {
+    "baseline": {
+      "frozen": {
+        "1": 0.234317,
+        "2": 0.348708,
+        "4": 0.483395,
+        "8": 0.605166
+      },
+      "rescored": {
+        "1": 0.234317,
+        "2": 0.348708,
+        "4": 0.49262,
+        "8": 0.614391
+      },
+      "frozen_taxonomy": {
+        "generation_invalid": 72,
+        "killed_assertion_error": 761,
+        "killed_error": 304,
+        "killed_timeout": 43,
+        "reference_assertion_error": 1661,
+        "reference_error": 151,
+        "survived": 1344
+      },
+      "rescored_taxonomy": {
+        "generation_invalid": 44,
+        "killed_assertion_error": 779,
+        "killed_error": 305,
+        "killed_timeout": 43,
+        "policy_invalid": 2,
+        "reference_assertion_error": 1667,
+        "reference_error": 151,
+        "survived": 1345
+      },
+      "candidates_recovered": 28,
+      "candidates": 4336
+    },
+    "oracle_first": {
+      "frozen": {
+        "1": 0.315498,
+        "2": 0.422509,
+        "4": 0.5369,
+        "8": 0.640221
+      },
+      "rescored": {
+        "1": 0.322878,
+        "2": 0.437269,
+        "4": 0.562731,
+        "8": 0.666052
+      },
+      "frozen_taxonomy": {
+        "generation_invalid": 446,
+        "killed_assertion_error": 1030,
+        "killed_error": 245,
+        "killed_timeout": 27,
+        "reference_assertion_error": 1820,
+        "reference_error": 134,
+        "survived": 634
+      },
+      "rescored_taxonomy": {
+        "generation_invalid": 345,
+        "killed_assertion_error": 1084,
+        "killed_error": 252,
+        "killed_timeout": 27,
+        "policy_invalid": 4,
+        "reference_assertion_error": 1849,
+        "reference_error": 137,
+        "reference_timeout": 1,
+        "survived": 637
+      },
+      "candidates_recovered": 101,
+      "candidates": 4336
+    }
+  }
+}
