@@ -23,6 +23,7 @@ Predeclared before the numbers were seen: MARGIN = 5 percentage points.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -107,6 +108,11 @@ def validate_artifact(data: dict, split: dict) -> dict[str, dict[str, dict]]:
         raise ValueError("pilot IDs are not a subset of the artifact IDs")
     if len(pilot) != split.get("pilot_n"):
         raise ValueError("pilot count does not match the split receipt")
+    contract = data.get("run_contract", {})
+    if contract.get("items_file_sha256") != split.get("items_file_sha256"):
+        raise ValueError("artifact and pilot split bind different TAP item files")
+    if data.get("status") != "complete":
+        raise ValueError("TAP artifact is not marked complete")
     return indexed
 
 
@@ -117,14 +123,31 @@ def main(argv=None) -> int:
     parser.add_argument("--out", default="results/tap_capacity_gate_analysis.json")
     args = parser.parse_args(argv)
 
-    data = json.loads(Path(args.artifact).read_text(encoding="utf-8"))
-    split = json.loads(Path(args.split).read_text(encoding="utf-8"))
+    artifact_path = Path(args.artifact)
+    split_path = Path(args.split)
+    artifact_bytes = artifact_path.read_bytes()
+    split_bytes = split_path.read_bytes()
+    data = json.loads(artifact_bytes)
+    split = json.loads(split_bytes)
     pilot = set(split["pilot_ids"])
     det = validate_artifact(data, split)
     primary = [i for i in det["base::TAP-ref"] if i not in pilot]
     arms = sorted({k.split("::")[0] for k in det})
-    report = {"primary_n": len(primary), "pilot_n": len(pilot),
-              "margin_pp": MARGIN_PP, "tost_alpha": 0.05, "arms": {}}
+    report = {
+        "primary_n": len(primary),
+        "pilot_n": len(pilot),
+        "margin_pp": MARGIN_PP,
+        "tost_alpha": 0.05,
+        "inputs": {
+            "artifact": str(artifact_path),
+            "artifact_sha256": hashlib.sha256(artifact_bytes).hexdigest(),
+            "pilot_split": str(split_path),
+            "pilot_split_sha256": hashlib.sha256(split_bytes).hexdigest(),
+            "analysis_source_sha256": hashlib.sha256(
+                Path(__file__).read_bytes()).hexdigest(),
+        },
+        "arms": {},
+    }
 
     def verdict(arm, cond, i):
         return det[f"{arm}::{cond}"][i]["verdict"]
@@ -147,6 +170,29 @@ def main(argv=None) -> int:
             report["arms"][key] = {"n": n, "correct": ok, "unanswered": un,
                                   "per_requested_accuracy": ok / n,
                                   "worst_case_lower": lo, "worst_case_upper": hi}
+
+    print("\n" + "=" * 78)
+    print("DESCRIPTIVE STRATA: per-requested accuracy (no cross-stratum selection)")
+    print("=" * 78)
+    report["strata"] = {}
+    for benchmark in ("humaneval", "mbpp"):
+        ids = [i for i in primary
+               if det["base::TAP-ref"][i].get("benchmark") == benchmark]
+        report["strata"][benchmark] = {"n": len(ids), "arms": {}}
+        print(f"  {benchmark} n={len(ids)}")
+        for arm in arms:
+            for cond in ("TAP-ref", "TAP-mut"):
+                key = f"{arm}::{cond}"
+                ok = sum(1 for i in ids if verdict(arm, cond, i) == "correct")
+                un = sum(1 for i in ids if verdict(arm, cond, i) not in ANSWERED)
+                rate = ok / len(ids) if ids else None
+                shown = f"{rate:6.1%}" if rate is not None else "   n/a"
+                print(f"    {key:32} {shown}  unanswered={un}")
+                report["strata"][benchmark]["arms"][key] = {
+                    "correct": ok,
+                    "unanswered": un,
+                    "per_requested_accuracy": rate,
+                }
 
     print("\n" + "=" * 78)
     print(f"EQUIVALENCE vs base, per-requested, all {len(primary)} primary items")

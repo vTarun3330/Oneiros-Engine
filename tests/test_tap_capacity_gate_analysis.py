@@ -29,6 +29,8 @@ def _row(item_id: str, raw: str = "assert f(1) == 2") -> dict:
 def _artifact() -> dict:
     rows = [_row("pilot"), _row("primary")]
     return {
+        "status": "complete",
+        "run_contract": {"items_file_sha256": "items-sha"},
         "detail": {
             f"{arm}::{condition}": [dict(row) for row in rows]
             for arm in ("base", "a431", "a431_sysprompt")
@@ -67,7 +69,8 @@ def test_exact_mcnemar_is_one_for_no_or_balanced_discordance():
 
 def test_integrity_validation_accepts_all_six_complete_conditions():
     indexed = validate_artifact(
-        _artifact(), {"pilot_ids": ["pilot"], "pilot_n": 1}
+        _artifact(), {"pilot_ids": ["pilot"], "pilot_n": 1,
+                      "items_file_sha256": "items-sha"}
     )
     assert len(indexed) == 6
 
@@ -76,11 +79,30 @@ def test_integrity_validation_refuses_missing_condition():
     artifact = _artifact()
     del artifact["detail"]["a431_sysprompt::TAP-mut"]
     with pytest.raises(ValueError, match="conditions mismatch"):
-        validate_artifact(artifact, {"pilot_ids": ["pilot"], "pilot_n": 1})
+        validate_artifact(artifact, {"pilot_ids": ["pilot"], "pilot_n": 1,
+                                     "items_file_sha256": "items-sha"})
 
 
 def test_integrity_validation_refuses_clipped_or_modified_raw_evidence():
     artifact = _artifact()
     artifact["detail"]["base::TAP-ref"][0]["raw"] += " modified"
     with pytest.raises(ValueError, match="raw hash mismatch"):
-        validate_artifact(artifact, {"pilot_ids": ["pilot"], "pilot_n": 1})
+        validate_artifact(artifact, {"pilot_ids": ["pilot"], "pilot_n": 1,
+                                     "items_file_sha256": "items-sha"})
+
+
+def test_integrity_validation_refuses_item_file_or_completion_mismatch():
+    with pytest.raises(ValueError, match="different TAP item files"):
+        validate_artifact(
+            _artifact(),
+            {"pilot_ids": ["pilot"], "pilot_n": 1,
+             "items_file_sha256": "different"},
+        )
+    artifact = _artifact()
+    artifact["status"] = "in_progress"
+    with pytest.raises(ValueError, match="not marked complete"):
+        validate_artifact(
+            artifact,
+            {"pilot_ids": ["pilot"], "pilot_n": 1,
+             "items_file_sha256": "items-sha"},
+        )
