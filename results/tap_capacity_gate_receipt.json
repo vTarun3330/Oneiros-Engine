@@ -1,0 +1,360 @@
+{
+  "schema_version": "oneiros_tap_capacity_gate_receipt_v2",
+  "label": "train-only diagnostic; not model selection, generalization, validation, or final-test evidence",
+  "created_utc": "2026-09-19T11:04:59.732402+00:00",
+  "run_id": "20260919-155017-tap_gate_fullretention_v2",
+  "launch": {
+    "branch": "experiment/research-eval-ablations",
+    "commit": "741ab03aca20a7be281e527a1b507f55eba4a577",
+    "dirty": true,
+    "dirty_files": [
+      "papers/",
+      "results/tap_capacity_gate_receipt.json"
+    ],
+    "command": [
+      "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Scripts\\python.exe",
+      "scripts\\run_tap_adapter_compare.py"
+    ],
+    "versions": {
+      "python": "3.12.14",
+      "torch": "2.5.1+cu124",
+      "transformers": "4.48.3",
+      "peft": "0.14.0",
+      "trl": "0.15.2",
+      "datasets": "3.2.0",
+      "bitsandbytes": "0.45.0",
+      "accelerate": "1.2.1",
+      "cuda_runtime": "12.4",
+      "cudnn": "90100",
+      "gpu_name": "NVIDIA RTX 4500 Ada Generation",
+      "driver": "596.71"
+    },
+    "status": {
+      "schema_version": "oneiros_gpu_run_v1",
+      "run_id": "20260919-155017-tap_gate_fullretention_v2",
+      "name": "tap_gate_fullretention_v2",
+      "state": "completed",
+      "exit_code": 0,
+      "start_utc": "2026-09-19T10:20:17+00:00",
+      "end_utc": "2026-09-19T10:57:23+00:00",
+      "duration_seconds": 2224.8,
+      "termination": {
+        "reason": "completed",
+        "confidence": "certain",
+        "detail": "child exited 0"
+      },
+      "artifact_validation": {
+        "validated": true,
+        "artifact_contract": "none_declared",
+        "reason": "no --run-name; validated on exit code alone"
+      },
+      "progress": {
+        "last_monitored_step": null,
+        "last_log_line": "written: C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\tap_adapter_compare.json"
+      },
+      "last_checkpoint": null,
+      "traceback": null
+    },
+    "note": "The launch worktree contained only non-generation untracked paths; every generation-defining source is verified against the committed launch bytes below."
+  },
+  "source_binding": {
+    "runner": {
+      "path": "scripts/run_tap_adapter_compare.py",
+      "artifact_sha256": "1f237d02fef3e0342922d2bccd23ce35f3fe21f789d4981274ad42676330872e",
+      "launch_commit_sha256": "1f237d02fef3e0342922d2bccd23ce35f3fe21f789d4981274ad42676330872e",
+      "normalised_sha256": "1f237d02fef3e0342922d2bccd23ce35f3fe21f789d4981274ad42676330872e",
+      "line_ending_normalised": false,
+      "matches": true
+    },
+    "tap_scorer": {
+      "path": "scripts/run_tap_diagnostic.py",
+      "artifact_sha256": "b375490f491596a2f397a21dfce4be6f2767f39497cdcff69d9c91ed0873de75",
+      "launch_commit_sha256": "35fa2510c6247fd99a6597070dc8e1ba7a284d97431fd5fcb9bf1ff9893eaee7",
+      "normalised_sha256": "35fa2510c6247fd99a6597070dc8e1ba7a284d97431fd5fcb9bf1ff9893eaee7",
+      "line_ending_normalised": true,
+      "matches": true
+    },
+    "generator": {
+      "path": "engine/generator.py",
+      "artifact_sha256": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
+      "launch_commit_sha256": "c4c16c7de07e82f226bd77d2e980339b13844a4418ad428e6c41158eb1938330",
+      "normalised_sha256": "c4c16c7de07e82f226bd77d2e980339b13844a4418ad428e6c41158eb1938330",
+      "line_ending_normalised": true,
+      "matches": true
+    },
+    "prompt_engine": {
+      "path": "engine/test_generation_prompt.py",
+      "artifact_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+      "launch_commit_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+      "normalised_sha256": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+      "line_ending_normalised": false,
+      "matches": true
+    },
+    "settings": {
+      "path": "config/settings.py",
+      "artifact_sha256": "6b849133ff916b61481073e07d13843baec6ae390590891456e377e04c53decd",
+      "launch_commit_sha256": "581ba75ee735097cb0bd7932ff1897f787473d1042d1bf039563bc9a12ec63fa",
+      "normalised_sha256": "581ba75ee735097cb0bd7932ff1897f787473d1042d1bf039563bc9a12ec63fa",
+      "line_ending_normalised": true,
+      "matches": true
+    }
+  },
+  "artifacts": {
+    "tap_comparison": {
+      "path": "results/tap_adapter_compare.json",
+      "bytes": 2055472,
+      "sha256": "1f84210e3af9939f86bbfca901b5116f59606b03e13599e8dde6a9eb80b97672"
+    },
+    "paired_analysis": {
+      "path": "results/tap_capacity_gate_analysis.json",
+      "bytes": 6951,
+      "sha256": "b47fb5461f7bc75ce80a09875e940848c923219b6d91e83539a85530dc138f19"
+    },
+    "pilot_split": {
+      "path": "results/tap_pilot_split.json",
+      "bytes": 1393,
+      "sha256": "99cb772bf6cd93a4a1e925cfeda7e8adde5bb5a831eafaa840478425a39516e8"
+    },
+    "run_manifest": {
+      "path": "runs/20260919-155017-tap_gate_fullretention_v2/manifest.json",
+      "bytes": 1845,
+      "sha256": "2748d3f7262fca9909084e6bb548d2a647cf235304adb821d8a0ba73a655b33e"
+    },
+    "run_status": {
+      "path": "runs/20260919-155017-tap_gate_fullretention_v2/status.json",
+      "bytes": 810,
+      "sha256": "8540cbaaaaef46fd458ea9d685dd7529bae86e397e2f165e1dbffd76808b4102"
+    }
+  },
+  "run_contract": {
+    "schema_version": "oneiros_tap_adapter_compare_v2",
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "adapter_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+    "items_file": "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\tap_train_items.jsonl",
+    "items_file_sha256": "c15398bdee5f1486a09d2f6338f426407470ba686dcc3ae8d99900364999f413",
+    "item_ids_sha256": "b8c383441b5650c6f666466bb8318255805ebf5619b30fc44bffaf9dec60f487",
+    "items": 600,
+    "decoding": "greedy",
+    "max_new_tokens": 128,
+    "batch": 8,
+    "tokenizer_max_length": 3072,
+    "system_prompt_sha256": "3f30793ae5cdb7588801ec26519ebde46708ce91dd68424f1ab231060bbd1bc4",
+    "source_files_sha256": {
+      "runner": "1f237d02fef3e0342922d2bccd23ce35f3fe21f789d4981274ad42676330872e",
+      "tap_scorer": "b375490f491596a2f397a21dfce4be6f2767f39497cdcff69d9c91ed0873de75",
+      "generator": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
+      "prompt_engine": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+      "settings": "6b849133ff916b61481073e07d13843baec6ae390590891456e377e04c53decd"
+    }
+  },
+  "primary_n": 584,
+  "pilot_n": 16,
+  "predeclared_margin_pp": 5.0,
+  "tost_alpha": 0.05,
+  "per_requested": {
+    "a431::TAP-ref": {
+      "n": 584,
+      "correct": 59,
+      "unanswered": 395,
+      "per_requested_accuracy": 0.10102739726027397,
+      "worst_case_lower": 0.10102739726027397,
+      "worst_case_upper": 0.7773972602739726,
+      "parseable_subset_accuracy": 0.31216931216931215,
+      "parseable_subset_n": 189
+    },
+    "a431::TAP-mut": {
+      "n": 584,
+      "correct": 51,
+      "unanswered": 459,
+      "per_requested_accuracy": 0.08732876712328767,
+      "worst_case_lower": 0.08732876712328767,
+      "worst_case_upper": 0.8732876712328768,
+      "parseable_subset_accuracy": 0.408,
+      "parseable_subset_n": 125
+    },
+    "a431_sysprompt::TAP-ref": {
+      "n": 584,
+      "correct": 187,
+      "unanswered": 201,
+      "per_requested_accuracy": 0.3202054794520548,
+      "worst_case_lower": 0.3202054794520548,
+      "worst_case_upper": 0.6643835616438356,
+      "parseable_subset_accuracy": 0.48825065274151436,
+      "parseable_subset_n": 383
+    },
+    "a431_sysprompt::TAP-mut": {
+      "n": 584,
+      "correct": 65,
+      "unanswered": 436,
+      "per_requested_accuracy": 0.1113013698630137,
+      "worst_case_lower": 0.1113013698630137,
+      "worst_case_upper": 0.8578767123287672,
+      "parseable_subset_accuracy": 0.4391891891891892,
+      "parseable_subset_n": 148
+    },
+    "base::TAP-ref": {
+      "n": 584,
+      "correct": 281,
+      "unanswered": 36,
+      "per_requested_accuracy": 0.4811643835616438,
+      "worst_case_lower": 0.4811643835616438,
+      "worst_case_upper": 0.5428082191780822,
+      "parseable_subset_accuracy": 0.5127737226277372,
+      "parseable_subset_n": 548
+    },
+    "base::TAP-mut": {
+      "n": 584,
+      "correct": 256,
+      "unanswered": 29,
+      "per_requested_accuracy": 0.4383561643835616,
+      "worst_case_lower": 0.4383561643835616,
+      "worst_case_upper": 0.488013698630137,
+      "parseable_subset_accuracy": 0.46126126126126127,
+      "parseable_subset_n": 555
+    }
+  },
+  "paired_equivalence": {
+    "a431::TAP-ref": {
+      "difference_pp": -38.013698630136986,
+      "ci95_low_pp": -42.253687667421715,
+      "ci95_high_pp": -33.77370959285226,
+      "tost_ci90_low_pp": -41.5720095990082,
+      "tost_ci90_high_pp": -34.45538766126578,
+      "gained": 11,
+      "lost": 233,
+      "mcnemar_exact_p": 2.699764417681852e-55,
+      "verdict": "NOT EQUIVALENT at +/-5pp"
+    },
+    "a431::TAP-mut": {
+      "difference_pp": -35.1027397260274,
+      "ci95_low_pp": -39.30845177736793,
+      "ci95_high_pp": -30.89702767468687,
+      "tost_ci90_low_pp": -38.632284541497604,
+      "tost_ci90_high_pp": -31.573194910557195,
+      "gained": 12,
+      "lost": 217,
+      "mcnemar_exact_p": 7.943178635896132e-50,
+      "verdict": "NOT EQUIVALENT at +/-5pp"
+    },
+    "a431_sysprompt::TAP-ref": {
+      "difference_pp": -16.095890410958905,
+      "ci95_low_pp": -20.079202094713803,
+      "ci95_high_pp": -12.112578727204005,
+      "tost_ci90_low_pp": -19.43879095435625,
+      "tost_ci90_high_pp": -12.75298986756156,
+      "gained": 31,
+      "lost": 125,
+      "mcnemar_exact_p": 1.3957568673972634e-14,
+      "verdict": "NOT EQUIVALENT at +/-5pp"
+    },
+    "a431_sysprompt::TAP-mut": {
+      "difference_pp": -32.70547945205479,
+      "ci95_low_pp": -36.850402641581006,
+      "ci95_high_pp": -28.560556262528575,
+      "tost_ci90_low_pp": -36.184008646522926,
+      "tost_ci90_high_pp": -29.226950257586658,
+      "gained": 12,
+      "lost": 203,
+      "mcnemar_exact_p": 6.010718891014841e-46,
+      "verdict": "NOT EQUIVALENT at +/-5pp"
+    }
+  },
+  "code_sensitivity": {
+    "a431": {
+      "n_both_answered": 98,
+      "identical_rate": 0.6428571428571429,
+      "ref_correct": 0.45918367346938777,
+      "mut_correct": 0.4387755102040816,
+      "coverage_of_primary": 0.1678082191780822
+    },
+    "a431_sysprompt": {
+      "n_both_answered": 125,
+      "identical_rate": 0.632,
+      "ref_correct": 0.48,
+      "mut_correct": 0.448,
+      "coverage_of_primary": 0.21404109589041095
+    },
+    "base": {
+      "n_both_answered": 525,
+      "identical_rate": 0.660952380952381,
+      "ref_correct": 0.518095238095238,
+      "mut_correct": 0.4685714285714286,
+      "coverage_of_primary": 0.898972602739726
+    }
+  },
+  "strata": {
+    "humaneval": {
+      "n": 165,
+      "arms": {
+        "a431::TAP-ref": {
+          "correct": 33,
+          "unanswered": 94,
+          "per_requested_accuracy": 0.2
+        },
+        "a431::TAP-mut": {
+          "correct": 24,
+          "unanswered": 119,
+          "per_requested_accuracy": 0.14545454545454545
+        },
+        "a431_sysprompt::TAP-ref": {
+          "correct": 69,
+          "unanswered": 65,
+          "per_requested_accuracy": 0.41818181818181815
+        },
+        "a431_sysprompt::TAP-mut": {
+          "correct": 39,
+          "unanswered": 109,
+          "per_requested_accuracy": 0.23636363636363636
+        },
+        "base::TAP-ref": {
+          "correct": 113,
+          "unanswered": 13,
+          "per_requested_accuracy": 0.6848484848484848
+        },
+        "base::TAP-mut": {
+          "correct": 110,
+          "unanswered": 11,
+          "per_requested_accuracy": 0.6666666666666666
+        }
+      }
+    },
+    "mbpp": {
+      "n": 419,
+      "arms": {
+        "a431::TAP-ref": {
+          "correct": 26,
+          "unanswered": 301,
+          "per_requested_accuracy": 0.06205250596658711
+        },
+        "a431::TAP-mut": {
+          "correct": 27,
+          "unanswered": 340,
+          "per_requested_accuracy": 0.06443914081145585
+        },
+        "a431_sysprompt::TAP-ref": {
+          "correct": 118,
+          "unanswered": 136,
+          "per_requested_accuracy": 0.28162291169451076
+        },
+        "a431_sysprompt::TAP-mut": {
+          "correct": 26,
+          "unanswered": 327,
+          "per_requested_accuracy": 0.06205250596658711
+        },
+        "base::TAP-ref": {
+          "correct": 168,
+          "unanswered": 23,
+          "per_requested_accuracy": 0.4009546539379475
+        },
+        "base::TAP-mut": {
+          "correct": 146,
+          "unanswered": 18,
+          "per_requested_accuracy": 0.34844868735083534
+        }
+      }
+    }
+  },
+  "sealed_data_accessed": false,
+  "weights_written": false
+}

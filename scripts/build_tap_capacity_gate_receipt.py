@@ -31,6 +31,20 @@ def sha256_bytes(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def normalised_sha256(data: bytes) -> str:
+    """Hash with line endings normalised to LF.
+
+    This repository is checked out with ``core.autocrlf=true``, so a file that
+    git stores with LF is on disk with CRLF and the runtime hashes the CRLF
+    bytes. Comparing a raw git blob against a raw runtime hash therefore
+    reports a mismatch for every file, including ones that are byte-identical
+    in content. The provenance question is whether the launch commit contains
+    the same *source*, so both sides are normalised before comparison and the
+    raw hashes are still recorded as evidence.
+    """
+    return hashlib.sha256(data.replace(b"\r\n", b"\n")).hexdigest()
+
+
 def file_meta(path: Path) -> dict:
     data = path.read_bytes()
     return {
@@ -103,17 +117,25 @@ def main(argv=None) -> int:
             print(f"REFUSED: artifact omits source binding for {name}")
             return 2
         try:
-            committed = sha256_bytes(committed_bytes(launch_commit, relative))
+            blob = committed_bytes(launch_commit, relative)
         except subprocess.CalledProcessError as exc:
             print(f"REFUSED: cannot read {relative} from launch commit: {exc}")
             return 2
-        if committed != expected:
-            print(f"REFUSED: launch commit does not contain the bound {name} bytes")
+        committed = sha256_bytes(blob)
+        runtime_path = ROOT / relative
+        runtime_raw = runtime_path.read_bytes() if runtime_path.exists() else b""
+        if sha256_bytes(runtime_raw) != expected:
+            print(f"REFUSED: the {name} on disk is not the bytes the run bound")
+            return 2
+        if normalised_sha256(blob) != normalised_sha256(runtime_raw):
+            print(f"REFUSED: launch commit does not contain the bound {name} source")
             return 2
         source_binding[name] = {
             "path": relative,
             "artifact_sha256": expected,
             "launch_commit_sha256": committed,
+            "normalised_sha256": normalised_sha256(blob),
+            "line_ending_normalised": committed != expected,
             "matches": True,
         }
 

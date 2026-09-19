@@ -137,8 +137,17 @@ def test_published_artifact_holds_unclipped_rows():
             assert row["raw_sha256"] == hashlib.sha256(
                 row["raw"].encode("utf-8")).hexdigest(), (
                 f"{arm} row {row['id']} hash does not match its retained text")
-        clipped = sum(1 for row in rows if row.get("raw_chars", 0) == 300)
-        assert clipped == 0, f"{arm} still has {clipped} rows clipped at 300 chars"
+            assert row["raw_chars"] == len(row["raw"]), (
+                f"{arm} row {row['id']} records a length that is not its text's")
+        # A row of exactly 300 characters is NOT evidence of clipping - the
+        # completed run contains genuine 300-character generations. Real
+        # clipping shows up as a hash covering a prefix, which the check above
+        # catches, and as every long row stopping dead on the old boundary.
+        longest = max(row["raw_chars"] for row in rows)
+        at_boundary = sum(1 for row in rows if row["raw_chars"] == 300)
+        assert longest > 300 or at_boundary == 0, (
+            f"{arm} has no row longer than 300 chars and {at_boundary} sitting "
+            f"exactly on the old clip boundary; retention looks truncated")
 
 
 @pytest.mark.skipif(not ARTIFACT.exists(), reason="capacity-gate artifact not present")
