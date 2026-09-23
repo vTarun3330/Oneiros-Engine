@@ -81,6 +81,10 @@ results/**
 !results/*_receipt.json
 !results/tap_pilot_split.json
 !results/tap_capacity_gate_analysis.json
+!results/tap_train_items.jsonl
+!results/tap_7b_capacity_protocol.json
+!results/tap_7b_capacity_analysis.json
+!results/tap_7b_capacity_receipt.json
 !results/prompt_variant_rescore*.json
 logs/
 wandb/

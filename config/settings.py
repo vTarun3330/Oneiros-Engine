@@ -105,6 +105,8 @@ IMMUTABLE_MODEL_REVISIONS = {
         "f39ac1d28e925b323eae81227eaba4464caced4e",
     "Qwen/Qwen2.5-Coder-1.5B-Instruct":
         "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "Qwen/Qwen2.5-Coder-7B-Instruct":
+        "c03e6d358207e414f1eca0bb1891e29f1db0e242",
 }
 
 

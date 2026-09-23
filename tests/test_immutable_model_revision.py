@@ -27,6 +27,8 @@ from config import IMMUTABLE_MODEL_REVISIONS, immutable_revision_for
 ROOT = Path(__file__).resolve().parent.parent
 QWEN = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
 QWEN_SHA = "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+QWEN_7B = "Qwen/Qwen2.5-Coder-7B-Instruct"
+QWEN_7B_SHA = "c03e6d358207e414f1eca0bb1891e29f1db0e242"
 
 #: Anything that is not one immutable commit.
 NOT_IMMUTABLE = ("main", "master", "latest", "HEAD", "head", "",
@@ -50,6 +52,11 @@ def qwen_override(monkeypatch):
 def test_the_qwen_snapshot_is_the_full_immutable_sha():
     assert immutable_revision_for(QWEN) == QWEN_SHA
     assert IMMUTABLE.match(QWEN_SHA)
+
+
+def test_the_qwen_7b_snapshot_is_the_full_immutable_sha():
+    assert immutable_revision_for(QWEN_7B) == QWEN_7B_SHA
+    assert IMMUTABLE.match(QWEN_7B_SHA)
 
 
 def test_every_pinned_revision_is_immutable():
