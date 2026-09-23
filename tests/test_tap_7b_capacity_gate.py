@@ -168,3 +168,18 @@ def test_token_audit_counts_rendered_prompt_plus_completion():
     assert report["TAP-ref"]["maximum_prompt_tokens"] == 4
     assert report["TAP-mut"]["maximum_prompt_plus_completion"] == 135
     assert all(row["fits"] for row in report.values())
+
+
+def test_analysis_cli_can_start_from_the_repository_root():
+    completed = subprocess.run(
+        [
+            str(ROOT / ".venv-gpu" / "Scripts" / "python.exe"),
+            "scripts/analyse_tap_7b_capacity_gate.py",
+            "--help",
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert "7B-versus-1.5B" in completed.stdout
