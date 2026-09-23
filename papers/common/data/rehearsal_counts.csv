@@ -1,0 +1,30 @@
+# Operational rehearsal on ablation_dev, 2026-09-17.
+# Source: results/v4_2_rehearsal_execution_receipt.json
+#   sha256 06aca918d2821a1f3f161e6f14a91978643f81b30e883746d8126a967136b59f
+# Pipeline-fidelity evidence only. Not a model-performance result.
+metric,value
+requested_records,594
+function_mode_targets,542
+excluded_repository_records,52
+excluded_unknown_mode_records,0
+candidates_expected,4336
+candidates_observed,4336
+raw_output_present,4336
+raw_output_sha256_present,4336
+raw_output_missing,0
+raw_output_mismatched,0
+independently_recomputed_mismatches,0
+parse_valid,4264
+parse_failures,72
+execution_valid,4113
+execution_failures,223
+reference_valid,2452
+killed_candidates,1108
+prompt_budget_failure_targets,0
+timeouts,43
+generation_batches,271
+generation_batch_size,2
+wall_time_seconds,577.753
+exit_status,0
+progress_files,55
+weights_written,0

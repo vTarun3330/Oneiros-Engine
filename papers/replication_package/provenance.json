@@ -1,0 +1,74 @@
+{
+  "schema_version": "oneiros_replication_package_provenance_v1",
+  "generated_utc": "2026-09-18T17:59:01Z",
+  "anonymized_for_double_anonymous_review": true,
+  "source_snapshot": {
+    "commit": "4f465622adf273ffcae672c93dfe3cc82c7d8645",
+    "note": "Commit identifier only. No repository host, account, remote URL or author name is recorded anywhere in this package."
+  },
+  "contents": {
+    "frozen_development_evaluation": {
+      "path": "results/v4_2_frozen_development_evaluation_receipt.json",
+      "sha256": "062774028693cfcbf5346eafeed232027748720940af7a47b5ac1a591055c4fe"
+    },
+    "development_selection": {
+      "path": "results/v4_2_development_selection_receipt.json",
+      "sha256": "0188324fe9eb2a51eebef71bbd4cc3ed45584f12393bf0fa6539817a09e58969"
+    },
+    "locked_validation_preflight": {
+      "path": "results/v4_2_locked_validation_preflight.json",
+      "sha256": "97be6855d41b1186a5c8a59a8a89efa71e1f40f5e1c7f29ab387402b7598912c"
+    },
+    "locked_validation_result": {
+      "path": "results/v4_2_locked_validation_result_receipt.json",
+      "sha256": "f7cdf84df8e65c51bd22410759c6fd54952ace3bfa80c6ab620674b53e288af9"
+    },
+    "rehearsal_receipt": {
+      "path": "results/v4_2_rehearsal_receipt.json",
+      "sha256": "bae9510218641b67cb07f065d6f1e5b01e3340d333618f0e1f52b36641414f4f"
+    },
+    "rehearsal_execution_receipt": {
+      "path": "results/v4_2_rehearsal_execution_receipt.json",
+      "sha256": "06aca918d2821a1f3f161e6f14a91978643f81b30e883746d8126a967136b59f"
+    },
+    "figure_data_kill_at_8": {
+      "path": "papers/common/data/kill_at_8.csv",
+      "sha256": "fe32f0205dbbfc66a4baa722a3ff340e5cb2a918150f63dd57e782608f129415"
+    },
+    "figure_data_validity": {
+      "path": "papers/common/data/validity.csv",
+      "sha256": "d59e1724f3a57dc84e88a1d89d688f6c6a1fe8adf55e9493f7729f3385aa10ea"
+    },
+    "figure_data_rehearsal_counts": {
+      "path": "papers/common/data/rehearsal_counts.csv",
+      "sha256": "c0ccec8cab8249dad3cc0d671f45ef05a35d111a6e5db074cab6750f32810e22"
+    },
+    "evidence_ledger": {
+      "path": "papers/common/evidence_ledger.md",
+      "sha256": "0fe9232982bfd9bb7049f0fa77758308b6e4e470b99b180fddd5784ba0d20b5c"
+    },
+    "claims_traceability": {
+      "path": "papers/common/claims_traceability.md",
+      "sha256": "ec87d1a321175e84a5e31b3b64608d4f18edc48991e64050b5615ed52dad4100"
+    },
+    "reference_verification": {
+      "path": "papers/common/reference_verification.md",
+      "sha256": "8fae02b7d26fb1ec76b28b5cdbd9e8a59eaab6d353965d93068de1df97153109"
+    },
+    "figure_table_inventory": {
+      "path": "papers/common/figure_and_table_inventory.md",
+      "sha256": "54cb6646f28613f3d43e8a6a0aad8eec875517e9b23bc9730008900c4dcfa79b"
+    }
+  },
+  "excluded": {
+    "raw_model_outputs": "4,336 retained completions from the rehearsal; digests published, content not redistributed",
+    "raw_prompts": "not included",
+    "candidate_code": "not included",
+    "consumed_split_material": "none exists and none is included",
+    "identity_bearing_links": "no repository host, account, remote URL or personal page"
+  },
+  "verification": {
+    "how": "recompute SHA-256 of each file under contents and compare",
+    "expected_file_count": 13
+  }
+}

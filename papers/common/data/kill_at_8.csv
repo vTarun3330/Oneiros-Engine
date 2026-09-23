@@ -1,0 +1,17 @@
+# Kill@8 point estimates and Wilson 95% bounds, by panel and arm.
+# Development rows: results/v4_2_development_selection_receipt.json
+#   sha256 0188324fe9eb2a51eebef71bbd4cc3ed45584f12393bf0fa6539817a09e58969
+# Locked rows:      results/v4_2_locked_validation_result_receipt.json
+#   sha256 f7cdf84df8e65c51bd22410759c6fd54952ace3bfa80c6ab620674b53e288af9
+# Rehearsal row:    results/v4_2_rehearsal_execution_receipt.json
+#   sha256 06aca918d2821a1f3f161e6f14a91978643f81b30e883746d8126a967136b59f
+# NOTE: development and locked rows are NOT comparable quantities. The
+# development panel selected the checkpoints it scored.
+panel,arm,n,kill_at_8,functions,wilson_lo,wilson_hi
+development,base,542,0.605166,328,0.563412,0.645440
+development,A@150,542,0.690037,374,0.649879,0.727520
+development,A@431,542,0.695572,377,0.655567,0.732824
+development,B@150,542,0.658672,357,0.617762,0.697348
+locked,base,757,0.594452,450,0.559083,0.628867
+locked,A@431,757,0.628798,476,0.593812,0.662483
+rehearsal,base,542,0.605166,328,0.563412,0.645440

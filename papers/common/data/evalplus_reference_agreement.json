@@ -1,0 +1,681 @@
+{
+  "note": "Agreement between the Oneiros reference implementation and the EvalPlus third-party canonical solution, executed on the corpus's own test inputs. Permitted splits only; the consumed split is never read.",
+  "permitted_splits": [
+    "train",
+    "ablation_dev",
+    "val"
+  ],
+  "per_benchmark": {
+    "humaneval": {
+      "ok": 127,
+      "agree": 796,
+      "disagree": 0,
+      "problems_scored": 127
+    },
+    "mbpp": {
+      "ok": 254,
+      "agree": 664,
+      "disagree": 102,
+      "problems_scored": 254,
+      "problems_disagreeing": 35,
+      "missing_entrypoint": 11
+    }
+  },
+  "disagreements": [
+    {
+      "bench": "mbpp",
+      "problem": 101,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "kth_element([12, 3, 5, 7, 19], 5, 2)",
+          "ours": "3",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "kth_element([17, 24, 8, 23], 4, 3)",
+          "ours": "8",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 119,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "search([1, 1, 2, 2, 3], 5)",
+          "ours": "3",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "search([1, 1, 3, 3, 4, 4, 5, 5, 7, 7, 8], 11)",
+          "ours": "8",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 125,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "find_length('11000010001', 11)",
+          "ours": "6",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "find_length('10111', 5)",
+          "ours": "1",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 130,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "max_occurrences([2, 3, 8, 4, 7, 9, 8, 2, 6, 5, 1, 6, 1, 2, 3, 2, 4, 6, 9, 1, 2])",
+          "ours": "(2, 5)",
+          "theirs": "2"
+        },
+        {
+          "call": "max_occurrences([2, 3, 8, 4, 7, 9, 8, 7, 9, 15, 14, 10, 12, 13, 16, 16, 18])",
+          "ours": "(8, 2)",
+          "theirs": "8"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 139,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "circle_circumference(10)",
+          "ours": "62.830000000000005",
+          "theirs": "62.83185307179586"
+        },
+        {
+          "call": "circle_circumference(5)",
+          "ours": "31.415000000000003",
+          "theirs": "31.41592653589793"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 140,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "extract_singly([(3, 4, 5), (4, 5, 7), (1, 4)])",
+          "ours": "[3, 4, 5, 7, 1]",
+          "theirs": "{1, 3, 4, 5, 7}"
+        },
+        {
+          "call": "extract_singly([(1, 2, 3), (4, 2, 3), (7, 8)])",
+          "ours": "[1, 2, 3, 4, 7, 8]",
+          "theirs": "{1, 2, 3, 4, 7, 8}"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 145,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "max_Abs_Diff((2, 1, 5, 3), 4)",
+          "ours": "4",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "max_Abs_Diff((9, 3, 2, 5, 1), 5)",
+          "ours": "8",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 233,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "lateralsuface_cylinder(10, 5)",
+          "ours": "314.15000000000003",
+          "theirs": "314.1592653589793"
+        },
+        {
+          "call": "lateralsuface_cylinder(4, 5)",
+          "ours": "125.66000000000001",
+          "theirs": "125.66370614359172"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 276,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "volume_cylinder(10, 5)",
+          "ours": "1570.7500000000002",
+          "theirs": "1570.7963267948967"
+        },
+        {
+          "call": "volume_cylinder(4, 5)",
+          "ours": "251.32000000000002",
+          "theirs": "251.32741228718345"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 406,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "find_Parity(12)",
+          "ours": "'Even Parity'",
+          "theirs": "False"
+        },
+        {
+          "call": "find_Parity(7)",
+          "ours": "'Odd Parity'",
+          "theirs": "True"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 433,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "check_greater([1, 2, 3, 4, 5], 4)",
+          "ours": "'No, entered number is less than those in the array'",
+          "theirs": "False"
+        },
+        {
+          "call": "check_greater([2, 3, 4, 5, 6], 8)",
+          "ours": "'Yes, the entered number is greater than those in the array'",
+          "theirs": "True"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 436,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "neg_nos([-1, 4, 5, -6])",
+          "ours": "-1",
+          "theirs": "[-1, -6]"
+        },
+        {
+          "call": "neg_nos([-1, -2, 3, 4])",
+          "ours": "-1",
+          "theirs": "[-1, -2]"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 454,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "text_match_wordz('pythonz.')",
+          "ours": "'Found a match!'",
+          "theirs": "True"
+        },
+        {
+          "call": "text_match_wordz('xyz.')",
+          "ours": "'Found a match!'",
+          "theirs": "True"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 468,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "max_product([3, 100, 4, 5, 150, 6], 6)",
+          "ours": "45000",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "max_product([4, 42, 55, 68, 80], 5)",
+          "ours": "50265600",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 471,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "find_remainder([100, 10, 5, 25, 35, 14], 6, 11)",
+          "ours": "9",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "find_remainder([1, 1, 1], 3, 1)",
+          "ours": "0",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 576,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "is_Sub_Array([1, 4, 3, 5], [1, 2], 4, 2)",
+          "ours": "False",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "is_Sub_Array([1, 2, 1], [1, 2, 1], 3, 3)",
+          "ours": "True",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 57,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "find_Max_Num([1, 2, 3], 3)",
+          "ours": "321",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "find_Max_Num([4, 5, 6, 1], 4)",
+          "ours": "6541",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 586,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "split_Arr([12, 10, 5, 6, 52, 36], 6, 2)",
+          "ours": "[5, 6, 52, 36, 12, 10]",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "split_Arr([1, 2, 3, 4], 4, 1)",
+          "ours": "[2, 3, 4, 1]",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 602,
+      "split": "train",
+      "agree": 2,
+      "disagree": 1,
+      "examples": [
+        {
+          "call": "first_repeated_char('abc')",
+          "ours": "'None'",
+          "theirs": "None"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 61,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "count_Substrings('112112', 6)",
+          "ours": "6",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "count_Substrings('111', 3)",
+          "ours": "6",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 626,
+      "split": "train",
+      "agree": 2,
+      "disagree": 1,
+      "examples": [
+        {
+          "call": "triangle_area(-1)",
+          "ours": "-1",
+          "theirs": "None"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 721,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "maxAverageOfPath([[1, 2, 3], [6, 5, 4], [7, 3, 9]], 3)",
+          "ours": "5.2",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "maxAverageOfPath([[2, 3, 4], [7, 6, 5], [8, 4, 10]], 3)",
+          "ours": "6.2",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 734,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "sum_Of_Subarray_Prod([1, 2, 3], 3)",
+          "ours": "20",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "sum_Of_Subarray_Prod([1, 2], 2)",
+          "ours": "5",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 743,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "rotate_right([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3, 4)",
+          "ours": "[8, 9, 10, 1, 2, 3, 4, 5, 6]",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "rotate_right([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 2, 2)",
+          "ours": "[9, 10, 1, 2, 3, 4, 5, 6, 7, 8]",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 751,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "check_min_heap([1, 2, 3, 4, 5, 6], 0)",
+          "ours": "True",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "check_min_heap([2, 3, 4, 5, 10, 15], 0)",
+          "ours": "True",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 757,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "count_reverse_pairs(['julia', 'best', 'tseb', 'for', 'ailuj'])",
+          "ours": "'2'",
+          "theirs": "2"
+        },
+        {
+          "call": "count_reverse_pairs(['geeks', 'best', 'for', 'skeeg'])",
+          "ours": "'1'",
+          "theirs": "1"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 75,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "find_tuples([(6, 24, 12), (7, 9, 6), (12, 18, 21)], 6)",
+          "ours": "'[(6, 24, 12)]'",
+          "theirs": "[(6, 24, 12)]"
+        },
+        {
+          "call": "find_tuples([(5, 25, 30), (4, 2, 3), (7, 8, 9)], 5)",
+          "ours": "'[(5, 25, 30)]'",
+          "theirs": "[(5, 25, 30)]"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 793,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "last([1, 2, 3], 1, 3)",
+          "ours": "0",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "last([1, 1, 1, 2, 3, 4], 1, 6)",
+          "ours": "2",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 794,
+      "split": "train",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "text_starta_endb('aabbbb')",
+          "ours": "'Found a match!'",
+          "theirs": "<re.Match object; span=(0, 6), match='aabbbb'>"
+        },
+        {
+          "call": "text_starta_endb('aabAbbbc')",
+          "ours": "'Not matched!'",
+          "theirs": "None"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 16,
+      "split": "ablation_dev",
+      "agree": 0,
+      "disagree": 4,
+      "examples": [
+        {
+          "call": "text_lowercase_underscore('aab_cbbbc')",
+          "ours": "'Found a match!'",
+          "theirs": "True"
+        },
+        {
+          "call": "text_lowercase_underscore('aab_Abbbc')",
+          "ours": "'Not matched!'",
+          "theirs": "False"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 270,
+      "split": "ablation_dev",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "sum_even_and_even_index([5, 6, 12, 1, 18, 8], 6)",
+          "ours": "30",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "sum_even_and_even_index([3, 20, 17, 9, 2, 10, 18, 13, 6, 18], 10)",
+          "ours": "26",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 296,
+      "split": "ablation_dev",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "get_Inv_Count([1, 20, 6, 4, 5], 5)",
+          "ours": "5",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "get_Inv_Count([1, 2, 1], 3)",
+          "ours": "1",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 760,
+      "split": "ablation_dev",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "unique_Element([1, 1, 1], 3)",
+          "ours": "'YES'",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "unique_Element([1, 2, 1, 2], 4)",
+          "ours": "'NO'",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 245,
+      "split": "val",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "max_sum([1, 15, 51, 45, 33, 100, 12, 18, 9], 9)",
+          "ours": "194",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "max_sum([80, 60, 30, 40, 20, 10], 6)",
+          "ours": "210",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    },
+    {
+      "bench": "mbpp",
+      "problem": 597,
+      "split": "val",
+      "agree": 0,
+      "disagree": 3,
+      "examples": [
+        {
+          "call": "find_kth([2, 3, 6, 7, 9], [1, 4, 8, 10], 5, 4, 5)",
+          "ours": "6",
+          "theirs": "('__exc__', 'TypeError')"
+        },
+        {
+          "call": "find_kth([100, 112, 256, 349, 770], [72, 86, 113, 119, 265, 445, 892], 5, 7, 7)",
+          "ours": "256",
+          "theirs": "('__exc__', 'TypeError')"
+        }
+      ]
+    }
+  ]
+}

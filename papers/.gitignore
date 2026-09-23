@@ -1,0 +1,18 @@
+# LaTeX intermediates are machine-specific, reproducible build products.
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+
+# Keep source, evidence tables, bibliographies, and final submission PDFs.
+!*.tex
+!*.bib
+!*.md
+!*.csv
+!*.json
+!*.py
+!*.pdf

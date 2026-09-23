@@ -1,0 +1,13 @@
+# Candidate-validity rates by panel and arm.
+# Development rows: results/v4_2_development_selection_receipt.json
+#   sha256 0188324fe9eb2a51eebef71bbd4cc3ed45584f12393bf0fa6539817a09e58969
+# Locked rows:      results/v4_2_locked_validation_result_receipt.json
+#   sha256 f7cdf84df8e65c51bd22410759c6fd54952ace3bfa80c6ab620674b53e288af9
+# functions_ref_valid is recorded only for the locked panel (field "fnrefn").
+panel,arm,parse_valid,execution_valid,reference_valid,functions_ref_valid
+development,base,0.983395,0.948570,0.565498,
+development,A@150,0.997463,0.975092,0.458487,
+development,A@431,0.998155,0.993081,0.455028,
+development,B@150,0.998155,0.973478,0.448801,
+locked,base,0.987285,0.928336,0.452114,675
+locked,A@431,0.988771,0.942206,0.333388,566
