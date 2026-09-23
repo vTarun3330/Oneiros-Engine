@@ -1,0 +1,263 @@
+{
+  "schema_version": "oneiros_tap_7b_capacity_analysis_v1",
+  "label": "train-only quantized capacity diagnostic; not generalization, validation, final-test, real-repository, or SFT evidence",
+  "primary_n": 584,
+  "pilot_n": 16,
+  "inputs": {
+    "candidate": {
+      "path": "results\\tap_7b_capacity.json",
+      "sha256": "3b613730d508b2546608e7399151abd580c3c49ae56f11c7beb3973f69a2f3bd"
+    },
+    "baseline": {
+      "path": "results\\tap_adapter_compare.json",
+      "sha256": "1f84210e3af9939f86bbfca901b5116f59606b03e13599e8dde6a9eb80b97672"
+    },
+    "split": {
+      "path": "results\\tap_pilot_split.json",
+      "sha256": "99cb772bf6cd93a4a1e925cfeda7e8adde5bb5a831eafaa840478425a39516e8"
+    },
+    "protocol": {
+      "path": "results\\tap_7b_capacity_protocol.json",
+      "sha256": "f6c33cfa1a1a35d87f0e1ccf226e24a204211dcd652f887d0c41b39238fc09c1"
+    }
+  },
+  "analysis_source_sha256": "c57689043b52ad6b41f8349a9e348475c7d5fa51904c9b3e329f5b338534b380",
+  "acceptance_policy": {
+    "primary_endpoint": "TAP-mut per-requested accuracy, paired 7B minus 1.5B",
+    "minimum_gain_pp": 5.0,
+    "minimum_ci95_low_pp_exclusive": 0.0,
+    "maximum_answer_rate_regression_pp": 5.0,
+    "maximum_cap_hit_rate": 0.02
+  },
+  "conditions": {
+    "TAP-ref": {
+      "base1_5b": {
+        "n": 584,
+        "correct": 281,
+        "answered": 548,
+        "unanswered": 36,
+        "per_requested_accuracy": 0.4811643835616438,
+        "answer_rate": 0.9383561643835616,
+        "cap_hits": 5,
+        "cap_hit_rate": 0.008561643835616438,
+        "worst_case_lower": 0.4811643835616438,
+        "worst_case_upper": 0.5428082191780822
+      },
+      "base7b": {
+        "n": 584,
+        "correct": 63,
+        "answered": 101,
+        "unanswered": 483,
+        "per_requested_accuracy": 0.10787671232876712,
+        "answer_rate": 0.17294520547945205,
+        "cap_hits": 1,
+        "cap_hit_rate": 0.0017123287671232876,
+        "worst_case_lower": 0.10787671232876712,
+        "worst_case_upper": 0.934931506849315
+      },
+      "paired_7b_minus_1_5b": {
+        "difference_pp": -37.32876712328767,
+        "ci95_low_pp": -41.9624170727028,
+        "ci95_high_pp": -32.69511717387254,
+        "gained": 27,
+        "lost": 245,
+        "mcnemar_exact_p": 3.8716799622962885e-45
+      },
+      "answer_rate_difference_pp": -76.54109589041096
+    },
+    "TAP-mut": {
+      "base1_5b": {
+        "n": 584,
+        "correct": 256,
+        "answered": 555,
+        "unanswered": 29,
+        "per_requested_accuracy": 0.4383561643835616,
+        "answer_rate": 0.9503424657534246,
+        "cap_hits": 9,
+        "cap_hit_rate": 0.015410958904109588,
+        "worst_case_lower": 0.4383561643835616,
+        "worst_case_upper": 0.488013698630137
+      },
+      "base7b": {
+        "n": 584,
+        "correct": 54,
+        "answered": 91,
+        "unanswered": 493,
+        "per_requested_accuracy": 0.09246575342465753,
+        "answer_rate": 0.1558219178082192,
+        "cap_hits": 1,
+        "cap_hit_rate": 0.0017123287671232876,
+        "worst_case_lower": 0.09246575342465753,
+        "worst_case_upper": 0.9366438356164384
+      },
+      "paired_7b_minus_1_5b": {
+        "difference_pp": -34.58904109589041,
+        "ci95_low_pp": -39.118289616329356,
+        "ci95_high_pp": -30.059792575451468,
+        "gained": 25,
+        "lost": 227,
+        "mcnemar_exact_p": 6.329263469063132e-42
+      },
+      "answer_rate_difference_pp": -79.45205479452055
+    }
+  },
+  "strata": {
+    "humaneval": {
+      "n": 165,
+      "conditions": {
+        "TAP-ref": {
+          "base1_5b": {
+            "n": 165,
+            "correct": 113,
+            "answered": 152,
+            "unanswered": 13,
+            "per_requested_accuracy": 0.6848484848484848,
+            "answer_rate": 0.9212121212121213,
+            "cap_hits": 1,
+            "cap_hit_rate": 0.006060606060606061,
+            "worst_case_lower": 0.6848484848484848,
+            "worst_case_upper": 0.7636363636363637
+          },
+          "base7b": {
+            "n": 165,
+            "correct": 18,
+            "answered": 23,
+            "unanswered": 142,
+            "per_requested_accuracy": 0.10909090909090909,
+            "answer_rate": 0.1393939393939394,
+            "cap_hits": 1,
+            "cap_hit_rate": 0.006060606060606061,
+            "worst_case_lower": 0.10909090909090909,
+            "worst_case_upper": 0.9696969696969697
+          },
+          "paired_7b_minus_1_5b": {
+            "difference_pp": -57.57575757575758,
+            "ci95_low_pp": -65.48219545938686,
+            "ci95_high_pp": -49.6693196921283,
+            "gained": 2,
+            "lost": 97,
+            "mcnemar_exact_p": 1.5622601366996918e-26
+          }
+        },
+        "TAP-mut": {
+          "base1_5b": {
+            "n": 165,
+            "correct": 110,
+            "answered": 154,
+            "unanswered": 11,
+            "per_requested_accuracy": 0.6666666666666666,
+            "answer_rate": 0.9333333333333333,
+            "cap_hits": 1,
+            "cap_hit_rate": 0.006060606060606061,
+            "worst_case_lower": 0.6666666666666666,
+            "worst_case_upper": 0.7333333333333333
+          },
+          "base7b": {
+            "n": 165,
+            "correct": 18,
+            "answered": 23,
+            "unanswered": 142,
+            "per_requested_accuracy": 0.10909090909090909,
+            "answer_rate": 0.1393939393939394,
+            "cap_hits": 1,
+            "cap_hit_rate": 0.006060606060606061,
+            "worst_case_lower": 0.10909090909090909,
+            "worst_case_upper": 0.9696969696969697
+          },
+          "paired_7b_minus_1_5b": {
+            "difference_pp": -55.757575757575765,
+            "ci95_low_pp": -63.875344539017675,
+            "ci95_high_pp": -47.639806976133855,
+            "gained": 3,
+            "lost": 95,
+            "mcnemar_exact_p": 9.904811308210189e-25
+          }
+        }
+      }
+    },
+    "mbpp": {
+      "n": 419,
+      "conditions": {
+        "TAP-ref": {
+          "base1_5b": {
+            "n": 419,
+            "correct": 168,
+            "answered": 396,
+            "unanswered": 23,
+            "per_requested_accuracy": 0.4009546539379475,
+            "answer_rate": 0.9451073985680191,
+            "cap_hits": 4,
+            "cap_hit_rate": 0.00954653937947494,
+            "worst_case_lower": 0.4009546539379475,
+            "worst_case_upper": 0.45584725536992843
+          },
+          "base7b": {
+            "n": 419,
+            "correct": 45,
+            "answered": 78,
+            "unanswered": 341,
+            "per_requested_accuracy": 0.10739856801909307,
+            "answer_rate": 0.18615751789976134,
+            "cap_hits": 0,
+            "cap_hit_rate": 0.0,
+            "worst_case_lower": 0.10739856801909307,
+            "worst_case_upper": 0.9212410501193318
+          },
+          "paired_7b_minus_1_5b": {
+            "difference_pp": -29.355608591885442,
+            "ci95_low_pp": -34.82859105422014,
+            "ci95_high_pp": -23.882626129550736,
+            "gained": 25,
+            "lost": 148,
+            "mcnemar_exact_p": 1.8659401207770104e-22
+          }
+        },
+        "TAP-mut": {
+          "base1_5b": {
+            "n": 419,
+            "correct": 146,
+            "answered": 401,
+            "unanswered": 18,
+            "per_requested_accuracy": 0.34844868735083534,
+            "answer_rate": 0.9570405727923628,
+            "cap_hits": 8,
+            "cap_hit_rate": 0.01909307875894988,
+            "worst_case_lower": 0.34844868735083534,
+            "worst_case_upper": 0.3914081145584726
+          },
+          "base7b": {
+            "n": 419,
+            "correct": 36,
+            "answered": 68,
+            "unanswered": 351,
+            "per_requested_accuracy": 0.08591885441527446,
+            "answer_rate": 0.162291169451074,
+            "cap_hits": 0,
+            "cap_hit_rate": 0.0,
+            "worst_case_lower": 0.08591885441527446,
+            "worst_case_upper": 0.9236276849642004
+          },
+          "paired_7b_minus_1_5b": {
+            "difference_pp": -26.25298329355609,
+            "ci95_low_pp": -31.48537704385088,
+            "ci95_high_pp": -21.020589543261295,
+            "gained": 22,
+            "lost": 132,
+            "mcnemar_exact_p": 2.5744715244070285e-20
+          }
+        }
+      }
+    }
+  },
+  "decision": {
+    "checks": {
+      "tap_mut_gain_at_least_5pp": false,
+      "tap_mut_ci95_lower_positive": false,
+      "tap_mut_answer_rate_noninferior": false,
+      "tap_mut_cap_hit_rate_within_ceiling": true
+    },
+    "capacity_gate_passed": false,
+    "selected_base_for_execution_supervision": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "scope": "mechanism/pilot model choice only; no promotion authority"
+  }
+}

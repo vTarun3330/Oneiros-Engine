@@ -1,0 +1,261 @@
+{
+  "schema_version": "oneiros_tap_7b_capacity_receipt_v1",
+  "created_utc": "2026-09-23T18:34:43.411097+00:00",
+  "label": "train-only quantized capacity diagnostic; not generalization, validation, final-test, real-repository, or SFT evidence",
+  "run_id": "20260923-142720-tap_7b_capacity_v1",
+  "launch": {
+    "manifest": {
+      "schema_version": "oneiros_gpu_run_v1",
+      "run_id": "20260923-142720-tap_7b_capacity_v1",
+      "name": "tap_7b_capacity_v1",
+      "created_utc": "2026-09-23T08:57:20+00:00",
+      "command": [
+        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Scripts\\python.exe",
+        "scripts\\run_tap_7b_capacity_gate.py",
+        "--items",
+        "results\\tap_train_items.jsonl",
+        "--max-new-tokens",
+        "128",
+        "--batch",
+        "8",
+        "--out",
+        "results\\tap_7b_capacity.json"
+      ],
+      "command_string": "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\.venv-gpu\\Scripts\\python.exe scripts\\run_tap_7b_capacity_gate.py --items results\\tap_train_items.jsonl --max-new-tokens 128 --batch 8 --out results\\tap_7b_capacity.json",
+      "cwd": "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros",
+      "git": {
+        "branch": "experiment/research-eval-ablations",
+        "commit": "681dd40f12be204cbf46b7832a70524885718fa5",
+        "dirty": false,
+        "dirty_files": []
+      },
+      "versions": {
+        "python": "3.12.14",
+        "torch": "2.5.1+cu124",
+        "transformers": "4.48.3",
+        "peft": "0.14.0",
+        "trl": "0.15.2",
+        "datasets": "3.2.0",
+        "bitsandbytes": "0.45.0",
+        "accelerate": "1.2.1",
+        "cuda_runtime": "12.4",
+        "cudnn": "90100",
+        "gpu_name": "NVIDIA RTX 4500 Ada Generation",
+        "driver": "596.71"
+      },
+      "dataset": {
+        "corpus_version": null
+      },
+      "config_snapshot": {
+        "seed": null,
+        "base_model_name": null,
+        "base_model_revision": null,
+        "attention_implementation": null,
+        "selection_tokenizer": null,
+        "prompt_token_limit": null,
+        "selection_prompt_token_limit": null,
+        "learning_rate": null,
+        "max_pairs": null,
+        "checkpoint_steps": null,
+        "monitor_validation_functions": null,
+        "complex_target_fraction": null,
+        "evaluation_split": null,
+        "run_name": null
+      },
+      "resume": {
+        "resumed": false,
+        "resumed_from_checkpoint": null,
+        "lineage": [
+          "20260923-142720-tap_7b_capacity_v1"
+        ]
+      }
+    },
+    "status": {
+      "schema_version": "oneiros_gpu_run_v1",
+      "run_id": "20260923-142720-tap_7b_capacity_v1",
+      "name": "tap_7b_capacity_v1",
+      "state": "completed",
+      "exit_code": 0,
+      "start_utc": "2026-09-23T08:57:20+00:00",
+      "end_utc": "2026-09-23T09:10:23+00:00",
+      "duration_seconds": 781.0,
+      "termination": {
+        "reason": "completed",
+        "confidence": "certain",
+        "detail": "child exited 0"
+      },
+      "artifact_validation": {
+        "validated": true,
+        "artifact_contract": "none_declared",
+        "reason": "no --run-name; validated on exit code alone"
+      },
+      "progress": {
+        "last_monitored_step": null,
+        "last_log_line": "written: C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\tap_7b_capacity.json"
+      },
+      "last_checkpoint": null,
+      "traceback": null
+    }
+  },
+  "model": {
+    "name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
+    "local_snapshot": "C:\\Users\\Student2\\.cache\\huggingface\\hub\\models--Qwen--Qwen2.5-Coder-7B-Instruct\\snapshots\\c03e6d358207e414f1eca0bb1891e29f1db0e242",
+    "weight_shards": [
+      "model-00001-of-00004.safetensors",
+      "model-00002-of-00004.safetensors",
+      "model-00003-of-00004.safetensors",
+      "model-00004-of-00004.safetensors"
+    ],
+    "runtime_profile": {
+      "profile_version": "oneiros_phi3_4bit_nf4_aligned_v1",
+      "compute_dtype": "bf16",
+      "load_in_4bit": true,
+      "quant_type": "nf4",
+      "double_quant": false,
+      "attention_implementation": "sdpa",
+      "model_name": "Qwen/Qwen2.5-Coder-7B-Instruct",
+      "model_revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242"
+    }
+  },
+  "source_binding": {
+    "runner": {
+      "path": "scripts/run_tap_7b_capacity_gate.py",
+      "artifact_sha256": "89e18252b872d82f60f6af0bb391c1f590c58e5107339d057d8cd8d0c92f8c35",
+      "launch_blob_sha256": "89e18252b872d82f60f6af0bb391c1f590c58e5107339d057d8cd8d0c92f8c35",
+      "normalised_sha256": "89e18252b872d82f60f6af0bb391c1f590c58e5107339d057d8cd8d0c92f8c35",
+      "matches": true
+    },
+    "tap_helpers": {
+      "path": "scripts/run_tap_adapter_compare.py",
+      "artifact_sha256": "1f237d02fef3e0342922d2bccd23ce35f3fe21f789d4981274ad42676330872e",
+      "launch_blob_sha256": "1f237d02fef3e0342922d2bccd23ce35f3fe21f789d4981274ad42676330872e",
+      "normalised_sha256": "1f237d02fef3e0342922d2bccd23ce35f3fe21f789d4981274ad42676330872e",
+      "matches": true
+    },
+    "tap_scorer": {
+      "path": "scripts/run_tap_diagnostic.py",
+      "artifact_sha256": "b375490f491596a2f397a21dfce4be6f2767f39497cdcff69d9c91ed0873de75",
+      "launch_blob_sha256": "35fa2510c6247fd99a6597070dc8e1ba7a284d97431fd5fcb9bf1ff9893eaee7",
+      "normalised_sha256": "35fa2510c6247fd99a6597070dc8e1ba7a284d97431fd5fcb9bf1ff9893eaee7",
+      "matches": true
+    },
+    "generator": {
+      "path": "engine/generator.py",
+      "artifact_sha256": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
+      "launch_blob_sha256": "c4c16c7de07e82f226bd77d2e980339b13844a4418ad428e6c41158eb1938330",
+      "normalised_sha256": "c4c16c7de07e82f226bd77d2e980339b13844a4418ad428e6c41158eb1938330",
+      "matches": true
+    },
+    "settings": {
+      "path": "config/settings.py",
+      "artifact_sha256": "40fe215d376d66d82a9092be7960f4ca87720729f8d0bea8c8ef3f3ecc6e211f",
+      "launch_blob_sha256": "5fa95a33073318dcc31f21c081cadcf2b60d38b34170061cfd010b6553aaa259",
+      "normalised_sha256": "5fa95a33073318dcc31f21c081cadcf2b60d38b34170061cfd010b6553aaa259",
+      "matches": true
+    }
+  },
+  "artifacts": {
+    "candidate": {
+      "path": "results\\tap_7b_capacity.json",
+      "bytes": 485761,
+      "sha256": "3b613730d508b2546608e7399151abd580c3c49ae56f11c7beb3973f69a2f3bd"
+    },
+    "analysis": {
+      "path": "results\\tap_7b_capacity_analysis.json",
+      "bytes": 9042,
+      "sha256": "e99e426a9df25a7855d8d73c5333d2a13ccb8b401d21832f28b9c3eb0ef370ab"
+    },
+    "protocol": {
+      "path": "results\\tap_7b_capacity_protocol.json",
+      "bytes": 3553,
+      "sha256": "f6c33cfa1a1a35d87f0e1ccf226e24a204211dcd652f887d0c41b39238fc09c1"
+    },
+    "baseline_1_5b": {
+      "path": "results\\tap_adapter_compare.json",
+      "bytes": 2055472,
+      "sha256": "1f84210e3af9939f86bbfca901b5116f59606b03e13599e8dde6a9eb80b97672"
+    },
+    "gate1_receipt": {
+      "path": "results\\tap_capacity_gate_receipt.json",
+      "bytes": 13171,
+      "sha256": "03103f89dc6e14367eb3bbfbfc648fd7876de2e4b6cf1465686ed5527603ed9f"
+    },
+    "items": {
+      "path": "results\\tap_train_items.jsonl",
+      "bytes": 1202718,
+      "sha256": "c15398bdee5f1486a09d2f6338f426407470ba686dcc3ae8d99900364999f413"
+    },
+    "pilot_split": {
+      "path": "results\\tap_pilot_split.json",
+      "bytes": 1393,
+      "sha256": "99cb772bf6cd93a4a1e925cfeda7e8adde5bb5a831eafaa840478425a39516e8"
+    },
+    "run_manifest": {
+      "path": "runs\\20260923-142720-tap_7b_capacity_v1\\manifest.json",
+      "bytes": 2031,
+      "sha256": "b60b1721d2f438337ad8d59422b1723b0141ce96c86a97d4e021c0574422096a"
+    },
+    "run_status": {
+      "path": "runs\\20260923-142720-tap_7b_capacity_v1\\status.json",
+      "bytes": 791,
+      "sha256": "0dff77d80d8317b1f76b1346e6b779f698c64db7c6972f5183fcfae2e66815ab"
+    }
+  },
+  "run_contract": {
+    "schema_version": "oneiros_tap_7b_capacity_v1",
+    "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "model_revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
+    "items_file": "results\\tap_train_items.jsonl",
+    "items_file_sha256": "c15398bdee5f1486a09d2f6338f426407470ba686dcc3ae8d99900364999f413",
+    "item_ids_sha256": "b8c383441b5650c6f666466bb8318255805ebf5619b30fc44bffaf9dec60f487",
+    "items": 600,
+    "permitted_split": "train",
+    "decoding": "greedy",
+    "do_sample": false,
+    "max_new_tokens": 128,
+    "batch": 8,
+    "tokenizer_max_length": 3072,
+    "attention_implementation": "sdpa",
+    "quantization": {
+      "load_in_4bit": true,
+      "quant_type": "nf4",
+      "double_quant": false,
+      "compute_dtype": "bf16_if_supported_else_fp16"
+    },
+    "weights_written": false,
+    "source_files_sha256": {
+      "runner": "89e18252b872d82f60f6af0bb391c1f590c58e5107339d057d8cd8d0c92f8c35",
+      "tap_helpers": "1f237d02fef3e0342922d2bccd23ce35f3fe21f789d4981274ad42676330872e",
+      "tap_scorer": "b375490f491596a2f397a21dfce4be6f2767f39497cdcff69d9c91ed0873de75",
+      "generator": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
+      "settings": "40fe215d376d66d82a9092be7960f4ca87720729f8d0bea8c8ef3f3ecc6e211f"
+    }
+  },
+  "acceptance_policy": {
+    "primary_endpoint": "TAP-mut per-requested accuracy, paired 7B minus 1.5B",
+    "minimum_gain_pp": 5.0,
+    "minimum_ci95_low_pp_exclusive": 0.0,
+    "maximum_answer_rate_regression_pp": 5.0,
+    "maximum_cap_hit_rate": 0.02
+  },
+  "decision": {
+    "checks": {
+      "tap_mut_gain_at_least_5pp": false,
+      "tap_mut_ci95_lower_positive": false,
+      "tap_mut_answer_rate_noninferior": false,
+      "tap_mut_cap_hit_rate_within_ceiling": true
+    },
+    "capacity_gate_passed": false,
+    "selected_base_for_execution_supervision": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "scope": "mechanism/pilot model choice only; no promotion authority"
+  },
+  "integrity": {
+    "full_raw_outputs_verified_by_analysis": true,
+    "train_only": true,
+    "validation_read": false,
+    "sealed_final_read": false,
+    "weights_written": false,
+    "training_performed": false
+  }
+}
