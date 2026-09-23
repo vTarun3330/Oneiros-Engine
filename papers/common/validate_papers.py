@@ -14,6 +14,7 @@ substitute for compiling. What it does check, it checks properly:
 from __future__ import annotations
 
 import re
+import os
 import sys
 from pathlib import Path
 
@@ -26,10 +27,18 @@ VENUES = ["saner_rene_2027", "icst_2027", "saner_short_2027", "cain_2027"]
 #: Strings that would break double-anonymous review.
 IDENTITY = [
     "github.com", "gitlab", "bitbucket", "@gmail", "@student", ".edu",
-    "venkattarun", "Student2", "oneiros-engine", "Oneiros-Engine",
     "\\author{\\IEEEauthorblockN{A", "acknowledg", "Acknowledg",
     "funded by", "grant no", "our university", "our institution",
 ]
+
+# Identity-specific terms must not be embedded in a validator that accompanies
+# a double-anonymous artifact: the denylist would disclose the very identity it
+# is meant to catch.  Internal validation can add private terms without writing
+# them to a source file, for example as a pipe-separated environment value.
+IDENTITY.extend(
+    term for term in os.getenv("ONEIROS_PAPER_PRIVATE_IDENTITY_TERMS", "").split("|")
+    if term
+)
 
 #: Claims that must never appear, per claims_traceability.md.
 PROHIBITED = [

@@ -41,7 +41,8 @@ anonymized artifact.
 
 ## Before archiving
 
-1. Assemble the files listed in `MANIFEST.md` and generate `SHA256SUMS`.
+1. Assemble the files listed in `MANIFEST.md`, run `verify_provenance.py`, and
+   optionally generate `SHA256SUMS` with its `--write-sha256sums` flag.
 2. Verify every digest against the full values in `provenance.json`.
 3. Archive to an **anonymous-capable** service. A personal repository link would
    break double-anonymous review at all four target venues; ICST requires the

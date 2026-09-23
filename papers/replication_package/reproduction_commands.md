@@ -10,11 +10,11 @@ These commands apply to the **assembled archive**, after the receipts listed in
 generated.  This source-tree directory is the archive plan, so it deliberately
 does not pretend that a not-yet-assembled checksum file exists.
 
-    sha256sum -c SHA256SUMS
-    python -c "import json; d=json.load(open('provenance.json')); print(len(d['contents']), 'artifacts')"
+    python verify_provenance.py
 
-Expect 13 artifacts and every digest matching the full value in
-`provenance.json`.
+Expect `verified: 13/13` and every digest matching the full value in
+`provenance.json`. To emit a conventional checksum file after assembly, run
+`python verify_provenance.py --write-sha256sums`.
 
 ## 1. Read the table values back from the receipts
 

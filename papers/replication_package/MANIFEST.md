@@ -53,12 +53,13 @@ Digest prefixes are shown for readability; `provenance.json` carries the full
 | File | Purpose |
 |---|---|
 | `validate_papers.py` | structural and claim validator for the drafts |
+| `verify_provenance.py` | cross-platform digest verification and optional `SHA256SUMS` generation |
 | `reproduction_commands.md` | exact commands to regenerate every table and figure |
 
 ## Verification
 
 ```
-sha256sum -c SHA256SUMS
+python verify_provenance.py
 ```
 
 Every digest must match the full value in `provenance.json`, which also records
