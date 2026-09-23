@@ -1,0 +1,98 @@
+{
+  "schema_version": "oneiros_tap_7b_capacity_protocol_v1",
+  "created_utc": "2026-09-23T08:53:10.259658+00:00",
+  "status": "ready",
+  "label": "frozen before 7B generation; train-only quantized capacity diagnostic, not SFT, generalization, validation, final-test, or promotion evidence",
+  "git": {
+    "branch": "experiment/research-eval-ablations",
+    "commit": "c2757239eb637368fa3d1f82f678c04966dbd296",
+    "clean_before_write": true
+  },
+  "candidate": {
+    "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "model_revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
+    "official_hub_sha": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
+    "base_only": true,
+    "adapter": null
+  },
+  "baseline": {
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "artifact": "results/tap_adapter_compare.json",
+    "artifact_sha256": "1f84210e3af9939f86bbfca901b5116f59606b03e13599e8dde6a9eb80b97672",
+    "gate1_receipt": "results/tap_capacity_gate_receipt.json",
+    "gate1_receipt_sha256": "03103f89dc6e14367eb3bbfbfc648fd7876de2e4b6cf1465686ed5527603ed9f"
+  },
+  "panel": {
+    "items": "results/tap_train_items.jsonl",
+    "items_sha256": "c15398bdee5f1486a09d2f6338f426407470ba686dcc3ae8d99900364999f413",
+    "total": 600,
+    "primary": 584,
+    "pilot_excluded_from_primary": 16,
+    "split": "results/tap_pilot_split.json",
+    "split_sha256": "99cb772bf6cd93a4a1e925cfeda7e8adde5bb5a831eafaa840478425a39516e8",
+    "dataset_counts": {
+      "other": 12,
+      "humaneval": 169,
+      "mbpp": 419
+    },
+    "all_rows_train": true,
+    "validation_read": false,
+    "sealed_final_read": false
+  },
+  "generation": {
+    "conditions": [
+      "TAP-ref",
+      "TAP-mut"
+    ],
+    "decoding": "greedy",
+    "do_sample": false,
+    "max_new_tokens": 128,
+    "batch": 8,
+    "tokenizer_max_length": 3072,
+    "attention_implementation": "sdpa",
+    "quantization": "NF4 4-bit, shared project runtime",
+    "full_raw_output_retention": true,
+    "atomic_checkpoint_per_condition": true,
+    "token_audit": {
+      "TAP-ref": {
+        "minimum_prompt_tokens": 110,
+        "maximum_prompt_tokens": 677,
+        "maximum_prompt_plus_completion": 805,
+        "sequence_limit": 3072,
+        "fits": true
+      },
+      "TAP-mut": {
+        "minimum_prompt_tokens": 155,
+        "maximum_prompt_tokens": 1071,
+        "maximum_prompt_plus_completion": 1199,
+        "sequence_limit": 3072,
+        "fits": true
+      }
+    }
+  },
+  "acceptance_policy": {
+    "primary_endpoint": "TAP-mut per-requested accuracy, paired 7B minus 1.5B",
+    "minimum_gain_pp": 5.0,
+    "minimum_ci95_low_pp_exclusive": 0.0,
+    "maximum_answer_rate_regression_pp": 5.0,
+    "maximum_cap_hit_rate": 0.02
+  },
+  "resources": {
+    "free_disk_bytes": 201109630976,
+    "gpu": {
+      "available": true,
+      "name": "NVIDIA RTX 4500 Ada Generation",
+      "total_memory_bytes": 25762988032,
+      "bf16_supported": true
+    }
+  },
+  "source_files_sha256": {
+    "runner": "89e18252b872d82f60f6af0bb391c1f590c58e5107339d057d8cd8d0c92f8c35",
+    "tap_helpers": "1f237d02fef3e0342922d2bccd23ce35f3fe21f789d4981274ad42676330872e",
+    "tap_scorer": "b375490f491596a2f397a21dfce4be6f2767f39497cdcff69d9c91ed0873de75",
+    "generator": "9153b4761311ccd84b60b644c24ac46cf6855e33ff9a0c02dc9aa4a636e13b35",
+    "settings": "40fe215d376d66d82a9092be7960f4ca87720729f8d0bea8c8ef3f3ecc6e211f"
+  },
+  "problems": []
+}
