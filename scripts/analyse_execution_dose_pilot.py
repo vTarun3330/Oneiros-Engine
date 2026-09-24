@@ -7,7 +7,15 @@ any evaluation exists.
 
 Two gates, both required:
 
-Mechanism (97-item train-derived panel, frozen control vs 25% treatment)
+The treatment is a composite: 256/1,024 examples (25%) but 73,665/127,108
+supervised tokens (58%), and 1.205306x the frozen control's supervised tokens.
+A token-matched control was infeasible, so every outcome is reported for the
+combined intervention and carries INFERENCE_LIMITATION; no outcome attributes
+an effect to execution supervision alone.
+
+Both gates are always measured and analysed together, whatever either shows.
+
+Mechanism (97-item train-derived panel, frozen control vs composite treatment)
     * primary outcome: lenient semantic correctness, per requested item;
     * in BOTH conditions (intended output, shown code's actual output):
       paired gain >= +5 pp and Newcombe (1998, method 10) 90% lower bound >= 0;
@@ -37,7 +45,9 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from harness.execution_dose import cluster_bootstrap_difference
+from harness.execution_dose import (
+    INFERENCE_LIMITATION, INTERVENTION_LABEL, cluster_bootstrap_difference,
+)
 from scripts.diagnose_execution_trace_pilot import exact_gain_upper, newcombe_paired
 
 SCHEMA = "oneiros_execution_dose_analysis_v1"
@@ -216,21 +226,23 @@ def retention_section(control: dict, treatment: dict, base: dict | None,
 
 def decide(mechanism: dict, retention: dict) -> dict[str, Any]:
     if mechanism["passed"] and retention["passed"]:
-        outcome = "mechanism_supported_at_25pct_dose"
+        outcome = "composite_intervention_mechanism_and_retention_passed"
         next_step = ("stop and request explicit authorization before opening the "
                      "100-lineage confirmation panel; nothing is opened automatically")
     elif mechanism["passed"]:
-        outcome = f"mechanism_gain_with_retention_{retention['verdict']}"
+        outcome = f"composite_intervention_gain_with_retention_{retention['verdict']}"
         next_step = ("stop; the gain is not accepted because test-generation retention "
                      "did not pass. Any follow-up needs a new explicit decision")
     else:
         excluded = all(mechanism["treatment_minus_control"][c]["newcombe90_high_pp"] < MIN_GAIN_PP
                        for c in CONDITIONS)
-        outcome = ("null_at_25pct_dose_5pp_gain_excluded" if excluded
-                   else "null_at_25pct_dose_inconclusive")
+        outcome = ("composite_intervention_null_5pp_gain_excluded" if excluded
+                   else "composite_intervention_null_inconclusive")
         next_step = ("stop this line; do not escalate the dose, add epochs, change the "
                      "mixture or re-threshold without a new explicit decision")
     return {"outcome": outcome, "next_permitted_step": next_step,
+            "intervention": INTERVENTION_LABEL, "inference_limitation": INFERENCE_LIMITATION,
+            "causal_attribution_to_execution_supervision_permitted": False,
             "promotion_permitted": False, "confirmation_opening_permitted": False}
 
 
@@ -287,6 +299,8 @@ def main(argv=None) -> int:
         "schema_version": SCHEMA,
         "label": "train-derived mechanism and retention diagnostic; not generalisation, "
                  "not model selection, not a final-test result",
+        "intervention": INTERVENTION_LABEL,
+        "inference_limitation": INFERENCE_LIMITATION,
         "predeclared": {
             "mechanism_min_gain_pp_each_condition": MIN_GAIN_PP,
             "mechanism_interval": "Newcombe (1998) method 10 paired score, 90%, lower >= 0",

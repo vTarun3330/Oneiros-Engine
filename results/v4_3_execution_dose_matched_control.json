@@ -1,0 +1,405 @@
+{
+  "schema_version": "oneiros_execution_dose_matched_control_v1",
+  "label": "CPU feasibility of a token-matched replay control; train-only; no model outcome used",
+  "created_utc": "2026-09-24T13:58:13.005294+00:00",
+  "target_supervised_tokens": 127108,
+  "frozen_control_supervised_tokens": 105457,
+  "frozen_control_trainer_preparation": {
+    "prompt_compacted_examples": 141,
+    "prompt_truncated_examples": 141,
+    "support_units_dropped": 7203,
+    "code_units_dropped": 0,
+    "malformed_prompt_examples": 0,
+    "dropped_overlong_examples": 0
+  },
+  "candidate_pool": {
+    "admissible": 4068,
+    "rejected": {
+      "exact_duplicate_of_arm_row": 7460,
+      "completion_token_limit": 129,
+      "prompt_budget": 47
+    },
+    "cells_with_candidates": 46
+  },
+  "construction": "treatment's 768 replay rows + at each of the 256 intervention positions the frozen control's row or an unused gold test from the identical source/tier/mode/family cell; fewest swaps",
+  "tolerances": {
+    "1pct": {
+      "tolerance": 0.01,
+      "feasible": false,
+      "examples": 1024,
+      "execution_output_examples": 0,
+      "supervised_tokens": 108694,
+      "treatment_supervised_tokens": 127108,
+      "ratio_to_treatment": 0.855131,
+      "ratio_to_frozen_control": 1.030695,
+      "rows_swapped_from_frozen_control": 78,
+      "swapped_by_source": {
+        "SWE-bench Verified": 6,
+        "mbpp": 70,
+        "humaneval": 2
+      },
+      "swapped_completion_tokens": {
+        "original_total": 7181,
+        "replacement_total": 10418
+      },
+      "shares": {
+        "source": {
+          "BugsInPy": 0.12207,
+          "SWE-bench Verified": 0.155273,
+          "humaneval": 0.287109,
+          "manual_curated_examples": 0.012695,
+          "mbpp": 0.422852
+        },
+        "complexity_tier": {
+          "complex": 0.461914,
+          "moderate": 0.348633,
+          "simple": 0.189453
+        },
+        "bug_family": {
+          "arithmetic": 0.208008,
+          "boolean": 0.015625,
+          "boundary": 0.254883,
+          "comparison": 0.12793,
+          "data_validation": 0.006836,
+          "index": 0.006836,
+          "logical": 0.016602,
+          "membership": 0.016602,
+          "negate_removal": 0.003906,
+          "off_by_one": 0.043945,
+          "return": 0.013672,
+          "string": 0.001953,
+          "string_manipulation": 0.005859,
+          "unknown": 0.277344
+        },
+        "execution_mode": {
+          "function_assertion": 0.722656,
+          "repository_pytest_fragment": 0.241211,
+          "repository_unittest_fragment": 0.036133
+        },
+        "repository": {
+          "function": 0.722656,
+          "repository": 0.277344
+        }
+      },
+      "representation_identical_to_frozen_control": true,
+      "lineages": 336,
+      "max_rows_per_function_lineage": 4,
+      "duplicate_checks": {
+        "exact_duplicate_completions": 0,
+        "near_duplicate_completions": 0,
+        "evaluation_panel_lineages_present": 0
+      },
+      "trainer_preparation": {
+        "prepared_examples": 1024,
+        "dropped_overlong_examples": 0,
+        "malformed_prompt_examples": 0,
+        "prompt_compacted_examples": 141,
+        "prompt_truncated_examples": 141,
+        "support_units_dropped": 7296,
+        "code_units_dropped": 0,
+        "task_kind_counts": {
+          "test_generation": 1024
+        }
+      },
+      "distribution_shift": {
+        "median_completion_tokens_by_stratum": {
+          "frozen_control": {
+            "BugsInPy/complex": 132.5,
+            "BugsInPy/moderate": 100.5,
+            "BugsInPy/simple": 95,
+            "SWE-bench Verified/complex": 347,
+            "SWE-bench Verified/moderate": 289.5,
+            "SWE-bench Verified/simple": 279.0,
+            "humaneval/complex": 20.0,
+            "humaneval/moderate": 20,
+            "humaneval/simple": 15,
+            "manual_curated_examples/moderate": 18,
+            "manual_curated_examples/simple": 14.5,
+            "mbpp/complex": 20.5,
+            "mbpp/moderate": 20,
+            "mbpp/simple": 18.0
+          },
+          "matched_control": {
+            "BugsInPy/complex": 132.5,
+            "BugsInPy/moderate": 100.5,
+            "BugsInPy/simple": 95,
+            "SWE-bench Verified/complex": 347,
+            "SWE-bench Verified/moderate": 289.5,
+            "SWE-bench Verified/simple": 279.0,
+            "humaneval/complex": 20.0,
+            "humaneval/moderate": 20,
+            "humaneval/simple": 15,
+            "manual_curated_examples/moderate": 18,
+            "manual_curated_examples/simple": 14.5,
+            "mbpp/complex": 20.5,
+            "mbpp/moderate": 20,
+            "mbpp/simple": 18.0
+          }
+        }
+      }
+    },
+    "2pct": {
+      "tolerance": 0.02,
+      "feasible": false,
+      "examples": 1024,
+      "execution_output_examples": 0,
+      "supervised_tokens": 108694,
+      "treatment_supervised_tokens": 127108,
+      "ratio_to_treatment": 0.855131,
+      "ratio_to_frozen_control": 1.030695,
+      "rows_swapped_from_frozen_control": 78,
+      "swapped_by_source": {
+        "SWE-bench Verified": 6,
+        "mbpp": 70,
+        "humaneval": 2
+      },
+      "swapped_completion_tokens": {
+        "original_total": 7181,
+        "replacement_total": 10418
+      },
+      "shares": {
+        "source": {
+          "BugsInPy": 0.12207,
+          "SWE-bench Verified": 0.155273,
+          "humaneval": 0.287109,
+          "manual_curated_examples": 0.012695,
+          "mbpp": 0.422852
+        },
+        "complexity_tier": {
+          "complex": 0.461914,
+          "moderate": 0.348633,
+          "simple": 0.189453
+        },
+        "bug_family": {
+          "arithmetic": 0.208008,
+          "boolean": 0.015625,
+          "boundary": 0.254883,
+          "comparison": 0.12793,
+          "data_validation": 0.006836,
+          "index": 0.006836,
+          "logical": 0.016602,
+          "membership": 0.016602,
+          "negate_removal": 0.003906,
+          "off_by_one": 0.043945,
+          "return": 0.013672,
+          "string": 0.001953,
+          "string_manipulation": 0.005859,
+          "unknown": 0.277344
+        },
+        "execution_mode": {
+          "function_assertion": 0.722656,
+          "repository_pytest_fragment": 0.241211,
+          "repository_unittest_fragment": 0.036133
+        },
+        "repository": {
+          "function": 0.722656,
+          "repository": 0.277344
+        }
+      },
+      "representation_identical_to_frozen_control": true,
+      "lineages": 336,
+      "max_rows_per_function_lineage": 4,
+      "duplicate_checks": {
+        "exact_duplicate_completions": 0,
+        "near_duplicate_completions": 0,
+        "evaluation_panel_lineages_present": 0
+      },
+      "trainer_preparation": {
+        "prepared_examples": 1024,
+        "dropped_overlong_examples": 0,
+        "malformed_prompt_examples": 0,
+        "prompt_compacted_examples": 141,
+        "prompt_truncated_examples": 141,
+        "support_units_dropped": 7296,
+        "code_units_dropped": 0,
+        "task_kind_counts": {
+          "test_generation": 1024
+        }
+      },
+      "distribution_shift": {
+        "median_completion_tokens_by_stratum": {
+          "frozen_control": {
+            "BugsInPy/complex": 132.5,
+            "BugsInPy/moderate": 100.5,
+            "BugsInPy/simple": 95,
+            "SWE-bench Verified/complex": 347,
+            "SWE-bench Verified/moderate": 289.5,
+            "SWE-bench Verified/simple": 279.0,
+            "humaneval/complex": 20.0,
+            "humaneval/moderate": 20,
+            "humaneval/simple": 15,
+            "manual_curated_examples/moderate": 18,
+            "manual_curated_examples/simple": 14.5,
+            "mbpp/complex": 20.5,
+            "mbpp/moderate": 20,
+            "mbpp/simple": 18.0
+          },
+          "matched_control": {
+            "BugsInPy/complex": 132.5,
+            "BugsInPy/moderate": 100.5,
+            "BugsInPy/simple": 95,
+            "SWE-bench Verified/complex": 347,
+            "SWE-bench Verified/moderate": 289.5,
+            "SWE-bench Verified/simple": 279.0,
+            "humaneval/complex": 20.0,
+            "humaneval/moderate": 20,
+            "humaneval/simple": 15,
+            "manual_curated_examples/moderate": 18,
+            "manual_curated_examples/simple": 14.5,
+            "mbpp/complex": 20.5,
+            "mbpp/moderate": 20,
+            "mbpp/simple": 18.0
+          }
+        }
+      }
+    },
+    "5pct": {
+      "tolerance": 0.05,
+      "feasible": false,
+      "examples": 1024,
+      "execution_output_examples": 0,
+      "supervised_tokens": 108694,
+      "treatment_supervised_tokens": 127108,
+      "ratio_to_treatment": 0.855131,
+      "ratio_to_frozen_control": 1.030695,
+      "rows_swapped_from_frozen_control": 78,
+      "swapped_by_source": {
+        "SWE-bench Verified": 6,
+        "mbpp": 70,
+        "humaneval": 2
+      },
+      "swapped_completion_tokens": {
+        "original_total": 7181,
+        "replacement_total": 10418
+      },
+      "shares": {
+        "source": {
+          "BugsInPy": 0.12207,
+          "SWE-bench Verified": 0.155273,
+          "humaneval": 0.287109,
+          "manual_curated_examples": 0.012695,
+          "mbpp": 0.422852
+        },
+        "complexity_tier": {
+          "complex": 0.461914,
+          "moderate": 0.348633,
+          "simple": 0.189453
+        },
+        "bug_family": {
+          "arithmetic": 0.208008,
+          "boolean": 0.015625,
+          "boundary": 0.254883,
+          "comparison": 0.12793,
+          "data_validation": 0.006836,
+          "index": 0.006836,
+          "logical": 0.016602,
+          "membership": 0.016602,
+          "negate_removal": 0.003906,
+          "off_by_one": 0.043945,
+          "return": 0.013672,
+          "string": 0.001953,
+          "string_manipulation": 0.005859,
+          "unknown": 0.277344
+        },
+        "execution_mode": {
+          "function_assertion": 0.722656,
+          "repository_pytest_fragment": 0.241211,
+          "repository_unittest_fragment": 0.036133
+        },
+        "repository": {
+          "function": 0.722656,
+          "repository": 0.277344
+        }
+      },
+      "representation_identical_to_frozen_control": true,
+      "lineages": 336,
+      "max_rows_per_function_lineage": 4,
+      "duplicate_checks": {
+        "exact_duplicate_completions": 0,
+        "near_duplicate_completions": 0,
+        "evaluation_panel_lineages_present": 0
+      },
+      "trainer_preparation": {
+        "prepared_examples": 1024,
+        "dropped_overlong_examples": 0,
+        "malformed_prompt_examples": 0,
+        "prompt_compacted_examples": 141,
+        "prompt_truncated_examples": 141,
+        "support_units_dropped": 7296,
+        "code_units_dropped": 0,
+        "task_kind_counts": {
+          "test_generation": 1024
+        }
+      },
+      "distribution_shift": {
+        "median_completion_tokens_by_stratum": {
+          "frozen_control": {
+            "BugsInPy/complex": 132.5,
+            "BugsInPy/moderate": 100.5,
+            "BugsInPy/simple": 95,
+            "SWE-bench Verified/complex": 347,
+            "SWE-bench Verified/moderate": 289.5,
+            "SWE-bench Verified/simple": 279.0,
+            "humaneval/complex": 20.0,
+            "humaneval/moderate": 20,
+            "humaneval/simple": 15,
+            "manual_curated_examples/moderate": 18,
+            "manual_curated_examples/simple": 14.5,
+            "mbpp/complex": 20.5,
+            "mbpp/moderate": 20,
+            "mbpp/simple": 18.0
+          },
+          "matched_control": {
+            "BugsInPy/complex": 132.5,
+            "BugsInPy/moderate": 100.5,
+            "BugsInPy/simple": 95,
+            "SWE-bench Verified/complex": 347,
+            "SWE-bench Verified/moderate": 289.5,
+            "SWE-bench Verified/simple": 279.0,
+            "humaneval/complex": 20.0,
+            "humaneval/moderate": 20,
+            "humaneval/simple": 15,
+            "manual_curated_examples/moderate": 18,
+            "manual_curated_examples/simple": 14.5,
+            "mbpp/complex": 20.5,
+            "mbpp/moderate": 20,
+            "mbpp/simple": 18.0
+          }
+        }
+      }
+    }
+  },
+  "upper_bounds": {
+    "intervention_positions_only": {
+      "max_supervised_tokens": 113093,
+      "ratio_to_treatment": 0.889739,
+      "valid_comparator": true,
+      "note": "the only construction in which control and treatment differ solely at the 256 intervention positions"
+    },
+    "any_position": {
+      "max_supervised_tokens": 148248,
+      "ratio_to_treatment": 1.166315,
+      "valid_comparator": false,
+      "note": "a canonical swap at a shared replay position must appear in both arms to keep them identical there, which adds equal mass to both and cannot close the gap; applied to the control alone it changes the replay and the arms no longer differ only by the intervention"
+    },
+    "minimum_required_at_5pct": 120753
+  },
+  "feasible_tolerances": [],
+  "primary_tolerance": null,
+  "leakage": {
+    "splits_opened": [
+      "train"
+    ],
+    "validation_accessed": false,
+    "ablation_dev_accessed": false,
+    "test_accessed": false,
+    "sealed_final_test_accessed": false,
+    "confirmation_opened": false
+  },
+  "source_files_sha256": {
+    "scripts/build_execution_dose_matched_control.py": "ecd69888303e97653e0c029b723fe90682a3772acc59f83723e14671e157a2aa",
+    "harness/execution_dose.py": "285fb540a4d986f37d429a9ecfb1457c0ce8b6c128a18f069fb0aad5ee457faa",
+    "scripts/build_execution_supervision_dataset.py": "6d7de3d3f81696d868fb2894648252d2ab765d4a7d66c424d38b9b21e85660d2",
+    "engine/sft_trainer.py": "0e34c20080e8a6bf30e2ca668fabd87b27e68ecb0583242a4712ded34915a503"
+  }
+}

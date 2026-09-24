@@ -17,7 +17,10 @@ Hard constraints for every design (see docs/EXECUTION_DOSE_RETENTION_PROTOCOL.md
   12% arm used;
 * balanced replay: exact (source x tier) removal quotas, bounded family loss,
   every dataset, tier, family, execution mode and the real-repository rows kept;
-* no prompt, completion or sequence budget is exceeded, nothing is truncated.
+* every execution prompt fits the 1,024-token function prompt budget before
+  compaction and every target fits 1,024 tokens; canonical replay rows are the
+  control's own and go through the trainer's existing section-aware prompt
+  compaction exactly as they did for the control (the preflight records it).
 
 Selection rule: the largest dose meeting every hard constraint.  Token-mass
 levers, applied in a fixed order: (1) per record, the call with the shortest
@@ -46,7 +49,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from harness.execution_dose import (
-    ARM_SIZE, DOSE_DESIGNS, dose_summary, largest_remainder, plan_replay,
+    INFERENCE_LIMITATION, INTERVENTION_LABEL, ARM_SIZE, DOSE_DESIGNS, dose_summary, largest_remainder, plan_replay,
     replay_balance_report, select_execution_rows, stratum,
 )
 from harness.execution_supervision import format_output_prediction_chat_prompt
@@ -273,6 +276,8 @@ def main(argv=None) -> int:
         "label": "train-only treatment arm; the frozen control is reused unchanged",
         "evaluation_split": "train",
         "chosen_design": chosen,
+        "intervention_label": INTERVENTION_LABEL,
+        "inference_limitation": INFERENCE_LIMITATION,
         "examples": ARM_SIZE,
         "execution_examples": len(removed),
         "replay_examples": len(kept),

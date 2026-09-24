@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from harness.execution_dose import (
+    INFERENCE_LIMITATION, INTERVENTION_LABEL, plan_token_matched_swaps,
     cluster_bootstrap_difference, dose_summary, largest_remainder, plan_replay,
     removal_ceilings, replay_balance_report, replay_removal_quotas, select_execution_rows,
 )
@@ -171,17 +172,21 @@ def test_paired_comparison_counts_discordant_pairs():
 def test_decision_paths_never_open_confirmation():
     mech = {"passed": True, "treatment_minus_control": {}}
     assert decide(mech, {"passed": True, "verdict": "pass"})["outcome"] == \
-        "mechanism_supported_at_25pct_dose"
+        "composite_intervention_mechanism_and_retention_passed"
     assert decide(mech, {"passed": False, "verdict": "inconclusive"})["outcome"] == \
-        "mechanism_gain_with_retention_inconclusive"
+        "composite_intervention_gain_with_retention_inconclusive"
     null = {"passed": False, "treatment_minus_control": {
         c: {"newcombe90_high_pp": MIN_GAIN_PP - 0.1}
         for c in ("intended_output", "shown_actual_output")}}
     decision = decide(null, {"passed": True, "verdict": "pass"})
-    assert decision["outcome"] == "null_at_25pct_dose_5pp_gain_excluded"
+    assert decision["outcome"] == "composite_intervention_null_5pp_gain_excluded"
     for outcome in (decision, decide(mech, {"passed": True, "verdict": "pass"})):
         assert outcome["confirmation_opening_permitted"] is False
         assert outcome["promotion_permitted"] is False
+        # Composite pilot: no outcome may attribute an effect to supervision type.
+        assert outcome["causal_attribution_to_execution_supervision_permitted"] is False
+        assert outcome["inference_limitation"] == INFERENCE_LIMITATION
+        assert outcome["intervention"] == INTERVENTION_LABEL
 
 
 def test_mechanism_evaluator_decoding_matches_the_control_evaluator():
@@ -237,3 +242,86 @@ def test_tracked_dose_design_artifacts_are_consistent():
     from harness.source_identity import canonical_sha256
     for relative, expected in manifest_data["source_files_sha256"].items():
         assert canonical_sha256(ROOT / relative) == expected, f"{relative} drifted"
+
+
+def _swap_candidate(identifier, cell, tokens, lineage="L"):
+    return {"id": identifier, "cell": cell, "tokens": tokens, "function_lineage": lineage}
+
+
+def test_token_matched_swaps_only_within_cell_and_report_infeasibility():
+    base_tokens = {0: 10, 1: 10}
+    base_cells = {0: "a", 1: "b"}
+    candidates = [_swap_candidate("x", "a", 40), _swap_candidate("y", "b", 25),
+                  _swap_candidate("z", "c", 500)]
+    plan = plan_token_matched_swaps(
+        base_tokens, base_cells, candidates, current_total=100, target_total=145,
+        tolerance=0.01, admissible=lambda candidate, position, state: True,
+        order_key=lambda position, candidate: candidate["id"])
+    assert plan["feasible"] and plan["total"] == 145
+    assert {p: c["id"] for p, c in plan["swaps"].items()} == {0: "x", 1: "y"}
+    # The other-cell candidate can never be used, so a larger target fails honestly.
+    short = plan_token_matched_swaps(
+        base_tokens, base_cells, candidates, current_total=100, target_total=400,
+        tolerance=0.05, admissible=lambda candidate, position, state: True,
+        order_key=lambda position, candidate: candidate["id"])
+    assert not short["feasible"] and short["total"] == 145
+
+
+def test_token_matched_swaps_pass_the_released_position_to_admissibility():
+    seen = []
+
+    def admissible(candidate, position, state):
+        seen.append(position)
+        return True
+
+    plan_token_matched_swaps({7: 1}, {7: "a"}, [_swap_candidate("x", "a", 11)],
+                             current_total=10, target_total=20, tolerance=0.01,
+                             admissible=admissible,
+                             order_key=lambda position, candidate: candidate["id"])
+    assert seen == [7]
+
+
+def test_tracked_matched_control_study_is_infeasible_and_honest():
+    report = RESULTS / "v4_3_execution_dose_matched_control.json"
+    if not report.exists():
+        pytest.skip("matched-control study not present")
+    assert b"\r" not in report.read_bytes()
+    data = json.loads(report.read_text(encoding="utf-8"))
+    assert data["feasible_tolerances"] == [] and data["primary_tolerance"] is None
+    assert "primary_arm" not in data
+    assert sorted(data["tolerances"]) == ["1pct", "2pct", "5pct"]
+    for entry in data["tolerances"].values():
+        assert entry["feasible"] is False
+        assert entry["examples"] == 1024 and entry["execution_output_examples"] == 0
+        assert entry["representation_identical_to_frozen_control"] is True
+        assert entry["duplicate_checks"] == {"exact_duplicate_completions": 0,
+                                             "near_duplicate_completions": 0,
+                                             "evaluation_panel_lineages_present": 0}
+        assert entry["trainer_preparation"]["dropped_overlong_examples"] == 0
+        assert entry["trainer_preparation"]["code_units_dropped"] == 0
+        assert entry["ratio_to_treatment"] < 0.95
+    bound = data["upper_bounds"]["intervention_positions_only"]
+    assert bound["valid_comparator"] is True
+    assert bound["max_supervised_tokens"] < data["upper_bounds"]["minimum_required_at_5pct"]
+    assert data["upper_bounds"]["any_position"]["valid_comparator"] is False
+    assert not (RESULTS / "v4_3_execution_dose_v1" / "arm_matched_control.json").exists()
+
+
+def test_manifest_states_exact_replay_minimum_and_composite_label():
+    manifest = RESULTS / "v4_3_execution_dose_dataset_manifest.json"
+    if not manifest.exists():
+        pytest.skip("dataset manifest not present")
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    balance = data["replay_balance"]
+    fractions = [entry["kept_fraction"] for section, values in balance.items()
+                 if section.startswith("by_") or section == "real_repository"
+                 for entry in values.values()]
+    assert balance["minimum_kept_fraction"]["kept_fraction"] == min(fractions) == 0.6667
+    assert "No 75% floor is claimed" in balance["integer_granularity_note"]
+    assert data["intervention_label"] == INTERVENTION_LABEL
+    assert data["inference_limitation"] == INFERENCE_LIMITATION
+    dose = data["dose"]
+    assert (dose["execution_examples"], dose["execution_supervised_tokens"],
+            dose["treatment_supervised_tokens"], dose["control_supervised_tokens"]) == (
+        256, 73665, 127108, 105457)
+    assert dose["treatment_to_control_mass_ratio"] == 1.205306

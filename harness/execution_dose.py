@@ -27,6 +27,17 @@ ARM_SIZE = 1024
 DOSE_DESIGNS = {"d25": 256, "d50": 512}
 REPOSITORY_SOURCES = frozenset({"SWE-bench Verified", "BugsInPy"})
 
+#: The treatment is not "a 25% dose": it raises both the example share and the
+#: total supervised tokens.  Every report uses this label.
+INTERVENTION_LABEL = "25%-example / 58%-supervised-token execution intervention"
+#: Frozen after the token-matched control proved infeasible at 1%, 2% and 5%
+#: (results/v4_3_execution_dose_matched_control.json).
+INFERENCE_LIMITATION = (
+    "Any observed effect is attributable to the combined 25%-example, "
+    "58%-token execution-supervision intervention and cannot isolate supervision "
+    "type from supervised-token exposure."
+)
+
 
 def largest_remainder(total: int, weights: Mapping[str, int]) -> dict[str, int]:
     """Apportion ``total`` over ``weights`` by largest remainder, ties by key."""
@@ -148,8 +159,16 @@ def replay_balance_report(rows: Sequence[Mapping[str, Any]],
             lambda row: "repository" if row["source_dataset"] in REPOSITORY_SOURCES
             else "function"),
     }
-    report["no_category_removed"] = all(
-        entry["kept"] >= 1 for section in report.values() for entry in section.values())
+    cells = [(section, key, entry) for section, values in report.items()
+             for key, entry in values.items()]
+    report["no_category_removed"] = all(entry["kept"] >= 1 for _, _, entry in cells)
+    lowest = min(cells, key=lambda item: (item[2]["kept_fraction"], item[0], item[1]))
+    report["minimum_kept_fraction"] = {"section": lowest[0], "category": lowest[1],
+                                       **lowest[2]}
+    report["integer_granularity_note"] = (
+        "kept counts are integers, so a cell of n rows can only keep k/n; a 3-row "
+        "cell keeps 2/3 = 66.7% or 3/3, never 75%. Large groups sit near the 75% "
+        "target; small cells can fall below it. No 75% floor is claimed.")
     return report
 
 
@@ -265,3 +284,76 @@ def cluster_bootstrap_difference(
     return {"difference_pp": point, "low_pp": low, "high_pp": high,
             "clusters": len(keys), "units": total_units,
             "replicates": replicates, "seed": seed, "confidence": confidence}
+
+
+MATCH_TOLERANCES = (0.01, 0.02, 0.05)
+
+
+def plan_token_matched_swaps(
+    base_tokens: Mapping[int, int],
+    base_cells: Mapping[int, Any],
+    candidates: Sequence[Mapping[str, Any]],
+    *,
+    current_total: int,
+    target_total: int,
+    tolerance: float,
+    admissible: Callable[[Mapping[str, Any], int, dict], bool],
+    order_key: Callable[[int, Mapping[str, Any]], Any],
+) -> dict[str, Any]:
+    """Fewest same-cell swaps that bring a control's token mass within tolerance.
+
+    ``base_tokens``/``base_cells`` describe the control rows that may be
+    swapped (position -> supervised tokens / representation cell).  Each
+    candidate carries ``cell``, ``tokens`` and an ``id``; a candidate may only
+    replace a row of the identical cell, so every representation count is
+    unchanged.  Swaps are taken largest-gain first (fewest rows changed), then
+    one best-fit swap closes the remaining gap.  ``admissible(candidate,
+    position, state)`` enforces uniqueness and lineage caps against the
+    evolving arm, with the row at ``position`` already released.
+    Nothing is repeated, padded or fabricated; if the tolerance cannot be met
+    the result says so.
+    """
+    band = tolerance * target_total
+    by_cell: dict[Any, list[Mapping[str, Any]]] = defaultdict(list)
+    for candidate in candidates:
+        by_cell[candidate["cell"]].append(candidate)
+    pairs = []
+    for position, cell in base_cells.items():
+        for candidate in by_cell.get(cell, ()):
+            gain = int(candidate["tokens"]) - int(base_tokens[position])
+            if gain > 0:
+                pairs.append((gain, position, candidate))
+    pairs.sort(key=lambda item: (-item[0], order_key(item[1], item[2])))
+    state: dict[str, Any] = {"swaps": {}, "used": set(), "total": current_total}
+
+    def apply(gain: int, position: int, candidate: Mapping[str, Any]) -> bool:
+        if position in state["swaps"] or candidate["id"] in state["used"]:
+            return False
+        if not admissible(candidate, position, state):
+            return False
+        state["swaps"][position] = candidate
+        state["used"].add(candidate["id"])
+        state["total"] += gain
+        return True
+
+    # Largest gains while the gap exceeds the largest remaining single fix.
+    for gain, position, candidate in pairs:
+        gap = target_total - state["total"]
+        if gap <= band:
+            break
+        if gain <= gap:
+            apply(gain, position, candidate)
+    # Best fit: the single admissible swap that lands closest to the target.
+    gap = target_total - state["total"]
+    if abs(gap) > band:
+        remaining = sorted(pairs, key=lambda item: (abs(gap - item[0]),
+                                                    order_key(item[1], item[2])))
+        for gain, position, candidate in remaining:
+            if abs(gap - gain) >= abs(gap):
+                break
+            if apply(gain, position, candidate):
+                break
+    ratio = state["total"] / target_total
+    return {"feasible": abs(state["total"] - target_total) <= band,
+            "tolerance": tolerance, "total": state["total"], "target": target_total,
+            "ratio_to_target": ratio, "swaps": state["swaps"]}

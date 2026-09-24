@@ -1,4 +1,4 @@
-"""Evaluate the 25% dose treatment on the frozen 97-item mechanism panel.
+"""Evaluate the composite execution-intervention treatment on the 97-item panel.
 
 The panel, prompts, scorer, greedy decoding, 128-token limit and batch size
 are imported from the evaluator that produced the frozen control's artifact

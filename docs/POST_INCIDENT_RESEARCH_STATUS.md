@@ -368,15 +368,26 @@ the panels are train-derived.
 
 ### Next experiment — prepared, not run
 
-A dose-and-retention experiment is designed and preflighted in
+A composite efficacy pilot is designed and preflighted in
 [EXECUTION_DOSE_RETENTION_PROTOCOL.md](EXECUTION_DOSE_RETENTION_PROTOCOL.md).
-It asks whether the null result came from the dose.
 
-The treatment is 25% of examples and 58% of supervised tokens, against the
-same frozen control. The 50% design was infeasible without concentrating
-lineages or changing the content mix. The experiment adds a frozen canonical
-Kill@8 retention gate, with a −3 pp noninferiority margin. **No training has
-been launched; it needs explicit approval.**
+The treatment is a **25%-example / 58%-supervised-token execution
+intervention**:
+- 256 of 1,024 examples;
+- 73,665 of 127,108 supervised target tokens;
+- 1.205306× the frozen control's 105,457 supervised tokens.
+
+It is judged against the same frozen control. The 50% design was infeasible
+without concentrating lineages or changing the content mix.
+
+A token-matched replay control was infeasible at 1%, 2% and 5%. The best valid
+construction reached 0.855 of the treatment's mass, and the conflict-free upper
+bound is 0.890. So any effect is attributable only to the combined intervention.
+It cannot isolate supervision type from supervised-token exposure.
+
+The pilot adds a frozen canonical Kill@8 retention gate, with a −3 pp
+noninferiority margin. **No training has been launched; it needs explicit
+approval.**
 
 ### Evidence (sha256 of the committed bytes)
 

@@ -14,8 +14,13 @@ Checks, all before any GPU work:
 * the training code and configuration are identical to the commit that
   trained the frozen control, so seed, learning rate, LoRA, quantisation,
   scheduler and regularisation are the control's;
-* the real trainer prepares all 1,024 examples with no drop and no
-  truncation, and the supervised-token totals are measured, not estimated;
+* the real trainer prepares all 1,024 examples with none dropped and no
+  malformed prompt; its section-aware prompt compaction (which the trainer
+  records as ``prompt_truncated_examples``) and the support/context and code
+  units it removes are copied into the receipt verbatim, and the
+  supervised-token totals are measured, not estimated;
+* the token-matched control study is present and its verdict is the one this
+  design rests on (infeasible at 1%, 2% and 5%, hence a composite pilot);
 * the optimizer plan is the frozen 64-step, no-padding schedule.
 
 CPU only.  No model weights are loaded; the tokenizer is.
@@ -36,6 +41,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from engine.sft_trainer import OneirosSFTTrainer, plan_sft_optimizer_schedule
+from harness.execution_dose import INFERENCE_LIMITATION, INTERVENTION_LABEL
 from harness.source_identity import canonical_sha256
 from harness.execution_supervision_sidecar import sha256_file
 from scripts.preflight_execution_supervision_ab import (
@@ -49,6 +55,7 @@ SOURCE_DIR = ROOT / "results" / "v4_3_execution_supervision_v1"
 RECEIPT = ROOT / "results" / "v4_3_execution_dose_preflight_receipt.json"
 MANIFEST_COPY = ROOT / "results" / "v4_3_execution_dose_dataset_manifest.json"
 PANEL = ROOT / "results" / "v4_3_execution_dose_retention_panel.json"
+MATCHED_CONTROL_REPORT = ROOT / "results" / "v4_3_execution_dose_matched_control.json"
 ARM_FILE = "arm_dose_treatment.json"
 ARM_NAME = "dose_treatment"
 CHECKPOINT = ROOT / "checkpoints" / "v4_3_execdose_d25_qwen15b_s42"
@@ -69,6 +76,7 @@ BOUND_SOURCES = (
     "harness/generation_adapter.py", "harness/rehearsal_evaluator.py",
     "harness/sealed_final_evaluator.py", "harness/evaluation_admission.py",
     "scripts/census_execution_dose_pool.py", "scripts/build_execution_dose_ab.py",
+    "scripts/build_execution_dose_matched_control.py",
     "scripts/build_execution_trace_ab.py", "scripts/freeze_execution_dose_retention_panel.py",
     "scripts/preflight_execution_dose_ab.py", "scripts/run_execution_dose_pilot.py",
     "scripts/evaluate_execution_dose_mechanism.py",
@@ -179,6 +187,12 @@ def preflight() -> dict[str, Any]:
     treatment = json.loads(arm_path.read_text(encoding="utf-8"))
     control = json.loads(control_path.read_text(encoding="utf-8"))
     problems.extend(arm_problems(treatment, control, manifest))
+    matched = json.loads(MATCHED_CONTROL_REPORT.read_text(encoding="utf-8"))
+    if matched.get("feasible_tolerances") != [] or matched.get("primary_tolerance") is not None:
+        problems.append("matched-control study no longer says infeasible; the composite "
+                        "design must be re-decided")
+    if manifest.get("inference_limitation") != INFERENCE_LIMITATION:
+        problems.append("dataset manifest does not carry the frozen inference limitation")
     problems.extend(f"leakage: {item}" for item in leakage_problems(treatment))
 
     control_result = json.loads(CONTROL_RESULT.read_text(encoding="utf-8"))
@@ -313,12 +327,34 @@ def preflight() -> dict[str, Any]:
             "training_code_identical_to_control_commit": list(CONTROL_IDENTICAL_PATHS),
             "monitor": None, "dpo": False, "rlvr": False,
         },
+        "intervention_label": INTERVENTION_LABEL,
+        "inference_limitation": INFERENCE_LIMITATION,
+        "design_class": "composite efficacy pilot (token-matched control infeasible)",
+        "matched_control_study": {
+            "report_sha256": sha256_file(MATCHED_CONTROL_REPORT),
+            "feasible_tolerances": matched["feasible_tolerances"],
+            "best_ratio_to_treatment": matched["tolerances"]["1pct"]["ratio_to_treatment"],
+            "upper_bound_ratio_valid_construction": matched["upper_bounds"][
+                "intervention_positions_only"]["ratio_to_treatment"]},
+        "replay_balance": {
+            "no_category_removed": manifest["replay_balance"]["no_category_removed"],
+            "minimum_kept_fraction": manifest["replay_balance"]["minimum_kept_fraction"],
+            "integer_granularity_note": manifest["replay_balance"][
+                "integer_granularity_note"]},
+        "prompt_compaction_evidence": {
+            name: {key: prepared["stats"][name][key] for key in (
+                "retained_examples", "dropped_overlong_examples",
+                "malformed_prompt_examples", "prompt_compacted_examples",
+                "prompt_truncated_examples", "support_units_dropped",
+                "code_units_dropped", "prompt_compaction_strategy")}
+            for name in (prepared.get("stats") or {})} or None,
         "declared_differences_from_control": [
             "256 canonical rows replaced by ordered execution-trace examples (the intervention)",
             "auxiliary execution targets use the 1,024-token completion ceiling the 12% "
             "arm used; no canonical function completion exceeds 128 tokens, so canonical "
             "rows are prepared identically",
-            "supervised token mass is higher than control by the measured ratio",
+            "supervised token mass is 1.205306x the control's; the effect of this "
+            "difference cannot be separated from the supervision type",
         ],
         "optimizer_schedule": schedule,
         "trainer_preparation": prepared,

@@ -7,8 +7,9 @@ executor and the sealed evaluator's pure scoring helpers via the rehearsal
 module.  Records come from the train shard of the development view only; the
 canonical ``records.json`` and every other split stay closed.
 
-Arms: ``control`` (frozen control adapter), ``dose_treatment`` (the 25% arm)
-and ``base`` (no adapter, descriptive).  Run them one at a time, never
+Arms: ``control`` (frozen control adapter), ``dose_treatment`` (the
+25%-example / 58%-supervised-token execution intervention) and ``base`` (no
+adapter, descriptive).  Run them one at a time, never
 concurrently.  No weights are written; existing artifacts are never replaced.
 """
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Train the single 25% execution-dose treatment arm on the local GPU.
+"""Train the single composite execution-intervention treatment arm (local GPU).
 
 Refuses unless the frozen dose preflight is ready and HEAD differs from its
 commit only by the committed receipt.  The frozen control is not retrained.
