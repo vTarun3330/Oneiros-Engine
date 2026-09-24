@@ -1,0 +1,95 @@
+{
+  "schema_version": "oneiros_execution_dose_census_v1",
+  "label": "train-only supply census; no model was loaded or evaluated",
+  "created_utc": "2026-09-24T10:58:35.891798+00:00",
+  "input_audit": {
+    "candidate_rows": 44760,
+    "literal_safe_call_rows": 19321,
+    "humaneval_records_audited": 755,
+    "humaneval_giveaway_records_excluded": 410,
+    "humaneval_unverifiable_records_excluded": 0,
+    "eligible_rows": 18105,
+    "eligible_lineages": 585
+  },
+  "candidate_rule": "train lineage, label wrong_oracle, distinguishing call, verified correction (identical to the first pilot)",
+  "candidate_rows": 8854,
+  "materialised_rows": 5859,
+  "trace_training_eligible_rows": 5578,
+  "rejections": {
+    "trace_cap_overflow": 1617,
+    "execution_error": 1329,
+    "focused_prompt_token_budget": 40,
+    "unsupported_value": 7,
+    "empty_sanitized_specification": 2
+  },
+  "unique": {
+    "records": 1636,
+    "lineages": 346,
+    "trace_completions": 3405,
+    "record_call_pairs": 3725
+  },
+  "eligible_by_source": {
+    "humaneval": 275,
+    "manual_curated_examples": 2,
+    "mbpp": 5301
+  },
+  "eligible_by_complexity_tier": {
+    "complex": 701,
+    "moderate": 2459,
+    "simple": 2418
+  },
+  "eligible_by_bug_family": {
+    "arithmetic": 1708,
+    "boolean": 41,
+    "boundary": 2215,
+    "comparison": 942,
+    "identity": 2,
+    "index": 94,
+    "logical": 75,
+    "membership": 53,
+    "negate_removal": 25,
+    "off_by_one": 386,
+    "return": 27,
+    "string": 8,
+    "string_manipulation": 2
+  },
+  "eligible_lineages_by_source": {
+    "humaneval": 26,
+    "manual_curated_examples": 1,
+    "mbpp": 319
+  },
+  "held_out_lineages_materialised": 0,
+  "inputs": {
+    "candidates_sha256": "b4a92fd7fa5c5d081204f41be348886501830c309bfe9bde869ff538fc152175",
+    "oracle_manifest_sha256": "0acdce9636cc67a451f424a7cb9fc1479dbc1201e72231a4149e027c49565065",
+    "lineage_split_sha256": "bc59e94b895e8f3f7b79d127f570f2ba3d179b13e265bd8610b01be8b0dd4ee8",
+    "source_manifest_sha256": "f9d1a2c94d98df7ea88cb192ff3bba11a8bfcfd3b4cdfc5f580ff7aac64cbd22",
+    "development_view_manifest_sha256": "9e4593f05c8cb769f2431a8a05f3fcb118c557c02922e2ba8878602bbe521115",
+    "corpus_manifest_sha256": "7f68386fdc66c8fc102d07f4605971c6c2dcffee0e5732abb30d8c62e7485d3c"
+  },
+  "outputs": {
+    "pool": {
+      "path": "results/v4_3_execution_dose_v1/pool.execution.json",
+      "sha256": "4dbf70041d68d5c66ae398918ac4e2b708133c09c9db47929084c469998b4017",
+      "rows": 5859
+    }
+  },
+  "source_files_sha256": {
+    "scripts/census_execution_dose_pool.py": "edab7d61ebd552f034632d19480e0beab84e49fef32f92a9b3bf6e7dc41de295",
+    "scripts/build_execution_supervision_dataset.py": "6d7de3d3f81696d868fb2894648252d2ab765d4a7d66c424d38b9b21e85660d2",
+    "harness/execution_supervision.py": "94b0250b30337eb288d32d85f7b6a5de33b0b6a76c16c40d40f39d25ba0f8b6e",
+    "harness/execution_supervision_sidecar.py": "5de35cd6f73bb862fd24f64321098e5924d686b4c37c783d08dee37a008b12a4"
+  },
+  "leakage": {
+    "splits_opened": [
+      "train"
+    ],
+    "validation_accessed": false,
+    "ablation_dev_accessed": false,
+    "test_accessed": false,
+    "sealed_final_test_accessed": false,
+    "confirmation_opened": false,
+    "pilot_development_lineages_materialised": false
+  },
+  "elapsed_seconds": 202.7
+}

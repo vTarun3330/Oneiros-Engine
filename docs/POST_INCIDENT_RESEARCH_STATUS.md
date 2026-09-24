@@ -327,8 +327,9 @@ are wrapped in Markdown bold (67–80 of 97).
 ### What it does not establish
 
 - That execution supervision cannot work. Only one dose was tested: 122
-  examples (12% of a 1,024-example mix), 64 steps, LoRA on 1.5B. Outputs were
-  ~95% unchanged, so the result cannot separate "the signal does not help" from
+  examples, which were 11.9% of the 1,024 examples and 23.1% of the supervised
+  tokens (30,842 of 133,603), with 64 steps and LoRA on 1.5B. Outputs were ~95%
+  unchanged, so the result cannot separate "the signal does not help" from
   "the dose was too small to move the model".
 - Anything about 7B semantic capacity.
 - Anything about generalization. Every panel here is train-derived.
@@ -338,6 +339,44 @@ the reference. The 100-lineage confirmation panel remains unopened, and no
 canonical Kill@8 was run for either trace arm. No further training, extra
 epochs, mixture change or re-thresholding of this intervention will be run
 without an explicit new decision.
+
+### Proposed paper wording
+
+Use this wording, or something no stronger. It reports a null result at one
+dose. It does not claim that execution supervision generally fails.
+
+> In a train-derived mechanism pilot, we replaced 12% of a 1,024-example
+> fine-tuning mixture (23% of supervised tokens) with verified execution-trace
+> supervision on Qwen2.5-Coder-1.5B. The pilot was null. Neither
+> intended-output nor actual-output prediction reached the predeclared +5 pp
+> gain on a 97-item panel. The largest change was +2.1 pp (2 items gained,
+> 0 lost), and a ≥ 5 pp gain on actual-output prediction could not be firmly
+> excluded. Preserving temporal order gave no benefit over an
+> unordered event multiset, and a ≥ 5 pp order effect was excluded. About 95%
+> of model outputs were unchanged by training. The pilot therefore does not
+> distinguish an ineffective signal from an insufficient dose, and we do not
+> conclude that execution supervision fails in general. All panels were derived
+> from training data, so none of these results is a generalization estimate.
+
+Avoid these phrasings:
+- "execution supervision does not help";
+- "trace training fails";
+- "fine-tuning cannot teach execution".
+
+Also avoid any wording that drops the dose, the model size, or the fact that
+the panels are train-derived.
+
+### Next experiment — prepared, not run
+
+A dose-and-retention experiment is designed and preflighted in
+[EXECUTION_DOSE_RETENTION_PROTOCOL.md](EXECUTION_DOSE_RETENTION_PROTOCOL.md).
+It asks whether the null result came from the dose.
+
+The treatment is 25% of examples and 58% of supervised tokens, against the
+same frozen control. The 50% design was infeasible without concentrating
+lineages or changing the content mix. The experiment adds a frozen canonical
+Kill@8 retention gate, with a −3 pp noninferiority margin. **No training has
+been launched; it needs explicit approval.**
 
 ### Evidence (sha256 of the committed bytes)
 

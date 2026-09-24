@@ -1,0 +1,73 @@
+{
+  "schema_version": "oneiros_execution_dose_design_v1",
+  "label": "CPU design selection from train supply only; no model outcome was used",
+  "created_utc": "2026-09-24T11:11:09.517810+00:00",
+  "reference_12pct_arm": {
+    "execution_examples": 122,
+    "execution_example_share": 0.119141,
+    "tier_mix": {
+      "moderate": 46,
+      "simple": 37,
+      "complex": 39
+    }
+  },
+  "selection_rule": "largest dose meeting every hard constraint",
+  "designs": {
+    "d25": {
+      "design": "d25",
+      "execution_examples": 256,
+      "tier_quotas": {
+        "moderate": 96,
+        "simple": 78,
+        "complex": 82
+      },
+      "hard_constraints": {
+        "execution_rows_fill_under_lineage_cap_4": true,
+        "balanced_replay": true,
+        "unique_records": true,
+        "unique_targets": true
+      },
+      "lineage_cap_attempts": {
+        "1": "tier complex exhausted at 42/82",
+        "2": "tier complex exhausted at 79/82"
+      },
+      "lineage_cap": 3,
+      "dose": {
+        "execution_examples": 256,
+        "execution_example_share": 0.25,
+        "control_supervised_tokens": 105457,
+        "removed_canonical_supervised_tokens": 52014,
+        "execution_supervised_tokens": 73665,
+        "treatment_supervised_tokens": 127108,
+        "execution_token_share": 0.579547,
+        "treatment_to_control_mass_ratio": 1.205306
+      },
+      "feasible": true
+    },
+    "d50": {
+      "design": "d50",
+      "execution_examples": 512,
+      "tier_quotas": {
+        "moderate": 193,
+        "simple": 155,
+        "complex": 164
+      },
+      "hard_constraints": {
+        "execution_rows_fill_under_lineage_cap_4": false
+      },
+      "lineage_cap_attempts": {
+        "1": "tier complex exhausted at 42/164",
+        "2": "tier complex exhausted at 79/164",
+        "3": "tier complex exhausted at 108/164",
+        "4": "tier complex exhausted at 132/164"
+      },
+      "feasible": false
+    }
+  },
+  "feasible_designs": [
+    "d25"
+  ],
+  "chosen_design": "d25",
+  "dataset_manifest_sha256": "be70dc655fba2956ca3eebed38e77253bd6c8799d6cecee3a42845adf4148ec3",
+  "census_sha256": "f951536032e4cc2b7eb3b20a0a41d7c250eb1812b226ca4994a3b389b37c5c7e"
+}
