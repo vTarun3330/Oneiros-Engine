@@ -1,0 +1,366 @@
+{
+  "schema_version": "oneiros_execution_supervision_failure_diagnosis_v1",
+  "label": "post-gate train-only diagnosis; no confirmation/validation/test access",
+  "frozen_gate_passed": false,
+  "inputs": {
+    "analysis_sha256": "8cc2c16db5e9f9ada5536c08db470fe47bcfa380596cb32ff63e18ee827267e7",
+    "control_sha256": "5156874ec30be45e5e2872e1a1969d47d4ac63fd328c58304bb218aba4d1decf",
+    "treatment_sha256": "de377f0a7d104a1b28f5f09741728b91e58f5b985924549116d13d4c157a52ac",
+    "pilot_development_sha256": "56972838fda060795840088660b09249cf95c97afcbe6bac63a82301239530ec",
+    "dataset_manifest_sha256": "f9d1a2c94d98df7ea88cb192ff3bba11a8bfcfd3b4cdfc5f580ff7aac64cbd22"
+  },
+  "training_intervention": {
+    "total_examples_per_arm": 1024,
+    "focused_replacements": 128,
+    "focused_share": 0.125,
+    "trace_eligible_replacements": 122,
+    "completion_bytes_equal_between_arms": true,
+    "interpretation": "the first pilot changes conditioning/task framing only; it does not add new target tokens or execution traces"
+  },
+  "conditions": {
+    "intended_output": {
+      "items": 97,
+      "raw_output_identical": 83,
+      "raw_output_changed": 14,
+      "raw_output_identical_rate": 0.8556701030927835,
+      "format_counts": {
+        "control": {
+          "empty": 13,
+          "markdown_bold": 67,
+          "markdown_fence": 13,
+          "plain_or_other": 4
+        },
+        "treatment": {
+          "empty": 12,
+          "markdown_bold": 66,
+          "markdown_fence": 3,
+          "plain_or_other": 16
+        }
+      },
+      "strict_transition_counts": {
+        "correct -> correct": 1,
+        "invalid_syntax -> correct": 3,
+        "invalid_syntax -> invalid_syntax": 73,
+        "invalid_syntax -> wrong_value": 7,
+        "multiple_or_missing_statements -> invalid_syntax": 1,
+        "multiple_or_missing_statements -> multiple_or_missing_statements": 12
+      },
+      "lenient_transition_counts": {
+        "correct -> correct": 25,
+        "correct -> invalid_syntax": 1,
+        "invalid_syntax -> invalid_syntax": 4,
+        "multiple_or_missing_statements -> invalid_syntax": 1,
+        "multiple_or_missing_statements -> multiple_or_missing_statements": 12,
+        "not_single_equality -> not_single_equality": 2,
+        "prediction_not_literal -> prediction_not_literal": 1,
+        "wrong_call -> wrong_call": 2,
+        "wrong_type -> wrong_type": 3,
+        "wrong_type -> wrong_value": 1,
+        "wrong_value -> wrong_value": 45
+      },
+      "changed_record_ids": [
+        "mutation::humaneval_HumanEval_161_mut_01597",
+        "mutation::humaneval_HumanEval_41_mut_00254",
+        "mutation::humaneval_HumanEval_99_mut_00796",
+        "mutation::mbpp_239_mut_03919",
+        "mutation::mbpp_24_mut_01836",
+        "mutation::mbpp_595_mut_06969",
+        "mutation::mbpp_702_mut_07787",
+        "mutation::mbpp_721_mut_07971",
+        "mutation::mbpp_74_mut_02351",
+        "mutation::mbpp_783_mut_08522",
+        "mutation::mbpp_789_mut_08554",
+        "mutation::mbpp_793_mut_08570",
+        "mutation::mbpp_817_mut_08701",
+        "mutation::mbpp_940_mut_09985"
+      ],
+      "strata": {
+        "bug_family::arithmetic": {
+          "n": 30,
+          "control_correct": 4,
+          "treatment_correct": 4,
+          "control_answered": 26,
+          "treatment_answered": 26
+        },
+        "bug_family::boolean": {
+          "n": 5,
+          "control_correct": 3,
+          "treatment_correct": 3,
+          "control_answered": 4,
+          "treatment_answered": 4
+        },
+        "bug_family::boundary": {
+          "n": 33,
+          "control_correct": 11,
+          "treatment_correct": 11,
+          "control_answered": 25,
+          "treatment_answered": 25
+        },
+        "bug_family::comparison": {
+          "n": 15,
+          "control_correct": 6,
+          "treatment_correct": 5,
+          "control_answered": 10,
+          "treatment_answered": 9
+        },
+        "bug_family::index": {
+          "n": 1,
+          "control_correct": 0,
+          "treatment_correct": 0,
+          "control_answered": 1,
+          "treatment_answered": 1
+        },
+        "bug_family::logical": {
+          "n": 1,
+          "control_correct": 0,
+          "treatment_correct": 0,
+          "control_answered": 0,
+          "treatment_answered": 0
+        },
+        "bug_family::negate_removal": {
+          "n": 1,
+          "control_correct": 0,
+          "treatment_correct": 0,
+          "control_answered": 1,
+          "treatment_answered": 1
+        },
+        "bug_family::off_by_one": {
+          "n": 6,
+          "control_correct": 0,
+          "treatment_correct": 0,
+          "control_answered": 5,
+          "treatment_answered": 5
+        },
+        "bug_family::return": {
+          "n": 5,
+          "control_correct": 2,
+          "treatment_correct": 2,
+          "control_answered": 3,
+          "treatment_answered": 3
+        },
+        "complexity::complex": {
+          "n": 16,
+          "control_correct": 7,
+          "treatment_correct": 7,
+          "control_answered": 10,
+          "treatment_answered": 10
+        },
+        "complexity::moderate": {
+          "n": 34,
+          "control_correct": 11,
+          "treatment_correct": 10,
+          "control_answered": 22,
+          "treatment_answered": 21
+        },
+        "complexity::simple": {
+          "n": 47,
+          "control_correct": 8,
+          "treatment_correct": 8,
+          "control_answered": 43,
+          "treatment_answered": 43
+        },
+        "shown_differs_from_intended::false": {
+          "n": 26,
+          "control_correct": 6,
+          "treatment_correct": 6,
+          "control_answered": 16,
+          "treatment_answered": 16
+        },
+        "shown_differs_from_intended::true": {
+          "n": 71,
+          "control_correct": 20,
+          "treatment_correct": 19,
+          "control_answered": 59,
+          "treatment_answered": 58
+        },
+        "source::humaneval": {
+          "n": 9,
+          "control_correct": 5,
+          "treatment_correct": 5,
+          "control_answered": 7,
+          "treatment_answered": 7
+        },
+        "source::mbpp": {
+          "n": 88,
+          "control_correct": 21,
+          "treatment_correct": 20,
+          "control_answered": 68,
+          "treatment_answered": 67
+        }
+      }
+    },
+    "shown_actual_output": {
+      "items": 97,
+      "raw_output_identical": 91,
+      "raw_output_changed": 6,
+      "raw_output_identical_rate": 0.9381443298969072,
+      "format_counts": {
+        "control": {
+          "empty": 1,
+          "markdown_bold": 80,
+          "markdown_fence": 14,
+          "plain_or_other": 2
+        },
+        "treatment": {
+          "empty": 1,
+          "markdown_bold": 80,
+          "markdown_fence": 14,
+          "plain_or_other": 2
+        }
+      },
+      "strict_transition_counts": {
+        "invalid_syntax -> invalid_syntax": 96,
+        "multiple_or_missing_statements -> multiple_or_missing_statements": 1
+      },
+      "lenient_transition_counts": {
+        "correct -> correct": 23,
+        "invalid_syntax -> invalid_syntax": 2,
+        "multiple_or_missing_statements -> multiple_or_missing_statements": 1,
+        "not_single_equality -> not_single_equality": 4,
+        "prediction_not_literal -> prediction_not_literal": 1,
+        "wrong_type -> wrong_type": 6,
+        "wrong_value -> correct": 1,
+        "wrong_value -> wrong_value": 59
+      },
+      "changed_record_ids": [
+        "mutation::humaneval_HumanEval_56_mut_00368",
+        "mutation::mbpp_236_mut_03881",
+        "mutation::mbpp_335_mut_04691",
+        "mutation::mbpp_338_mut_04704",
+        "mutation::mbpp_648_mut_07398",
+        "mutation::mbpp_689_mut_07700"
+      ],
+      "strata": {
+        "bug_family::arithmetic": {
+          "n": 30,
+          "control_correct": 7,
+          "treatment_correct": 7,
+          "control_answered": 29,
+          "treatment_answered": 29
+        },
+        "bug_family::boolean": {
+          "n": 5,
+          "control_correct": 1,
+          "treatment_correct": 1,
+          "control_answered": 4,
+          "treatment_answered": 4
+        },
+        "bug_family::boundary": {
+          "n": 33,
+          "control_correct": 10,
+          "treatment_correct": 11,
+          "control_answered": 30,
+          "treatment_answered": 30
+        },
+        "bug_family::comparison": {
+          "n": 15,
+          "control_correct": 2,
+          "treatment_correct": 2,
+          "control_answered": 14,
+          "treatment_answered": 14
+        },
+        "bug_family::index": {
+          "n": 1,
+          "control_correct": 1,
+          "treatment_correct": 1,
+          "control_answered": 1,
+          "treatment_answered": 1
+        },
+        "bug_family::logical": {
+          "n": 1,
+          "control_correct": 0,
+          "treatment_correct": 0,
+          "control_answered": 1,
+          "treatment_answered": 1
+        },
+        "bug_family::negate_removal": {
+          "n": 1,
+          "control_correct": 0,
+          "treatment_correct": 0,
+          "control_answered": 1,
+          "treatment_answered": 1
+        },
+        "bug_family::off_by_one": {
+          "n": 6,
+          "control_correct": 1,
+          "treatment_correct": 1,
+          "control_answered": 6,
+          "treatment_answered": 6
+        },
+        "bug_family::return": {
+          "n": 5,
+          "control_correct": 1,
+          "treatment_correct": 1,
+          "control_answered": 3,
+          "treatment_answered": 3
+        },
+        "complexity::complex": {
+          "n": 16,
+          "control_correct": 5,
+          "treatment_correct": 5,
+          "control_answered": 14,
+          "treatment_answered": 14
+        },
+        "complexity::moderate": {
+          "n": 34,
+          "control_correct": 6,
+          "treatment_correct": 7,
+          "control_answered": 30,
+          "treatment_answered": 30
+        },
+        "complexity::simple": {
+          "n": 47,
+          "control_correct": 12,
+          "treatment_correct": 12,
+          "control_answered": 45,
+          "treatment_answered": 45
+        },
+        "shown_differs_from_intended::false": {
+          "n": 26,
+          "control_correct": 9,
+          "treatment_correct": 9,
+          "control_answered": 22,
+          "treatment_answered": 22
+        },
+        "shown_differs_from_intended::true": {
+          "n": 71,
+          "control_correct": 14,
+          "treatment_correct": 15,
+          "control_answered": 67,
+          "treatment_answered": 67
+        },
+        "source::humaneval": {
+          "n": 9,
+          "control_correct": 4,
+          "treatment_correct": 4,
+          "control_answered": 8,
+          "treatment_answered": 8
+        },
+        "source::mbpp": {
+          "n": 88,
+          "control_correct": 19,
+          "treatment_correct": 20,
+          "control_answered": 81,
+          "treatment_answered": 81
+        }
+      }
+    }
+  },
+  "conclusions": [
+    "The frozen primary mechanism gate failed; no promotion or confirmation opening is permitted.",
+    "The treatment increased exact-format answer production but did not improve lenient intended-value correctness.",
+    "Most outputs are identical between arms, so 128 prompt-only replacements produced a small behavioural perturbation.",
+    "Repeating or lengthening the same prompt-only intervention is not justified by this pilot."
+  ],
+  "next_experiment_requirements": [
+    "Use a genuinely new execution-learning signal (for example bounded trace/value targets), not the same assertion tokens under a new prompt.",
+    "Keep the existing control adapter and 97-item train-derived panel frozen.",
+    "Predeclare a matched token-mass/format control so trace length is not mistaken for execution learning.",
+    "Do not open confirmation, validation, ablation_dev, test, or sealed-final data.",
+    "Require semantic intended-value improvement under lenient and strict scoring before any canonical Kill@8 check."
+  ],
+  "sealed_final_test_accessed": false,
+  "validation_accessed": false,
+  "ablation_dev_accessed": false,
+  "confirmation_opened": false
+}

@@ -1,0 +1,188 @@
+{
+  "schema_version": "oneiros_execution_supervision_mechanism_analysis_v1",
+  "label": "train-derived mechanism diagnostic; not generalisation or model selection",
+  "items": 97,
+  "predeclared_gates": {
+    "minimum_treatment_minus_control_intended_accuracy_pp": 5.0,
+    "maximum_treatment_minus_control_actual_accuracy_regression_pp": 5.0,
+    "maximum_treatment_minus_control_answer_rate_regression_pp": 2.0
+  },
+  "inputs": {
+    "base": {
+      "path": "results\\v4_3_execution_supervision_v1\\eval_base.json",
+      "sha256": "7eeb1d818a08c9006f2edb1859d1442c524813418c0a55a0a4b729674603aec4"
+    },
+    "control": {
+      "path": "results\\v4_3_execution_supervision_v1\\eval_control.json",
+      "sha256": "5156874ec30be45e5e2872e1a1969d47d4ac63fd328c58304bb218aba4d1decf"
+    },
+    "treatment": {
+      "path": "results\\v4_3_execution_supervision_v1\\eval_treatment.json",
+      "sha256": "de377f0a7d104a1b28f5f09741728b91e58f5b985924549116d13d4c157a52ac"
+    }
+  },
+  "arms": {
+    "base": {
+      "intended_output": {
+        "requested": 97,
+        "strict_counts": {
+          "invalid_syntax": 84,
+          "multiple_or_missing_statements": 13
+        },
+        "strict_accuracy_per_requested": 0.0,
+        "strict_answer_rate": 0.0,
+        "lenient_counts": {
+          "correct": 25,
+          "invalid_syntax": 4,
+          "multiple_or_missing_statements": 13,
+          "not_single_equality": 2,
+          "prediction_not_literal": 1,
+          "wrong_call": 2,
+          "wrong_type": 4,
+          "wrong_value": 46
+        },
+        "lenient_accuracy_per_requested": 0.25773195876288657,
+        "completion_limit_hits": 0
+      },
+      "shown_actual_output": {
+        "requested": 97,
+        "strict_counts": {
+          "invalid_syntax": 96,
+          "multiple_or_missing_statements": 1
+        },
+        "strict_accuracy_per_requested": 0.0,
+        "strict_answer_rate": 0.0,
+        "lenient_counts": {
+          "correct": 24,
+          "invalid_syntax": 2,
+          "multiple_or_missing_statements": 1,
+          "not_single_equality": 4,
+          "prediction_not_literal": 1,
+          "wrong_type": 6,
+          "wrong_value": 59
+        },
+        "lenient_accuracy_per_requested": 0.24742268041237114,
+        "completion_limit_hits": 0
+      }
+    },
+    "control": {
+      "intended_output": {
+        "requested": 97,
+        "strict_counts": {
+          "correct": 1,
+          "invalid_syntax": 83,
+          "multiple_or_missing_statements": 13
+        },
+        "strict_accuracy_per_requested": 0.010309278350515464,
+        "strict_answer_rate": 0.010309278350515464,
+        "lenient_counts": {
+          "correct": 26,
+          "invalid_syntax": 4,
+          "multiple_or_missing_statements": 13,
+          "not_single_equality": 2,
+          "prediction_not_literal": 1,
+          "wrong_call": 2,
+          "wrong_type": 4,
+          "wrong_value": 45
+        },
+        "lenient_accuracy_per_requested": 0.26804123711340205,
+        "completion_limit_hits": 0
+      },
+      "shown_actual_output": {
+        "requested": 97,
+        "strict_counts": {
+          "invalid_syntax": 96,
+          "multiple_or_missing_statements": 1
+        },
+        "strict_accuracy_per_requested": 0.0,
+        "strict_answer_rate": 0.0,
+        "lenient_counts": {
+          "correct": 23,
+          "invalid_syntax": 2,
+          "multiple_or_missing_statements": 1,
+          "not_single_equality": 4,
+          "prediction_not_literal": 1,
+          "wrong_type": 6,
+          "wrong_value": 60
+        },
+        "lenient_accuracy_per_requested": 0.23711340206185566,
+        "completion_limit_hits": 0
+      }
+    },
+    "treatment": {
+      "intended_output": {
+        "requested": 97,
+        "strict_counts": {
+          "correct": 4,
+          "invalid_syntax": 74,
+          "multiple_or_missing_statements": 12,
+          "wrong_value": 7
+        },
+        "strict_accuracy_per_requested": 0.041237113402061855,
+        "strict_answer_rate": 0.1134020618556701,
+        "lenient_counts": {
+          "correct": 25,
+          "invalid_syntax": 6,
+          "multiple_or_missing_statements": 12,
+          "not_single_equality": 2,
+          "prediction_not_literal": 1,
+          "wrong_call": 2,
+          "wrong_type": 3,
+          "wrong_value": 46
+        },
+        "lenient_accuracy_per_requested": 0.25773195876288657,
+        "completion_limit_hits": 0
+      },
+      "shown_actual_output": {
+        "requested": 97,
+        "strict_counts": {
+          "invalid_syntax": 96,
+          "multiple_or_missing_statements": 1
+        },
+        "strict_accuracy_per_requested": 0.0,
+        "strict_answer_rate": 0.0,
+        "lenient_counts": {
+          "correct": 24,
+          "invalid_syntax": 2,
+          "multiple_or_missing_statements": 1,
+          "not_single_equality": 4,
+          "prediction_not_literal": 1,
+          "wrong_type": 6,
+          "wrong_value": 59
+        },
+        "lenient_accuracy_per_requested": 0.24742268041237114,
+        "completion_limit_hits": 0
+      }
+    }
+  },
+  "comparisons": {
+    "intended_output": {
+      "treatment_minus_control_accuracy_pp": 3.0927835051546393,
+      "paired_ci90_low_pp": 0.20147649246809937,
+      "paired_ci90_high_pp": 5.984090517841179,
+      "gained": 3,
+      "lost": 0,
+      "mcnemar_exact_p": 0.25
+    },
+    "shown_actual_output": {
+      "treatment_minus_control_accuracy_pp": 0.0,
+      "paired_ci90_low_pp": 0.0,
+      "paired_ci90_high_pp": 0.0,
+      "gained": 0,
+      "lost": 0,
+      "mcnemar_exact_p": 1.0
+    }
+  },
+  "answer_rate_change_pp": 10.309278350515463,
+  "gate_checks": {
+    "intended_gain": false,
+    "intended_direction_90ci": true,
+    "actual_noninferiority": true,
+    "answer_rate_noninferiority": true,
+    "no_completion_limit_hits": true
+  },
+  "mechanism_gate_passed": false,
+  "next_step": "retain the control; diagnose failures without opening confirmation or validation",
+  "promotion_permitted": false,
+  "confirmation_opening_permitted": false
+}
