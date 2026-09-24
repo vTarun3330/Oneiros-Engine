@@ -33,6 +33,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from harness.source_identity import canonical_sha256
 from harness.execution_supervision_sidecar import (
     freeze_lineage_split, sha256_file, stable_rank,
 )
@@ -179,7 +180,7 @@ def main(argv=None) -> int:
         "outputs": {"pool": {"path": pool_path.relative_to(ROOT).as_posix(),
                              "sha256": sha256_file(pool_path), "rows": len(pool)}},
         "source_files_sha256": {
-            relative: sha256_file(ROOT / relative) for relative in (
+            relative: canonical_sha256(ROOT / relative) for relative in (
                 "scripts/census_execution_dose_pool.py",
                 "scripts/build_execution_supervision_dataset.py",
                 "harness/execution_supervision.py",

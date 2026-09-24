@@ -50,6 +50,7 @@ from harness.execution_dose import (
     replay_balance_report, select_execution_rows, stratum,
 )
 from harness.execution_supervision import format_output_prediction_chat_prompt
+from harness.source_identity import canonical_sha256
 from harness.execution_supervision_sidecar import sha256_file, stable_rank
 from scripts.build_execution_trace_ab import build_pair_prompt, event_completion
 from scripts.preflight_execution_supervision_ab import MODEL_NAME, MODEL_REVISION
@@ -327,7 +328,7 @@ def main(argv=None) -> int:
         "model": MODEL_NAME, "model_revision": MODEL_REVISION,
         "sealed_final_test_accessed": False, "ablation_dev_accessed": False,
         "validation_accessed": False, "test_accessed": False, "confirmation_opened": False,
-        "source_files_sha256": {relative: sha256_file(ROOT / relative) for relative in (
+        "source_files_sha256": {relative: canonical_sha256(ROOT / relative) for relative in (
             "scripts/build_execution_dose_ab.py", "harness/execution_dose.py",
             "scripts/build_execution_trace_ab.py", "harness/execution_supervision.py",
             "engine/sft_trainer.py")},

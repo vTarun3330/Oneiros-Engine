@@ -23,6 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from harness.source_identity import canonical_sha256
 from harness.execution_supervision_sidecar import sha256_file
 from scripts.preflight_execution_dose_ab import (
     ARM_NAME, CHECKPOINT, CONTROL_ADAPTER, CONTROL_RESULT, DATASET_DIR, PANEL, RECEIPT,
@@ -137,7 +138,7 @@ def main(argv=None) -> int:
                              "sha256": sha256_file(result_path)},
         "kill_at_k": {k: value["rate"] for k, value in artifact["kill_at_k"].items()},
         "wall_time_seconds": artifact["wall_time_seconds"],
-        "source_sha256": sha256_file(Path(__file__)),
+        "source_sha256": canonical_sha256(Path(__file__)),
         "sealed_final_test_accessed": False, "validation_accessed": False,
         "ablation_dev_accessed": False, "confirmation_opened": False,
         "weights_written": False,

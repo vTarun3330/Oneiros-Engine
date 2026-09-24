@@ -30,6 +30,7 @@ if str(ROOT) not in sys.path:
 
 from harness.corpus_view import load_development_split
 from harness.evaluation_admission import scope_split
+from harness.source_identity import canonical_sha256
 from harness.execution_supervision_sidecar import sha256_file, stable_rank
 from scripts.census_execution_dose_pool import CORPUS, SOURCE_DIR, corpus_disjointness_problems
 
@@ -140,7 +141,7 @@ def main(argv=None) -> int:
         "leakage": {"splits_opened": ["train"], "validation_accessed": False,
                     "ablation_dev_accessed": False, "test_accessed": False,
                     "sealed_final_test_accessed": False, "confirmation_opened": False},
-        "source_sha256": sha256_file(Path(__file__)),
+        "source_sha256": canonical_sha256(Path(__file__)),
     }
     args.output.write_bytes((json.dumps(receipt, indent=2) + "\n").encode("utf-8"))
     print(json.dumps({key: receipt[key] for key in (

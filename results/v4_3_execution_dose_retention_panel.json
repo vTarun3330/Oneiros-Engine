@@ -1,7 +1,7 @@
 {
   "schema_version": "oneiros_execution_dose_retention_panel_v1",
   "label": "train-derived canonical test-generation retention panel; not validation, not generalisation, not a final-test panel",
-  "created_utc": "2026-09-24T11:03:44.233098+00:00",
+  "created_utc": "2026-09-24T11:22:54.569938+00:00",
   "panel_name": "execution_dose_retention_train_derived",
   "selection_rule": "every function-mode train record in a pilot-development lineage, at most 10 per lineage by stable_rank('retention', lineage, id)",
   "records": 613,
@@ -1266,5 +1266,5 @@
     "sealed_final_test_accessed": false,
     "confirmation_opened": false
   },
-  "source_sha256": "932db81eb6e080bfa30cb527ae153bd433f40b3270cec117a95a7ecb63a464c3"
+  "source_sha256": "9b7fc5a0c9045d81140f35a7d0a17dc64abfe5079d9a516021b3ad704a4b5f7c"
 }

@@ -232,3 +232,8 @@ def test_tracked_dose_design_artifacts_are_consistent():
         panel_data["record_ids"], separators=(",", ":")).encode("utf-8")).hexdigest()
     assert ids_digest == panel_data["record_ids_sha256"]
     assert not set(manifest_data["execution_record_ids"]) & set(panel_data["record_ids"])
+    # Bound sources use the LF-canonical hash, so the recorded values hold on
+    # any checkout whatever its line-ending settings.
+    from harness.source_identity import canonical_sha256
+    for relative, expected in manifest_data["source_files_sha256"].items():
+        assert canonical_sha256(ROOT / relative) == expected, f"{relative} drifted"

@@ -1,7 +1,7 @@
 {
   "schema_version": "oneiros_execution_dose_design_v1",
   "label": "CPU design selection from train supply only; no model outcome was used",
-  "created_utc": "2026-09-24T11:11:09.517810+00:00",
+  "created_utc": "2026-09-24T11:22:48.992843+00:00",
   "reference_12pct_arm": {
     "execution_examples": 122,
     "execution_example_share": 0.119141,
@@ -68,6 +68,6 @@
     "d25"
   ],
   "chosen_design": "d25",
-  "dataset_manifest_sha256": "be70dc655fba2956ca3eebed38e77253bd6c8799d6cecee3a42845adf4148ec3",
-  "census_sha256": "f951536032e4cc2b7eb3b20a0a41d7c250eb1812b226ca4994a3b389b37c5c7e"
+  "dataset_manifest_sha256": "fd57b1c3f8fbe49b9ea510f4353701e5324c54cb2833ad375a7601173e1a9d84",
+  "census_sha256": "30b8647cab5ed20a7eb7585e9bbab679d38cb59b1ba34cfa769b802773a10104"
 }

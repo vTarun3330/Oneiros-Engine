@@ -1115,7 +1115,7 @@
   "control_adapter_training_result": "results/v4_3_execution_supervision_v1/arm_a_training_result.json",
   "pilot_development_sha256": "56972838fda060795840088660b09249cf95c97afcbe6bac63a82301239530ec",
   "unopened_confirmation_ids_sha256": "df3554c8fed40dbef1c11ad279dce0ea8a1ccb56ecc7986107edf8be9684728e",
-  "census_sha256": "f951536032e4cc2b7eb3b20a0a41d7c250eb1812b226ca4994a3b389b37c5c7e",
+  "census_sha256": "30b8647cab5ed20a7eb7585e9bbab679d38cb59b1ba34cfa769b802773a10104",
   "pool_sha256": "4dbf70041d68d5c66ae398918ac4e2b708133c09c9db47929084c469998b4017",
   "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
   "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
@@ -1125,10 +1125,10 @@
   "test_accessed": false,
   "confirmation_opened": false,
   "source_files_sha256": {
-    "scripts/build_execution_dose_ab.py": "38c0c27c39ce73b3380482c641601d7df7de6fd2c202a5283aee2f3584b739d9",
-    "harness/execution_dose.py": "6289acb1eb362c0d90e2852ae306c3e7c57595143bc830d70d1f2e2676d4f28d",
+    "scripts/build_execution_dose_ab.py": "06d58d6e691306f2cb439db4263acc7427faff0f2beee220055ed4ada871e611",
+    "harness/execution_dose.py": "b3191aca7bc5152b3c331999231e3d1f2b2f16e1e7365ff25c686fa62a9e2614",
     "scripts/build_execution_trace_ab.py": "b344488d93a2f3f854c6d7efe1f4400fe09f3e2f51eba501f89c7cbda42d9b70",
     "harness/execution_supervision.py": "94b0250b30337eb288d32d85f7b6a5de33b0b6a76c16c40d40f39d25ba0f8b6e",
-    "engine/sft_trainer.py": "95e1746a3b58b61d9beb1b79e1e83feabf50f3656818ea5abdfb17f30f19efed"
+    "engine/sft_trainer.py": "0e34c20080e8a6bf30e2ca668fabd87b27e68ecb0583242a4712ded34915a503"
   }
 }

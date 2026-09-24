@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from harness.source_identity import canonical_sha256
 from harness.execution_supervision_sidecar import sha256_file
 from scripts.evaluate_execution_supervision_pilot import (
     BATCH_SIZE, CONDITIONS, MAX_NEW_TOKENS, score_assertion, shown_actual_prompt,
@@ -128,7 +129,7 @@ def main(argv=None) -> int:
         "adapter_sha256": adapter_hash, "git_commit": receipt["git"]["commit"],
         "preflight_sha256": sha256_file(RECEIPT),
         "pilot_development_sha256": receipt["dataset"]["pilot_development_sha256"],
-        "decoding": DECODING, "source_sha256": sha256_file(Path(__file__)),
+        "decoding": DECODING, "source_sha256": canonical_sha256(Path(__file__)),
         "items": len(items), "conditions": list(CONDITIONS),
         "summary": summary, "detail": detail,
         "sealed_final_test_accessed": False, "validation_accessed": False,

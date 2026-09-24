@@ -1,7 +1,7 @@
 {
   "schema_version": "oneiros_execution_dose_census_v1",
   "label": "train-only supply census; no model was loaded or evaluated",
-  "created_utc": "2026-09-24T10:58:35.891798+00:00",
+  "created_utc": "2026-09-24T11:22:35.364579+00:00",
   "input_audit": {
     "candidate_rows": 44760,
     "literal_safe_call_rows": 19321,
@@ -75,7 +75,7 @@
     }
   },
   "source_files_sha256": {
-    "scripts/census_execution_dose_pool.py": "edab7d61ebd552f034632d19480e0beab84e49fef32f92a9b3bf6e7dc41de295",
+    "scripts/census_execution_dose_pool.py": "7f45768e9dd14e53410fd14d3ba63af2c647374f82b0b8e71a9823580cdd7b4c",
     "scripts/build_execution_supervision_dataset.py": "6d7de3d3f81696d868fb2894648252d2ab765d4a7d66c424d38b9b21e85660d2",
     "harness/execution_supervision.py": "94b0250b30337eb288d32d85f7b6a5de33b0b6a76c16c40d40f39d25ba0f8b6e",
     "harness/execution_supervision_sidecar.py": "5de35cd6f73bb862fd24f64321098e5924d686b4c37c783d08dee37a008b12a4"
@@ -91,5 +91,5 @@
     "confirmation_opened": false,
     "pilot_development_lineages_materialised": false
   },
-  "elapsed_seconds": 202.7
+  "elapsed_seconds": 211.8
 }

@@ -36,6 +36,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from engine.sft_trainer import OneirosSFTTrainer, plan_sft_optimizer_schedule
+from harness.source_identity import canonical_sha256
 from harness.execution_supervision_sidecar import sha256_file
 from scripts.preflight_execution_supervision_ab import (
     BATCH_SIZE, CHECKPOINT_STEPS, EPOCHS, GRADIENT_ACCUMULATION_STEPS, LEARNING_RATE,
@@ -167,7 +168,7 @@ def preflight() -> dict[str, Any]:
         if manifest.get(key) is not False:
             problems.append(f"dataset isolation field {key} is not false")
     for relative, expected in manifest["source_files_sha256"].items():
-        if sha256_file(ROOT / relative) != expected:
+        if canonical_sha256(ROOT / relative) != expected:
             problems.append(f"dataset source drift: {relative}")
     arm_path = DATASET_DIR / ARM_FILE
     if sha256_file(arm_path) != manifest["treatment_arm_sha256"]:
@@ -329,7 +330,7 @@ def preflight() -> dict[str, Any]:
             "(scripts/evaluate_execution_dose_retention.py)",
             "frozen analysis (scripts/analyse_execution_dose_pilot.py, CPU)",
         ],
-        "source_files_sha256": {path: sha256_file(ROOT / path) for path in BOUND_SOURCES},
+        "source_files_sha256": {path: canonical_sha256(ROOT / path) for path in BOUND_SOURCES},
         "leakage": {"validation_accessed": False, "ablation_dev_accessed": False,
                     "test_accessed": False, "sealed_final_test_accessed": False,
                     "confirmation_opened": False},
@@ -371,7 +372,7 @@ def verify_receipt_for_launch(receipt_path: Path = RECEIPT) -> dict[str, Any]:
     if changed - allowed:
         raise SystemExit(f"REFUSED: files changed since preflight: {sorted(changed - allowed)}")
     for relative, expected in receipt["source_files_sha256"].items():
-        if sha256_file(ROOT / relative) != expected:
+        if canonical_sha256(ROOT / relative) != expected:
             raise SystemExit(f"REFUSED: bound source drift: {relative}")
     return receipt
 
