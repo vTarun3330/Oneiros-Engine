@@ -264,6 +264,8 @@ def preflight(dataset_dir: Path, output: Path) -> dict[str, Any]:
                 ROOT / "harness" / "execution_supervision.py",
                 ROOT / "harness" / "execution_supervision_sidecar.py",
                 ROOT / "scripts" / "run_execution_supervision_pilot.py",
+                ROOT / "scripts" / "evaluate_execution_supervision_pilot.py",
+                ROOT / "scripts" / "analyse_execution_supervision_pilot.py",
                 Path(__file__).resolve(),
             )
         },
@@ -281,8 +283,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset-dir", type=Path, default=ROOT / "results"
                         / "v4_3_execution_supervision_v1")
+    # This is a launch-time receipt, not a committed result.  Keeping it next
+    # to the ignored, hash-bound arm artifacts avoids the impossible cycle in
+    # which writing/committing the receipt changes the HEAD it attests to.
     parser.add_argument("--output", type=Path, default=ROOT / "results"
-                        / "v4_3_execution_supervision_preflight.json")
+                        / "v4_3_execution_supervision_v1" / "preflight.json")
     arguments = parser.parse_args()
     receipt = preflight(arguments.dataset_dir, arguments.output)
     print(json.dumps({

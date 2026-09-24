@@ -74,7 +74,7 @@ def main() -> int:
     parser.add_argument("--dataset-dir", type=Path, default=ROOT / "results"
                         / "v4_3_execution_supervision_v1")
     parser.add_argument("--preflight", type=Path, default=ROOT / "results"
-                        / "v4_3_execution_supervision_preflight.json")
+                        / "v4_3_execution_supervision_v1" / "preflight.json")
     parser.add_argument("--checkpoint-dir", type=Path, required=True)
     parser.add_argument("--result", type=Path, required=True)
     arguments = parser.parse_args()
