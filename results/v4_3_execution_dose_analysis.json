@@ -1,0 +1,289 @@
+{
+  "schema_version": "oneiros_execution_dose_analysis_v1",
+  "label": "train-derived mechanism and retention diagnostic; not generalisation, not model selection, not a final-test result",
+  "intervention": "25%-example / 58%-supervised-token execution intervention",
+  "inference_limitation": "Any observed effect is attributable to the combined 25%-example, 58%-token execution-supervision intervention and cannot isolate supervision type from supervised-token exposure.",
+  "predeclared": {
+    "mechanism_min_gain_pp_each_condition": 5.0,
+    "mechanism_interval": "Newcombe (1998) method 10 paired score, 90%, lower >= 0",
+    "max_strict_answer_regression_pp": 2.0,
+    "retention_margin_pp": 3.0,
+    "retention_interval": "lineage-cluster percentile bootstrap, 90%, 10000 replicates, seed 20260924"
+  },
+  "inputs": {
+    "control_mechanism": {
+      "path": "results/v4_3_execution_supervision_v1/eval_control.json",
+      "sha256": "5156874ec30be45e5e2872e1a1969d47d4ac63fd328c58304bb218aba4d1decf"
+    },
+    "treatment_mechanism": {
+      "path": "results/v4_3_execution_dose_v1/eval_dose_treatment.json",
+      "sha256": "8f72337eb8d91b2d737888f93aab1363264b60ea3c2849863e9ade5dacae20ad"
+    },
+    "reference_12pct": {
+      "path": "results/v4_3_execution_trace_v1/eval_ordered_trace.json",
+      "sha256": "ed092ea92f5d89b45e507af712da397d0ac18aaa227fdf2a8b35615adc625bc5"
+    },
+    "retention_control": {
+      "path": "results/v4_3_execution_dose_v1/retention_control.json",
+      "sha256": "6ea55450adfcb344b1b53c902d2ab9b2100da9942102eb681a06654bd4c7317d"
+    },
+    "retention_treatment": {
+      "path": "results/v4_3_execution_dose_v1/retention_dose_treatment.json",
+      "sha256": "9d877981c38c67e4755a654e8150cf2dc8b9a5e8bce2a7a7b340177c0a27ab19"
+    },
+    "retention_base": {
+      "path": "results/v4_3_execution_dose_v1/retention_base.json",
+      "sha256": "37c00589a04530c015518b992e505e679b291205e4c1f44d9cbde5ab1b4d1ded"
+    },
+    "panel": {
+      "path": "results/v4_3_execution_dose_retention_panel.json",
+      "sha256": "17d4e6f525dee754b60ed80b93616005499d557eb0f3bbe991edba5cf523b046"
+    }
+  },
+  "mechanism": {
+    "primary_outcome": "lenient semantic correctness per requested item",
+    "treatment_minus_control": {
+      "intended_output": {
+        "n": 97,
+        "first_correct": 26,
+        "second_correct": 25,
+        "difference_pp": -1.0309278350515463,
+        "newcombe90_low_pp": -3.1846563556656333,
+        "newcombe90_high_pp": 1.020803488543939,
+        "gained": 0,
+        "lost": 1,
+        "exact_mcnemar_p": 1.0,
+        "exact_one_sided_95_gain_upper_pp": 3.04118040369311
+      },
+      "shown_actual_output": {
+        "n": 97,
+        "first_correct": 23,
+        "second_correct": 26,
+        "difference_pp": 3.0927835051546393,
+        "newcombe90_low_pp": 0.04303319160840306,
+        "newcombe90_high_pp": 6.342747242555954,
+        "gained": 3,
+        "lost": 0,
+        "exact_mcnemar_p": 0.25,
+        "exact_one_sided_95_gain_upper_pp": 7.799470845335697
+      }
+    },
+    "treatment_minus_12pct_ordered_trace_descriptive": {
+      "intended_output": {
+        "n": 97,
+        "first_correct": 25,
+        "second_correct": 25,
+        "difference_pp": 0.0,
+        "newcombe90_low_pp": -2.706220016104568,
+        "newcombe90_high_pp": 2.706220016104565,
+        "gained": 1,
+        "lost": 1,
+        "exact_mcnemar_p": 1.0,
+        "exact_one_sided_95_gain_upper_pp": 4.797208408344116
+      },
+      "shown_actual_output": {
+        "n": 97,
+        "first_correct": 25,
+        "second_correct": 26,
+        "difference_pp": 1.0309278350515463,
+        "newcombe90_low_pp": -1.020803488543939,
+        "newcombe90_high_pp": 3.1846563556656333,
+        "gained": 1,
+        "lost": 0,
+        "exact_mcnemar_p": 1.0,
+        "exact_one_sided_95_gain_upper_pp": 4.797208408344116
+      }
+    },
+    "format_metrics_not_semantic": {
+      "intended_output": {
+        "control": {
+          "strict_accuracy_per_requested": 0.010309278350515464,
+          "strict_answer_rate": 0.010309278350515464,
+          "lenient_accuracy_per_requested": 0.26804123711340205,
+          "completion_limit_hits": 0
+        },
+        "treatment": {
+          "strict_accuracy_per_requested": 0.010309278350515464,
+          "strict_answer_rate": 0.010309278350515464,
+          "lenient_accuracy_per_requested": 0.25773195876288657,
+          "completion_limit_hits": 0
+        }
+      },
+      "shown_actual_output": {
+        "control": {
+          "strict_accuracy_per_requested": 0.0,
+          "strict_answer_rate": 0.0,
+          "lenient_accuracy_per_requested": 0.23711340206185566,
+          "completion_limit_hits": 0
+        },
+        "treatment": {
+          "strict_accuracy_per_requested": 0.0,
+          "strict_answer_rate": 0.0,
+          "lenient_accuracy_per_requested": 0.26804123711340205,
+          "completion_limit_hits": 0
+        }
+      }
+    },
+    "strict_answer_rate_change_pp": 0.0,
+    "checks": {
+      "intended_output_gain_at_least_5pp": false,
+      "intended_output_newcombe90_lower_at_least_0": false,
+      "shown_actual_output_gain_at_least_5pp": false,
+      "shown_actual_output_newcombe90_lower_at_least_0": true,
+      "strict_answer_rate_noninferior_2pp": true,
+      "no_completion_limit_hits": true
+    },
+    "passed": false
+  },
+  "retention": {
+    "primary_outcome": "canonical Kill@8 per record, paired",
+    "margin_pp": 3.0,
+    "treatment_minus_control": {
+      "cluster_bootstrap90": {
+        "difference_pp": -0.3262642740619902,
+        "low_pp": -3.554868624420402,
+        "high_pp": 2.926829268292683,
+        "clusters": 100,
+        "units": 613,
+        "replicates": 10000,
+        "seed": 20260924,
+        "confidence": 0.9
+      },
+      "record_level_newcombe90": {
+        "n": 613,
+        "first_correct": 388,
+        "second_correct": 386,
+        "difference_pp": -0.3262642740619902,
+        "newcombe90_low_pp": -3.380541968652461,
+        "newcombe90_high_pp": 2.729039187256155,
+        "gained": 64,
+        "lost": 66,
+        "exact_mcnemar_p": 0.9301553393082155,
+        "exact_one_sided_95_gain_upper_pp": 12.697600498095552
+      }
+    },
+    "descriptive": {
+      "control_minus_base": {
+        "cluster_bootstrap90": {
+          "difference_pp": 0.6525285481239804,
+          "low_pp": -2.7681660899653977,
+          "high_pp": 4.225352112676056,
+          "clusters": 100,
+          "units": 613,
+          "replicates": 10000,
+          "seed": 20260924,
+          "confidence": 0.9
+        },
+        "record_level_newcombe90": {
+          "n": 613,
+          "first_correct": 384,
+          "second_correct": 388,
+          "difference_pp": 0.6525285481239804,
+          "newcombe90_low_pp": -2.403011714035865,
+          "newcombe90_high_pp": 3.7060028827975486,
+          "gained": 67,
+          "lost": 63,
+          "exact_mcnemar_p": 0.7925825227940955,
+          "exact_one_sided_95_gain_upper_pp": 13.22626571777546
+        }
+      },
+      "treatment_minus_base": {
+        "cluster_bootstrap90": {
+          "difference_pp": 0.3262642740619902,
+          "low_pp": -3.0351437699680512,
+          "high_pp": 3.587443946188341,
+          "clusters": 100,
+          "units": 613,
+          "replicates": 10000,
+          "seed": 20260924,
+          "confidence": 0.9
+        },
+        "record_level_newcombe90": {
+          "n": 613,
+          "first_correct": 384,
+          "second_correct": 386,
+          "difference_pp": 0.3262642740619902,
+          "newcombe90_low_pp": -2.8441381058078745,
+          "newcombe90_high_pp": 3.495555835984375,
+          "gained": 71,
+          "lost": 69,
+          "exact_mcnemar_p": 0.9326867554513667,
+          "exact_one_sided_95_gain_upper_pp": 13.929160841303975
+        }
+      }
+    },
+    "arms": {
+      "control": {
+        "kill_at_k": {
+          "1": 0.282219,
+          "2": 0.381729,
+          "4": 0.515498,
+          "8": 0.632953
+        },
+        "pass_at_8": 0.887439,
+        "prompt_budget_failures": 0,
+        "failure_taxonomy": {
+          "generation_invalid": 101,
+          "killed_assertion_error": 920,
+          "killed_error": 333,
+          "killed_timeout": 71,
+          "reference_assertion_error": 2354,
+          "reference_error": 239,
+          "survived": 886
+        },
+        "adapter_sha256": "c1fe9e52cc86f5f5afed7c378905ac042a9a3e152f42ccc980311d2f47cc0841"
+      },
+      "treatment": {
+        "kill_at_k": {
+          "1": 0.244698,
+          "2": 0.380098,
+          "4": 0.499184,
+          "8": 0.62969
+        },
+        "pass_at_8": 0.88907,
+        "prompt_budget_failures": 0,
+        "failure_taxonomy": {
+          "generation_invalid": 91,
+          "killed_assertion_error": 910,
+          "killed_error": 318,
+          "killed_timeout": 64,
+          "reference_assertion_error": 2291,
+          "reference_error": 255,
+          "survived": 975
+        },
+        "adapter_sha256": "2c0949816b93607e51ba016785b3a29b53cad0ec29f2aadffbcf29d135a885af"
+      },
+      "base": {
+        "kill_at_k": {
+          "1": 0.247961,
+          "2": 0.388254,
+          "4": 0.520392,
+          "8": 0.626427
+        },
+        "pass_at_8": 0.898858,
+        "prompt_budget_failures": 0,
+        "failure_taxonomy": {
+          "generation_invalid": 141,
+          "killed_assertion_error": 867,
+          "killed_error": 311,
+          "killed_timeout": 61,
+          "reference_assertion_error": 2156,
+          "reference_error": 253,
+          "survived": 1115
+        },
+        "adapter_sha256": null
+      }
+    },
+    "verdict": "inconclusive",
+    "passed": false
+  },
+  "decision": {
+    "outcome": "composite_intervention_null_inconclusive",
+    "next_permitted_step": "stop this line; do not escalate the dose, add epochs, change the mixture or re-threshold without a new explicit decision",
+    "intervention": "25%-example / 58%-supervised-token execution intervention",
+    "inference_limitation": "Any observed effect is attributable to the combined 25%-example, 58%-token execution-supervision intervention and cannot isolate supervision type from supervised-token exposure.",
+    "causal_attribution_to_execution_supervision_permitted": false,
+    "promotion_permitted": false,
+    "confirmation_opening_permitted": false
+  }
+}

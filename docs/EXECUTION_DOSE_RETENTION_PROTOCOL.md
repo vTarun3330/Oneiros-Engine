@@ -296,3 +296,24 @@ final-test results.
 **Ignored, bound by hash:** under `results/v4_3_execution_dose_v1/`, the pool,
 the treatment arm and its manifest. No matched-control arm exists, because none
 was feasible.
+
+## Execution record (appended after the run; the protocol above is unchanged)
+
+GPU execution was authorized for `b65ade4` and ran strictly sequentially on
+2026-09-24:
+
+| run | job | duration |
+|---|---|---:|
+| `20260924-194214-execdose-d25-treatment-qwen15b-s42` | train `dose_treatment` | 492.6 s |
+| `20260924-195055-execdose-mechanism-qwen15b-s42` | mechanism evaluation | 44.1 s |
+| `20260924-195156-execdose-retention-control-qwen15b-s42` | retention, control | 763.1 s |
+| `20260924-200500-execdose-retention-treatment-qwen15b-s42` | retention, treatment | 667.0 s |
+| `20260924-201642-execdose-retention-base-qwen15b-s42` | retention, base | 580.8 s |
+
+Every run exited with code 0.
+
+**Result:** the mechanism gate failed and the retention gate was inconclusive.
+The frozen outcome is `composite_intervention_null_inconclusive`, and this line
+stops. The numbers are in `results/v4_3_execution_dose_analysis.json` and
+`results/v4_3_execution_dose_decision_receipt.json`, and are summarized in
+section 7 of `POST_INCIDENT_RESEARCH_STATUS.md`.

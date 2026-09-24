@@ -325,3 +325,29 @@ def test_manifest_states_exact_replay_minimum_and_composite_label():
             dose["treatment_supervised_tokens"], dose["control_supervised_tokens"]) == (
         256, 73665, 127108, 105457)
     assert dose["treatment_to_control_mass_ratio"] == 1.205306
+
+
+def test_tracked_dose_decision_chain_verifies_on_any_checkout():
+    """Analysis -> decision receipt verify from tracked bytes, LF only."""
+    analysis = RESULTS / "v4_3_execution_dose_analysis.json"
+    receipt = RESULTS / "v4_3_execution_dose_decision_receipt.json"
+    if not receipt.exists():
+        pytest.skip("execution-dose decision receipt not present")
+    for path in (analysis, receipt):
+        assert b"\r" not in path.read_bytes(), f"{path.name} contains CR bytes"
+    data = json.loads(receipt.read_text(encoding="utf-8"))
+    result = json.loads(analysis.read_text(encoding="utf-8"))
+    assert data["analysis"]["sha256"] == hashlib.sha256(analysis.read_bytes()).hexdigest()
+    for relative, expected in data["tracked_design_artifacts"].items():
+        assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
+    assert result["mechanism"]["passed"] is False
+    assert result["retention"]["verdict"] == "inconclusive"
+    assert data["decision"]["outcome"] == "composite_intervention_null_inconclusive"
+    for decision in (data["decision"], result["decision"]):
+        assert decision["promotion_permitted"] is False
+        assert decision["confirmation_opening_permitted"] is False
+        assert decision["causal_attribution_to_execution_supervision_permitted"] is False
+        assert decision["inference_limitation"] == INFERENCE_LIMITATION
+    assert all(run["state"] == "completed" and run["exit_code"] == 0
+               for run in data["runs"].values())
+    assert not any(data["leakage"].values())

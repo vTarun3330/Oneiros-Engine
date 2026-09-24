@@ -221,7 +221,7 @@ copies are committed under `docs/evidence/sealed_final_incident/`.
 
 ## 7. Why fine-tuning did not help: the mechanism chain (2026-09-19 → 2026-09-24)
 
-Four diagnostics, each gated before its data was generated. All four ran on
+Five diagnostics, each gated before its data was generated. All five ran on
 **train-derived** panels only. None opened `val`, `ablation_dev`, `test`, the
 sealed split or the 100-lineage confirmation panel, and **none is a
 generalization, model-selection or final-test result**.
@@ -232,6 +232,7 @@ generalization, model-selection or final-test result**.
 | Gate 2 — TAP, 7B vs 1.5B base | is model capacity the ceiling? | TAP-mut 95% lower bound > 0; answer-rate non-inferiority | **fail** |
 | Pilot 1 — prompt-only execution supervision | does re-framing 128 of 1,024 examples as output prediction help? | +5 pp intended | **fail** |
 | Pilot 2 — execution events, unordered vs ordered | does execution-event supervision, or its temporal order, help? | +5 pp in both conditions, 90% lower bound ≥ 0 | **fail, both arms** |
+| Pilot 3 — composite execution intervention | does a 25%-example / 58%-supervised-token execution intervention move execution prediction without losing test generation? | mechanism +5 pp in both conditions, Newcombe 90% lower ≥ 0; Kill@8 retention, cluster-bootstrap 90% lower ≥ −3 pp | **mechanism fail; retention inconclusive** |
 
 TAP asks a model to state what a call returns, given the correct code (TAP-ref)
 or the mutated code plus specification (TAP-mut). Primary panel: 584 train items;
@@ -342,21 +343,33 @@ without an explicit new decision.
 
 ### Proposed paper wording
 
-Use this wording, or something no stronger. It reports a null result at one
-dose. It does not claim that execution supervision generally fails.
+Use this wording, or something no stronger. It reports null results at the
+two tested intervention sizes. It does not claim that execution supervision
+generally fails, and it never attributes an effect to supervision type alone.
 
-> In a train-derived mechanism pilot, we replaced 12% of a 1,024-example
-> fine-tuning mixture (23% of supervised tokens) with verified execution-trace
-> supervision on Qwen2.5-Coder-1.5B. The pilot was null. Neither
-> intended-output nor actual-output prediction reached the predeclared +5 pp
-> gain on a 97-item panel. The largest change was +2.1 pp (2 items gained,
-> 0 lost), and a ≥ 5 pp gain on actual-output prediction could not be firmly
-> excluded. Preserving temporal order gave no benefit over an
-> unordered event multiset, and a ≥ 5 pp order effect was excluded. About 95%
-> of model outputs were unchanged by training. The pilot therefore does not
-> distinguish an ineffective signal from an insufficient dose, and we do not
-> conclude that execution supervision fails in general. All panels were derived
-> from training data, so none of these results is a generalization estimate.
+> In two train-derived mechanism pilots on Qwen2.5-Coder-1.5B, we replaced part
+> of a 1,024-example fine-tuning mixture with verified execution-trace
+> supervision.
+>
+> In the first pilot it made up 12% of examples and 23% of supervised tokens.
+> In the second it made up 25% of examples and 58% of supervised tokens. The
+> second pilot also carried 1.2× the control's total supervised tokens, so it
+> is a composite intervention.
+>
+> Neither pilot reached the predeclared +5 pp gain in intended-output or
+> actual-output prediction on a 97-item panel. The largest change was +3.1 pp
+> (3 items gained, 0 lost). A ≥ 5 pp gain on actual-output prediction could
+> not be firmly excluded. Preserving temporal order gave no benefit over an
+> unordered event multiset. About 94–95% of model outputs were unchanged by
+> training.
+>
+> In the larger intervention, canonical test-generation Kill@8 moved by
+> −0.3 pp, but noninferiority within 3 pp could not be confirmed.
+>
+> We therefore do not conclude that execution supervision fails in general.
+> The second pilot cannot separate supervision type from total supervised-token
+> exposure. All panels were derived from training data, so none of these
+> results is a generalization estimate.
 
 Avoid these phrasings:
 - "execution supervision does not help";
@@ -366,28 +379,75 @@ Avoid these phrasings:
 Also avoid any wording that drops the dose, the model size, or the fact that
 the panels are train-derived.
 
-### Next experiment — prepared, not run
+### Pilot 3 — composite execution intervention (run 2026-09-24)
 
-A composite efficacy pilot is designed and preflighted in
-[EXECUTION_DOSE_RETENTION_PROTOCOL.md](EXECUTION_DOSE_RETENTION_PROTOCOL.md).
+The protocol is in
+[EXECUTION_DOSE_RETENTION_PROTOCOL.md](EXECUTION_DOSE_RETENTION_PROTOCOL.md),
+frozen at `b65ade4` before training.
 
-The treatment is a **25%-example / 58%-supervised-token execution
+**The treatment** was a **25%-example / 58%-supervised-token execution
 intervention**:
 - 256 of 1,024 examples;
 - 73,665 of 127,108 supervised target tokens;
 - 1.205306× the frozen control's 105,457 supervised tokens.
 
-It is judged against the same frozen control. The 50% design was infeasible
-without concentrating lineages or changing the content mix.
+A token-matched control was infeasible at 1%, 2% and 5%, so the pilot is a
+**composite efficacy pilot**. Any effect would be attributable only to the
+combined intervention. It cannot isolate supervision type from supervised-token
+exposure.
 
-A token-matched replay control was infeasible at 1%, 2% and 5%. The best valid
-construction reached 0.855 of the treatment's mass, and the conflict-free upper
-bound is 0.890. So any effect is attributable only to the combined intervention.
-It cannot isolate supervision type from supervised-token exposure.
+**Training** (run `20260924-194214-…`, 492.6 s):
+- 1,024 of 1,024 examples retained, 0 dropped, 0 malformed;
+- 92 prompts compacted (the trainer's `prompt_truncated_examples` = 92), 0 code units dropped;
+- 64 of 64 steps, adapter `2c094981…`.
 
-The pilot adds a frozen canonical Kill@8 retention gate, with a −3 pp
-noninferiority margin. **No training has been launched; it needs explicit
-approval.**
+**Mechanism gate — fail.** The panel is the same 97 train-derived items, scored
+by lenient semantic correctness against the frozen control.
+
+| condition | control | treatment | Δ pp | gained / lost | Newcombe 90% | exact McNemar p |
+|---|---:|---:|---:|---:|---:|---:|
+| intended output | 26 | 25 | −1.03 | 0 / 1 | [−3.19, +1.02] | 1.00 |
+| shown actual output | 23 | 26 | +3.09 | 3 / 0 | [+0.04, +6.34] | 0.25 |
+
+- The strict answer rate was unchanged (1.03% in both arms).
+- There were 0 completion-limit hits.
+- Against the failed 12% ordered arm, the change was 0.00 pp on intended output and +1.03 pp on shown actual output.
+
+**Retention gate — inconclusive, which does not pass.** Canonical Kill@8 on the
+613-record train-derived panel:
+
+| arm | Kill@1 | Kill@2 | Kill@4 | Kill@8 |
+|---|---:|---:|---:|---:|
+| control | 0.282 | 0.382 | 0.515 | 0.633 |
+| treatment | 0.245 | 0.380 | 0.499 | 0.630 |
+| base | 0.248 | 0.388 | 0.520 | 0.626 |
+
+- Treatment − control Kill@8 was −0.33 pp, with 64 records gained and 66 lost.
+- The lineage-cluster bootstrap 90% interval was [−3.55, +2.93]. Its lower bound fell below the −3 pp margin.
+- The record-level Newcombe interval was [−3.38, +2.73].
+- There were no prompt-budget failures in any arm.
+
+**Frozen outcome:** `composite_intervention_null_inconclusive`.
+- It is "inconclusive" rather than "≥ 5 pp excluded" because the shown-actual upper bound (6.34 pp) exceeds 5.
+- On intended output, a +5 pp gain is excluded: the upper bound is 1.02 and the exact gain bound is 3.04.
+
+**Exploratory, non-gating:** 91 of 97 mechanism outputs (93.8%) were
+byte-identical between control and treatment in each condition. That holds even
+with 58% of supervised tokens coming from execution supervision.
+
+**Decision.** This intervention line stops, and the frozen control remains the
+reference. The following will not happen without an explicit new decision:
+- dose escalation;
+- extra epochs;
+- a mixture change;
+- re-thresholding;
+- promotion;
+- opening confirmation or validation.
+
+**What this adds to the chain.**
+- Raising the execution share from 12% of examples (23% of tokens) to 25% (58%) still left the model's outputs almost unchanged, and it did not reach the predeclared gain.
+- Canonical test generation was not measurably damaged, but its retention could not be confirmed within the 3 pp margin.
+- The result does **not** show that execution supervision cannot work: other representations, longer training, larger models, or a design that can isolate supervision type were not tested.
 
 ### Evidence (sha256 of the committed bytes)
 
@@ -402,7 +462,11 @@ approval.**
 | `results/v4_3_execution_trace_pilot_analysis.json` | `ee5a666bf4117ff09eff7f745ea4a298cd29e252887a61973992428d9a8f94ff` |
 | `results/v4_3_execution_trace_pilot_diagnosis.json` | `91201a7ebffbd1e5c5800a98164e2db955ecca7109e6fc1cbcc639e2f5427805` |
 | `results/v4_3_execution_trace_pilot_decision_receipt.json` | `65144bcc2244498b12ba65ef21183ea555cb63b98f7e21c106e2e7c92128bc27` |
+| `results/v4_3_execution_dose_matched_control.json` | `3c3d92c7f41987817c4b81fc6a88870db296fa5cf0048bc945babf7f386f343b` |
+| `results/v4_3_execution_dose_preflight_receipt.json` | `22df107c97e0ebe240e70730cba2d011f9f573a9c6d92e778bb7ecaf7921712c` |
+| `results/v4_3_execution_dose_analysis.json` | `5b1a718710e42b3091f9417f4e879f0c82848aaab0936680d4cddcc1aabbf27e` |
+| `results/v4_3_execution_dose_decision_receipt.json` | `3e6236e4596c5381635cd559987549ee877a3e90f73c166542e572e663743033` |
 
-The decision receipt binds every training result, adapter, evaluation artifact,
+Each decision receipt binds every training result, adapter, evaluation artifact,
 run ID and source file by hash. Adapters, raw evaluations and datasets stay in
 ignored local storage on the GPU machine.
