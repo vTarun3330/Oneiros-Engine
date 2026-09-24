@@ -1,8 +1,8 @@
 # Oneiros — research status after the sealed-final incident
 
-**Written 2026-09-17.** This is the current standing of every result in the
-project. Where a figure is quoted it is quoted from a committed receipt, not
-recomputed. Nothing here changes a number.
+**Written 2026-09-17; section 7 added 2026-09-24.** This is the current
+standing of every result in the project. Where a figure is quoted it is quoted
+from a committed receipt, not recomputed. Nothing here changes a number.
 
 **The one-sentence version:** the sealed final test was attempted, failed after
 authorization with zero output, and is consumed; the project's evidence is
@@ -216,3 +216,143 @@ Sealed-final receipts v1–v5 are retained as superseded evidence with
 `.SUPERSEDED.md` markers; all are refused by the entrypoint by schema version.
 The guard state files under `results/` are uncommitted by design; redacted
 copies are committed under `docs/evidence/sealed_final_incident/`.
+
+---
+
+## 7. Why fine-tuning did not help: the mechanism chain (2026-09-19 → 2026-09-24)
+
+Four diagnostics, each gated before its data was generated. All four ran on
+**train-derived** panels only. None opened `val`, `ablation_dev`, `test`, the
+sealed split or the 100-lineage confirmation panel, and **none is a
+generalization, model-selection or final-test result**.
+
+| step | question | predeclared gate | verdict |
+|---|---|---|---|
+| Gate 1 — TAP, base vs A@431 | did ordinary SFT change output prediction? | TOST, ±5 pp | not equivalent — driven by non-answers |
+| Gate 2 — TAP, 7B vs 1.5B base | is model capacity the ceiling? | TAP-mut 95% lower bound > 0; answer-rate non-inferiority | **fail** |
+| Pilot 1 — prompt-only execution supervision | does re-framing 128 of 1,024 examples as output prediction help? | +5 pp intended | **fail** |
+| Pilot 2 — execution events, unordered vs ordered | does execution-event supervision, or its temporal order, help? | +5 pp in both conditions, 90% lower bound ≥ 0 | **fail, both arms** |
+
+TAP asks a model to state what a call returns, given the correct code (TAP-ref)
+or the mutated code plus specification (TAP-mut). Primary panel: 584 train items;
+16 pilot items excluded as design data.
+
+### Gate 1 — ordinary SFT (A@431) versus base
+
+Per-requested accuracy, TAP-ref, with A@431 given its own training system
+prompt: **48.1% base vs 32.0% A@431, −16.10 pp, 95% CI [−20.08, −12.11]**. The
+loss is concentrated in non-answers (36 vs 201 of 584). On the 363 items both
+answered, the difference is −1.10 pp and equivalent within ±5 pp. That subset
+is self-selected, so it is diagnostic only.
+
+**Reading:** an execution-reasoning gain from SFT was not demonstrated. SFT
+damaged output-contract adherence, most severely on inputs that resemble its
+training task: median output length on TAP-mut was 293 characters against
+49 for base.
+
+### Gate 2 — 7B base versus 1.5B base
+
+TAP-mut per-requested: **9.2% vs 43.8%, −34.59 pp, 95% CI [−39.12, −30.06]**;
+answer rate 15.6% vs 95.0%. TAP-ref: 10.8% vs 48.1%. Gate failed.
+
+**Reading:** the 7B model ignored the assertion-only output contract on most
+items. This rules out scaling *under the deployed contract*. It is **not**
+evidence about 7B semantic capacity, because its worst-case bounds are wide.
+
+### Pilot 1 — prompt-only execution supervision
+
+The treatment re-framed 128 of 1,024 training examples as output prediction,
+with every completion byte identical to control. On the 97-item train-derived
+mechanism panel, strict intended accuracy moved from 1/97 to 4/97 (+3.09 pp,
+90% CI [+0.20, +5.98]), below the +5 pp gate. Lenient intended accuracy:
+**base 25/97, control 26/97, treatment 25/97**. The answer-rate gain (+10.3 pp)
+was a formatting change.
+
+### Pilot 2 — execution events, temporal order removed vs preserved
+
+Both arms: 1,024 examples, of which 122 (11.9%) are verified execution-output
+examples carrying an identical event multiset. Events are sorted in one arm and
+kept in true execution order in the other. 64 optimizer steps; supervised token
+mass 133,605 vs 133,603. Judged against Pilot 1's control on the same panel.
+
+| lenient, per requested (n = 97) | control | unordered | ordered |
+|---|---:|---:|---:|
+| intended output | 26 | 26 | 25 |
+| shown actual output | 23 | 25 | 25 |
+
+| paired comparison | Δ pp | 90% CI (frozen Wald) | gained / lost |
+|---|---:|---:|---:|
+| unordered − control, intended | 0.00 | [0.00, 0.00] | 0 / 0 |
+| unordered − control, shown actual | +2.06 | [−0.31, +4.44] | 2 / 0 |
+| ordered − control, intended | −1.03 | [−2.72, +0.66] | 0 / 1 |
+| ordered − control, shown actual | +2.06 | [−0.31, +4.44] | 2 / 0 |
+| ordered − unordered, intended | −1.03 | [−2.72, +0.66] | 0 / 1 |
+| ordered − unordered, shown actual | 0.00 | [0.00, 0.00] | 0 / 0 |
+
+Neither arm passed. Strict answer rate was about 1% in every arm: most answers
+are wrapped in Markdown bold (67–80 of 97).
+
+### Post-gate diagnosis (exploratory — does not alter any gate)
+
+- **The intervention barely moved the model.** Raw outputs were byte-identical
+  across arms on 92.8–96.9% of items.
+- **The model answers from a behavioural prior, not by executing the shown
+  code.** On the 71 items where the shown code's result differs from the
+  intended one, control was asked what the *shown* code returns. It gave the
+  intended value 21 times and the shown code's actual value 14 times; 32
+  answers matched neither and 4 had no usable answer. A model that executed the
+  code would almost always give the actual value. Both trace arms shifted this
+  by two items (16 actual). This independently reproduces the original TAP
+  finding: 63.2% identical predictions whether shown correct or mutated code.
+- **Interval robustness.** The frozen paired Wald interval collapses to [0, 0]
+  when a comparison has no discordant pairs. Unordered/intended passed its
+  "lower bound ≥ 0" check this way, and that pass is not evidence of a
+  direction. Re-checked with Newcombe's paired score interval and an exact
+  one-sided bound on the gain rate:
+  - *intended output, and ordered vs unordered in both conditions:* a +5 pp
+    gain is excluded by all three methods (exact gain bound ≤ 3.04 pp);
+  - *shown actual output vs control:* +5 pp is excluded by Wald (+4.44) and
+    Newcombe (+4.86) but **not** by the exact gain bound (+6.35). A small
+    benefit there cannot be firmly ruled out on 97 items.
+
+### What the chain establishes
+
+1. No fine-tuning variant tested improved output prediction. On the 97-item
+   panel, none beat the untrained base model.
+2. Temporal order added nothing measurable over the unordered event multiset.
+   A ≥ 5 pp order effect is excluded under every interval method.
+3. Output-contract adherence (Markdown wrapping, non-answers) is the dominant
+   *measured* failure in every step.
+
+### What it does not establish
+
+- That execution supervision cannot work. Only one dose was tested: 122
+  examples (12% of a 1,024-example mix), 64 steps, LoRA on 1.5B. Outputs were
+  ~95% unchanged, so the result cannot separate "the signal does not help" from
+  "the dose was too small to move the model".
+- Anything about 7B semantic capacity.
+- Anything about generalization. Every panel here is train-derived.
+
+**Decision.** This intervention is stopped and the prior control is retained as
+the reference. The 100-lineage confirmation panel remains unopened, and no
+canonical Kill@8 was run for either trace arm. No further training, extra
+epochs, mixture change or re-thresholding of this intervention will be run
+without an explicit new decision.
+
+### Evidence (sha256 of the committed bytes)
+
+| artifact | sha256 |
+|---|---|
+| `results/tap_capacity_gate_analysis.json` | `c3a37d0b5d77e0d3908043241b5827e45b63eda1f1189be2fe677b41e7a8404d` |
+| `results/tap_capacity_gate_receipt.json` | `a4ee8c8ee0f95e7b6f016d247d88de43af31521e8be80faa30d8ff2381f8e53a` |
+| `results/tap_7b_capacity_analysis.json` | `a2fcedc69b31426bfe2b999b5689c01120b9348629841e2b4aaab8912de30251` |
+| `results/tap_7b_capacity_receipt.json` | `c528ab6da93c2d09721232d068e63d2afe56a6f3c1c95911d88f30d9d2b555d1` |
+| `results/v4_3_execution_supervision_pilot_analysis.json` | `83d8315847bb13d9935ece79761a11fe3a596f281cfb156792c72ca4702c8047` |
+| `results/v4_3_execution_supervision_pilot_diagnosis.json` | `59ce7290167de0cb35d5c96deeb40f0ca864b40e849df9948bdc1a662ef272a6` |
+| `results/v4_3_execution_trace_pilot_analysis.json` | `ee5a666bf4117ff09eff7f745ea4a298cd29e252887a61973992428d9a8f94ff` |
+| `results/v4_3_execution_trace_pilot_diagnosis.json` | `91201a7ebffbd1e5c5800a98164e2db955ecca7109e6fc1cbcc639e2f5427805` |
+| `results/v4_3_execution_trace_pilot_decision_receipt.json` | `65144bcc2244498b12ba65ef21183ea555cb63b98f7e21c106e2e7c92128bc27` |
+
+The decision receipt binds every training result, adapter, evaluation artifact,
+run ID and source file by hash. Adapters, raw evaluations and datasets stay in
+ignored local storage on the GPU machine.

@@ -1,0 +1,462 @@
+{
+  "schema_version": "oneiros_execution_trace_decision_receipt_v1",
+  "label": "train-derived mechanism diagnostic; not generalisation, not model selection, not a final-test result",
+  "created_utc": "2026-09-24T10:36:39.118576+00:00",
+  "experiment_commit": "c0050f7cde9c93e5a2ba798a1a887d8f468151ae",
+  "receipt_built_at_commit": "c0050f7cde9c93e5a2ba798a1a887d8f468151ae",
+  "worktree_clean_at_build": false,
+  "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+  "comparison": "unordered_events vs ordered_trace: identical 122-example execution event multiset, temporal order removed vs preserved; both judged against the earlier prompt-only control",
+  "training": {
+    "unordered_events": {
+      "result": {
+        "path": "results/v4_3_execution_trace_v1/unordered_training_result.json",
+        "sha256": "f6e6ee4f9a72e296d6e3be0d5add56d0956fe77751342e9bf5206aa22c0a36b0",
+        "bytes": 4202
+      },
+      "adapter_sha256": "f7a67fb830126824fbfd938a58d63997cf33029799d9fca8359d739cfa080364",
+      "run_id": "20260924-153249-execorder-unordered-qwen15b-s42",
+      "run_state": "completed",
+      "run_exit_code": 0,
+      "run_duration_seconds": 492.7,
+      "completed_optimizer_steps": 64,
+      "completed_epochs": 1.0,
+      "retained_examples": 1024,
+      "task_kind_counts": {
+        "execution_output_prediction": 122,
+        "test_generation": 902
+      },
+      "training_loss": 0.7096465453505516,
+      "run_contract_sha256": "64664ce23158098dc5c14fa86cef7cecd03944c1aad97fd7ec31492682e69840"
+    },
+    "ordered_trace": {
+      "result": {
+        "path": "results/v4_3_execution_trace_v1/ordered_training_result.json",
+        "sha256": "1f88c7f6d6440b7f14b2456212a02d49c31a570b5e446c07cffa720fde29e5f9",
+        "bytes": 4192
+      },
+      "adapter_sha256": "02d83c6ea712c5a3299d45d7c1075d22e04d8ba580fca894fcbfb8cc9945c2b6",
+      "run_id": "20260924-154111-execorder-ordered-qwen15b-s42",
+      "run_state": "completed",
+      "run_exit_code": 0,
+      "run_duration_seconds": 496.6,
+      "completed_optimizer_steps": 64,
+      "completed_epochs": 1.0,
+      "retained_examples": 1024,
+      "task_kind_counts": {
+        "execution_output_prediction": 122,
+        "test_generation": 902
+      },
+      "training_loss": 0.7166616581380367,
+      "run_contract_sha256": "63dedc376b04e32c1c99b12595d6305a73a13971c7b644f117d3ada86c265dfa"
+    }
+  },
+  "evaluations": {
+    "control": {
+      "artifact": {
+        "path": "results/v4_3_execution_supervision_v1/eval_control.json",
+        "sha256": "5156874ec30be45e5e2872e1a1969d47d4ac63fd328c58304bb218aba4d1decf",
+        "bytes": 159070
+      },
+      "adapter_sha256": "c1fe9e52cc86f5f5afed7c378905ac042a9a3e152f42ccc980311d2f47cc0841",
+      "evaluator_source_sha256": "c2cc1e23ec8d7393c6acf4dd28045372e0a0f390d10e9c4051c38d79b04bcc38",
+      "decoding": {
+        "strategy": "greedy",
+        "max_new_tokens": 128,
+        "batch_size": 8,
+        "system_prompt": null
+      },
+      "summary": {
+        "intended_output": {
+          "requested": 97,
+          "strict_counts": {
+            "correct": 1,
+            "invalid_syntax": 83,
+            "multiple_or_missing_statements": 13
+          },
+          "strict_accuracy_per_requested": 0.010309278350515464,
+          "strict_answer_rate": 0.010309278350515464,
+          "lenient_counts": {
+            "correct": 26,
+            "invalid_syntax": 4,
+            "multiple_or_missing_statements": 13,
+            "not_single_equality": 2,
+            "prediction_not_literal": 1,
+            "wrong_call": 2,
+            "wrong_type": 4,
+            "wrong_value": 45
+          },
+          "lenient_accuracy_per_requested": 0.26804123711340205,
+          "completion_limit_hits": 0
+        },
+        "shown_actual_output": {
+          "requested": 97,
+          "strict_counts": {
+            "invalid_syntax": 96,
+            "multiple_or_missing_statements": 1
+          },
+          "strict_accuracy_per_requested": 0.0,
+          "strict_answer_rate": 0.0,
+          "lenient_counts": {
+            "correct": 23,
+            "invalid_syntax": 2,
+            "multiple_or_missing_statements": 1,
+            "not_single_equality": 4,
+            "prediction_not_literal": 1,
+            "wrong_type": 6,
+            "wrong_value": 60
+          },
+          "lenient_accuracy_per_requested": 0.23711340206185566,
+          "completion_limit_hits": 0
+        }
+      }
+    },
+    "unordered_events": {
+      "artifact": {
+        "path": "results/v4_3_execution_trace_v1/eval_unordered_events.json",
+        "sha256": "46f1483d365272d4f56ef5a73da31bd311accea961989b1e952abe4e78e61bd0",
+        "bytes": 159403
+      },
+      "adapter_sha256": "f7a67fb830126824fbfd938a58d63997cf33029799d9fca8359d739cfa080364",
+      "evaluator_source_sha256": "156197c57bf45afe3c07207b51d21bc812cda385b3256ffafe726f00e2324b77",
+      "decoding": {
+        "strategy": "greedy",
+        "max_new_tokens": 128,
+        "batch_size": 8,
+        "system_prompt": null
+      },
+      "summary": {
+        "intended_output": {
+          "requested": 97,
+          "strict_counts": {
+            "correct": 1,
+            "invalid_syntax": 85,
+            "multiple_or_missing_statements": 11
+          },
+          "strict_accuracy_per_requested": 0.010309278350515464,
+          "strict_answer_rate": 0.010309278350515464,
+          "lenient_counts": {
+            "correct": 26,
+            "invalid_syntax": 6,
+            "multiple_or_missing_statements": 11,
+            "not_single_equality": 2,
+            "prediction_not_literal": 1,
+            "wrong_call": 2,
+            "wrong_type": 4,
+            "wrong_value": 45
+          },
+          "lenient_accuracy_per_requested": 0.26804123711340205,
+          "lenient_answer_rate": 0.7731958762886598,
+          "completion_limit_hits": 0
+        },
+        "shown_actual_output": {
+          "requested": 97,
+          "strict_counts": {
+            "invalid_syntax": 96,
+            "multiple_or_missing_statements": 1
+          },
+          "strict_accuracy_per_requested": 0.0,
+          "strict_answer_rate": 0.0,
+          "lenient_counts": {
+            "correct": 25,
+            "invalid_syntax": 2,
+            "multiple_or_missing_statements": 1,
+            "not_single_equality": 3,
+            "prediction_not_literal": 1,
+            "wrong_type": 6,
+            "wrong_value": 59
+          },
+          "lenient_accuracy_per_requested": 0.25773195876288657,
+          "lenient_answer_rate": 0.9278350515463918,
+          "completion_limit_hits": 0
+        }
+      },
+      "run_id": "20260924-155542-execorder-eval-unordered-qwen15b-s42",
+      "run_state": "completed",
+      "run_exit_code": 0,
+      "run_duration_seconds": 60.2
+    },
+    "ordered_trace": {
+      "artifact": {
+        "path": "results/v4_3_execution_trace_v1/eval_ordered_trace.json",
+        "sha256": "ed092ea92f5d89b45e507af712da397d0ac18aaa227fdf2a8b35615adc625bc5",
+        "bytes": 159093
+      },
+      "adapter_sha256": "02d83c6ea712c5a3299d45d7c1075d22e04d8ba580fca894fcbfb8cc9945c2b6",
+      "evaluator_source_sha256": "156197c57bf45afe3c07207b51d21bc812cda385b3256ffafe726f00e2324b77",
+      "decoding": {
+        "strategy": "greedy",
+        "max_new_tokens": 128,
+        "batch_size": 8,
+        "system_prompt": null
+      },
+      "summary": {
+        "intended_output": {
+          "requested": 97,
+          "strict_counts": {
+            "correct": 1,
+            "invalid_syntax": 83,
+            "multiple_or_missing_statements": 13
+          },
+          "strict_accuracy_per_requested": 0.010309278350515464,
+          "strict_answer_rate": 0.010309278350515464,
+          "lenient_counts": {
+            "correct": 25,
+            "invalid_syntax": 4,
+            "multiple_or_missing_statements": 13,
+            "not_single_equality": 2,
+            "prediction_not_literal": 1,
+            "wrong_call": 2,
+            "wrong_type": 4,
+            "wrong_value": 46
+          },
+          "lenient_accuracy_per_requested": 0.25773195876288657,
+          "lenient_answer_rate": 0.7731958762886598,
+          "completion_limit_hits": 0
+        },
+        "shown_actual_output": {
+          "requested": 97,
+          "strict_counts": {
+            "invalid_syntax": 96,
+            "multiple_or_missing_statements": 1
+          },
+          "strict_accuracy_per_requested": 0.0,
+          "strict_answer_rate": 0.0,
+          "lenient_counts": {
+            "correct": 25,
+            "invalid_syntax": 2,
+            "multiple_or_missing_statements": 1,
+            "not_single_equality": 3,
+            "prediction_not_literal": 1,
+            "wrong_type": 6,
+            "wrong_value": 59
+          },
+          "lenient_accuracy_per_requested": 0.25773195876288657,
+          "lenient_answer_rate": 0.9278350515463918,
+          "completion_limit_hits": 0
+        }
+      },
+      "run_id": "20260924-155717-execorder-eval-ordered-qwen15b-s42",
+      "run_state": "completed",
+      "run_exit_code": 0,
+      "run_duration_seconds": 58.2
+    }
+  },
+  "supporting_artifacts": {
+    "trace_preflight": {
+      "path": "results/v4_3_execution_trace_v1/preflight.json",
+      "sha256": "db527d58f8a385a5518babd74ebad885626fb00e9beb2e37b43e5d7184342ec2",
+      "bytes": 6259
+    },
+    "trace_manifest": {
+      "path": "results/v4_3_execution_trace_v1/manifest.json",
+      "sha256": "ee6a675e90aa757b178bf24902fc7c08f5b02b712ede59244068c95ac802e5ac",
+      "bytes": 4278
+    },
+    "pilot_panel": {
+      "path": "results/v4_3_execution_supervision_v1/pilot_development.execution.json",
+      "sha256": "56972838fda060795840088660b09249cf95c97afcbe6bac63a82301239530ec",
+      "bytes": 435397
+    }
+  },
+  "analysis": {
+    "path": "results/v4_3_execution_trace_pilot_analysis.json",
+    "sha256": "ee5a666bf4117ff09eff7f745ea4a298cd29e252887a61973992428d9a8f94ff",
+    "bytes": 7390,
+    "predeclared_gates": {
+      "minimum_lenient_gain_pp_each_condition": 5.0,
+      "maximum_strict_answer_regression_pp": 2.0,
+      "paired_ci": "90%, lower bound must be non-negative"
+    },
+    "comparisons_vs_control": {
+      "unordered_events": {
+        "intended_output": {
+          "difference_pp": 0.0,
+          "ci90_low_pp": 0.0,
+          "ci90_high_pp": 0.0,
+          "gained": 0,
+          "lost": 0
+        },
+        "shown_actual_output": {
+          "difference_pp": 2.0618556701030926,
+          "ci90_low_pp": -0.31141053983052036,
+          "ci90_high_pp": 4.435121880036706,
+          "gained": 2,
+          "lost": 0
+        }
+      },
+      "ordered_trace": {
+        "intended_output": {
+          "difference_pp": -1.0309278350515463,
+          "ci90_low_pp": -2.7178897263448465,
+          "ci90_high_pp": 0.6560340562417539,
+          "gained": 0,
+          "lost": 1
+        },
+        "shown_actual_output": {
+          "difference_pp": 2.0618556701030926,
+          "ci90_low_pp": -0.31141053983052036,
+          "ci90_high_pp": 4.435121880036706,
+          "gained": 2,
+          "lost": 0
+        }
+      }
+    },
+    "ordered_minus_unordered": {
+      "intended_output": {
+        "difference_pp": -1.0309278350515463,
+        "ci90_low_pp": -2.7178897263448465,
+        "ci90_high_pp": 0.6560340562417539,
+        "gained": 0,
+        "lost": 1
+      },
+      "shown_actual_output": {
+        "difference_pp": 0.0,
+        "ci90_low_pp": 0.0,
+        "ci90_high_pp": 0.0,
+        "gained": 0,
+        "lost": 0
+      }
+    },
+    "gate_checks": {
+      "unordered_events": {
+        "intended_semantic_gain": false,
+        "intended_direction_90ci": true,
+        "actual_execution_gain": false,
+        "actual_direction_90ci": false,
+        "strict_answer_noninferiority": true,
+        "no_completion_limit_hits": true,
+        "passed": false
+      },
+      "ordered_trace": {
+        "intended_semantic_gain": false,
+        "intended_direction_90ci": false,
+        "actual_execution_gain": false,
+        "actual_direction_90ci": false,
+        "strict_answer_noninferiority": true,
+        "no_completion_limit_hits": true,
+        "passed": false
+      }
+    },
+    "mechanism_gate_passed": false,
+    "passing_arms": []
+  },
+  "diagnosis": {
+    "path": "results/v4_3_execution_trace_pilot_diagnosis.json",
+    "sha256": "91201a7ebffbd1e5c5800a98164e2db955ecca7109e6fc1cbcc639e2f5427805",
+    "bytes": 21048,
+    "answer_tracking_where_shown_differs": {
+      "items_where_shown_differs_from_intended": 71,
+      "control": {
+        "intended_output": {
+          "intended": 20,
+          "neither": 27,
+          "no_usable_answer": 12,
+          "shown_code_actual": 12
+        },
+        "shown_actual_output": {
+          "intended": 21,
+          "neither": 32,
+          "no_usable_answer": 4,
+          "shown_code_actual": 14
+        }
+      },
+      "unordered_events": {
+        "intended_output": {
+          "intended": 20,
+          "neither": 27,
+          "no_usable_answer": 12,
+          "shown_code_actual": 12
+        },
+        "shown_actual_output": {
+          "intended": 20,
+          "neither": 32,
+          "no_usable_answer": 3,
+          "shown_code_actual": 16
+        }
+      },
+      "ordered_trace": {
+        "intended_output": {
+          "intended": 20,
+          "neither": 27,
+          "no_usable_answer": 12,
+          "shown_code_actual": 12
+        },
+        "shown_actual_output": {
+          "intended": 21,
+          "neither": 31,
+          "no_usable_answer": 3,
+          "shown_code_actual": 16
+        }
+      }
+    },
+    "min_gain_exclusion_intended_output": {
+      "control -> unordered_events": {
+        "frozen_wald": true,
+        "newcombe": true,
+        "exact_gain_rate_bound": true
+      },
+      "control -> ordered_trace": {
+        "frozen_wald": true,
+        "newcombe": true,
+        "exact_gain_rate_bound": true
+      },
+      "unordered_events -> ordered_trace": {
+        "frozen_wald": true,
+        "newcombe": true,
+        "exact_gain_rate_bound": true
+      }
+    },
+    "min_gain_exclusion_shown_actual_output": {
+      "control -> unordered_events": {
+        "frozen_wald": true,
+        "newcombe": true,
+        "exact_gain_rate_bound": false
+      },
+      "control -> ordered_trace": {
+        "frozen_wald": true,
+        "newcombe": true,
+        "exact_gain_rate_bound": false
+      },
+      "unordered_events -> ordered_trace": {
+        "frozen_wald": true,
+        "newcombe": true,
+        "exact_gain_rate_bound": true
+      }
+    },
+    "gate_mechanics_findings": [
+      "The frozen paired Wald interval collapses to [0, 0] when a comparison has no discordant pairs, so a '90% lower bound >= 0' check passes vacuously. unordered_events/intended_output passed that single check this way; it is not evidence of a direction.",
+      "Future frozen analyses should report a non-degenerate interval (Newcombe or exact) alongside Wald; this recommendation does not alter the present gate."
+    ]
+  },
+  "source_files_sha256": {
+    "scripts/build_execution_trace_ab.py": "b344488d93a2f3f854c6d7efe1f4400fe09f3e2f51eba501f89c7cbda42d9b70",
+    "scripts/preflight_execution_trace_ab.py": "41a5d503922e48d3ac8f2f69dcd64cc649826bfb905ba767c3a46ff97db41ae5",
+    "scripts/run_execution_trace_pilot.py": "c1660193a71d3614e5a6c0b712a72b312fc769e722ec6b8737e8a38447285067",
+    "scripts/evaluate_execution_trace_pilot.py": "156197c57bf45afe3c07207b51d21bc812cda385b3256ffafe726f00e2324b77",
+    "scripts/evaluate_execution_supervision_pilot.py": "c2cc1e23ec8d7393c6acf4dd28045372e0a0f390d10e9c4051c38d79b04bcc38",
+    "scripts/analyse_execution_trace_pilot.py": "da3984302ebe52ed0a7ecedd698c6246ae9e8e90d82596c53954ed77a97dc991",
+    "scripts/diagnose_execution_trace_pilot.py": "669944447a26ffb619e44eb8aa7057d17825620da034145b24e9d3139b062f14",
+    "engine/sft_trainer.py": "95e1746a3b58b61d9beb1b79e1e83feabf50f3656818ea5abdfb17f30f19efed",
+    "harness/execution_supervision.py": "94b0250b30337eb288d32d85f7b6a5de33b0b6a76c16c40d40f39d25ba0f8b6e"
+  },
+  "decision": {
+    "advance": false,
+    "reason": "frozen mechanism gate failed for both arms",
+    "retained_reference": "prior prompt-only control (eval_control.json)",
+    "not_permitted": [
+      "opening the 100-lineage confirmation panel",
+      "validation, ablation_dev, test or sealed-final access",
+      "canonical Kill@8 for either trace arm",
+      "further training, extra epochs, mixture changes or re-thresholding of this intervention"
+    ]
+  },
+  "leakage": {
+    "sealed_final_test_accessed": false,
+    "validation_accessed": false,
+    "ablation_dev_accessed": false,
+    "confirmation_opened": false,
+    "evaluation_panel": "97 train-derived lineages, frozen before training"
+  }
+}

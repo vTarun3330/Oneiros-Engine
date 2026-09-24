@@ -69,3 +69,28 @@ It is lower-risk now that the consumed split is refused unconditionally at the
 loader, but it remains the wrong default for any future held-out set.
 
 Detail in item 4 of [`LOCAL_WINDOWS_GPU.md`](LOCAL_WINDOWS_GPU.md).
+
+---
+
+## 3. Receipt hashes taken from CRLF working-tree bytes
+
+**Status:** open, found 2026-09-24 while freezing the execution-trace receipt.
+
+`.gitattributes` stores `*.json` and `*.py` as LF, but on this Windows machine
+`Path.write_text` writes CRLF. A hash taken from the working tree therefore does
+not match the committed blob, and on a fresh clone a receipt that recorded
+another tracked file's hash will not verify against it.
+
+- **Fixed for new work:** `scripts/diagnose_execution_trace_pilot.py` and
+  `scripts/build_execution_trace_decision_receipt.py` write LF bytes, so the
+  trace-pilot analysis, diagnosis and decision receipt form a chain that
+  verifies on any checkout.
+- **Known affected, left as committed:** receipts written earlier by text-mode
+  writers, including `results/tap_capacity_gate_receipt.json` and the
+  first execution-supervision pilot's analysis/diagnosis. The hashes they record
+  for other *tracked* files are CRLF-disk hashes. Hashes of ignored local
+  artifacts are unaffected, because those files never pass through git.
+
+**Fix when next touched:** write tracked JSON as LF bytes everywhere, or compare
+line-ending-normalised hashes as `scripts/build_tap_capacity_gate_receipt.py`
+already does. Do not rewrite committed evidence to fix this.

@@ -1,0 +1,678 @@
+{
+  "schema_version": "oneiros_execution_trace_failure_diagnosis_v1",
+  "label": "post-gate train-only diagnosis; exploratory below the frozen gate; no confirmation/validation/ablation_dev/test/sealed access",
+  "frozen_gate_passed": false,
+  "frozen_gate_unchanged": true,
+  "inputs": {
+    "analysis_sha256": "ee5a666bf4117ff09eff7f745ea4a298cd29e252887a61973992428d9a8f94ff",
+    "control_sha256": "5156874ec30be45e5e2872e1a1969d47d4ac63fd328c58304bb218aba4d1decf",
+    "unordered_events_sha256": "46f1483d365272d4f56ef5a73da31bd311accea961989b1e952abe4e78e61bd0",
+    "ordered_trace_sha256": "ed092ea92f5d89b45e507af712da397d0ac18aaa227fdf2a8b35615adc625bc5",
+    "pilot_development_sha256": "56972838fda060795840088660b09249cf95c97afcbe6bac63a82301239530ec",
+    "trace_manifest_sha256": "ee6a675e90aa757b178bf24902fc7c08f5b02b712ede59244068c95ac802e5ac"
+  },
+  "panel": {
+    "items": 97,
+    "train_only": true,
+    "source_counts": {
+      "humaneval": 9,
+      "mbpp": 88
+    },
+    "complexity_counts": {
+      "complex": 16,
+      "moderate": 34,
+      "simple": 47
+    }
+  },
+  "training_intervention": {
+    "examples_per_arm": 1024,
+    "execution_examples_per_arm": 122,
+    "shared_canonical_examples": 902,
+    "execution_share": 0.119140625,
+    "replacement_source_counts": {
+      "humaneval": 43,
+      "manual_curated_examples": 2,
+      "mbpp": 77
+    },
+    "token_report": {
+      "unordered_events": {
+        "replacement_prompt_tokens_total": 48099,
+        "replacement_completion_tokens_total": 30844,
+        "prompt_tokens_min": 230,
+        "prompt_tokens_max": 967,
+        "completion_tokens_min": 44,
+        "completion_tokens_max": 740
+      },
+      "ordered_trace": {
+        "replacement_prompt_tokens_total": 47001,
+        "replacement_completion_tokens_total": 30842,
+        "prompt_tokens_min": 221,
+        "prompt_tokens_max": 958,
+        "completion_tokens_min": 44,
+        "completion_tokens_max": 740
+      }
+    },
+    "arms_differ_only_in": "temporal order of an identical execution-event multiset"
+  },
+  "arm_profiles": {
+    "control": {
+      "intended_output": {
+        "lenient_answer_classes": {
+          "correct": 26,
+          "no_usable_answer": 22,
+          "wrong_answer": 49
+        },
+        "lenient_verdicts": {
+          "correct": 26,
+          "invalid_syntax": 4,
+          "multiple_or_missing_statements": 13,
+          "not_single_equality": 2,
+          "prediction_not_literal": 1,
+          "wrong_call": 2,
+          "wrong_type": 4,
+          "wrong_value": 45
+        },
+        "strict_verdicts": {
+          "correct": 1,
+          "invalid_syntax": 83,
+          "multiple_or_missing_statements": 13
+        },
+        "format_classes": {
+          "empty": 13,
+          "markdown_bold": 67,
+          "markdown_fence": 13,
+          "plain_or_other": 4
+        },
+        "completion_limit_hits": 0,
+        "median_raw_chars": 42
+      },
+      "shown_actual_output": {
+        "lenient_answer_classes": {
+          "correct": 23,
+          "no_usable_answer": 8,
+          "wrong_answer": 66
+        },
+        "lenient_verdicts": {
+          "correct": 23,
+          "invalid_syntax": 2,
+          "multiple_or_missing_statements": 1,
+          "not_single_equality": 4,
+          "prediction_not_literal": 1,
+          "wrong_type": 6,
+          "wrong_value": 60
+        },
+        "strict_verdicts": {
+          "invalid_syntax": 96,
+          "multiple_or_missing_statements": 1
+        },
+        "format_classes": {
+          "empty": 1,
+          "markdown_bold": 80,
+          "markdown_fence": 14,
+          "plain_or_other": 2
+        },
+        "completion_limit_hits": 0,
+        "median_raw_chars": 45
+      }
+    },
+    "unordered_events": {
+      "intended_output": {
+        "lenient_answer_classes": {
+          "correct": 26,
+          "no_usable_answer": 22,
+          "wrong_answer": 49
+        },
+        "lenient_verdicts": {
+          "correct": 26,
+          "invalid_syntax": 6,
+          "multiple_or_missing_statements": 11,
+          "not_single_equality": 2,
+          "prediction_not_literal": 1,
+          "wrong_call": 2,
+          "wrong_type": 4,
+          "wrong_value": 45
+        },
+        "strict_verdicts": {
+          "correct": 1,
+          "invalid_syntax": 85,
+          "multiple_or_missing_statements": 11
+        },
+        "format_classes": {
+          "empty": 11,
+          "markdown_bold": 67,
+          "markdown_fence": 13,
+          "plain_or_other": 6
+        },
+        "completion_limit_hits": 0,
+        "median_raw_chars": 43
+      },
+      "shown_actual_output": {
+        "lenient_answer_classes": {
+          "correct": 25,
+          "no_usable_answer": 7,
+          "wrong_answer": 65
+        },
+        "lenient_verdicts": {
+          "correct": 25,
+          "invalid_syntax": 2,
+          "multiple_or_missing_statements": 1,
+          "not_single_equality": 3,
+          "prediction_not_literal": 1,
+          "wrong_type": 6,
+          "wrong_value": 59
+        },
+        "strict_verdicts": {
+          "invalid_syntax": 96,
+          "multiple_or_missing_statements": 1
+        },
+        "format_classes": {
+          "empty": 1,
+          "markdown_bold": 80,
+          "markdown_fence": 14,
+          "plain_or_other": 2
+        },
+        "completion_limit_hits": 0,
+        "median_raw_chars": 45
+      }
+    },
+    "ordered_trace": {
+      "intended_output": {
+        "lenient_answer_classes": {
+          "correct": 25,
+          "no_usable_answer": 22,
+          "wrong_answer": 50
+        },
+        "lenient_verdicts": {
+          "correct": 25,
+          "invalid_syntax": 4,
+          "multiple_or_missing_statements": 13,
+          "not_single_equality": 2,
+          "prediction_not_literal": 1,
+          "wrong_call": 2,
+          "wrong_type": 4,
+          "wrong_value": 46
+        },
+        "strict_verdicts": {
+          "correct": 1,
+          "invalid_syntax": 83,
+          "multiple_or_missing_statements": 13
+        },
+        "format_classes": {
+          "empty": 12,
+          "markdown_bold": 67,
+          "markdown_fence": 13,
+          "plain_or_other": 5
+        },
+        "completion_limit_hits": 0,
+        "median_raw_chars": 42
+      },
+      "shown_actual_output": {
+        "lenient_answer_classes": {
+          "correct": 25,
+          "no_usable_answer": 7,
+          "wrong_answer": 65
+        },
+        "lenient_verdicts": {
+          "correct": 25,
+          "invalid_syntax": 2,
+          "multiple_or_missing_statements": 1,
+          "not_single_equality": 3,
+          "prediction_not_literal": 1,
+          "wrong_type": 6,
+          "wrong_value": 59
+        },
+        "strict_verdicts": {
+          "invalid_syntax": 96,
+          "multiple_or_missing_statements": 1
+        },
+        "format_classes": {
+          "empty": 1,
+          "markdown_bold": 80,
+          "markdown_fence": 14,
+          "plain_or_other": 2
+        },
+        "completion_limit_hits": 0,
+        "median_raw_chars": 45
+      }
+    }
+  },
+  "answer_tracking_where_shown_differs": {
+    "items_where_shown_differs_from_intended": 71,
+    "control": {
+      "intended_output": {
+        "intended": 20,
+        "neither": 27,
+        "no_usable_answer": 12,
+        "shown_code_actual": 12
+      },
+      "shown_actual_output": {
+        "intended": 21,
+        "neither": 32,
+        "no_usable_answer": 4,
+        "shown_code_actual": 14
+      }
+    },
+    "unordered_events": {
+      "intended_output": {
+        "intended": 20,
+        "neither": 27,
+        "no_usable_answer": 12,
+        "shown_code_actual": 12
+      },
+      "shown_actual_output": {
+        "intended": 20,
+        "neither": 32,
+        "no_usable_answer": 3,
+        "shown_code_actual": 16
+      }
+    },
+    "ordered_trace": {
+      "intended_output": {
+        "intended": 20,
+        "neither": 27,
+        "no_usable_answer": 12,
+        "shown_code_actual": 12
+      },
+      "shown_actual_output": {
+        "intended": 21,
+        "neither": 31,
+        "no_usable_answer": 3,
+        "shown_code_actual": 16
+      }
+    }
+  },
+  "pairwise": {
+    "control -> unordered_events": {
+      "intended_output": {
+        "raw_output_identical": 93,
+        "raw_output_identical_rate": 0.9587628865979382,
+        "lenient_gained_ids": [],
+        "lenient_lost_ids": [],
+        "discordant_pairs": 0,
+        "difference_pp": 0.0,
+        "frozen_wald_ci90_pp": [
+          0.0,
+          0.0
+        ],
+        "wald_interval_degenerate": true,
+        "posthoc_newcombe_ci90_pp": [
+          -1.2588558084994883,
+          1.2588558084994883
+        ],
+        "posthoc_exact_gain_rate_upper95_one_sided_pp": 3.04118040369311,
+        "min_gain_excluded_by": {
+          "frozen_wald": true,
+          "newcombe": true,
+          "exact_gain_rate_bound": true
+        },
+        "strict_transitions": {
+          "correct -> correct": 1,
+          "invalid_syntax -> invalid_syntax": 83,
+          "multiple_or_missing_statements -> invalid_syntax": 2,
+          "multiple_or_missing_statements -> multiple_or_missing_statements": 11
+        },
+        "lenient_transitions": {
+          "correct -> correct": 26,
+          "invalid_syntax -> invalid_syntax": 4,
+          "multiple_or_missing_statements -> invalid_syntax": 2,
+          "multiple_or_missing_statements -> multiple_or_missing_statements": 11,
+          "not_single_equality -> not_single_equality": 2,
+          "prediction_not_literal -> prediction_not_literal": 1,
+          "wrong_call -> wrong_call": 2,
+          "wrong_type -> wrong_type": 4,
+          "wrong_value -> wrong_value": 45
+        }
+      },
+      "shown_actual_output": {
+        "raw_output_identical": 92,
+        "raw_output_identical_rate": 0.9484536082474226,
+        "lenient_gained_ids": [
+          "mutation::mbpp_338_mut_04704",
+          "mutation::mbpp_3_mut_01683"
+        ],
+        "lenient_lost_ids": [],
+        "discordant_pairs": 2,
+        "difference_pp": 2.0618556701030926,
+        "frozen_wald_ci90_pp": [
+          -0.31141053983052025,
+          4.435121880036705
+        ],
+        "wald_interval_degenerate": false,
+        "posthoc_newcombe_ci90_pp": [
+          -0.5621963439539173,
+          4.8595460801715
+        ],
+        "posthoc_exact_gain_rate_upper95_one_sided_pp": 6.34827051400401,
+        "min_gain_excluded_by": {
+          "frozen_wald": true,
+          "newcombe": true,
+          "exact_gain_rate_bound": false
+        },
+        "strict_transitions": {
+          "invalid_syntax -> invalid_syntax": 96,
+          "multiple_or_missing_statements -> multiple_or_missing_statements": 1
+        },
+        "lenient_transitions": {
+          "correct -> correct": 23,
+          "invalid_syntax -> invalid_syntax": 2,
+          "multiple_or_missing_statements -> multiple_or_missing_statements": 1,
+          "not_single_equality -> correct": 1,
+          "not_single_equality -> not_single_equality": 3,
+          "prediction_not_literal -> prediction_not_literal": 1,
+          "wrong_type -> wrong_type": 6,
+          "wrong_value -> correct": 1,
+          "wrong_value -> wrong_value": 59
+        }
+      }
+    },
+    "control -> ordered_trace": {
+      "intended_output": {
+        "raw_output_identical": 90,
+        "raw_output_identical_rate": 0.9278350515463918,
+        "lenient_gained_ids": [],
+        "lenient_lost_ids": [
+          "mutation::mbpp_423_mut_05473"
+        ],
+        "discordant_pairs": 1,
+        "difference_pp": -1.0309278350515463,
+        "frozen_wald_ci90_pp": [
+          -2.7178897263448465,
+          0.6560340562417539
+        ],
+        "wald_interval_degenerate": false,
+        "posthoc_newcombe_ci90_pp": [
+          -3.1846563556656333,
+          1.020803488543939
+        ],
+        "posthoc_exact_gain_rate_upper95_one_sided_pp": 3.04118040369311,
+        "min_gain_excluded_by": {
+          "frozen_wald": true,
+          "newcombe": true,
+          "exact_gain_rate_bound": true
+        },
+        "strict_transitions": {
+          "correct -> correct": 1,
+          "invalid_syntax -> invalid_syntax": 82,
+          "invalid_syntax -> multiple_or_missing_statements": 1,
+          "multiple_or_missing_statements -> invalid_syntax": 1,
+          "multiple_or_missing_statements -> multiple_or_missing_statements": 12
+        },
+        "lenient_transitions": {
+          "correct -> correct": 25,
+          "correct -> wrong_value": 1,
+          "invalid_syntax -> invalid_syntax": 3,
+          "invalid_syntax -> multiple_or_missing_statements": 1,
+          "multiple_or_missing_statements -> invalid_syntax": 1,
+          "multiple_or_missing_statements -> multiple_or_missing_statements": 12,
+          "not_single_equality -> not_single_equality": 2,
+          "prediction_not_literal -> prediction_not_literal": 1,
+          "wrong_call -> wrong_call": 2,
+          "wrong_type -> wrong_type": 4,
+          "wrong_value -> wrong_value": 45
+        }
+      },
+      "shown_actual_output": {
+        "raw_output_identical": 91,
+        "raw_output_identical_rate": 0.9381443298969072,
+        "lenient_gained_ids": [
+          "mutation::mbpp_338_mut_04704",
+          "mutation::mbpp_3_mut_01683"
+        ],
+        "lenient_lost_ids": [],
+        "discordant_pairs": 2,
+        "difference_pp": 2.0618556701030926,
+        "frozen_wald_ci90_pp": [
+          -0.31141053983052025,
+          4.435121880036705
+        ],
+        "wald_interval_degenerate": false,
+        "posthoc_newcombe_ci90_pp": [
+          -0.5621963439539173,
+          4.8595460801715
+        ],
+        "posthoc_exact_gain_rate_upper95_one_sided_pp": 6.34827051400401,
+        "min_gain_excluded_by": {
+          "frozen_wald": true,
+          "newcombe": true,
+          "exact_gain_rate_bound": false
+        },
+        "strict_transitions": {
+          "invalid_syntax -> invalid_syntax": 96,
+          "multiple_or_missing_statements -> multiple_or_missing_statements": 1
+        },
+        "lenient_transitions": {
+          "correct -> correct": 23,
+          "invalid_syntax -> invalid_syntax": 2,
+          "multiple_or_missing_statements -> multiple_or_missing_statements": 1,
+          "not_single_equality -> correct": 1,
+          "not_single_equality -> not_single_equality": 3,
+          "prediction_not_literal -> prediction_not_literal": 1,
+          "wrong_type -> wrong_type": 6,
+          "wrong_value -> correct": 1,
+          "wrong_value -> wrong_value": 59
+        }
+      }
+    },
+    "unordered_events -> ordered_trace": {
+      "intended_output": {
+        "raw_output_identical": 92,
+        "raw_output_identical_rate": 0.9484536082474226,
+        "lenient_gained_ids": [],
+        "lenient_lost_ids": [
+          "mutation::mbpp_423_mut_05473"
+        ],
+        "discordant_pairs": 1,
+        "difference_pp": -1.0309278350515463,
+        "frozen_wald_ci90_pp": [
+          -2.7178897263448465,
+          0.6560340562417539
+        ],
+        "wald_interval_degenerate": false,
+        "posthoc_newcombe_ci90_pp": [
+          -3.1846563556656333,
+          1.020803488543939
+        ],
+        "posthoc_exact_gain_rate_upper95_one_sided_pp": 3.04118040369311,
+        "min_gain_excluded_by": {
+          "frozen_wald": true,
+          "newcombe": true,
+          "exact_gain_rate_bound": true
+        },
+        "strict_transitions": {
+          "correct -> correct": 1,
+          "invalid_syntax -> invalid_syntax": 83,
+          "invalid_syntax -> multiple_or_missing_statements": 2,
+          "multiple_or_missing_statements -> multiple_or_missing_statements": 11
+        },
+        "lenient_transitions": {
+          "correct -> correct": 25,
+          "correct -> wrong_value": 1,
+          "invalid_syntax -> invalid_syntax": 4,
+          "invalid_syntax -> multiple_or_missing_statements": 2,
+          "multiple_or_missing_statements -> multiple_or_missing_statements": 11,
+          "not_single_equality -> not_single_equality": 2,
+          "prediction_not_literal -> prediction_not_literal": 1,
+          "wrong_call -> wrong_call": 2,
+          "wrong_type -> wrong_type": 4,
+          "wrong_value -> wrong_value": 45
+        }
+      },
+      "shown_actual_output": {
+        "raw_output_identical": 94,
+        "raw_output_identical_rate": 0.9690721649484536,
+        "lenient_gained_ids": [],
+        "lenient_lost_ids": [],
+        "discordant_pairs": 0,
+        "difference_pp": 0.0,
+        "frozen_wald_ci90_pp": [
+          0.0,
+          0.0
+        ],
+        "wald_interval_degenerate": true,
+        "posthoc_newcombe_ci90_pp": [
+          -1.3148049555439154,
+          1.3148049555439154
+        ],
+        "posthoc_exact_gain_rate_upper95_one_sided_pp": 3.04118040369311,
+        "min_gain_excluded_by": {
+          "frozen_wald": true,
+          "newcombe": true,
+          "exact_gain_rate_bound": true
+        },
+        "strict_transitions": {
+          "invalid_syntax -> invalid_syntax": 96,
+          "multiple_or_missing_statements -> multiple_or_missing_statements": 1
+        },
+        "lenient_transitions": {
+          "correct -> correct": 25,
+          "invalid_syntax -> invalid_syntax": 2,
+          "multiple_or_missing_statements -> multiple_or_missing_statements": 1,
+          "not_single_equality -> not_single_equality": 3,
+          "prediction_not_literal -> prediction_not_literal": 1,
+          "wrong_type -> wrong_type": 6,
+          "wrong_value -> wrong_value": 59
+        }
+      }
+    }
+  },
+  "strata_intended_lenient_correct_exploratory": {
+    "bug_family::arithmetic": {
+      "n": 30,
+      "control": 4,
+      "unordered_events": 4,
+      "ordered_trace": 4
+    },
+    "bug_family::boolean": {
+      "n": 5,
+      "control": 3,
+      "unordered_events": 3,
+      "ordered_trace": 3
+    },
+    "bug_family::boundary": {
+      "n": 33,
+      "control": 11,
+      "unordered_events": 11,
+      "ordered_trace": 10
+    },
+    "bug_family::comparison": {
+      "n": 15,
+      "control": 6,
+      "unordered_events": 6,
+      "ordered_trace": 6
+    },
+    "bug_family::index": {
+      "n": 1,
+      "control": 0,
+      "unordered_events": 0,
+      "ordered_trace": 0
+    },
+    "bug_family::logical": {
+      "n": 1,
+      "control": 0,
+      "unordered_events": 0,
+      "ordered_trace": 0
+    },
+    "bug_family::negate_removal": {
+      "n": 1,
+      "control": 0,
+      "unordered_events": 0,
+      "ordered_trace": 0
+    },
+    "bug_family::off_by_one": {
+      "n": 6,
+      "control": 0,
+      "unordered_events": 0,
+      "ordered_trace": 0
+    },
+    "bug_family::return": {
+      "n": 5,
+      "control": 2,
+      "unordered_events": 2,
+      "ordered_trace": 2
+    },
+    "complexity::complex": {
+      "n": 16,
+      "control": 7,
+      "unordered_events": 7,
+      "ordered_trace": 6
+    },
+    "complexity::moderate": {
+      "n": 34,
+      "control": 11,
+      "unordered_events": 11,
+      "ordered_trace": 11
+    },
+    "complexity::simple": {
+      "n": 47,
+      "control": 8,
+      "unordered_events": 8,
+      "ordered_trace": 8
+    },
+    "shown_differs_from_intended::false": {
+      "n": 26,
+      "control": 6,
+      "unordered_events": 6,
+      "ordered_trace": 5
+    },
+    "shown_differs_from_intended::true": {
+      "n": 71,
+      "control": 20,
+      "unordered_events": 20,
+      "ordered_trace": 20
+    },
+    "source::humaneval": {
+      "n": 9,
+      "control": 5,
+      "unordered_events": 5,
+      "ordered_trace": 5
+    },
+    "source::mbpp": {
+      "n": 88,
+      "control": 21,
+      "unordered_events": 21,
+      "ordered_trace": 20
+    }
+  },
+  "gate_mechanics_findings": [
+    "The frozen paired Wald interval collapses to [0, 0] when a comparison has no discordant pairs, so a '90% lower bound >= 0' check passes vacuously. unordered_events/intended_output passed that single check this way; it is not evidence of a direction.",
+    "Future frozen analyses should report a non-degenerate interval (Newcombe or exact) alongside Wald; this recommendation does not alter the present gate."
+  ],
+  "min_gain_exclusion_intended_output": {
+    "control -> unordered_events": {
+      "frozen_wald": true,
+      "newcombe": true,
+      "exact_gain_rate_bound": true
+    },
+    "control -> ordered_trace": {
+      "frozen_wald": true,
+      "newcombe": true,
+      "exact_gain_rate_bound": true
+    },
+    "unordered_events -> ordered_trace": {
+      "frozen_wald": true,
+      "newcombe": true,
+      "exact_gain_rate_bound": true
+    }
+  },
+  "min_gain_exclusion_shown_actual_output": {
+    "control -> unordered_events": {
+      "frozen_wald": true,
+      "newcombe": true,
+      "exact_gain_rate_bound": false
+    },
+    "control -> ordered_trace": {
+      "frozen_wald": true,
+      "newcombe": true,
+      "exact_gain_rate_bound": false
+    },
+    "unordered_events -> ordered_trace": {
+      "frozen_wald": true,
+      "newcombe": true,
+      "exact_gain_rate_bound": true
+    }
+  },
+  "sealed_final_test_accessed": false,
+  "validation_accessed": false,
+  "ablation_dev_accessed": false,
+  "confirmation_opened": false
+}

@@ -1,0 +1,237 @@
+{
+  "schema_version": "oneiros_execution_trace_mechanism_analysis_v1",
+  "label": "train-derived mechanism diagnostic; not generalisation or model selection",
+  "items": 97,
+  "predeclared_gates": {
+    "minimum_lenient_gain_pp_each_condition": 5.0,
+    "maximum_strict_answer_regression_pp": 2.0,
+    "paired_ci": "90%, lower bound must be non-negative"
+  },
+  "inputs": {
+    "control": {
+      "path": "results\\v4_3_execution_supervision_v1\\eval_control.json",
+      "sha256": "5156874ec30be45e5e2872e1a1969d47d4ac63fd328c58304bb218aba4d1decf"
+    },
+    "unordered_events": {
+      "path": "results\\v4_3_execution_trace_v1\\eval_unordered_events.json",
+      "sha256": "46f1483d365272d4f56ef5a73da31bd311accea961989b1e952abe4e78e61bd0"
+    },
+    "ordered_trace": {
+      "path": "results\\v4_3_execution_trace_v1\\eval_ordered_trace.json",
+      "sha256": "ed092ea92f5d89b45e507af712da397d0ac18aaa227fdf2a8b35615adc625bc5"
+    }
+  },
+  "arms": {
+    "control": {
+      "intended_output": {
+        "requested": 97,
+        "strict_counts": {
+          "correct": 1,
+          "invalid_syntax": 83,
+          "multiple_or_missing_statements": 13
+        },
+        "strict_accuracy_per_requested": 0.010309278350515464,
+        "strict_answer_rate": 0.010309278350515464,
+        "lenient_counts": {
+          "correct": 26,
+          "invalid_syntax": 4,
+          "multiple_or_missing_statements": 13,
+          "not_single_equality": 2,
+          "prediction_not_literal": 1,
+          "wrong_call": 2,
+          "wrong_type": 4,
+          "wrong_value": 45
+        },
+        "lenient_accuracy_per_requested": 0.26804123711340205,
+        "completion_limit_hits": 0
+      },
+      "shown_actual_output": {
+        "requested": 97,
+        "strict_counts": {
+          "invalid_syntax": 96,
+          "multiple_or_missing_statements": 1
+        },
+        "strict_accuracy_per_requested": 0.0,
+        "strict_answer_rate": 0.0,
+        "lenient_counts": {
+          "correct": 23,
+          "invalid_syntax": 2,
+          "multiple_or_missing_statements": 1,
+          "not_single_equality": 4,
+          "prediction_not_literal": 1,
+          "wrong_type": 6,
+          "wrong_value": 60
+        },
+        "lenient_accuracy_per_requested": 0.23711340206185566,
+        "completion_limit_hits": 0
+      }
+    },
+    "unordered_events": {
+      "intended_output": {
+        "requested": 97,
+        "strict_counts": {
+          "correct": 1,
+          "invalid_syntax": 85,
+          "multiple_or_missing_statements": 11
+        },
+        "strict_accuracy_per_requested": 0.010309278350515464,
+        "strict_answer_rate": 0.010309278350515464,
+        "lenient_counts": {
+          "correct": 26,
+          "invalid_syntax": 6,
+          "multiple_or_missing_statements": 11,
+          "not_single_equality": 2,
+          "prediction_not_literal": 1,
+          "wrong_call": 2,
+          "wrong_type": 4,
+          "wrong_value": 45
+        },
+        "lenient_accuracy_per_requested": 0.26804123711340205,
+        "lenient_answer_rate": 0.7731958762886598,
+        "completion_limit_hits": 0
+      },
+      "shown_actual_output": {
+        "requested": 97,
+        "strict_counts": {
+          "invalid_syntax": 96,
+          "multiple_or_missing_statements": 1
+        },
+        "strict_accuracy_per_requested": 0.0,
+        "strict_answer_rate": 0.0,
+        "lenient_counts": {
+          "correct": 25,
+          "invalid_syntax": 2,
+          "multiple_or_missing_statements": 1,
+          "not_single_equality": 3,
+          "prediction_not_literal": 1,
+          "wrong_type": 6,
+          "wrong_value": 59
+        },
+        "lenient_accuracy_per_requested": 0.25773195876288657,
+        "lenient_answer_rate": 0.9278350515463918,
+        "completion_limit_hits": 0
+      }
+    },
+    "ordered_trace": {
+      "intended_output": {
+        "requested": 97,
+        "strict_counts": {
+          "correct": 1,
+          "invalid_syntax": 83,
+          "multiple_or_missing_statements": 13
+        },
+        "strict_accuracy_per_requested": 0.010309278350515464,
+        "strict_answer_rate": 0.010309278350515464,
+        "lenient_counts": {
+          "correct": 25,
+          "invalid_syntax": 4,
+          "multiple_or_missing_statements": 13,
+          "not_single_equality": 2,
+          "prediction_not_literal": 1,
+          "wrong_call": 2,
+          "wrong_type": 4,
+          "wrong_value": 46
+        },
+        "lenient_accuracy_per_requested": 0.25773195876288657,
+        "lenient_answer_rate": 0.7731958762886598,
+        "completion_limit_hits": 0
+      },
+      "shown_actual_output": {
+        "requested": 97,
+        "strict_counts": {
+          "invalid_syntax": 96,
+          "multiple_or_missing_statements": 1
+        },
+        "strict_accuracy_per_requested": 0.0,
+        "strict_answer_rate": 0.0,
+        "lenient_counts": {
+          "correct": 25,
+          "invalid_syntax": 2,
+          "multiple_or_missing_statements": 1,
+          "not_single_equality": 3,
+          "prediction_not_literal": 1,
+          "wrong_type": 6,
+          "wrong_value": 59
+        },
+        "lenient_accuracy_per_requested": 0.25773195876288657,
+        "lenient_answer_rate": 0.9278350515463918,
+        "completion_limit_hits": 0
+      }
+    }
+  },
+  "comparisons_vs_control": {
+    "unordered_events": {
+      "intended_output": {
+        "difference_pp": 0.0,
+        "ci90_low_pp": 0.0,
+        "ci90_high_pp": 0.0,
+        "gained": 0,
+        "lost": 0
+      },
+      "shown_actual_output": {
+        "difference_pp": 2.0618556701030926,
+        "ci90_low_pp": -0.31141053983052036,
+        "ci90_high_pp": 4.435121880036706,
+        "gained": 2,
+        "lost": 0
+      }
+    },
+    "ordered_trace": {
+      "intended_output": {
+        "difference_pp": -1.0309278350515463,
+        "ci90_low_pp": -2.7178897263448465,
+        "ci90_high_pp": 0.6560340562417539,
+        "gained": 0,
+        "lost": 1
+      },
+      "shown_actual_output": {
+        "difference_pp": 2.0618556701030926,
+        "ci90_low_pp": -0.31141053983052036,
+        "ci90_high_pp": 4.435121880036706,
+        "gained": 2,
+        "lost": 0
+      }
+    }
+  },
+  "ordered_minus_unordered": {
+    "intended_output": {
+      "difference_pp": -1.0309278350515463,
+      "ci90_low_pp": -2.7178897263448465,
+      "ci90_high_pp": 0.6560340562417539,
+      "gained": 0,
+      "lost": 1
+    },
+    "shown_actual_output": {
+      "difference_pp": 0.0,
+      "ci90_low_pp": 0.0,
+      "ci90_high_pp": 0.0,
+      "gained": 0,
+      "lost": 0
+    }
+  },
+  "gate_checks": {
+    "unordered_events": {
+      "intended_semantic_gain": false,
+      "intended_direction_90ci": true,
+      "actual_execution_gain": false,
+      "actual_direction_90ci": false,
+      "strict_answer_noninferiority": true,
+      "no_completion_limit_hits": true,
+      "passed": false
+    },
+    "ordered_trace": {
+      "intended_semantic_gain": false,
+      "intended_direction_90ci": false,
+      "actual_execution_gain": false,
+      "actual_direction_90ci": false,
+      "strict_answer_noninferiority": true,
+      "no_completion_limit_hits": true,
+      "passed": false
+    }
+  },
+  "mechanism_gate_passed": false,
+  "passing_arms": [],
+  "next_step": "stop this intervention; retain prior control and do not open confirmation",
+  "promotion_permitted": false,
+  "confirmation_opening_permitted": false
+}
