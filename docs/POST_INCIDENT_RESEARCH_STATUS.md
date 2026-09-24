@@ -478,8 +478,8 @@ will be no more epochs, dose increases, mixture changes, re-thresholding or new
 execution-supervision adapters.
 
 The next hypothesis is different in kind. Execution feedback at inference time
-may improve test generation beyond what the same inference compute achieves by
-resampling. It writes no weights, and the model is never asked to simulate the
+may improve test generation beyond sham self-conditioning under matched calls,
+sequences, input tokens and output-token caps. It writes no weights, and the model is never asked to simulate the
 program. Candidates are executed in the sandbox against the code under test,
 and only demonstrably invalid artifacts receive feedback: parse and shape
 failures, prohibited constructs, invented names, malformed calls, and duplicates.
@@ -493,8 +493,9 @@ These are kept silently, because each could be, or would reveal, a kill.
 
 The full design is in [TOOL_ASSISTED_REPAIR_PROTOCOL.md](TOOL_ASSISTED_REPAIR_PROTOCOL.md).
 Its main features:
-- **Arms:** A is the canonical control. B is a compute-matched resampling control. C is the repair arm.
-- **Pairing:** B and C share round 1, so C differs from B only where feedback was given. Both spend 16 sequences per target.
+- **Arms:** A is the canonical control. B is a sham-feedback control. On every repaired slot it gets the same prompt, the same echoed candidate and a neutral sentence, padded to C's exact rendered input-token count. C is the repair arm.
+- **Matching:** B and C are matched in calls, sequences, caps and rendered input tokens. Actual output tokens and wall time are measured outcomes and may differ.
+- **Pairing:** B and C share round 1 and every non-repaired slot. They differ only where C gets feedback and B gets the matched sham. Both spend 16 sequences per target.
 - **Final slots:** chosen by a policy that is blind to assertion outcomes.
 - **Gate:** C − B Kill@8 must gain at least +5 pp with a lower bound above 0, and reference validity must stay within −3 pp.
 

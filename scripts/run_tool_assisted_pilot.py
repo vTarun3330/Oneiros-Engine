@@ -5,7 +5,8 @@ Stages, run one at a time and only after explicit approval:
 ``generate-a``  Arm A, the canonical model-only control: the unchanged
                 successor path (8 samples, batch 2, one seed), scored by the
                 unchanged rehearsal evaluator.
-``generate-bc`` Arms B and C from one shared round 1 through
+``generate-bc`` Arms B (sham-feedback, request-budget-matched) and C from
+                one shared round 1 through
                 :mod:`harness.tool_assisted_generation`.  Writes one lineage
                 file per target and an append-only call journal, so a
                 disconnect resumes without repeating a completed model call.
@@ -109,7 +110,6 @@ def make_sampler(generator, settings, build_prompt):
     import torch
     from harness.generation_adapter import build_prompts
     from harness.generation_rng import seed_generation_rngs
-    from harness.tool_assisted_generation import RepairPromptOverBudget
 
     tokenizer = generator.tokenizer
 
@@ -119,9 +119,9 @@ def make_sampler(generator, settings, build_prompt):
         token_ids, generable, failures = build_prompts(tokenizer, records, settings,
                                                        build_prompt, extra)
         if failures:
-            if any(index in extra for index in failures):
-                raise RepairPromptOverBudget(str(failures))
-            raise RuntimeError(f"canonical prompt over budget: {failures}")
+            # Matched pairs are pre-checked to fit without compaction, so any
+            # budget failure here is an integrity error, not a fallback.
+            raise RuntimeError(f"prompt over budget after matching: {failures}")
         seed_generation_rngs(seed)
         original_side = tokenizer.padding_side
         tokenizer.padding_side = "left"
@@ -224,10 +224,12 @@ def main(argv=None) -> int:
     loop_dir = OUTPUT_DIR / "loop"
     if args.stage == "generate-bc":
         from harness.buggy_side_execution import execute_on_code_under_test
-        from harness.tool_assisted_generation import Journal, make_frozen_parser, run_target
+        from harness.tool_assisted_generation import (
+            Journal, make_frozen_parser, make_token_matcher, run_target)
         generator, adapter = load_generator(settings)
         sampler = make_sampler(generator, settings, build_prompt)
         parse = make_frozen_parser(generator)
+        matcher = make_token_matcher(generator.tokenizer, settings, build_prompt)
         journal = Journal(OUTPUT_DIR / "journal.jsonl")
         loop_dir.mkdir(parents=True, exist_ok=True)
         provenance = {"model": settings.base_model_name,
@@ -239,12 +241,15 @@ def main(argv=None) -> int:
             if target.exists():
                 continue
             result = run_target(record, sampler=sampler, parse=parse,
-                                execute=execute_on_code_under_test, base_seed=settings.seed,
+                                execute=execute_on_code_under_test, matcher=matcher,
+                                base_seed=settings.seed,
                                 journal=journal, timeout=receipt["executor_timeout_seconds"],
                                 provenance=provenance)
             target.write_bytes((json.dumps(result, indent=2) + "\n").encode("utf-8"))
-            print(f"generate-bc {index}/{len(scope.eligible)} repairs="
-                  f"{result['budget']['repairs']}", flush=True)
+            budget = result["budget"]
+            print(f"generate-bc {index}/{len(scope.eligible)} repairs delivered="
+                  f"{len(budget['repairs_delivered'])} skipped="
+                  f"{len(budget['repairs_skipped_match_infeasible'])}", flush=True)
         return 0
 
     arm = "B" if args.stage == "score-b" else "C"

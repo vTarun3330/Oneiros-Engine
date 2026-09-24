@@ -43,7 +43,7 @@ COMPONENTS = {
             "treats every exception as repairable, including exceptions raised inside "
             "the target, which may be the defect itself",
             "no frame attribution, no duplicate handling, no budget accounting, no "
-            "lineage, no compute-matched control",
+            "lineage, no matched control",
         ],
         "disposition": "left unchanged (bound by earlier receipts); superseded for this "
                        "experiment by harness/execution_feedback.py and "
@@ -149,7 +149,8 @@ COMPONENTS = {
 MISSING = {
     "buggy-side executor with frame attribution": "harness/buggy_side_execution.py",
     "closed, versioned, hashable feedback taxonomy": "harness/execution_feedback.py",
-    "bounded repair loop with compute-matched resampling control, lineage, "
+    "bounded repair loop with a call-, sequence-, cap- and rendered-input-token-"
+    "matched sham-feedback control, lineage, "
     "outcome-blind final-slot policy and resume journal": "harness/tool_assisted_generation.py",
 }
 

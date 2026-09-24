@@ -1,7 +1,8 @@
 """Frozen analysis for the execution-feedback pilot (written before any generation).
 
-Primary comparison: arm C (execution-feedback repair) versus arm B
-(compute-matched resampling), paired by record, 90% percentile intervals from
+Primary comparison: arm C (execution-feedback repair) versus arm B (sham
+feedback: a call-, sequence-, cap- and rendered-input-token-matched control),
+paired by record, 90% percentile intervals from
 a lineage-cluster bootstrap (10,000 replicates, fixed seed).
 
 PASS requires all of:
@@ -11,7 +12,9 @@ PASS requires all of:
   >= -3 pp (the project's existing noninferiority margin);
 * candidate diversity (exact-unique ratio): C - B mean >= -0.05;
 * wall-clock: C <= 1.5 x B;
-* exact compute matching (identical sequences and token cap per target).
+* a request-budget-matched pair on every target: equal model calls, sequences
+  and max-new-token caps, and for every C repair a B sham that echoes the same
+  parent with an identical rendered input-token count.
 
 FAIL when the Kill@8 upper bound is below +5 pp (the minimum gain is
 excluded), or the reference-validity upper bound is below -3 pp.
@@ -19,8 +22,9 @@ Anything else is INCONCLUSIVE and does not pass.
 
 A syntax-only improvement cannot pass: the gate is on Kill@8, a semantic
 outcome, and parse/execution rates are reported but never gate.  If compute
-matching fails, the analysis refuses and the comparison is not called
-controlled.  Arm A (canonical model-only control) comparisons are secondary.
+pairing fails anywhere, the analysis refuses and the comparison is not called
+controlled.  Actual output tokens and wall-clock time are measured outcomes;
+their ratios are reported and are never described as equal compute.  Arm A (canonical model-only control) comparisons are secondary.
 """
 from __future__ import annotations
 
@@ -113,20 +117,86 @@ def load_arm(arm: str, panel: Mapping[str, Any]) -> dict[str, dict[str, float]]:
     return metrics
 
 
+def pairing_problems(data: Mapping[str, Any]) -> list[str]:
+    """Every reason one target's B/C pair is not a request-budget-matched pair."""
+    from harness.execution_feedback import CATEGORIES, _TEMPLATES, sham_is_neutral
+
+    problems: list[str] = []
+    record_id = data["record_id"]
+    budget = data["budget"]
+    for field in ("sequences", "model_calls"):
+        if budget[field]["B"] != budget[field]["C"]:
+            problems.append(f"{record_id}: {field} differ")
+    round1 = {c["slot"]: c for c in data["candidates"]["C"] if c["round"] == 1}
+    shared = {c["slot"]: c for c in data["candidates"]["B"] if c["round"] == 1}
+    for slot, candidate in round1.items():
+        if candidate["raw_output"] != shared[slot]["raw_output"]:
+            problems.append(f"{record_id}: round-1 slot {slot} is not shared")
+    c2 = {c["slot"]: c for c in data["candidates"]["C"] if c["round"] == 2}
+    b2 = {c["slot"]: c for c in data["candidates"]["B"] if c["round"] == 2}
+    if sorted(c2) != sorted(b2):
+        problems.append(f"{record_id}: round-2 slots differ")
+        return problems
+    feedback_fragments = [text.split("{")[0][:30].lower() for text in _TEMPLATES.values()]
+    repair_slots = []
+    for slot in sorted(c2):
+        c, b = c2[slot], b2[slot]
+        if c["status"] == "repair":
+            repair_slots.append(slot)
+            parent = round1[slot]
+            echo = parent["code"] if parent["code"] else parent["raw_output"]
+            expected_parent = f"{record_id}|r1|{slot}"
+            if b["status"] != "sham":
+                problems.append(f"{record_id}: repair slot {slot} has no sham")
+                continue
+            if not (c["parent_candidate"] == b["parent_candidate"] == expected_parent):
+                problems.append(f"{record_id}: slot {slot} echoes different parents")
+            if not (c["input_tokens"] == b["input_tokens"]
+                    == (c["matched_input_tokens"] or {}).get("repair")
+                    == (b["matched_input_tokens"] or {}).get("sham")):
+                problems.append(f"{record_id}: slot {slot} rendered input tokens differ")
+            addition = str(b["prompt_addition"] or "")
+            if not sham_is_neutral(addition, echo):
+                problems.append(f"{record_id}: slot {slot} sham is not the neutral template")
+            echoed = echo.strip()[:1500]
+            lowered = (addition.split(echoed, 1)[1] if echoed in addition
+                       else addition).lower()
+            if any(fragment and fragment in lowered for fragment in feedback_fragments) or any(
+                    category in lowered for category in CATEGORIES):
+                problems.append(f"{record_id}: slot {slot} sham carries diagnostic text")
+            if not str(c["prompt_addition"] or "").startswith(
+                    "You previously answered:\n\n" + echo.strip()[:1500]):
+                problems.append(f"{record_id}: slot {slot} repair echo differs")
+        else:
+            if b["status"] != "resample" or c["status"] != "resample":
+                problems.append(f"{record_id}: slot {slot} is unmatched ({b['status']}/"
+                                f"{c['status']})")
+            elif (b["raw_output"] != c["raw_output"] or b["input_tokens"] != c["input_tokens"]):
+                problems.append(f"{record_id}: non-repair slot {slot} is not shared")
+    if repair_slots != sorted(budget["repairs_delivered"]):
+        problems.append(f"{record_id}: delivered repairs do not match repair slots")
+    for slot in budget["repairs_skipped_match_infeasible"]:
+        if c2[int(slot)]["status"] != "resample" or b2[int(slot)]["status"] != "resample":
+            problems.append(f"{record_id}: skipped slot {slot} was not a shared fallback")
+    return problems
+
+
 def loop_accounting(panel: Mapping[str, Any]) -> dict[str, Any]:
-    """Compute matching and runtime from the per-target lineage files."""
+    """Pairing integrity, request budgets and measured outcomes per arm."""
     totals = {arm: Counter() for arm in ("B", "C")}
     transitions: Counter = Counter()
-    unmatched = []
+    problems: list[str] = []
     caps = set()
+    attempted = delivered = skipped = 0
     for record_id in panel["record_ids"]:
         target = OUTPUT_DIR / "loop" / (hashlib.sha256(record_id.encode()).hexdigest() + ".json")
         data = json.loads(target.read_text(encoding="utf-8"))
         budget = data["budget"]
         caps.add(budget["max_new_tokens"])
-        if (budget["sequences"]["B"] != budget["sequences"]["C"]
-                or budget["model_calls"]["B"] != budget["model_calls"]["C"]):
-            unmatched.append(record_id)
+        problems.extend(pairing_problems(data))
+        attempted += len(budget["repairs_attempted"])
+        delivered += len(budget["repairs_delivered"])
+        skipped += len(budget["repairs_skipped_match_infeasible"])
         for arm in ("B", "C"):
             totals[arm]["sequences"] += budget["sequences"][arm]
             totals[arm]["model_calls"] += budget["model_calls"][arm]
@@ -136,18 +206,33 @@ def loop_accounting(panel: Mapping[str, Any]) -> dict[str, Any]:
                 c["wall_seconds"] for c in data["candidates"][arm])
             totals[arm]["duplicates_in_final"] += len(data["final"][arm]) - len(
                 {c["code"] for c in data["final"][arm] if c["code"]})
-        totals["C"]["repairs"] += budget["repairs"]
-        totals["C"]["repairs_undelivered"] += len(
-            budget.get("repairs_undelivered_prompt_over_budget", []))
         children = {c["slot"]: c for c in data["candidates"]["C"] if c["round"] == 2}
         for parent in data["candidates"]["C"]:
-            if parent["round"] == 1 and children[parent["slot"]]["feedback"] is not None:
+            if parent["round"] == 1 and children[parent["slot"]]["status"] == "repair":
                 transitions[f"{parent['category']} -> {children[parent['slot']]['category']}"] += 1
-    return {"totals": {arm: dict(value) for arm, value in totals.items()},
-            "unmatched_targets": unmatched,
-            "compute_matched": not unmatched and len(caps) == 1,
-            "max_new_tokens": sorted(caps),
-            "repair_category_transitions": dict(transitions.most_common())}
+    if len(caps) != 1:
+        problems.append(f"max-new-token caps differ across targets: {sorted(caps)}")
+    b, c = totals["B"], totals["C"]
+    return {
+        "control": "call-, sequence-, cap- and rendered-input-token-matched sham-feedback "
+                   "control (request-budget-matched)",
+        "request_budget_matched": not problems,
+        "pairing_problems": problems[:50],
+        "pairing_problem_count": len(problems),
+        "max_new_tokens": sorted(caps),
+        "totals": {arm: dict(value) for arm, value in totals.items()},
+        "input_tokens": {"B": b["input_tokens"], "C": c["input_tokens"]},
+        "output_tokens": {"B": b["output_tokens"], "C": c["output_tokens"],
+                          "ratio_c_over_b": c["output_tokens"] / max(b["output_tokens"], 1)},
+        "wall_seconds": {"B": b["generation_wall_seconds"], "C": c["generation_wall_seconds"],
+                         "ratio_c_over_b": c["generation_wall_seconds"]
+                         / max(b["generation_wall_seconds"], 1e-9)},
+        "repairs": {"attempted": attempted, "delivered": delivered,
+                    "skipped_match_infeasible": skipped},
+        "measured_outcomes_not_matched": ["actual output tokens (early EOS is a model "
+                                          "outcome)", "generation wall-clock time"],
+        "repair_category_transitions": dict(transitions.most_common()),
+    }
 
 
 def compare(first: dict, second: dict, lineages: Mapping[str, str], metric: str) -> dict:
@@ -181,8 +266,9 @@ def main(argv=None) -> int:
     lineages = panel["record_lineages"]
     arms = {arm: load_arm(arm, panel) for arm in ("A", "B", "C")}
     accounting = loop_accounting(panel)
-    if not accounting["compute_matched"]:
-        print("REFUSED: compute is not matched between B and C; not a controlled comparison")
+    if not accounting["request_budget_matched"]:
+        print(f"REFUSED: B and C are not request-budget-matched "
+              f"({accounting['pairing_problem_count']} problems); not a controlled comparison")
         return 2
     metrics = ("kill_at_1", "kill_at_4", "kill_at_8", "reference_valid_per_requested",
                "function_has_reference_valid", "parse_success", "execution_success",
@@ -200,9 +286,7 @@ def main(argv=None) -> int:
                                              for m in ("kill_at_8",
                                                        "reference_valid_per_requested")}
                  for first, second in (("A", "B"), ("A", "C"))}
-    totals = accounting["totals"]
-    wall_ratio = (totals["C"]["generation_wall_seconds"]
-                  / max(totals["B"]["generation_wall_seconds"], 1e-9))
+    wall_ratio = accounting["wall_seconds"]["ratio_c_over_b"]
     outcome = verdict(primary["kill_at_8"], primary["reference_valid_per_requested"],
                       primary["exact_unique_ratio"]["difference"], wall_ratio)
     means = {arm: {metric: sum(values[metric] for values in data.values()) / len(data)
@@ -223,6 +307,9 @@ def main(argv=None) -> int:
         "secondary": secondary,
         "accounting": accounting,
         "wall_ratio_c_over_b": wall_ratio,
+        "limitations": ["actual output tokens and wall-clock time are measured outcomes and "
+                        "may differ between B and C; the output-token ratio is reported, not "
+                        "matched"],
         "verdict": outcome,
         "decision": {
             "pass": "stop; request explicit authorization to design a confirmation on "

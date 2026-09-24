@@ -1,7 +1,7 @@
 {
   "schema_version": "oneiros_tool_assisted_component_audit_v1",
   "label": "component audit and readiness; reads source only, opens no split",
-  "created_utc": "2026-09-24T16:55:21.139445+00:00",
+  "created_utc": "2026-09-24T17:31:59.365146+00:00",
   "classes": [
     "reusable_unchanged",
     "reusable_after_fix",
@@ -20,7 +20,7 @@
         "feedback reports pass/fail on the code under test; passing implies the mutant is not killed, so this reveals kill-relevant information",
         "asks the model to 'correct the asserted value' after an assertion failure, i.e. can repair a legitimate kill away",
         "treats every exception as repairable, including exceptions raised inside the target, which may be the defect itself",
-        "no frame attribution, no duplicate handling, no budget accounting, no lineage, no compute-matched control"
+        "no frame attribution, no duplicate handling, no budget accounting, no lineage, no matched control"
       ],
       "disposition": "left unchanged (bound by earlier receipts); superseded for this experiment by harness/execution_feedback.py and harness/tool_assisted_generation.py; its leakage-scan idea is kept",
       "static": {
@@ -276,7 +276,7 @@
   "missing_components_now_implemented": {
     "buggy-side executor with frame attribution": "harness/buggy_side_execution.py",
     "closed, versioned, hashable feedback taxonomy": "harness/execution_feedback.py",
-    "bounded repair loop with compute-matched resampling control, lineage, outcome-blind final-slot policy and resume journal": "harness/tool_assisted_generation.py"
+    "bounded repair loop with a call-, sequence-, cap- and rendered-input-token-matched sham-feedback control, lineage, outcome-blind final-slot policy and resume journal": "harness/tool_assisted_generation.py"
   },
   "checks_performed": [
     "fixed-code or gold-test leakage",

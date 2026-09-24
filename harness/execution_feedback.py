@@ -84,7 +84,18 @@ _TEMPLATES = {
     "duplicate_candidate": "Your previous test duplicates an earlier test. Write a "
                            "different one.",
 }
-_CLOSING = "Write one corrected test. Output only the test."
+#: Final request shared VERBATIM by the repair (C) and sham (B) prompts.
+CLOSING = "Write one test. Output only the test."
+#: Arm B's neutral sentence.  It carries no category, no execution result and
+#: no parse/policy information; it is shorter than every feedback template, so
+#: the sham is never longer than its repair before padding.
+SHAM_SENTENCE = "No diagnostic information is provided."
+#: Frozen neutral marker used to pad the sham to the repair's rendered length.
+#: Measured on the Qwen chat template: each repetition adds exactly one token
+#: and adjacent repetitions never merge.  It is punctuation, not a word.
+PAD_UNIT = " ."
+#: The model's earlier attempt is echoed back at most this long (characters).
+MAX_ECHO_CHARS = 1500
 
 #: Model-visible text must never contain these.  Assertion outcomes and
 #: evaluator vocabulary are included so a template edit cannot reintroduce them.
@@ -191,13 +202,38 @@ def build_feedback(category: str, detail: str, hidden: Iterable[str]) -> dict[st
     return body
 
 
-def build_repair_prompt(original_prompt: str, candidate_text: str,
-                        feedback: Mapping[str, Any], hidden: Iterable[str]) -> str:
-    """Original prompt verbatim, the model's own attempt, one feedback sentence.
+def _echo(candidate_text: str) -> str:
+    return str(candidate_text).strip()[:MAX_ECHO_CHARS]
 
-    Only the added instruction text is scanned: the prompt is the one the model
-    already received, and the attempt is the model's own output.
+
+def repair_addition(candidate_text: str, feedback: Mapping[str, Any],
+                    hidden: Iterable[str]) -> str:
+    """Arm C: the model's own attempt, one feedback sentence, the shared request.
+
+    Appended to the canonical prompt exactly as the generation adapter appends
+    (a blank line between).  Only the added instruction text is scanned: the
+    attempt is the model's own output.
     """
-    assert_no_hidden_content(str(feedback["message"]) + " " + _CLOSING, hidden)
-    return "\n\n".join([original_prompt.rstrip(), "You previously answered:",
-                        str(candidate_text).strip(), str(feedback["message"]), _CLOSING])
+    assert_no_hidden_content(str(feedback["message"]) + " " + CLOSING, hidden)
+    return "\n\n".join(["You previously answered:", _echo(candidate_text),
+                        str(feedback["message"]), CLOSING])
+
+
+def sham_addition(candidate_text: str, pad_units: int = 0) -> str:
+    """Arm B: the SAME attempt and request, a neutral sentence, neutral padding."""
+    if pad_units < 0:
+        raise ValueError("pad_units must be non-negative")
+    parts = ["You previously answered:", _echo(candidate_text), SHAM_SENTENCE]
+    if pad_units:
+        parts.append(PAD_UNIT * pad_units)
+    parts.append(CLOSING)
+    return "\n\n".join(parts)
+
+
+def sham_is_neutral(addition: str, candidate_text: str) -> bool:
+    """True when ``addition`` is exactly a sham for ``candidate_text``."""
+    prefix = "\n\n".join(["You previously answered:", _echo(candidate_text), SHAM_SENTENCE])
+    if not addition.startswith(prefix) or not addition.endswith(CLOSING):
+        return False
+    middle = addition[len(prefix):len(addition) - len(CLOSING)].strip("\n")
+    return middle == "" or middle == PAD_UNIT * (len(middle) // len(PAD_UNIT))

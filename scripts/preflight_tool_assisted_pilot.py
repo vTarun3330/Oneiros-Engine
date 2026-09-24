@@ -13,7 +13,10 @@ Checks, all before any GPU work:
   field can influence what the model sees;
 * every canonical prompt fits its budget;
 * generation settings are the unchanged successor settings;
-* budgets for B and C are identical by construction;
+* budgets for B and C are request-budget-matched by construction (equal calls,
+  sequences and max-new-token caps), and a matched sham can be built for
+  every panel record and every feedback category, both with a typical echo
+  and with the longest permitted echo;
 * every protected-data flag is false.
 
 No model weights are loaded; the tokenizer is.
@@ -61,10 +64,15 @@ def preflight() -> dict:
     from harness.prompt_factory import prompt_factory
     from harness.safe_execution import DEFAULT_TIMEOUT_SECONDS
     from harness.tool_assisted_generation import (
-        FINAL_SLOTS, FINAL_SLOT_POLICY, INITIAL_SAMPLES, LOOP_VERSION, MAX_ECHO_CHARS,
-        MAX_REPAIRS_PER_TARGET, SECOND_ROUND_SLOTS, SEQUENCES_PER_TARGET, permitted_view,
+        CONTROL_DESCRIPTION, FINAL_SLOTS, FINAL_SLOT_POLICY, INITIAL_SAMPLES, LOOP_VERSION,
+        MAX_ECHO_CHARS, MAX_REPAIRS_PER_TARGET, SECOND_ROUND_SLOTS, SEQUENCES_PER_TARGET,
+        MatchInfeasible, make_token_matcher, permitted_view,
     )
-    from harness.execution_feedback import FEEDBACK_SCHEMA_VERSION, REPAIRABLE, RETAINED
+    from harness.execution_feedback import (
+        CLOSING, FEEDBACK_SCHEMA_VERSION, PAD_UNIT, REPAIRABLE, RETAINED, SHAM_SENTENCE,
+        build_feedback, repair_addition,
+    )
+    from harness.tool_assisted_generation import hidden_material
     from scripts import analyse_tool_assisted_pilot as analysis
     from scripts.run_tool_assisted_pilot import CONTROL_ADAPTER, CONTROL_RESULT, PANEL, \
         load_panel_scope
@@ -100,12 +108,63 @@ def preflight() -> dict:
         problems.append(f"canonical prompt budget failures: {len(failures)}")
     lengths = sorted(len(ids) for ids in token_ids)
 
+    # Sham matching feasibility on the real template, before any generation.
+    matcher = make_token_matcher(tokenizer, settings, build_prompt)
+    typical = "assert {entry}([1, 2, 3], 1) == 2"
+    feasibility = {"typical_echo": {"feasible": 0, "infeasible": 0, "max_pad_units": 0},
+                   "long_realistic_echo": {"feasible": 0, "infeasible": 0, "max_pad_units": 0},
+                   "max_length_dense_echo": {"feasible": 0, "infeasible": 0,
+                                             "max_pad_units": 0}}
+    for record, view in zip(scope.eligible, views):
+        hidden = hidden_material(record)
+        entry = view["entry_point"]
+        realistic = "def test_" + entry + "():\n" + "".join(
+            f"    assert {entry}([{i}, {i + 1}, {i + 2}], {i % 3}) == {i}\n"
+            for i in range(40))
+        echoes = {"typical_echo": typical.format(entry=entry),
+                  "long_realistic_echo": realistic[:MAX_ECHO_CHARS],
+                  "max_length_dense_echo": ("assert " + entry + "(" + "1, " * 600)
+                  [:MAX_ECHO_CHARS]}
+        for label, echo in echoes.items():
+            for category in REPAIRABLE:
+                feedback = build_feedback(category, "detail", hidden)
+                try:
+                    pair = matcher(view, repair_addition(echo, feedback, hidden), echo)
+                except MatchInfeasible:
+                    feasibility[label]["infeasible"] += 1
+                    continue
+                if pair.sham_tokens != pair.repair_tokens:
+                    problems.append("matcher returned an unequal pair")
+                feasibility[label]["feasible"] += 1
+                feasibility[label]["max_pad_units"] = max(
+                    feasibility[label]["max_pad_units"], pair.pad_units)
+    # Tokens left for the echoed candidate under the longest feedback message,
+    # without any compaction: repairs of longer candidates are skipped in both arms.
+    from engine.test_generation_prompt import format_chat_prompt
+    longest = max(REPAIRABLE, key=lambda c: len(build_feedback(c, "detail", [])["message"]))
+    headroom = sorted(
+        settings.prompt_token_limit - len(tokenizer(format_chat_prompt(
+            tokenizer, build_prompt(view) + "\n\n" + repair_addition(
+                "", build_feedback(longest, "detail", []), [])),
+            add_special_tokens=False)["input_ids"])
+        for view in views)
+    feasibility["echo_token_headroom"] = {"min": headroom[0],
+                                          "median": headroom[len(headroom) // 2],
+                                          "max": headroom[-1],
+                                          "note": "a repair whose echoed candidate exceeds "
+                                                  "this is skipped in both arms"}
+    if feasibility["typical_echo"]["infeasible"]:
+        problems.append("a typical-echo sham could not be matched on the panel")
+
     records = panel["records"]
     per_record = 577.753 / 542  # measured canonical Kill@8 seconds per record
     estimate = {
         "basis": {"canonical_kill_at_8_seconds_per_record": per_record,
                   "assumed_single_sequence_generation_seconds": "0.8-2.5",
-                  "note": "B/C round 2 is 8 single-sequence calls per record plus repairs"},
+                  "note": "per record: one shared 8-sequence call, then (8 - k) shared "
+                          "canonical calls plus k repair and k sham calls, i.e. 8 + k "
+                          "single-sequence calls for k delivered repairs (unchanged from the "
+                          "previous design); matching adds CPU tokenisation only"},
         "arm_a_minutes": round(records * per_record * 1.2 / 60, 1),
         "arms_b_c_generation_minutes": {"low": round(records * 10 / 60),
                                         "high": round(records * 30 / 60)},
@@ -123,16 +182,29 @@ def preflight() -> dict:
         "git": {"branch": git("branch", "--show-current"), "commit": git("rev-parse", "HEAD"),
                 "clean": not status},
         "label": "CPU design receipt; no generation has been run",
-        "question": "does bounded execution feedback improve test generation beyond the "
-                    "same inference compute spent on resampling?",
+        "question": "Does structured execution feedback improve test generation beyond "
+                    "sham self-conditioning under matched calls, sequences, input tokens "
+                    "and output-token caps?",
+        "control": CONTROL_DESCRIPTION,
+        "matching_statement": {
+            "model_calls": "equal per target by construction",
+            "sequences": "equal per target by construction",
+            "max_new_token_caps": "equal",
+            "rendered_input_tokens": "exactly equal for every compared repair/sham slot "
+                                     "on the Qwen chat template",
+            "actual_output_tokens": "measured outcome; may differ (early EOS)",
+            "wall_clock": "measured outcome; may differ",
+        },
         "arms": {
             "A": "frozen control adapter, unchanged successor protocol, 8 samples, no "
                  "feedback (canonical historical control)",
-            "B": "same adapter; shared round 1 of 8 + 8 single-sequence canonical "
-                 "resamples; same outcome-blind final-slot policy as C; no diagnostics",
-            "C": "same adapter; shared round 1 of 8 + 8 single-sequence slots, each a "
-                 "repair of a demonstrably invalid round-1 candidate or else the identical "
-                 "canonical sample B receives",
+            "B": "same adapter; shared round 1 of 8; on every slot where C is repaired, "
+                 "a sham prompt (identical canonical prompt, identical echoed parent, a "
+                 "neutral sentence, identical final request, neutral padding to C's exact "
+                 "rendered token count); elsewhere the identical canonical sample C gets",
+            "C": "same adapter; shared round 1 of 8; slot i is a repair of a demonstrably "
+                 "invalid round-1 candidate when a matched sham exists, otherwise the "
+                 "identical canonical sample B gets",
             "primary_comparison": "C versus B",
         },
         "adapter": {"path": CONTROL_ADAPTER.relative_to(ROOT).as_posix(),
@@ -144,9 +216,16 @@ def preflight() -> dict:
                     "max_new_tokens_per_sequence": settings.generation_completion_token_limit,
                     "final_slots": FINAL_SLOTS, "max_echo_chars": MAX_ECHO_CHARS,
                     "arm_a_sequences_per_target": settings.candidates_per_function,
-                    "compute_matched": "B and C: identical sequences, calls and token cap "
-                                       "per target by construction; A is not compute-"
-                                       "matched and is secondary"},
+                    "request_budget_matching": "B and C: equal calls, sequences and caps "
+                                               "per target; exact rendered input tokens on "
+                                               "compared repair/sham slots; A is not "
+                                               "matched and is secondary"},
+        "sham": {"sentence": SHAM_SENTENCE, "closing_shared_with_repair": CLOSING,
+                 "pad_unit": PAD_UNIT, "pad_unit_property": "adds exactly one rendered "
+                 "Qwen token per repetition; punctuation, not a word",
+                 "infeasible_policy": "neither arm is repaired; both take the identical "
+                                      "canonical sample; the slot is recorded as skipped",
+                 "panel_feasibility": feasibility},
         "executor_timeout_seconds": DEFAULT_TIMEOUT_SECONDS,
         "final_slot_policy": FINAL_SLOT_POLICY,
         "feedback": {"schema_version": FEEDBACK_SCHEMA_VERSION, "repairable": list(REPAIRABLE),
@@ -168,7 +247,7 @@ def preflight() -> dict:
                         f"{analysis.BOOTSTRAP_SEED}",
             "pass": "Kill@8 C-B >= +5 pp with lower bound > 0; reference-valid per requested "
                     "lower bound >= -3 pp; exact-unique ratio loss <= 0.05; C wall <= 1.5x B; "
-                    "compute matched",
+                    "request-budget-matched pairing on every target",
             "fail": "Kill@8 C-B upper bound < +5 pp, or reference-valid upper bound < -3 pp",
             "inconclusive": "anything else; does not pass",
             "syntax_only_cannot_pass": "the gate is on Kill@8; parse and execution rates "
@@ -177,7 +256,9 @@ def preflight() -> dict:
         "stopping_rules": [
             "stages run strictly sequentially: generate-a, generate-bc, score-b, score-c, "
             "then the frozen analysis on the CPU",
-            "the analysis refuses partial results and uncontrolled compute",
+            "the analysis refuses partial results and any target whose B/C pairing is not "
+            "request-budget-matched (calls, sequences, caps, parents, sham neutrality, "
+            "rendered input tokens)",
             "an infrastructure crash resumes from the journal; no completed model call is "
             "repeated and no setting changes",
             "no rerun with changed prompts, budgets, taxonomy or thresholds",

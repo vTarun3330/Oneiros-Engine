@@ -124,6 +124,13 @@ def test_tracked_design_receipt_binds_sources_and_budgets():
     assert receipt["budgets"]["sequences_per_target_b_and_c"] == 16
     assert receipt["budgets"]["final_slots"] == 8
     assert receipt["panel"]["prompt_from_permitted_view_identical"] is True
+    assert receipt["question"].startswith("Does structured execution feedback improve test "
+                                          "generation beyond sham self-conditioning")
+    assert "rendered-input-token-matched" in receipt["control"]
+    assert "exact compute" not in json.dumps(receipt).lower()
+    assert receipt["matching_statement"]["actual_output_tokens"].startswith("measured outcome")
+    assert receipt["sham"]["panel_feasibility"]["typical_echo"]["infeasible"] == 0
+    assert receipt["panel"]["records"] == 264
     assert not any(value for key, value in receipt["leakage"].items() if key != "splits_opened")
     for relative, expected in receipt["source_files_sha256"].items():
         assert canonical_sha256(ROOT / relative) == expected, relative
