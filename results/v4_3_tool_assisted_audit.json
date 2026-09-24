@@ -1,0 +1,377 @@
+{
+  "schema_version": "oneiros_tool_assisted_component_audit_v1",
+  "label": "component audit and readiness; reads source only, opens no split",
+  "created_utc": "2026-09-24T16:55:21.139445+00:00",
+  "classes": [
+    "reusable_unchanged",
+    "reusable_after_fix",
+    "diagnostic_only",
+    "unsafe_for_this_experiment",
+    "missing"
+  ],
+  "components": {
+    "harness/verifier_guided_repair.py": {
+      "classification": "unsafe_for_this_experiment",
+      "tests": [
+        "tests/test_verifier_guided_repair.py"
+      ],
+      "findings": [
+        "reference is structurally out of scope (good)",
+        "feedback reports pass/fail on the code under test; passing implies the mutant is not killed, so this reveals kill-relevant information",
+        "asks the model to 'correct the asserted value' after an assertion failure, i.e. can repair a legitimate kill away",
+        "treats every exception as repairable, including exceptions raised inside the target, which may be the defect itself",
+        "no frame attribution, no duplicate handling, no budget accounting, no lineage, no compute-matched control"
+      ],
+      "disposition": "left unchanged (bound by earlier receipts); superseded for this experiment by harness/execution_feedback.py and harness/tool_assisted_generation.py; its leakage-scan idea is kept",
+      "static": {
+        "exists": true,
+        "canonical_sha256": "c5d66c9005995523455b644e04ea80e6afeebe2cf20897a60d069c21d8a46440",
+        "reads_canonical_records_json": false,
+        "mentions_reference_or_golden": true,
+        "calls_reference_mutant_classifier": false,
+        "imports_real_atheris": false,
+        "deep_copies_arguments": false
+      },
+      "tests_present": {
+        "tests/test_verifier_guided_repair.py": true
+      }
+    },
+    "harness/safe_execution.py": {
+      "classification": "reusable_unchanged",
+      "tests": [
+        "tests/test_safe_execution.py"
+      ],
+      "findings": [
+        "fresh isolated interpreter (-I), temp working directory, restricted builtins and imports, tracing deadline, hard parent timeout, POSIX limits where available (not enforced on Windows)",
+        "execute_assertions runs against the shown code only; classify_assertions compares reference and mutant and is evaluator-only",
+        "each implementation executes the candidate text afresh in its own namespace, so mutable arguments are never shared",
+        "does not report which frame raised"
+      ],
+      "disposition": "primitives reused by harness/buggy_side_execution.py, which adds frame attribution without modifying this file",
+      "static": {
+        "exists": true,
+        "canonical_sha256": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+        "reads_canonical_records_json": false,
+        "mentions_reference_or_golden": true,
+        "calls_reference_mutant_classifier": true,
+        "imports_real_atheris": false,
+        "deep_copies_arguments": false
+      },
+      "tests_present": {
+        "tests/test_safe_execution.py": true
+      }
+    },
+    "harness/execution_harness.py": {
+      "classification": "diagnostic_only",
+      "tests": [],
+      "findings": [
+        "legacy differential golden-vs-mutant harness; uses the golden function, so it must never feed a prompt"
+      ],
+      "disposition": "not used",
+      "static": {
+        "exists": true,
+        "canonical_sha256": "c9edf6dc6d66152c11976e21ad42e1dcd368cd154912345dedf37874ad69d41c",
+        "reads_canonical_records_json": false,
+        "mentions_reference_or_golden": true,
+        "calls_reference_mutant_classifier": false,
+        "imports_real_atheris": false,
+        "deep_copies_arguments": false
+      },
+      "tests_present": {}
+    },
+    "harness/metamorphic_relations.py": {
+      "classification": "diagnostic_only",
+      "tests": [
+        "tests/test_metamorphic_relations.py"
+      ],
+      "findings": [
+        "relations proposed blind from argument shape; verification in its caller uses the reference"
+      ],
+      "disposition": "not used; a metamorphic arm would be a different intervention",
+      "static": {
+        "exists": true,
+        "canonical_sha256": "3fb4cfbd594dfbd807384d90380ebd3637c7d909a80580c08a3ab8368249586f",
+        "reads_canonical_records_json": false,
+        "mentions_reference_or_golden": true,
+        "calls_reference_mutant_classifier": false,
+        "imports_real_atheris": false,
+        "deep_copies_arguments": false
+      },
+      "tests_present": {
+        "tests/test_metamorphic_relations.py": true
+      }
+    },
+    "harness/oracle_diagnosis.py": {
+      "classification": "diagnostic_only",
+      "tests": [
+        "tests/test_oracle_diagnosis.py"
+      ],
+      "findings": [
+        "executes the candidate's call on reference and mutant; its own docstring forbids importing it from prompt-building code"
+      ],
+      "disposition": "not used",
+      "static": {
+        "exists": true,
+        "canonical_sha256": "37276e07ca06a81cda102c0ae9fe69cd4261c9759497b4843f9507c21af4c99c",
+        "reads_canonical_records_json": false,
+        "mentions_reference_or_golden": true,
+        "calls_reference_mutant_classifier": false,
+        "imports_real_atheris": false,
+        "deep_copies_arguments": false
+      },
+      "tests_present": {
+        "tests/test_oracle_diagnosis.py": true
+      }
+    },
+    "harness/rehearsal_evaluator.py": {
+      "classification": "reusable_unchanged",
+      "tests": [
+        "tests/test_rehearsal_receipt.py"
+      ],
+      "findings": [
+        "imports the sealed evaluator's pure scoring helpers; retains raw outputs and hashes; refuses the consumed test split; accepts exactly candidates_per_target slots per record"
+      ],
+      "disposition": "scores all three arms unchanged, after generation is frozen",
+      "static": {
+        "exists": true,
+        "canonical_sha256": "ed16b84dec441f5e9d4474f3d300d02ff6af7671cbfa6afab0f2f26fa248eeda",
+        "reads_canonical_records_json": false,
+        "mentions_reference_or_golden": false,
+        "calls_reference_mutant_classifier": false,
+        "imports_real_atheris": false,
+        "deep_copies_arguments": false
+      },
+      "tests_present": {
+        "tests/test_rehearsal_receipt.py": true
+      }
+    },
+    "harness/native_repository_eval.py": {
+      "classification": "reusable_after_fix",
+      "tests": [
+        "tests/test_native_repository_eval.py"
+      ],
+      "findings": [
+        "fail-closed statuses separate environment failures from behavioural outcomes",
+        "requires WSL-built per-bug environments; no generated test has been executed natively yet"
+      ],
+      "disposition": "readiness blocked on environment reliability (see readiness)",
+      "static": {
+        "exists": true,
+        "canonical_sha256": "be3322f244ff2f10e43cc656d333406d559671ead326573b0932b26b236fd524",
+        "reads_canonical_records_json": false,
+        "mentions_reference_or_golden": true,
+        "calls_reference_mutant_classifier": false,
+        "imports_real_atheris": false,
+        "deep_copies_arguments": false
+      },
+      "tests_present": {
+        "tests/test_native_repository_eval.py": true
+      }
+    },
+    "baseline/atheris_harness.py": {
+      "classification": "diagnostic_only",
+      "tests": [
+        "tests/test_atheris_harness.py",
+        "tests/test_atheris_panel_and_comparison.py",
+        "tests/test_atheris_seed_aggregate.py"
+      ],
+      "findings": [
+        "real atheris package driving libFuzzer, labelled distinct from the simulated baseline.coverage_fuzzer",
+        "differential oracle uses the reference (baseline only, never a model input)",
+        "deep-copies arguments per implementation",
+        "integer inputs are bounded to [-1000, 1000]; branches outside that range are unreachable by construction",
+        "its own comments record that an earlier validation sweep ran without coverage instrumentation (since fixed)"
+      ],
+      "disposition": "baseline for a separate comparison; not part of the repair arms",
+      "static": {
+        "exists": true,
+        "canonical_sha256": "2ae5ad31e8e5053411bdf61fac451f364dbf866b20a74a63b400cd83d7e985b0",
+        "reads_canonical_records_json": false,
+        "mentions_reference_or_golden": true,
+        "calls_reference_mutant_classifier": false,
+        "imports_real_atheris": true,
+        "deep_copies_arguments": true
+      },
+      "tests_present": {
+        "tests/test_atheris_harness.py": true,
+        "tests/test_atheris_panel_and_comparison.py": true,
+        "tests/test_atheris_seed_aggregate.py": true
+      }
+    },
+    "scripts/measure_repair_loop_headroom.py": {
+      "classification": "unsafe_for_this_experiment",
+      "tests": [],
+      "findings": [
+        "reads the canonical records.json",
+        "uses the superseded observation taxonomy that exposes pass/fail on the code under test"
+      ],
+      "disposition": "not used",
+      "static": {
+        "exists": true,
+        "canonical_sha256": "e6ab819c36cb8fadd128a2417375282478b74fc58686b252194f48a698cb9b10",
+        "reads_canonical_records_json": true,
+        "mentions_reference_or_golden": true,
+        "calls_reference_mutant_classifier": false,
+        "imports_real_atheris": false,
+        "deep_copies_arguments": false
+      },
+      "tests_present": {}
+    },
+    "scripts/measure_metamorphic_ceiling.py": {
+      "classification": "diagnostic_only",
+      "tests": [],
+      "findings": [
+        "reads the canonical records.json and executes the reference; a ceiling measurement, never a model input"
+      ],
+      "disposition": "not used",
+      "static": {
+        "exists": true,
+        "canonical_sha256": "296564bf39b15924975f4b112ec1728e8971e77bdc575a76718db1dc28304404",
+        "reads_canonical_records_json": true,
+        "mentions_reference_or_golden": true,
+        "calls_reference_mutant_classifier": true,
+        "imports_real_atheris": false,
+        "deep_copies_arguments": false
+      },
+      "tests_present": {}
+    },
+    "scripts/diagnose_atheris_survivors.py": {
+      "classification": "unsafe_for_this_experiment",
+      "tests": [],
+      "findings": [
+        "default input is the validation-split Atheris task file",
+        "uses gold assertions as a diagnostic oracle"
+      ],
+      "disposition": "not run",
+      "static": {
+        "exists": true,
+        "canonical_sha256": "f3331d6ecf58c1358cd0a50ab7ab7600b27a7b2394784a4f25840ee6ed454d22",
+        "reads_canonical_records_json": false,
+        "mentions_reference_or_golden": true,
+        "calls_reference_mutant_classifier": false,
+        "imports_real_atheris": false,
+        "deep_copies_arguments": false
+      },
+      "tests_present": {}
+    },
+    "scripts/run_atheris_wsl.sh": {
+      "classification": "reusable_unchanged",
+      "tests": [],
+      "findings": [
+        "one target per process, per-target working directory, wall-limit and per-input timeout, finalises every result file"
+      ],
+      "disposition": "used only for the readiness smoke",
+      "static": {
+        "exists": true,
+        "canonical_sha256": "af7f76bae18aea47253306b1c6b4d62402bb00b84e5777f243af0ebdbaecb2b0",
+        "reads_canonical_records_json": false,
+        "mentions_reference_or_golden": false,
+        "calls_reference_mutant_classifier": false,
+        "imports_real_atheris": false,
+        "deep_copies_arguments": false
+      },
+      "tests_present": {}
+    }
+  },
+  "missing_components_now_implemented": {
+    "buggy-side executor with frame attribution": "harness/buggy_side_execution.py",
+    "closed, versioned, hashable feedback taxonomy": "harness/execution_feedback.py",
+    "bounded repair loop with compute-matched resampling control, lineage, outcome-blind final-slot policy and resume journal": "harness/tool_assisted_generation.py"
+  },
+  "checks_performed": [
+    "fixed-code or gold-test leakage",
+    "validation/sealed-data access",
+    "fabricated expected values",
+    "parser differences from the successor protocol",
+    "raw-output loss",
+    "candidate reranking",
+    "candidate budgets",
+    "deep-copy of mutable arguments",
+    "filesystem/network/process safety",
+    "simulated vs actual Atheris labelling"
+  ],
+  "readiness": {
+    "atheris": {
+      "probe": {
+        "atheris_python_and_version": "3.11.15 2.3.0",
+        "probed_utc": "2026-09-24T16:55:21.139445+00:00"
+      },
+      "is_actual_atheris": true,
+      "wsl_distribution": "Ubuntu-24.04 (WSL2)",
+      "instrumentation_smoke": {
+        "target": "synthetic int branch x > 500 (reachable within the [-1000, 1000] adapter range); reference returns x",
+        "coverage_instrumented": true,
+        "libfuzzer_coverage": "cov 2 -> 3 (NEW)",
+        "outcome": "killed",
+        "kill_kind": "semantic_kill",
+        "runs_to_kill": 11,
+        "negative_check": "a branch at x > 1000 was unreachable: the adapter bounds integers to [-1000, 1000]"
+      },
+      "crash_vs_semantic_separated": true,
+      "blocking_defects": [
+        "input adapter ranges are fixed ([-1000,1000] ints, <=8-element lists): reachability must be reported per target, not assumed",
+        "earlier Atheris artifacts on validation predate the instrumentation fix and are not reusable for a reportable comparison",
+        "no permitted (non-validation) Atheris task panel exists for the tool-assisted pilot panel yet"
+      ],
+      "status": "ready_for_smoke_not_for_comparison"
+    },
+    "native_repository": {
+      "host": "WSL2 Ubuntu 24.04; per-bug interpreters 3.7-3.11",
+      "official_test_pilot": {
+        "tasks": 5,
+        "reproduced": 3,
+        "infrastructure_failures": 2,
+        "reproduced_tasks": [
+          "bugsinpy::thefuck::1",
+          "bugsinpy::sanic::1",
+          "bugsinpy::tornado::1"
+        ],
+        "failures": {
+          "bugsinpy::httpie::1": "pytest exit 4 (collection)",
+          "bugsinpy::fastapi::1": "flit_core<4 unresolvable"
+        }
+      },
+      "generated_tests_executed_natively": 0,
+      "environment_failures_counted_as_model_outcomes": false,
+      "blocking_defects": [
+        "40% infrastructure failure on the official-test pilot",
+        "no generated repository test has been executed natively",
+        "all 13 train repository projects are in the frozen control's training arm, so any native run on them is an engineering smoke, not evidence",
+        "the local ingestion cache is a blob-less partial clone; environments must be rebuilt from upstream URLs"
+      ],
+      "status": "not_ready_for_reportable_comparison",
+      "smoke_plan": [
+        {
+          "case": "bugsinpy::thefuck::1",
+          "purpose": "reproduced official test; inject 8 generated tests, expect buggy/fixed statuses recorded per test"
+        },
+        {
+          "case": "bugsinpy::sanic::1",
+          "purpose": "second reproduced project"
+        },
+        {
+          "case": "bugsinpy::tornado::1",
+          "purpose": "third reproduced project"
+        },
+        {
+          "case": "negative control: a generated test that passes on both revisions",
+          "purpose": "must be passes_both, never a kill"
+        },
+        {
+          "case": "negative control: environment build forced to fail",
+          "purpose": "must be environment_unavailable, never a model failure or positive example"
+        }
+      ],
+      "smoke_runtime_estimate": {
+        "cpu_wsl_minutes": "15-45 (environment builds, 900 s timeout each)",
+        "gpu_minutes": "about 1 (8 samples x 3 tasks)"
+      },
+      "artifacts_needed_before_reportable_comparison": [
+        "a frozen repository panel outside every training arm (none exists in the train shard today)",
+        "per-task environment receipts (interpreter, dependency lock, commit hashes) with a reliability target met on official tests",
+        "a smoke receipt showing generated tests reach both revisions and every environment failure is excluded from rates",
+        "a predeclared analysis with separate environment-failure accounting"
+      ]
+    }
+  }
+}

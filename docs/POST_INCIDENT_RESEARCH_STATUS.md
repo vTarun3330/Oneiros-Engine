@@ -470,3 +470,42 @@ reference. The following will not happen without an explicit new decision:
 Each decision receipt binds every training result, adapter, evaluation artifact,
 run ID and source file by hash. Adapters, raw evaluations and datasets stay in
 ignored local storage on the GPU machine.
+
+## 8. Next direction: execution feedback at inference (designed, not run)
+
+The execution-supervision SFT line is closed and will not be reopened: there
+will be no more epochs, dose increases, mixture changes, re-thresholding or new
+execution-supervision adapters.
+
+The next hypothesis is different in kind. Execution feedback at inference time
+may improve test generation beyond what the same inference compute achieves by
+resampling. It writes no weights, and the model is never asked to simulate the
+program. Candidates are executed in the sandbox against the code under test,
+and only demonstrably invalid artifacts receive feedback: parse and shape
+failures, prohibited constructs, invented names, malformed calls, and duplicates.
+
+Some outcomes get no feedback at all:
+- assertion failures;
+- clean passes;
+- exceptions or timeouts inside the code under test.
+
+These are kept silently, because each could be, or would reveal, a kill.
+
+The full design is in [TOOL_ASSISTED_REPAIR_PROTOCOL.md](TOOL_ASSISTED_REPAIR_PROTOCOL.md).
+Its main features:
+- **Arms:** A is the canonical control. B is a compute-matched resampling control. C is the repair arm.
+- **Pairing:** B and C share round 1, so C differs from B only where feedback was given. Both spend 16 sequences per target.
+- **Final slots:** chosen by a policy that is blind to assertion outcomes.
+- **Gate:** C − B Kill@8 must gain at least +5 pp with a lower bound above 0, and reference validity must stay within −3 pp.
+
+**Panel.** The panel is a *qualified exploratory* train-derived set: 264 MBPP
+records in 110 lineages. It is disjoint from every training arm and from every
+earlier panel. It is not untouched: base-model generations on every train
+lineage were labelled in the O1 oracle artifact. It also has no complex-tier,
+HumanEval or repository records. Results on it cannot be confirmatory.
+
+**Readiness.**
+- **Actual Atheris:** the installed package is the real one and its instrumentation is active, but no permitted comparison panel exists yet.
+- **Native repository:** execution is not ready for a reportable comparison. Only 3 of 5 official tests reproduce, and no generated test has been run natively.
+
+**No result exists yet. GPU generation awaits explicit approval.**
