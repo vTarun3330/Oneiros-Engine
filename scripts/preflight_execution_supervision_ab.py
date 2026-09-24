@@ -156,9 +156,15 @@ def preflight(dataset_dir: Path, output: Path) -> dict[str, Any]:
                 lr_scheduler_type="constant_with_warmup",
             )
             trainer.tokenizer = tokenizer
-            datasets[name] = trainer.prepare_dataset(_data_points(rows))
-            stats[name] = dict(trainer.dataset_stats)
-        if len(datasets["control"]) != ARM_SIZE or len(datasets["treatment"]) != ARM_SIZE:
+            try:
+                datasets[name] = trainer.prepare_dataset(_data_points(rows))
+                stats[name] = dict(trainer.dataset_stats)
+            except ValueError as exc:
+                problems.append(f"{name} trainer preparation failed: {exc}")
+                break
+        if problems:
+            prepared = {"stats": stats, "complete": False}
+        elif len(datasets["control"]) != ARM_SIZE or len(datasets["treatment"]) != ARM_SIZE:
             problems.append("trainer dropped one or more examples")
         else:
             supervised_equal = True

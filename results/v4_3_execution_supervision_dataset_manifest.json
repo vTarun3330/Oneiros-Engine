@@ -31,8 +31,8 @@
   "sidecar_sha256": "528f4496dfdc617935587c80250aca5e6a70b7be1dda0573f661af29c711fbbd",
   "pilot_development_sha256": "56972838fda060795840088660b09249cf95c97afcbe6bac63a82301239530ec",
   "unopened_confirmation_ids_sha256": "df3554c8fed40dbef1c11ad279dce0ea8a1ccb56ecc7986107edf8be9684728e",
-  "arm_a_sha256": "26704f2f58d1bf1bf0797f7608112a66d0af889f6bcda3caae285fd37a589c60",
-  "arm_b_sha256": "77d44dac517dc5755bb0d8d4030bea2adcec4da3d423ac95d71862bd403df407",
+  "arm_a_sha256": "e9337b479ec5a60dee606a51a06d372b189a72584f493514d863e301e8ab1687",
+  "arm_b_sha256": "c082f30cc8f1de097800f41d25a053b8b2dd2e737e395cf40da9abcda53af4c2",
   "arm_report": {
     "schema_version": "oneiros_execution_supervision_ab_v1",
     "arm_size": 1024,
@@ -192,17 +192,17 @@
     "manual_curated_examples": 2
   },
   "arm_a_source_counts": {
-    "mbpp": 403,
+    "mbpp": 433,
     "humaneval": 294,
-    "SWE-bench Verified": 166,
-    "BugsInPy": 148,
+    "SWE-bench Verified": 159,
+    "BugsInPy": 125,
     "manual_curated_examples": 13
   },
   "arm_b_source_counts": {
-    "mbpp": 403,
+    "mbpp": 433,
     "humaneval": 294,
-    "SWE-bench Verified": 166,
-    "BugsInPy": 148,
+    "SWE-bench Verified": 159,
+    "BugsInPy": 125,
     "manual_curated_examples": 13
   },
   "trace_training_eligible_replacements": 122,
@@ -211,7 +211,7 @@
     "harness/execution_supervision_sidecar.py": "5de35cd6f73bb862fd24f64321098e5924d686b4c37c783d08dee37a008b12a4",
     "engine/sft_trainer.py": "95e1746a3b58b61d9beb1b79e1e83feabf50f3656818ea5abdfb17f30f19efed",
     "engine/test_generation_prompt.py": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
-    "scripts/build_execution_supervision_dataset.py": "e8feeba2d44d849b9e4f80f4394b9ccf964c4462fd9e2a28ac7860b34b2bad03"
+    "scripts/build_execution_supervision_dataset.py": "6d7de3d3f81696d868fb2894648252d2ab765d4a7d66c424d38b9b21e85660d2"
   },
   "source_candidates_sha256": "b4a92fd7fa5c5d081204f41be348886501830c309bfe9bde869ff538fc152175",
   "source_oracle_manifest_sha256": "0acdce9636cc67a451f424a7cb9fc1479dbc1201e72231a4149e027c49565065",

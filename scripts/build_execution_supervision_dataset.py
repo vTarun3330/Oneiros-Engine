@@ -33,6 +33,7 @@ from engine.test_generation_prompt import (
     format_chat_prompt,
     sanitize_behavioral_specification,
 )
+from engine.prompt_budget import PromptBudgetError, compact_unified_user_prompt
 from harness.candidate_policy import validate_function_assertion
 from harness.corpus import sha256_file, write_json
 from harness.corpus_view import load_development_split
@@ -462,10 +463,11 @@ def _select_shared(
                                       for row in replacement_rows)
     family_counts: Counter = Counter(str(row["bug_family"])
                                      for row in replacement_rows)
-    # Four real/synthetic sources remain represented. The empirical clean
-    # supply cannot meet 0.35 without duplication; 0.40 is the tightest cap
-    # that fills 1,024 unique examples under the frozen holdout boundaries.
-    max_source = int(ARM_SIZE * 0.40)
+    # Four real/synthetic sources remain represented. After exact prompt-fit
+    # filtering, 0.425 is the tightest ceiling that fills 1,024 unique
+    # examples under the frozen holdout boundaries. Repetition is not used to
+    # manufacture a lower share.
+    max_source = int(ARM_SIZE * 0.425)
     max_family = int(ARM_SIZE * 0.35)
     while len(selected) < target:
         possible = [source for source, queue in queues.items() if queue
@@ -488,6 +490,24 @@ def _select_shared(
                 continue
             if family_counts[family] >= max_family:
                 continue
+            prompt_limit = (
+                2048 if str(row.get("execution_mode")).startswith("repository_")
+                else PROMPT_TOKEN_LIMIT
+            )
+            completion_tokens = int(row["completion_tokens_with_eos"])
+            prompt_limit = min(prompt_limit, MAX_SEQUENCE_TOKENS - completion_tokens)
+            try:
+                compaction = compact_unified_user_prompt(
+                    tokenizer,
+                    str(row["canonical_prompt"]),
+                    prompt_limit,
+                    format_chat_prompt,
+                )
+            except PromptBudgetError:
+                continue
+            row["canonical_prompt_tokens_original"] = compaction.original_token_count
+            row["canonical_prompt_tokens_final"] = compaction.final_token_count
+            row["canonical_prompt_compacted"] = compaction.compacted
             selected.append(row)
             source_counts[source] += 1
             lineage_counts[lineage] += 1
