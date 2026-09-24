@@ -8,6 +8,7 @@ from engine.sft_trainer import (
 )
 import engine.sft_trainer as sft_module
 from engine.test_generation_prompt import build_unified_user_prompt
+from harness.execution_supervision import OUTPUT_PREDICTION_TASK_KIND
 
 
 class _TokenLengthTokenizer:
@@ -22,6 +23,16 @@ class _TokenLengthTokenizer:
     def __call__(self, text, add_special_tokens=False):
         normalized = text.replace(self.eos_token, f" {self.eos_token}")
         return {"input_ids": normalized.split()}
+
+
+class _MixedTaskTokenizer(_TokenLengthTokenizer):
+    def apply_chat_template(self, messages, tokenize=False, add_generation_prompt=True):
+        assert tokenize is False
+        assert add_generation_prompt is True
+        roles = [message["role"] for message in messages]
+        assert roles in (["system", "user"], ["user"])
+        prefix = "SYS " if roles == ["system", "user"] else "USER "
+        return prefix + messages[-1]["content"]
 
 
 def _dataset_only_trainer(
@@ -136,6 +147,47 @@ def test_sft_repository_fragment_uses_its_larger_prompt_budget(monkeypatch):
     ])
 
     assert 80 < dataset[0]["completion_start"] <= 160
+
+
+def test_execution_output_task_uses_user_only_renderer_and_masks_prompt(monkeypatch):
+    monkeypatch.setattr(sft_module, "Dataset", _DatasetStub, raising=False)
+    trainer = _dataset_only_trainer(prompt_limit=64, completion_limit=16)
+    trainer.tokenizer = _MixedTaskTokenizer()
+    point = SFTDataPoint(
+        prompt="focused execution prompt",
+        completion="assert f(1) == 2",
+        function_id="execution-row",
+        task_kind=OUTPUT_PREDICTION_TASK_KIND,
+    )
+    dataset = trainer.prepare_dataset([point])
+    assert dataset[0]["completion_start"] == 4
+    assert trainer.dataset_stats["task_kind_counts"] == {
+        OUTPUT_PREDICTION_TASK_KIND: 1,
+    }
+
+
+def test_execution_output_task_refuses_compaction_and_whitespace(monkeypatch):
+    monkeypatch.setattr(sft_module, "Dataset", _DatasetStub, raising=False)
+    trainer = _dataset_only_trainer(prompt_limit=2, completion_limit=16)
+    trainer.tokenizer = _MixedTaskTokenizer()
+    with pytest.raises(ValueError, match="malformed/over-budget"):
+        trainer.prepare_dataset([
+            SFTDataPoint(
+                prompt="three prompt tokens",
+                completion="assert f(1) == 2",
+                function_id="overlong-execution-row",
+                task_kind=OUTPUT_PREDICTION_TASK_KIND,
+            )
+        ])
+    with pytest.raises(ValueError, match="completion bytes are not canonical"):
+        trainer.prepare_dataset([
+            SFTDataPoint(
+                prompt="short",
+                completion=" assert f(1) == 2 ",
+                function_id="whitespace-execution-row",
+                task_kind=OUTPUT_PREDICTION_TASK_KIND,
+            )
+        ])
 
 
 def test_safer_v3_sft_defaults_bound_optimizer_drift():

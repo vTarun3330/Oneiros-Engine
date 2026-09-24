@@ -50,6 +50,10 @@ from engine.prompt_budget import (
     compact_unified_user_prompt,
 )
 from engine.test_generation_prompt import format_chat_prompt
+from harness.execution_supervision import (
+    OUTPUT_PREDICTION_TASK_KIND,
+    format_output_prediction_chat_prompt,
+)
 
 
 #: Raised from 2048 for the successor protocol. The launch guard refuses a
@@ -127,6 +131,10 @@ class SFTDataPoint:
     execution_mode: str = "function_assertion"
     dataset: str = "unknown"
     dataset_family: str = "unknown::unknown"
+    # Default preserves the historical byte-for-byte rendering path.  The
+    # execution pilot opts into a separate user-only prompt contract; mixing
+    # task renderers implicitly is forbidden in prepare_dataset.
+    task_kind: str = "test_generation"
 
 
 
@@ -462,7 +470,19 @@ class OneirosSFTTrainer:
         code_units_dropped = 0
         max_observed_prompt = 0
         max_observed_completion = 0
+        task_kind_counts: Dict[str, int] = {}
         for dp in data_points:
+            task_kind_counts[dp.task_kind] = task_kind_counts.get(dp.task_kind, 0) + 1
+            if dp.task_kind not in {"test_generation", OUTPUT_PREDICTION_TASK_KIND}:
+                raise ValueError(f"Unsupported SFT task_kind: {dp.task_kind!r}")
+            if (
+                dp.task_kind == OUTPUT_PREDICTION_TASK_KIND
+                and dp.completion != dp.completion.strip()
+            ):
+                raise ValueError(
+                    "execution-output completion bytes are not canonical; "
+                    "leading/trailing whitespace would be changed by SFT"
+                )
             completion_text = dp.completion.strip() + self.tokenizer.eos_token
             completion_ids = self.tokenizer(completion_text, add_special_tokens=False)["input_ids"]
             completion_limit = sft_completion_limit_for_execution_mode(
@@ -492,27 +512,50 @@ class OneirosSFTTrainer:
                 mode_prompt_limit,
                 MAX_SFT_SEQUENCE_LENGTH - len(completion_ids),
             )
-            try:
-                compaction = compact_unified_user_prompt(
-                    self.tokenizer,
-                    dp.prompt,
-                    max_prompt_tokens,
-                    format_chat_prompt,
+            if dp.task_kind == OUTPUT_PREDICTION_TASK_KIND:
+                # The focused task is not the canonical six-section prompt and
+                # must never be sent through its AST compactor.  Its code,
+                # specification, and call are all load-bearing, so an overlong
+                # row is rejected rather than sliced or reformatted.
+                rendered_prompt = format_output_prediction_chat_prompt(
+                    self.tokenizer, dp.prompt
                 )
-            except PromptBudgetError as exc:
-                malformed_prompts.append({
-                    "function_id": dp.function_id,
-                    "execution_mode": dp.execution_mode,
-                    "reason": str(exc),
-                })
-                continue
-            prompt_ids = compaction.token_ids
-            max_observed_prompt = max(
-                max_observed_prompt, compaction.original_token_count
-            )
-            prompt_truncated += int(compaction.compacted)
-            support_units_dropped += compaction.support_units_dropped
-            code_units_dropped += compaction.code_units_dropped
+                prompt_ids = list(self.tokenizer(
+                    rendered_prompt, add_special_tokens=False
+                )["input_ids"])
+                max_observed_prompt = max(max_observed_prompt, len(prompt_ids))
+                if len(prompt_ids) > max_prompt_tokens:
+                    malformed_prompts.append({
+                        "function_id": dp.function_id,
+                        "execution_mode": dp.execution_mode,
+                        "reason": (
+                            "execution-output prompt exceeds its fail-closed "
+                            f"budget ({len(prompt_ids)} > {max_prompt_tokens})"
+                        ),
+                    })
+                    continue
+            else:
+                try:
+                    compaction = compact_unified_user_prompt(
+                        self.tokenizer,
+                        dp.prompt,
+                        max_prompt_tokens,
+                        format_chat_prompt,
+                    )
+                except PromptBudgetError as exc:
+                    malformed_prompts.append({
+                        "function_id": dp.function_id,
+                        "execution_mode": dp.execution_mode,
+                        "reason": str(exc),
+                    })
+                    continue
+                prompt_ids = compaction.token_ids
+                max_observed_prompt = max(
+                    max_observed_prompt, compaction.original_token_count
+                )
+                prompt_truncated += int(compaction.compacted)
+                support_units_dropped += compaction.support_units_dropped
+                code_units_dropped += compaction.code_units_dropped
             token_ids = prompt_ids + completion_ids
             input_ids.append(token_ids)
             attention_masks.append([1] * len(token_ids))
@@ -534,6 +577,7 @@ class OneirosSFTTrainer:
             "malformed_prompt_examples": len(malformed_prompts),
             "support_units_dropped": support_units_dropped,
             "code_units_dropped": code_units_dropped,
+            "task_kind_counts": dict(sorted(task_kind_counts.items())),
         }
         if incompatible:
             sample = ", ".join(
