@@ -2,14 +2,14 @@
   "schema_version": "oneiros_execution_dose_preflight_v1",
   "ready": true,
   "problems": [],
-  "created_utc": "2026-09-24T11:28:12.825851+00:00",
+  "created_utc": "2026-09-24T14:04:27.174304+00:00",
   "git": {
     "branch": "experiment/research-eval-ablations",
-    "commit": "df6e20fbba02b1584e4263c5c4fb6f52488173f2",
+    "commit": "41e821ac2f80cbe8931d52a81bd706eac2457d8c",
     "clean": true
   },
   "dataset": {
-    "manifest_sha256": "fd57b1c3f8fbe49b9ea510f4353701e5324c54cb2833ad375a7601173e1a9d84",
+    "manifest_sha256": "1327274aad2d8931c17290f4fd37580ffa859de98de081ea4060e56165a5d150",
     "treatment_arm_sha256": "619e72ea984b90df2800cfe177d90da90887140878475a4ca539ff08fab0b9d8",
     "control_arm_sha256": "e9337b479ec5a60dee606a51a06d372b189a72584f493514d863e301e8ab1687",
     "chosen_design": "d25",
@@ -273,7 +273,7 @@
     ],
     "pilot_development_sha256": "56972838fda060795840088660b09249cf95c97afcbe6bac63a82301239530ec",
     "retention_panel_sha256": "17d4e6f525dee754b60ed80b93616005499d557eb0f3bbe991edba5cf523b046",
-    "design_report_sha256": "407a5ddd3d1c0b4cb1bbe3ddd9cfe9c1f28857ac102f140236b9a416adeec382",
+    "design_report_sha256": "55a3e0e3f7310a17d3ed28ad4c751e99bba4068416e7315a227dfb405afdd6bd",
     "census_sha256": "30b8647cab5ed20a7eb7585e9bbab679d38cb59b1ba34cfa769b802773a10104"
   },
   "control": {
@@ -315,10 +315,52 @@
     "dpo": false,
     "rlvr": false
   },
+  "intervention_label": "25%-example / 58%-supervised-token execution intervention",
+  "inference_limitation": "Any observed effect is attributable to the combined 25%-example, 58%-token execution-supervision intervention and cannot isolate supervision type from supervised-token exposure.",
+  "design_class": "composite efficacy pilot (token-matched control infeasible)",
+  "matched_control_study": {
+    "report_sha256": "3c3d92c7f41987817c4b81fc6a88870db296fa5cf0048bc945babf7f386f343b",
+    "feasible_tolerances": [],
+    "best_ratio_to_treatment": 0.855131,
+    "upper_bound_ratio_valid_construction": 0.889739
+  },
+  "replay_balance": {
+    "no_category_removed": true,
+    "minimum_kept_fraction": {
+      "section": "by_source_and_tier",
+      "category": "humaneval/simple",
+      "control": 3,
+      "kept": 2,
+      "kept_fraction": 0.6667
+    },
+    "integer_granularity_note": "kept counts are integers, so a cell of n rows can only keep k/n; a 3-row cell keeps 2/3 = 66.7% or 3/3, never 75%. Large groups sit near the 75% target; small cells can fall below it. No 75% floor is claimed."
+  },
+  "prompt_compaction_evidence": {
+    "control": {
+      "retained_examples": 1024,
+      "dropped_overlong_examples": 0,
+      "malformed_prompt_examples": 0,
+      "prompt_compacted_examples": 141,
+      "prompt_truncated_examples": 141,
+      "support_units_dropped": 7203,
+      "code_units_dropped": 0,
+      "prompt_compaction_strategy": "section_aware_ast_units_before_chat_v4_1"
+    },
+    "dose_treatment": {
+      "retained_examples": 1024,
+      "dropped_overlong_examples": 0,
+      "malformed_prompt_examples": 0,
+      "prompt_compacted_examples": 92,
+      "prompt_truncated_examples": 92,
+      "support_units_dropped": 4438,
+      "code_units_dropped": 0,
+      "prompt_compaction_strategy": "section_aware_ast_units_before_chat_v4_1"
+    }
+  },
   "declared_differences_from_control": [
     "256 canonical rows replaced by ordered execution-trace examples (the intervention)",
     "auxiliary execution targets use the 1,024-token completion ceiling the 12% arm used; no canonical function completion exceeds 128 tokens, so canonical rows are prepared identically",
-    "supervised token mass is higher than control by the measured ratio"
+    "supervised token mass is 1.205306x the control's; the effect of this difference cannot be separated from the supervision type"
   ],
   "optimizer_schedule": {
     "unique_examples": 1024,
@@ -437,21 +479,22 @@
     "engine/test_generation_prompt.py": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
     "config/settings.py": "5fa95a33073318dcc31f21c081cadcf2b60d38b34170061cfd010b6553aaa259",
     "harness/execution_supervision.py": "94b0250b30337eb288d32d85f7b6a5de33b0b6a76c16c40d40f39d25ba0f8b6e",
-    "harness/execution_dose.py": "b3191aca7bc5152b3c331999231e3d1f2b2f16e1e7365ff25c686fa62a9e2614",
+    "harness/execution_dose.py": "285fb540a4d986f37d429a9ecfb1457c0ce8b6c128a18f069fb0aad5ee457faa",
     "harness/generation_adapter.py": "39583f39acdfb885286a406d65f5d90e7547ea9069760870f610eafd09c6a8f7",
     "harness/rehearsal_evaluator.py": "ed16b84dec441f5e9d4474f3d300d02ff6af7671cbfa6afab0f2f26fa248eeda",
     "harness/sealed_final_evaluator.py": "56869a08e9e4ae618d883e2caae86868630dfcb88736d57f127aca9068e7becf",
     "harness/evaluation_admission.py": "9c8d1c835d95d1d188ccaeb2b73f8359aae1c97b619270b711d6835553e6f575",
     "scripts/census_execution_dose_pool.py": "7f45768e9dd14e53410fd14d3ba63af2c647374f82b0b8e71a9823580cdd7b4c",
-    "scripts/build_execution_dose_ab.py": "06d58d6e691306f2cb439db4263acc7427faff0f2beee220055ed4ada871e611",
+    "scripts/build_execution_dose_ab.py": "3433ac6422b327b3da9e669170c0853950a2129246396947a974769547bf5211",
+    "scripts/build_execution_dose_matched_control.py": "ecd69888303e97653e0c029b723fe90682a3772acc59f83723e14671e157a2aa",
     "scripts/build_execution_trace_ab.py": "b344488d93a2f3f854c6d7efe1f4400fe09f3e2f51eba501f89c7cbda42d9b70",
     "scripts/freeze_execution_dose_retention_panel.py": "9b7fc5a0c9045d81140f35a7d0a17dc64abfe5079d9a516021b3ad704a4b5f7c",
-    "scripts/preflight_execution_dose_ab.py": "a6cd217158a893ceb5ba30748a271b77c0105bd394f9090139b7c941dc11a88d",
-    "scripts/run_execution_dose_pilot.py": "02158403e97a1ed1fdbc6bb77fbbfa686f9b3dafea082d3a17940bdcd266465c",
-    "scripts/evaluate_execution_dose_mechanism.py": "b3f1bea850d113975a5dedd66f8593e6a1882e6cfe4d64fbfc33873dd15745df",
-    "scripts/evaluate_execution_dose_retention.py": "d2562e7380333a503ec614eef565e54f653f2ec03aecf5ea1fe914fb9ead6f6d",
+    "scripts/preflight_execution_dose_ab.py": "a13926ae82420243754b9d95533f70f942244781e94f1479b7040d3a7f12a1d0",
+    "scripts/run_execution_dose_pilot.py": "f328d8179dd5512517bea954696f84473f79f926002649eabd799fdd165c8b4c",
+    "scripts/evaluate_execution_dose_mechanism.py": "6c748baa7fb40716d9acb0e4629ff9d616025f87176de0efc65b45da73af6b51",
+    "scripts/evaluate_execution_dose_retention.py": "cd4a101be841e99eed9ec45eab90d0f2856123b60046b5374afd8f5ee3163d2e",
     "scripts/evaluate_execution_supervision_pilot.py": "c2cc1e23ec8d7393c6acf4dd28045372e0a0f390d10e9c4051c38d79b04bcc38",
-    "scripts/analyse_execution_dose_pilot.py": "23ccdff96d21410a3b2f1b68e86037b98db42be0e408e9f9c64f19a7e7862478",
+    "scripts/analyse_execution_dose_pilot.py": "ee262bf13c3068c5bbf09ce6d4e39f5510265d07079fe25001dfdd451fa6f133",
     "scripts/diagnose_execution_trace_pilot.py": "669944447a26ffb619e44eb8aa7057d17825620da034145b24e9d3139b062f14"
   },
   "leakage": {
