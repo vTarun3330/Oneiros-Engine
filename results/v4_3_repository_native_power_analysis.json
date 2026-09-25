@@ -1,0 +1,307 @@
+{
+  "schema_version": "oneiros_repository_native_power_analysis_v1",
+  "label": "prospective design calculation from permitted train-derived evidence only",
+  "gate": {
+    "min_gain_pp": 5.0,
+    "lower_bound": "one-sided 95% (two-sided 90%) > 0"
+  },
+  "evidence": {
+    "retention_control_vs_base": {
+      "records": 613,
+      "clusters": 100,
+      "mean_cluster_size": 6.13,
+      "discordance": 0.2121,
+      "difference_pp": 0.653,
+      "icc_of_paired_differences": 0.0062,
+      "inputs_sha256": {
+        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_execution_dose_v1\\retention_base\\rehearsal_result.json": "4d8cbc59631a58a28eec99ed174ec9b3aae1a08c2932ff197ebad41ee62720ee",
+        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_execution_dose_v1\\retention_control\\rehearsal_result.json": "b3f819296e3c5ec6fc6a2c12007d125a2fe889aa6167318cd8fb4e0a8c58c4a2",
+        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_execution_dose_retention_panel.json": "17d4e6f525dee754b60ed80b93616005499d557eb0f3bbe991edba5cf523b046"
+      }
+    },
+    "retention_treatment_vs_control": {
+      "records": 613,
+      "clusters": 100,
+      "mean_cluster_size": 6.13,
+      "discordance": 0.2121,
+      "difference_pp": -0.326,
+      "icc_of_paired_differences": -0.0174,
+      "inputs_sha256": {
+        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_execution_dose_v1\\retention_control\\rehearsal_result.json": "b3f819296e3c5ec6fc6a2c12007d125a2fe889aa6167318cd8fb4e0a8c58c4a2",
+        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_execution_dose_v1\\retention_dose_treatment\\rehearsal_result.json": "4bbf9d10d6934aaf0fef568e77b8a6a136d5e1ed61e10d2cd9da5aa941fe66c9",
+        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_execution_dose_retention_panel.json": "17d4e6f525dee754b60ed80b93616005499d557eb0f3bbe991edba5cf523b046"
+      }
+    },
+    "toolassist_b_vs_a": {
+      "records": 264,
+      "clusters": 110,
+      "mean_cluster_size": 2.4,
+      "discordance": 0.1705,
+      "difference_pp": 6.439,
+      "icc_of_paired_differences": -0.1214,
+      "inputs_sha256": {
+        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_tool_assisted_v1\\eval_A\\rehearsal_result.json": "3ab0b54fca91ba4010b9e04f3188786dfe2657c6aea3f829da6d6dea8c4adbfd",
+        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_tool_assisted_v1\\eval_B\\rehearsal_result.json": "fe63091a5300c02f0f7eb179d3cefdc73429b984c4afd093f37168f4e9e93eab",
+        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_tool_assisted_panel.json": "fa8f51980b86fdb4d71a9beb5e8bec5c481741ce87145844f871cfbe4b2dda40"
+      }
+    }
+  },
+  "scenarios": {
+    "discordance": [
+      0.15,
+      0.21,
+      0.3,
+      0.4
+    ],
+    "central_discordance": 0.21,
+    "rho": [
+      0.0,
+      0.05,
+      0.1,
+      0.2
+    ],
+    "central_rho": 0.05,
+    "repositories_central": 25,
+    "per_repository_cap": 0.08,
+    "design_effect": "1 + (m - 1) * rho"
+  },
+  "power_by_n": {
+    "100": {
+      "targets_per_repository_central": 4.0,
+      "targets_per_repository_at_cap": 8.0,
+      "power_central": {
+        "5pp": 0.267,
+        "8pp": 0.503,
+        "10pp": 0.67,
+        "15pp": 0.944
+      },
+      "mde_80pct_pp": {
+        "d=0.15": {
+          "rho=0.0": 9.35,
+          "rho=0.05": 9.98,
+          "rho=0.1": 10.57,
+          "rho=0.2": 11.63
+        },
+        "d=0.21": {
+          "rho=0.0": 11.06,
+          "rho=0.05": 11.81,
+          "rho=0.1": 12.5,
+          "rho=0.2": 13.75
+        },
+        "d=0.3": {
+          "rho=0.0": 13.22,
+          "rho=0.05": 14.12,
+          "rho=0.1": 14.94,
+          "rho=0.2": 16.44
+        },
+        "d=0.4": {
+          "rho=0.0": 15.27,
+          "rho=0.05": 16.3,
+          "rho=0.1": 17.26,
+          "rho=0.2": 18.98
+        }
+      },
+      "mde_80pct_pp_at_cap_rho_0.10": {
+        "d=0.15": 11.95,
+        "d=0.21": 14.14,
+        "d=0.3": 16.9,
+        "d=0.4": 19.51
+      },
+      "lower_bound_binds_above_gate_central": true,
+      "monte_carlo_unclustered_power_d0.21": {
+        "8pp": 0.559,
+        "10pp": 0.7415
+      },
+      "analytic_unclustered_power_d0.21": {
+        "8pp": 0.551,
+        "10pp": 0.723
+      }
+    },
+    "150": {
+      "targets_per_repository_central": 6.0,
+      "targets_per_repository_at_cap": 12.0,
+      "power_central": {
+        "5pp": 0.329,
+        "8pp": 0.617,
+        "10pp": 0.789,
+        "15pp": 0.984
+      },
+      "mde_80pct_pp": {
+        "d=0.15": {
+          "rho=0.0": 7.71,
+          "rho=0.05": 8.58,
+          "rho=0.1": 9.35,
+          "rho=0.2": 10.69
+        },
+        "d=0.21": {
+          "rho=0.0": 9.12,
+          "rho=0.05": 10.15,
+          "rho=0.1": 11.06,
+          "rho=0.2": 12.65
+        },
+        "d=0.3": {
+          "rho=0.0": 10.9,
+          "rho=0.05": 12.13,
+          "rho=0.1": 13.22,
+          "rho=0.2": 15.12
+        },
+        "d=0.4": {
+          "rho=0.0": 12.59,
+          "rho=0.05": 14.0,
+          "rho=0.1": 15.27,
+          "rho=0.2": 17.46
+        }
+      },
+      "mde_80pct_pp_at_cap_rho_0.10": {
+        "d=0.15": 10.94,
+        "d=0.21": 12.94,
+        "d=0.3": 15.46,
+        "d=0.4": 17.86
+      },
+      "lower_bound_binds_above_gate_central": true,
+      "monte_carlo_unclustered_power_d0.21": {
+        "8pp": 0.7205,
+        "10pp": 0.87225
+      },
+      "analytic_unclustered_power_d0.21": {
+        "8pp": 0.701,
+        "10pp": 0.863
+      }
+    },
+    "200": {
+      "targets_per_repository_central": 8.0,
+      "targets_per_repository_at_cap": 16.0,
+      "power_central": {
+        "5pp": 0.379,
+        "8pp": 0.696,
+        "10pp": 0.859,
+        "15pp": 0.995
+      },
+      "mde_80pct_pp": {
+        "d=0.15": {
+          "rho=0.0": 7.27,
+          "rho=0.05": 7.76,
+          "rho=0.1": 8.66,
+          "rho=0.2": 10.18
+        },
+        "d=0.21": {
+          "rho=0.0": 7.94,
+          "rho=0.05": 9.18,
+          "rho=0.1": 10.24,
+          "rho=0.2": 12.05
+        },
+        "d=0.3": {
+          "rho=0.0": 9.49,
+          "rho=0.05": 10.97,
+          "rho=0.1": 12.24,
+          "rho=0.2": 14.4
+        },
+        "d=0.4": {
+          "rho=0.0": 10.96,
+          "rho=0.05": 12.66,
+          "rho=0.1": 14.14,
+          "rho=0.2": 16.63
+        }
+      },
+      "mde_80pct_pp_at_cap_rho_0.10": {
+        "d=0.15": 10.38,
+        "d=0.21": 12.28,
+        "d=0.3": 14.68,
+        "d=0.4": 16.94
+      },
+      "lower_bound_binds_above_gate_central": true,
+      "monte_carlo_unclustered_power_d0.21": {
+        "8pp": 0.81775,
+        "10pp": 0.93825
+      },
+      "analytic_unclustered_power_d0.21": {
+        "8pp": 0.806,
+        "10pp": 0.935
+      }
+    },
+    "300": {
+      "targets_per_repository_central": 12.0,
+      "targets_per_repository_at_cap": 24.0,
+      "power_central": {
+        "5pp": 0.453,
+        "8pp": 0.794,
+        "10pp": 0.929,
+        "15pp": 0.999
+      },
+      "mde_80pct_pp": {
+        "d=0.15": {
+          "rho=0.0": 6.86,
+          "rho=0.05": 7.31,
+          "rho=0.1": 7.89,
+          "rho=0.2": 9.64
+        },
+        "d=0.21": {
+          "rho=0.0": 7.2,
+          "rho=0.05": 8.07,
+          "rho=0.1": 9.34,
+          "rho=0.2": 11.4
+        },
+        "d=0.3": {
+          "rho=0.0": 7.79,
+          "rho=0.05": 9.64,
+          "rho=0.1": 11.16,
+          "rho=0.2": 13.63
+        },
+        "d=0.4": {
+          "rho=0.0": 8.99,
+          "rho=0.05": 11.13,
+          "rho=0.1": 12.89,
+          "rho=0.2": 15.74
+        }
+      },
+      "mde_80pct_pp_at_cap_rho_0.10": {
+        "d=0.15": 9.78,
+        "d=0.21": 11.57,
+        "d=0.3": 13.83,
+        "d=0.4": 15.96
+      },
+      "lower_bound_binds_above_gate_central": true,
+      "monte_carlo_unclustered_power_d0.21": {
+        "8pp": 0.886,
+        "10pp": 0.97825
+      },
+      "analytic_unclustered_power_d0.21": {
+        "8pp": 0.875,
+        "10pp": 0.974
+      }
+    }
+  },
+  "attrition_required_mining_pool": {
+    "N=100": {
+      "yield=0.07": 1429,
+      "yield=0.1": 1000,
+      "yield=0.15": 667
+    },
+    "N=150": {
+      "yield=0.07": 2143,
+      "yield=0.1": 1500,
+      "yield=0.15": 1000
+    },
+    "N=200": {
+      "yield=0.07": 2858,
+      "yield=0.1": 2000,
+      "yield=0.15": 1334
+    },
+    "N=300": {
+      "yield=0.07": 4286,
+      "yield=0.1": 3000,
+      "yield=0.15": 2000
+    }
+  },
+  "recommendation": {
+    "recommended_final_n": 300,
+    "minimum_acceptable_n": 200,
+    "reasoning": [
+      "the frozen gate needs the estimate to reach +5 pp AND a positive lower bound; in the central scenario the lower-bound requirement binds above 5 pp at every N considered (about 8.1 pp at N=100, 5.4 pp at N=300), so small N passes only large true effects",
+      "at N=300 (central discordance 0.21, rho 0.05, 25 repositories) the 80%-power minimum detectable effect is about 8 pp; at N=100 it is about 12 pp",
+      "historical lineage clustering of paired differences is near zero, but repository clustering in new data is unknown, so rho up to 0.20 is reported",
+      "the +5 pp gate is not changed to fit the sample; with the expected mining yield, N=300 needs roughly 2,000-4,300 mined candidate fix commits"
+    ]
+  },
+  "source_sha256": "5dc9179e3deeb1f59e3f5e658c05d58844e20e87178f4a7a3305229b17884f1f"
+}

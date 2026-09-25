@@ -13,13 +13,14 @@
     "not_recommended": [
       "any further execution-supervision or execution-feedback variant (both closed by frozen gates)",
       "reusing the consumed test split or opening the reserved confirmation lineages for a different question"
-    ]
+    ],
+    "claim_scope": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks; this is not a claim that no model has seen these repositories"
   },
   "repository_native_protocol": {
     "status": "draft; no candidate mined, no split created",
     "candidate_sources": {
       "strategy": "independently mined bug-fix commits from permissively licensed, pure-Python, pytest-tested GitHub repositories outside the exclusion universe, with fixes merged on or after 2025-01-01",
-      "temporal_rule": "fix commit authored and merged on or after 2025-01-01, after the Qwen2.5-Coder release; the buggy code may predate it, which is unavoidable and reported",
+      "temporal_rule": "fix commit authored and merged on or after 2025-01-01, after the Qwen2.5-Coder release. This is contamination-risk MITIGATION only: it does not show that the model has never seen the repository, the buggy code or a similar fix, and it is never described as proof",
       "not_used_and_why": {
         "BugsInPy": "all 17 projects are in the exclusion universe",
         "SWE-bench / SWE-bench Verified": "same 12 repositories; in the exclusion universe",
@@ -28,29 +29,77 @@
         "SWE-rebench / SWE-Gym style collections": "admissible only per repository after the same screening, licence review and temporal rule; treated as a candidate index, never as a pre-built split"
       },
       "screening_candidates_unverified": [
-        "more-itertools", "toolz", "boltons", "attrs", "cattrs", "marshmallow", "python-dateutil",
-        "arrow", "pendulum", "humanize", "sortedcontainers", "networkx", "sqlglot", "pyparsing",
-        "tomlkit", "rich", "typer", "cachetools", "glom", "parse", "inflect", "babel", "isort",
-        "jsonschema", "tabulate", "textdistance", "dateparser", "schedule", "python-slugify",
+        "more-itertools",
+        "toolz",
+        "boltons",
+        "attrs",
+        "cattrs",
+        "marshmallow",
+        "python-dateutil",
+        "arrow",
+        "pendulum",
+        "humanize",
+        "sortedcontainers",
+        "networkx",
+        "sqlglot",
+        "pyparsing",
+        "tomlkit",
+        "rich",
+        "typer",
+        "cachetools",
+        "glom",
+        "parse",
+        "inflect",
+        "babel",
+        "isort",
+        "jsonschema",
+        "tabulate",
+        "textdistance",
+        "dateparser",
+        "schedule",
+        "python-slugify",
         "validators"
       ],
       "screening_note": "names only; licence, activity, test suite, Python support and 2025+ bug-fix supply are verified during mining, never assumed. Repositories in the same organisation as an excluded repository (for example pallets, pylint-dev, pytest-dev, psf) are flagged for an explicit decision rather than silently admitted"
     },
     "isolation_rules": {
-      "repository": "canonical owner/name and bare name outside the exclusion universe; the fork parent is checked too; same-organisation repositories are flagged",
+      "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks; this is not a claim that no model has seen these repositories",
+      "mandatory_evidence": [
+        "canonical lower-case owner/name",
+        "verified https://github.com/<owner>/<name> URL and numeric repository identity",
+        "explicit fork status: not_fork, or fork with verified parent owner/name and numeric parent identity",
+        "full 40-hex buggy commit SHA",
+        "full 40-hex fixed commit SHA",
+        "non-empty normalised patch",
+        "parseable target function with at least 12 comparison shingles",
+        "issue or PR identity owner/name#number in the same repository",
+        "licence SPDX identifier from the admitted list and the SHA-256 of the licence file",
+        "target file path and module"
+      ],
+      "fail_closed": "any missing, unknown or malformed evidence refuses with insufficient_isolation_evidence; nothing defaults to admission",
+      "repository": "owner/name, bare name and verified fork parent outside the universe; same-organisation repositories are flagged for decision D2",
       "issue": "issue/PR identifier not a known benchmark instance",
-      "patch_lineage": "fix and buggy commits not known benchmark commits; normalised patch not identical to, and Jaccard < 0.80 against, every known BugsInPy and SWE-bench Verified patch",
-      "function_lineage": "target function Jaccard < 0.80 (AST-normalised, 5-token shingles) against 33k reference functions from upstream MBPP, HumanEval, BugsInPy, SWE-bench Verified and the train shard; the nearest match and score are recorded for every admitted function",
-      "within_set": "no two admitted targets from the same fix commit; pairwise near-duplicate check within the new set; at most one target per function lineage",
-      "proof_artifact": "a per-candidate isolation record (harness/repository_isolation.check_candidate) stored and hash-bound in the dataset manifest; admission requires admissible=true"
+      "patch_lineage": "commits not known benchmark commits; normalised patch not identical to, and Jaccard < 0.80 against, every indexed BugsInPy and SWE-bench Verified patch",
+      "function_lineage": "target function Jaccard < 0.80 against every indexed reference function; nearest match, score and fingerprint recorded",
+      "within_set": "one target per fix commit and function lineage; pairwise near-duplicate check within the new set",
+      "coverage": "audit_source_coverage requires concrete indexed counts and bound input files for every corpus source and for the train view and legacy real-bug files; an unknown, unindexed or zero-count source fails",
+      "receipt": "every isolation record carries the SHA-256 of results/v4_3_reference_universe_receipt.json; a record made against any other universe is invalid and must be recomputed"
     },
     "licensing_and_reproducibility": {
-      "licences_admitted": ["MIT", "BSD-2-Clause", "BSD-3-Clause", "Apache-2.0", "ISC", "PSF-2.0"],
+      "licences_admitted": [
+        "MIT",
+        "BSD-2-Clause",
+        "BSD-3-Clause",
+        "Apache-2.0",
+        "ISC",
+        "PSF-2.0"
+      ],
       "licence_evidence": "SPDX identifier from the repository LICENSE file at the buggy commit, recorded with its hash",
       "checkout": "full clone (no blob-less partial clone: the existing ingestion cache is unusable for checkouts); buggy and fixed commits recorded by SHA; tree hashes stored",
       "python_versions": "3.8, 3.9, 3.11 and 3.12 are available in WSL today; 3.10 and 3.13 need an approved installer; each bug uses the lowest supported version declared by the project at that commit",
-      "dependencies": "per-bug virtual environment; installation from the project's own metadata at the buggy commit; a frozen lock (pip freeze with hashes) recorded; network allowed only during environment build, never during test execution",
-      "environment_evidence": "interpreter version, lock hash, install log hash, WSL distribution, kernel and CPU count per environment"
+      "dependencies": "one dependency environment per target, shared by the buggy and the fixed revision: dependencies are resolved ONCE from the declared requirements of both revisions into a hash-pinned lock (uv pip compile --generate-hashes, or pip-compile --generate-hashes) and installed with hash checking (uv pip sync / pip install --require-hashes). The project itself is not installed into the environment; each revision's checkout is placed on the path (and rebuilt in place if it has compiled parts) when its tests run. pip freeze is not used as a lock: it records versions without hashes",
+      "environment_evidence": "interpreter version, lock file and its SHA-256, resolver and version, install log hash, WSL distribution, kernel and CPU count per environment",
+      "shared_environment_rule": "if no single lock satisfies both revisions' declared requirements, or either revision cannot import or build against the shared lock, the target is disqualified before evaluation. No per-revision environments are used unless a separate rule is predeclared and approved"
     },
     "native_qualification": {
       "steps": [
@@ -73,42 +122,129 @@
       "infrastructure_rule": "harness, dependency and environment failures are never counted as kills or as model failures; they are excluded from denominators, reported with counts, and a target with any environment failure on either revision is disqualified before evaluation, not after"
     },
     "context_policy": {
-      "permitted": ["buggy-side target function source", "its signature, type hints and docstring", "buggy-side module-level context needed to call it (imports, constants, class definition skeletons)", "public documentation strings present at the buggy commit"],
-      "forbidden": ["fixed code", "patch or diff text", "hidden, official or gold tests", "expected outputs", "issue or PR discussion describing the fix", "commit messages of the fix"],
+      "permitted": [
+        "buggy-side target function source",
+        "its signature, type hints and docstring",
+        "buggy-side module-level context needed to call it (imports, constants, class definition skeletons)",
+        "public documentation strings present at the buggy commit"
+      ],
+      "forbidden": [
+        "fixed code",
+        "patch or diff text",
+        "hidden, official or gold tests",
+        "expected outputs",
+        "issue or PR discussion describing the fix",
+        "commit messages of the fix"
+      ],
       "enforcement": "prompt built from a permitted view, as in the tool-assisted loop; a leakage scan over every prompt for any line of the fixed function, patch or official test; the prompt-from-view equality check is repeated",
-      "recorded_per_target": ["complexity tier (existing AST policy)", "bug family (existing repository defect taxonomy)", "LOC", "maximum nesting depth", "outgoing call count", "parameter count and kinds", "statefulness (method, global or IO use)", "Python version", "repository"]
+      "recorded_per_target": [
+        "complexity tier (existing AST policy)",
+        "bug family (existing repository defect taxonomy)",
+        "LOC",
+        "maximum nesting depth",
+        "outgoing call count",
+        "parameter count and kinds",
+        "statefulness (method, global or IO use)",
+        "Python version",
+        "repository"
+      ]
     },
     "composition": {
-      "target_size": {"minimum": 100, "planned": 150},
+      "target_size": {
+        "recommended": 300,
+        "minimum": 200,
+        "basis": "results/v4_3_repository_native_power_analysis.json: under the frozen +5 pp gate the 80%-power minimum detectable paired Kill@8 effect is about 11.8 pp at N=100, 10.1 at 150, 9.2 at 200 and 8.1 at 300 (discordance 0.21, rho 0.05, 25 repositories); the gate is not changed to fit the sample"
+      },
       "unit": "one target function per unique bug; unique function lineages and fix commits",
-      "caps": {"per_repository_share_max": 0.08, "per_bug_family_share_max": 0.25, "per_source_index_share_max": 0.5},
+      "caps": {
+        "per_repository_share_max": 0.08,
+        "per_bug_family_share_max": 0.25,
+        "per_source_index_share_max": 0.5
+      },
       "tiers": "simple, moderate and complex all present; minimum 20% each where supply allows, otherwise the shortfall is reported, never filled by repetition",
       "no_repetition_balancing": "no duplicated targets, no resampling to balance; exact unique counts and every exclusion with its reason are reported",
       "rehearsal_pool": "a separate pool of 20-30 qualified bugs from at least 5 repositories that are never admitted to the final set, used only for the dress rehearsal"
     },
     "atheris_protocol": {
       "tool": "actual atheris 2.3.0 (libFuzzer) under WSL Python 3.11; never the simulated baseline.coverage_fuzzer, which is reported under its own name if at all",
-      "eligibility": "identical target set for both systems; targets Atheris cannot drive are reported as Atheris-ineligible and both systems are compared on the jointly eligible subset and, separately, on all targets with Atheris scored zero on ineligible ones",
-      "oracle": "identical buggy/fixed revisions; Atheris uses a differential oracle (fixed vs buggy), which is information Oneiros never receives - stated as generous to Atheris",
+      "eligibility": "a target is Atheris-applicable if the adapter can construct well-typed arguments that reach the target function; applicability and ineligibility counts are reported separately, with reasons. An ineligible target is never recorded as a tested zero",
+      "oracle": "identical buggy/fixed revisions for both systems",
       "adapter": "strongest reasonable structured-input adapter: type-hint and docstring driven, full-range integers and floats, bytes, nested containers, dict/set/tuple, dataclass/NamedTuple construction, and seeds from literals in the buggy function; reachability of the defect is reported per target",
-      "budgets": {"per_target_cpu_seconds": 600, "seeds": [42, 43, 44], "oneiros_budget": "8 candidates per target, reported as model calls, tokens, GPU seconds and CPU execution seconds", "note": "budgets differ in kind; both are reported explicitly and no single 'equal budget' claim is made"},
-      "reporting": "crash kills and semantic kills separately; kills per CPU-second; per-seed and seed-aggregated results"
+      "budgets": {
+        "per_target_cpu_seconds": 600,
+        "seeds": [
+          42,
+          43,
+          44
+        ],
+        "oneiros_budget": "8 candidates per target, reported as model calls, tokens, GPU seconds and CPU execution seconds",
+        "note": "budgets differ in kind; both are reported explicitly and no single 'equal budget' claim is made"
+      },
+      "reporting": "crash kills and semantic kills separately; kills per CPU-second; per-seed and seed-aggregated results",
+      "modes": {
+        "ordinary_crash_contract": "fuzzes the buggy function alone; a finding is an uncaught exception or a violated declared contract (annotated types, documented preconditions); it counts as a kill only if the same input replayed on the fixed revision does not fail",
+        "differential_oracle": "fixed and buggy run side by side; any divergence is a finding. Reported separately and labelled a generous upper bound, because Oneiros never receives the fixed implementation"
+      },
+      "primary_comparison": "Oneiros versus ordinary crash/contract Atheris, paired by target, on the jointly eligible set only"
     },
     "dress_rehearsal": {
       "data": "the rehearsal pool only (never the final set)",
-      "stages": ["mining and isolation records", "environment build and locks", "official-test qualification", "prompt construction and leakage scan", "generation (base and frozen control)", "native execution on both revisions", "Atheris runs", "scoring, outcome classification and receipts", "analysis on rehearsal data with the frozen analysis code", "a deliberate crash-and-resume test"],
+      "stages": [
+        "mining and isolation records",
+        "environment build and locks",
+        "official-test qualification",
+        "prompt construction and leakage scan",
+        "generation (base and frozen control)",
+        "native execution on both revisions",
+        "Atheris runs",
+        "scoring, outcome classification and receipts",
+        "analysis on rehearsal data with the frozen analysis code",
+        "a deliberate crash-and-resume test"
+      ],
       "gate": "every stage completes with receipts and zero unexplained failures before any one-time evaluation is requested"
     },
     "metrics": {
-      "primary": ["Kill@1", "Kill@4", "Kill@8 (native semantic-or-crash kill, per target)", "unique defects killed"],
-      "secondary": ["semantic kills and crash kills separately", "reference validity (passes on fixed) per requested candidate", "parse success", "execution success", "slices by complexity tier, bug family and repository", "repository-level generalisation (leave-one-repository-out summary)", "Atheris kills and kills per CPU-second"],
+      "primary": [
+        "Kill@1",
+        "Kill@4",
+        "Kill@8 (native semantic-or-crash kill, per target)",
+        "unique defects killed"
+      ],
+      "secondary": [
+        "semantic kills and crash kills separately",
+        "reference validity (passes on fixed) per requested candidate",
+        "parse success",
+        "execution success",
+        "slices by complexity tier, bug family and repository",
+        "repository-stratified performance and repository-cluster sensitivity (the paired estimate recomputed with each repository dropped); this is not leave-one-repository-out generalisation, which would need retraining",
+        "ordinary and differential Atheris kills, applicability counts, kills per CPU-second"
+      ],
       "intervals": "Wilson 95% for single proportions; paired comparisons by exact McNemar and a repository-cluster bootstrap 90% interval (10,000 replicates, fixed seed)",
-      "comparisons": ["frozen control vs base (paired)", "Oneiros (best predeclared configuration) vs Atheris on the jointly eligible set (paired)"],
+      "comparisons": [
+        "frozen control vs base (paired)",
+        "Oneiros vs ordinary Atheris on the jointly eligible set (paired, primary Atheris comparison)",
+        "differential-oracle Atheris reported as a labelled upper bound"
+      ],
       "decision_rules": "predeclared before the one-time run: a model comparison passes only with a +5 pp Kill@8 gain and cluster-bootstrap lower bound > 0, reference validity within -3 pp; everything else is reported descriptively; no configuration is selected on the final set"
     },
     "receipts": {
-      "per_target": ["repository and licence", "buggy/fixed commit and tree hashes", "isolation record", "environment lock and interpreter", "official-test qualification runs", "prompt hash and leakage scan"],
-      "per_run": ["source hashes (LF-canonical)", "model, revision, adapter hash", "seeds and generation settings", "raw outputs and hashes", "execution logs, return codes, timeouts and durations for both revisions", "Atheris logs, corpora sizes, coverage and seeds", "WSL distribution, kernel, CPU and memory"],
+      "per_target": [
+        "repository and licence",
+        "buggy/fixed commit and tree hashes",
+        "isolation record",
+        "environment lock and interpreter",
+        "official-test qualification runs",
+        "prompt hash and leakage scan"
+      ],
+      "per_run": [
+        "source hashes (LF-canonical)",
+        "model, revision, adapter hash",
+        "seeds and generation settings",
+        "raw outputs and hashes",
+        "execution logs, return codes, timeouts and durations for both revisions",
+        "Atheris logs, corpora sizes, coverage and seeds",
+        "WSL distribution, kernel, CPU and memory"
+      ],
       "rollback": "no artifact is overwritten; a failed run is preserved and marked invalid; the one-time set is sealed by hash before any model sees it and is never re-evaluated after a protocol change"
     }
   },
@@ -123,58 +259,209 @@
       "S8": "the first eight of sixteen samples drawn in one call (current policy's eight)",
       "S16_select8": "all sixteen from the same call, then the frozen text-only policy: parser/policy-valid, first-occurrence non-duplicates in generation order, first eight"
     },
-    "held_constant": ["model and revision", "frozen control adapter", "prompt", "seed family", "whole-output parser", "candidate policy", "evaluator and scoring"],
+    "held_constant": [
+      "model and revision",
+      "frozen control adapter",
+      "prompt",
+      "seed family",
+      "whole-output parser",
+      "candidate policy",
+      "evaluator and scoring"
+    ],
     "cost_accounting": "S16 costs twice the generated sequences of S8; generated tokens, GPU seconds and wall time are reported for both; the comparison is framed as 'more samples plus selection', not as a free gain",
-    "forbidden": ["execution-based reranking", "fixed-side information in selection", "generalisation claims"],
-    "gate": "S16_select8 - S8 Kill@8 >= +5 pp with cluster-bootstrap 90% lower bound > 0 and reference validity within -3 pp; otherwise inconclusive or fail; exploratory either way"
+    "forbidden": [
+      "execution-based reranking",
+      "fixed-side information in selection",
+      "generalisation claims"
+    ],
+    "gate": "S16_select8 - S8 Kill@8 >= +5 pp with cluster-bootstrap 90% lower bound > 0 and reference validity within -3 pp; otherwise inconclusive or fail; exploratory either way",
+    "frozen_details": {
+      "generation": "one generate call per record with num_return_sequences=16, seed derived_seed(43, record_id, 's16') applied immediately before the call, unchanged successor settings otherwise",
+      "candidate_ordering": "the 16 sequences in the order the call returns them (index 0-15)",
+      "s8": "sequences 0-7 exactly, in order; the analysis verifies byte-identical raw outputs and hashes against sequences 0-7 of the S16 record (nested arm)",
+      "validity": "a candidate is valid if the frozen whole-output parser accepts it (parse and candidate policy); nothing is executed for selection",
+      "duplicate_definition": "whitespace-collapsed normalised code (harness.execution_feedback.normalised_code) equal to an EARLIER valid candidate",
+      "selection": "walk indices 0-15; keep valid first occurrences in order until eight are kept",
+      "fewer_than_eight": "fill the remaining slots with the not-kept candidates (invalid or duplicate) in ascending index order; always exactly eight slots",
+      "implementation": "harness.tool_assisted_generation.select_final with slot=index and round=1, whose policy is exactly this rule",
+      "source_hashes_bound": [
+        "engine/generator.py",
+        "harness/generation_adapter.py",
+        "harness/tool_assisted_generation.py",
+        "harness/execution_feedback.py",
+        "metrics/research_evaluation.py",
+        "harness/sealed_final_evaluator.py"
+      ],
+      "difference_from_canonical": "S8 is the first eight of a 16-sample call, not the canonical 8-sample batch-of-2 protocol; the study compares S8 and S16->8 with each other only"
+    }
   },
   "estimates": {
     "assumptions": {
       "native_test_seconds_per_run": 45,
       "environment_build_minutes": 4,
       "parallel_native_jobs": 16,
-      "mining_funnel": "1,500 candidate fix commits -> 450 heuristic -> ~430 isolation-admissible -> ~260 environments build -> ~180 deterministic official reproduction -> ~150 single-function extractable",
+      "mining_funnel": "yield 7-15% from mined candidate fix commits to qualified single-function targets; N=300 needs about 2,000-4,300 candidates (3,000 at 10%)",
       "generation_seconds_per_repository_record_8_samples": 6,
       "canonical_kill8_seconds_per_function_record": 1.07
     },
     "repository_native": {
-      "mining": {"network_hours": "1-2", "cpu_hours": 1, "storage_gb": "4-8 (clones)"},
-      "environment_build": {"wall_hours": "about 2 (450 x 4 min / 16)", "storage_gb": "about 45 kept (150 x 0.3), up to 135 before pruning"},
-      "qualification": {"wall_hours": "about 2 (450 x 2 revisions x 3 repeats x 45 s / 16)"},
-      "dress_rehearsal": {"gpu_minutes": 5, "cpu_wall_minutes": 40, "storage_gb": 1},
-      "one_time_evaluation": {"gpu_minutes": 30, "native_execution_wall_hours": "about 3.75", "atheris_wall_hours": "about 4.7 (3 seeds)", "storage_gb": 1},
-      "total": {"gpu_hours": "under 1", "cpu_wall_hours": "about 14", "storage_gb": "about 60 kept, 150 peak"}
+      "planning_n": 300,
+      "mining": {
+        "network_hours": "2-4",
+        "cpu_hours": "about 2",
+        "storage_gb": "8-16 (clones)"
+      },
+      "environment_build": {
+        "wall_hours": "about 4 (about 900 heuristic candidates x 4 min / 16)",
+        "storage_gb": "about 90 kept (300 x 0.3), up to 270 before pruning"
+      },
+      "qualification": {
+        "wall_hours": "about 4 (900 x 2 revisions x 3 repeats x 45 s / 16)"
+      },
+      "dress_rehearsal": {
+        "gpu_minutes": 5,
+        "cpu_wall_minutes": 60,
+        "storage_gb": 1
+      },
+      "one_time_evaluation": {
+        "gpu_minutes": "about 60 (2 models x 300 x 6 s)",
+        "native_execution_wall_hours": "about 7.5 (2 models x 300 x 8 x 2 revisions x 45 s / 16)",
+        "atheris_wall_hours": "about 19 (2 modes x 300 targets x 600 CPU-s x 3 seeds / 16)",
+        "storage_gb": 2
+      },
+      "total": {
+        "gpu_hours": "about 1",
+        "cpu_wall_hours": "about 35-40",
+        "storage_gb": "about 110 kept, about 290 peak"
+      },
+      "smaller_alternative": "at N=200 the CPU totals scale by about two thirds; power is lower (see the power analysis)"
     },
-    "sampling_budget_study": {"gpu_minutes": "about 20 (613 x one 16-sample call)", "cpu_minutes": 6, "storage_mb": 15}
+    "sampling_budget_study": {
+      "gpu_minutes": "about 20 (613 x one 16-sample call)",
+      "cpu_minutes": 6,
+      "storage_mb": 15
+    }
   },
   "blockers": [
-    {"id": "B1", "blocker": "no candidate data exists locally; mining needs network access and a licence review", "resolution": "user approval to mine (decision D1)"},
-    {"id": "B2", "blocker": "WSL lacks Python 3.10 and 3.13 and any environment manager (uv, pyenv, conda); Docker/Podman absent", "resolution": "approve installing uv in WSL (D6) or restrict to projects supporting 3.8/3.9/3.11/3.12"},
-    {"id": "B3", "blocker": "native execution of generated tests has never been demonstrated; official-test reproduction was 3/5 with 40% infrastructure failure", "resolution": "the dress rehearsal must reach a predeclared reliability (>= 90% of qualified targets execute on both revisions) before the one-time run"},
-    {"id": "B4", "blocker": "the Atheris adapter handles only primitives in fixed ranges; repository functions take objects and state", "resolution": "adapter extension and per-target reachability reporting, implemented and tested on the rehearsal pool"},
-    {"id": "B5", "blocker": "repository prompts are capped at 2,048 tokens and compaction may drop context", "resolution": "record compaction per target; exclude targets whose required buggy-side context cannot fit without dropping the target code"},
-    {"id": "B6", "blocker": "the consumed test split can never be read, so disjointness from it is proven only by source-universe coverage and upstream near-duplicate screening", "resolution": "user acceptance of this proof method (D7)"},
-    {"id": "B7", "blocker": "no untouched train-derived panel remains for the sampling study", "resolution": "accept the 613-record panel with a fresh seed family as exploratory (D8) or skip the study"}
+    {
+      "id": "B1",
+      "blocker": "no candidate data exists locally; mining needs network access and a licence review",
+      "resolution": "user approval to mine (decision D1)"
+    },
+    {
+      "id": "B2",
+      "blocker": "WSL lacks Python 3.10/3.13 and any hash-locking environment tool (uv or pip-tools); Docker/Podman absent",
+      "resolution": "approve installing uv in WSL (D6) or restrict to projects supporting 3.8/3.9/3.11/3.12"
+    },
+    {
+      "id": "B3",
+      "blocker": "native execution of generated tests has never been demonstrated; official-test reproduction was 3/5 with 40% infrastructure failure",
+      "resolution": "the dress rehearsal must reach a predeclared reliability (>= 90% of qualified targets execute on both revisions) before the one-time run"
+    },
+    {
+      "id": "B4",
+      "blocker": "the Atheris adapter handles only primitives in fixed ranges; repository functions take objects and state",
+      "resolution": "adapter extension and per-target reachability reporting, implemented and tested on the rehearsal pool"
+    },
+    {
+      "id": "B5",
+      "blocker": "repository prompts are capped at 2,048 tokens and compaction may drop context",
+      "resolution": "record compaction per target; exclude targets whose required buggy-side context cannot fit without dropping the target code"
+    },
+    {
+      "id": "B6",
+      "blocker": "the consumed test split can never be read, so disjointness from it is ENFORCED only through complete indexing of the upstream sources that fed every split (coverage audit and hash-bound receipt), not by inspecting the split",
+      "resolution": "user acceptance of this enforcement method (D7)"
+    },
+    {
+      "id": "B7",
+      "blocker": "no untouched train-derived panel remains for the sampling study",
+      "resolution": "accept the 613-record panel with a fresh seed family as exploratory (D8) or skip the study"
+    },
+    {
+      "id": "B8",
+      "blocker": "the power analysis recommends N=300 (minimum 200), which needs roughly 2,000-4,300 mined candidates and about 35-40 CPU-hours",
+      "resolution": "decision D3"
+    }
   ],
   "required_user_decisions": [
-    {"id": "D1", "decision": "approve network mining of GitHub repositories and the temporal rule (fixes on or after 2025-01-01)"},
-    {"id": "D2", "decision": "confirm the admitted licence list and whether same-organisation repositories are excluded"},
-    {"id": "D3", "decision": "target size (100 minimum, 150 planned) and the 8% per-repository cap"},
-    {"id": "D4", "decision": "who seals the one-time set and whether it becomes the project's new locked evaluation"},
-    {"id": "D5", "decision": "Atheris budget definition (600 CPU-seconds x 3 seeds per target) and the jointly-eligible comparison rule"},
-    {"id": "D6", "decision": "permission to install uv (and interpreters 3.10/3.13) inside WSL"},
-    {"id": "D7", "decision": "accept source-universe coverage plus upstream near-duplicate screening as the disjointness proof against the consumed test split"},
-    {"id": "D8", "decision": "run, defer or skip the optional sampling-budget study, and its panel"},
-    {"id": "D9", "decision": "which models enter the one-time evaluation (base and frozen control proposed)"}
+    {
+      "id": "D1",
+      "decision": "approve network mining of GitHub repositories and the temporal rule (fixes on or after 2025-01-01)"
+    },
+    {
+      "id": "D2",
+      "decision": "confirm the admitted licence list and whether same-organisation repositories are excluded"
+    },
+    {
+      "id": "D3",
+      "decision": "final size: recommended N=300, minimum 200 (power analysis), with the 8% per-repository cap; the +5 pp gate is unchanged"
+    },
+    {
+      "id": "D4",
+      "decision": "who seals the one-time set and whether it becomes the project's new locked evaluation"
+    },
+    {
+      "id": "D5",
+      "decision": "Atheris: ordinary crash/contract mode as the primary paired comparison on the jointly eligible set; differential mode as a labelled upper bound; 600 CPU-s x 3 seeds per target and mode"
+    },
+    {
+      "id": "D6",
+      "decision": "permission to install uv (hash-locked resolution and sync) and interpreters 3.10/3.13 inside WSL"
+    },
+    {
+      "id": "D7",
+      "decision": "accept that disjointness is enforced against the complete indexed source universe (coverage audit + hash-bound receipt), which does not require reading any protected split"
+    },
+    {
+      "id": "D8",
+      "decision": "run, defer or skip the optional sampling-budget study, and its panel"
+    },
+    {
+      "id": "D9",
+      "decision": "which models enter the one-time evaluation (base and frozen control proposed)"
+    }
   ],
   "execution_order": [
-    {"step": 1, "what": "approve this design and decisions D1-D9", "resources": "none"},
-    {"step": 2, "what": "optional: sampling-budget study (independent, exploratory)", "resources": "GPU about 20 min"},
-    {"step": 3, "what": "tooling: install uv/interpreters in WSL; extend the Atheris adapter; tests on synthetic targets", "resources": "CPU"},
-    {"step": 4, "what": "mining, licence screening and per-candidate isolation records; split into rehearsal pool and final pool (final pool unseen by any model)", "resources": "network + CPU about 2 h"},
-    {"step": 5, "what": "environment build and official-test qualification for both pools", "resources": "CPU about 4 h, disk about 150 GB peak"},
-    {"step": 6, "what": "full dress rehearsal on the rehearsal pool, including crash-and-resume", "resources": "GPU about 5 min, CPU about 40 min"},
-    {"step": 7, "what": "freeze the final set by hash, freeze protocol, analysis and budgets; request one-time authorization", "resources": "none"},
-    {"step": 8, "what": "one-time evaluation (only after explicit authorization)", "resources": "GPU about 30 min, CPU about 8.5 h"}
+    {
+      "step": 1,
+      "what": "approve this design and decisions D1-D9",
+      "resources": "none"
+    },
+    {
+      "step": 2,
+      "what": "optional: sampling-budget study (independent, exploratory)",
+      "resources": "GPU about 20 min"
+    },
+    {
+      "step": 3,
+      "what": "tooling: install uv/interpreters in WSL; extend the Atheris adapter; tests on synthetic targets",
+      "resources": "CPU"
+    },
+    {
+      "step": 4,
+      "what": "mining, licence screening and per-candidate isolation records; split into rehearsal pool and final pool (final pool unseen by any model)",
+      "resources": "network + CPU about 4 h for N=300"
+    },
+    {
+      "step": 5,
+      "what": "environment build and official-test qualification for both pools",
+      "resources": "CPU about 8 h, disk about 290 GB peak for N=300"
+    },
+    {
+      "step": 6,
+      "what": "full dress rehearsal on the rehearsal pool, including crash-and-resume",
+      "resources": "GPU about 5 min, CPU about 40 min"
+    },
+    {
+      "step": 7,
+      "what": "freeze the final set by hash, freeze protocol, analysis and budgets; request one-time authorization",
+      "resources": "none"
+    },
+    {
+      "step": 8,
+      "what": "one-time evaluation (only after explicit authorization)",
+      "resources": "GPU about 1 h, CPU about 26 h (native + Atheris) for N=300"
+    }
   ]
 }

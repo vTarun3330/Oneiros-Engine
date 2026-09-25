@@ -1,8 +1,14 @@
 # Next-direction decision memo
 
-Written 2026-09-25. This is a design only: no split has been created, nothing
-has been mined, no model has been run, and no protected data has been opened. The
-machine-readable version is `results/v4_3_next_direction_design.json`.
+Written 2026-09-25 and revised the same day, after the isolation design was sent
+back for repair. This is a design only: no split exists, nothing has been mined,
+no tool has been installed, no model has run, and no protected data has been
+opened.
+
+The machine-readable versions are:
+- `results/v4_3_next_direction_design.json`;
+- `results/v4_3_reference_universe_receipt.json`;
+- `results/v4_3_repository_native_power_analysis.json`.
 
 ## Where the project stands
 
@@ -15,104 +21,167 @@ Two lines are closed by their own frozen gates:
 
 Every number the project has produced since the sealed-final incident is either
 train-derived or measured on a previously inspected panel. The only locked test
-split was consumed. **The project currently cannot make any held-out claim.**
-
-The one sizeable effect in the last pilot was secondary and unmatched. The
-16-sample arm with text-only de-duplicating selection beat the canonical
-8-sample protocol by +6.44 pp Kill@8 (B − A, CI [+2.46, +10.59]). It says
-nothing about execution feedback, but it is a cheap, separable question.
+split was consumed. **The project currently cannot make a held-out claim.**
 
 ## Recommendation
 
 1. **Primary: an independently constructed repository-native evaluation.** New
-   bugs from repositories that have never touched any Oneiros split, reproduced
-   natively on buggy and fixed revisions, and evaluated once after a full dress
-   rehearsal on a separate pool. This is the evaluation the research plan asks
-   for, and it has never been done for generated tests: 0 generated tests have
-   been run natively, and official-test reproduction was 3 of 5.
-2. **Secondary (optional): a controlled sampling-budget study.** It asks
-   whether 16 samples with text-only selection of 8 beat the first 8, at twice
-   the generation cost. It is exploratory and train-derived, about 20 GPU
-   minutes, and independent of the primary line.
+   bugs from repositories outside every indexed source, reproduced natively on
+   buggy and fixed revisions. A dress rehearsal on a separate pool runs before
+   any one-time evaluation.
+2. **Secondary (optional): a sampling-budget study.** It asks whether 16
+   samples with frozen text-only selection of 8 beat the nested first 8.
+   Exploratory, about 20 GPU minutes.
 
-**Not recommended:**
-- any further execution-supervision or execution-feedback variant;
-- reusing the consumed test split;
-- opening the reserved confirmation lineages for a different question.
+## The isolation claim, stated narrowly
 
-## Disjointness is proven, not asserted
+> Disjointness is enforced against the complete indexed source universe under
+> the recorded repository, fork, commit, patch, issue, and function-similarity
+> checks.
 
-`harness/repository_isolation.py` checks every future candidate against the
-complete upstream copy of every source that has ever fed an Oneiros split. The
-corpus manifest lists exactly MBPP, HumanEval, BugsInPy, SWE-bench Verified and
-curated examples, and the checker confirms that coverage in code.
+This does **not** claim that no model has seen a repository. The 2025 cutoff for
+fix commits is contamination-risk mitigation, not proof.
 
-The reference universe:
-- **35 excluded repositories:** every BugsInPy project, every SWE-bench Verified repository, and the legacy real-bug repositories (aiohttp, boto3, celery, click, django, flask, numpy, pytest, redis, requests, sqlalchemy);
-- **1,484 known commits;**
-- **998 known patches;**
-- **33,172 reference functions**, from upstream MBPP, HumanEval, BugsInPy, the SWE-bench Verified patches and the train shard.
+### What the repaired checker does (`harness/repository_isolation.py`)
 
-It reuses the frozen near-duplicate audit: AST-normalised code, exact Jaccard
-over 5-token shingles, threshold 0.80.
+**It fails closed.** A candidate is admitted only with complete, structurally
+valid evidence:
+- canonical owner/name;
+- a verified URL and numeric repository identity;
+- explicit fork status, with a verified parent if it is a fork;
+- full 40-hex buggy and fixed commit SHAs;
+- a non-empty normalised patch;
+- a parseable target function with at least 12 comparison shingles;
+- an issue or PR identity in the same repository;
+- licence evidence and the licence-file hash;
+- the target file and module.
 
-Its self-checks behave correctly:
-- a real BugsInPy patch is rejected, both as the same repository and as an identical patch;
-- a renamed MBPP function is rejected as a near-duplicate;
-- a fork of an excluded repository is rejected;
-- a novel function is admitted.
+Anything missing, unknown or malformed is refused as
+`insufficient_isolation_evidence`. There are 27 refusal cases under test.
 
-Because every split is a subset of these upstream sources, disjointness from the
-consumed test split follows without ever reading it. This proof method still
-needs your acceptance (decision D7).
+**Evidence-based coverage.** For every corpus source, and for the train view and
+the legacy real-bug files, the audit requires concrete indexed counts and
+hash-bound input files:
 
-## Estimates (explicit assumptions in the JSON)
+| source | indexed |
+|---|---|
+| BugsInPy | 17 projects, 501 bugs (every `project.info`, `bug.info` and `bug_patch.txt` bound: 1,019 files) |
+| SWE-bench Verified | 500 instances |
+| MBPP | 974 tasks |
+| HumanEval | 164 tasks |
+| legacy real bugs | 493 metadata entries, 532 Python files (533 files bound) |
+| train shard | 6,052 records (the view manifest and shard file bound) |
+| curated seeds | all 10 `CURATED_BUGSINPY_BUGS` definitions, reconstructed from code |
+
+The curated definition is the only generator of curated records, so every
+curated seed in any split is covered: the 7 in train, and the corpus's eighth,
+which must be one of `black_1`, `cookiecutter_1` or `scrapy_1`. No non-train
+record was opened.
+
+Tests show that each of the following fails:
+- a declared but unindexed source;
+- an unknown source;
+- a zero-count source;
+- the removal of any required input.
+
+**A hash-bound universe.** `results/v4_3_reference_universe_receipt.json`
+(`receipt_sha256` `2e7883a7…`) records:
+- 28 full and 35 bare repository names;
+- 1,484 commits;
+- 998 normalised patch hashes;
+- 1,001 instance IDs;
+- 33,192 function fingerprints;
+- the path and SHA-256 of all 1,559 input files;
+- a SHA-256 for each collection;
+- the source hashes of the builder, checker and normaliser.
+
+The receipt is byte-identical across rebuilds. I removed one non-deterministic
+input to make it so: re-running the historical curated execution filter. Every
+isolation record carries the receipt hash, and a record made against any other
+universe is invalid.
+
+## Power (prospective, from permitted evidence only)
+
+Measured on the retention and tool-assisted panels, the paired Kill@8
+discordance between independently sampled arms is 0.17–0.21. The lineage
+clustering of paired differences is about 0. Repository clustering in new data
+is unknown, so it is swept up to ρ = 0.20.
+
+Under the **frozen, unchanged +5 pp gate**, which requires the estimate to be at
+least 5 pp *and* the 90% lower bound to be above 0:
+
+| N | power at true +8 pp | power at +10 pp | 80%-power MDE (d 0.21, ρ 0.05, 25 repos) |
+|---|---|---|---|
+| 100 | 0.50 | 0.67 | 11.8 pp |
+| 150 | 0.62 | 0.79 | 10.2 pp |
+| 200 | 0.70 | 0.86 | 9.2 pp |
+| 300 | 0.79 | 0.93 | 8.1 pp |
+
+- **Recommendation:** N = 300, with a minimum of 200.
+- **Mining pool needed:** roughly 2,000–4,300 candidate fix commits, at a 7–15% yield.
+- **Cross-check:** a Monte Carlo simulation matches the analytic power within 0.02.
+
+## Estimates (N = 300)
 
 | work | GPU | CPU wall | storage |
 |---|---|---|---|
 | sampling-budget study (optional) | ~20 min | ~6 min | ~15 MB |
-| mining + isolation records | — | ~1 h (+1–2 h network) | 4–8 GB |
-| environment build + qualification | — | ~4 h | ~45 GB kept, ~150 GB peak |
-| dress rehearsal | ~5 min | ~40 min | ~1 GB |
-| one-time evaluation | ~30 min | ~8.5 h (native ~3.75 h + Atheris ~4.7 h) | ~1 GB |
+| mining + isolation records | — | ~2 h (+2–4 h network) | 8–16 GB |
+| environment build + qualification | — | ~8 h | ~90 GB kept, ~290 GB peak |
+| dress rehearsal | ~5 min | ~1 h | ~1 GB |
+| one-time evaluation | ~1 h | ~26 h (native ~7.5 h + Atheris ~19 h) | ~2 GB |
 
-WSL has 32 CPUs, 62 GB RAM and 952 GB free. The GPU is one local RTX 4500 Ada.
+WSL has 32 CPUs, 62 GB RAM and 952 GB free.
 
 ## Blockers
 
 | id | blocker |
 |---|---|
-| B1 | No candidate data exists locally; mining needs network access and a licence review. |
-| B2 | WSL lacks Python 3.10 and 3.13 and any environment manager; Docker is absent. |
-| B3 | Native execution of generated tests has never been demonstrated; official reproduction was 3 of 5, with 40% infrastructure failure. |
-| B4 | The Atheris adapter only drives primitives in fixed ranges; repository functions take objects and state. |
-| B5 | Repository prompts are capped at 2,048 tokens, so compaction may drop context. |
-| B6 | The consumed test split can never be read, so disjointness from it rests on the source-universe proof. |
-| B7 | No untouched train-derived panel remains for the sampling study. |
+| B1 | No candidate data exists; mining needs network access and a licence review. |
+| B2 | WSL lacks Python 3.10 and 3.13 and any hash-locking tool (`uv` or pip-tools). |
+| B3 | Native execution of generated tests has never been demonstrated. |
+| B4 | The Atheris adapter covers primitives only. |
+| B5 | Repository prompts are capped at 2,048 tokens. |
+| B6 | The consumed test split is covered only through enforced upstream indexing. |
+| B7 | No untouched train panel exists for the sampling study. |
+| B8 | N = 300 needs a large mining pool and about 35–40 CPU-hours. |
 
-## Decisions needed from you
+## Decisions needed
 
 | id | decision |
 |---|---|
-| D1 | Approve network mining and the temporal rule (fixes on or after 2025-01-01). |
-| D2 | Approve the licence list, and decide whether same-organisation repositories are excluded. |
-| D3 | Set the target size (100 minimum, 150 planned) and the 8% per-repository cap. |
-| D4 | Decide who seals the one-time set, and whether it becomes the project's new locked evaluation. |
-| D5 | Set the Atheris budget (600 CPU-s × 3 seeds per target) and the jointly-eligible comparison rule. |
-| D6 | Permit installing `uv`, plus Python 3.10 and 3.13, in WSL. |
-| D7 | Accept the source-universe proof of disjointness from the consumed test split. |
-| D8 | Run, defer or skip the sampling-budget study, and choose its panel. |
-| D9 | Choose the models for the one-time evaluation (base and frozen control proposed). |
+| D1 | Approve mining and the 2025 cutoff (as mitigation). |
+| D2 | Approve the licence list and the same-organisation rule. |
+| D3 | Set N (300 recommended, 200 minimum); the gate is unchanged. |
+| D4 | Decide who seals the final set and its status. |
+| D5 | Set the Atheris modes and budgets. |
+| D6 | Permit installing `uv` and Python 3.10/3.13 in WSL. |
+| D7 | Accept enforcement against the complete indexed universe. |
+| D8 | Run, defer or skip the sampling study. |
+| D9 | Choose the models for the one-time evaluation. |
+
+## Can D7 now be accepted?
+
+**Recommended: yes, as the narrowed claim.**
+
+- **What is now true:**
+  - the checker fails closed;
+  - coverage is evidence-based, with concrete counts and bound inputs;
+  - the universe is hash-bound, deterministic, and verified from disk in tests;
+  - every decision is tied to the exact universe it was made against.
+- **What remains limited:** the claim covers enforcement against the indexed
+  universe only. It cannot rule out that the base model saw a candidate
+  repository during pretraining.
 
 ## Proposed execution order
 
-1. Approve this design and decisions D1–D9.
-2. Optionally, run the sampling-budget study: about 20 GPU minutes, independent of everything else.
-3. Tooling: install `uv` and the interpreters in WSL, extend the Atheris adapter, and test on synthetic targets.
-4. Mining and licence screening, with a per-candidate isolation record. Split the result into a rehearsal pool and a final pool; no model ever sees the final pool before the one-time run.
-5. Environment builds and official-test qualification for both pools.
-6. A full dress rehearsal on the rehearsal pool, including a crash-and-resume test.
-7. Freeze the final set by hash, freeze the protocol, analysis and budgets, and request one-time authorization.
+1. Approve the design and decisions D1–D9.
+2. Optionally, run the sampling study.
+3. Install tooling (`uv`, interpreters); extend the Atheris adapter.
+4. Mine candidates, split them into a rehearsal pool and a final pool, and write isolation records bound to the receipt hash.
+5. Build hash-locked shared environments and run official-test qualification.
+6. Run the dress rehearsal, including crash-and-resume.
+7. Freeze by hash and request one-time authorization.
 8. Run the one-time evaluation, only after explicit authorization.
 
 Detailed drafts: [REPOSITORY_NATIVE_EVALUATION_PROTOCOL.md](REPOSITORY_NATIVE_EVALUATION_PROTOCOL.md)

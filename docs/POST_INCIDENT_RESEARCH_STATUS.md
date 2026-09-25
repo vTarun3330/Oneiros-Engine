@@ -571,28 +571,32 @@ reference, and confirmation stays closed. The receipts are
 `results/v4_3_tool_assisted_analysis.json` and
 `results/v4_3_tool_assisted_decision_receipt.json`.
 
-## 9. Next direction (design only, 2026-09-25)
+## 9. Next direction (design only, 2026-09-25; isolation repaired)
 
 **Recommended primary line: an independently constructed repository-native
-evaluation.** It uses new bugs from repositories that have never fed any Oneiros
-split, reproduced natively on buggy and fixed revisions. A full dress rehearsal
-on a separate pool precedes any one-time run.
+evaluation.** It uses new bugs from repositories outside every indexed source,
+reproduced natively on buggy and fixed revisions, with a dress rehearsal on a
+separate pool before any one-time run.
 
 **Optional secondary line: a sampling-budget study.** It asks whether 16 samples
-with text-only selection of 8 beat the first 8 (exploratory, about 20 GPU
-minutes).
+with frozen text-only selection of 8 beat the nested first 8. It is exploratory
+and takes about 20 GPU minutes.
 
-**Disjointness is executable.** `harness/repository_isolation.py` checks every
-candidate against the full upstream copy of every source any split was built
-from:
-- 35 repositories;
-- 1,484 commits;
-- 998 patches;
-- 33,172 reference functions.
+**Isolation claim (narrow).** Disjointness is *enforced* against the complete
+indexed source universe under the recorded repository, fork, commit, patch,
+issue and function-similarity checks. It does not claim that no model has seen
+a repository, and the 2025 fix cutoff is contamination-risk mitigation only.
+Three properties back the claim:
+- **Fail-closed checks.** `harness/repository_isolation.py` refuses any candidate lacking complete evidence (`insufficient_isolation_evidence`).
+- **Evidence-based coverage.** Coverage requires concrete indexed counts and hash-bound inputs for every source. That includes all 10 curated seed definitions, reconstructed from code.
+- **A hash-bound universe.** The universe is bound by `results/v4_3_reference_universe_receipt.json`, which lists 1,559 input files, 1,484 commits, 998 patches and 33,192 function fingerprints. The receipt is deterministic, and every isolation decision carries its hash.
 
-This removes any need to open protected splits. The design, estimates, blockers
-(B1–B7) and required decisions (D1–D9) are in
-[NEXT_DIRECTION_DECISION_MEMO.md](NEXT_DIRECTION_DECISION_MEMO.md) and
-`results/v4_3_next_direction_design.json`.
+**Power.** A prospective analysis from permitted evidence
+(`results/v4_3_repository_native_power_analysis.json`) recommends N = 300, with
+200 the minimum, under the unchanged +5 pp gate. The 80%-power minimum
+detectable effect is about 8.1 pp at N = 300 and 11.8 pp at N = 100.
 
-**Nothing has been mined, no split exists, and no model has run.**
+The design, estimates, blockers (B1–B8) and required decisions (D1–D9) are in
+[NEXT_DIRECTION_DECISION_MEMO.md](NEXT_DIRECTION_DECISION_MEMO.md).
+
+**Nothing has been mined or installed, no split exists, and no model has run.**
