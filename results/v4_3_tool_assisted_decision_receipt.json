@@ -1,0 +1,263 @@
+{
+  "schema_version": "oneiros_tool_assisted_decision_receipt_v1",
+  "label": "exploratory train-derived pilot on a previously base-inspected panel; not confirmation, generalisation, validation or final-test evidence",
+  "created_utc": "2026-09-25T06:06:48.897020+00:00",
+  "question": "Does structured execution feedback improve test generation beyond sham self-conditioning under matched calls, sequences, input tokens and output-token caps?",
+  "control": "call-, sequence-, cap- and rendered-input-token-matched sham-feedback control (request-budget-matched); actual output tokens and wall-clock time are measured outcomes and may differ",
+  "design_receipt": {
+    "path": "results/v4_3_tool_assisted_design_receipt.json",
+    "sha256": "d9d248984e627d3e7d04820b10de676f0ebcb090e5055b6220408fcbe3fa8fbb",
+    "bytes": 11661,
+    "built_at_commit": "cab29d3949a413d36473e9e6d09b6d0a450c95a2"
+  },
+  "panel": {
+    "path": "results/v4_3_tool_assisted_panel.json",
+    "sha256": "fa8f51980b86fdb4d71a9beb5e8bec5c481741ce87145844f871cfbe4b2dda40",
+    "bytes": 44985,
+    "records": 264,
+    "lineages": 110,
+    "evidence_class": "exploratory pilot; any positive result needs confirmation"
+  },
+  "adapter_sha256": "c1fe9e52cc86f5f5afed7c378905ac042a9a3e152f42ccc980311d2f47cc0841",
+  "receipt_built_at_commit": "5e8692b4e52a7932b008ed7a5ca2042145b0df55",
+  "runs": {
+    "generate-a": {
+      "run_id": "20260925-103511-toolassist-generate-a-qwen15b-s42",
+      "state": "completed",
+      "exit_code": 0,
+      "duration_seconds": 298.5,
+      "start_utc": "2026-09-25T05:05:11+00:00",
+      "end_utc": "2026-09-25T05:10:13+00:00"
+    },
+    "generate-bc": {
+      "run_id": "20260925-104038-toolassist-generate-bc-qwen15b-s42",
+      "state": "completed",
+      "exit_code": 0,
+      "duration_seconds": 3168.2,
+      "start_utc": "2026-09-25T05:10:38+00:00",
+      "end_utc": "2026-09-25T06:03:27+00:00"
+    },
+    "score-b": {
+      "run_id": "20260925-113357-toolassist-score-b-qwen15b-s42",
+      "state": "completed",
+      "exit_code": 0,
+      "duration_seconds": 42.1,
+      "start_utc": "2026-09-25T06:03:57+00:00",
+      "end_utc": "2026-09-25T06:04:41+00:00"
+    },
+    "score-c": {
+      "run_id": "20260925-113501-toolassist-score-c-qwen15b-s42",
+      "state": "completed",
+      "exit_code": 0,
+      "duration_seconds": 44.1,
+      "start_utc": "2026-09-25T06:05:01+00:00",
+      "end_utc": "2026-09-25T06:05:46+00:00"
+    }
+  },
+  "evaluations": {
+    "A": {
+      "envelope": {
+        "path": "results/v4_3_tool_assisted_v1/eval_A.json",
+        "sha256": "e2af9af277ce50d425cfc62201c4a3a7d7444e62840b2ffd87024929f1b15d3d",
+        "bytes": 842
+      },
+      "rehearsal_result": {
+        "path": "results/v4_3_tool_assisted_v1/eval_A/rehearsal_result.json",
+        "sha256": "3ab0b54fca91ba4010b9e04f3188786dfe2657c6aea3f829da6d6dea8c4adbfd",
+        "bytes": 1712435
+      },
+      "kill_at_k": {
+        "1": 0.30303,
+        "2": 0.443182,
+        "4": 0.602273,
+        "8": 0.659091
+      },
+      "wall_time_seconds": 281.067
+    },
+    "B": {
+      "envelope": {
+        "path": "results/v4_3_tool_assisted_v1/eval_B.json",
+        "sha256": "1e9e18a1d684b92399d5e0fc14fedb5c47596ad3594980a4072c318737e8c60e",
+        "bytes": 836
+      },
+      "rehearsal_result": {
+        "path": "results/v4_3_tool_assisted_v1/eval_B/rehearsal_result.json",
+        "sha256": "fe63091a5300c02f0f7eb179d3cefdc73429b984c4afd093f37168f4e9e93eab",
+        "bytes": 1717354
+      },
+      "kill_at_k": {
+        "1": 0.359848,
+        "2": 0.5,
+        "4": 0.617424,
+        "8": 0.723485
+      },
+      "wall_time_seconds": 34.75
+    },
+    "C": {
+      "envelope": {
+        "path": "results/v4_3_tool_assisted_v1/eval_C.json",
+        "sha256": "7dd3ffcb2d7106190419d458e8837e45c9c0826531e97ce868d597313454203d",
+        "bytes": 837
+      },
+      "rehearsal_result": {
+        "path": "results/v4_3_tool_assisted_v1/eval_C/rehearsal_result.json",
+        "sha256": "53472cc960046f536c29a0aa6117d16d65b578167b31d74dcd8802fb56da334c",
+        "bytes": 1717462
+      },
+      "kill_at_k": {
+        "1": 0.359848,
+        "2": 0.5,
+        "4": 0.621212,
+        "8": 0.727273
+      },
+      "wall_time_seconds": 36.204
+    }
+  },
+  "journal": {
+    "path": "results/v4_3_tool_assisted_v1/journal.jsonl",
+    "sha256": "6325c7fc7921cf8e14c74b5b6f247987ddf5926a8c41519c721dea03a466902c",
+    "bytes": 1033578
+  },
+  "lineage_manifest": {
+    "path": "results/v4_3_tool_assisted_lineage_manifest.json",
+    "sha256": "dd5d9a548c5ec927467941388de43417bffdc056cf08b6e0e75be0db4a285d40",
+    "bytes": 37491,
+    "files": 264
+  },
+  "analysis": {
+    "path": "results/v4_3_tool_assisted_analysis.json",
+    "sha256": "38995b78d81aa8ba34eb4f040b82929871d92621ebfd3bb6abf8d365844d3d41",
+    "bytes": 7405,
+    "verdict": "fail",
+    "request_budget_matched": true,
+    "pairing_problem_count": 0,
+    "kill_at_8_c_minus_b_pp": {
+      "difference": 0.3787878787878788,
+      "low": -1.0714285714285714,
+      "high": 1.773049645390071,
+      "clusters": 110,
+      "units": 264,
+      "replicates": 10000,
+      "seed": 20260925
+    },
+    "reference_valid_per_requested_c_minus_b_pp": {
+      "difference": -0.14204545454545456,
+      "low": -0.6578947368421052,
+      "high": 0.3412969283276451,
+      "clusters": 110,
+      "units": 264,
+      "replicates": 10000,
+      "seed": 20260925
+    },
+    "repairs": {
+      "attempted": 450,
+      "delivered": 449,
+      "skipped_match_infeasible": 1
+    },
+    "output_tokens": {
+      "B": 89937,
+      "C": 90022,
+      "ratio_c_over_b": 1.0009451060186576
+    },
+    "wall_seconds": {
+      "B": 2269.8123919999994,
+      "C": 2270.121376000002,
+      "ratio_c_over_b": 1.0001361275500529
+    },
+    "unique_defects_killed": {
+      "A": 174,
+      "B": 191,
+      "C": 192
+    },
+    "secondary": {
+      "B_minus_A": {
+        "kill_at_8": {
+          "difference": 6.4393939393939394,
+          "low": 2.456140350877193,
+          "high": 10.588235294117647,
+          "clusters": 110,
+          "units": 264,
+          "replicates": 10000,
+          "seed": 20260925
+        },
+        "reference_valid_per_requested": {
+          "difference": 0.14204545454545456,
+          "low": -2.330508474576271,
+          "high": 2.5098425196850394,
+          "clusters": 110,
+          "units": 264,
+          "replicates": 10000,
+          "seed": 20260925
+        }
+      },
+      "C_minus_A": {
+        "kill_at_8": {
+          "difference": 6.8181818181818175,
+          "low": 2.7450980392156863,
+          "high": 10.894941634241246,
+          "clusters": 110,
+          "units": 264,
+          "replicates": 10000,
+          "seed": 20260925
+        },
+        "reference_valid_per_requested": {
+          "difference": 0.0,
+          "low": -2.4734982332155475,
+          "high": 2.3890784982935154,
+          "clusters": 110,
+          "units": 264,
+          "replicates": 10000,
+          "seed": 20260925
+        }
+      }
+    }
+  },
+  "decision": {
+    "outcome": "fail",
+    "action": "stop this line; no re-thresholding, extra rounds or prompt changes",
+    "retained_reference": "frozen model-only control (adapter c1fe9e52...)",
+    "promotion_permitted": false,
+    "confirmation_opening_permitted": false,
+    "not_permitted": [
+      "additional repairs, calls or tokens",
+      "changed thresholds, prompts, feedback or padding",
+      "a rerun of this pilot",
+      "opening confirmation, validation, ablation_dev, test or sealed-final data"
+    ]
+  },
+  "leakage": {
+    "validation_accessed": false,
+    "ablation_dev_accessed": false,
+    "test_accessed": false,
+    "sealed_final_test_accessed": false,
+    "confirmation_opened": false,
+    "canonical_records_json_opened": false,
+    "fixed_code_in_loop": false,
+    "gold_tests_in_loop": false,
+    "weights_written": false
+  },
+  "source_files_sha256": {
+    "harness/buggy_side_execution.py": "cdc6055b9535281e1662a86239b805285652ce98a5b991fca3873c155186ad7b",
+    "harness/execution_feedback.py": "e27e4269a86e2b8b80a3cdb37460fed55d4ab55b42b78a77103819d4b811ca41",
+    "harness/tool_assisted_generation.py": "776d63d3409836ad796b38c2859fbd2da61838c6c3fa4042f7db6e7a654fe4db",
+    "harness/safe_execution.py": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+    "harness/candidate_policy.py": "cf6df214ad73da6e5082fb5a06ca9bc3c30a00a098572adc44ad883f80013426",
+    "harness/generation_adapter.py": "39583f39acdfb885286a406d65f5d90e7547ea9069760870f610eafd09c6a8f7",
+    "harness/generation_rng.py": "1282a2c463cdee272742dbe8c630680841b6489b16bb0695789786e9fb403f5c",
+    "harness/prompt_factory.py": "29c05789161522ea5581995f7e66ccb79f7e524ead5edc4745f4795822fbe565",
+    "harness/rehearsal_evaluator.py": "ed16b84dec441f5e9d4474f3d300d02ff6af7671cbfa6afab0f2f26fa248eeda",
+    "harness/sealed_final_evaluator.py": "56869a08e9e4ae618d883e2caae86868630dfcb88736d57f127aca9068e7becf",
+    "harness/evaluation_admission.py": "9c8d1c835d95d1d188ccaeb2b73f8359aae1c97b619270b711d6835553e6f575",
+    "harness/parallel_execution.py": "337ed8e77b630292531579b9ea274c605c5a70c0c5658728c5a415bddf5f090a",
+    "metrics/research_evaluation.py": "4ae24c7ed3aced80f50f4a1bf1e3d30facffb327a4c8cef9e3bb6ce748717b7f",
+    "engine/generator.py": "c4c16c7de07e82f226bd77d2e980339b13844a4418ad428e6c41158eb1938330",
+    "engine/test_generation_prompt.py": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+    "engine/prompt_budget.py": "8db031f8d9b187ae748d8b5457a3fe25ae4ffb73c6cba91107904ad5b8f3a42a",
+    "scripts/freeze_tool_assisted_panel.py": "6fdbc83762a84391c0342a54e0d8d292c0d68f4ab24e36ddb4604bfd74439770",
+    "scripts/run_tool_assisted_pilot.py": "a997cf3a70892da16638f79e37c3d3dd1ae7e344533713e6d8e6ffc5d5b709c4",
+    "scripts/analyse_tool_assisted_pilot.py": "e4bc59561c6a2cf60dd761c741b315b4535b8d427b5aa42408c3fe803ac521fa",
+    "scripts/audit_tool_assisted_components.py": "471083818e1f95e26dec02b3b5b11187788c7db604aa11fe03ec79204587853e",
+    "scripts/preflight_tool_assisted_pilot.py": "8be4eed82fb3458528bbce2210901be4a5b07c7e4085f1b54e8bfb07fbb6c25d",
+    "scripts/build_tool_assisted_decision_receipt.py": "b2c3c99d861b429a57ac86f168109b18d7e0f9fc6c911d76a3aeff329dde4a7f"
+  }
+}

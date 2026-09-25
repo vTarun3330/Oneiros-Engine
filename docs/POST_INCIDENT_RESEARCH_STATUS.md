@@ -466,12 +466,16 @@ reference. The following will not happen without an explicit new decision:
 | `results/v4_3_execution_dose_preflight_receipt.json` | `22df107c97e0ebe240e70730cba2d011f9f573a9c6d92e778bb7ecaf7921712c` |
 | `results/v4_3_execution_dose_analysis.json` | `5b1a718710e42b3091f9417f4e879f0c82848aaab0936680d4cddcc1aabbf27e` |
 | `results/v4_3_execution_dose_decision_receipt.json` | `3e6236e4596c5381635cd559987549ee877a3e90f73c166542e572e663743033` |
+| `results/v4_3_tool_assisted_design_receipt.json` | `d9d248984e627d3e7d04820b10de676f0ebcb090e5055b6220408fcbe3fa8fbb` |
+| `results/v4_3_tool_assisted_analysis.json` | `38995b78d81aa8ba34eb4f040b82929871d92621ebfd3bb6abf8d365844d3d41` |
+| `results/v4_3_tool_assisted_lineage_manifest.json` | `dd5d9a548c5ec927467941388de43417bffdc056cf08b6e0e75be0db4a285d40` |
+| `results/v4_3_tool_assisted_decision_receipt.json` | `78a7f6285b56e43c809e89d2811c205c77ae58184c5eadf295ec786cb8fe9011` |
 
 Each decision receipt binds every training result, adapter, evaluation artifact,
 run ID and source file by hash. Adapters, raw evaluations and datasets stay in
 ignored local storage on the GPU machine.
 
-## 8. Next direction: execution feedback at inference (designed, not run)
+## 8. Execution feedback at inference (run 2026-09-25: FAIL)
 
 The execution-supervision SFT line is closed and will not be reopened: there
 will be no more epochs, dose increases, mixture changes, re-thresholding or new
@@ -509,4 +513,60 @@ HumanEval or repository records. Results on it cannot be confirmatory.
 - **Actual Atheris:** the installed package is the real one and its instrumentation is active, but no permitted comparison panel exists yet.
 - **Native repository:** execution is not ready for a reportable comparison. Only 3 of 5 official tests reproduce, and no generated test has been run natively.
 
-**No result exists yet. GPU generation awaits explicit approval.**
+### Result (run 2026-09-25): FAIL
+
+**Evidence status.** This is an exploratory pilot on training-derived data. It
+is not confirmation, generalization, validation or final-test evidence.
+
+**Runs.** There were four GPU/CPU stages, run one after another:
+
+| run | stage | duration |
+|---|---|---:|
+| `20260925-103511-…` | generate A | 298.5 s |
+| `20260925-104038-…` | generate B/C | 3,168.2 s |
+| `20260925-113357-…` | score B | 42.1 s |
+| `20260925-113501-…` | score C | 44.1 s |
+
+All four exited with code 0.
+
+**Integrity.** B/C pairing held on all 264 targets, with 0 problems.
+- B and C used identical input tokens: 1,769,147 each.
+- Output tokens are a measured outcome, not matched: 89,937 for B and 90,022 for C (ratio 1.0009).
+- Generation wall time was also measured: 2,269.8 s for B and 2,270.1 s for C (ratio 1.0001).
+
+**Repairs.** 182 of 264 records (68.9%) got at least one repair.
+- 450 were attempted, 449 delivered, and 1 skipped because matching was infeasible.
+- **93% of delivered repairs were duplicate-candidate feedback** (419 of 449).
+- Only 30 addressed a genuinely invalid artifact: 16 invalid shapes, 7 malformed calls, 5 missing calls, 1 prohibited construct and 1 syntax error.
+
+**Primary comparison (C − B).** Paired across 110 lineage clusters, with 90% bootstrap intervals.
+
+| metric | B | C | Δ | 90% CI |
+|---|---:|---:|---:|---:|
+| Kill@1 | 95/264 | 95/264 | 0.00 pp | [0.00, 0.00] |
+| Kill@4 | 163/264 | 164/264 | +0.38 pp | [−0.74, +1.50] |
+| **Kill@8** | **191/264** | **192/264** | **+0.38 pp** | **[−1.07, +1.77]** |
+| reference-valid per requested | 0.480 | 0.479 | −0.14 pp | [−0.66, +0.34] |
+| functions with ≥1 reference-valid | 232 | 233 | +0.38 pp | [0.00, +1.12] |
+| execution success | 0.966 | 0.968 | +0.19 pp | [+0.04, +0.39] |
+| exact-unique ratio | 0.969 | 0.975 | +0.006 | [+0.002, +0.010] |
+
+The frozen verdict is **FAIL**. The Kill@8 upper bound (+1.77 pp) is below the
++5 pp minimum important gain, so a practically important benefit from execution
+feedback is excluded. Most repaired duplicates became distinct tests, but this
+did not change which mutants were killed.
+
+**Secondary, not matched.** Against the canonical 8-sample protocol (A: 174 of
+264 killed):
+- B − A = **+6.44 pp** [+2.46, +10.59];
+- C − A = **+6.82 pp** [+2.75, +10.89].
+
+These gains come from 16 sequences plus text-level de-duplicating selection, not
+from execution feedback. They are an uncontrolled observation that motivates
+nothing on their own.
+
+**Decision.** This intervention is stopped: no extra repairs, calls, tokens,
+prompt changes or thresholds. The frozen model-only control remains the
+reference, and confirmation stays closed. The receipts are
+`results/v4_3_tool_assisted_analysis.json` and
+`results/v4_3_tool_assisted_decision_receipt.json`.

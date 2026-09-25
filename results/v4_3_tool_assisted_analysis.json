@@ -1,0 +1,242 @@
+{
+  "schema_version": "oneiros_tool_assisted_analysis_v1",
+  "label": "train-derived exploratory pilot on a previously base-inspected panel; not generalisation, not confirmatory, not a final-test result",
+  "predeclared": {
+    "min_gain_pp": 5.0,
+    "validity_margin_pp": 3.0,
+    "max_diversity_loss": 0.05,
+    "max_wall_ratio": 1.5,
+    "interval": "lineage-cluster percentile bootstrap, 90%, 10000 replicates, seed 20260925"
+  },
+  "arm_means": {
+    "A": {
+      "kill_at_1": 0.30303030303030304,
+      "kill_at_4": 0.6022727272727273,
+      "kill_at_8": 0.6590909090909091,
+      "reference_valid_per_requested": 0.4786931818181818,
+      "function_has_reference_valid": 0.7992424242424242,
+      "parse_success": 0.9900568181818182,
+      "execution_success": 0.9659090909090909,
+      "exact_unique_ratio": 0.8008658030303031
+    },
+    "B": {
+      "kill_at_1": 0.35984848484848486,
+      "kill_at_4": 0.6174242424242424,
+      "kill_at_8": 0.7234848484848485,
+      "reference_valid_per_requested": 0.48011363636363635,
+      "function_has_reference_valid": 0.8787878787878788,
+      "parse_success": 0.9976325757575758,
+      "execution_success": 0.9663825757575758,
+      "exact_unique_ratio": 0.96875
+    },
+    "C": {
+      "kill_at_1": 0.35984848484848486,
+      "kill_at_4": 0.6212121212121212,
+      "kill_at_8": 0.7272727272727273,
+      "reference_valid_per_requested": 0.4786931818181818,
+      "function_has_reference_valid": 0.8825757575757576,
+      "parse_success": 0.9976325757575758,
+      "execution_success": 0.9682765151515151,
+      "exact_unique_ratio": 0.9744994583333333
+    }
+  },
+  "unique_defects_killed": {
+    "A": 174,
+    "B": 191,
+    "C": 192
+  },
+  "primary_c_minus_b": {
+    "kill_at_1": {
+      "difference": 0.0,
+      "low": 0.0,
+      "high": 0.0,
+      "clusters": 110,
+      "units": 264,
+      "replicates": 10000,
+      "seed": 20260925
+    },
+    "kill_at_4": {
+      "difference": 0.3787878787878788,
+      "low": -0.7352941176470588,
+      "high": 1.5037593984962405,
+      "clusters": 110,
+      "units": 264,
+      "replicates": 10000,
+      "seed": 20260925
+    },
+    "kill_at_8": {
+      "difference": 0.3787878787878788,
+      "low": -1.0714285714285714,
+      "high": 1.773049645390071,
+      "clusters": 110,
+      "units": 264,
+      "replicates": 10000,
+      "seed": 20260925
+    },
+    "reference_valid_per_requested": {
+      "difference": -0.14204545454545456,
+      "low": -0.6578947368421052,
+      "high": 0.3412969283276451,
+      "clusters": 110,
+      "units": 264,
+      "replicates": 10000,
+      "seed": 20260925
+    },
+    "function_has_reference_valid": {
+      "difference": 0.3787878787878788,
+      "low": 0.0,
+      "high": 1.1194029850746268,
+      "clusters": 110,
+      "units": 264,
+      "replicates": 10000,
+      "seed": 20260925
+    },
+    "parse_success": {
+      "difference": 0.0,
+      "low": 0.0,
+      "high": 0.0,
+      "clusters": 110,
+      "units": 264,
+      "replicates": 10000,
+      "seed": 20260925
+    },
+    "execution_success": {
+      "difference": 0.1893939393939394,
+      "low": 0.04222972972972973,
+      "high": 0.3923766816143498,
+      "clusters": 110,
+      "units": 264,
+      "replicates": 10000,
+      "seed": 20260925
+    },
+    "exact_unique_ratio": {
+      "difference": 0.005749458333333333,
+      "low": 0.0021551724137931034,
+      "high": 0.009782608695652175,
+      "clusters": 110,
+      "units": 264,
+      "replicates": 10000,
+      "seed": 20260925
+    }
+  },
+  "secondary": {
+    "B_minus_A": {
+      "kill_at_8": {
+        "difference": 6.4393939393939394,
+        "low": 2.456140350877193,
+        "high": 10.588235294117647,
+        "clusters": 110,
+        "units": 264,
+        "replicates": 10000,
+        "seed": 20260925
+      },
+      "reference_valid_per_requested": {
+        "difference": 0.14204545454545456,
+        "low": -2.330508474576271,
+        "high": 2.5098425196850394,
+        "clusters": 110,
+        "units": 264,
+        "replicates": 10000,
+        "seed": 20260925
+      }
+    },
+    "C_minus_A": {
+      "kill_at_8": {
+        "difference": 6.8181818181818175,
+        "low": 2.7450980392156863,
+        "high": 10.894941634241246,
+        "clusters": 110,
+        "units": 264,
+        "replicates": 10000,
+        "seed": 20260925
+      },
+      "reference_valid_per_requested": {
+        "difference": 0.0,
+        "low": -2.4734982332155475,
+        "high": 2.3890784982935154,
+        "clusters": 110,
+        "units": 264,
+        "replicates": 10000,
+        "seed": 20260925
+      }
+    }
+  },
+  "accounting": {
+    "control": "call-, sequence-, cap- and rendered-input-token-matched sham-feedback control (request-budget-matched)",
+    "request_budget_matched": true,
+    "pairing_problems": [],
+    "pairing_problem_count": 0,
+    "max_new_tokens": [
+      1024
+    ],
+    "totals": {
+      "B": {
+        "sequences": 4224,
+        "model_calls": 2376,
+        "input_tokens": 1769147,
+        "output_tokens": 89937,
+        "generation_wall_seconds": 2269.8123919999994,
+        "duplicates_in_final": 70
+      },
+      "C": {
+        "sequences": 4224,
+        "model_calls": 2376,
+        "input_tokens": 1769147,
+        "output_tokens": 90022,
+        "generation_wall_seconds": 2270.121376000002,
+        "duplicates_in_final": 58
+      }
+    },
+    "input_tokens": {
+      "B": 1769147,
+      "C": 1769147
+    },
+    "output_tokens": {
+      "B": 89937,
+      "C": 90022,
+      "ratio_c_over_b": 1.0009451060186576
+    },
+    "wall_seconds": {
+      "B": 2269.8123919999994,
+      "C": 2270.121376000002,
+      "ratio_c_over_b": 1.0001361275500529
+    },
+    "repairs": {
+      "attempted": 450,
+      "delivered": 449,
+      "skipped_match_infeasible": 1
+    },
+    "measured_outcomes_not_matched": [
+      "actual output tokens (early EOS is a model outcome)",
+      "generation wall-clock time"
+    ],
+    "repair_category_transitions": {
+      "duplicate_candidate -> observed_assertion_failure": 164,
+      "duplicate_candidate -> executes_without_error": 103,
+      "duplicate_candidate -> duplicate_candidate": 91,
+      "duplicate_candidate -> identical_to_parent": 37,
+      "duplicate_candidate -> target_raised_exception": 14,
+      "duplicate_candidate -> target_timeout": 8,
+      "invalid_candidate_shape -> duplicate_candidate": 6,
+      "missing_test_invocation -> missing_test_invocation": 5,
+      "malformed_invocation -> observed_assertion_failure": 4,
+      "invalid_candidate_shape -> observed_assertion_failure": 3,
+      "invalid_candidate_shape -> executes_without_error": 3,
+      "invalid_candidate_shape -> identical_to_parent": 3,
+      "duplicate_candidate -> malformed_invocation": 2,
+      "malformed_invocation -> executes_without_error": 2,
+      "prohibited_construct -> prohibited_construct": 1,
+      "invalid_candidate_shape -> invalid_candidate_shape": 1,
+      "invalid_python_syntax -> invalid_python_syntax": 1,
+      "malformed_invocation -> duplicate_candidate": 1
+    }
+  },
+  "wall_ratio_c_over_b": 1.0001361275500529,
+  "limitations": [
+    "actual output tokens and wall-clock time are measured outcomes and may differ between B and C; the output-token ratio is reported, not matched"
+  ],
+  "verdict": "fail",
+  "decision": "stop this line; no re-thresholding, extra rounds or prompt changes",
+  "promotion_permitted": false,
+  "confirmation_opening_permitted": false
+}

@@ -40,9 +40,12 @@ def test_cluster_bootstrap_is_deterministic_and_clustered():
     assert first["clusters"] == 3 and first["low"] <= first["difference"] <= first["high"]
 
 
-def test_analysis_refuses_partial_results(tmp_path):
-    from scripts.analyse_tool_assisted_pilot import main
-    assert main(["--output", str(tmp_path / "analysis.json")]) == 2
+def test_analysis_refuses_partial_results(tmp_path, monkeypatch):
+    import scripts.analyse_tool_assisted_pilot as analysis
+    empty = tmp_path / "no_arms"
+    empty.mkdir()
+    monkeypatch.setattr(analysis, "OUTPUT_DIR", empty)
+    assert analysis.main(["--output", str(tmp_path / "analysis.json")]) == 2
     assert not (tmp_path / "analysis.json").exists()
 
 
@@ -136,3 +139,27 @@ def test_tracked_design_receipt_binds_sources_and_budgets():
         assert canonical_sha256(ROOT / relative) == expected, relative
     for relative, expected in receipt["tracked_artifacts_sha256"].items():
         assert hashlib.sha256((ROOT / relative).read_bytes()).hexdigest() == expected
+
+
+def test_tracked_tool_assisted_decision_chain_verifies():
+    """Analysis, lineage manifest and decision receipt verify from tracked bytes."""
+    receipt_path = RESULTS / "v4_3_tool_assisted_decision_receipt.json"
+    if not receipt_path.exists():
+        pytest.skip("tool-assisted decision receipt not present")
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    for key in ("analysis", "lineage_manifest", "design_receipt", "panel"):
+        path = ROOT / receipt[key]["path"]
+        assert b"\r" not in path.read_bytes()
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == receipt[key]["sha256"], key
+    analysis = json.loads((ROOT / receipt["analysis"]["path"]).read_text(encoding="utf-8"))
+    assert analysis["verdict"] == receipt["decision"]["outcome"] == "fail"
+    assert analysis["accounting"]["request_budget_matched"] is True
+    assert analysis["accounting"]["pairing_problem_count"] == 0
+    assert analysis["primary_c_minus_b"]["kill_at_8"]["high"] < MIN_GAIN_PP
+    assert receipt["lineage_manifest"]["files"] == 264
+    assert all(run["state"] == "completed" and run["exit_code"] == 0
+               for run in receipt["runs"].values())
+    assert receipt["decision"]["promotion_permitted"] is False
+    assert receipt["decision"]["confirmation_opening_permitted"] is False
+    assert not any(receipt["leakage"].values())
+    assert "exact compute" not in json.dumps(receipt).lower()

@@ -229,3 +229,30 @@ generated test has been run natively.
 - `results/v4_3_tool_assisted_design_receipt.json`
 
 **Written when run (ignored):** `results/v4_3_tool_assisted_v1/`.
+
+## Execution record (appended after the run; the protocol above is unchanged)
+
+GPU generation was authorized for `5e8692b` (design receipt built at `cab29d3`).
+The pilot ran strictly sequentially on 2026-09-25:
+
+| run | stage | duration |
+|---|---|---:|
+| `20260925-103511-toolassist-generate-a-qwen15b-s42` | generate A | 298.5 s |
+| `20260925-104038-toolassist-generate-bc-qwen15b-s42` | generate B/C | 3,168.2 s |
+| `20260925-113357-toolassist-score-b-qwen15b-s42` | score B | 42.1 s |
+| `20260925-113501-toolassist-score-c-qwen15b-s42` | score C | 44.1 s |
+
+Every run exited with code 0.
+
+**Integrity.** B/C pairing passed on all 264 targets, and the journal holds 2,825
+entries. No call was replayed, because there was no disconnect.
+
+**Repairs.** 450 were attempted, 449 delivered, and 1 skipped because matching
+was infeasible. Of the delivered repairs, 419 were duplicate-candidate feedback.
+
+**Result.** Kill@8 C − B was +0.38 pp, with a 90% interval of [−1.07, +1.77].
+The frozen verdict is **FAIL**, and the line is stopped.
+
+The full numbers are in `results/v4_3_tool_assisted_analysis.json` and
+`results/v4_3_tool_assisted_decision_receipt.json`. The latter also binds the
+journal, the lineage-file manifest, every run, the adapter and the source hashes.
