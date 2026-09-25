@@ -570,3 +570,29 @@ prompt changes or thresholds. The frozen model-only control remains the
 reference, and confirmation stays closed. The receipts are
 `results/v4_3_tool_assisted_analysis.json` and
 `results/v4_3_tool_assisted_decision_receipt.json`.
+
+## 9. Next direction (design only, 2026-09-25)
+
+**Recommended primary line: an independently constructed repository-native
+evaluation.** It uses new bugs from repositories that have never fed any Oneiros
+split, reproduced natively on buggy and fixed revisions. A full dress rehearsal
+on a separate pool precedes any one-time run.
+
+**Optional secondary line: a sampling-budget study.** It asks whether 16 samples
+with text-only selection of 8 beat the first 8 (exploratory, about 20 GPU
+minutes).
+
+**Disjointness is executable.** `harness/repository_isolation.py` checks every
+candidate against the full upstream copy of every source any split was built
+from:
+- 35 repositories;
+- 1,484 commits;
+- 998 patches;
+- 33,172 reference functions.
+
+This removes any need to open protected splits. The design, estimates, blockers
+(B1–B7) and required decisions (D1–D9) are in
+[NEXT_DIRECTION_DECISION_MEMO.md](NEXT_DIRECTION_DECISION_MEMO.md) and
+`results/v4_3_next_direction_design.json`.
+
+**Nothing has been mined, no split exists, and no model has run.**
