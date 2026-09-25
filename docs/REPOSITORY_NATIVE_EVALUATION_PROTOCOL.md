@@ -45,8 +45,8 @@ decision D2.
 
 ## 2. Isolation (fail-closed, bound to a verified frozen universe)
 
-**Status: D7 is pending.** The universe-to-receipt binding below is new and
-awaits acceptance.
+**Status: D7 accepted (2026-09-25)**, only under the narrowed claim in *Claim
+scope*.
 
 ### Three separate stages
 
@@ -99,7 +99,7 @@ blob, and that blob's SHA-256 must match.
 - **Direct parent:** the fixed commit has exactly one parent, the buggy commit. Merge commits are refused.
 - **Single changed file:** comparing the authenticated buggy and fixed trees must show exactly one changed path, the target file. A changed subtree without its tree objects is refused (partial evidence is never accepted), and so is a multi-file fix. Policy B, multi-file fixes, is not selected.
 - **Derived diff:** the canonical diff is recomputed from the two authenticated target blobs (difflib unified diff, 3 context lines, `a/`/`b/` headers).
-- **Submitted patch:** it must carry exactly the derived removed and added lines, per file. Its hunks are parsed by their header counts, so a line that looks like a header cannot hide.
+- **Submitted patch (not authoritative):** it is only required to carry the same derived added and removed lines per file. Byte-identical patch text and identical hunk placement are not required. Its hunks are parsed by their header counts, so a line that looks like a header cannot hide.
 - **Patch lineage:** patch hashes, shingles, and identical and near-duplicate checks use only the derived diff.
 - **Target function changed:** the declared target function must occur exactly once in the buggy file. At least one derived hunk must overlap its AST span, the same qualified function must exist in the fixed file, and the normalised bodies must differ.
 - **Recorded:** the derived diff's SHA-256, the changed-file list, the hunks, the target-function spans (buggy and fixed) and the authentication result are stored in the isolation record.

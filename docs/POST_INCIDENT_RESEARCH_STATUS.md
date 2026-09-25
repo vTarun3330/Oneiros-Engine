@@ -582,7 +582,7 @@ separate pool before any one-time run.
 with frozen text-only selection of 8 beat the nested first 8. It is exploratory
 and takes about 20 GPU minutes.
 
-**Isolation claim (narrow; D7 pending).** Disjointness is *enforced* against the
+**Isolation claim (narrow; D7 accepted 2026-09-25 under exactly this claim).** Disjointness is *enforced* against the
 complete indexed source universe under the recorded repository, fork, commit,
 patch, issue and function-similarity checks. It does not claim that no model
 has seen a repository, and the 2025 fix cutoff is contamination-risk mitigation
@@ -590,7 +590,7 @@ only.
 
 - **Bound decisions.** Every decision is made against a `FrozenReferenceUniverse`. Loading it re-verifies the recomputed collections, the collection hashes, the internal receipt hash, every input file and every canonical source against the receipt (`40ce55b0…`), which is published in the crash-safe bundle `results/next_direction_bundle`. The receipt hash comes from that object; no caller can supply one.
 - **Bound coverage inputs.** The receipt binds the corpus manifest, `utils/dataset_identity.py`, the curated definition and the train-view loader. All ten curated definitions are indexed, a conservative superset of the eight corpus seeds.
-- **Exact diff (policy A).** Only direct-parent, single-target-file fixes are admitted. Patch lineage comes only from the diff derived from authenticated git blobs. A submitted patch must match that diff exactly, and must modify the declared target function. A partial patch carrying only an unrelated change, which previously passed, is now refused.
+- **Exact diff (policy A).** Only direct-parent, single-target-file fixes are admitted. Patch lineage comes only from the diff derived from authenticated git blobs. The derived diff must modify the declared target function. A submitted patch is not authoritative: it only has to carry the same derived added and removed lines per file. A partial patch carrying only an unrelated change, which previously passed, is now refused.
 - **Temporal rule.** The fixed-commit committer timestamp must be on or after 2025-01-01. It is enforced at admission and frozen in the receipt, and is contamination-risk mitigation only.
 - **Separate stages.** Candidate evidence goes through schema validation, then offline authentication, then source-universe overlap. Network acquisition is a later, separately approved step.
 - **Integrity.** `record_sha256` is a self-hash, not a signature. Downstream use must revalidate each record from its evidence sidecar, byte for byte.

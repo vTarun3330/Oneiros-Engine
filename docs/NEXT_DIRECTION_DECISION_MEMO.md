@@ -51,7 +51,11 @@ split was consumed. **The project currently cannot make a held-out claim.**
 This does **not** claim that no model has seen a repository. The 2025 cutoff for
 fix commits is contamination-risk mitigation, not proof.
 
-**D7 remains pending.** Three things are fixed below and await your review:
+**D7 is accepted (2026-09-25) under exactly this narrowed claim, and no
+broader one.** It is not a claim that the model could not have seen a
+repository during pretraining.
+
+The acceptance followed three fixes:
 - the universe-to-receipt binding;
 - patch lineage, which could be spoofed by submitting a partial patch;
 - the crash-safety of publication.
@@ -139,7 +143,7 @@ stages, returning `[]` from each.
 frozen policy A works as follows:
 - **Direct parent:** the fixed commit's only parent is the buggy commit.
 - **One changed path:** the authenticated trees must show exactly one changed path, the target file. Multi-file fixes, and changed subtrees without their tree objects, are refused.
-- **Derived diff:** the canonical diff is recomputed from the authenticated blobs. The submitted patch must carry exactly its removed and added lines, and only the derived diff feeds patch hashes and the identical and near-duplicate checks.
+- **Derived diff:** the canonical diff is recomputed from the authenticated blobs, and only it feeds patch hashes and the identical and near-duplicate checks. The submitted patch is not authoritative; the authenticated canonical diff is. The submitted patch is only required to carry the same derived added and removed lines per file. Byte-identical patch text and identical hunk placement are not required.
 - **Target function changed:** a derived hunk must overlap the declared target function's AST span, and that function's normalised body must change between revisions.
 - **Recorded:** each isolation record stores the derived diff's SHA-256, the changed files, the hunks and the target-function spans.
 
@@ -259,24 +263,23 @@ rehearsal-result hash for all six evaluations.
 | B8 | N = 400 needs roughly 2,700–5,700 mined candidates from 34 or more repositories, and about 50 CPU-hours. |
 | B9 | Candidate GitHub metadata and git objects must be acquired and hash-bound. The offline authenticator exists; the acquisition step does not. |
 
-## Decisions needed
+## Decisions (recorded 2026-09-25)
 
-| id | decision |
-|---|---|
-| D1 | Approve mining, hash-bound acquisition of metadata and git objects, and the temporal rule: a committer timestamp on or after 2025-01-01, as mitigation only. |
-| D2 | Approve the licence list and the same-organisation rule. |
-| D3 | Set N: 400 recommended for +8 pp at ρ 0.05 with at most 12 targets per repository; 200 only as an approved lower-power compromise. The gate is unchanged. |
-| D4 | Decide who seals the final set and its status. |
-| D5 | Set the Atheris modes and budgets. |
-| D6 | Permit installing `uv` and Python 3.10/3.13 in WSL. |
-| D7 | Accept enforcement against the complete indexed universe: decisions bound to the verified frozen universe, patch lineage from the authenticated diff, and records trusted only after revalidation. **Pending.** |
-| D8 | Run, defer or skip the sampling study. |
-| D9 | Choose the models for the one-time evaluation. |
+| id | status | decision |
+|---|---|---|
+| D1 | approved | Read-only GitHub mining and hash-bound acquisition of repository metadata, issue/PR responses, commit, tree and blob objects and licence evidence. The fixed commit's authenticated committer timestamp must be on or after 2025-01-01T00:00:00Z (mitigation only). |
+| D2 | approved conservatively | Only MIT, BSD-2-Clause, BSD-3-Clause, Apache-2.0, ISC and PSF-2.0. Same-organisation repositories are excluded by default and listed separately for explicit review, never silently admitted. |
+| D3 | approved | N = 400 from at least 34 repositories, with at most 12 targets per repository. The +5 pp gate is unchanged, and shortages are never filled by repetition. A bounded acquisition pilot comes first. |
+| D4 | decided | The final set is sealed by hash after qualification and before any model sees it. The user is the one-time final-evaluation authorizer. No development tool, model call or prompt inspection may touch the sealed set before that authorization. |
+| D5 | approved | Actual Atheris 2.3.0 in two labelled modes: ordinary crash/contract (the primary baseline) and differential-oracle (an upper bound). Seeds 42, 43 and 44; 600 CPU-seconds per target, per mode, per seed. Applicability is reported separately, and an ineligible target is never counted as a zero. |
+| D6 | approved | `uv` and Python 3.10/3.13 inside WSL only, pinned, with hash-locked environments. Windows Python is untouched. |
+| D7 | **accepted** | Accepted only under the narrowed claim quoted above. |
+| D8 | deferred | The sampling-budget GPU study is not run; the repository-native critical path comes first. |
+| D9 | provisionally approved | Exactly two arms: the pinned Qwen2.5-Coder-1.5B base model and the existing frozen control adapter, with identities resolved from the frozen receipts. Proceeding is refused if either identity is missing or ambiguous. |
 
-## Can D7 now be accepted?
+## D7 acceptance
 
-**Recommended: yes, as the narrowed indexed-universe claim.** It remains pending
-until you accept it.
+**Accepted on 2026-09-25, under the narrowed indexed-universe claim only.**
 
 - **What is now true:**
   - a decision can be made only against a universe verified against its receipt, and no caller can supply the receipt hash;
@@ -289,13 +292,13 @@ until you accept it.
 - **What remains limited:**
   - the claim covers enforcement against the indexed universe only. It cannot rule out pretraining exposure, and the temporal rule only mitigates that risk;
   - under policy A, only single-file fixes are admissible, which narrows the candidate supply;
-  - no real candidate can pass until acquisition is approved and built (D1, B9);
+  - no real candidate can pass until the approved acquisition step (D1) is built (B9);
   - on Windows, publication durability relies on NTFS metadata journaling.
 
 ## Proposed execution order
 
-1. Approve the design and decisions D1–D9.
-2. Optionally, run the sampling study.
+1. Decisions D1–D9 are recorded, and D8 defers the sampling study.
+2. Build the acquisition pipeline, then run a bounded acquisition pilot (D3).
 3. Install tooling (`uv`, interpreters); extend the Atheris adapter.
 4. Mine candidates and acquire their metadata and git objects, hash-bound. Split them into a rehearsal pool and a final pool, with isolation records made against the frozen universe.
 5. Build hash-locked shared environments and run official-test qualification.

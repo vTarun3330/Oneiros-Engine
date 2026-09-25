@@ -1,0 +1,1814 @@
+{
+  "schema_version": "oneiros_next_direction_design_v4",
+  "label": "design only; no split created, no mining, no model, no protected access",
+  "created_utc": "2026-09-25T16:22:00.136169+00:00",
+  "starting_state": {
+    "closed_pilots": {
+      "tool_assisted": {
+        "verdict": "fail",
+        "artifact_hashes_verify": true,
+        "protected_flags_false": true
+      },
+      "execution_dose": {
+        "outcome": "composite_intervention_null_inconclusive",
+        "protected_flags_false": true
+      },
+      "evaluations": {
+        "tool_assisted/A": {
+          "envelope_and_raw_result_verify": true,
+          "problems": []
+        },
+        "tool_assisted/B": {
+          "envelope_and_raw_result_verify": true,
+          "problems": []
+        },
+        "tool_assisted/C": {
+          "envelope_and_raw_result_verify": true,
+          "problems": []
+        },
+        "execution_dose/control": {
+          "envelope_and_raw_result_verify": true,
+          "problems": []
+        },
+        "execution_dose/dose_treatment": {
+          "envelope_and_raw_result_verify": true,
+          "problems": []
+        },
+        "execution_dose/base": {
+          "envelope_and_raw_result_verify": true,
+          "problems": []
+        }
+      },
+      "all_evaluations_verify": true
+    }
+  },
+  "isolation": {
+    "version": "oneiros_repository_isolation_v4",
+    "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+    "near_duplicate_threshold": 0.8,
+    "method": "AST-normalised, docstring-stripped code; exact Jaccard over 5-token shingles; inverted-index candidates (reused from scripts/audit_cross_split_near_duplicates.py)",
+    "stages": [
+      "evidence schema",
+      "evidence authentication (offline)",
+      "source-universe overlap"
+    ],
+    "acquisition_requirements": {
+      "repository_metadata": "GET https://api.github.com/repos/{owner}/{name}: raw response bytes, SHA-256, retrieval timestamp (UTC) and ETag; fields full_name, id, node_id, html_url, fork, parent{full_name,id,node_id}, license.spdx_id are cross-checked",
+      "issue_metadata": "GET https://api.github.com/repos/{owner}/{name}/issues/{n} (or /pulls/{n}): raw response bytes, SHA-256, timestamp and ETag; fields url, number and repository_url are cross-checked",
+      "git_objects": "loose-object bodies of the buggy and fixed commits, every tree on the paths to the licence file and target file at each revision, and the licence and target-file blobs; each is re-hashed to its object ID",
+      "network": "acquisition requires separate approval (decision D1); this module is offline"
+    },
+    "why_protected_splits_need_not_be_opened": "every split, the consumed test split included, is built only from MBPP, HumanEval, BugsInPy, SWE-bench Verified and the curated seeds; the universe indexes the complete upstream copy of each, verified by the coverage audit",
+    "diff_policy": {
+      "id": "A_direct_parent_single_target_file",
+      "rule": "the fixed commit has exactly one parent, the buggy commit; comparing the authenticated buggy and fixed trees shows exactly one changed path, the target file; the canonical diff is recomputed from the two target blobs (difflib unified diff, 3 context lines, a/ and b/ headers); the submitted patch must carry exactly the same removed and added lines per file; at least one changed hunk overlaps the declared target function, whose normalised body differs between the buggy and fixed files",
+      "multi_file_fixes": "refused (policy B is not selected)"
+    },
+    "temporal_rule": {
+      "rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
+      "cutoff_epoch": 1735689600,
+      "rejects": "a missing or unparseable author or committer timestamp; an author timestamp later than the committer timestamp; a buggy-commit committer timestamp later than the fixed commit's; a commit timestamp later than the evidence retrieval",
+      "status": "contamination-risk mitigation only; it does not show that no model saw the code"
+    },
+    "integrity": "record_sha256 detects accidental modification only; it is a self-hash, not a signature. Downstream use must keep the evidence sidecar, reload the same frozen universe, rerun check_candidate and compare the record byte for byte (revalidate_isolation_record)",
+    "coverage": {
+      "covered": true,
+      "problems": [],
+      "corpus_manifest_sha256": "7f68386fdc66c8fc102d07f4605971c6c2dcffee0e5732abb30d8c62e7485d3c",
+      "per_source": {
+        "BugsInPy": {
+          "declared_records": 269,
+          "indexed": {
+            "bugs": 501,
+            "functions": 500,
+            "patches": 501,
+            "projects": 17
+          },
+          "bound_inputs": 1019
+        },
+        "SWE-bench Verified": {
+          "declared_records": 324,
+          "indexed": {
+            "functions": 500,
+            "instances": 500,
+            "patches": 500
+          },
+          "bound_inputs": 1
+        },
+        "humaneval": {
+          "declared_records": 1252,
+          "indexed": {
+            "functions": 179,
+            "tasks": 164
+          },
+          "bound_inputs": 1
+        },
+        "manual_curated_examples": {
+          "declared_records": 8,
+          "indexed": {
+            "definition_ids": [
+              "curated::bugsinpy_black_1",
+              "curated::bugsinpy_cookiecutter_1",
+              "curated::bugsinpy_fastapi_1",
+              "curated::bugsinpy_httpie_1",
+              "curated::bugsinpy_pandas_1",
+              "curated::bugsinpy_requests_1",
+              "curated::bugsinpy_scrapy_1",
+              "curated::bugsinpy_thefuck_1",
+              "curated::bugsinpy_tornado_1",
+              "curated::bugsinpy_youtube_dl_1"
+            ],
+            "definitions": 10,
+            "definitions_sha256": "c76a7e5158311840fabca9ebba8902017f7e310c2bb60987fcb4e5837ee9d9b3",
+            "functions": 20
+          },
+          "bound_inputs": 2,
+          "non_train_seed_candidates": [
+            "curated::bugsinpy_black_1",
+            "curated::bugsinpy_cookiecutter_1",
+            "curated::bugsinpy_scrapy_1"
+          ],
+          "non_train_seeds_required": 1,
+          "note": "all definitions are indexed: a conservative superset of the seeds that entered any split"
+        },
+        "mbpp": {
+          "declared_records": 6384,
+          "indexed": {
+            "functions": 1029,
+            "tasks": 974
+          },
+          "bound_inputs": 1
+        }
+      }
+    },
+    "reference_universe_receipt_file": "results/next_direction_bundle/generations/<current>/reference_universe_receipt.json",
+    "reference_universe_receipt_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
+    "reference_universe_receipt_file_sha256": "01077dc15bb260946122fd3b3c969798743b84287ca827b8af7f57ef1edc637f",
+    "frozen_universe_verification": {
+      "canonical_sources_verified": 10,
+      "code_inputs_verified": 7,
+      "collection_hashes_match": true,
+      "collections_match": true,
+      "corpus_manifest_sha256": "7f68386fdc66c8fc102d07f4605971c6c2dcffee0e5732abb30d8c62e7485d3c",
+      "coverage_covered": true,
+      "input_files_verified": 1558,
+      "receipt_hash_verifies": true
+    },
+    "collection_sha256": {
+      "code_input_files": "137c3a0d2ab70e0e7f293262a937ae4b14324fb5f1d556fa405d06346afb2486",
+      "commits": "32ec4f8ac0953c9a0a0612832d4b30c9dc9a67288b631023daaca84b8a36f172",
+      "counts": "d3f1e86953a7f25d7a2422332c430777be410827cdb2d34037c7f5e361cb8610",
+      "fork_parent_identities": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "function_fingerprints": "ca30865fd928cf5280515b838ffcf8730b1ce7e1be1a521621c25c0277463bd6",
+      "input_files": "b63324c1b4a5185c24d084f9919fe8990c27a8992c3d876d78a9646d5693e18e",
+      "instance_ids": "2e39837398e36f4973ef072a0d3af407434f175a533352a92c5494adcd673123",
+      "patch_hashes": "2a212d2232b132bdbc55f5e2a00b1515ea14438fda64d6ca01efdc3d4bcca4b8",
+      "repository_full_names": "343d3f3ad2f85bd6bad866552945210401a278acd77e3bbd4f97362809280ae6",
+      "repository_names": "7bce3bb35f9516b47b36ab68802e61b6111ca74e11458e0cbd20695215699a58"
+    },
+    "excluded_repository_names": [
+      "aiohttp",
+      "ansible",
+      "astropy",
+      "black",
+      "boto3",
+      "celery",
+      "click",
+      "cookiecutter",
+      "django",
+      "fastapi",
+      "flask",
+      "httpie",
+      "keras",
+      "luigi",
+      "matplotlib",
+      "numpy",
+      "pandas",
+      "pylint",
+      "pysnooper",
+      "pytest",
+      "redis",
+      "requests",
+      "sanic",
+      "scikit-learn",
+      "scrapy",
+      "seaborn",
+      "spacy",
+      "sphinx",
+      "sqlalchemy",
+      "sympy",
+      "thefuck",
+      "tornado",
+      "tqdm",
+      "xarray",
+      "youtube-dl"
+    ],
+    "counts": {
+      "BugsInPy": {
+        "bugs": 501,
+        "functions": 500,
+        "patches": 501,
+        "projects": 17
+      },
+      "SWE-bench Verified": {
+        "functions": 500,
+        "instances": 500,
+        "patches": 500
+      },
+      "corpus_manifest": {
+        "path": "data/corpus/v4_1_research_hardened_candidate/manifest.json",
+        "records_by_source": {
+          "BugsInPy": 269,
+          "SWE-bench Verified": 324,
+          "humaneval": 1252,
+          "manual_curated_examples": 8,
+          "mbpp": 6384
+        },
+        "sha256": "7f68386fdc66c8fc102d07f4605971c6c2dcffee0e5732abb30d8c62e7485d3c"
+      },
+      "humaneval": {
+        "functions": 179,
+        "tasks": 164
+      },
+      "legacy_real_bugs": {
+        "functions": 581,
+        "metadata_entries": 493,
+        "python_files": 532
+      },
+      "manual_curated_examples": {
+        "definition_ids": [
+          "curated::bugsinpy_black_1",
+          "curated::bugsinpy_cookiecutter_1",
+          "curated::bugsinpy_fastapi_1",
+          "curated::bugsinpy_httpie_1",
+          "curated::bugsinpy_pandas_1",
+          "curated::bugsinpy_requests_1",
+          "curated::bugsinpy_scrapy_1",
+          "curated::bugsinpy_thefuck_1",
+          "curated::bugsinpy_tornado_1",
+          "curated::bugsinpy_youtube_dl_1"
+        ],
+        "definitions": 10,
+        "definitions_sha256": "c76a7e5158311840fabca9ebba8902017f7e310c2bb60987fcb4e5837ee9d9b3",
+        "functions": 20
+      },
+      "mbpp": {
+        "functions": 1029,
+        "tasks": 974
+      },
+      "train_shard": {
+        "curated_ids": [
+          "curated::bugsinpy_fastapi_1",
+          "curated::bugsinpy_httpie_1",
+          "curated::bugsinpy_pandas_1",
+          "curated::bugsinpy_requests_1",
+          "curated::bugsinpy_thefuck_1",
+          "curated::bugsinpy_tornado_1",
+          "curated::bugsinpy_youtube_dl_1"
+        ],
+        "declared_records": 6052,
+        "functions": 30383,
+        "records": 6052
+      }
+    },
+    "bound_input_files": {
+      "BugsInPy": 1019,
+      "SWE-bench Verified": 1,
+      "corpus_manifest": 1,
+      "humaneval": 1,
+      "legacy_real_bugs": 533,
+      "mbpp": 1,
+      "train_shard": 2
+    },
+    "bound_code_inputs": {
+      "corpus_manifest": [
+        "utils/dataset_identity.py"
+      ],
+      "manual_curated_examples": [
+        "harness/bugsinpy_loader.py",
+        "scripts/build_corpus_v1.py"
+      ],
+      "train_shard": [
+        "harness/corpus.py",
+        "harness/corpus_view.py",
+        "harness/function_complexity.py",
+        "utils/dataset_identity.py"
+      ]
+    },
+    "self_checks": {
+      "known_benchmark_patch_in_excluded_repository_refused": {
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
+        "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
+        "admissible": false,
+        "reasons": [
+          "repository_in_reference_universe:tqdm/tqdm",
+          "patch_identical_to_known_bug",
+          "patch_near_duplicate_of_known_bug"
+        ],
+        "insufficient_evidence": false,
+        "stages": {
+          "schema": [],
+          "authentication": [],
+          "overlap": [
+            "repository_in_reference_universe:tqdm/tqdm",
+            "patch_identical_to_known_bug",
+            "patch_near_duplicate_of_known_bug"
+          ]
+        },
+        "authentication_passed": true,
+        "evidence": {
+          "repository": "tqdm/tqdm",
+          "repository_url": "https://github.com/tqdm/tqdm",
+          "repository_id": "123456",
+          "repository_node_id": "R_tqdmtqdmnode",
+          "fork_status": "not_fork",
+          "fork_parent": "",
+          "fork_parent_id": "",
+          "fork_parent_node_id": "",
+          "buggy_commit": "d71edf23d00273fd4d3a4f81df329e2e3f9a326d",
+          "fixed_commit": "dc377ddcb11d4d2c12e746ad901a64670642d9df",
+          "target_file": "tqdm/contrib/__init__.py",
+          "target_module": "contrib",
+          "target_blob_buggy": "e8fc9ffbfb9c4434fe342942427447257f757b5a",
+          "target_blob_fixed": "88a15bef9240686deb81ff7b47388e177fefe987",
+          "issue_id": "tqdm/tqdm#1",
+          "licence_spdx": "MIT",
+          "licence_path": "LICENSE",
+          "licence_blob": "529be11d08524096c89333d593c8785f043f91c1",
+          "licence_sha256": "74c785b41143247e880eb278ca9d887cb7ae191615c5bca467f0cf980ca8b60d",
+          "repository_metadata": {
+            "url": "https://api.github.com/repos/tqdm/tqdm",
+            "sha256": "0457a9faa710e7c1bcb3365281c4c6acaed64ce50084b7500d84df88e395bac3",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "issue_metadata": {
+            "url": "https://api.github.com/repos/tqdm/tqdm/issues/1",
+            "sha256": "bd42b160215961734d4ed5bc6bdbdad2ccd91190d1862568f273b03fc38a1633",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "git_objects": [
+            "224b96b097f6c9ca754c622e5a50fcb855e43ab3",
+            "35dc896dae5b01e5d891182c480fb23490b54709",
+            "3909d71cc7d06e9933d2ea28c6bb1508c8c1c6e0",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "6fc1913faf865dfde954a710ba4e4be29e2891c4",
+            "800b4698ca0848b353f8544da0f67ed9882a76ab",
+            "88a15bef9240686deb81ff7b47388e177fefe987",
+            "b8c13d06a0f66f7379a2b03cf575df40253fe5b7",
+            "d71edf23d00273fd4d3a4f81df329e2e3f9a326d",
+            "dc377ddcb11d4d2c12e746ad901a64670642d9df",
+            "e8fc9ffbfb9c4434fe342942427447257f757b5a"
+          ]
+        },
+        "derived_from_verified_evidence": {
+          "diff_policy": "A_direct_parent_single_target_file",
+          "fixed_commit_author_epoch": 1740787200,
+          "fixed_commit_committer_epoch": 1740787200,
+          "temporal_rule_satisfied": true,
+          "changed_files": [
+            "tqdm/contrib/__init__.py"
+          ],
+          "canonical_diff_sha256": "ce7da8a7813d013ab4b39d90344ec81ee372add391168b06906996750cdb71d5",
+          "canonical_patch_hash": "ba65252ea1b8fbfa65e61c579ceefee40230e23f0e819e04f3f83af656ff3f1a",
+          "changed_hunks": [
+            {
+              "op": "replace",
+              "buggy": [
+                6,
+                6
+              ],
+              "fixed": [
+                6,
+                6
+              ]
+            }
+          ],
+          "submitted_patch_sha256": "ce7da8a7813d013ab4b39d90344ec81ee372add391168b06906996750cdb71d5",
+          "submitted_patch_matches_derived_diff": true,
+          "target_qualname": "tenumerate",
+          "target_span_buggy": [
+            1,
+            6
+          ],
+          "target_span_fixed": [
+            1,
+            6
+          ]
+        },
+        "patch_sha256": "ba65252ea1b8fbfa65e61c579ceefee40230e23f0e819e04f3f83af656ff3f1a",
+        "patch_checks": "run_on_derived_diff",
+        "nearest_patch": {
+          "reference": "bugsinpy::tqdm::1",
+          "jaccard": 1.0
+        },
+        "nearest_function": {
+          "reference": "bugsinpy::tqdm::1#0",
+          "jaccard": 0.1343
+        },
+        "target_function_fingerprint": "3e1453dadedac20f0958d9dc00034450c180e5fbc6e0c7e9c7a52b92fd729ce4",
+        "same_organisation_as_excluded": [
+          "tqdm/tqdm"
+        ],
+        "threshold": 0.8,
+        "record_sha256": "a1fa132a0aec763116a93653b88ccb83b06e793fd6c8f3117a89f2a89d2609e7",
+        "self_check_passed": true
+      },
+      "renamed_mbpp_function_refused": {
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
+        "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
+        "admissible": false,
+        "reasons": [
+          "function_near_duplicate_of_reference"
+        ],
+        "insufficient_evidence": false,
+        "stages": {
+          "schema": [],
+          "authentication": [],
+          "overlap": [
+            "function_near_duplicate_of_reference"
+          ]
+        },
+        "authentication_passed": true,
+        "evidence": {
+          "repository": "example-org/ranges",
+          "repository_url": "https://github.com/example-org/ranges",
+          "repository_id": "123456",
+          "repository_node_id": "R_exampleorgrangesnode",
+          "fork_status": "not_fork",
+          "fork_parent": "",
+          "fork_parent_id": "",
+          "fork_parent_node_id": "",
+          "buggy_commit": "2c4dda099e211ca6de2738ba1a7b5e1f91d0fc46",
+          "fixed_commit": "ca9409306aa6b4f3422bb4c155ca4f7f568d6c53",
+          "target_file": "src/paths.py",
+          "target_module": "paths",
+          "target_blob_buggy": "ecb0211e295926370087ccdd55db821d934210b2",
+          "target_blob_fixed": "5ad6caa44e96a90cf7242f50520624a8b73a6952",
+          "issue_id": "example-org/ranges#1",
+          "licence_spdx": "MIT",
+          "licence_path": "LICENSE",
+          "licence_blob": "529be11d08524096c89333d593c8785f043f91c1",
+          "licence_sha256": "74c785b41143247e880eb278ca9d887cb7ae191615c5bca467f0cf980ca8b60d",
+          "repository_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges",
+            "sha256": "fc6a640eb52552be9b37766de3f513afe33d9347bacba257010ba8bc28bec401",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "issue_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges/issues/1",
+            "sha256": "b7b72a4ea84bbcdddf0db64d02e8aee58b7b1352a3067b1a6f130bcc32c3f078",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "git_objects": [
+            "0c72db510a0e90727ee910a4ae1f814fe24706f5",
+            "2a8b4a5074b908997fbbca3820da680575c4ec61",
+            "2c4dda099e211ca6de2738ba1a7b5e1f91d0fc46",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "5ad6caa44e96a90cf7242f50520624a8b73a6952",
+            "894f8c41a4ad49bbc2aad40cea8720878620ca16",
+            "ca9409306aa6b4f3422bb4c155ca4f7f568d6c53",
+            "ecb0211e295926370087ccdd55db821d934210b2",
+            "f8210015c9f9effd2b315aa1c51eb3c854241e3c"
+          ]
+        },
+        "derived_from_verified_evidence": {
+          "diff_policy": "A_direct_parent_single_target_file",
+          "fixed_commit_author_epoch": 1740787200,
+          "fixed_commit_committer_epoch": 1740787200,
+          "temporal_rule_satisfied": true,
+          "changed_files": [
+            "src/paths.py"
+          ],
+          "canonical_diff_sha256": "56ae6d60e7c4ca9e428a262b6c2587b5c61ab9d332a26c3091c0860acfd39ecb",
+          "canonical_patch_hash": "d94544bf8ccca8df1dd4cb2445b2ceed0fe1af8555be4c76dfdc2d578a23258c",
+          "changed_hunks": [
+            {
+              "op": "insert",
+              "buggy": [
+                2,
+                1
+              ],
+              "fixed": [
+                2,
+                2
+              ]
+            }
+          ],
+          "submitted_patch_sha256": "56ae6d60e7c4ca9e428a262b6c2587b5c61ab9d332a26c3091c0860acfd39ecb",
+          "submitted_patch_matches_derived_diff": true,
+          "target_qualname": "cheapest_path",
+          "target_span_buggy": [
+            1,
+            11
+          ],
+          "target_span_fixed": [
+            1,
+            12
+          ]
+        },
+        "patch_sha256": "d94544bf8ccca8df1dd4cb2445b2ceed0fe1af8555be4c76dfdc2d578a23258c",
+        "patch_checks": "run_on_derived_diff",
+        "nearest_patch": {
+          "reference": null,
+          "jaccard": 0.0
+        },
+        "nearest_function": {
+          "reference": "mbpp::1#0",
+          "jaccard": 0.972
+        },
+        "target_function_fingerprint": "49ea58fa043e3a5c00b661991c102d204fd622e88eb26af1d4fbb5d69ff9dd17",
+        "same_organisation_as_excluded": [],
+        "threshold": 0.8,
+        "record_sha256": "dd6b1a9a9c4db918547285027301aac8e3ca4303d793d10c5c8650906e632feb",
+        "self_check_passed": true
+      },
+      "fork_of_excluded_repository_refused": {
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
+        "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
+        "admissible": false,
+        "reasons": [
+          "fork_parent_in_reference_universe:pandas-dev/pandas"
+        ],
+        "insufficient_evidence": false,
+        "stages": {
+          "schema": [],
+          "authentication": [],
+          "overlap": [
+            "fork_parent_in_reference_universe:pandas-dev/pandas"
+          ]
+        },
+        "authentication_passed": true,
+        "evidence": {
+          "repository": "example-org/ranges",
+          "repository_url": "https://github.com/example-org/ranges",
+          "repository_id": "123456",
+          "repository_node_id": "R_exampleorgrangesnode",
+          "fork_status": "fork",
+          "fork_parent": "pandas-dev/pandas",
+          "fork_parent_id": "7",
+          "fork_parent_node_id": "R_pandasdevpandasnode",
+          "buggy_commit": "2d841e681230d60670bfbbfbc520df133f72c5af",
+          "fixed_commit": "e839979a8bd34d103ed89e69237440c981b9cc4a",
+          "target_file": "src/ranges.py",
+          "target_module": "ranges",
+          "target_blob_buggy": "73005b34fbc999993c420bb0defe47655b332e36",
+          "target_blob_fixed": "fae3781c4e058154466052c212beab6cebec0b00",
+          "issue_id": "example-org/ranges#1",
+          "licence_spdx": "MIT",
+          "licence_path": "LICENSE",
+          "licence_blob": "529be11d08524096c89333d593c8785f043f91c1",
+          "licence_sha256": "74c785b41143247e880eb278ca9d887cb7ae191615c5bca467f0cf980ca8b60d",
+          "repository_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges",
+            "sha256": "346353c10423812d4e34f2b3f6b8eee889fd06fd8382dbf3817d4a8650dfe771",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "issue_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges/issues/1",
+            "sha256": "b7b72a4ea84bbcdddf0db64d02e8aee58b7b1352a3067b1a6f130bcc32c3f078",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "git_objects": [
+            "2d841e681230d60670bfbbfbc520df133f72c5af",
+            "346b623d7b6d7f7a8b7c1e811f0d4b471b311cd4",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "73005b34fbc999993c420bb0defe47655b332e36",
+            "b2a80f3efc811b4f70a37f5b83b83862c71cdcc3",
+            "c52eed80566edee0a49724d8c68a4069d3e2385d",
+            "e6bd81ebace7ba3738f6729c56a1d1e82d3c2e3a",
+            "e839979a8bd34d103ed89e69237440c981b9cc4a",
+            "fae3781c4e058154466052c212beab6cebec0b00"
+          ]
+        },
+        "derived_from_verified_evidence": {
+          "diff_policy": "A_direct_parent_single_target_file",
+          "fixed_commit_author_epoch": 1740787200,
+          "fixed_commit_committer_epoch": 1740787200,
+          "temporal_rule_satisfied": true,
+          "changed_files": [
+            "src/ranges.py"
+          ],
+          "canonical_diff_sha256": "ec609d3603281b53ad4776571965c779f0ecaf33dd8e1285beac5b2609a33537",
+          "canonical_patch_hash": "0b00b464e740767902f151afd112980269ca637e68e6f783a08ebb6e73f9b623",
+          "changed_hunks": [
+            {
+              "op": "replace",
+              "buggy": [
+                5,
+                5
+              ],
+              "fixed": [
+                5,
+                5
+              ]
+            }
+          ],
+          "submitted_patch_sha256": "ec609d3603281b53ad4776571965c779f0ecaf33dd8e1285beac5b2609a33537",
+          "submitted_patch_matches_derived_diff": true,
+          "target_qualname": "merge_ranges",
+          "target_span_buggy": [
+            1,
+            9
+          ],
+          "target_span_fixed": [
+            1,
+            9
+          ]
+        },
+        "patch_sha256": "0b00b464e740767902f151afd112980269ca637e68e6f783a08ebb6e73f9b623",
+        "patch_checks": "run_on_derived_diff",
+        "nearest_patch": {
+          "reference": null,
+          "jaccard": 0.0
+        },
+        "nearest_function": {
+          "reference": "train::official-repository::youtube-dl::43::test/test_utils.py__TestUtil__test_url_basename::code_under_test#51",
+          "jaccard": 0.0259
+        },
+        "target_function_fingerprint": "b7aa9433e92524a87ac59e47c64de68a7d42a6514b550ef1cd102e68961491ea",
+        "same_organisation_as_excluded": [],
+        "threshold": 0.8,
+        "record_sha256": "cfa0dbd71aa64f9fd64b094a81f0b2ab0d244de7c6180ea8109b11144c5a93b0",
+        "self_check_passed": true
+      },
+      "partial_patch_with_only_an_unrelated_change_refused": {
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
+        "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
+        "admissible": false,
+        "reasons": [
+          "insufficient_isolation_evidence:authentication:submitted_patch_does_not_match_derived_diff"
+        ],
+        "insufficient_evidence": true,
+        "stages": {
+          "schema": [],
+          "authentication": [
+            "insufficient_isolation_evidence:authentication:submitted_patch_does_not_match_derived_diff"
+          ],
+          "overlap": []
+        },
+        "authentication_passed": false,
+        "evidence": {
+          "repository": "example-org/ranges",
+          "repository_url": "https://github.com/example-org/ranges",
+          "repository_id": "123456",
+          "repository_node_id": "R_exampleorgrangesnode",
+          "fork_status": "not_fork",
+          "fork_parent": "",
+          "fork_parent_id": "",
+          "fork_parent_node_id": "",
+          "buggy_commit": "f169a07eb30f3cd0ae51056d75c8b394afc2f79e",
+          "fixed_commit": "81af007945fd6649ced2adba8fbbf6a8f9431a1f",
+          "target_file": "src/ranges.py",
+          "target_module": "ranges",
+          "target_blob_buggy": "fc8a206434af44546348e4912109765a35b932c9",
+          "target_blob_fixed": "ef5b5b6483d0ef5085fe4d43613a8ab963955934",
+          "issue_id": "example-org/ranges#1",
+          "licence_spdx": "MIT",
+          "licence_path": "LICENSE",
+          "licence_blob": "529be11d08524096c89333d593c8785f043f91c1",
+          "licence_sha256": "74c785b41143247e880eb278ca9d887cb7ae191615c5bca467f0cf980ca8b60d",
+          "repository_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges",
+            "sha256": "fc6a640eb52552be9b37766de3f513afe33d9347bacba257010ba8bc28bec401",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "issue_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges/issues/1",
+            "sha256": "b7b72a4ea84bbcdddf0db64d02e8aee58b7b1352a3067b1a6f130bcc32c3f078",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "git_objects": [
+            "0c058ae7bcb50fd19eb1a83cc6536a0096a7894a",
+            "4fa48790fdaa9a7f9ace9d9d2035edc4b7cf2b90",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "81af007945fd6649ced2adba8fbbf6a8f9431a1f",
+            "b9a8cf71e03714b3e108c9550d7993070ea1149b",
+            "ef5b5b6483d0ef5085fe4d43613a8ab963955934",
+            "f169a07eb30f3cd0ae51056d75c8b394afc2f79e",
+            "fc8a206434af44546348e4912109765a35b932c9",
+            "fd2779079047f9167e4fe4e4ce399c4db4f35759"
+          ]
+        },
+        "derived_from_verified_evidence": {
+          "diff_policy": "A_direct_parent_single_target_file",
+          "fixed_commit_author_epoch": 1740787200,
+          "fixed_commit_committer_epoch": 1740787200,
+          "temporal_rule_satisfied": true,
+          "changed_files": [
+            "src/ranges.py"
+          ],
+          "canonical_diff_sha256": "fbceafb83457e1f2a78cb7d006d10e7358530214f1a54875b426850abdd30fac",
+          "canonical_patch_hash": "d98476a6462f97a19ef5c5190ef5270aeed67d2de5b76fd9b080831210e4bf5f",
+          "changed_hunks": [
+            {
+              "op": "replace",
+              "buggy": [
+                1,
+                1
+              ],
+              "fixed": [
+                1,
+                1
+              ]
+            },
+            {
+              "op": "replace",
+              "buggy": [
+                8,
+                8
+              ],
+              "fixed": [
+                8,
+                8
+              ]
+            }
+          ],
+          "submitted_patch_sha256": "ca73dd45ff504df02a9332f3444e478dca47215ae206f7bcfee3c2aee761421d",
+          "submitted_patch_matches_derived_diff": false,
+          "target_qualname": "merge_ranges",
+          "target_span_buggy": [
+            4,
+            12
+          ],
+          "target_span_fixed": [
+            4,
+            12
+          ]
+        },
+        "patch_sha256": "d98476a6462f97a19ef5c5190ef5270aeed67d2de5b76fd9b080831210e4bf5f",
+        "patch_checks": "run_on_derived_diff",
+        "nearest_patch": {
+          "reference": null,
+          "jaccard": 0.0
+        },
+        "nearest_function": {
+          "reference": "train::official-repository::youtube-dl::43::test/test_utils.py__TestUtil__test_url_basename::code_under_test#51",
+          "jaccard": 0.0259
+        },
+        "target_function_fingerprint": "b7aa9433e92524a87ac59e47c64de68a7d42a6514b550ef1cd102e68961491ea",
+        "same_organisation_as_excluded": [],
+        "threshold": 0.8,
+        "record_sha256": "f4a2d58496454dfba43b9e3a0a776834594113a6277fa3bdeb58ede31cbbf52d",
+        "self_check_passed": true
+      },
+      "fix_before_temporal_cutoff_refused": {
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
+        "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
+        "admissible": false,
+        "reasons": [
+          "insufficient_isolation_evidence:authentication:fixed_commit_before_temporal_cutoff"
+        ],
+        "insufficient_evidence": true,
+        "stages": {
+          "schema": [],
+          "authentication": [
+            "insufficient_isolation_evidence:authentication:fixed_commit_before_temporal_cutoff"
+          ],
+          "overlap": []
+        },
+        "authentication_passed": false,
+        "evidence": {
+          "repository": "example-org/ranges",
+          "repository_url": "https://github.com/example-org/ranges",
+          "repository_id": "123456",
+          "repository_node_id": "R_exampleorgrangesnode",
+          "fork_status": "not_fork",
+          "fork_parent": "",
+          "fork_parent_id": "",
+          "fork_parent_node_id": "",
+          "buggy_commit": "50eaaa401ad77e2487bf03e7795264bb32e7fd05",
+          "fixed_commit": "027219bc10a67ab46ab5f914ae07bfadf2f392bd",
+          "target_file": "src/ranges.py",
+          "target_module": "ranges",
+          "target_blob_buggy": "73005b34fbc999993c420bb0defe47655b332e36",
+          "target_blob_fixed": "fae3781c4e058154466052c212beab6cebec0b00",
+          "issue_id": "example-org/ranges#1",
+          "licence_spdx": "MIT",
+          "licence_path": "LICENSE",
+          "licence_blob": "529be11d08524096c89333d593c8785f043f91c1",
+          "licence_sha256": "74c785b41143247e880eb278ca9d887cb7ae191615c5bca467f0cf980ca8b60d",
+          "repository_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges",
+            "sha256": "fc6a640eb52552be9b37766de3f513afe33d9347bacba257010ba8bc28bec401",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "issue_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges/issues/1",
+            "sha256": "b7b72a4ea84bbcdddf0db64d02e8aee58b7b1352a3067b1a6f130bcc32c3f078",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "git_objects": [
+            "027219bc10a67ab46ab5f914ae07bfadf2f392bd",
+            "346b623d7b6d7f7a8b7c1e811f0d4b471b311cd4",
+            "50eaaa401ad77e2487bf03e7795264bb32e7fd05",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "73005b34fbc999993c420bb0defe47655b332e36",
+            "b2a80f3efc811b4f70a37f5b83b83862c71cdcc3",
+            "c52eed80566edee0a49724d8c68a4069d3e2385d",
+            "e6bd81ebace7ba3738f6729c56a1d1e82d3c2e3a",
+            "fae3781c4e058154466052c212beab6cebec0b00"
+          ]
+        },
+        "derived_from_verified_evidence": {
+          "diff_policy": "A_direct_parent_single_target_file",
+          "fixed_commit_author_epoch": 1735689599,
+          "fixed_commit_committer_epoch": 1735689599,
+          "temporal_rule_satisfied": false,
+          "changed_files": [
+            "src/ranges.py"
+          ],
+          "canonical_diff_sha256": "ec609d3603281b53ad4776571965c779f0ecaf33dd8e1285beac5b2609a33537",
+          "canonical_patch_hash": "0b00b464e740767902f151afd112980269ca637e68e6f783a08ebb6e73f9b623",
+          "changed_hunks": [
+            {
+              "op": "replace",
+              "buggy": [
+                5,
+                5
+              ],
+              "fixed": [
+                5,
+                5
+              ]
+            }
+          ],
+          "submitted_patch_sha256": "ec609d3603281b53ad4776571965c779f0ecaf33dd8e1285beac5b2609a33537",
+          "submitted_patch_matches_derived_diff": true,
+          "target_qualname": "merge_ranges",
+          "target_span_buggy": [
+            1,
+            9
+          ],
+          "target_span_fixed": [
+            1,
+            9
+          ]
+        },
+        "patch_sha256": "0b00b464e740767902f151afd112980269ca637e68e6f783a08ebb6e73f9b623",
+        "patch_checks": "run_on_derived_diff",
+        "nearest_patch": {
+          "reference": null,
+          "jaccard": 0.0
+        },
+        "nearest_function": {
+          "reference": "train::official-repository::youtube-dl::43::test/test_utils.py__TestUtil__test_url_basename::code_under_test#51",
+          "jaccard": 0.0259
+        },
+        "target_function_fingerprint": "b7aa9433e92524a87ac59e47c64de68a7d42a6514b550ef1cd102e68961491ea",
+        "same_organisation_as_excluded": [],
+        "threshold": 0.8,
+        "record_sha256": "48e99bcb55635831263713931bb3a75b103000738e57c13f58e2bbb95d4098ff",
+        "self_check_passed": true
+      },
+      "novel_fully_evidenced_candidate_admitted": {
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
+        "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
+        "admissible": true,
+        "reasons": [],
+        "insufficient_evidence": false,
+        "stages": {
+          "schema": [],
+          "authentication": [],
+          "overlap": []
+        },
+        "authentication_passed": true,
+        "evidence": {
+          "repository": "example-org/ranges",
+          "repository_url": "https://github.com/example-org/ranges",
+          "repository_id": "123456",
+          "repository_node_id": "R_exampleorgrangesnode",
+          "fork_status": "not_fork",
+          "fork_parent": "",
+          "fork_parent_id": "",
+          "fork_parent_node_id": "",
+          "buggy_commit": "2d841e681230d60670bfbbfbc520df133f72c5af",
+          "fixed_commit": "e839979a8bd34d103ed89e69237440c981b9cc4a",
+          "target_file": "src/ranges.py",
+          "target_module": "ranges",
+          "target_blob_buggy": "73005b34fbc999993c420bb0defe47655b332e36",
+          "target_blob_fixed": "fae3781c4e058154466052c212beab6cebec0b00",
+          "issue_id": "example-org/ranges#1",
+          "licence_spdx": "MIT",
+          "licence_path": "LICENSE",
+          "licence_blob": "529be11d08524096c89333d593c8785f043f91c1",
+          "licence_sha256": "74c785b41143247e880eb278ca9d887cb7ae191615c5bca467f0cf980ca8b60d",
+          "repository_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges",
+            "sha256": "fc6a640eb52552be9b37766de3f513afe33d9347bacba257010ba8bc28bec401",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "issue_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges/issues/1",
+            "sha256": "b7b72a4ea84bbcdddf0db64d02e8aee58b7b1352a3067b1a6f130bcc32c3f078",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "git_objects": [
+            "2d841e681230d60670bfbbfbc520df133f72c5af",
+            "346b623d7b6d7f7a8b7c1e811f0d4b471b311cd4",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "73005b34fbc999993c420bb0defe47655b332e36",
+            "b2a80f3efc811b4f70a37f5b83b83862c71cdcc3",
+            "c52eed80566edee0a49724d8c68a4069d3e2385d",
+            "e6bd81ebace7ba3738f6729c56a1d1e82d3c2e3a",
+            "e839979a8bd34d103ed89e69237440c981b9cc4a",
+            "fae3781c4e058154466052c212beab6cebec0b00"
+          ]
+        },
+        "derived_from_verified_evidence": {
+          "diff_policy": "A_direct_parent_single_target_file",
+          "fixed_commit_author_epoch": 1740787200,
+          "fixed_commit_committer_epoch": 1740787200,
+          "temporal_rule_satisfied": true,
+          "changed_files": [
+            "src/ranges.py"
+          ],
+          "canonical_diff_sha256": "ec609d3603281b53ad4776571965c779f0ecaf33dd8e1285beac5b2609a33537",
+          "canonical_patch_hash": "0b00b464e740767902f151afd112980269ca637e68e6f783a08ebb6e73f9b623",
+          "changed_hunks": [
+            {
+              "op": "replace",
+              "buggy": [
+                5,
+                5
+              ],
+              "fixed": [
+                5,
+                5
+              ]
+            }
+          ],
+          "submitted_patch_sha256": "ec609d3603281b53ad4776571965c779f0ecaf33dd8e1285beac5b2609a33537",
+          "submitted_patch_matches_derived_diff": true,
+          "target_qualname": "merge_ranges",
+          "target_span_buggy": [
+            1,
+            9
+          ],
+          "target_span_fixed": [
+            1,
+            9
+          ]
+        },
+        "patch_sha256": "0b00b464e740767902f151afd112980269ca637e68e6f783a08ebb6e73f9b623",
+        "patch_checks": "run_on_derived_diff",
+        "nearest_patch": {
+          "reference": null,
+          "jaccard": 0.0
+        },
+        "nearest_function": {
+          "reference": "train::official-repository::youtube-dl::43::test/test_utils.py__TestUtil__test_url_basename::code_under_test#51",
+          "jaccard": 0.0259
+        },
+        "target_function_fingerprint": "b7aa9433e92524a87ac59e47c64de68a7d42a6514b550ef1cd102e68961491ea",
+        "same_organisation_as_excluded": [],
+        "threshold": 0.8,
+        "record_sha256": "bb98aa21ee4db1db9760db427b727e43334832eb50f2b239375c3a00a4fb3fab",
+        "self_check_passed": true
+      },
+      "evidence_free_candidate_refused": {
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
+        "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
+        "admissible": false,
+        "reasons": [
+          "insufficient_isolation_evidence:repository_url_unverified_or_inconsistent",
+          "insufficient_isolation_evidence:repository_identity_missing",
+          "insufficient_isolation_evidence:repository_node_id_missing",
+          "insufficient_isolation_evidence:fork_status_unknown",
+          "insufficient_isolation_evidence:buggy_commit_not_full_sha",
+          "insufficient_isolation_evidence:fixed_commit_not_full_sha",
+          "insufficient_isolation_evidence:target_blob_buggy_not_full_sha",
+          "insufficient_isolation_evidence:target_blob_fixed_not_full_sha",
+          "insufficient_isolation_evidence:licence_blob_not_full_sha",
+          "insufficient_isolation_evidence:patch_empty",
+          "insufficient_isolation_evidence:target_function_missing_or_unparseable",
+          "insufficient_isolation_evidence:target_file_missing",
+          "insufficient_isolation_evidence:licence_path_missing",
+          "insufficient_isolation_evidence:target_file_not_python",
+          "insufficient_isolation_evidence:target_module_missing",
+          "insufficient_isolation_evidence:issue_identity_missing",
+          "insufficient_isolation_evidence:licence_evidence_missing_or_not_admitted",
+          "insufficient_isolation_evidence:licence_file_hash_missing",
+          "insufficient_isolation_evidence:repository_metadata_url_missing_or_inconsistent",
+          "insufficient_isolation_evidence:repository_metadata_response_missing",
+          "insufficient_isolation_evidence:repository_metadata_response_hash_missing",
+          "insufficient_isolation_evidence:repository_metadata_retrieval_timestamp_missing",
+          "insufficient_isolation_evidence:issue_metadata_url_missing_or_inconsistent",
+          "insufficient_isolation_evidence:issue_metadata_response_missing",
+          "insufficient_isolation_evidence:issue_metadata_response_hash_missing",
+          "insufficient_isolation_evidence:issue_metadata_retrieval_timestamp_missing",
+          "insufficient_isolation_evidence:git_object_evidence_missing"
+        ],
+        "insufficient_evidence": true,
+        "stages": {
+          "schema": [
+            "insufficient_isolation_evidence:repository_url_unverified_or_inconsistent",
+            "insufficient_isolation_evidence:repository_identity_missing",
+            "insufficient_isolation_evidence:repository_node_id_missing",
+            "insufficient_isolation_evidence:fork_status_unknown",
+            "insufficient_isolation_evidence:buggy_commit_not_full_sha",
+            "insufficient_isolation_evidence:fixed_commit_not_full_sha",
+            "insufficient_isolation_evidence:target_blob_buggy_not_full_sha",
+            "insufficient_isolation_evidence:target_blob_fixed_not_full_sha",
+            "insufficient_isolation_evidence:licence_blob_not_full_sha",
+            "insufficient_isolation_evidence:patch_empty",
+            "insufficient_isolation_evidence:target_function_missing_or_unparseable",
+            "insufficient_isolation_evidence:target_file_missing",
+            "insufficient_isolation_evidence:licence_path_missing",
+            "insufficient_isolation_evidence:target_file_not_python",
+            "insufficient_isolation_evidence:target_module_missing",
+            "insufficient_isolation_evidence:issue_identity_missing",
+            "insufficient_isolation_evidence:licence_evidence_missing_or_not_admitted",
+            "insufficient_isolation_evidence:licence_file_hash_missing",
+            "insufficient_isolation_evidence:repository_metadata_url_missing_or_inconsistent",
+            "insufficient_isolation_evidence:repository_metadata_response_missing",
+            "insufficient_isolation_evidence:repository_metadata_response_hash_missing",
+            "insufficient_isolation_evidence:repository_metadata_retrieval_timestamp_missing",
+            "insufficient_isolation_evidence:issue_metadata_url_missing_or_inconsistent",
+            "insufficient_isolation_evidence:issue_metadata_response_missing",
+            "insufficient_isolation_evidence:issue_metadata_response_hash_missing",
+            "insufficient_isolation_evidence:issue_metadata_retrieval_timestamp_missing",
+            "insufficient_isolation_evidence:git_object_evidence_missing"
+          ],
+          "authentication": [
+            "not_run:schema_invalid"
+          ],
+          "overlap": []
+        },
+        "authentication_passed": false,
+        "evidence": {
+          "repository": "example-org/ranges",
+          "repository_url": "",
+          "repository_id": "",
+          "repository_node_id": "",
+          "fork_status": "unknown",
+          "fork_parent": "",
+          "fork_parent_id": "",
+          "fork_parent_node_id": "",
+          "buggy_commit": "",
+          "fixed_commit": "",
+          "target_file": "",
+          "target_module": "",
+          "target_blob_buggy": "",
+          "target_blob_fixed": "",
+          "issue_id": "",
+          "licence_spdx": "",
+          "licence_path": "",
+          "licence_blob": "",
+          "licence_sha256": "",
+          "repository_metadata": {
+            "url": "",
+            "sha256": "",
+            "retrieved_utc": "",
+            "etag": ""
+          },
+          "issue_metadata": {
+            "url": "",
+            "sha256": "",
+            "retrieved_utc": "",
+            "etag": ""
+          },
+          "git_objects": []
+        },
+        "derived_from_verified_evidence": {},
+        "patch_sha256": null,
+        "patch_checks": "not_run:no_authenticated_diff",
+        "nearest_patch": {
+          "reference": null,
+          "jaccard": 0.0
+        },
+        "nearest_function": {
+          "reference": null,
+          "jaccard": 0.0
+        },
+        "target_function_fingerprint": null,
+        "same_organisation_as_excluded": [],
+        "threshold": 0.8,
+        "record_sha256": "c1aa17a929349c674d0093d9ff3040b1a7798c0b7ce15211ae6c6c8206dcba58",
+        "self_check_passed": true
+      },
+      "arbitrary_receipt_hash_refused": {
+        "check_candidate_with_a_hash_raises_type_error": true,
+        "record_with_a_substituted_hash_is_not_current": true,
+        "self_check_passed": true
+      }
+    },
+    "self_checks_pass": true
+  },
+  "publication": "crash-safe bundle: receipt, design and the verified power artifact are one immutable generation under results/next_direction_bundle, selected by its CURRENT pointer; readers accept only a complete manifest-verified generation (harness/atomic_publish.py)",
+  "power_analysis": {
+    "path": "results/v4_3_repository_native_power_analysis.json",
+    "bundle_copy": "repository_native_power_analysis.json",
+    "sha256": "c98d49ddcd85e07659323c088cff0967e104ae71f2603155d552635cc0ba05f1",
+    "verified_by_recomputation": true,
+    "recommendation": {
+      "composition_requirement": "at most 12 targets per repository; the draft 8% cap allows 32 per repository at N=400 and is insufficient",
+      "effect_exactly_at_gate": "a true gain of exactly +5 pp passes with probability at most 50% at every N, because the estimate itself must reach +5 pp; 80% power is impossible there",
+      "feasibility_option_label": "lower-power compromise, not adequately powered for the planning scenario; usable only with explicit approval",
+      "feasibility_option_n": 200,
+      "feasibility_option_power_at_planning_effect": {
+        "analytic": 0.644,
+        "clustered_monte_carlo": 0.6258
+      },
+      "planning_scenario": {
+        "discordance": 0.21,
+        "per_repository_cap_targets": 12,
+        "repository_scenario": "12_targets_per_repository",
+        "rho": 0.05,
+        "true_effect_pp": 8.0
+      },
+      "power_at_planning_effect_by_n": {
+        "100": {
+          "analytic": 0.413,
+          "clustered_monte_carlo": 0.4402
+        },
+        "150": {
+          "analytic": 0.54,
+          "clustered_monte_carlo": 0.5383
+        },
+        "200": {
+          "analytic": 0.644,
+          "clustered_monte_carlo": 0.6258
+        },
+        "300": {
+          "analytic": 0.794,
+          "clustered_monte_carlo": 0.7678
+        },
+        "400": {
+          "analytic": 0.857,
+          "clustered_monte_carlo": 0.8233
+        },
+        "500": {
+          "analytic": 0.884,
+          "clustered_monte_carlo": 0.8548
+        }
+      },
+      "power_at_recommendation": {
+        "analytic": 0.857,
+        "clustered_monte_carlo": 0.8233
+      },
+      "reasoning": [
+        "the planning effect is +8 pp: the smallest round effect meaningfully above the +5 pp gate (the largest paired gain observed so far is +6.4 pp, post hoc)",
+        "rho = 0.05 is the planning clustering; historical lineage clustering of paired differences is near zero, and 0.10/0.20 are reported as sensitivity",
+        "12 targets per repository keeps the design effect fixed as N grows; with a fixed 25 repositories the design effect grows with N and larger N buys little",
+        "the +5 pp gate is not changed to fit the sample"
+      ],
+      "recommended_final_n": 400,
+      "repositories_required_at_recommendation": 34
+    },
+    "evidence": {
+      "retention_control_vs_base": {
+        "checks": {
+          "every_record_is_a_train_view_record": true,
+          "no_duplicate_record_ids": true,
+          "paired_arms_have_identical_record_ids": true,
+          "panel_is_train_derived": true,
+          "panel_lineages_cover_exactly_the_evaluated_records": true,
+          "panel_record_ids_equal_evaluated_records": true,
+          "panel_reports_no_protected_access": true
+        },
+        "clusters": 100,
+        "difference_pp": 0.653,
+        "discordance": 0.2121,
+        "first": "execution_dose/base",
+        "icc_of_paired_differences": 0.0062,
+        "mean_cluster_size": 6.13,
+        "panel": "results/v4_3_execution_dose_retention_panel.json",
+        "records": 613,
+        "second": "execution_dose/control"
+      },
+      "retention_treatment_vs_control": {
+        "checks": {
+          "every_record_is_a_train_view_record": true,
+          "no_duplicate_record_ids": true,
+          "paired_arms_have_identical_record_ids": true,
+          "panel_is_train_derived": true,
+          "panel_lineages_cover_exactly_the_evaluated_records": true,
+          "panel_record_ids_equal_evaluated_records": true,
+          "panel_reports_no_protected_access": true
+        },
+        "clusters": 100,
+        "difference_pp": -0.326,
+        "discordance": 0.2121,
+        "first": "execution_dose/control",
+        "icc_of_paired_differences": -0.0174,
+        "mean_cluster_size": 6.13,
+        "panel": "results/v4_3_execution_dose_retention_panel.json",
+        "records": 613,
+        "second": "execution_dose/dose_treatment"
+      },
+      "toolassist_b_vs_a": {
+        "checks": {
+          "every_record_is_a_train_view_record": true,
+          "no_duplicate_record_ids": true,
+          "paired_arms_have_identical_record_ids": true,
+          "panel_is_train_derived": true,
+          "panel_lineages_cover_exactly_the_evaluated_records": true,
+          "panel_record_ids_equal_evaluated_records": true,
+          "panel_reports_no_protected_access": true
+        },
+        "clusters": 110,
+        "difference_pp": 6.439,
+        "discordance": 0.1705,
+        "first": "tool_assisted/A",
+        "icc_of_paired_differences": -0.1214,
+        "mean_cluster_size": 2.4,
+        "panel": "results/v4_3_tool_assisted_panel.json",
+        "records": 264,
+        "second": "tool_assisted/B"
+      }
+    }
+  },
+  "environment_probe": {
+    "interpreters": [
+      "python3.7 3.7.17",
+      "python3.8 3.8.20",
+      "python3.9 3.9.25",
+      "python3.11 3.11.15",
+      "python3.12 3.12.3"
+    ],
+    "tools": {
+      "uv": "absent",
+      "pip-compile": "absent",
+      "pyenv": "absent",
+      "docker": "absent",
+      "podman": "absent",
+      "git": "present",
+      "conda": "absent"
+    },
+    "cpus": "32",
+    "memory_gb": "62",
+    "free_disk": "952G",
+    "probed_utc": "2026-09-25T16:22:02.742045+00:00"
+  },
+  "decision_memo": {
+    "closed_lines": [
+      "execution-supervision SFT (12% and 25%/58% composite): mechanism gates failed",
+      "execution-feedback repair at inference: C - B Kill@8 +0.38 pp [-1.07, +1.77], FAIL"
+    ],
+    "recommendation": "primary: independently constructed repository-native evaluation; secondary (optional): a controlled train-derived sampling-budget study",
+    "rationale": [
+      "every result so far is train-derived or on previously inspected panels; the project cannot currently make any held-out claim, and its only locked test split was consumed",
+      "the tool-assisted pilot's only material effect was secondary and unmatched (B - A Kill@8 +6.44 pp from 16 samples plus text-only de-duplicating selection); whether that is real is a cheap, separable question",
+      "repository-native execution is the evaluation the research plan actually asks for and has never been demonstrated for generated tests (0 generated tests run natively; official-test reproduction 3/5)"
+    ],
+    "not_recommended": [
+      "any further execution-supervision or execution-feedback variant (both closed by frozen gates)",
+      "reusing the consumed test split or opening the reserved confirmation lineages for a different question"
+    ],
+    "claim_scope": "Disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks. D7 is accepted under exactly this claim; it is not a claim that no model has seen these repositories"
+  },
+  "repository_native_protocol": {
+    "status": "draft; no candidate mined, no split created",
+    "candidate_sources": {
+      "strategy": "independently mined bug-fix commits from permissively licensed, pure-Python, pytest-tested GitHub repositories outside the exclusion universe, whose fixed commit was committed on or after 2025-01-01 (committer timestamp)",
+      "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z, enforced at admission; missing, unparseable or contradictory timestamps (author after committer, buggy commit after fix, commit after evidence retrieval) are refused. The earlier 'authored and merged' wording is withdrawn: PR merge evidence cannot be made reliable for every candidate. This is contamination-risk MITIGATION only: it does not show that the model has never seen the repository, the buggy code or a similar fix",
+      "not_used_and_why": {
+        "BugsInPy": "all 17 projects are in the exclusion universe",
+        "SWE-bench / SWE-bench Verified": "same 12 repositories; in the exclusion universe",
+        "HumanEvalFix / HumanEvalPack / EvalPlus": "derived from HumanEval/MBPP; near-duplicate by construction",
+        "Defectors, PyTraceBugs and similar aggregates": "project overlap with BugsInPy (pandas, ansible, ...) must be screened repository by repository; not used wholesale",
+        "SWE-rebench / SWE-Gym style collections": "admissible only per repository after the same screening, licence review and temporal rule; treated as a candidate index, never as a pre-built split"
+      },
+      "screening_candidates_unverified": [
+        "more-itertools",
+        "toolz",
+        "boltons",
+        "attrs",
+        "cattrs",
+        "marshmallow",
+        "python-dateutil",
+        "arrow",
+        "pendulum",
+        "humanize",
+        "sortedcontainers",
+        "networkx",
+        "sqlglot",
+        "pyparsing",
+        "tomlkit",
+        "rich",
+        "typer",
+        "cachetools",
+        "glom",
+        "parse",
+        "inflect",
+        "babel",
+        "isort",
+        "jsonschema",
+        "tabulate",
+        "textdistance",
+        "dateparser",
+        "schedule",
+        "python-slugify",
+        "validators"
+      ],
+      "screening_note": "names only; licence, activity, test suite, Python support and 2025+ bug-fix supply are verified during mining, never assumed. Repositories in the same organisation as an excluded repository (for example pallets, pylint-dev, pytest-dev, psf) are flagged for an explicit decision rather than silently admitted"
+    },
+    "isolation_rules": {
+      "claim": "Disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks.",
+      "mandatory_evidence": [
+        "canonical lower-case owner/name, https://github.com/<owner>/<name> URL, numeric repository ID and node ID",
+        "repository API response (URL, raw bytes, SHA-256, UTC retrieval timestamp, ETag where available); the queried full_name must equal the returned full_name",
+        "explicit fork status; for a fork, the parent's full_name, numeric ID and node ID",
+        "full 40-hex buggy and fixed commit SHAs with their commit objects",
+        "the tree objects on the paths to the licence file and the target file at both revisions",
+        "licence SPDX identifier from the admitted list, licence file path at the buggy commit, its blob ID and SHA-256",
+        "target file path, module, and blob IDs at the buggy and fixed revisions",
+        "non-empty normalised patch touching the target file",
+        "parseable target function (>= 12 shingles) present in the buggy target file",
+        "issue or PR identity owner/name#number with its API response (URL, bytes, SHA-256, timestamp) naming the same repository"
+      ],
+      "fail_closed": "any missing, unknown or malformed evidence refuses with insufficient_isolation_evidence; nothing defaults to admission",
+      "repository": "owner/name, bare name and verified fork parent outside the universe; same-organisation repositories are flagged for decision D2",
+      "issue": "issue/PR identifier not a known benchmark instance",
+      "patch_lineage": "commits not known benchmark commits; normalised patch not identical to, and Jaccard < 0.80 against, every indexed BugsInPy and SWE-bench Verified patch",
+      "function_lineage": "target function Jaccard < 0.80 against every indexed reference function; nearest match, score and fingerprint recorded",
+      "within_set": "one target per fix commit and function lineage; pairwise near-duplicate check within the new set",
+      "coverage": "audit_source_coverage decides which sources require indexing from the corpus manifest bound in the universe, records its SHA-256 and re-verifies it on disk; an unknown, unindexed or zero-count source fails; the manifest, utils/dataset_identity.py, the curated definition and every module that affects classification, normalisation, curated-seed identification or train-view loading are bound in the receipt",
+      "receipt": "decisions are made only against a FrozenReferenceUniverse: the receipt also freezes the diff policy and the temporal rule; loading rebuilds the universe, requires its collections and collection hashes to equal the receipt's, verifies the internal receipt hash, re-hashes every input file, code input and canonical source, and recomputes coverage; any mismatch refuses. check_candidate takes that object and reads the receipt hash from it; no caller can supply a hash. isolation_record_is_current accepts only the same verified universe and an unmodified record digest",
+      "stages": {
+        "1_evidence_schema": "every mandatory field present and well formed (evidence_problems)",
+        "2_evidence_authentication": "offline cross-checks of acquired evidence (authentication_problems): repository and issue API responses re-hashed and compared with the declared identity; git objects re-hashed to their IDs; diff policy A: the fixed commit's only parent is the buggy commit and the authenticated trees show exactly one changed path, the target file; the canonical diff is DERIVED from the authenticated target blobs and the submitted patch is not authoritative and must only carry the same derived added and removed lines per file (not byte-identical text or hunk placement); a derived hunk must overlap the declared target function and its normalised body must change; the temporal rule is proved from the commit timestamps",
+        "3_source_universe_overlap": "repository, fork parent, commit and issue against the frozen universe; patch identity and near-duplicate checks use ONLY the derived diff; function similarity uses the declared target function (proved present and changed in stage 2)",
+        "later_network_acquisition": "a separate, separately approved step (D1) that fetches and stores the evidence listed in ACQUISITION_REQUIREMENTS; nothing in the checker makes a network call"
+      },
+      "curated_seeds": "all ten CURATED_BUGSINPY_BUGS definitions are indexed: a conservative source superset of the eight corpus seeds (seven in train, the eighth one of black_1, cookiecutter_1, scrapy_1); no non-train record opened",
+      "diff_policy": "A (frozen): direct-parent, single-target-file fixes only; multi-file fixes are refused; the derived diff's SHA-256, changed-file list, hunks and target-function spans are stored in the isolation record",
+      "integrity": "record_sha256 detects accidental modification only; it is not a signature. Dataset construction must keep each candidate's evidence sidecar, reload the same FrozenReferenceUniverse, rerun check_candidate and compare the record byte for byte (revalidate_isolation_record); an edited record is rejected even with a recomputed record_sha256",
+      "claim_status": "accepted (D7), narrowed claim only",
+      "submitted_patch": "not authoritative: the authenticated canonical diff is authoritative; the submitted patch is only required to carry the same derived added and removed lines per file (as multisets); byte-identical patch text and identical hunk placement are NOT required"
+    },
+    "licensing_and_reproducibility": {
+      "licences_admitted": [
+        "MIT",
+        "BSD-2-Clause",
+        "BSD-3-Clause",
+        "Apache-2.0",
+        "ISC",
+        "PSF-2.0"
+      ],
+      "licence_evidence": "SPDX identifier from the repository LICENSE file at the buggy commit, recorded with its hash",
+      "checkout": "full clone (no blob-less partial clone: the existing ingestion cache is unusable for checkouts); buggy and fixed commits recorded by SHA; tree hashes stored",
+      "python_versions": "3.8, 3.9, 3.11 and 3.12 are available in WSL today; 3.10 and 3.13 need an approved installer; each bug uses the lowest supported version declared by the project at that commit",
+      "dependencies": "one dependency environment per target, shared by the buggy and the fixed revision: dependencies are resolved ONCE from the declared requirements of both revisions into a hash-pinned lock (uv pip compile --generate-hashes, or pip-compile --generate-hashes) and installed with hash checking (uv pip sync / pip install --require-hashes). The project itself is not installed into the environment; each revision's checkout is placed on the path (and rebuilt in place if it has compiled parts) when its tests run. pip freeze is not used as a lock: it records versions without hashes",
+      "environment_evidence": "interpreter version, lock file and its SHA-256, resolver and version, install log hash, WSL distribution, kernel and CPU count per environment",
+      "shared_environment_rule": "if no single lock satisfies both revisions' declared requirements, or either revision cannot import or build against the shared lock, the target is disqualified before evaluation. No per-revision environments are used unless a separate rule is predeclared and approved"
+    },
+    "native_qualification": {
+      "steps": [
+        "build environments for the buggy and the fixed revision",
+        "run the official regression test (or an independently written and reviewed test, recorded as such) three times on each revision",
+        "qualify only if it fails 3/3 on buggy and passes 3/3 on fixed with identical environment locks",
+        "inject generated tests into both revisions under an isolated file name; run each with a per-test timeout; repeat any discordant result once to detect flakiness"
+      ],
+      "outcome_classes": {
+        "semantic_kill": "fails on buggy by assertion, passes on fixed",
+        "crash_kill": "fails on buggy by an uncaught exception from project code, passes on fixed",
+        "timeout_on_buggy": "times out on buggy, passes on fixed; reported separately, never merged into semantic kills",
+        "passes_both": "no discrimination",
+        "fails_both": "reference-invalid",
+        "inverted": "passes buggy, fails fixed",
+        "harness_failure": "collection error, injection error, pytest internal error",
+        "dependency_failure": "import of a missing or incompatible package",
+        "environment_failure": "interpreter, build or filesystem failure"
+      },
+      "infrastructure_rule": "harness, dependency and environment failures are never counted as kills or as model failures; they are excluded from denominators, reported with counts, and a target with any environment failure on either revision is disqualified before evaluation, not after"
+    },
+    "context_policy": {
+      "permitted": [
+        "buggy-side target function source",
+        "its signature, type hints and docstring",
+        "buggy-side module-level context needed to call it (imports, constants, class definition skeletons)",
+        "public documentation strings present at the buggy commit"
+      ],
+      "forbidden": [
+        "fixed code",
+        "patch or diff text",
+        "hidden, official or gold tests",
+        "expected outputs",
+        "issue or PR discussion describing the fix",
+        "commit messages of the fix"
+      ],
+      "enforcement": "prompt built from a permitted view, as in the tool-assisted loop; a leakage scan over every prompt for any line of the fixed function, patch or official test; the prompt-from-view equality check is repeated",
+      "recorded_per_target": [
+        "complexity tier (existing AST policy)",
+        "bug family (existing repository defect taxonomy)",
+        "LOC",
+        "maximum nesting depth",
+        "outgoing call count",
+        "parameter count and kinds",
+        "statefulness (method, global or IO use)",
+        "Python version",
+        "repository"
+      ]
+    },
+    "composition": {
+      "target_size": {
+        "recommended": 400,
+        "powered_for": "a true paired Kill@8 gain of +8 pp, discordance 0.21, within-repository correlation rho = 0.05, at most 12 targets per repository (>= 34 repositories): analytic power 0.857, clustered Monte Carlo 0.823",
+        "feasibility_option": {
+          "n": 200,
+          "label": "lower-power compromise (power about 0.64 at the planning effect); not adequately powered; usable only with explicit approval"
+        },
+        "effect_at_gate": "a true gain of exactly +5 pp passes with probability at most 50% at every N; no N gives 80% power there",
+        "basis": "results/v4_3_repository_native_power_analysis.json (verified by recomputation from repository-relative, hash-checked train-derived evidence); the +5 pp gate is not changed to fit the sample"
+      },
+      "unit": "one target function per unique bug; unique function lineages and fix commits",
+      "caps": {
+        "per_repository_targets_max": 12,
+        "per_repository_note": "the earlier 8% share cap allows 32 targets per repository at N=400 and raises the design effect enough to lose 80% power; the cap is an absolute 12 targets",
+        "per_bug_family_share_max": 0.25,
+        "per_source_index_share_max": 0.5
+      },
+      "tiers": "simple, moderate and complex all present; minimum 20% each where supply allows, otherwise the shortfall is reported, never filled by repetition",
+      "no_repetition_balancing": "no duplicated targets, no resampling to balance; exact unique counts and every exclusion with its reason are reported",
+      "rehearsal_pool": "a separate pool of 20-30 qualified bugs from at least 5 repositories that are never admitted to the final set, used only for the dress rehearsal"
+    },
+    "atheris_protocol": {
+      "tool": "actual atheris 2.3.0 (libFuzzer) under WSL Python 3.11; never the simulated baseline.coverage_fuzzer, which is reported under its own name if at all",
+      "eligibility": "a target is Atheris-applicable if the adapter can construct well-typed arguments that reach the target function; applicability and ineligibility counts are reported separately, with reasons. An ineligible target is never recorded as a tested zero",
+      "oracle": "identical buggy/fixed revisions for both systems",
+      "adapter": "strongest reasonable structured-input adapter: type-hint and docstring driven, full-range integers and floats, bytes, nested containers, dict/set/tuple, dataclass/NamedTuple construction, and seeds from literals in the buggy function; reachability of the defect is reported per target",
+      "budgets": {
+        "per_target_cpu_seconds": 600,
+        "seeds": [
+          42,
+          43,
+          44
+        ],
+        "oneiros_budget": "8 candidates per target, reported as model calls, tokens, GPU seconds and CPU execution seconds",
+        "note": "budgets differ in kind; both are reported explicitly and no single 'equal budget' claim is made"
+      },
+      "reporting": "crash kills and semantic kills separately; kills per CPU-second; per-seed and seed-aggregated results",
+      "modes": {
+        "ordinary_crash_contract": "fuzzes the buggy function alone; a finding is an uncaught exception or a violated declared contract (annotated types, documented preconditions); it counts as a kill only if the same input replayed on the fixed revision does not fail",
+        "differential_oracle": "fixed and buggy run side by side; any divergence is a finding. Reported separately and labelled a generous upper bound, because Oneiros never receives the fixed implementation"
+      },
+      "primary_comparison": "Oneiros versus ordinary crash/contract Atheris, paired by target, on the jointly eligible set only"
+    },
+    "dress_rehearsal": {
+      "data": "the rehearsal pool only (never the final set)",
+      "stages": [
+        "mining and isolation records",
+        "environment build and locks",
+        "official-test qualification",
+        "prompt construction and leakage scan",
+        "generation (base and frozen control)",
+        "native execution on both revisions",
+        "Atheris runs",
+        "scoring, outcome classification and receipts",
+        "analysis on rehearsal data with the frozen analysis code",
+        "a deliberate crash-and-resume test"
+      ],
+      "gate": "every stage completes with receipts and zero unexplained failures before any one-time evaluation is requested"
+    },
+    "metrics": {
+      "primary": [
+        "Kill@1",
+        "Kill@4",
+        "Kill@8 (native semantic-or-crash kill, per target)",
+        "unique defects killed"
+      ],
+      "secondary": [
+        "semantic kills and crash kills separately",
+        "reference validity (passes on fixed) per requested candidate",
+        "parse success",
+        "execution success",
+        "slices by complexity tier, bug family and repository",
+        "repository-stratified performance and repository-cluster sensitivity (the paired estimate recomputed with each repository dropped); this is not leave-one-repository-out generalisation, which would need retraining",
+        "ordinary and differential Atheris kills, applicability counts, kills per CPU-second"
+      ],
+      "intervals": "Wilson 95% for single proportions; paired comparisons by exact McNemar and a repository-cluster bootstrap 90% interval (10,000 replicates, fixed seed)",
+      "comparisons": [
+        "frozen control vs base (paired)",
+        "Oneiros vs ordinary Atheris on the jointly eligible set (paired, primary Atheris comparison)",
+        "differential-oracle Atheris reported as a labelled upper bound"
+      ],
+      "decision_rules": "predeclared before the one-time run: a model comparison passes only with a +5 pp Kill@8 gain and cluster-bootstrap lower bound > 0, reference validity within -3 pp; everything else is reported descriptively; no configuration is selected on the final set"
+    },
+    "receipts": {
+      "per_target": [
+        "repository and issue API responses with hashes and retrieval timestamps",
+        "commit, tree and blob objects; licence blob and hash",
+        "derived canonical diff SHA-256, changed files and target-function spans",
+        "isolation record (frozen-universe receipt hash, record digest) and evidence sidecar",
+        "environment lock and interpreter",
+        "official-test qualification runs",
+        "prompt hash and leakage scan"
+      ],
+      "per_run": [
+        "source hashes (LF-canonical)",
+        "model, revision, adapter hash",
+        "seeds and generation settings",
+        "raw outputs and hashes",
+        "execution logs, return codes, timeouts and durations for both revisions",
+        "Atheris logs, corpora sizes, coverage and seeds",
+        "WSL distribution, kernel, CPU and memory"
+      ],
+      "rollback": "no artifact is overwritten; a failed run is preserved and marked invalid; the one-time set is sealed by hash before any model sees it and is never re-evaluated after a protocol change",
+      "publication": "generated design artifacts are published as one immutable generation under results/next_direction_bundle (receipt, design, verified power copy, manifest), selected by replacing a single CURRENT pointer; readers accept only a complete manifest-verified generation; accepted generations are never overwritten"
+    }
+  },
+  "sampling_budget_protocol": {
+    "status": "optional secondary draft; not run",
+    "question": "Does generating sixteen candidates and keeping eight by text-only selection improve Kill@8 over the first eight, at twice the generation cost?",
+    "panel_options": {
+      "recommended": "the 613-record retention panel with a fresh seed family (seed 43), exploratory; its canonical seed-42 Kill@8 for the control is already known (0.633), which is disclosed",
+      "rejected": "the 264-record tool-assisted panel: its B - A comparison (+6.44 pp) is already observed, so a study there would be post hoc"
+    },
+    "arms": {
+      "S8": "the first eight of sixteen samples drawn in one call (current policy's eight)",
+      "S16_select8": "all sixteen from the same call, then the frozen text-only policy: parser/policy-valid, first-occurrence non-duplicates in generation order, first eight"
+    },
+    "held_constant": [
+      "model and revision",
+      "frozen control adapter",
+      "prompt",
+      "seed family",
+      "whole-output parser",
+      "candidate policy",
+      "evaluator and scoring"
+    ],
+    "cost_accounting": "S16 costs twice the generated sequences of S8; generated tokens, GPU seconds and wall time are reported for both; the comparison is framed as 'more samples plus selection', not as a free gain",
+    "forbidden": [
+      "execution-based reranking",
+      "fixed-side information in selection",
+      "generalisation claims"
+    ],
+    "gate": "S16_select8 - S8 Kill@8 >= +5 pp with cluster-bootstrap 90% lower bound > 0 and reference validity within -3 pp; otherwise inconclusive or fail; exploratory either way",
+    "frozen_details": {
+      "generation": "one generate call per record with num_return_sequences=16, seed derived_seed(43, record_id, 's16') applied immediately before the call, unchanged successor settings otherwise",
+      "candidate_ordering": "the 16 sequences in the order the call returns them (index 0-15)",
+      "s8": "sequences 0-7 exactly, in order; the analysis verifies byte-identical raw outputs and hashes against sequences 0-7 of the S16 record (nested arm)",
+      "validity": "a candidate is valid if the frozen whole-output parser accepts it (parse and candidate policy); nothing is executed for selection",
+      "duplicate_definition": "whitespace-collapsed normalised code (harness.execution_feedback.normalised_code) equal to an EARLIER valid candidate",
+      "selection": "walk indices 0-15; keep valid first occurrences in order until eight are kept",
+      "fewer_than_eight": "fill the remaining slots with the not-kept candidates (invalid or duplicate) in ascending index order; always exactly eight slots",
+      "implementation": "harness.tool_assisted_generation.select_final with slot=index and round=1, whose policy is exactly this rule",
+      "source_hashes_bound": [
+        "engine/generator.py",
+        "harness/generation_adapter.py",
+        "harness/tool_assisted_generation.py",
+        "harness/execution_feedback.py",
+        "metrics/research_evaluation.py",
+        "harness/sealed_final_evaluator.py"
+      ],
+      "difference_from_canonical": "S8 is the first eight of a 16-sample call, not the canonical 8-sample batch-of-2 protocol; the study compares S8 and S16->8 with each other only"
+    }
+  },
+  "estimates": {
+    "assumptions": {
+      "native_test_seconds_per_run": 45,
+      "environment_build_minutes": 4,
+      "parallel_native_jobs": 16,
+      "mining_funnel": "yield 7-15% from mined candidate fix commits to qualified single-function targets; N=400 needs about 2,700-5,700 candidates (4,000 at 10%)",
+      "generation_seconds_per_repository_record_8_samples": 6,
+      "canonical_kill8_seconds_per_function_record": 1.07
+    },
+    "repository_native": {
+      "planning_n": 400,
+      "mining": {
+        "network_hours": "2.7-5.3",
+        "cpu_hours": "about 2.7",
+        "candidates": "2667-5715 (4,000 at 10% yield)",
+        "repositories": ">= 34 at 12 targets each",
+        "storage_gb": "11-21 (clones)"
+      },
+      "environment_build": {
+        "wall_hours": "about 5.0",
+        "storage_gb": "about 120 kept, up to 360 before pruning"
+      },
+      "qualification": {
+        "wall_hours": "about 5.6"
+      },
+      "dress_rehearsal": {
+        "gpu_minutes": 5,
+        "cpu_wall_minutes": 60,
+        "storage_gb": 1
+      },
+      "one_time_evaluation": {
+        "gpu_minutes": "about 80",
+        "native_execution_wall_hours": "about 10.0",
+        "atheris_wall_hours": "about 25.0",
+        "storage_gb": 2.7
+      },
+      "total": {
+        "gpu_hours": "about 1.4",
+        "cpu_wall_hours": "about 49.3",
+        "storage_gb": "about 384 peak"
+      },
+      "by_n": "results/v4_3_repository_native_power_analysis.json power_by_n.<N>.resources gives mining, runtime and storage for N = 100, 150, 200, 300, 400, 500"
+    },
+    "sampling_budget_study": {
+      "gpu_minutes": "about 20 (613 x one 16-sample call)",
+      "cpu_minutes": 6,
+      "storage_mb": 15
+    }
+  },
+  "blockers": [
+    {
+      "id": "B1",
+      "blocker": "no candidate data exists locally; mining needs network access and a licence review",
+      "resolution": "mining approved (D1); a bounded acquisition pilot comes first (D3)"
+    },
+    {
+      "id": "B2",
+      "blocker": "WSL lacks Python 3.10/3.13 and any hash-locking environment tool (uv or pip-tools); Docker/Podman absent",
+      "resolution": "installation of uv and Python 3.10/3.13 inside WSL approved (D6)"
+    },
+    {
+      "id": "B3",
+      "blocker": "native execution of generated tests has never been demonstrated; official-test reproduction was 3/5 with 40% infrastructure failure",
+      "resolution": "the dress rehearsal must reach a predeclared reliability (>= 90% of qualified targets execute on both revisions) before the one-time run"
+    },
+    {
+      "id": "B4",
+      "blocker": "the Atheris adapter handles only primitives in fixed ranges; repository functions take objects and state",
+      "resolution": "adapter extension and per-target reachability reporting, implemented and tested on the rehearsal pool"
+    },
+    {
+      "id": "B5",
+      "blocker": "repository prompts are capped at 2,048 tokens and compaction may drop context",
+      "resolution": "record compaction per target; exclude targets whose required buggy-side context cannot fit without dropping the target code"
+    },
+    {
+      "id": "B6",
+      "blocker": "the consumed test split can never be read, so disjointness from it is ENFORCED only through complete indexing of the upstream sources that fed every split (coverage audit and hash-bound receipt), not by inspecting the split",
+      "resolution": "resolved by the accepted narrowed claim (D7)"
+    },
+    {
+      "id": "B7",
+      "blocker": "no untouched train-derived panel remains for the sampling study",
+      "resolution": "sampling study deferred (D8)"
+    },
+    {
+      "id": "B8",
+      "blocker": "N=400 (powered for +8 pp at rho 0.05, <= 12 targets per repository) needs about 2,700-5,700 mined candidates from >= 34 repositories and about 50 CPU wall-hours; N=200 is only a lower-power feasibility option",
+      "resolution": "decision D3"
+    },
+    {
+      "id": "B9",
+      "blocker": "candidate GitHub metadata (repository, fork parent, issue, licence) and git objects must be acquired and hash-bound before any isolation decision; the offline authenticator exists, the acquisition step does not",
+      "resolution": "part of the mining approval (D1)"
+    }
+  ],
+  "required_user_decisions": [
+    {
+      "id": "D1",
+      "status": "approved",
+      "decision": "read-only GitHub mining and hash-bound acquisition of repository metadata, issue/PR responses, commit objects, tree objects, blobs and licence evidence; the fixed commit's authenticated committer timestamp must be on or after 2025-01-01T00:00:00Z (contamination-risk mitigation only)"
+    },
+    {
+      "id": "D2",
+      "status": "approved_conservatively",
+      "decision": "admit only MIT, BSD-2-Clause, BSD-3-Clause, Apache-2.0, ISC and PSF-2.0; repositories from the same organisation as an indexed/excluded repository are excluded by default and listed separately for explicit review, never silently admitted"
+    },
+    {
+      "id": "D3",
+      "status": "approved",
+      "decision": "planned final N=400 from at least 34 repositories, at most 12 targets per repository; the +5 pp gate is unchanged; no filling of shortages by repetition; a bounded acquisition pilot precedes full mining"
+    },
+    {
+      "id": "D4",
+      "status": "decided",
+      "decision": "the final set is sealed by hash after qualification and before any model sees it; the user is the one-time final-evaluation authorizer; development tools, model calls and prompt inspection must not access the sealed set before explicit authorization"
+    },
+    {
+      "id": "D5",
+      "status": "approved",
+      "decision": "actual Atheris 2.3.0 (never the simulated coverage baseline) in two labelled modes: ordinary crash/contract (primary baseline) and differential-oracle (generous upper bound); seeds 42, 43, 44; 600 CPU-seconds per target, mode and seed; applicability reported separately; an ineligible target is never a zero"
+    },
+    {
+      "id": "D6",
+      "status": "approved",
+      "decision": "install uv and Python 3.10/3.13 inside WSL only, pinned, with hash-locked environments; no change to Windows Python installations"
+    },
+    {
+      "id": "D7",
+      "status": "accepted",
+      "decision": "accepted ONLY under the narrowed claim: Disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks. This is not a claim that the model could not have seen a repository during pretraining; the 2025 fixed-commit cutoff is contamination-risk mitigation only"
+    },
+    {
+      "id": "D8",
+      "status": "deferred",
+      "decision": "the optional sampling-budget GPU study is not run; the repository-native critical path comes first"
+    },
+    {
+      "id": "D9",
+      "status": "provisionally_approved",
+      "decision": "exactly two model arms: the immutable pinned Qwen2.5-Coder-1.5B base model and the existing frozen control adapter, with revision, adapter hash, prompt contract and generation settings resolved from the frozen receipts; refuse to proceed if either identity is missing or ambiguous; no other model, no new adapter"
+    }
+  ],
+  "execution_order": [
+    {
+      "step": 1,
+      "what": "approve this design and decisions D1-D9",
+      "resources": "none"
+    },
+    {
+      "step": 2,
+      "what": "optional: sampling-budget study (independent, exploratory)",
+      "resources": "GPU about 20 min"
+    },
+    {
+      "step": 3,
+      "what": "tooling: install uv/interpreters in WSL; extend the Atheris adapter; tests on synthetic targets",
+      "resources": "CPU"
+    },
+    {
+      "step": 4,
+      "what": "mining, metadata and git-object acquisition (hash-bound), licence screening and per-candidate isolation records against the frozen universe; split into rehearsal pool and final pool (final pool unseen by any model)",
+      "resources": "network + CPU about 5-8 h for N=400"
+    },
+    {
+      "step": 5,
+      "what": "environment build and official-test qualification for both pools",
+      "resources": "CPU about 10.6 h, disk about 360 GB peak for N=400"
+    },
+    {
+      "step": 6,
+      "what": "full dress rehearsal on the rehearsal pool, including crash-and-resume",
+      "resources": "GPU about 5 min, CPU about 40 min"
+    },
+    {
+      "step": 7,
+      "what": "freeze the final set by hash, freeze protocol, analysis and budgets; request one-time authorization",
+      "resources": "none"
+    },
+    {
+      "step": 8,
+      "what": "one-time evaluation (only after explicit authorization)",
+      "resources": "GPU about 80 min, CPU about 35 h (native + Atheris) for N=400"
+    }
+  ],
+  "decisions_recorded_utc": "2026-09-25",
+  "source_files_sha256": {
+    "harness/repository_isolation.py": "9b60e64170b012bb45d54d7c9010eddb68d3620cc9404d259b3c1b0bd62f65b2",
+    "harness/source_identity.py": "619d28f5131fc5f268c1a53992b767ca57f566c8408ca88ef5ba7babb40a3f2c",
+    "scripts/audit_cross_split_near_duplicates.py": "702e58a7f65b350ec9f3172234e89c717d37394f77adfcd5f5439027c4340c7d",
+    "harness/bugsinpy_loader.py": "6c54a924d6943f0fd591f08df8745040627fd57e79870e63a847bb28367e7cd6",
+    "scripts/build_corpus_v1.py": "4c3476a09a83212cbeabd3102881adbeac4d151f19a5b5908c11575cb32d8cfd",
+    "utils/dataset_identity.py": "0689dd52f468f06d9c9652cf77d4f66991feaa5dcafcf857172c14bf98f338ac",
+    "harness/corpus_view.py": "6c1c90909a8a92a3996ced782ed0acaffaf17fd54b716498bbfe552ecd2908b0",
+    "harness/corpus.py": "1c9148bc6946031f0cb9af69405f64b385417e8cf71345cd5e84aa831d5a32d3",
+    "harness/function_complexity.py": "83c6e3dfa21374555ce35454838d0fe16668f407f241d05417918d428ca63497",
+    "scripts/build_next_direction_design.py": "ee9874e76e12f1600590408e27753ab8847d8ba9550ecf264343ba5c2b775040",
+    "harness/isolation_evidence_fixtures.py": "c9e4fa210797124c2aab2698e2b451960cec407a42c934610c1cb68b7b44dc9a",
+    "harness/atomic_publish.py": "d370316bdfc3075d99d5047c80fc9428950246021cfe23d2f5b6dd21415243f9",
+    "harness/closed_pilot_evidence.py": "23d517ec71236f5630009c6dd18848549fb76f61aab3cbcabc1f303c31cf21b0",
+    "scripts/build_repository_native_power_analysis.py": "2f337976d900e4ceaec6f16750b458e5935b0c8fcbbccc076cb85a6bccb26877",
+    "docs/next_direction_design_content.json": "00da288a8572364ddf718fd30ee2c967526ea0532438acda60783a5e92ee10d4"
+  },
+  "leakage": {
+    "splits_opened": [
+      "train"
+    ],
+    "validation_accessed": false,
+    "ablation_dev_accessed": false,
+    "test_accessed": false,
+    "sealed_final_test_accessed": false,
+    "confirmation_opened": false,
+    "canonical_records_json_opened": false,
+    "non_train_records_opened": false,
+    "network_accessed": false,
+    "new_split_created": false
+  }
+}

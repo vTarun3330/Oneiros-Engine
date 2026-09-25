@@ -14,7 +14,7 @@
       "any further execution-supervision or execution-feedback variant (both closed by frozen gates)",
       "reusing the consumed test split or opening the reserved confirmation lineages for a different question"
     ],
-    "claim_scope": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks; this is not a claim that no model has seen these repositories"
+    "claim_scope": "Disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks. D7 is accepted under exactly this claim; it is not a claim that no model has seen these repositories"
   },
   "repository_native_protocol": {
     "status": "draft; no candidate mined, no split created",
@@ -63,7 +63,7 @@
       "screening_note": "names only; licence, activity, test suite, Python support and 2025+ bug-fix supply are verified during mining, never assumed. Repositories in the same organisation as an excluded repository (for example pallets, pylint-dev, pytest-dev, psf) are flagged for an explicit decision rather than silently admitted"
     },
     "isolation_rules": {
-      "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks; this is not a claim that no model has seen these repositories",
+      "claim": "Disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks.",
       "mandatory_evidence": [
         "canonical lower-case owner/name, https://github.com/<owner>/<name> URL, numeric repository ID and node ID",
         "repository API response (URL, raw bytes, SHA-256, UTC retrieval timestamp, ETag where available); the queried full_name must equal the returned full_name",
@@ -86,13 +86,15 @@
       "receipt": "decisions are made only against a FrozenReferenceUniverse: the receipt also freezes the diff policy and the temporal rule; loading rebuilds the universe, requires its collections and collection hashes to equal the receipt's, verifies the internal receipt hash, re-hashes every input file, code input and canonical source, and recomputes coverage; any mismatch refuses. check_candidate takes that object and reads the receipt hash from it; no caller can supply a hash. isolation_record_is_current accepts only the same verified universe and an unmodified record digest",
       "stages": {
         "1_evidence_schema": "every mandatory field present and well formed (evidence_problems)",
-        "2_evidence_authentication": "offline cross-checks of acquired evidence (authentication_problems): repository and issue API responses re-hashed and compared with the declared identity; git objects re-hashed to their IDs; diff policy A: the fixed commit's only parent is the buggy commit and the authenticated trees show exactly one changed path, the target file; the canonical diff is DERIVED from the authenticated target blobs and the submitted patch must carry exactly its removed/added lines; a derived hunk must overlap the declared target function and its normalised body must change; the temporal rule is proved from the commit timestamps",
+        "2_evidence_authentication": "offline cross-checks of acquired evidence (authentication_problems): repository and issue API responses re-hashed and compared with the declared identity; git objects re-hashed to their IDs; diff policy A: the fixed commit's only parent is the buggy commit and the authenticated trees show exactly one changed path, the target file; the canonical diff is DERIVED from the authenticated target blobs and the submitted patch is not authoritative and must only carry the same derived added and removed lines per file (not byte-identical text or hunk placement); a derived hunk must overlap the declared target function and its normalised body must change; the temporal rule is proved from the commit timestamps",
         "3_source_universe_overlap": "repository, fork parent, commit and issue against the frozen universe; patch identity and near-duplicate checks use ONLY the derived diff; function similarity uses the declared target function (proved present and changed in stage 2)",
         "later_network_acquisition": "a separate, separately approved step (D1) that fetches and stores the evidence listed in ACQUISITION_REQUIREMENTS; nothing in the checker makes a network call"
       },
       "curated_seeds": "all ten CURATED_BUGSINPY_BUGS definitions are indexed: a conservative source superset of the eight corpus seeds (seven in train, the eighth one of black_1, cookiecutter_1, scrapy_1); no non-train record opened",
       "diff_policy": "A (frozen): direct-parent, single-target-file fixes only; multi-file fixes are refused; the derived diff's SHA-256, changed-file list, hunks and target-function spans are stored in the isolation record",
-      "integrity": "record_sha256 detects accidental modification only; it is not a signature. Dataset construction must keep each candidate's evidence sidecar, reload the same FrozenReferenceUniverse, rerun check_candidate and compare the record byte for byte (revalidate_isolation_record); an edited record is rejected even with a recomputed record_sha256"
+      "integrity": "record_sha256 detects accidental modification only; it is not a signature. Dataset construction must keep each candidate's evidence sidecar, reload the same FrozenReferenceUniverse, rerun check_candidate and compare the record byte for byte (revalidate_isolation_record); an edited record is rejected even with a recomputed record_sha256",
+      "claim_status": "accepted (D7), narrowed claim only",
+      "submitted_patch": "not authoritative: the authenticated canonical diff is authoritative; the submitted patch is only required to carry the same derived added and removed lines per file (as multisets); byte-identical patch text and identical hunk placement are NOT required"
     },
     "licensing_and_reproducibility": {
       "licences_admitted": [
@@ -365,12 +367,12 @@
     {
       "id": "B1",
       "blocker": "no candidate data exists locally; mining needs network access and a licence review",
-      "resolution": "user approval to mine (decision D1)"
+      "resolution": "mining approved (D1); a bounded acquisition pilot comes first (D3)"
     },
     {
       "id": "B2",
       "blocker": "WSL lacks Python 3.10/3.13 and any hash-locking environment tool (uv or pip-tools); Docker/Podman absent",
-      "resolution": "approve installing uv in WSL (D6) or restrict to projects supporting 3.8/3.9/3.11/3.12"
+      "resolution": "installation of uv and Python 3.10/3.13 inside WSL approved (D6)"
     },
     {
       "id": "B3",
@@ -390,12 +392,12 @@
     {
       "id": "B6",
       "blocker": "the consumed test split can never be read, so disjointness from it is ENFORCED only through complete indexing of the upstream sources that fed every split (coverage audit and hash-bound receipt), not by inspecting the split",
-      "resolution": "user acceptance (D7), now that each decision is bound to a verified frozen universe"
+      "resolution": "resolved by the accepted narrowed claim (D7)"
     },
     {
       "id": "B7",
       "blocker": "no untouched train-derived panel remains for the sampling study",
-      "resolution": "accept the 613-record panel with a fresh seed family as exploratory (D8) or skip the study"
+      "resolution": "sampling study deferred (D8)"
     },
     {
       "id": "B8",
@@ -411,39 +413,48 @@
   "required_user_decisions": [
     {
       "id": "D1",
-      "decision": "approve network mining of GitHub repositories, acquisition and hash-binding of repository/issue API responses and git objects, and the temporal rule (fixed-commit committer timestamp on or after 2025-01-01; mitigation only)"
+      "status": "approved",
+      "decision": "read-only GitHub mining and hash-bound acquisition of repository metadata, issue/PR responses, commit objects, tree objects, blobs and licence evidence; the fixed commit's authenticated committer timestamp must be on or after 2025-01-01T00:00:00Z (contamination-risk mitigation only)"
     },
     {
       "id": "D2",
-      "decision": "confirm the admitted licence list and whether same-organisation repositories are excluded"
+      "status": "approved_conservatively",
+      "decision": "admit only MIT, BSD-2-Clause, BSD-3-Clause, Apache-2.0, ISC and PSF-2.0; repositories from the same organisation as an indexed/excluded repository are excluded by default and listed separately for explicit review, never silently admitted"
     },
     {
       "id": "D3",
-      "decision": "final size: N=400 recommended, powered for a true +8 pp gain at rho 0.05 with at most 12 targets per repository; N=200 only as an explicitly approved lower-power feasibility compromise; the +5 pp gate is unchanged"
+      "status": "approved",
+      "decision": "planned final N=400 from at least 34 repositories, at most 12 targets per repository; the +5 pp gate is unchanged; no filling of shortages by repetition; a bounded acquisition pilot precedes full mining"
     },
     {
       "id": "D4",
-      "decision": "who seals the one-time set and whether it becomes the project's new locked evaluation"
+      "status": "decided",
+      "decision": "the final set is sealed by hash after qualification and before any model sees it; the user is the one-time final-evaluation authorizer; development tools, model calls and prompt inspection must not access the sealed set before explicit authorization"
     },
     {
       "id": "D5",
-      "decision": "Atheris: ordinary crash/contract mode as the primary paired comparison on the jointly eligible set; differential mode as a labelled upper bound; 600 CPU-s x 3 seeds per target and mode"
+      "status": "approved",
+      "decision": "actual Atheris 2.3.0 (never the simulated coverage baseline) in two labelled modes: ordinary crash/contract (primary baseline) and differential-oracle (generous upper bound); seeds 42, 43, 44; 600 CPU-seconds per target, mode and seed; applicability reported separately; an ineligible target is never a zero"
     },
     {
       "id": "D6",
-      "decision": "permission to install uv (hash-locked resolution and sync) and interpreters 3.10/3.13 inside WSL"
+      "status": "approved",
+      "decision": "install uv and Python 3.10/3.13 inside WSL only, pinned, with hash-locked environments; no change to Windows Python installations"
     },
     {
       "id": "D7",
-      "decision": "accept that disjointness is enforced against the complete indexed source universe: decisions bound to a verified FrozenReferenceUniverse, patch lineage taken from the authenticated derived diff, and records trusted only after revalidation (pending)"
+      "status": "accepted",
+      "decision": "accepted ONLY under the narrowed claim: Disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks. This is not a claim that the model could not have seen a repository during pretraining; the 2025 fixed-commit cutoff is contamination-risk mitigation only"
     },
     {
       "id": "D8",
-      "decision": "run, defer or skip the optional sampling-budget study, and its panel"
+      "status": "deferred",
+      "decision": "the optional sampling-budget GPU study is not run; the repository-native critical path comes first"
     },
     {
       "id": "D9",
-      "decision": "which models enter the one-time evaluation (base and frozen control proposed)"
+      "status": "provisionally_approved",
+      "decision": "exactly two model arms: the immutable pinned Qwen2.5-Coder-1.5B base model and the existing frozen control adapter, with revision, adapter hash, prompt contract and generation settings resolved from the frozen receipts; refuse to proceed if either identity is missing or ambiguous; no other model, no new adapter"
     }
   ],
   "execution_order": [
@@ -487,5 +498,6 @@
       "what": "one-time evaluation (only after explicit authorization)",
       "resources": "GPU about 80 min, CPU about 35 h (native + Atheris) for N=400"
     }
-  ]
+  ],
+  "decisions_recorded_utc": "2026-09-25"
 }
