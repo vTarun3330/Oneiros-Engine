@@ -1,0 +1,313 @@
+{
+ "admitted": [
+  {
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:fastapi/typer@f0bc3a34d425c6ddd4222d1c0294203deadf424a",
+   "patch_sha256": "8a732de45ae9680a4d54d3842900d194983b8fb81e252351414be4659209c435",
+   "record_sha256": "9eafd7ba11a4ffee2167e0f138a511cff23b7822290fd5ca433f753c9cf7b28f",
+   "sidecar_address": "f246298fae80699675da2d740358c1423f8da2b6abc13498610242281cea7812",
+   "target": "NoSuchOption.format_message",
+   "target_file": "typer/_click/exceptions.py",
+   "tier": "moderate"
+  }
+ ],
+ "admitted_per_repository": {
+  "fastapi/typer": 1
+ },
+ "bug_family_shares_heuristic": {
+  "boundary_or_comparison": 0.0,
+  "call_or_argument": 0.0,
+  "exception_handling": 0.0,
+  "none_or_empty_handling": 0.0,
+  "other_logic": 1.0,
+  "type_or_conversion": 0.0
+ },
+ "complexity_shares": {
+  "moderate": 1.0
+ },
+ "counts": {
+  "acquisition_failures": {},
+  "admitted": 1,
+  "authenticated": 2,
+  "candidates_inspected": 124,
+  "reached_pipeline": 56,
+  "same_organisation_exclusions": 0,
+  "single_file_policy_losses": 99,
+  "unique_fix_commits_admitted": 1,
+  "unique_functions_admitted": 1,
+  "unique_repositories_admitted": 1,
+  "unique_repositories_inspected": 13,
+  "within_set_duplicates_removed": 0
+ },
+ "created_utc": "2026-09-25T18:18:39Z",
+ "exclusions_all_reasons": {
+  "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 11,
+  "insufficient_isolation_evidence:authentication:issue_url_mismatch": 5,
+  "insufficient_isolation_evidence:authentication:multi_file_fix_not_admitted_under_single_file_policy": 54,
+  "insufficient_isolation_evidence:authentication:target_function_missing_or_ambiguous_in_fixed_file": 3,
+  "multiple_functions_changed": 19,
+  "no_existing_function_changed": 19,
+  "no_non_test_python_file_changed": 29,
+  "patch_near_duplicate_of_known_bug": 8,
+  "target_file_added_by_fix": 1
+ },
+ "exclusions_primary_reason": {
+  "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 6,
+  "insufficient_isolation_evidence:authentication:issue_url_mismatch": 5,
+  "insufficient_isolation_evidence:authentication:multi_file_fix_not_admitted_under_single_file_policy": 43,
+  "multiple_functions_changed": 19,
+  "no_existing_function_changed": 19,
+  "no_non_test_python_file_changed": 29,
+  "patch_near_duplicate_of_known_bug": 1,
+  "target_file_added_by_fix": 1
+ },
+ "gate": {
+  "admitted_per_repository": true,
+  "admitted_with_incomplete_evidence": true,
+  "diversity": false,
+  "hash_inconsistencies": true,
+  "minimum_scale": true,
+  "protected_data_access": true,
+  "record_or_sidecar_revalidation_failures": true,
+  "yield_overlaps_planned_range": false
+ },
+ "gate_definition": {
+  "admitted_per_repository": "must be <= 12",
+  "admitted_with_incomplete_evidence": "must be 0",
+  "diversity": "admitted targets from >= 5 repositories, no repository above 40% of admitted",
+  "hash_inconsistencies": "must be 0 (stored-object re-verification and acquisition)",
+  "minimum_scale": ">= 100 candidates inspected from >= 10 repositories",
+  "protected_data_access": "must be false",
+  "record_or_sidecar_revalidation_failures": "must be 0",
+  "yield": "the admission-yield Wilson 95% interval overlaps the planned 7-15% range, or a revised evidence-based estimate shows N=400 within the approved repositories' projected supply"
+ },
+ "journal_sha256": "c48b2110cb974dcfa66eb9d321f771977e1d7a78372f6056d0a5168058264dc5",
+ "label": "bounded acquisition pilot: candidate pool only; no evaluation set created, no model called, no protected data opened",
+ "leakage": {
+  "ablation_dev_accessed": false,
+  "canonical_records_json_opened": false,
+  "confirmation_opened": false,
+  "evaluation_set_created": false,
+  "model_called": false,
+  "sealed_final_test_accessed": false,
+  "test_accessed": false,
+  "validation_accessed": false
+ },
+ "policy": {
+  "candidates_since": "2025-01-01",
+  "diff_policy": "A_direct_parent_single_target_file",
+  "fix_commit_selection": "first-parent default-branch commits whose message describes a fix and links a PR/issue (heuristic)",
+  "per_repository_candidate_cap": 10,
+  "temporal_cutoff_epoch": 1735689600
+ },
+ "projection_for_n400": {
+  "at_point_estimate": {
+   "acquisition_hours": 650.6,
+   "candidates_needed": 49600,
+   "repositories_needed_at_pilot_rate": 5200,
+   "storage_gb": 14.43
+  },
+  "at_wilson_lower": {
+   "acquisition_hours": 3747.9,
+   "candidates_needed": 285715,
+   "repositories_needed_at_pilot_rate": 29954,
+   "storage_gb": 83.09
+  },
+  "at_wilson_upper": {
+   "acquisition_hours": 118.5,
+   "candidates_needed": 9030,
+   "repositories_needed_at_pilot_rate": 947,
+   "storage_gb": 2.63
+  }
+ },
+ "repositories": {
+  "listed": 18,
+  "renames": {
+   "python-pendulum/pendulum": [
+    {
+     "queried": "sdispater/pendulum",
+     "redirected_to": "python-pendulum/pendulum"
+    }
+   ]
+  },
+  "same_organisation_for_review": [],
+  "scans": {
+   "arrow-py/arrow": {
+    "classification": {
+     "fix_candidate": 6,
+     "no_linked_pr_or_issue": 1,
+     "non_code_commit_subject": 9,
+     "not_described_as_a_fix": 7
+    },
+    "commits_scanned": 23,
+    "failure": null
+   },
+   "fastapi/typer": {
+    "classification": {
+     "fix_candidate": 31,
+     "not_described_as_a_fix": 832
+    },
+    "commits_scanned": 863,
+    "failure": null
+   },
+   "marshmallow-code/marshmallow": {
+    "classification": {
+     "fix_candidate": 26,
+     "fix_merge_commit": 1,
+     "no_linked_pr_or_issue": 7,
+     "non_code_commit_subject": 62,
+     "not_described_as_a_fix": 108
+    },
+    "commits_scanned": 204,
+    "failure": null
+   },
+   "more-itertools/more-itertools": {
+    "classification": {
+     "fix_merge_commit": 43,
+     "no_linked_pr_or_issue": 2,
+     "non_code_commit_subject": 1,
+     "not_described_as_a_fix": 141
+    },
+    "commits_scanned": 187,
+    "failure": null
+   },
+   "pyparsing/pyparsing": {
+    "classification": {
+     "fix_candidate": 8,
+     "no_linked_pr_or_issue": 43,
+     "non_code_commit_subject": 23,
+     "not_described_as_a_fix": 225
+    },
+    "commits_scanned": 299,
+    "failure": null
+   },
+   "python-attrs/attrs": {
+    "classification": {
+     "fix_candidate": 34,
+     "no_linked_pr_or_issue": 11,
+     "non_code_commit_subject": 56,
+     "not_described_as_a_fix": 127
+    },
+    "commits_scanned": 228,
+    "failure": null
+   },
+   "python-attrs/cattrs": {
+    "classification": {
+     "fix_candidate": 26,
+     "no_linked_pr_or_issue": 8,
+     "non_code_commit_subject": 14,
+     "not_described_as_a_fix": 57
+    },
+    "commits_scanned": 105,
+    "failure": null
+   },
+   "python-humanize/humanize": {
+    "classification": {
+     "fix_candidate": 15,
+     "no_linked_pr_or_issue": 1,
+     "non_code_commit_subject": 7,
+     "not_described_as_a_fix": 89
+    },
+    "commits_scanned": 112,
+    "failure": null
+   },
+   "python-pendulum/pendulum": {
+    "classification": {
+     "fix_candidate": 27,
+     "fix_merge_commit": 1,
+     "no_linked_pr_or_issue": 6,
+     "non_code_commit_subject": 2,
+     "not_described_as_a_fix": 32
+    },
+    "commits_scanned": 68,
+    "failure": null
+   },
+   "python-poetry/tomlkit": {
+    "classification": {
+     "fix_candidate": 33,
+     "non_code_commit_subject": 49,
+     "not_described_as_a_fix": 37
+    },
+    "commits_scanned": 119,
+    "failure": null
+   },
+   "textualize/rich": {
+    "classification": {
+     "fix_merge_commit": 20,
+     "no_linked_pr_or_issue": 2,
+     "non_code_commit_subject": 1,
+     "not_described_as_a_fix": 78
+    },
+    "commits_scanned": 101,
+    "failure": null
+   },
+   "tkem/cachetools": {
+    "classification": {
+     "fix_candidate": 23,
+     "fix_merge_commit": 1,
+     "no_linked_pr_or_issue": 6,
+     "non_code_commit_subject": 53,
+     "not_described_as_a_fix": 87
+    },
+    "commits_scanned": 170,
+    "failure": null
+   },
+   "tobymao/sqlglot": {
+    "classification": {
+     "fix_candidate": 1232,
+     "no_linked_pr_or_issue": 85,
+     "non_code_commit_subject": 514,
+     "not_described_as_a_fix": 1526
+    },
+    "commits_scanned": 3357,
+    "failure": null
+   }
+  },
+  "screened_out": {
+   "dateutil/dateutil": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "grantjenks/python-sortedcontainers": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "mahmoud/boltons": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "networkx/networkx": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "pytoolz/toolz": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ]
+  }
+ },
+ "resources": {
+  "candidate_seconds_total": 5855.7,
+  "clone_bytes": 15358815,
+  "store_bytes": 20704161
+ },
+ "schema_version": "oneiros_repository_native_acquisition_pilot_v1",
+ "source_files_sha256": {
+  "docs/repository_native_candidate_repositories.json": "4efed779f706cc899749c370e64438745cfe3c01a292156c6d5e1e30a22179ee",
+  "harness/github_acquisition.py": "957205f9d5986fd69d26f864b7a97dd1ab355cbca6692754da370d2afa23cb0f",
+  "harness/repository_isolation.py": "9b60e64170b012bb45d54d7c9010eddb68d3620cc9404d259b3c1b0bd62f65b2",
+  "harness/repository_native_candidates.py": "9938db4d3c11564f1a552259d9d2c97765617ad93d3b438f7b10933682f6fed3",
+  "scripts/run_repository_native_acquisition_pilot.py": "1daa092d3a039dfa456a0fc41d9a57c98d2d170059dda0c0d7b1d513a8ca7ecc"
+ },
+ "store_verification": {
+  "objects_checked": 1018,
+  "problems": []
+ },
+ "yield": {
+  "admission_yield": 0.0081,
+  "note": "admission yield precedes native qualification (Phase 3), so it is an upper bound on the planned mined-to-qualified yield",
+  "planned_range": [
+   0.07,
+   0.15
+  ],
+  "wilson_95": [
+   0.0014,
+   0.0443
+  ]
+ }
+}
