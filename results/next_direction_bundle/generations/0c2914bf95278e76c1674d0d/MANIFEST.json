@@ -1,0 +1,18 @@
+{
+ "files": {
+  "next_direction_design.json": {
+   "bytes": 89252,
+   "sha256": "ce727dffb238bb734b8b46ea6c8d934f07737ad6cb112219567c146ddcab1108"
+  },
+  "reference_universe_receipt.json": {
+   "bytes": 2758384,
+   "sha256": "01077dc15bb260946122fd3b3c969798743b84287ca827b8af7f57ef1edc637f"
+  },
+  "repository_native_power_analysis.json": {
+   "bytes": 51525,
+   "sha256": "c98d49ddcd85e07659323c088cff0967e104ae71f2603155d552635cc0ba05f1"
+  }
+ },
+ "previous_generation": null,
+ "schema_version": "oneiros_artifact_bundle_v1"
+}

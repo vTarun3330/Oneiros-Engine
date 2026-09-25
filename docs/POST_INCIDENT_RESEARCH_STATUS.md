@@ -571,7 +571,7 @@ reference, and confirmation stays closed. The receipts are
 `results/v4_3_tool_assisted_analysis.json` and
 `results/v4_3_tool_assisted_decision_receipt.json`.
 
-## 9. Next direction (design only, 2026-09-25; isolation bound to a verified universe)
+## 9. Next direction (design only, 2026-09-25; isolation bound, exact diff, crash-safe publication)
 
 **Recommended primary line: an independently constructed repository-native
 evaluation.** It uses new bugs from repositories outside every indexed source,
@@ -588,9 +588,12 @@ patch, issue and function-similarity checks. It does not claim that no model
 has seen a repository, and the 2025 fix cutoff is contamination-risk mitigation
 only.
 
-- **Bound decisions.** Every decision is made against a `FrozenReferenceUniverse`. Loading it re-verifies the recomputed collections, the collection hashes, the internal receipt hash, every input file and every canonical source against `results/v4_3_reference_universe_receipt.json` (`c3fabc47…`). The receipt hash comes from that object; no caller can supply one.
+- **Bound decisions.** Every decision is made against a `FrozenReferenceUniverse`. Loading it re-verifies the recomputed collections, the collection hashes, the internal receipt hash, every input file and every canonical source against the receipt (`40ce55b0…`), which is published in the crash-safe bundle `results/next_direction_bundle`. The receipt hash comes from that object; no caller can supply one.
 - **Bound coverage inputs.** The receipt binds the corpus manifest, `utils/dataset_identity.py`, the curated definition and the train-view loader. All ten curated definitions are indexed, a conservative superset of the eight corpus seeds.
-- **Separate stages.** Candidate evidence goes through schema validation, then offline authentication (API responses and git objects are re-hashed and cross-checked), then source-universe overlap. Network acquisition is a later, separately approved step.
+- **Exact diff (policy A).** Only direct-parent, single-target-file fixes are admitted. Patch lineage comes only from the diff derived from authenticated git blobs. A submitted patch must match that diff exactly, and must modify the declared target function. A partial patch carrying only an unrelated change, which previously passed, is now refused.
+- **Temporal rule.** The fixed-commit committer timestamp must be on or after 2025-01-01. It is enforced at admission and frozen in the receipt, and is contamination-risk mitigation only.
+- **Separate stages.** Candidate evidence goes through schema validation, then offline authentication, then source-universe overlap. Network acquisition is a later, separately approved step.
+- **Integrity.** `record_sha256` is a self-hash, not a signature. Downstream use must revalidate each record from its evidence sidecar, byte for byte.
 
 **Power.** Evidence paths are repository-relative, and every evidence file is
 hash-checked against the closed pilots' decision receipts. The artifact is
@@ -601,7 +604,7 @@ verified by full recomputation before the design accepts it
 - **N = 400 is recommended**, powered for a true +8 pp gain at ρ = 0.05 with at most 12 targets per repository (power 0.86 analytic, 0.82 clustered Monte Carlo);
 - N = 200 is only a lower-power feasibility compromise (power about 0.64).
 
-Artifacts are published atomically, after every gate passes.
+Artifacts are published as one immutable, manifest-verified generation selected by a single pointer. A crash leaves either the complete old generation or the complete new one.
 
 The design, estimates, blockers (B1–B9) and required decisions (D1–D9) are in
 [NEXT_DIRECTION_DECISION_MEMO.md](NEXT_DIRECTION_DECISION_MEMO.md).

@@ -13,3 +13,5 @@
 *.jpeg binary
 *.pdf binary
 *.pptx binary
+# Bundle generations are hash-verified byte for byte: never convert line endings.
+results/next_direction_bundle/** -text

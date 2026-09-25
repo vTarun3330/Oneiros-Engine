@@ -13,15 +13,26 @@ Three separate stages decide a candidate:
 2. **Evidence authentication** (``authentication_problems``): the stored
    repository and issue API responses hash to their recorded SHA-256 and agree
    with the declared identity, fork status, parent and licence; the stored git
-   objects hash to their object IDs, the fixed commit's parent is the buggy
-   commit, and the licence file and target file resolve through the commit
-   trees to the recorded blobs, whose content agrees with the declared hashes,
-   target function and patch.  All of this is offline cross-checking of
-   evidence acquired earlier.
+   objects hash to their object IDs; the licence file and target file resolve
+   through the commit trees to the recorded blobs.  Under the frozen diff
+   policy A (``DIFF_POLICY``) the fixed commit's only parent is the buggy
+   commit, the authenticated trees show exactly one changed path (the target
+   file), and the canonical diff is DERIVED from the two target blobs.  The
+   submitted patch is never authoritative: it must carry exactly the derived
+   changed lines, and at least one derived hunk must overlap the declared
+   target function, whose normalised body must differ between revisions.  The
+   frozen temporal rule (``TEMPORAL_RULE``, contamination-risk mitigation only)
+   is proved from the authenticated commit timestamps.  All of this is offline
+   cross-checking of evidence acquired earlier.
 3. **Source-universe overlap** (``overlap_problems``): repository, fork-parent,
-   commit, issue and patch lineage outside the universe, and target-function
-   Jaccard below the frozen near-duplicate threshold against every indexed
-   reference function.
+   commit and issue lineage outside the universe; patch lineage computed ONLY
+   from the derived diff; and target-function Jaccard below the frozen
+   near-duplicate threshold against every indexed reference function.
+
+``record_sha256`` on an isolation record detects accidental modification only;
+it is a self-hash, not a signature.  Downstream trust comes from
+``revalidate_isolation_record``: retain the evidence sidecar, reload the same
+frozen universe, rerun ``check_candidate`` and compare the record byte for byte.
 
 Network acquisition of the evidence is a LATER, separate step
 (``ACQUISITION_REQUIREMENTS``); nothing here makes a network call.
@@ -38,10 +49,13 @@ threshold 0.80.  No protected split and no canonical records.json is read.
 """
 from __future__ import annotations
 
+import base64
 from collections import Counter
 from dataclasses import dataclass, field, fields
+from datetime import datetime, timezone
 import ast
 import copy
+import difflib
 import hashlib
 import json
 from pathlib import Path
@@ -55,9 +69,34 @@ from scripts.audit_cross_split_near_duplicates import (
     CANDIDATE_MIN_SHARED, NEAR_DUPLICATE_JACCARD, _index, jaccard, normalise, shingles,
 )
 
-ISOLATION_VERSION = "oneiros_repository_isolation_v3"
+ISOLATION_VERSION = "oneiros_repository_isolation_v4"
 CODE_ROOT = Path(__file__).resolve().parent.parent
-RECEIPT_SCHEMA = "oneiros_reference_universe_receipt_v2"
+RECEIPT_SCHEMA = "oneiros_reference_universe_receipt_v3"
+#: Frozen diff policy A: only a direct-parent fix that changes exactly one file,
+#: the target file.  The complete diff is DERIVED from the authenticated buggy
+#: and fixed blobs; a submitted patch is never authoritative.
+DIFF_POLICY = {
+    "id": "A_direct_parent_single_target_file",
+    "rule": ("the fixed commit has exactly one parent, the buggy commit; comparing the "
+             "authenticated buggy and fixed trees shows exactly one changed path, the target "
+             "file; the canonical diff is recomputed from the two target blobs (difflib unified "
+             "diff, 3 context lines, a/ and b/ headers); the submitted patch must carry exactly "
+             "the same removed and added lines per file; at least one changed hunk overlaps "
+             "the declared target function, whose normalised body differs between the buggy "
+             "and fixed files"),
+    "multi_file_fixes": "refused (policy B is not selected)",
+}
+#: Frozen temporal rule: contamination-risk MITIGATION only, never proof.
+TEMPORAL_CUTOFF_EPOCH = 1735689600  # 2025-01-01T00:00:00Z
+TEMPORAL_RULE = {
+    "rule": ("the authenticated fixed-commit committer timestamp is on or after "
+             "2025-01-01T00:00:00Z"),
+    "cutoff_epoch": TEMPORAL_CUTOFF_EPOCH,
+    "rejects": ("a missing or unparseable author or committer timestamp; an author timestamp "
+                "later than the committer timestamp; a buggy-commit committer timestamp later "
+                "than the fixed commit's; a commit timestamp later than the evidence retrieval"),
+    "status": "contamination-risk mitigation only; it does not show that no model saw the code",
+}
 CLAIM = ("disjointness is enforced against the complete indexed source universe under "
          "the recorded repository, fork, commit, patch, issue, and function-similarity "
          "checks")
@@ -565,6 +604,8 @@ def reference_universe_receipt(universe: ReferenceUniverse,
         "claim": CLAIM,
         "near_duplicate_threshold": NEAR_DUPLICATE_JACCARD,
         "min_function_shingles": MIN_FUNCTION_SHINGLES,
+        "diff_policy": DIFF_POLICY,
+        "temporal_rule": TEMPORAL_RULE,
         "fork_parent_note": ("benchmark repositories are recorded as their canonical "
                              "upstreams; no fork relation among them is asserted offline, so "
                              "every candidate must supply verified fork evidence"),
@@ -666,7 +707,9 @@ def freeze_reference_universe(universe: ReferenceUniverse, receipt: Mapping[str,
     for key, expected in (("schema_version", RECEIPT_SCHEMA),
                           ("isolation_version", ISOLATION_VERSION), ("claim", CLAIM),
                           ("near_duplicate_threshold", NEAR_DUPLICATE_JACCARD),
-                          ("min_function_shingles", MIN_FUNCTION_SHINGLES)):
+                          ("min_function_shingles", MIN_FUNCTION_SHINGLES),
+                          ("diff_policy", _plain(DIFF_POLICY)),
+                          ("temporal_rule", _plain(TEMPORAL_RULE))):
         if receipt.get(key) != expected:
             problems.append(f"receipt {key} is not {expected!r}")
     if not verify_receipt(receipt):
@@ -731,16 +774,17 @@ def git_object_id(kind: str, body: bytes) -> str:
 
 def parse_commit(body: bytes) -> dict[str, Any]:
     header = body.split(b"\n\n", 1)[0].decode("utf-8", "replace")
-    parsed: dict[str, Any] = {"tree": None, "parents": [], "committer_epoch": None}
+    parsed: dict[str, Any] = {"tree": None, "parents": [], "author_epoch": None,
+                              "committer_epoch": None}
     for line in header.splitlines():
         key, _, value = line.partition(" ")
         if key == "tree":
             parsed["tree"] = value.strip()
         elif key == "parent":
             parsed["parents"].append(value.strip())
-        elif key == "committer":
+        elif key in ("author", "committer"):
             match = re.search(r" (\d+) [+-]\d{4}$", value)
-            parsed["committer_epoch"] = int(match.group(1)) if match else None
+            parsed[f"{key}_epoch"] = int(match.group(1)) if match else None
     return parsed
 
 
@@ -776,22 +820,135 @@ def resolve_path(objects: Mapping[str, tuple[str, bytes]], tree_id: str, path: s
     return current
 
 
-def patch_sections(patch: str) -> dict[str, dict[str, list[str]]]:
-    """{target path: {"removed": [...], "added": [...]}} (lines whitespace-collapsed)."""
-    sections: dict[str, dict[str, list[str]]] = {}
-    current = None
-    for line in str(patch or "").splitlines():
-        if line.startswith("+++ "):
-            path = line[4:].split("\t")[0].strip()
-            current = sections.setdefault(path[2:] if path.startswith("b/") else path,
-                                          {"removed": [], "added": []})
-        elif line.startswith(("--- ", "diff ", "index ", "@@")):
+class IncompleteTreeEvidence(ValueError):
+    """A changed subtree cannot be listed from the supplied tree objects."""
+
+
+def changed_paths(objects: Mapping[str, tuple[str, bytes]], buggy_tree: str, fixed_tree: str,
+                  prefix: str = "") -> list[str]:
+    """Every path whose entry differs between two authenticated trees.
+
+    Descends only into subtrees whose IDs differ, so unchanged content needs no
+    evidence.  An added or removed subtree is reported as ``path/``.  A differing
+    subtree whose object is missing raises: partial evidence is never accepted.
+    """
+    if buggy_tree == fixed_tree:
+        return []
+    listings = []
+    for tree in (buggy_tree, fixed_tree):
+        kind, body = objects.get(tree, ("", b""))
+        if kind != "tree":
+            raise IncompleteTreeEvidence(prefix or "/")
+        listings.append(parse_tree(body))
+    old, new = listings
+    changed: list[str] = []
+    for name in sorted(set(old) | set(new)):
+        before, after = old.get(name), new.get(name)
+        if before == after:
             continue
-        elif current is not None and line[:1] in "+-" and line:
-            body = re.sub(r"\s+", " ", line[1:]).strip()
-            if body:
-                current["removed" if line[0] == "-" else "added"].append(body)
-    return sections
+        path = prefix + name
+        if before and after and before[0] == after[0] == "40000":
+            changed += changed_paths(objects, before[1], after[1], path + "/")
+        elif (before and before[0] == "40000") or (after and after[0] == "40000"):
+            changed.append(path + "/")
+        else:
+            changed.append(path)
+    return changed
+
+
+def canonical_diff(path: str, buggy_text: str, fixed_text: str) -> str:
+    """The frozen, deterministic diff between two authenticated file versions."""
+    lines = list(difflib.unified_diff(buggy_text.splitlines(), fixed_text.splitlines(),
+                                      f"a/{path}", f"b/{path}", n=3, lineterm=""))
+    return "\n".join(lines) + "\n" if lines else ""
+
+
+def changed_hunks(buggy_text: str, fixed_text: str) -> list[dict[str, Any]]:
+    """Non-equal opcodes of the canonical diff, as 1-based line ranges."""
+    matcher = difflib.SequenceMatcher(None, buggy_text.splitlines(), fixed_text.splitlines())
+    return [{"op": op, "buggy": [i1 + 1, i2], "fixed": [j1 + 1, j2]}
+            for op, i1, i2, j1, j2 in matcher.get_opcodes() if op != "equal"]
+
+
+def parse_unified_diff(patch: str) -> dict[str, dict[str, Counter]] | None:
+    """{path: {"removed": Counter, "added": Counter}} of exact changed lines.
+
+    Hunks are read by their header line counts, so a changed line that looks like
+    a header cannot hide.  Returns None for a malformed diff.
+    """
+    files: dict[str, dict[str, Counter]] = {}
+    old_path = new_path = None
+    lines = str(patch or "").splitlines()
+    index = 0
+    while index < len(lines):
+        line = lines[index]
+        if line.startswith("--- "):
+            old_path = line[4:].split("\t")[0].strip()
+        elif line.startswith("+++ "):
+            new_path = line[4:].split("\t")[0].strip()
+        elif line.startswith("@@"):
+            match = re.match(r"^@@ -\d+(?:,(\d+))? \+\d+(?:,(\d+))? @@", line)
+            if not match or new_path is None or old_path is None:
+                return None
+            path = new_path if new_path != "/dev/null" else old_path
+            path = path[2:] if path[:2] in ("a/", "b/") else path
+            entry = files.setdefault(path, {"removed": Counter(), "added": Counter()})
+            old_left = int(match.group(1)) if match.group(1) is not None else 1
+            new_left = int(match.group(2)) if match.group(2) is not None else 1
+            while old_left > 0 or new_left > 0:
+                index += 1
+                if index >= len(lines):
+                    return None
+                body = lines[index]
+                if body.startswith("\\"):
+                    continue
+                tag, text = (body[:1], body[1:]) if body else (" ", "")
+                if tag == " ":
+                    old_left, new_left = old_left - 1, new_left - 1
+                elif tag == "-":
+                    entry["removed"][text.rstrip("\r")] += 1
+                    old_left -= 1
+                elif tag == "+":
+                    entry["added"][text.rstrip("\r")] += 1
+                    new_left -= 1
+                else:
+                    return None
+                if old_left < 0 or new_left < 0:
+                    return None
+        index += 1
+    return files
+
+
+def _function_spans(source: str) -> list[dict[str, Any]]:
+    """Every function with its qualified name, line span and normalised source."""
+    tree = _parse(source)
+    if tree is None:
+        return []
+    found: list[dict[str, Any]] = []
+
+    def visit(node: ast.AST, stack: list[str]) -> None:
+        for child in ast.iter_child_nodes(node):
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                qualname = stack + [child.name]
+                if not isinstance(child, ast.ClassDef):
+                    segment = ast.get_source_segment(source, child) or ""
+                    start = min([child.lineno] + [d.lineno for d in child.decorator_list])
+                    found.append({"qualname": ".".join(qualname), "span": [start,
+                                  child.end_lineno], "normalised": normalise(segment)
+                                  or segment.strip()})
+                visit(child, qualname)
+            else:
+                visit(child, stack)
+    visit(tree, [])
+    return found
+
+
+def _overlaps(hunk: dict[str, Any], span: list[int]) -> bool:
+    start, end = span
+    first, last = hunk["buggy"]
+    if hunk["op"] == "insert":           # inserted after buggy line ``first - 1``
+        return start <= first - 1 <= end
+    return first <= end and last >= start
 
 
 # --- candidates -----------------------------------------------------------------
@@ -825,6 +982,8 @@ class CandidateBug:
     fork_parent_node_id: str = ""
     buggy_commit: str = ""
     fixed_commit: str = ""
+    #: Submitted/display patch.  Never authoritative: it must match the diff
+    #: derived from the authenticated blobs, and only the derived diff is used.
     patch: str = ""
     target_function: str = ""
     target_file: str = ""
@@ -933,16 +1092,17 @@ def _json_body(response: ApiResponse) -> dict[str, Any] | None:
     return value if isinstance(value, dict) else None
 
 
-def authentication_problems(candidate: CandidateBug) -> tuple[list[str], dict[str, Any]]:
-    """Stage 2, authentication: cross-check the stored evidence (offline).
+def _utc_epoch(value: str) -> int | None:
+    try:
+        return int(datetime.strptime(value.split(".")[0].rstrip("Z"), "%Y-%m-%dT%H:%M:%S")
+                   .replace(tzinfo=timezone.utc).timestamp())
+    except ValueError:
+        return None
 
-    Returns the problems and the facts derived from verified evidence (for the
-    record).  Run only on schema-valid candidates.
-    """
+
+def _metadata_problems(candidate: CandidateBug) -> list[str]:
     problems: list[str] = []
-    derived: dict[str, Any] = {}
     repository = candidate.repository
-
     meta = candidate.repository_metadata
     if _sha_bytes(meta.body) != meta.sha256:
         problems.append("repository_metadata_hash_mismatch")
@@ -977,7 +1137,6 @@ def authentication_problems(candidate: CandidateBug) -> tuple[list[str], dict[st
         licence = body.get("license")
         if not isinstance(licence, dict) or licence.get("spdx_id") != candidate.licence_spdx:
             problems.append("licence_spdx_mismatch")
-
     issue = candidate.issue_metadata
     if _sha_bytes(issue.body) != issue.sha256:
         problems.append("issue_metadata_hash_mismatch")
@@ -995,24 +1154,70 @@ def authentication_problems(candidate: CandidateBug) -> tuple[list[str], dict[st
                     ((issue_body.get("base") or {}).get("repo") or {}).get("full_name", "")
                 ).lower() == repository):
             problems.append("issue_repository_identity_mismatch")
+    return problems
+
+
+def _temporal_problems(candidate: CandidateBug, commits: dict[str, dict[str, Any]],
+                       derived: dict[str, Any]) -> list[str]:
+    """The frozen temporal rule, proved from authenticated commit objects."""
+    fixed = commits.get("fixed_commit")
+    if fixed is None:
+        return ["temporal_rule_unprovable_without_fixed_commit"]
+    author, committer = fixed["author_epoch"], fixed["committer_epoch"]
+    derived["fixed_commit_author_epoch"] = author
+    derived["fixed_commit_committer_epoch"] = committer
+    if author is None or committer is None:
+        return ["fixed_commit_timestamp_missing"]
+    problems = []
+    if author > committer:
+        problems.append("fixed_commit_author_after_committer")
+    buggy = commits.get("buggy_commit") or {}
+    if buggy.get("committer_epoch") is None:
+        problems.append("buggy_commit_timestamp_missing")
+    elif buggy["committer_epoch"] > committer:
+        problems.append("buggy_commit_committed_after_fix")
+    retrieved = [_utc_epoch(candidate.repository_metadata.retrieved_utc),
+                 _utc_epoch(candidate.issue_metadata.retrieved_utc)]
+    if any(value is None for value in retrieved):
+        problems.append("retrieval_timestamp_unparseable")
+    elif committer > min(retrieved):
+        problems.append("fixed_commit_later_than_evidence_retrieval")
+    satisfied = committer >= TEMPORAL_CUTOFF_EPOCH
+    derived["temporal_rule_satisfied"] = satisfied and not problems
+    if not satisfied:
+        problems.append("fixed_commit_before_temporal_cutoff")
+    return problems
+
+
+def authentication_problems(candidate: CandidateBug) -> tuple[list[str], dict[str, Any]]:
+    """Stage 2, authentication: cross-check the stored evidence (offline).
+
+    Returns the problems and the facts derived from authenticated evidence,
+    including the canonical diff (key ``canonical_diff``), which is the ONLY diff
+    later stages use.  Run only on schema-valid candidates.
+    """
+    problems = _metadata_problems(candidate)
+    derived: dict[str, Any] = {"diff_policy": DIFF_POLICY["id"]}
 
     objects: dict[str, tuple[str, bytes]] = {}
     for item in candidate.git_objects:
         objects[git_object_id(item.kind, item.body)] = (item.kind, item.body)
-    commits = {}
+    commits: dict[str, dict[str, Any]] = {}
     for label in ("buggy_commit", "fixed_commit"):
-        oid = getattr(candidate, label)
-        kind, body_bytes = objects.get(oid, ("", b""))
+        kind, body_bytes = objects.get(getattr(candidate, label), ("", b""))
         if kind != "commit":
             problems.append(f"{label}_object_missing")
-            continue
-        commits[label] = parse_commit(body_bytes)
+        else:
+            commits[label] = parse_commit(body_bytes)
     if "fixed_commit" in commits:
-        derived["fixed_commit_committer_epoch"] = commits["fixed_commit"]["committer_epoch"]
-        if candidate.buggy_commit not in commits["fixed_commit"]["parents"]:
+        parents = commits["fixed_commit"]["parents"]
+        if candidate.buggy_commit not in parents:
             problems.append("fixed_commit_parent_is_not_buggy_commit")
+        elif len(parents) != 1:
+            problems.append("fixed_commit_is_not_a_direct_single_parent_commit")
+    problems += _temporal_problems(candidate, commits, derived)
+
     if "buggy_commit" in commits:
-        derived["buggy_commit_committer_epoch"] = commits["buggy_commit"]["committer_epoch"]
         tree = commits["buggy_commit"]["tree"]
         if resolve_path(objects, tree, candidate.licence_path) != candidate.licence_blob:
             problems.append("licence_blob_not_at_licence_path_in_buggy_tree")
@@ -1025,29 +1230,72 @@ def authentication_problems(candidate: CandidateBug) -> tuple[list[str], dict[st
             objects, commits["fixed_commit"]["tree"],
             candidate.target_file) != candidate.target_blob_fixed:
         problems.append("target_blob_fixed_not_at_target_file")
-    if candidate.target_blob_buggy == candidate.target_blob_fixed:
-        problems.append("target_file_unchanged_by_fix")
+
+    # Complete changed-file list from the authenticated trees (policy A).
+    if len(commits) == 2:
+        try:
+            files = changed_paths(objects, commits["buggy_commit"]["tree"],
+                                  commits["fixed_commit"]["tree"])
+        except IncompleteTreeEvidence as exc:
+            files = None
+            problems.append(f"changed_files_not_fully_evidenced:{exc}")
+        derived["changed_files"] = files
+        if files is not None:
+            if candidate.target_file not in files:
+                problems.append("target_file_unchanged_by_fix")
+            if len(files) > 1:
+                problems.append("multi_file_fix_not_admitted_under_single_file_policy")
+
     buggy_kind, buggy_bytes = objects.get(candidate.target_blob_buggy, ("", b""))
     fixed_kind, fixed_bytes = objects.get(candidate.target_blob_fixed, ("", b""))
-    if buggy_kind != "blob" or fixed_kind != "blob":
-        problems.append("target_blob_object_missing")
+    blobs_resolved = not any(problem.startswith(("target_blob_", "buggy_commit_object",
+                                                 "fixed_commit_object"))
+                             for problem in problems)
+    if buggy_kind != "blob" or fixed_kind != "blob" or not blobs_resolved:
+        problems.append("target_blob_object_missing_or_unresolved")
+        return [f"{INSUFFICIENT}:authentication:{problem}" for problem in problems], derived
+
+    buggy_text = buggy_bytes.decode("utf-8", "replace")
+    fixed_text = fixed_bytes.decode("utf-8", "replace")
+    diff = canonical_diff(candidate.target_file, buggy_text, fixed_text)
+    hunks = changed_hunks(buggy_text, fixed_text)
+    derived.update({"canonical_diff": diff,
+                    "canonical_diff_sha256": _sha_bytes(diff.encode("utf-8")),
+                    "canonical_patch_hash": patch_hash(diff), "changed_hunks": hunks})
+    if not diff:
+        problems.append("target_file_unchanged_by_fix")
+
+    # The submitted patch must carry exactly the derived changes, per file.
+    submitted = parse_unified_diff(candidate.patch)
+    expected = parse_unified_diff(diff)
+    derived["submitted_patch_sha256"] = _sha_bytes(str(candidate.patch).encode("utf-8"))
+    derived["submitted_patch_matches_derived_diff"] = submitted is not None and \
+        submitted == expected
+    if submitted is None:
+        problems.append("submitted_patch_unparseable")
+    elif submitted != expected:
+        problems.append("submitted_patch_does_not_match_derived_diff")
+
+    # The diff must modify the declared target function.
+    wanted = normalise(candidate.target_function) or candidate.target_function.strip()
+    matches = [item for item in _function_spans(buggy_text) if item["normalised"] == wanted]
+    if len(matches) != 1:
+        problems.append("target_function_not_in_buggy_file" if not matches
+                        else "target_function_ambiguous_in_buggy_file")
     else:
-        buggy_text = buggy_bytes.decode("utf-8", "replace")
-        fixed_text = fixed_bytes.decode("utf-8", "replace")
-        wanted = normalise(candidate.target_function) or candidate.target_function.strip()
-        if wanted not in {normalise(item) or item.strip()
-                          for item in extract_functions(buggy_text)}:
-            problems.append("target_function_not_in_buggy_file")
-        section = patch_sections(candidate.patch).get(candidate.target_file)
-        if section is None:
-            problems.append("patch_does_not_touch_target_file")
-        else:
-            buggy_lines = {re.sub(r"\s+", " ", line).strip() for line in buggy_text.splitlines()}
-            fixed_lines = {re.sub(r"\s+", " ", line).strip() for line in fixed_text.splitlines()}
-            if not set(section["removed"]) <= buggy_lines:
-                problems.append("patch_removed_lines_not_in_buggy_file")
-            if not set(section["added"]) <= fixed_lines:
-                problems.append("patch_added_lines_not_in_fixed_file")
+        target = matches[0]
+        fixed_side = [item for item in _function_spans(fixed_text)
+                      if item["qualname"] == target["qualname"]]
+        derived.update({"target_qualname": target["qualname"],
+                        "target_span_buggy": target["span"],
+                        "target_span_fixed": fixed_side[0]["span"] if len(fixed_side) == 1
+                        else None})
+        if not any(_overlaps(hunk, target["span"]) for hunk in hunks):
+            problems.append("no_changed_hunk_overlaps_target_function")
+        if len(fixed_side) != 1:
+            problems.append("target_function_missing_or_ambiguous_in_fixed_file")
+        elif fixed_side[0]["normalised"] == target["normalised"]:
+            problems.append("declared_target_function_unchanged")
     dotted = candidate.target_file[:-3].replace("/", ".")
     if not (dotted == candidate.target_module or dotted.endswith("." + candidate.target_module)
             or (dotted.endswith(".__init__")
@@ -1056,9 +1304,14 @@ def authentication_problems(candidate: CandidateBug) -> tuple[list[str], dict[st
     return [f"{INSUFFICIENT}:authentication:{problem}" for problem in problems], derived
 
 
-def overlap_problems(candidate: CandidateBug, universe: ReferenceUniverse,
-                     threshold: float) -> tuple[list[str], dict[str, Any]]:
-    """Stage 3, source-universe overlap."""
+def overlap_problems(candidate: CandidateBug, universe: ReferenceUniverse, threshold: float,
+                     derived_diff: str | None = None) -> tuple[list[str], dict[str, Any]]:
+    """Stage 3, source-universe overlap.
+
+    Patch checks use ONLY ``derived_diff``, the diff recomputed from
+    authenticated blobs; without one they are not run (and the candidate is
+    already refused by authentication).
+    """
     reasons: list[str] = []
     for label, value in (("repository", candidate.repository),
                          ("fork_parent", candidate.fork_parent)):
@@ -1073,10 +1326,12 @@ def overlap_problems(candidate: CandidateBug, universe: ReferenceUniverse,
     if candidate.issue_id and candidate.issue_id in universe.instance_ids:
         reasons.append("issue_is_known_benchmark_instance")
     nearest_patch: dict[str, Any] = {"reference": None, "jaccard": 0.0}
-    if normalised_patch(candidate.patch):
-        if patch_hash(candidate.patch) in universe.patch_hashes:
+    patch_checks = "not_run:no_authenticated_diff"
+    if derived_diff and normalised_patch(derived_diff):
+        patch_checks = "run_on_derived_diff"
+        if patch_hash(derived_diff) in universe.patch_hashes:
             reasons.append("patch_identical_to_known_bug")
-        mine = _patch_shingles(candidate.patch)
+        mine = _patch_shingles(derived_diff)
         for key, items in universe.patch_shingles.items():
             score = jaccard(items, mine)
             if score > nearest_patch["jaccard"]:
@@ -1102,7 +1357,8 @@ def overlap_problems(candidate: CandidateBug, universe: ReferenceUniverse,
     owner = canonical_repository(candidate.repository)[0].split("/")[0]
     organisation_flags = sorted({full for full in universe.repository_full
                                  if owner and full.split("/")[0] == owner})
-    return reasons, {"nearest_patch": nearest_patch, "nearest_function": nearest_function,
+    return reasons, {"patch_checks": patch_checks, "nearest_patch": nearest_patch,
+                     "nearest_function": nearest_function,
                      "target_function_fingerprint": fingerprint(mine) if mine else None,
                      "same_organisation_as_excluded": organisation_flags}
 
@@ -1145,20 +1401,24 @@ def check_candidate(candidate: CandidateBug, frozen: FrozenReferenceUniverse) ->
         authentication, derived = ["not_run:schema_invalid"], {}
     else:
         authentication, derived = authentication_problems(candidate)
-    overlap, nearest = overlap_problems(candidate, frozen.universe, threshold)
+    derived_diff = derived.pop("canonical_diff", None)
+    overlap, nearest = overlap_problems(candidate, frozen.universe, threshold, derived_diff)
     authentication_failures = [item for item in authentication if not item.startswith("not_run")]
     reasons = schema + authentication_failures + overlap
     record = {
         "isolation_version": ISOLATION_VERSION,
         "reference_universe_sha256": frozen.receipt_sha256,
         "claim": CLAIM,
+        "diff_policy": DIFF_POLICY["id"],
+        "temporal_rule": TEMPORAL_RULE["rule"],
         "admissible": not reasons,
         "reasons": reasons,
         "insufficient_evidence": bool(schema or authentication_failures),
         "stages": {"schema": schema, "authentication": authentication, "overlap": overlap},
+        "authentication_passed": not schema and not authentication_failures,
         "evidence": _evidence_summary(candidate),
         "derived_from_verified_evidence": derived,
-        "patch_sha256": patch_hash(candidate.patch) if candidate.patch else None,
+        "patch_sha256": derived.get("canonical_patch_hash"),
         **nearest,
         "threshold": threshold,
     }
@@ -1168,9 +1428,78 @@ def check_candidate(candidate: CandidateBug, frozen: FrozenReferenceUniverse) ->
 
 def isolation_record_is_current(record: Mapping[str, Any],
                                 frozen: FrozenReferenceUniverse) -> bool:
-    """A record is current only for the verified universe it was made against."""
+    """A record is current only for the verified universe it was made against.
+
+    ``record_sha256`` detects ACCIDENTAL modification only.  It is a self-hash,
+    not a digital signature: anyone who edits a record can recompute it.
+    Trust in a record comes only from ``revalidate_isolation_record``.
+    """
     if not isinstance(frozen, FrozenReferenceUniverse):
         raise TypeError("currency is judged only against a verified FrozenReferenceUniverse")
     return (record.get("isolation_version") == ISOLATION_VERSION
             and record.get("reference_universe_sha256") == frozen.receipt_sha256
             and record.get("record_sha256") == _record_digest(record))
+
+
+# --- downstream revalidation ------------------------------------------------------
+
+EVIDENCE_SIDECAR_SCHEMA = "oneiros_candidate_evidence_sidecar_v1"
+
+
+def candidate_to_sidecar(candidate: CandidateBug) -> dict[str, Any]:
+    """The complete authenticated evidence, JSON-serialisable (bytes as base64)."""
+    def encode(name: str, value: Any) -> Any:
+        if isinstance(value, ApiResponse):
+            return {"url": value.url, "body_b64": base64.b64encode(value.body).decode("ascii"),
+                    "sha256": value.sha256, "retrieved_utc": value.retrieved_utc,
+                    "etag": value.etag}
+        if name == "git_objects":
+            return [{"kind": obj.kind, "body_b64": base64.b64encode(obj.body).decode("ascii")}
+                    for obj in value]
+        return value
+    return {"schema_version": EVIDENCE_SIDECAR_SCHEMA,
+            "candidate": {item.name: encode(item.name, getattr(candidate, item.name))
+                          for item in fields(candidate)}}
+
+
+def candidate_from_sidecar(sidecar: Mapping[str, Any]) -> CandidateBug:
+    if sidecar.get("schema_version") != EVIDENCE_SIDECAR_SCHEMA:
+        raise ValueError("unknown evidence sidecar schema")
+    values = dict(sidecar["candidate"])
+    for key in ("repository_metadata", "issue_metadata"):
+        item = values[key]
+        values[key] = ApiResponse(url=item["url"], body=base64.b64decode(item["body_b64"]),
+                                  sha256=item["sha256"], retrieved_utc=item["retrieved_utc"],
+                                  etag=item["etag"])
+    values["git_objects"] = tuple(GitObject(kind=item["kind"],
+                                            body=base64.b64decode(item["body_b64"]))
+                                  for item in values["git_objects"])
+    return CandidateBug(**values)
+
+
+def canonical_record_bytes(record: Mapping[str, Any]) -> bytes:
+    return json.dumps(record, sort_keys=True, separators=(",", ":"),
+                      ensure_ascii=False).encode("utf-8")
+
+
+def revalidate_isolation_record(record: Mapping[str, Any], sidecar: Mapping[str, Any],
+                                frozen: FrozenReferenceUniverse) -> dict[str, Any]:
+    """Downstream trust: rerun the decision from the retained evidence.
+
+    The stored record is accepted only if ``check_candidate`` on the evidence
+    sidecar, against the same verified frozen universe, reproduces it byte for
+    byte.  A hand-edited record is rejected even if its ``record_sha256`` was
+    recomputed.
+    """
+    try:
+        candidate = candidate_from_sidecar(sidecar)
+    except (KeyError, TypeError, ValueError) as exc:
+        return {"valid": False, "reason": f"evidence sidecar unusable: {exc}"}
+    recomputed = check_candidate(candidate, frozen)
+    if canonical_record_bytes(recomputed) != canonical_record_bytes(record):
+        differing = sorted(key for key in set(recomputed) | set(record)
+                           if recomputed.get(key) != record.get(key))
+        return {"valid": False, "reason": "record differs from recomputation",
+                "differing_fields": differing}
+    return {"valid": True, "admissible": recomputed["admissible"],
+            "record_sha256": recomputed["record_sha256"]}

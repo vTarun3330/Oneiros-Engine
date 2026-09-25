@@ -1,7 +1,7 @@
 {
-  "schema_version": "oneiros_next_direction_design_v3",
+  "schema_version": "oneiros_next_direction_design_v4",
   "label": "design only; no split created, no mining, no model, no protected access",
-  "created_utc": "2026-09-25T11:22:52.245573+00:00",
+  "created_utc": "2026-09-25T15:51:43.769904+00:00",
   "starting_state": {
     "closed_pilots": {
       "tool_assisted": {
@@ -43,7 +43,7 @@
     }
   },
   "isolation": {
-    "version": "oneiros_repository_isolation_v3",
+    "version": "oneiros_repository_isolation_v4",
     "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
     "near_duplicate_threshold": 0.8,
     "method": "AST-normalised, docstring-stripped code; exact Jaccard over 5-token shingles; inverted-index candidates (reused from scripts/audit_cross_split_near_duplicates.py)",
@@ -59,6 +59,18 @@
       "network": "acquisition requires separate approval (decision D1); this module is offline"
     },
     "why_protected_splits_need_not_be_opened": "every split, the consumed test split included, is built only from MBPP, HumanEval, BugsInPy, SWE-bench Verified and the curated seeds; the universe indexes the complete upstream copy of each, verified by the coverage audit",
+    "diff_policy": {
+      "id": "A_direct_parent_single_target_file",
+      "rule": "the fixed commit has exactly one parent, the buggy commit; comparing the authenticated buggy and fixed trees shows exactly one changed path, the target file; the canonical diff is recomputed from the two target blobs (difflib unified diff, 3 context lines, a/ and b/ headers); the submitted patch must carry exactly the same removed and added lines per file; at least one changed hunk overlaps the declared target function, whose normalised body differs between the buggy and fixed files",
+      "multi_file_fixes": "refused (policy B is not selected)"
+    },
+    "temporal_rule": {
+      "rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
+      "cutoff_epoch": 1735689600,
+      "rejects": "a missing or unparseable author or committer timestamp; an author timestamp later than the committer timestamp; a buggy-commit committer timestamp later than the fixed commit's; a commit timestamp later than the evidence retrieval",
+      "status": "contamination-risk mitigation only; it does not show that no model saw the code"
+    },
+    "integrity": "record_sha256 detects accidental modification only; it is a self-hash, not a signature. Downstream use must keep the evidence sidecar, reload the same frozen universe, rerun check_candidate and compare the record byte for byte (revalidate_isolation_record)",
     "coverage": {
       "covered": true,
       "problems": [],
@@ -129,9 +141,9 @@
         }
       }
     },
-    "reference_universe_receipt_path": "results/v4_3_reference_universe_receipt.json",
-    "reference_universe_receipt_sha256": "c3fabc474c48b403d08356265f123eed86b0cb3b59516e375df7b4bfc8c93603",
-    "reference_universe_receipt_file_sha256": "184b512b311d12e95812c05fd0ad55b9f39775dfecade54f67cc38f1d0ac19c0",
+    "reference_universe_receipt_file": "results/next_direction_bundle/generations/<current>/reference_universe_receipt.json",
+    "reference_universe_receipt_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
+    "reference_universe_receipt_file_sha256": "01077dc15bb260946122fd3b3c969798743b84287ca827b8af7f57ef1edc637f",
     "frozen_universe_verification": {
       "canonical_sources_verified": 10,
       "code_inputs_verified": 7,
@@ -285,9 +297,11 @@
     },
     "self_checks": {
       "known_benchmark_patch_in_excluded_repository_refused": {
-        "isolation_version": "oneiros_repository_isolation_v3",
-        "reference_universe_sha256": "c3fabc474c48b403d08356265f123eed86b0cb3b59516e375df7b4bfc8c93603",
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
         "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
         "admissible": false,
         "reasons": [
           "repository_in_reference_universe:tqdm/tqdm",
@@ -304,6 +318,7 @@
             "patch_near_duplicate_of_known_bug"
           ]
         },
+        "authentication_passed": true,
         "evidence": {
           "repository": "tqdm/tqdm",
           "repository_url": "https://github.com/tqdm/tqdm",
@@ -313,12 +328,12 @@
           "fork_parent": "",
           "fork_parent_id": "",
           "fork_parent_node_id": "",
-          "buggy_commit": "ad191eab3dbc6ce75121964d22f92763185d380f",
-          "fixed_commit": "03261a21cc62be7a74327f87f5a8606be96ecd38",
+          "buggy_commit": "d71edf23d00273fd4d3a4f81df329e2e3f9a326d",
+          "fixed_commit": "dc377ddcb11d4d2c12e746ad901a64670642d9df",
           "target_file": "tqdm/contrib/__init__.py",
           "target_module": "contrib",
-          "target_blob_buggy": "8aeda75ee2a3701c882c6990f29ef09485fd0045",
-          "target_blob_fixed": "73c4e8aae6a4c3221e1f352f2811119120f2337b",
+          "target_blob_buggy": "e8fc9ffbfb9c4434fe342942427447257f757b5a",
+          "target_blob_fixed": "88a15bef9240686deb81ff7b47388e177fefe987",
           "issue_id": "tqdm/tqdm#1",
           "licence_spdx": "MIT",
           "licence_path": "LICENSE",
@@ -337,48 +352,81 @@
             "etag": "\"synthetic\""
           },
           "git_objects": [
-            "03261a21cc62be7a74327f87f5a8606be96ecd38",
-            "0fcf1714b7e1e8a4227c2d86bf34da7cacb2f517",
+            "224b96b097f6c9ca754c622e5a50fcb855e43ab3",
+            "35dc896dae5b01e5d891182c480fb23490b54709",
+            "3909d71cc7d06e9933d2ea28c6bb1508c8c1c6e0",
             "529be11d08524096c89333d593c8785f043f91c1",
             "529be11d08524096c89333d593c8785f043f91c1",
-            "623607865afb693afc39bfe3d37e9ab6e797c038",
-            "73c4e8aae6a4c3221e1f352f2811119120f2337b",
-            "78327d0e79ddc5e925aa47f79fa8f57aa12ce54e",
-            "8aeda75ee2a3701c882c6990f29ef09485fd0045",
-            "ad191eab3dbc6ce75121964d22f92763185d380f",
-            "dd6f6830777f4407b5861879b363984d13b10f05",
-            "ff24a1ab7907e3fb8df9cbd4ff1f3723914cce92",
-            "fffc0ed18642ec08df7fc1dc0d10b1f5d7b326e4"
+            "6fc1913faf865dfde954a710ba4e4be29e2891c4",
+            "800b4698ca0848b353f8544da0f67ed9882a76ab",
+            "88a15bef9240686deb81ff7b47388e177fefe987",
+            "b8c13d06a0f66f7379a2b03cf575df40253fe5b7",
+            "d71edf23d00273fd4d3a4f81df329e2e3f9a326d",
+            "dc377ddcb11d4d2c12e746ad901a64670642d9df",
+            "e8fc9ffbfb9c4434fe342942427447257f757b5a"
           ]
         },
         "derived_from_verified_evidence": {
+          "diff_policy": "A_direct_parent_single_target_file",
+          "fixed_commit_author_epoch": 1740787200,
           "fixed_commit_committer_epoch": 1740787200,
-          "buggy_commit_committer_epoch": 1740783600
+          "temporal_rule_satisfied": true,
+          "changed_files": [
+            "tqdm/contrib/__init__.py"
+          ],
+          "canonical_diff_sha256": "ce7da8a7813d013ab4b39d90344ec81ee372add391168b06906996750cdb71d5",
+          "canonical_patch_hash": "ba65252ea1b8fbfa65e61c579ceefee40230e23f0e819e04f3f83af656ff3f1a",
+          "changed_hunks": [
+            {
+              "op": "replace",
+              "buggy": [
+                6,
+                6
+              ],
+              "fixed": [
+                6,
+                6
+              ]
+            }
+          ],
+          "submitted_patch_sha256": "ce7da8a7813d013ab4b39d90344ec81ee372add391168b06906996750cdb71d5",
+          "submitted_patch_matches_derived_diff": true,
+          "target_qualname": "tenumerate",
+          "target_span_buggy": [
+            1,
+            6
+          ],
+          "target_span_fixed": [
+            1,
+            6
+          ]
         },
         "patch_sha256": "ba65252ea1b8fbfa65e61c579ceefee40230e23f0e819e04f3f83af656ff3f1a",
+        "patch_checks": "run_on_derived_diff",
         "nearest_patch": {
           "reference": "bugsinpy::tqdm::1",
           "jaccard": 1.0
         },
         "nearest_function": {
-          "reference": "train::official-repository::youtube-dl::43::test/test_utils.py__TestUtil__test_url_basename::code_under_test#51",
-          "jaccard": 0.0259
+          "reference": "bugsinpy::tqdm::1#0",
+          "jaccard": 0.1343
         },
-        "target_function_fingerprint": "2d17bd40bf69518c1f22aeafa2082bc568fde80be85dbc21cab5bd7de77168af",
+        "target_function_fingerprint": "3e1453dadedac20f0958d9dc00034450c180e5fbc6e0c7e9c7a52b92fd729ce4",
         "same_organisation_as_excluded": [
           "tqdm/tqdm"
         ],
         "threshold": 0.8,
-        "record_sha256": "2d36fd9f547eb277afb8708337eb822949e197e4050cb86bffd70ff8b6abacf9",
+        "record_sha256": "a1fa132a0aec763116a93653b88ccb83b06e793fd6c8f3117a89f2a89d2609e7",
         "self_check_passed": true
       },
       "renamed_mbpp_function_refused": {
-        "isolation_version": "oneiros_repository_isolation_v3",
-        "reference_universe_sha256": "c3fabc474c48b403d08356265f123eed86b0cb3b59516e375df7b4bfc8c93603",
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
         "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
         "admissible": false,
         "reasons": [
-          "patch_near_duplicate_of_known_bug",
           "function_near_duplicate_of_reference"
         ],
         "insufficient_evidence": false,
@@ -386,10 +434,10 @@
           "schema": [],
           "authentication": [],
           "overlap": [
-            "patch_near_duplicate_of_known_bug",
             "function_near_duplicate_of_reference"
           ]
         },
+        "authentication_passed": true,
         "evidence": {
           "repository": "example-org/ranges",
           "repository_url": "https://github.com/example-org/ranges",
@@ -400,11 +448,11 @@
           "fork_parent_id": "",
           "fork_parent_node_id": "",
           "buggy_commit": "2c4dda099e211ca6de2738ba1a7b5e1f91d0fc46",
-          "fixed_commit": "dd7e9c017eb1ff062a0b3b3e100f188a5ca2d579",
+          "fixed_commit": "ca9409306aa6b4f3422bb4c155ca4f7f568d6c53",
           "target_file": "src/paths.py",
           "target_module": "paths",
           "target_blob_buggy": "ecb0211e295926370087ccdd55db821d934210b2",
-          "target_blob_fixed": "a7f1a4708bd4ba2f78b98c2010b68863c9da8c95",
+          "target_blob_fixed": "5ad6caa44e96a90cf7242f50520624a8b73a6952",
           "issue_id": "example-org/ranges#1",
           "licence_spdx": "MIT",
           "licence_path": "LICENSE",
@@ -423,26 +471,58 @@
             "etag": "\"synthetic\""
           },
           "git_objects": [
+            "0c72db510a0e90727ee910a4ae1f814fe24706f5",
+            "2a8b4a5074b908997fbbca3820da680575c4ec61",
             "2c4dda099e211ca6de2738ba1a7b5e1f91d0fc46",
             "529be11d08524096c89333d593c8785f043f91c1",
             "529be11d08524096c89333d593c8785f043f91c1",
+            "5ad6caa44e96a90cf7242f50520624a8b73a6952",
             "894f8c41a4ad49bbc2aad40cea8720878620ca16",
-            "8e1b2190663f745e569c57c1ddf74b72e088ad5c",
-            "a7f1a4708bd4ba2f78b98c2010b68863c9da8c95",
-            "ccfec94deb7bc1c488dfc3b2b3e32cf003ad06f1",
-            "dd7e9c017eb1ff062a0b3b3e100f188a5ca2d579",
+            "ca9409306aa6b4f3422bb4c155ca4f7f568d6c53",
             "ecb0211e295926370087ccdd55db821d934210b2",
             "f8210015c9f9effd2b315aa1c51eb3c854241e3c"
           ]
         },
         "derived_from_verified_evidence": {
+          "diff_policy": "A_direct_parent_single_target_file",
+          "fixed_commit_author_epoch": 1740787200,
           "fixed_commit_committer_epoch": 1740787200,
-          "buggy_commit_committer_epoch": 1740783600
+          "temporal_rule_satisfied": true,
+          "changed_files": [
+            "src/paths.py"
+          ],
+          "canonical_diff_sha256": "56ae6d60e7c4ca9e428a262b6c2587b5c61ab9d332a26c3091c0860acfd39ecb",
+          "canonical_patch_hash": "d94544bf8ccca8df1dd4cb2445b2ceed0fe1af8555be4c76dfdc2d578a23258c",
+          "changed_hunks": [
+            {
+              "op": "insert",
+              "buggy": [
+                2,
+                1
+              ],
+              "fixed": [
+                2,
+                2
+              ]
+            }
+          ],
+          "submitted_patch_sha256": "56ae6d60e7c4ca9e428a262b6c2587b5c61ab9d332a26c3091c0860acfd39ecb",
+          "submitted_patch_matches_derived_diff": true,
+          "target_qualname": "cheapest_path",
+          "target_span_buggy": [
+            1,
+            11
+          ],
+          "target_span_fixed": [
+            1,
+            12
+          ]
         },
-        "patch_sha256": "41a5840330c28b779d274fd3c230ee72e2dad079dd98ef9ba62b7106cc306a06",
+        "patch_sha256": "d94544bf8ccca8df1dd4cb2445b2ceed0fe1af8555be4c76dfdc2d578a23258c",
+        "patch_checks": "run_on_derived_diff",
         "nearest_patch": {
-          "reference": "bugsinpy::ansible::17",
-          "jaccard": 1.0
+          "reference": null,
+          "jaccard": 0.0
         },
         "nearest_function": {
           "reference": "mbpp::1#0",
@@ -451,13 +531,15 @@
         "target_function_fingerprint": "49ea58fa043e3a5c00b661991c102d204fd622e88eb26af1d4fbb5d69ff9dd17",
         "same_organisation_as_excluded": [],
         "threshold": 0.8,
-        "record_sha256": "ccade3745fd7160da40f2295463189d75b90d5a30fbeb9ddcf21fbaab69116d9",
+        "record_sha256": "dd6b1a9a9c4db918547285027301aac8e3ca4303d793d10c5c8650906e632feb",
         "self_check_passed": true
       },
       "fork_of_excluded_repository_refused": {
-        "isolation_version": "oneiros_repository_isolation_v3",
-        "reference_universe_sha256": "c3fabc474c48b403d08356265f123eed86b0cb3b59516e375df7b4bfc8c93603",
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
         "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
         "admissible": false,
         "reasons": [
           "fork_parent_in_reference_universe:pandas-dev/pandas"
@@ -470,6 +552,7 @@
             "fork_parent_in_reference_universe:pandas-dev/pandas"
           ]
         },
+        "authentication_passed": true,
         "evidence": {
           "repository": "example-org/ranges",
           "repository_url": "https://github.com/example-org/ranges",
@@ -516,10 +599,42 @@
           ]
         },
         "derived_from_verified_evidence": {
+          "diff_policy": "A_direct_parent_single_target_file",
+          "fixed_commit_author_epoch": 1740787200,
           "fixed_commit_committer_epoch": 1740787200,
-          "buggy_commit_committer_epoch": 1740783600
+          "temporal_rule_satisfied": true,
+          "changed_files": [
+            "src/ranges.py"
+          ],
+          "canonical_diff_sha256": "ec609d3603281b53ad4776571965c779f0ecaf33dd8e1285beac5b2609a33537",
+          "canonical_patch_hash": "0b00b464e740767902f151afd112980269ca637e68e6f783a08ebb6e73f9b623",
+          "changed_hunks": [
+            {
+              "op": "replace",
+              "buggy": [
+                5,
+                5
+              ],
+              "fixed": [
+                5,
+                5
+              ]
+            }
+          ],
+          "submitted_patch_sha256": "ec609d3603281b53ad4776571965c779f0ecaf33dd8e1285beac5b2609a33537",
+          "submitted_patch_matches_derived_diff": true,
+          "target_qualname": "merge_ranges",
+          "target_span_buggy": [
+            1,
+            9
+          ],
+          "target_span_fixed": [
+            1,
+            9
+          ]
         },
         "patch_sha256": "0b00b464e740767902f151afd112980269ca637e68e6f783a08ebb6e73f9b623",
+        "patch_checks": "run_on_derived_diff",
         "nearest_patch": {
           "reference": null,
           "jaccard": 0.0
@@ -531,13 +646,256 @@
         "target_function_fingerprint": "b7aa9433e92524a87ac59e47c64de68a7d42a6514b550ef1cd102e68961491ea",
         "same_organisation_as_excluded": [],
         "threshold": 0.8,
-        "record_sha256": "31925d113d35a5bcbf984bbde101d0c87664e8d6612d690a8c7b99b5b3991a83",
+        "record_sha256": "cfa0dbd71aa64f9fd64b094a81f0b2ab0d244de7c6180ea8109b11144c5a93b0",
+        "self_check_passed": true
+      },
+      "partial_patch_with_only_an_unrelated_change_refused": {
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
+        "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
+        "admissible": false,
+        "reasons": [
+          "insufficient_isolation_evidence:authentication:submitted_patch_does_not_match_derived_diff"
+        ],
+        "insufficient_evidence": true,
+        "stages": {
+          "schema": [],
+          "authentication": [
+            "insufficient_isolation_evidence:authentication:submitted_patch_does_not_match_derived_diff"
+          ],
+          "overlap": []
+        },
+        "authentication_passed": false,
+        "evidence": {
+          "repository": "example-org/ranges",
+          "repository_url": "https://github.com/example-org/ranges",
+          "repository_id": "123456",
+          "repository_node_id": "R_exampleorgrangesnode",
+          "fork_status": "not_fork",
+          "fork_parent": "",
+          "fork_parent_id": "",
+          "fork_parent_node_id": "",
+          "buggy_commit": "f169a07eb30f3cd0ae51056d75c8b394afc2f79e",
+          "fixed_commit": "81af007945fd6649ced2adba8fbbf6a8f9431a1f",
+          "target_file": "src/ranges.py",
+          "target_module": "ranges",
+          "target_blob_buggy": "fc8a206434af44546348e4912109765a35b932c9",
+          "target_blob_fixed": "ef5b5b6483d0ef5085fe4d43613a8ab963955934",
+          "issue_id": "example-org/ranges#1",
+          "licence_spdx": "MIT",
+          "licence_path": "LICENSE",
+          "licence_blob": "529be11d08524096c89333d593c8785f043f91c1",
+          "licence_sha256": "74c785b41143247e880eb278ca9d887cb7ae191615c5bca467f0cf980ca8b60d",
+          "repository_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges",
+            "sha256": "fc6a640eb52552be9b37766de3f513afe33d9347bacba257010ba8bc28bec401",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "issue_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges/issues/1",
+            "sha256": "b7b72a4ea84bbcdddf0db64d02e8aee58b7b1352a3067b1a6f130bcc32c3f078",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "git_objects": [
+            "0c058ae7bcb50fd19eb1a83cc6536a0096a7894a",
+            "4fa48790fdaa9a7f9ace9d9d2035edc4b7cf2b90",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "81af007945fd6649ced2adba8fbbf6a8f9431a1f",
+            "b9a8cf71e03714b3e108c9550d7993070ea1149b",
+            "ef5b5b6483d0ef5085fe4d43613a8ab963955934",
+            "f169a07eb30f3cd0ae51056d75c8b394afc2f79e",
+            "fc8a206434af44546348e4912109765a35b932c9",
+            "fd2779079047f9167e4fe4e4ce399c4db4f35759"
+          ]
+        },
+        "derived_from_verified_evidence": {
+          "diff_policy": "A_direct_parent_single_target_file",
+          "fixed_commit_author_epoch": 1740787200,
+          "fixed_commit_committer_epoch": 1740787200,
+          "temporal_rule_satisfied": true,
+          "changed_files": [
+            "src/ranges.py"
+          ],
+          "canonical_diff_sha256": "fbceafb83457e1f2a78cb7d006d10e7358530214f1a54875b426850abdd30fac",
+          "canonical_patch_hash": "d98476a6462f97a19ef5c5190ef5270aeed67d2de5b76fd9b080831210e4bf5f",
+          "changed_hunks": [
+            {
+              "op": "replace",
+              "buggy": [
+                1,
+                1
+              ],
+              "fixed": [
+                1,
+                1
+              ]
+            },
+            {
+              "op": "replace",
+              "buggy": [
+                8,
+                8
+              ],
+              "fixed": [
+                8,
+                8
+              ]
+            }
+          ],
+          "submitted_patch_sha256": "ca73dd45ff504df02a9332f3444e478dca47215ae206f7bcfee3c2aee761421d",
+          "submitted_patch_matches_derived_diff": false,
+          "target_qualname": "merge_ranges",
+          "target_span_buggy": [
+            4,
+            12
+          ],
+          "target_span_fixed": [
+            4,
+            12
+          ]
+        },
+        "patch_sha256": "d98476a6462f97a19ef5c5190ef5270aeed67d2de5b76fd9b080831210e4bf5f",
+        "patch_checks": "run_on_derived_diff",
+        "nearest_patch": {
+          "reference": null,
+          "jaccard": 0.0
+        },
+        "nearest_function": {
+          "reference": "train::official-repository::youtube-dl::43::test/test_utils.py__TestUtil__test_url_basename::code_under_test#51",
+          "jaccard": 0.0259
+        },
+        "target_function_fingerprint": "b7aa9433e92524a87ac59e47c64de68a7d42a6514b550ef1cd102e68961491ea",
+        "same_organisation_as_excluded": [],
+        "threshold": 0.8,
+        "record_sha256": "f4a2d58496454dfba43b9e3a0a776834594113a6277fa3bdeb58ede31cbbf52d",
+        "self_check_passed": true
+      },
+      "fix_before_temporal_cutoff_refused": {
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
+        "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
+        "admissible": false,
+        "reasons": [
+          "insufficient_isolation_evidence:authentication:fixed_commit_before_temporal_cutoff"
+        ],
+        "insufficient_evidence": true,
+        "stages": {
+          "schema": [],
+          "authentication": [
+            "insufficient_isolation_evidence:authentication:fixed_commit_before_temporal_cutoff"
+          ],
+          "overlap": []
+        },
+        "authentication_passed": false,
+        "evidence": {
+          "repository": "example-org/ranges",
+          "repository_url": "https://github.com/example-org/ranges",
+          "repository_id": "123456",
+          "repository_node_id": "R_exampleorgrangesnode",
+          "fork_status": "not_fork",
+          "fork_parent": "",
+          "fork_parent_id": "",
+          "fork_parent_node_id": "",
+          "buggy_commit": "50eaaa401ad77e2487bf03e7795264bb32e7fd05",
+          "fixed_commit": "027219bc10a67ab46ab5f914ae07bfadf2f392bd",
+          "target_file": "src/ranges.py",
+          "target_module": "ranges",
+          "target_blob_buggy": "73005b34fbc999993c420bb0defe47655b332e36",
+          "target_blob_fixed": "fae3781c4e058154466052c212beab6cebec0b00",
+          "issue_id": "example-org/ranges#1",
+          "licence_spdx": "MIT",
+          "licence_path": "LICENSE",
+          "licence_blob": "529be11d08524096c89333d593c8785f043f91c1",
+          "licence_sha256": "74c785b41143247e880eb278ca9d887cb7ae191615c5bca467f0cf980ca8b60d",
+          "repository_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges",
+            "sha256": "fc6a640eb52552be9b37766de3f513afe33d9347bacba257010ba8bc28bec401",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "issue_metadata": {
+            "url": "https://api.github.com/repos/example-org/ranges/issues/1",
+            "sha256": "b7b72a4ea84bbcdddf0db64d02e8aee58b7b1352a3067b1a6f130bcc32c3f078",
+            "retrieved_utc": "2026-09-25T00:00:00Z",
+            "etag": "\"synthetic\""
+          },
+          "git_objects": [
+            "027219bc10a67ab46ab5f914ae07bfadf2f392bd",
+            "346b623d7b6d7f7a8b7c1e811f0d4b471b311cd4",
+            "50eaaa401ad77e2487bf03e7795264bb32e7fd05",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "529be11d08524096c89333d593c8785f043f91c1",
+            "73005b34fbc999993c420bb0defe47655b332e36",
+            "b2a80f3efc811b4f70a37f5b83b83862c71cdcc3",
+            "c52eed80566edee0a49724d8c68a4069d3e2385d",
+            "e6bd81ebace7ba3738f6729c56a1d1e82d3c2e3a",
+            "fae3781c4e058154466052c212beab6cebec0b00"
+          ]
+        },
+        "derived_from_verified_evidence": {
+          "diff_policy": "A_direct_parent_single_target_file",
+          "fixed_commit_author_epoch": 1735689599,
+          "fixed_commit_committer_epoch": 1735689599,
+          "temporal_rule_satisfied": false,
+          "changed_files": [
+            "src/ranges.py"
+          ],
+          "canonical_diff_sha256": "ec609d3603281b53ad4776571965c779f0ecaf33dd8e1285beac5b2609a33537",
+          "canonical_patch_hash": "0b00b464e740767902f151afd112980269ca637e68e6f783a08ebb6e73f9b623",
+          "changed_hunks": [
+            {
+              "op": "replace",
+              "buggy": [
+                5,
+                5
+              ],
+              "fixed": [
+                5,
+                5
+              ]
+            }
+          ],
+          "submitted_patch_sha256": "ec609d3603281b53ad4776571965c779f0ecaf33dd8e1285beac5b2609a33537",
+          "submitted_patch_matches_derived_diff": true,
+          "target_qualname": "merge_ranges",
+          "target_span_buggy": [
+            1,
+            9
+          ],
+          "target_span_fixed": [
+            1,
+            9
+          ]
+        },
+        "patch_sha256": "0b00b464e740767902f151afd112980269ca637e68e6f783a08ebb6e73f9b623",
+        "patch_checks": "run_on_derived_diff",
+        "nearest_patch": {
+          "reference": null,
+          "jaccard": 0.0
+        },
+        "nearest_function": {
+          "reference": "train::official-repository::youtube-dl::43::test/test_utils.py__TestUtil__test_url_basename::code_under_test#51",
+          "jaccard": 0.0259
+        },
+        "target_function_fingerprint": "b7aa9433e92524a87ac59e47c64de68a7d42a6514b550ef1cd102e68961491ea",
+        "same_organisation_as_excluded": [],
+        "threshold": 0.8,
+        "record_sha256": "48e99bcb55635831263713931bb3a75b103000738e57c13f58e2bbb95d4098ff",
         "self_check_passed": true
       },
       "novel_fully_evidenced_candidate_admitted": {
-        "isolation_version": "oneiros_repository_isolation_v3",
-        "reference_universe_sha256": "c3fabc474c48b403d08356265f123eed86b0cb3b59516e375df7b4bfc8c93603",
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
         "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
         "admissible": true,
         "reasons": [],
         "insufficient_evidence": false,
@@ -546,6 +904,7 @@
           "authentication": [],
           "overlap": []
         },
+        "authentication_passed": true,
         "evidence": {
           "repository": "example-org/ranges",
           "repository_url": "https://github.com/example-org/ranges",
@@ -592,10 +951,42 @@
           ]
         },
         "derived_from_verified_evidence": {
+          "diff_policy": "A_direct_parent_single_target_file",
+          "fixed_commit_author_epoch": 1740787200,
           "fixed_commit_committer_epoch": 1740787200,
-          "buggy_commit_committer_epoch": 1740783600
+          "temporal_rule_satisfied": true,
+          "changed_files": [
+            "src/ranges.py"
+          ],
+          "canonical_diff_sha256": "ec609d3603281b53ad4776571965c779f0ecaf33dd8e1285beac5b2609a33537",
+          "canonical_patch_hash": "0b00b464e740767902f151afd112980269ca637e68e6f783a08ebb6e73f9b623",
+          "changed_hunks": [
+            {
+              "op": "replace",
+              "buggy": [
+                5,
+                5
+              ],
+              "fixed": [
+                5,
+                5
+              ]
+            }
+          ],
+          "submitted_patch_sha256": "ec609d3603281b53ad4776571965c779f0ecaf33dd8e1285beac5b2609a33537",
+          "submitted_patch_matches_derived_diff": true,
+          "target_qualname": "merge_ranges",
+          "target_span_buggy": [
+            1,
+            9
+          ],
+          "target_span_fixed": [
+            1,
+            9
+          ]
         },
         "patch_sha256": "0b00b464e740767902f151afd112980269ca637e68e6f783a08ebb6e73f9b623",
+        "patch_checks": "run_on_derived_diff",
         "nearest_patch": {
           "reference": null,
           "jaccard": 0.0
@@ -607,13 +998,15 @@
         "target_function_fingerprint": "b7aa9433e92524a87ac59e47c64de68a7d42a6514b550ef1cd102e68961491ea",
         "same_organisation_as_excluded": [],
         "threshold": 0.8,
-        "record_sha256": "dee4c98b4f89d2b8288245ead2055482557efaa86dc1a9e78b409249ab9a4976",
+        "record_sha256": "bb98aa21ee4db1db9760db427b727e43334832eb50f2b239375c3a00a4fb3fab",
         "self_check_passed": true
       },
       "evidence_free_candidate_refused": {
-        "isolation_version": "oneiros_repository_isolation_v3",
-        "reference_universe_sha256": "c3fabc474c48b403d08356265f123eed86b0cb3b59516e375df7b4bfc8c93603",
+        "isolation_version": "oneiros_repository_isolation_v4",
+        "reference_universe_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
         "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
+        "diff_policy": "A_direct_parent_single_target_file",
+        "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
         "admissible": false,
         "reasons": [
           "insufficient_isolation_evidence:repository_url_unverified_or_inconsistent",
@@ -680,6 +1073,7 @@
           ],
           "overlap": []
         },
+        "authentication_passed": false,
         "evidence": {
           "repository": "example-org/ranges",
           "repository_url": "",
@@ -716,6 +1110,7 @@
         },
         "derived_from_verified_evidence": {},
         "patch_sha256": null,
+        "patch_checks": "not_run:no_authenticated_diff",
         "nearest_patch": {
           "reference": null,
           "jaccard": 0.0
@@ -727,7 +1122,7 @@
         "target_function_fingerprint": null,
         "same_organisation_as_excluded": [],
         "threshold": 0.8,
-        "record_sha256": "a6ad3360a680837f8ff2ee6d069bcf2471e715284581d61f9ff5fbf6ad6c6489",
+        "record_sha256": "c1aa17a929349c674d0093d9ff3040b1a7798c0b7ce15211ae6c6c8206dcba58",
         "self_check_passed": true
       },
       "arbitrary_receipt_hash_refused": {
@@ -738,9 +1133,11 @@
     },
     "self_checks_pass": true
   },
+  "publication": "crash-safe bundle: receipt, design and the verified power artifact are one immutable generation under results/next_direction_bundle, selected by its CURRENT pointer; readers accept only a complete manifest-verified generation (harness/atomic_publish.py)",
   "power_analysis": {
     "path": "results/v4_3_repository_native_power_analysis.json",
-    "sha256": "9bfc49fef90d397a58b050753c3dee7aa942bca3ac3983831cce1e497abbf47c",
+    "bundle_copy": "repository_native_power_analysis.json",
+    "sha256": "c98d49ddcd85e07659323c088cff0967e104ae71f2603155d552635cc0ba05f1",
     "verified_by_recomputation": true,
     "recommendation": {
       "composition_requirement": "at most 12 targets per repository; the draft 8% cap allows 32 per repository at N=400 and is insufficient",
@@ -880,7 +1277,7 @@
     "cpus": "32",
     "memory_gb": "62",
     "free_disk": "952G",
-    "probed_utc": "2026-09-25T11:22:53.608664+00:00"
+    "probed_utc": "2026-09-25T15:51:45.179775+00:00"
   },
   "decision_memo": {
     "closed_lines": [
@@ -902,8 +1299,8 @@
   "repository_native_protocol": {
     "status": "draft; no candidate mined, no split created",
     "candidate_sources": {
-      "strategy": "independently mined bug-fix commits from permissively licensed, pure-Python, pytest-tested GitHub repositories outside the exclusion universe, with fixes merged on or after 2025-01-01",
-      "temporal_rule": "fix commit authored and merged on or after 2025-01-01, after the Qwen2.5-Coder release. This is contamination-risk MITIGATION only: it does not show that the model has never seen the repository, the buggy code or a similar fix, and it is never described as proof",
+      "strategy": "independently mined bug-fix commits from permissively licensed, pure-Python, pytest-tested GitHub repositories outside the exclusion universe, whose fixed commit was committed on or after 2025-01-01 (committer timestamp)",
+      "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z, enforced at admission; missing, unparseable or contradictory timestamps (author after committer, buggy commit after fix, commit after evidence retrieval) are refused. The earlier 'authored and merged' wording is withdrawn: PR merge evidence cannot be made reliable for every candidate. This is contamination-risk MITIGATION only: it does not show that the model has never seen the repository, the buggy code or a similar fix",
       "not_used_and_why": {
         "BugsInPy": "all 17 projects are in the exclusion universe",
         "SWE-bench / SWE-bench Verified": "same 12 repositories; in the exclusion universe",
@@ -966,14 +1363,16 @@
       "function_lineage": "target function Jaccard < 0.80 against every indexed reference function; nearest match, score and fingerprint recorded",
       "within_set": "one target per fix commit and function lineage; pairwise near-duplicate check within the new set",
       "coverage": "audit_source_coverage decides which sources require indexing from the corpus manifest bound in the universe, records its SHA-256 and re-verifies it on disk; an unknown, unindexed or zero-count source fails; the manifest, utils/dataset_identity.py, the curated definition and every module that affects classification, normalisation, curated-seed identification or train-view loading are bound in the receipt",
-      "receipt": "decisions are made only against a FrozenReferenceUniverse: loading rebuilds the universe, requires its collections and collection hashes to equal the receipt's, verifies the internal receipt hash, re-hashes every input file, code input and canonical source, and recomputes coverage; any mismatch refuses. check_candidate takes that object and reads the receipt hash from it; no caller can supply a hash. isolation_record_is_current accepts only the same verified universe and an unmodified record digest",
+      "receipt": "decisions are made only against a FrozenReferenceUniverse: the receipt also freezes the diff policy and the temporal rule; loading rebuilds the universe, requires its collections and collection hashes to equal the receipt's, verifies the internal receipt hash, re-hashes every input file, code input and canonical source, and recomputes coverage; any mismatch refuses. check_candidate takes that object and reads the receipt hash from it; no caller can supply a hash. isolation_record_is_current accepts only the same verified universe and an unmodified record digest",
       "stages": {
         "1_evidence_schema": "every mandatory field present and well formed (evidence_problems)",
-        "2_evidence_authentication": "offline cross-checks of acquired evidence (authentication_problems): repository and issue API responses re-hashed and their full_name, id, node_id, html_url, fork, parent{full_name,id,node_id}, license.spdx_id, number, url and repository_url compared with the declared identity; git commit, tree and blob objects re-hashed to their IDs; the fixed commit's parent must be the buggy commit; the licence file and target file must resolve through the commit trees to the recorded blobs, whose contents must match the licence hash, the target function and the patch's removed/added lines",
-        "3_source_universe_overlap": "repository, fork parent, commit, issue, patch and function similarity against the frozen universe (overlap_problems)",
+        "2_evidence_authentication": "offline cross-checks of acquired evidence (authentication_problems): repository and issue API responses re-hashed and compared with the declared identity; git objects re-hashed to their IDs; diff policy A: the fixed commit's only parent is the buggy commit and the authenticated trees show exactly one changed path, the target file; the canonical diff is DERIVED from the authenticated target blobs and the submitted patch must carry exactly its removed/added lines; a derived hunk must overlap the declared target function and its normalised body must change; the temporal rule is proved from the commit timestamps",
+        "3_source_universe_overlap": "repository, fork parent, commit and issue against the frozen universe; patch identity and near-duplicate checks use ONLY the derived diff; function similarity uses the declared target function (proved present and changed in stage 2)",
         "later_network_acquisition": "a separate, separately approved step (D1) that fetches and stores the evidence listed in ACQUISITION_REQUIREMENTS; nothing in the checker makes a network call"
       },
-      "curated_seeds": "all ten CURATED_BUGSINPY_BUGS definitions are indexed: a conservative source superset of the eight corpus seeds (seven in train, the eighth one of black_1, cookiecutter_1, scrapy_1); no non-train record opened"
+      "curated_seeds": "all ten CURATED_BUGSINPY_BUGS definitions are indexed: a conservative source superset of the eight corpus seeds (seven in train, the eighth one of black_1, cookiecutter_1, scrapy_1); no non-train record opened",
+      "diff_policy": "A (frozen): direct-parent, single-target-file fixes only; multi-file fixes are refused; the derived diff's SHA-256, changed-file list, hunks and target-function spans are stored in the isolation record",
+      "integrity": "record_sha256 detects accidental modification only; it is not a signature. Dataset construction must keep each candidate's evidence sidecar, reload the same FrozenReferenceUniverse, rerun check_candidate and compare the record byte for byte (revalidate_isolation_record); an edited record is rejected even with a recomputed record_sha256"
     },
     "licensing_and_reproducibility": {
       "licences_admitted": [
@@ -1125,9 +1524,10 @@
     },
     "receipts": {
       "per_target": [
-        "repository and licence",
-        "buggy/fixed commit and tree hashes",
-        "isolation record",
+        "repository and issue API responses with hashes and retrieval timestamps",
+        "commit, tree and blob objects; licence blob and hash",
+        "derived canonical diff SHA-256, changed files and target-function spans",
+        "isolation record (frozen-universe receipt hash, record digest) and evidence sidecar",
         "environment lock and interpreter",
         "official-test qualification runs",
         "prompt hash and leakage scan"
@@ -1141,7 +1541,8 @@
         "Atheris logs, corpora sizes, coverage and seeds",
         "WSL distribution, kernel, CPU and memory"
       ],
-      "rollback": "no artifact is overwritten; a failed run is preserved and marked invalid; the one-time set is sealed by hash before any model sees it and is never re-evaluated after a protocol change"
+      "rollback": "no artifact is overwritten; a failed run is preserved and marked invalid; the one-time set is sealed by hash before any model sees it and is never re-evaluated after a protocol change",
+      "publication": "generated design artifacts are published as one immutable generation under results/next_direction_bundle (receipt, design, verified power copy, manifest), selected by replacing a single CURRENT pointer; readers accept only a complete manifest-verified generation; accepted generations are never overwritten"
     }
   },
   "sampling_budget_protocol": {
@@ -1290,7 +1691,7 @@
   "required_user_decisions": [
     {
       "id": "D1",
-      "decision": "approve network mining of GitHub repositories, acquisition and hash-binding of repository/issue API responses and git objects, and the temporal rule (fixes on or after 2025-01-01, mitigation only)"
+      "decision": "approve network mining of GitHub repositories, acquisition and hash-binding of repository/issue API responses and git objects, and the temporal rule (fixed-commit committer timestamp on or after 2025-01-01; mitigation only)"
     },
     {
       "id": "D2",
@@ -1314,7 +1715,7 @@
     },
     {
       "id": "D7",
-      "decision": "accept that disjointness is enforced against the complete indexed source universe, with every decision bound to a FrozenReferenceUniverse verified against the receipt (pending)"
+      "decision": "accept that disjointness is enforced against the complete indexed source universe: decisions bound to a verified FrozenReferenceUniverse, patch lineage taken from the authenticated derived diff, and records trusted only after revalidation (pending)"
     },
     {
       "id": "D8",
@@ -1368,7 +1769,7 @@
     }
   ],
   "source_files_sha256": {
-    "harness/repository_isolation.py": "dd4da1f0ce975fbba55cc01008f9d8723127349525b101347c4598c39f3e2ee4",
+    "harness/repository_isolation.py": "9b60e64170b012bb45d54d7c9010eddb68d3620cc9404d259b3c1b0bd62f65b2",
     "harness/source_identity.py": "619d28f5131fc5f268c1a53992b767ca57f566c8408ca88ef5ba7babb40a3f2c",
     "scripts/audit_cross_split_near_duplicates.py": "702e58a7f65b350ec9f3172234e89c717d37394f77adfcd5f5439027c4340c7d",
     "harness/bugsinpy_loader.py": "6c54a924d6943f0fd591f08df8745040627fd57e79870e63a847bb28367e7cd6",
@@ -1377,12 +1778,12 @@
     "harness/corpus_view.py": "6c1c90909a8a92a3996ced782ed0acaffaf17fd54b716498bbfe552ecd2908b0",
     "harness/corpus.py": "1c9148bc6946031f0cb9af69405f64b385417e8cf71345cd5e84aa831d5a32d3",
     "harness/function_complexity.py": "83c6e3dfa21374555ce35454838d0fe16668f407f241d05417918d428ca63497",
-    "scripts/build_next_direction_design.py": "43df7dd1da64e1b0f0377e4dbfb6969ad02f489ac6cbb846f0f6dabbca766c51",
-    "harness/isolation_evidence_fixtures.py": "4f9c0e1ce01eb5d160d17dc490cdd30e1b7546401a2c0fe029276cd2b335fa09",
-    "harness/atomic_publish.py": "159f332c876c360b45e06a770fb8c91b068539d556ef09819be752d1cccdbb06",
+    "scripts/build_next_direction_design.py": "ee9874e76e12f1600590408e27753ab8847d8ba9550ecf264343ba5c2b775040",
+    "harness/isolation_evidence_fixtures.py": "c9e4fa210797124c2aab2698e2b451960cec407a42c934610c1cb68b7b44dc9a",
+    "harness/atomic_publish.py": "d370316bdfc3075d99d5047c80fc9428950246021cfe23d2f5b6dd21415243f9",
     "harness/closed_pilot_evidence.py": "23d517ec71236f5630009c6dd18848549fb76f61aab3cbcabc1f303c31cf21b0",
-    "scripts/build_repository_native_power_analysis.py": "0e9939d7c4cc5bed491d1178c9b239e2aa53d64b228c7d8835fdc655df4ee546",
-    "docs/next_direction_design_content.json": "ab6990beca1d9690a514e0e5a48264097e9517c500dbbbc5cc04f43ac2c184e1"
+    "scripts/build_repository_native_power_analysis.py": "2f337976d900e4ceaec6f16750b458e5935b0c8fcbbccc076cb85a6bccb26877",
+    "docs/next_direction_design_content.json": "d1f5e046b2ba0f4f5e200e4cba643877f0d7d5ab460d65d2dc12c59fab67955d"
   },
   "leakage": {
     "splits_opened": [

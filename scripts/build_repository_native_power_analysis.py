@@ -25,7 +25,8 @@ A clustered Monte Carlo simulation (repository random effects, cluster-robust
 lower bound) cross-checks the analytic power for rho = 0, 0.05, 0.10, 0.20.
 
 The artifact is deterministic.  It is published only after it has been
-recomputed and verified (``verify_power_artifact``), atomically.
+recomputed and verified (``verify_power_artifact``), with a single atomic file
+replacement (``publish_file_atomically``).
 """
 from __future__ import annotations
 
@@ -44,7 +45,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from harness.atomic_publish import PublicationRefused, publish_atomically
+from harness.atomic_publish import PublicationRefused, publish_file_atomically
 from harness.closed_pilot_evidence import (
     EXECUTION_DOSE_RECEIPT, TOOL_ASSISTED_RECEIPT, evaluation_entries, load_json, sha256_file,
     verify_evaluation,
@@ -454,9 +455,8 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     try:
         data = encode(build_report(ROOT))
-        publish_atomically({args.output: data},
-                           verify=lambda staged: verify_power_artifact(
-                               ROOT, staged[args.output].read_bytes()))
+        publish_file_atomically(args.output, data, verify=lambda staged: verify_power_artifact(
+            ROOT, staged.read_bytes()))
     except (EvidenceRefused, PublicationRefused) as exc:
         print(f"REFUSED: {exc}")
         return 2

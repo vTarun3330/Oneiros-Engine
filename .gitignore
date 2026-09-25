@@ -87,6 +87,12 @@ results/**
 !results/tap_7b_capacity_analysis.json
 !results/tap_7b_capacity_receipt.json
 !results/prompt_variant_rescore*.json
+# The next-direction design bundle: immutable generations selected by CURRENT.
+# Staging leftovers from an interrupted publication stay ignored.
+!results/next_direction_bundle/
+!results/next_direction_bundle/**
+results/next_direction_bundle/generations/.partial-*/
+results/next_direction_bundle/.CURRENT.*
 logs/
 wandb/
 runs/

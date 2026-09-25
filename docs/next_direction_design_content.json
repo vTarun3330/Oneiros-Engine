@@ -19,8 +19,8 @@
   "repository_native_protocol": {
     "status": "draft; no candidate mined, no split created",
     "candidate_sources": {
-      "strategy": "independently mined bug-fix commits from permissively licensed, pure-Python, pytest-tested GitHub repositories outside the exclusion universe, with fixes merged on or after 2025-01-01",
-      "temporal_rule": "fix commit authored and merged on or after 2025-01-01, after the Qwen2.5-Coder release. This is contamination-risk MITIGATION only: it does not show that the model has never seen the repository, the buggy code or a similar fix, and it is never described as proof",
+      "strategy": "independently mined bug-fix commits from permissively licensed, pure-Python, pytest-tested GitHub repositories outside the exclusion universe, whose fixed commit was committed on or after 2025-01-01 (committer timestamp)",
+      "temporal_rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z, enforced at admission; missing, unparseable or contradictory timestamps (author after committer, buggy commit after fix, commit after evidence retrieval) are refused. The earlier 'authored and merged' wording is withdrawn: PR merge evidence cannot be made reliable for every candidate. This is contamination-risk MITIGATION only: it does not show that the model has never seen the repository, the buggy code or a similar fix",
       "not_used_and_why": {
         "BugsInPy": "all 17 projects are in the exclusion universe",
         "SWE-bench / SWE-bench Verified": "same 12 repositories; in the exclusion universe",
@@ -83,14 +83,16 @@
       "function_lineage": "target function Jaccard < 0.80 against every indexed reference function; nearest match, score and fingerprint recorded",
       "within_set": "one target per fix commit and function lineage; pairwise near-duplicate check within the new set",
       "coverage": "audit_source_coverage decides which sources require indexing from the corpus manifest bound in the universe, records its SHA-256 and re-verifies it on disk; an unknown, unindexed or zero-count source fails; the manifest, utils/dataset_identity.py, the curated definition and every module that affects classification, normalisation, curated-seed identification or train-view loading are bound in the receipt",
-      "receipt": "decisions are made only against a FrozenReferenceUniverse: loading rebuilds the universe, requires its collections and collection hashes to equal the receipt's, verifies the internal receipt hash, re-hashes every input file, code input and canonical source, and recomputes coverage; any mismatch refuses. check_candidate takes that object and reads the receipt hash from it; no caller can supply a hash. isolation_record_is_current accepts only the same verified universe and an unmodified record digest",
+      "receipt": "decisions are made only against a FrozenReferenceUniverse: the receipt also freezes the diff policy and the temporal rule; loading rebuilds the universe, requires its collections and collection hashes to equal the receipt's, verifies the internal receipt hash, re-hashes every input file, code input and canonical source, and recomputes coverage; any mismatch refuses. check_candidate takes that object and reads the receipt hash from it; no caller can supply a hash. isolation_record_is_current accepts only the same verified universe and an unmodified record digest",
       "stages": {
         "1_evidence_schema": "every mandatory field present and well formed (evidence_problems)",
-        "2_evidence_authentication": "offline cross-checks of acquired evidence (authentication_problems): repository and issue API responses re-hashed and their full_name, id, node_id, html_url, fork, parent{full_name,id,node_id}, license.spdx_id, number, url and repository_url compared with the declared identity; git commit, tree and blob objects re-hashed to their IDs; the fixed commit's parent must be the buggy commit; the licence file and target file must resolve through the commit trees to the recorded blobs, whose contents must match the licence hash, the target function and the patch's removed/added lines",
-        "3_source_universe_overlap": "repository, fork parent, commit, issue, patch and function similarity against the frozen universe (overlap_problems)",
+        "2_evidence_authentication": "offline cross-checks of acquired evidence (authentication_problems): repository and issue API responses re-hashed and compared with the declared identity; git objects re-hashed to their IDs; diff policy A: the fixed commit's only parent is the buggy commit and the authenticated trees show exactly one changed path, the target file; the canonical diff is DERIVED from the authenticated target blobs and the submitted patch must carry exactly its removed/added lines; a derived hunk must overlap the declared target function and its normalised body must change; the temporal rule is proved from the commit timestamps",
+        "3_source_universe_overlap": "repository, fork parent, commit and issue against the frozen universe; patch identity and near-duplicate checks use ONLY the derived diff; function similarity uses the declared target function (proved present and changed in stage 2)",
         "later_network_acquisition": "a separate, separately approved step (D1) that fetches and stores the evidence listed in ACQUISITION_REQUIREMENTS; nothing in the checker makes a network call"
       },
-      "curated_seeds": "all ten CURATED_BUGSINPY_BUGS definitions are indexed: a conservative source superset of the eight corpus seeds (seven in train, the eighth one of black_1, cookiecutter_1, scrapy_1); no non-train record opened"
+      "curated_seeds": "all ten CURATED_BUGSINPY_BUGS definitions are indexed: a conservative source superset of the eight corpus seeds (seven in train, the eighth one of black_1, cookiecutter_1, scrapy_1); no non-train record opened",
+      "diff_policy": "A (frozen): direct-parent, single-target-file fixes only; multi-file fixes are refused; the derived diff's SHA-256, changed-file list, hunks and target-function spans are stored in the isolation record",
+      "integrity": "record_sha256 detects accidental modification only; it is not a signature. Dataset construction must keep each candidate's evidence sidecar, reload the same FrozenReferenceUniverse, rerun check_candidate and compare the record byte for byte (revalidate_isolation_record); an edited record is rejected even with a recomputed record_sha256"
     },
     "licensing_and_reproducibility": {
       "licences_admitted": [
@@ -242,9 +244,10 @@
     },
     "receipts": {
       "per_target": [
-        "repository and licence",
-        "buggy/fixed commit and tree hashes",
-        "isolation record",
+        "repository and issue API responses with hashes and retrieval timestamps",
+        "commit, tree and blob objects; licence blob and hash",
+        "derived canonical diff SHA-256, changed files and target-function spans",
+        "isolation record (frozen-universe receipt hash, record digest) and evidence sidecar",
         "environment lock and interpreter",
         "official-test qualification runs",
         "prompt hash and leakage scan"
@@ -258,7 +261,8 @@
         "Atheris logs, corpora sizes, coverage and seeds",
         "WSL distribution, kernel, CPU and memory"
       ],
-      "rollback": "no artifact is overwritten; a failed run is preserved and marked invalid; the one-time set is sealed by hash before any model sees it and is never re-evaluated after a protocol change"
+      "rollback": "no artifact is overwritten; a failed run is preserved and marked invalid; the one-time set is sealed by hash before any model sees it and is never re-evaluated after a protocol change",
+      "publication": "generated design artifacts are published as one immutable generation under results/next_direction_bundle (receipt, design, verified power copy, manifest), selected by replacing a single CURRENT pointer; readers accept only a complete manifest-verified generation; accepted generations are never overwritten"
     }
   },
   "sampling_budget_protocol": {
@@ -407,7 +411,7 @@
   "required_user_decisions": [
     {
       "id": "D1",
-      "decision": "approve network mining of GitHub repositories, acquisition and hash-binding of repository/issue API responses and git objects, and the temporal rule (fixes on or after 2025-01-01, mitigation only)"
+      "decision": "approve network mining of GitHub repositories, acquisition and hash-binding of repository/issue API responses and git objects, and the temporal rule (fixed-commit committer timestamp on or after 2025-01-01; mitigation only)"
     },
     {
       "id": "D2",
@@ -431,7 +435,7 @@
     },
     {
       "id": "D7",
-      "decision": "accept that disjointness is enforced against the complete indexed source universe, with every decision bound to a FrozenReferenceUniverse verified against the receipt (pending)"
+      "decision": "accept that disjointness is enforced against the complete indexed source universe: decisions bound to a verified FrozenReferenceUniverse, patch lineage taken from the authenticated derived diff, and records trusted only after revalidation (pending)"
     },
     {
       "id": "D8",

@@ -2,7 +2,8 @@
 
 **Status: optional secondary draft. Not run.** This is an exploratory,
 train-derived study that supports no generalisation claim. Structured content is
-in `results/v4_3_next_direction_design.json`, under `sampling_budget_protocol`.
+in the design artifact's `sampling_budget_protocol` section (current generation of
+`results/next_direction_bundle`).
 
 ## Question
 

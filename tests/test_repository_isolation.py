@@ -16,7 +16,8 @@ from harness.repository_isolation import (
     CANONICAL_SOURCES, CLAIM, CODE_INPUTS, CODE_ROOT, CORPUS_MANIFEST, INSUFFICIENT,
     MIN_FUNCTION_SHINGLES, ApiResponse, CandidateBug, FrozenReferenceUniverse,
     ReferenceUniverse, ReferenceUniverseMismatch, audit_source_coverage,
-    authentication_problems, build_reference_universe, canonical_repository, check_candidate,
+    authentication_problems, build_reference_universe, canonical_diff, canonical_repository,
+    check_candidate,
     code_shingles, evidence_problems, extract_functions, freeze_reference_universe,
     isolation_record_is_current, load_frozen_reference_universe, normalised_patch,
     overlap_problems, patch_hash, reference_universe_receipt, verify_receipt,
@@ -44,7 +45,8 @@ REFERENCE_FUNCTION = ("def rolling_mean(values, window):\n    out = []\n"
                       "        out.append(sum(values[i:i + window]) / window)\n    return out\n")
 
 
-BUILDER_ARGUMENTS = {"buggy_text", "fixed_text", "fork_parent", "issue_number", "repository_id"}
+BUILDER_ARGUMENTS = {"buggy_text", "fixed_text", "fork_parent", "issue_number", "repository_id",
+                     "extra_files", "committer_epoch", "author_epoch", "buggy_epoch"}
 
 
 def complete_candidate(**overrides) -> CandidateBug:
@@ -465,7 +467,10 @@ def _authentication(candidate: CandidateBug) -> list[str]:
 def test_consistent_evidence_authenticates():
     problems, derived = authentication_problems(complete_candidate())
     assert problems == []
-    assert derived["fixed_commit_committer_epoch"] > derived["buggy_commit_committer_epoch"]
+    assert derived["changed_files"] == ["src/ranges.py"]
+    assert derived["submitted_patch_matches_derived_diff"] is True
+    assert derived["target_qualname"] == "merge_ranges"
+    assert derived["temporal_rule_satisfied"] is True
 
 
 def _other(**overrides):
@@ -513,9 +518,7 @@ AUTHENTICATION_CASES = {
     "target_blob_buggy_not_at_target_file": lambda c: dataclasses.replace(
         c, target_blob_buggy=c.licence_blob),
     "target_function_not_in_buggy_file": lambda c: dataclasses.replace(c, target_function=NOVEL),
-    "patch_does_not_touch_target_file": lambda c: dataclasses.replace(
-        c, patch=c.patch.replace("src/ranges.py", "src/other.py")),
-    "patch_added_lines_not_in_fixed_file": lambda c: dataclasses.replace(
+    "submitted_patch_does_not_match_derived_diff": lambda c: dataclasses.replace(
         c, patch=c.patch.replace("+        if lo <= merged", "+        if lo >= merged")),
     "target_module_inconsistent_with_target_file": lambda c: dataclasses.replace(
         c, target_module="elsewhere"),
@@ -545,7 +548,11 @@ def test_overlap_stage_rejects_repository_commit_patch_and_function_lineage(froz
         CandidateBug(fixed_commit="4" * 40), universe, threshold)[0]
     reformatted = PATCH.replace("return sum(xs)", "return   sum( xs )")
     assert "patch_near_duplicate_of_known_bug" in overlap_problems(
-        CandidateBug(patch=reformatted), universe, threshold)[0]
+        CandidateBug(), universe, threshold, derived_diff=reformatted)[0]
+    # A submitted patch is never used for patch checks: only the derived diff is.
+    reasons, nearest = overlap_problems(CandidateBug(patch=PATCH), universe, threshold)
+    assert "patch_identical_to_known_bug" not in reasons
+    assert nearest["patch_checks"] == "not_run:no_authenticated_diff"
     renamed = REFERENCE_FUNCTION.replace("rolling_mean", "moving_average")
     reasons, nearest = overlap_problems(CandidateBug(target_function=renamed), universe,
                                         threshold)
@@ -553,10 +560,16 @@ def test_overlap_stage_rejects_repository_commit_patch_and_function_lineage(froz
     assert nearest["nearest_function"]["jaccard"] >= NEAR_DUPLICATE_JACCARD
 
 
+KNOWN_BUGGY = ("def total(xs):\n    values = [x for x in xs if x is not None]\n"
+               "    count = len(values)\n    if count == 0:\n        return 0\n"
+               "    return sum(xs[1:])\n")
+KNOWN_FIXED = KNOWN_BUGGY.replace("return sum(xs[1:])", "return sum(xs)")
+
+
 def test_a_fully_authenticated_known_patch_is_refused_by_the_overlap_stage(frozen):
-    path, buggy, fixed = files_from_patch(PATCH, NOVEL)
-    candidate = synthetic_candidate(buggy_text=buggy, fixed_text=fixed, target_function=NOVEL,
-                                    target_file=path, target_module="mod", patch=PATCH)
+    candidate = synthetic_candidate(buggy_text=KNOWN_BUGGY, fixed_text=KNOWN_FIXED,
+                                    target_function=KNOWN_BUGGY, target_file="pkg/mod.py",
+                                    target_module="mod")
     record = check_candidate(candidate, frozen)
     assert record["stages"]["schema"] == [] and record["stages"]["authentication"] == []
     assert "patch_identical_to_known_bug" in record["stages"]["overlap"]
@@ -580,28 +593,282 @@ def test_helpers_reuse_the_frozen_audit():
     assert shingles(normalised_patch(PATCH).replace("\n", " "))
 
 
+# --- exact diff: the patch is derived from authenticated blobs (policy A) -------------
+
+SETTING_BUGGY, SETTING_FIXED = "TIMEOUT = 10\n\n\n", "TIMEOUT = 30\n\n\n"
+OTHER_FUNCTION = ("def rolling_total(values, window):\n    out = []\n"
+                  "    for i in range(len(values) - window + 1):\n"
+                  "        out.append(sum(values[i:i + window]))\n    return out\n")
+
+
+def _two_change_candidate(submitted: str | None, **overrides) -> CandidateBug:
+    """Buggy/fixed blobs with two real changes: the target function and a setting."""
+    buggy, fixed = SETTING_BUGGY + BUGGY, SETTING_FIXED + NOVEL
+    return synthetic_candidate(buggy_text=buggy, fixed_text=fixed, target_function=BUGGY,
+                               target_file="src/ranges.py", target_module="ranges",
+                               patch=submitted, **overrides)
+
+
+def _auth_reasons(candidate: CandidateBug) -> list[str]:
+    assert evidence_problems(candidate) == []
+    return [problem.rsplit(":", 1)[1] for problem in authentication_problems(candidate)[0]]
+
+
+def test_partial_patch_with_only_an_unrelated_valid_change_is_refused(frozen):
+    # Regression for the reported case: before the fix both stages returned [].
+    partial = canonical_diff("src/ranges.py", SETTING_BUGGY + BUGGY, SETTING_FIXED + BUGGY)
+    candidate = _two_change_candidate(partial)
+    assert evidence_problems(candidate) == []
+    assert "submitted_patch_does_not_match_derived_diff" in _auth_reasons(candidate)
+    record = check_candidate(candidate, frozen)
+    assert record["admissible"] is False and record["insufficient_evidence"] is True
+    derived = record["derived_from_verified_evidence"]
+    assert derived["submitted_patch_matches_derived_diff"] is False
+    # Patch lineage is taken from the derived diff, never the submitted one.
+    full = canonical_diff("src/ranges.py", SETTING_BUGGY + BUGGY, SETTING_FIXED + NOVEL)
+    assert record["patch_sha256"] == patch_hash(full) != patch_hash(partial)
+
+
+def test_patch_omitting_one_of_two_real_changes_is_refused():
+    function_only = canonical_diff("src/ranges.py", SETTING_BUGGY + BUGGY, SETTING_BUGGY + NOVEL)
+    assert "submitted_patch_does_not_match_derived_diff" in _auth_reasons(
+        _two_change_candidate(function_only))
+
+
+def test_the_complete_two_change_patch_is_admitted_with_derived_facts(frozen):
+    record = check_candidate(_two_change_candidate(None), frozen)
+    assert record["admissible"] is True, record["reasons"]
+    derived = record["derived_from_verified_evidence"]
+    assert derived["changed_files"] == ["src/ranges.py"]
+    assert derived["target_span_buggy"] == [4, 12] and derived["target_span_fixed"] == [4, 12]
+    assert len(derived["changed_hunks"]) == 2
+    assert derived["canonical_diff_sha256"] and record["authentication_passed"] is True
+
+
+def test_patch_with_invented_lines_is_refused():
+    candidate = complete_candidate()
+    invented = candidate.patch.replace("+        if lo <= merged[-1][1]:",
+                                       "+        if lo <= merged[-1][1] or True:")
+    assert invented != candidate.patch
+    assert "submitted_patch_does_not_match_derived_diff" in _auth_reasons(
+        dataclasses.replace(candidate, patch=invented))
+    extra_hunk = candidate.patch + "@@ -20,0 +21,1 @@\n+invented = 1\n"
+    assert "submitted_patch_does_not_match_derived_diff" in _auth_reasons(
+        dataclasses.replace(candidate, patch=extra_hunk))
+
+
+def test_patch_from_another_file_is_refused():
+    candidate = complete_candidate()
+    elsewhere = canonical_diff("src/other.py", BUGGY, NOVEL)
+    assert "submitted_patch_does_not_match_derived_diff" in _auth_reasons(
+        dataclasses.replace(candidate, patch=elsewhere))
+
+
+def test_target_file_changed_but_declared_function_unchanged_is_refused():
+    buggy = BUGGY + "\n\n" + OTHER_FUNCTION
+    fixed = BUGGY + "\n\n" + OTHER_FUNCTION.replace("window + 1", "window")
+    reasons = _auth_reasons(synthetic_candidate(
+        buggy_text=buggy, fixed_text=fixed, target_function=BUGGY, target_file="src/ranges.py",
+        target_module="ranges"))
+    assert "declared_target_function_unchanged" in reasons
+    assert "no_changed_hunk_overlaps_target_function" in reasons
+
+
+def test_a_fix_in_an_unrelated_file_is_refused():
+    reasons = _auth_reasons(synthetic_candidate(
+        buggy_text=BUGGY, fixed_text=BUGGY, target_function=BUGGY, target_file="src/ranges.py",
+        target_module="ranges", patch=canonical_diff("src/util.py", BUGGY, NOVEL),
+        extra_files={"src/util.py": (BUGGY, NOVEL)}))
+    assert "target_file_unchanged_by_fix" in reasons
+
+
+def test_known_benchmark_patch_disguised_as_a_novel_subset_is_refused(frozen):
+    buggy, fixed = KNOWN_BUGGY + "\n\n" + BUGGY, KNOWN_FIXED + "\n\n" + NOVEL
+    novel_subset = canonical_diff("src/ranges.py", buggy, KNOWN_BUGGY + "\n\n" + NOVEL)
+    candidate = synthetic_candidate(buggy_text=buggy, fixed_text=fixed, target_function=BUGGY,
+                                    target_file="src/ranges.py", target_module="ranges",
+                                    patch=novel_subset)
+    record = check_candidate(candidate, frozen)
+    assert record["admissible"] is False
+    assert f"{INSUFFICIENT}:authentication:submitted_patch_does_not_match_derived_diff" in \
+        record["reasons"]
+    # The derived diff, not the submission, carries the known benchmark change.
+    assert record["patch_sha256"] == patch_hash(canonical_diff("src/ranges.py", buggy, fixed))
+
+
+def test_a_complete_multi_file_fix_is_refused_under_policy_a():
+    candidate = synthetic_candidate(
+        buggy_text=BUGGY, fixed_text=NOVEL, target_function=BUGGY, target_file="src/ranges.py",
+        target_module="ranges", extra_files={"src/util.py": (OTHER_FUNCTION, OTHER_FUNCTION
+                                                             + "\n# changed\n")})
+    problems, derived = authentication_problems(candidate)
+    assert derived["changed_files"] == ["src/ranges.py", "src/util.py"]
+    assert f"{INSUFFICIENT}:authentication:multi_file_fix_not_admitted_under_single_file_policy" \
+        in problems
+    from harness.repository_isolation import DIFF_POLICY
+    assert DIFF_POLICY["id"].startswith("A_") and "refused" in DIFF_POLICY["multi_file_fixes"]
+
+
+def test_missing_tree_evidence_for_a_changed_subtree_is_refused():
+    candidate = synthetic_candidate(
+        buggy_text=BUGGY, fixed_text=NOVEL, target_function=BUGGY, target_file="src/ranges.py",
+        target_module="ranges", extra_files={"docs/a/notes.py": ("x = 1\n", "x = 2\n")})
+    from harness.repository_isolation import git_object_id, parse_commit, parse_tree
+    objects = {git_object_id(o.kind, o.body): o for o in candidate.git_objects}
+    fixed_root = parse_commit(objects[candidate.fixed_commit].body)["tree"]
+    docs_tree = parse_tree(objects[fixed_root].body)["docs"][1]
+    stripped = tuple(o for o in candidate.git_objects
+                     if git_object_id(o.kind, o.body) != docs_tree)
+    reasons = _auth_reasons(dataclasses.replace(candidate, git_objects=stripped))
+    assert any(reason.startswith("changed_files_not_fully_evidenced") or reason == "docs/"
+               for reason in reasons), reasons
+
+
+def test_a_merge_commit_is_not_a_direct_parent_fix():
+    candidate = complete_candidate()
+    from harness.repository_isolation import GitObject, git_object_id
+    objects = {git_object_id(o.kind, o.body): o for o in candidate.git_objects}
+    body = objects[candidate.fixed_commit].body
+    merged = body.replace(b"\nauthor ", b"\nparent " + b"9" * 40 + b"\nauthor ", 1)
+    merge_id = git_object_id("commit", merged)
+    reasons = _auth_reasons(dataclasses.replace(
+        candidate, fixed_commit=merge_id,
+        git_objects=candidate.git_objects + (GitObject("commit", merged),)))
+    assert "fixed_commit_is_not_a_direct_single_parent_commit" in reasons
+
+
+# --- temporal rule (frozen; contamination-risk mitigation only) ----------------------
+
+CUTOFF = 1735689600
+
+
+@pytest.mark.parametrize("epoch, admitted", [(CUTOFF - 1, False), (CUTOFF, True),
+                                             (CUTOFF + 86400, True)])
+def test_temporal_boundary(frozen, epoch, admitted):
+    candidate = complete_candidate(committer_epoch=epoch, buggy_epoch=CUTOFF - 7200)
+    record = check_candidate(candidate, frozen)
+    assert record["admissible"] is admitted, record["reasons"]
+    assert (f"{INSUFFICIENT}:authentication:fixed_commit_before_temporal_cutoff" in
+            record["reasons"]) is (not admitted)
+    assert record["derived_from_verified_evidence"]["temporal_rule_satisfied"] is admitted
+
+
+@pytest.mark.parametrize("arguments, expected", [
+    (dict(committer_epoch=None), "fixed_commit_timestamp_missing"),
+    (dict(author_epoch=1740787200 + 3600), "fixed_commit_author_after_committer"),
+    (dict(buggy_epoch=1740787200 + 60), "buggy_commit_committed_after_fix"),
+    (dict(committer_epoch=1830000000, buggy_epoch=1829990000),
+     "fixed_commit_later_than_evidence_retrieval"),
+    (dict(buggy_epoch=None), "buggy_commit_timestamp_missing"),
+])
+def test_missing_or_contradictory_timestamps_are_refused(arguments, expected):
+    assert expected in _auth_reasons(complete_candidate(**arguments))
+
+
+def test_the_rules_are_frozen_in_the_receipt(fake_root):
+    from harness.repository_isolation import DIFF_POLICY, TEMPORAL_RULE, _sha_json
+    universe = _fake_universe(fake_root)
+    receipt = reference_universe_receipt(universe)
+    assert receipt["temporal_rule"] == TEMPORAL_RULE and receipt["diff_policy"] == DIFF_POLICY
+    assert "mitigation" in TEMPORAL_RULE["status"]
+    for key, value in (("temporal_rule", {**TEMPORAL_RULE, "cutoff_epoch": 0}),
+                       ("diff_policy", {**DIFF_POLICY, "multi_file_fixes": "admitted"})):
+        altered = json.loads(json.dumps(receipt))
+        altered[key] = value
+        altered.pop("receipt_sha256")
+        altered["receipt_sha256"] = _sha_json(altered)
+        with pytest.raises(ReferenceUniverseMismatch):
+            freeze_reference_universe(universe, altered, root=fake_root)
+
+
+# --- integrity: record_sha256 is a self-hash, trust comes from revalidation ------------
+
+def test_downstream_revalidation_rejects_an_edited_record_with_a_recomputed_hash(
+        fake_root, tmp_path):
+    from harness.repository_isolation import (
+        _record_digest, candidate_from_sidecar, candidate_to_sidecar,
+        revalidate_isolation_record,
+    )
+    frozen_, receipt = _freeze(fake_root)
+    candidate = complete_candidate()
+    record = check_candidate(candidate, frozen_)
+    # Retain the authenticated evidence sidecar and the record, as a dataset would.
+    (tmp_path / "evidence.json").write_text(json.dumps(candidate_to_sidecar(candidate)),
+                                            encoding="utf-8")
+    (tmp_path / "record.json").write_text(json.dumps(record), encoding="utf-8")
+    (tmp_path / "receipt.json").write_text(json.dumps(receipt), encoding="utf-8")
+    sidecar = json.loads((tmp_path / "evidence.json").read_text(encoding="utf-8"))
+    stored = json.loads((tmp_path / "record.json").read_text(encoding="utf-8"))
+    assert candidate_from_sidecar(sidecar) == candidate
+    # Reload the same frozen universe from its receipt.
+    reloaded = freeze_reference_universe(
+        _fake_universe(fake_root), json.loads((tmp_path / "receipt.json").read_text()),
+        root=fake_root)
+    assert reloaded.receipt_sha256 == frozen_.receipt_sha256
+    assert revalidate_isolation_record(stored, sidecar, reloaded)["valid"] is True
+    for edit in ({"admissible": False}, {"reasons": ["manually_excluded"]},
+                 {"admissible": False, "reasons": ["x"], "insufficient_evidence": True}):
+        forged = {**stored, **edit}
+        forged["record_sha256"] = _record_digest(forged)
+        # The self-hash cannot tell: the forged record still looks current...
+        assert isolation_record_is_current(forged, reloaded)
+        # ...but revalidation from the evidence rejects it.
+        result = revalidate_isolation_record(forged, sidecar, reloaded)
+        assert result["valid"] is False and set(edit) <= set(result["differing_fields"])
+    refused = check_candidate(dataclasses.replace(candidate, licence_sha256="0" * 64), frozen_)
+    promoted = {**refused, "admissible": True, "reasons": []}
+    promoted["record_sha256"] = _record_digest(promoted)
+    tampered_sidecar = candidate_to_sidecar(dataclasses.replace(candidate,
+                                                                licence_sha256="0" * 64))
+    assert revalidate_isolation_record(promoted, tampered_sidecar, reloaded)["valid"] is False
+
+
 # --- the real universe -------------------------------------------------------------
 
-RECEIPT_PATH = ROOT / "results" / "v4_3_reference_universe_receipt.json"
+BUNDLE_STORE = ROOT / "results" / "next_direction_bundle"
 
 
 @pytest.fixture(scope="module")
-def real_frozen():
-    if not (ROOT / "data" / "BugsInPy_repo" / "projects").exists() or not RECEIPT_PATH.exists():
-        pytest.skip("upstream sources or receipt not present")
-    return load_frozen_reference_universe(ROOT, RECEIPT_PATH)
+def current_bundle():
+    from harness.atomic_publish import read_current_bundle
+    if not (BUNDLE_STORE / "CURRENT").exists():
+        pytest.skip("no published bundle")
+    return read_current_bundle(BUNDLE_STORE)
 
 
-def test_tracked_receipt_loads_as_a_verified_frozen_universe(real_frozen):
-    receipt = json.loads(RECEIPT_PATH.read_text(encoding="utf-8"))
+@pytest.fixture(scope="module")
+def real_frozen(current_bundle):
+    if not (ROOT / "data" / "BugsInPy_repo" / "projects").exists():
+        pytest.skip("upstream sources not present")
+    receipt = json.loads(current_bundle["files"]["reference_universe_receipt.json"])
+    return freeze_reference_universe(build_reference_universe(ROOT), receipt, root=ROOT)
+
+
+def test_tracked_receipt_loads_as_a_verified_frozen_universe(real_frozen, current_bundle):
+    receipt_bytes = current_bundle["files"]["reference_universe_receipt.json"]
+    receipt = json.loads(receipt_bytes)
     assert real_frozen.receipt_sha256 == receipt["receipt_sha256"]
     verification = real_frozen.verification
     assert verification["input_files_verified"] == sum(
         len(files) for files in receipt["collections"]["input_files"].values())
     assert verification["canonical_sources_verified"] == len(CANONICAL_SOURCES)
-    assert b"\r" not in RECEIPT_PATH.read_bytes()
+    assert b"\r" not in receipt_bytes
     for relative, expected in receipt["source_files_sha256"].items():
         assert canonical_sha256(ROOT / relative) == expected, relative
+
+
+def test_tracked_design_binds_the_bundle(current_bundle):
+    files = current_bundle["files"]
+    design = json.loads(files["next_direction_design.json"])
+    isolation = design["isolation"]
+    assert isolation["reference_universe_receipt_file_sha256"] == hashlib.sha256(
+        files["reference_universe_receipt.json"]).hexdigest()
+    assert design["power_analysis"]["sha256"] == hashlib.sha256(
+        files["repository_native_power_analysis.json"]).hexdigest()
+    assert isolation["coverage"]["covered"] and isolation["self_checks_pass"]
+    assert all(check["self_check_passed"] for check in isolation["self_checks"].values())
+    assert "proven" not in json.dumps(isolation).lower()
+    assert not any(value for key, value in design["leakage"].items() if key != "splits_opened")
 
 
 def test_complete_real_universe_passes_coverage(real_frozen):

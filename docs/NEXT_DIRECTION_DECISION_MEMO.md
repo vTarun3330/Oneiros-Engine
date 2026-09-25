@@ -1,15 +1,23 @@
 # Next-direction decision memo
 
-Written 2026-09-25 and revised twice the same day. The revisions made isolation
-fail closed, then bound every isolation decision cryptographically to a verified
-universe. This is a design only: no split exists, nothing has been mined, no
-tool has been installed, no model has run, no network call was made, and no
-protected data has been opened.
+Written 2026-09-25 and revised three times the same day. The revisions:
+- made isolation fail closed;
+- bound every isolation decision to a verified universe;
+- derived patch lineage from the authenticated commit diff, made the temporal rule executable, and made publication crash-safe.
 
-The machine-readable versions are:
-- `results/v4_3_next_direction_design.json`;
-- `results/v4_3_reference_universe_receipt.json`;
-- `results/v4_3_repository_native_power_analysis.json`.
+This is a design only: no split exists, nothing has been mined, no tool has
+been installed, no model has run, no network call was made, and no protected
+data has been opened.
+
+The machine-readable versions are one crash-safe bundle generation under
+`results/next_direction_bundle`, selected by its `CURRENT` pointer (§ Publication
+is crash-safe):
+- `next_direction_design.json`;
+- `reference_universe_receipt.json`;
+- `repository_native_power_analysis.json`, a verified copy of `results/v4_3_repository_native_power_analysis.json`.
+
+The previous top-level receipt and design files are superseded. They remain in
+git history at `9d29a4c`.
 
 ## Where the project stands
 
@@ -43,9 +51,10 @@ split was consumed. **The project currently cannot make a held-out claim.**
 This does **not** claim that no model has seen a repository. The 2025 cutoff for
 fix commits is contamination-risk mitigation, not proof.
 
-**D7 remains pending.** The previous checker accepted any 64-character receipt
-hash, and the universe-to-receipt binding needed to be fixed first. It is fixed
-below, and acceptance awaits your review.
+**D7 remains pending.** Three things are fixed below and await your review:
+- the universe-to-receipt binding;
+- patch lineage, which could be spoofed by submitting a partial patch;
+- the crash-safety of publication.
 
 ### Every decision is bound to a verified frozen universe
 
@@ -86,14 +95,14 @@ Further tests show that each of the following invalidates a frozen universe:
 
 ### Coverage binds every input that decides it
 
-`results/v4_3_reference_universe_receipt.json`
-(`receipt_sha256` `c3fabc47…`) binds:
+The receipt (`receipt_sha256` `40ce55b0…`, file `01077dc1…`) also freezes the
+diff policy and the temporal rule. It binds:
 - the corpus manifest (`7f68386f…`), from which coverage decides which sources need indexing. Coverage records that manifest's SHA-256 and re-checks it on disk; changing its sources or counts refuses the old receipt;
 - 1,558 data inputs: BugsInPy 1,019 (every `project.info`, `bug.info` and `bug_patch.txt`), SWE-bench Verified 1, HumanEval 1, MBPP 1, legacy real bugs 533, the train view 2, and the corpus manifest 1;
 - 6 code inputs and 10 canonical sources, by LF-canonical hash: the checker, `harness/source_identity.py`, the normaliser, `harness/bugsinpy_loader.py`, `scripts/build_corpus_v1.py`, `utils/dataset_identity.py`, `harness/corpus_view.py`, `harness/corpus.py`, `harness/function_complexity.py` and the builder;
 - 28 full and 35 bare repository names, 1,484 commits, 998 patch hashes, 1,001 instance IDs and 33,192 function fingerprints.
 
-The receipt is byte-identical across rebuilds (`184b512b…`).
+The receipt is byte-identical across rebuilds: generations `0c2914bf…` and `9703c7b4…` carry the same receipt bytes.
 
 **Curated seeds.** All ten `CURATED_BUGSINPY_BUGS` definitions are indexed. That
 is a **conservative source superset** of the eight corpus seeds: the 7 in train,
@@ -116,6 +125,52 @@ calls the network.
 
 Offline synthetic fixtures show that tampered evidence is refused even when its
 hashes have been recomputed.
+
+### Patch lineage comes from the authenticated commit diff (policy A)
+
+**The defect.** Authentication used to check only that the submitted patch's
+removed lines occurred in the buggy file and its added lines in the fixed file.
+A reproduction: the buggy and fixed blobs carry two changes, one in the target
+function and one to an unrelated `TIMEOUT` setting, but the submitted patch
+carries only the setting change. That passed both the schema and authentication
+stages, returning `[]` from each.
+
+**It is now refused** with `submitted_patch_does_not_match_derived_diff`. The
+frozen policy A works as follows:
+- **Direct parent:** the fixed commit's only parent is the buggy commit.
+- **One changed path:** the authenticated trees must show exactly one changed path, the target file. Multi-file fixes, and changed subtrees without their tree objects, are refused.
+- **Derived diff:** the canonical diff is recomputed from the authenticated blobs. The submitted patch must carry exactly its removed and added lines, and only the derived diff feeds patch hashes and the identical and near-duplicate checks.
+- **Target function changed:** a derived hunk must overlap the declared target function's AST span, and that function's normalised body must change between revisions.
+- **Recorded:** each isolation record stores the derived diff's SHA-256, the changed files, the hunks and the target-function spans.
+
+**Tests** cover each case: a partial unrelated patch, an omitted real change,
+invented lines, a patch from another file, an unrelated-file fix, a target file
+changed with the declared function unchanged, a known benchmark change hidden
+behind a novel subset, a merge commit, missing tree evidence and a multi-file
+fix. The exact single-file patch is admitted.
+
+### The temporal rule is executable
+
+**The rule:** the authenticated fixed-commit committer timestamp is on or after
+2025-01-01T00:00:00Z. It is enforced at admission and frozen in the receipt.
+The earlier "authored and merged" wording is withdrawn, because PR merge
+evidence cannot be made reliable for every candidate.
+
+**Refused timestamps:** missing and contradictory ones, meaning an author time
+after the committer time, a buggy commit after the fix, or a commit after the
+evidence was retrieved.
+
+**Boundary tests:** one second before the cutoff is refused; exactly at it and
+after it are admitted. The rule is contamination-risk mitigation only.
+
+### A record's self-hash is not a signature
+
+`record_sha256` only detects accidental edits. Downstream dataset construction
+must keep each candidate's evidence sidecar, reload the same frozen universe,
+rerun `check_candidate`, and compare byte for byte
+(`revalidate_isolation_record`). An integration test shows that an edited
+`admissible` or `reasons` field is rejected even when its `record_sha256` was
+recomputed. The self-hash alone would still call it current.
 
 ## Power (prospective, verified, portable)
 
@@ -166,13 +221,29 @@ Network time for mining is extra: about 2.7–5.3 h at N = 400. WSL has 32 CPUs,
 62 GB RAM and 952 GB free. The optional sampling study needs about 20 GPU
 minutes.
 
-## Publication is atomic
+## Publication is crash-safe
 
-All three artifacts are built and gated in memory, then staged and re-verified
-from the staged bytes. Only then are they promoted with `os.replace`. A failed
-gate or promotion leaves the previously accepted artifacts intact, and the tests
-cover both cases. The closed-pilot check verifies both the evaluation envelope
-and the raw rehearsal-result hash for all six evaluations.
+The earlier multi-file `os.replace` sequence was per-file atomic only. A process
+kill between two replacements could have left a mixed generation. It is
+replaced by an immutable-generation bundle:
+1. Files and a manifest of their hashes are written into a private staging directory, fsynced, re-read and verified.
+2. The staging directory is renamed to its generation directory, whose ID is derived from the manifest hash.
+3. One small `CURRENT` pointer is replaced last.
+
+Readers accept only a complete, manifest-verified generation, and reject any
+modified, extra or mispointed file. Accepted generations are never overwritten.
+
+**Crash tests.** A child process is killed with `os._exit` at each of the 8
+publication points. Every time, readers see the complete old generation, or,
+only after the pointer replacement, the complete new one. They never see a
+mixture, and a later publication still succeeds.
+
+**Durability caveat.** Windows has no directory fsync. There, a crash can at
+worst lose the newest pointer update, never mix generations. The standalone
+power artifact uses a single-file replacement, which is per-file atomic only.
+
+The closed-pilot check verifies both the evaluation envelope and the raw
+rehearsal-result hash for all six evaluations.
 
 ## Blockers
 
@@ -192,29 +263,34 @@ and the raw rehearsal-result hash for all six evaluations.
 
 | id | decision |
 |---|---|
-| D1 | Approve mining, hash-bound acquisition of metadata and git objects, and the 2025 cutoff (as mitigation). |
+| D1 | Approve mining, hash-bound acquisition of metadata and git objects, and the temporal rule: a committer timestamp on or after 2025-01-01, as mitigation only. |
 | D2 | Approve the licence list and the same-organisation rule. |
 | D3 | Set N: 400 recommended for +8 pp at ρ 0.05 with at most 12 targets per repository; 200 only as an approved lower-power compromise. The gate is unchanged. |
 | D4 | Decide who seals the final set and its status. |
 | D5 | Set the Atheris modes and budgets. |
 | D6 | Permit installing `uv` and Python 3.10/3.13 in WSL. |
-| D7 | Accept enforcement against the complete indexed universe, with decisions bound to the verified frozen universe. **Pending.** |
+| D7 | Accept enforcement against the complete indexed universe: decisions bound to the verified frozen universe, patch lineage from the authenticated diff, and records trusted only after revalidation. **Pending.** |
 | D8 | Run, defer or skip the sampling study. |
 | D9 | Choose the models for the one-time evaluation. |
 
 ## Can D7 now be accepted?
 
-**Recommended: yes, as the narrowed claim.** It remains pending until you
-accept it.
+**Recommended: yes, as the narrowed indexed-universe claim.** It remains pending
+until you accept it.
 
 - **What is now true:**
-  - a decision can be made only against a universe that was verified against its receipt;
-  - the receipt hash cannot be supplied by a caller;
-  - every input that decides coverage is hash-bound, including the manifest, the classification code and the curated definition;
-  - candidate identity, fork, issue and licence evidence is authenticated rather than self-declared.
+  - a decision can be made only against a universe verified against its receipt, and no caller can supply the receipt hash;
+  - every input that decides coverage is hash-bound;
+  - candidate identity, fork, issue and licence evidence is authenticated;
+  - patch lineage comes only from the diff derived from authenticated git objects, and must modify the declared target function, so partial or unrelated patches are refused;
+  - the temporal rule is enforced from the authenticated commit timestamps;
+  - records are trusted only after byte-for-byte revalidation;
+  - the published artifacts cannot be observed in a mixed state.
 - **What remains limited:**
-  - the claim covers enforcement against the indexed universe only, and cannot rule out that the base model saw a candidate repository in pretraining;
-  - the authenticator validates evidence acquired later. Until acquisition is approved and built (D1, B9), no real candidate can pass it.
+  - the claim covers enforcement against the indexed universe only. It cannot rule out pretraining exposure, and the temporal rule only mitigates that risk;
+  - under policy A, only single-file fixes are admissible, which narrows the candidate supply;
+  - no real candidate can pass until acquisition is approved and built (D1, B9);
+  - on Windows, publication durability relies on NTFS metadata journaling.
 
 ## Proposed execution order
 

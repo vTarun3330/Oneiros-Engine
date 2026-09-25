@@ -2,8 +2,9 @@
 
 **Status: draft.** Nothing has been mined or installed, no split exists and no
 model has run. Everything here is frozen and hash-bound before any model sees
-the final set. Structured content lives in
-`results/v4_3_next_direction_design.json` (`repository_native_protocol`).
+the final set. Structured content is in the design artifact
+(`next_direction_design.json`, under `repository_native_protocol`). That
+artifact lives in the current generation of `results/next_direction_bundle`.
 
 ## Claim scope
 
@@ -16,10 +17,14 @@ That is the whole claim. It does not state that no model has seen a repository.
 ## 1. Candidate sources
 
 We mine bug-fix commits from permissively licensed, pure-Python, pytest-tested
-GitHub repositories outside the indexed universe. The fix must have been merged
-**on or after 2025-01-01**. That cutoff is **contamination-risk mitigation
-only**: the buggy code, the repository or a similar fix may still have been seen
-in pretraining.
+GitHub repositories outside the indexed universe.
+
+**Temporal rule (frozen in the receipt, enforced at admission).** The
+authenticated fixed-commit **committer timestamp must be on or after
+2025-01-01T00:00:00Z**.
+- **Refused timestamps:** missing or unparseable ones, and contradictory ones: an author time later than the committer time, a buggy commit later than the fix, or a commit later than the evidence was retrieved.
+- **Why not "authored and merged":** the earlier wording is withdrawn, because PR merge evidence cannot be made reliable for every candidate.
+- **Status:** the cutoff is **contamination-risk mitigation only**. The buggy code, the repository or a similar fix may still have been seen in pretraining.
 
 **Not used wholesale:**
 - BugsInPy and SWE-bench / SWE-bench Verified, whose repositories are all indexed;
@@ -85,22 +90,34 @@ declared values.
 **Issue response.** It must hash to its recorded SHA-256. Its `number`, `url`
 and `repository_url` (or, for a PR, its base repository) must match.
 
-**Git objects.** Every object is re-hashed to its git object ID. In addition:
-- the fixed commit's parent is the buggy commit;
-- the licence path resolves through the buggy commit's trees to the recorded licence blob, and the blob's SHA-256 matches;
-- the target file resolves to the recorded blobs at both revisions, and the two blobs differ;
-- the target function is present in the buggy file;
-- the patch touches the target file, its removed lines appear in the buggy file, and its added lines appear in the fixed file;
-- the module is consistent with the file path.
+**Git objects.** Every object is re-hashed to its git object ID. The licence
+path must resolve through the buggy commit's trees to the recorded licence
+blob, and that blob's SHA-256 must match.
+
+**Exact diff (policy A, frozen in the receipt).** The submitted patch is
+**never authoritative**. The rules:
+- **Direct parent:** the fixed commit has exactly one parent, the buggy commit. Merge commits are refused.
+- **Single changed file:** comparing the authenticated buggy and fixed trees must show exactly one changed path, the target file. A changed subtree without its tree objects is refused (partial evidence is never accepted), and so is a multi-file fix. Policy B, multi-file fixes, is not selected.
+- **Derived diff:** the canonical diff is recomputed from the two authenticated target blobs (difflib unified diff, 3 context lines, `a/`/`b/` headers).
+- **Submitted patch:** it must carry exactly the derived removed and added lines, per file. Its hunks are parsed by their header counts, so a line that looks like a header cannot hide.
+- **Patch lineage:** patch hashes, shingles, and identical and near-duplicate checks use only the derived diff.
+- **Target function changed:** the declared target function must occur exactly once in the buggy file. At least one derived hunk must overlap its AST span, the same qualified function must exist in the fixed file, and the normalised bodies must differ.
+- **Recorded:** the derived diff's SHA-256, the changed-file list, the hunks, the target-function spans (buggy and fixed) and the authentication result are stored in the isolation record.
+
+**Temporal rule.** This is proved from the authenticated commit timestamps (§1).
 
 Tests use offline synthetic fixtures (`harness/isolation_evidence_fixtures.py`).
 They show that each of the following is refused:
 - an edited response whose hash was recomputed but whose content no longer matches;
-- a wrong parent;
-- an undeclared fork;
-- a licence mismatch;
-- a missing commit object;
-- a patch that does not match the file blobs.
+- a wrong parent, a merge commit, an undeclared fork, a licence mismatch, a missing commit object;
+- a partial patch carrying only an unrelated valid change;
+- a patch that omits one of two real changes, invents lines, or comes from another file;
+- a fix in an unrelated file, or a changed target file whose declared function is unchanged;
+- a known benchmark change disguised by submitting only a novel subset;
+- a multi-file fix;
+- a fix before the cutoff, and each missing or contradictory timestamp.
+
+The exact, complete, single-file patch is admitted.
 
 ### Overlap (stage 3)
 
@@ -108,16 +125,16 @@ They show that each of the following is refused:
 |---|---|
 | repository | owner/name, bare name and verified fork parent are all outside the universe |
 | issue | not a known benchmark instance |
-| patch lineage | commits are not known commits; the normalised patch is not identical to any indexed patch, and its Jaccard with each is below 0.80 |
+| patch lineage | commits are not known commits; the **derived** normalised diff is not identical to any indexed patch, and its Jaccard with each is below 0.80 |
 | function lineage | Jaccard against every indexed reference function is below 0.80; the nearest match, score and fingerprint are recorded |
 | within the new set | one target per fix commit and per function lineage; a pairwise near-duplicate check |
 
 ### Frozen universe and receipt
 
-**Loading refuses on any mismatch.**
-`load_frozen_reference_universe(root, receipt_path)` rebuilds the universe from
-disk and freezes it against `results/v4_3_reference_universe_receipt.json`. It
-refuses unless all of the following hold:
+**Loading refuses on any mismatch.** Loading rebuilds the universe from disk and
+freezes it against the receipt in the current bundle generation
+(`reference_universe_receipt.json`, which also freezes the diff policy and the
+temporal rule). It refuses unless all of the following hold:
 - the recomputed collections equal the receipt's, and so do their hashes;
 - the internal receipt hash verifies;
 - all 1,558 data inputs, 6 code inputs and 10 canonical sources match their recorded hashes;
@@ -128,6 +145,16 @@ refuses unless all of the following hold:
 receipt-hash parameter, and the object cannot be built directly.
 `isolation_record_is_current(record, frozen)` accepts only the same verified
 universe and an unmodified record digest.
+
+**Integrity is not a signature.** `record_sha256` only detects accidental
+modification: anyone who edits a record can recompute it. Downstream dataset
+construction must:
+1. keep each candidate's authenticated evidence sidecar (`candidate_to_sidecar`);
+2. reload the same frozen universe;
+3. rerun `check_candidate` and compare the record byte for byte (`revalidate_isolation_record`).
+
+An integration test shows that edited `admissible` or `reasons` fields are
+rejected even with a recomputed `record_sha256`.
 
 **Coverage.** `audit_source_coverage` takes the sources that need indexing from
 the corpus manifest bound in the universe. It records the manifest's SHA-256
@@ -310,8 +337,8 @@ fixed seed).
 **Per target:**
 - repository and issue API responses, with their hashes and retrieval timestamps;
 - the licence file's blob and hash, and the commit and tree objects;
-- commit and tree hashes;
-- the isolation record, including the frozen universe's receipt hash and the record digest;
+- the derived canonical diff's SHA-256, the changed files and the target-function spans;
+- the isolation record (the frozen universe's receipt hash and the record digest) and its evidence sidecar, so the record can be revalidated;
 - the hash-locked environment;
 - the qualification runs;
 - the prompt hash and leakage scan.
@@ -324,6 +351,12 @@ fixed seed).
 - logs, return codes, timeouts and durations for both revisions;
 - Atheris logs, corpora, coverage and seeds per mode;
 - the WSL environment details.
+
+**Publication:**
+- design artifacts are published as one immutable generation under `results/next_direction_bundle`: the receipt, the design, a verified copy of the power artifact, and a manifest of file hashes;
+- one small `CURRENT` pointer selects the generation. Readers accept only a complete, manifest-verified generation, so a crash at any point leaves either the complete old generation or the complete new one;
+- accepted generations are never overwritten;
+- the standalone power artifact is replaced with a single atomic file replacement, which is per-file atomic only.
 
 **Rollback:**
 - nothing is overwritten;

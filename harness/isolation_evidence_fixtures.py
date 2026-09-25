@@ -9,14 +9,13 @@ acquisition step.
 """
 from __future__ import annotations
 
-import difflib
 import hashlib
 import json
 import re
 from typing import Any
 
 from harness.repository_isolation import (
-    API, ApiResponse, CandidateBug, GitObject, git_object_id,
+    API, ApiResponse, CandidateBug, GitObject, canonical_diff, git_object_id,
 )
 
 LICENCE_TEXT = b"MIT License\n\nCopyright (c) 2025 Example\n"
@@ -56,10 +55,14 @@ def _tree_for(files: dict[str, bytes], objects: list[GitObject]) -> str:
     return git_object_id("tree", body)
 
 
-def _commit(tree: str, parents: list[str], message: str, epoch: int) -> bytes:
+def _commit(tree: str, parents: list[str], message: str, epoch: int | None,
+            author_epoch: int | None = None) -> bytes:
+    author = epoch if author_epoch is None else author_epoch
+    def stamp(value):
+        return "" if value is None else f" {value} +0000"
     lines = [f"tree {tree}", *[f"parent {parent}" for parent in parents],
-             f"author Example <dev@example.invalid> {epoch} +0000",
-             f"committer Example <dev@example.invalid> {epoch} +0000", "", message, ""]
+             f"author Example <dev@example.invalid>{stamp(author)}",
+             f"committer Example <dev@example.invalid>{stamp(epoch)}", "", message, ""]
     return "\n".join(lines).encode("utf-8")
 
 
@@ -92,20 +95,32 @@ def synthetic_candidate(*, repository: str = "example-org/ranges", buggy_text: s
                         fixed_text: str, target_function: str, target_file: str,
                         target_module: str, patch: str | None = None,
                         fork_parent: str | None = None, issue_number: int = 1,
-                        repository_id: int = 123456, **overrides: Any) -> CandidateBug:
-    """A candidate whose every piece of evidence is mutually consistent."""
+                        repository_id: int = 123456,
+                        extra_files: dict[str, tuple[str, str]] | None = None,
+                        committer_epoch: int | None = COMMIT_EPOCH,
+                        author_epoch: int | None = None,
+                        buggy_epoch: int | None = COMMIT_EPOCH - 3600,
+                        **overrides: Any) -> CandidateBug:
+    """A candidate whose every piece of evidence is mutually consistent.
+
+    ``extra_files`` ({path: (buggy text, fixed text)}) adds further files to both
+    revisions; the commit timestamps can be set to exercise the temporal rule.
+    The default patch is the canonical diff of the target file.
+    """
     objects: list[GitObject] = []
     buggy_bytes, fixed_bytes = buggy_text.encode("utf-8"), fixed_text.encode("utf-8")
-    buggy_tree = _tree_for({"LICENSE": LICENCE_TEXT, target_file: buggy_bytes}, objects)
-    fixed_tree = _tree_for({"LICENSE": LICENCE_TEXT, target_file: fixed_bytes}, objects)
-    buggy_body = _commit(buggy_tree, [], "buggy", COMMIT_EPOCH - 3600)
+    extra = extra_files or {}
+    buggy_tree = _tree_for({"LICENSE": LICENCE_TEXT, target_file: buggy_bytes,
+                            **{p: b.encode("utf-8") for p, (b, _) in extra.items()}}, objects)
+    fixed_tree = _tree_for({"LICENSE": LICENCE_TEXT, target_file: fixed_bytes,
+                            **{p: f.encode("utf-8") for p, (_, f) in extra.items()}}, objects)
+    buggy_body = _commit(buggy_tree, [], "buggy", buggy_epoch)
     buggy_commit = git_object_id("commit", buggy_body)
-    fixed_body = _commit(fixed_tree, [buggy_commit], f"fix #{issue_number}", COMMIT_EPOCH)
+    fixed_body = _commit(fixed_tree, [buggy_commit], f"fix #{issue_number}", committer_epoch,
+                         author_epoch)
     objects += [GitObject("commit", buggy_body), GitObject("commit", fixed_body)]
     if patch is None:
-        patch = "".join(difflib.unified_diff(
-            buggy_text.splitlines(keepends=True), fixed_text.splitlines(keepends=True),
-            f"a/{target_file}", f"b/{target_file}"))
+        patch = canonical_diff(target_file, buggy_text, fixed_text)
     node = "R_" + re.sub(r"[^A-Za-z0-9]", "", repository) + "node"
     metadata = {"full_name": repository, "id": repository_id, "node_id": node,
                 "html_url": f"https://github.com/{repository}", "fork": fork_parent is not None,

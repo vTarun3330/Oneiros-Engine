@@ -38507,22 +38507,33 @@
   "problems": []
  },
  "curated_note": "all CURATED_BUGSINPY_BUGS definitions are indexed: a conservative superset of the curated seeds that entered any split",
+ "diff_policy": {
+  "id": "A_direct_parent_single_target_file",
+  "multi_file_fixes": "refused (policy B is not selected)",
+  "rule": "the fixed commit has exactly one parent, the buggy commit; comparing the authenticated buggy and fixed trees shows exactly one changed path, the target file; the canonical diff is recomputed from the two target blobs (difflib unified diff, 3 context lines, a/ and b/ headers); the submitted patch must carry exactly the same removed and added lines per file; at least one changed hunk overlaps the declared target function, whose normalised body differs between the buggy and fixed files"
+ },
  "fork_parent_note": "benchmark repositories are recorded as their canonical upstreams; no fork relation among them is asserted offline, so every candidate must supply verified fork evidence",
- "isolation_version": "oneiros_repository_isolation_v3",
+ "isolation_version": "oneiros_repository_isolation_v4",
  "min_function_shingles": 12,
  "near_duplicate_threshold": 0.8,
- "receipt_sha256": "c3fabc474c48b403d08356265f123eed86b0cb3b59516e375df7b4bfc8c93603",
- "schema_version": "oneiros_reference_universe_receipt_v2",
+ "receipt_sha256": "40ce55b056dde543d70813f9dfd7849813621d152fdcbd4797cfad2cf3af8977",
+ "schema_version": "oneiros_reference_universe_receipt_v3",
  "source_files_sha256": {
   "harness/bugsinpy_loader.py": "6c54a924d6943f0fd591f08df8745040627fd57e79870e63a847bb28367e7cd6",
   "harness/corpus.py": "1c9148bc6946031f0cb9af69405f64b385417e8cf71345cd5e84aa831d5a32d3",
   "harness/corpus_view.py": "6c1c90909a8a92a3996ced782ed0acaffaf17fd54b716498bbfe552ecd2908b0",
   "harness/function_complexity.py": "83c6e3dfa21374555ce35454838d0fe16668f407f241d05417918d428ca63497",
-  "harness/repository_isolation.py": "dd4da1f0ce975fbba55cc01008f9d8723127349525b101347c4598c39f3e2ee4",
+  "harness/repository_isolation.py": "9b60e64170b012bb45d54d7c9010eddb68d3620cc9404d259b3c1b0bd62f65b2",
   "harness/source_identity.py": "619d28f5131fc5f268c1a53992b767ca57f566c8408ca88ef5ba7babb40a3f2c",
   "scripts/audit_cross_split_near_duplicates.py": "702e58a7f65b350ec9f3172234e89c717d37394f77adfcd5f5439027c4340c7d",
   "scripts/build_corpus_v1.py": "4c3476a09a83212cbeabd3102881adbeac4d151f19a5b5908c11575cb32d8cfd",
-  "scripts/build_next_direction_design.py": "43df7dd1da64e1b0f0377e4dbfb6969ad02f489ac6cbb846f0f6dabbca766c51",
+  "scripts/build_next_direction_design.py": "ee9874e76e12f1600590408e27753ab8847d8ba9550ecf264343ba5c2b775040",
   "utils/dataset_identity.py": "0689dd52f468f06d9c9652cf77d4f66991feaa5dcafcf857172c14bf98f338ac"
+ },
+ "temporal_rule": {
+  "cutoff_epoch": 1735689600,
+  "rejects": "a missing or unparseable author or committer timestamp; an author timestamp later than the committer timestamp; a buggy-commit committer timestamp later than the fixed commit's; a commit timestamp later than the evidence retrieval",
+  "rule": "the authenticated fixed-commit committer timestamp is on or after 2025-01-01T00:00:00Z",
+  "status": "contamination-risk mitigation only; it does not show that no model saw the code"
  }
 }
