@@ -1,307 +1,2014 @@
 {
-  "schema_version": "oneiros_repository_native_power_analysis_v1",
-  "label": "prospective design calculation from permitted train-derived evidence only",
-  "gate": {
-    "min_gain_pp": 5.0,
-    "lower_bound": "one-sided 95% (two-sided 90%) > 0"
-  },
   "evidence": {
     "retention_control_vs_base": {
-      "records": 613,
+      "checks": {
+        "every_record_is_a_train_view_record": true,
+        "no_duplicate_record_ids": true,
+        "paired_arms_have_identical_record_ids": true,
+        "panel_is_train_derived": true,
+        "panel_lineages_cover_exactly_the_evaluated_records": true,
+        "panel_record_ids_equal_evaluated_records": true,
+        "panel_reports_no_protected_access": true
+      },
       "clusters": 100,
-      "mean_cluster_size": 6.13,
-      "discordance": 0.2121,
       "difference_pp": 0.653,
+      "discordance": 0.2121,
+      "first": "execution_dose/base",
       "icc_of_paired_differences": 0.0062,
       "inputs_sha256": {
-        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_execution_dose_v1\\retention_base\\rehearsal_result.json": "4d8cbc59631a58a28eec99ed174ec9b3aae1a08c2932ff197ebad41ee62720ee",
-        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_execution_dose_v1\\retention_control\\rehearsal_result.json": "b3f819296e3c5ec6fc6a2c12007d125a2fe889aa6167318cd8fb4e0a8c58c4a2",
-        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_execution_dose_retention_panel.json": "17d4e6f525dee754b60ed80b93616005499d557eb0f3bbe991edba5cf523b046"
-      }
+        "results/v4_3_execution_dose_retention_panel.json": "17d4e6f525dee754b60ed80b93616005499d557eb0f3bbe991edba5cf523b046",
+        "results/v4_3_execution_dose_v1/retention_base.json": "37c00589a04530c015518b992e505e679b291205e4c1f44d9cbde5ab1b4d1ded",
+        "results/v4_3_execution_dose_v1/retention_base/rehearsal_result.json": "4d8cbc59631a58a28eec99ed174ec9b3aae1a08c2932ff197ebad41ee62720ee",
+        "results/v4_3_execution_dose_v1/retention_control.json": "6ea55450adfcb344b1b53c902d2ab9b2100da9942102eb681a06654bd4c7317d",
+        "results/v4_3_execution_dose_v1/retention_control/rehearsal_result.json": "b3f819296e3c5ec6fc6a2c12007d125a2fe889aa6167318cd8fb4e0a8c58c4a2"
+      },
+      "mean_cluster_size": 6.13,
+      "panel": "results/v4_3_execution_dose_retention_panel.json",
+      "records": 613,
+      "second": "execution_dose/control"
     },
     "retention_treatment_vs_control": {
-      "records": 613,
+      "checks": {
+        "every_record_is_a_train_view_record": true,
+        "no_duplicate_record_ids": true,
+        "paired_arms_have_identical_record_ids": true,
+        "panel_is_train_derived": true,
+        "panel_lineages_cover_exactly_the_evaluated_records": true,
+        "panel_record_ids_equal_evaluated_records": true,
+        "panel_reports_no_protected_access": true
+      },
       "clusters": 100,
-      "mean_cluster_size": 6.13,
-      "discordance": 0.2121,
       "difference_pp": -0.326,
+      "discordance": 0.2121,
+      "first": "execution_dose/control",
       "icc_of_paired_differences": -0.0174,
       "inputs_sha256": {
-        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_execution_dose_v1\\retention_control\\rehearsal_result.json": "b3f819296e3c5ec6fc6a2c12007d125a2fe889aa6167318cd8fb4e0a8c58c4a2",
-        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_execution_dose_v1\\retention_dose_treatment\\rehearsal_result.json": "4bbf9d10d6934aaf0fef568e77b8a6a136d5e1ed61e10d2cd9da5aa941fe66c9",
-        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_execution_dose_retention_panel.json": "17d4e6f525dee754b60ed80b93616005499d557eb0f3bbe991edba5cf523b046"
-      }
+        "results/v4_3_execution_dose_retention_panel.json": "17d4e6f525dee754b60ed80b93616005499d557eb0f3bbe991edba5cf523b046",
+        "results/v4_3_execution_dose_v1/retention_control.json": "6ea55450adfcb344b1b53c902d2ab9b2100da9942102eb681a06654bd4c7317d",
+        "results/v4_3_execution_dose_v1/retention_control/rehearsal_result.json": "b3f819296e3c5ec6fc6a2c12007d125a2fe889aa6167318cd8fb4e0a8c58c4a2",
+        "results/v4_3_execution_dose_v1/retention_dose_treatment.json": "9d877981c38c67e4755a654e8150cf2dc8b9a5e8bce2a7a7b340177c0a27ab19",
+        "results/v4_3_execution_dose_v1/retention_dose_treatment/rehearsal_result.json": "4bbf9d10d6934aaf0fef568e77b8a6a136d5e1ed61e10d2cd9da5aa941fe66c9"
+      },
+      "mean_cluster_size": 6.13,
+      "panel": "results/v4_3_execution_dose_retention_panel.json",
+      "records": 613,
+      "second": "execution_dose/dose_treatment"
     },
     "toolassist_b_vs_a": {
-      "records": 264,
+      "checks": {
+        "every_record_is_a_train_view_record": true,
+        "no_duplicate_record_ids": true,
+        "paired_arms_have_identical_record_ids": true,
+        "panel_is_train_derived": true,
+        "panel_lineages_cover_exactly_the_evaluated_records": true,
+        "panel_record_ids_equal_evaluated_records": true,
+        "panel_reports_no_protected_access": true
+      },
       "clusters": 110,
-      "mean_cluster_size": 2.4,
-      "discordance": 0.1705,
       "difference_pp": 6.439,
+      "discordance": 0.1705,
+      "first": "tool_assisted/A",
       "icc_of_paired_differences": -0.1214,
       "inputs_sha256": {
-        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_tool_assisted_v1\\eval_A\\rehearsal_result.json": "3ab0b54fca91ba4010b9e04f3188786dfe2657c6aea3f829da6d6dea8c4adbfd",
-        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_tool_assisted_v1\\eval_B\\rehearsal_result.json": "fe63091a5300c02f0f7eb179d3cefdc73429b984c4afd093f37168f4e9e93eab",
-        "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\results\\v4_3_tool_assisted_panel.json": "fa8f51980b86fdb4d71a9beb5e8bec5c481741ce87145844f871cfbe4b2dda40"
+        "results/v4_3_tool_assisted_panel.json": "fa8f51980b86fdb4d71a9beb5e8bec5c481741ce87145844f871cfbe4b2dda40",
+        "results/v4_3_tool_assisted_v1/eval_A.json": "e2af9af277ce50d425cfc62201c4a3a7d7444e62840b2ffd87024929f1b15d3d",
+        "results/v4_3_tool_assisted_v1/eval_A/rehearsal_result.json": "3ab0b54fca91ba4010b9e04f3188786dfe2657c6aea3f829da6d6dea8c4adbfd",
+        "results/v4_3_tool_assisted_v1/eval_B.json": "1e9e18a1d684b92399d5e0fc14fedb5c47596ad3594980a4072c318737e8c60e",
+        "results/v4_3_tool_assisted_v1/eval_B/rehearsal_result.json": "fe63091a5300c02f0f7eb179d3cefdc73429b984c4afd093f37168f4e9e93eab"
+      },
+      "mean_cluster_size": 2.4,
+      "panel": "results/v4_3_tool_assisted_panel.json",
+      "records": 264,
+      "second": "tool_assisted/B"
+    }
+  },
+  "gate": {
+    "lower_bound": "one-sided 95% (two-sided 90%) > 0",
+    "min_gain_pp": 5.0
+  },
+  "label": "prospective design calculation from permitted train-derived evidence only",
+  "permitted_inputs": [
+    "results/v4_3_execution_dose_retention_panel.json",
+    "results/v4_3_execution_dose_v1/retention_base.json",
+    "results/v4_3_execution_dose_v1/retention_base/rehearsal_result.json",
+    "results/v4_3_execution_dose_v1/retention_control.json",
+    "results/v4_3_execution_dose_v1/retention_control/rehearsal_result.json",
+    "results/v4_3_execution_dose_v1/retention_dose_treatment.json",
+    "results/v4_3_execution_dose_v1/retention_dose_treatment/rehearsal_result.json",
+    "results/v4_3_tool_assisted_panel.json",
+    "results/v4_3_tool_assisted_v1/eval_A.json",
+    "results/v4_3_tool_assisted_v1/eval_A/rehearsal_result.json",
+    "results/v4_3_tool_assisted_v1/eval_B.json",
+    "results/v4_3_tool_assisted_v1/eval_B/rehearsal_result.json"
+  ],
+  "power_at_true_effect_equal_to_gate": {
+    "100": 0.292,
+    "150": 0.382,
+    "200": 0.463,
+    "300": 0.5,
+    "400": 0.5,
+    "500": 0.5
+  },
+  "power_by_n": {
+    "100": {
+      "lower_bound_binds_above_gate_rho0.05_25_repositories": true,
+      "mde_80pct_pp": {
+        "12_targets_per_repository": {
+          "d=0.15": {
+            "rho=0.0": 9.35,
+            "rho=0.05": 11.46,
+            "rho=0.1": 13.13,
+            "rho=0.2": 15.75
+          },
+          "d=0.21": {
+            "rho=0.0": 11.06,
+            "rho=0.05": 13.56,
+            "rho=0.1": 15.54,
+            "rho=0.2": 18.63
+          },
+          "d=0.3": {
+            "rho=0.0": 13.22,
+            "rho=0.05": 16.2,
+            "rho=0.1": 18.57,
+            "rho=0.2": 22.26
+          },
+          "d=0.4": {
+            "rho=0.0": 15.27,
+            "rho=0.05": 18.71,
+            "rho=0.1": 21.44,
+            "rho=0.2": 25.71
+          }
+        },
+        "cap_bound_8pct": {
+          "d=0.15": {
+            "rho=0.0": 9.35,
+            "rho=0.05": 10.75,
+            "rho=0.1": 11.95,
+            "rho=0.2": 13.93
+          },
+          "d=0.21": {
+            "rho=0.0": 11.06,
+            "rho=0.05": 12.72,
+            "rho=0.1": 14.14,
+            "rho=0.2": 16.48
+          },
+          "d=0.3": {
+            "rho=0.0": 13.22,
+            "rho=0.05": 15.21,
+            "rho=0.1": 16.9,
+            "rho=0.2": 19.69
+          },
+          "d=0.4": {
+            "rho=0.0": 15.27,
+            "rho=0.05": 17.56,
+            "rho=0.1": 19.51,
+            "rho=0.2": 22.74
+          }
+        },
+        "fixed_25_repositories": {
+          "d=0.15": {
+            "rho=0.0": 9.35,
+            "rho=0.05": 9.98,
+            "rho=0.1": 10.57,
+            "rho=0.2": 11.63
+          },
+          "d=0.21": {
+            "rho=0.0": 11.06,
+            "rho=0.05": 11.81,
+            "rho=0.1": 12.5,
+            "rho=0.2": 13.75
+          },
+          "d=0.3": {
+            "rho=0.0": 13.22,
+            "rho=0.05": 14.12,
+            "rho=0.1": 14.94,
+            "rho=0.2": 16.44
+          },
+          "d=0.4": {
+            "rho=0.0": 15.27,
+            "rho=0.05": 16.3,
+            "rho=0.1": 17.26,
+            "rho=0.2": 18.98
+          }
+        }
+      },
+      "power_analytic": {
+        "12_targets_per_repository": {
+          "rho=0.0": {
+            "10pp": 0.723,
+            "15pp": 0.966,
+            "5pp": 0.292,
+            "8pp": 0.551
+          },
+          "rho=0.05": {
+            "10pp": 0.56,
+            "15pp": 0.872,
+            "5pp": 0.223,
+            "8pp": 0.413
+          },
+          "rho=0.1": {
+            "10pp": 0.459,
+            "15pp": 0.772,
+            "5pp": 0.187,
+            "8pp": 0.337
+          },
+          "rho=0.2": {
+            "10pp": 0.346,
+            "15pp": 0.615,
+            "5pp": 0.151,
+            "8pp": 0.257
+          }
+        },
+        "cap_bound_8pct": {
+          "rho=0.0": {
+            "10pp": 0.723,
+            "15pp": 0.966,
+            "5pp": 0.292,
+            "8pp": 0.551
+          },
+          "rho=0.05": {
+            "10pp": 0.61,
+            "15pp": 0.909,
+            "5pp": 0.242,
+            "8pp": 0.453
+          },
+          "rho=0.1": {
+            "10pp": 0.528,
+            "15pp": 0.844,
+            "5pp": 0.211,
+            "8pp": 0.388
+          },
+          "rho=0.2": {
+            "10pp": 0.42,
+            "15pp": 0.723,
+            "5pp": 0.175,
+            "8pp": 0.308
+          }
+        },
+        "fixed_25_repositories": {
+          "rho=0.0": {
+            "10pp": 0.723,
+            "15pp": 0.966,
+            "5pp": 0.292,
+            "8pp": 0.551
+          },
+          "rho=0.05": {
+            "10pp": 0.67,
+            "15pp": 0.944,
+            "5pp": 0.267,
+            "8pp": 0.503
+          },
+          "rho=0.1": {
+            "10pp": 0.624,
+            "15pp": 0.918,
+            "5pp": 0.248,
+            "8pp": 0.464
+          },
+          "rho=0.2": {
+            "10pp": 0.549,
+            "15pp": 0.863,
+            "5pp": 0.219,
+            "8pp": 0.404
+          }
+        }
+      },
+      "power_clustered_monte_carlo_12_targets_per_repository": {
+        "rho=0.0": {
+          "10pp": 0.741,
+          "15pp": 0.9673,
+          "5pp": 0.3185,
+          "8pp": 0.5693
+        },
+        "rho=0.05": {
+          "10pp": 0.5655,
+          "15pp": 0.8415,
+          "5pp": 0.2497,
+          "8pp": 0.4402
+        },
+        "rho=0.1": {
+          "10pp": 0.4552,
+          "15pp": 0.7135,
+          "5pp": 0.2132,
+          "8pp": 0.347
+        },
+        "rho=0.2": {
+          "10pp": 0.3247,
+          "15pp": 0.5345,
+          "5pp": 0.171,
+          "8pp": 0.2567
+        }
+      },
+      "power_clustered_monte_carlo_25_repositories": {
+        "rho=0.0": {
+          "10pp": 0.7295,
+          "15pp": 0.9732,
+          "5pp": 0.3093,
+          "8pp": 0.5573
+        },
+        "rho=0.05": {
+          "10pp": 0.6468,
+          "15pp": 0.9097,
+          "5pp": 0.2685,
+          "8pp": 0.483
+        },
+        "rho=0.1": {
+          "10pp": 0.5345,
+          "15pp": 0.811,
+          "5pp": 0.217,
+          "8pp": 0.406
+        },
+        "rho=0.2": {
+          "10pp": 0.4047,
+          "15pp": 0.6577,
+          "5pp": 0.1827,
+          "8pp": 0.2953
+        }
+      },
+      "resources": {
+        "environment_build_wall_hours": 1.2,
+        "environment_storage_gb": {
+          "kept": 30,
+          "peak": 90
+        },
+        "mined_candidates_needed": {
+          "yield=0.07": 1429,
+          "yield=0.1": 1000,
+          "yield=0.15": 667
+        },
+        "mining": {
+          "clone_storage_gb": [
+            3,
+            5
+          ],
+          "cpu_hours": 0.7,
+          "network_hours": [
+            0.7,
+            1.3
+          ]
+        },
+        "one_time_evaluation": {
+          "atheris_wall_hours": 6.2,
+          "gpu_minutes": 20,
+          "native_execution_wall_hours": 2.5,
+          "storage_gb": 0.7
+        },
+        "peak_storage_gb": 98,
+        "qualification_wall_hours": 1.4,
+        "repositories_needed": {
+          "at_12_targets_each": 9,
+          "at_8pct_cap_minimum": 13
+        },
+        "total_cpu_wall_hours": 13.1
+      }
+    },
+    "150": {
+      "lower_bound_binds_above_gate_rho0.05_25_repositories": true,
+      "mde_80pct_pp": {
+        "12_targets_per_repository": {
+          "d=0.15": {
+            "rho=0.0": 7.71,
+            "rho=0.05": 9.5,
+            "rho=0.1": 10.94,
+            "rho=0.2": 13.23
+          },
+          "d=0.21": {
+            "rho=0.0": 9.12,
+            "rho=0.05": 11.23,
+            "rho=0.1": 12.94,
+            "rho=0.2": 15.65
+          },
+          "d=0.3": {
+            "rho=0.0": 10.9,
+            "rho=0.05": 13.43,
+            "rho=0.1": 15.46,
+            "rho=0.2": 18.7
+          },
+          "d=0.4": {
+            "rho=0.0": 12.59,
+            "rho=0.05": 15.5,
+            "rho=0.1": 17.86,
+            "rho=0.2": 21.59
+          }
+        },
+        "cap_bound_8pct": {
+          "d=0.15": {
+            "rho=0.0": 7.71,
+            "rho=0.05": 9.5,
+            "rho=0.1": 10.94,
+            "rho=0.2": 13.23
+          },
+          "d=0.21": {
+            "rho=0.0": 9.12,
+            "rho=0.05": 11.23,
+            "rho=0.1": 12.94,
+            "rho=0.2": 15.65
+          },
+          "d=0.3": {
+            "rho=0.0": 10.9,
+            "rho=0.05": 13.43,
+            "rho=0.1": 15.46,
+            "rho=0.2": 18.7
+          },
+          "d=0.4": {
+            "rho=0.0": 12.59,
+            "rho=0.05": 15.5,
+            "rho=0.1": 17.86,
+            "rho=0.2": 21.59
+          }
+        },
+        "fixed_25_repositories": {
+          "d=0.15": {
+            "rho=0.0": 7.71,
+            "rho=0.05": 8.58,
+            "rho=0.1": 9.35,
+            "rho=0.2": 10.69
+          },
+          "d=0.21": {
+            "rho=0.0": 9.12,
+            "rho=0.05": 10.15,
+            "rho=0.1": 11.06,
+            "rho=0.2": 12.65
+          },
+          "d=0.3": {
+            "rho=0.0": 10.9,
+            "rho=0.05": 12.13,
+            "rho=0.1": 13.22,
+            "rho=0.2": 15.12
+          },
+          "d=0.4": {
+            "rho=0.0": 12.59,
+            "rho=0.05": 14.0,
+            "rho=0.1": 15.27,
+            "rho=0.2": 17.46
+          }
+        }
+      },
+      "power_analytic": {
+        "12_targets_per_repository": {
+          "rho=0.0": {
+            "10pp": 0.863,
+            "15pp": 0.995,
+            "5pp": 0.382,
+            "8pp": 0.701
+          },
+          "rho=0.05": {
+            "10pp": 0.711,
+            "15pp": 0.961,
+            "5pp": 0.286,
+            "8pp": 0.54
+          },
+          "rho=0.1": {
+            "10pp": 0.597,
+            "15pp": 0.9,
+            "5pp": 0.237,
+            "8pp": 0.442
+          },
+          "rho=0.2": {
+            "10pp": 0.455,
+            "15pp": 0.766,
+            "5pp": 0.186,
+            "8pp": 0.333
+          }
+        },
+        "cap_bound_8pct": {
+          "rho=0.0": {
+            "10pp": 0.863,
+            "15pp": 0.995,
+            "5pp": 0.382,
+            "8pp": 0.701
+          },
+          "rho=0.05": {
+            "10pp": 0.711,
+            "15pp": 0.961,
+            "5pp": 0.286,
+            "8pp": 0.54
+          },
+          "rho=0.1": {
+            "10pp": 0.597,
+            "15pp": 0.9,
+            "5pp": 0.237,
+            "8pp": 0.442
+          },
+          "rho=0.2": {
+            "10pp": 0.455,
+            "15pp": 0.766,
+            "5pp": 0.186,
+            "8pp": 0.333
+          }
+        },
+        "fixed_25_repositories": {
+          "rho=0.0": {
+            "10pp": 0.863,
+            "15pp": 0.995,
+            "5pp": 0.382,
+            "8pp": 0.701
+          },
+          "rho=0.05": {
+            "10pp": 0.789,
+            "15pp": 0.984,
+            "5pp": 0.329,
+            "8pp": 0.617
+          },
+          "rho=0.1": {
+            "10pp": 0.723,
+            "15pp": 0.966,
+            "5pp": 0.292,
+            "8pp": 0.551
+          },
+          "rho=0.2": {
+            "10pp": 0.615,
+            "15pp": 0.912,
+            "5pp": 0.244,
+            "8pp": 0.456
+          }
+        }
+      },
+      "power_clustered_monte_carlo_12_targets_per_repository": {
+        "rho=0.0": {
+          "10pp": 0.86,
+          "15pp": 0.9955,
+          "5pp": 0.3852,
+          "8pp": 0.6977
+        },
+        "rho=0.05": {
+          "10pp": 0.6935,
+          "15pp": 0.9365,
+          "5pp": 0.3085,
+          "8pp": 0.5383
+        },
+        "rho=0.1": {
+          "10pp": 0.5455,
+          "15pp": 0.824,
+          "5pp": 0.2482,
+          "8pp": 0.4047
+        },
+        "rho=0.2": {
+          "10pp": 0.3845,
+          "15pp": 0.6617,
+          "5pp": 0.1832,
+          "8pp": 0.297
+        }
+      },
+      "power_clustered_monte_carlo_25_repositories": {
+        "rho=0.0": {
+          "10pp": 0.8678,
+          "15pp": 0.997,
+          "5pp": 0.3812,
+          "8pp": 0.6945
+        },
+        "rho=0.05": {
+          "10pp": 0.7365,
+          "15pp": 0.965,
+          "5pp": 0.3162,
+          "8pp": 0.5885
+        },
+        "rho=0.1": {
+          "10pp": 0.6292,
+          "15pp": 0.9107,
+          "5pp": 0.2677,
+          "8pp": 0.487
+        },
+        "rho=0.2": {
+          "10pp": 0.4557,
+          "15pp": 0.7515,
+          "5pp": 0.192,
+          "8pp": 0.3453
+        }
+      },
+      "resources": {
+        "environment_build_wall_hours": 1.9,
+        "environment_storage_gb": {
+          "kept": 45,
+          "peak": 135
+        },
+        "mined_candidates_needed": {
+          "yield=0.07": 2143,
+          "yield=0.1": 1500,
+          "yield=0.15": 1000
+        },
+        "mining": {
+          "clone_storage_gb": [
+            4,
+            8
+          ],
+          "cpu_hours": 1.0,
+          "network_hours": [
+            1.0,
+            2.0
+          ]
+        },
+        "one_time_evaluation": {
+          "atheris_wall_hours": 9.4,
+          "gpu_minutes": 30,
+          "native_execution_wall_hours": 3.8,
+          "storage_gb": 1.0
+        },
+        "peak_storage_gb": 146,
+        "qualification_wall_hours": 2.1,
+        "repositories_needed": {
+          "at_12_targets_each": 13,
+          "at_8pct_cap_minimum": 13
+        },
+        "total_cpu_wall_hours": 19.1
+      }
+    },
+    "200": {
+      "lower_bound_binds_above_gate_rho0.05_25_repositories": true,
+      "mde_80pct_pp": {
+        "12_targets_per_repository": {
+          "d=0.15": {
+            "rho=0.0": 7.27,
+            "rho=0.05": 8.29,
+            "rho=0.1": 9.57,
+            "rho=0.2": 11.63
+          },
+          "d=0.21": {
+            "rho=0.0": 7.94,
+            "rho=0.05": 9.8,
+            "rho=0.1": 11.32,
+            "rho=0.2": 13.75
+          },
+          "d=0.3": {
+            "rho=0.0": 9.49,
+            "rho=0.05": 11.72,
+            "rho=0.1": 13.53,
+            "rho=0.2": 16.44
+          },
+          "d=0.4": {
+            "rho=0.0": 10.96,
+            "rho=0.05": 13.53,
+            "rho=0.1": 15.62,
+            "rho=0.2": 18.98
+          }
+        },
+        "cap_bound_8pct": {
+          "d=0.15": {
+            "rho=0.0": 7.27,
+            "rho=0.05": 8.78,
+            "rho=0.1": 10.38,
+            "rho=0.2": 12.85
+          },
+          "d=0.21": {
+            "rho=0.0": 7.94,
+            "rho=0.05": 10.39,
+            "rho=0.1": 12.28,
+            "rho=0.2": 15.21
+          },
+          "d=0.3": {
+            "rho=0.0": 9.49,
+            "rho=0.05": 12.41,
+            "rho=0.1": 14.68,
+            "rho=0.2": 18.17
+          },
+          "d=0.4": {
+            "rho=0.0": 10.96,
+            "rho=0.05": 14.33,
+            "rho=0.1": 16.94,
+            "rho=0.2": 20.99
+          }
+        },
+        "fixed_25_repositories": {
+          "d=0.15": {
+            "rho=0.0": 7.27,
+            "rho=0.05": 7.76,
+            "rho=0.1": 8.66,
+            "rho=0.2": 10.18
+          },
+          "d=0.21": {
+            "rho=0.0": 7.94,
+            "rho=0.05": 9.18,
+            "rho=0.1": 10.24,
+            "rho=0.2": 12.05
+          },
+          "d=0.3": {
+            "rho=0.0": 9.49,
+            "rho=0.05": 10.97,
+            "rho=0.1": 12.24,
+            "rho=0.2": 14.4
+          },
+          "d=0.4": {
+            "rho=0.0": 10.96,
+            "rho=0.05": 12.66,
+            "rho=0.1": 14.14,
+            "rho=0.2": 16.63
+          }
+        }
+      },
+      "power_analytic": {
+        "12_targets_per_repository": {
+          "rho=0.0": {
+            "10pp": 0.935,
+            "15pp": 0.999,
+            "5pp": 0.463,
+            "8pp": 0.806
+          },
+          "rho=0.05": {
+            "10pp": 0.815,
+            "15pp": 0.989,
+            "5pp": 0.345,
+            "8pp": 0.644
+          },
+          "rho=0.1": {
+            "10pp": 0.704,
+            "15pp": 0.959,
+            "5pp": 0.283,
+            "8pp": 0.534
+          },
+          "rho=0.2": {
+            "10pp": 0.549,
+            "15pp": 0.863,
+            "5pp": 0.219,
+            "8pp": 0.404
+          }
+        },
+        "cap_bound_8pct": {
+          "rho=0.0": {
+            "10pp": 0.935,
+            "15pp": 0.999,
+            "5pp": 0.463,
+            "8pp": 0.806
+          },
+          "rho=0.05": {
+            "10pp": 0.772,
+            "15pp": 0.98,
+            "5pp": 0.319,
+            "8pp": 0.599
+          },
+          "rho=0.1": {
+            "10pp": 0.639,
+            "15pp": 0.927,
+            "5pp": 0.254,
+            "8pp": 0.476
+          },
+          "rho=0.2": {
+            "10pp": 0.475,
+            "15pp": 0.789,
+            "5pp": 0.193,
+            "8pp": 0.348
+          }
+        },
+        "fixed_25_repositories": {
+          "rho=0.0": {
+            "10pp": 0.935,
+            "15pp": 0.999,
+            "5pp": 0.463,
+            "8pp": 0.806
+          },
+          "rho=0.05": {
+            "10pp": 0.859,
+            "15pp": 0.995,
+            "5pp": 0.379,
+            "8pp": 0.696
+          },
+          "rho=0.1": {
+            "10pp": 0.782,
+            "15pp": 0.983,
+            "5pp": 0.325,
+            "8pp": 0.61
+          },
+          "rho=0.2": {
+            "10pp": 0.654,
+            "15pp": 0.935,
+            "5pp": 0.26,
+            "8pp": 0.489
+          }
+        }
+      },
+      "power_clustered_monte_carlo_12_targets_per_repository": {
+        "rho=0.0": {
+          "10pp": 0.9267,
+          "15pp": 0.9998,
+          "5pp": 0.4507,
+          "8pp": 0.7835
+        },
+        "rho=0.05": {
+          "10pp": 0.792,
+          "15pp": 0.9745,
+          "5pp": 0.346,
+          "8pp": 0.6258
+        },
+        "rho=0.1": {
+          "10pp": 0.6332,
+          "15pp": 0.9173,
+          "5pp": 0.2715,
+          "8pp": 0.4848
+        },
+        "rho=0.2": {
+          "10pp": 0.4532,
+          "15pp": 0.74,
+          "5pp": 0.1925,
+          "8pp": 0.3575
+        }
+      },
+      "power_clustered_monte_carlo_25_repositories": {
+        "rho=0.0": {
+          "10pp": 0.9275,
+          "15pp": 0.9998,
+          "5pp": 0.4517,
+          "8pp": 0.799
+        },
+        "rho=0.05": {
+          "10pp": 0.8313,
+          "15pp": 0.9858,
+          "5pp": 0.3488,
+          "8pp": 0.6743
+        },
+        "rho=0.1": {
+          "10pp": 0.6955,
+          "15pp": 0.9483,
+          "5pp": 0.299,
+          "8pp": 0.5365
+        },
+        "rho=0.2": {
+          "10pp": 0.512,
+          "15pp": 0.8095,
+          "5pp": 0.2167,
+          "8pp": 0.374
+        }
+      },
+      "resources": {
+        "environment_build_wall_hours": 2.5,
+        "environment_storage_gb": {
+          "kept": 60,
+          "peak": 180
+        },
+        "mined_candidates_needed": {
+          "yield=0.07": 2858,
+          "yield=0.1": 2000,
+          "yield=0.15": 1334
+        },
+        "mining": {
+          "clone_storage_gb": [
+            5,
+            11
+          ],
+          "cpu_hours": 1.3,
+          "network_hours": [
+            1.3,
+            2.7
+          ]
+        },
+        "one_time_evaluation": {
+          "atheris_wall_hours": 12.5,
+          "gpu_minutes": 40,
+          "native_execution_wall_hours": 5.0,
+          "storage_gb": 1.3
+        },
+        "peak_storage_gb": 194,
+        "qualification_wall_hours": 2.8,
+        "repositories_needed": {
+          "at_12_targets_each": 17,
+          "at_8pct_cap_minimum": 13
+        },
+        "total_cpu_wall_hours": 25.2
+      }
+    },
+    "300": {
+      "lower_bound_binds_above_gate_rho0.05_25_repositories": true,
+      "mde_80pct_pp": {
+        "12_targets_per_repository": {
+          "d=0.15": {
+            "rho=0.0": 6.86,
+            "rho=0.05": 7.31,
+            "rho=0.1": 7.89,
+            "rho=0.2": 9.64
+          },
+          "d=0.21": {
+            "rho=0.0": 7.2,
+            "rho=0.05": 8.07,
+            "rho=0.1": 9.34,
+            "rho=0.2": 11.4
+          },
+          "d=0.3": {
+            "rho=0.0": 7.79,
+            "rho=0.05": 9.64,
+            "rho=0.1": 11.16,
+            "rho=0.2": 13.63
+          },
+          "d=0.4": {
+            "rho=0.0": 8.99,
+            "rho=0.05": 11.13,
+            "rho=0.1": 12.89,
+            "rho=0.2": 15.74
+          }
+        },
+        "cap_bound_8pct": {
+          "d=0.15": {
+            "rho=0.0": 6.86,
+            "rho=0.05": 7.98,
+            "rho=0.1": 9.78,
+            "rho=0.2": 12.46
+          },
+          "d=0.21": {
+            "rho=0.0": 7.2,
+            "rho=0.05": 9.44,
+            "rho=0.1": 11.57,
+            "rho=0.2": 14.75
+          },
+          "d=0.3": {
+            "rho=0.0": 7.79,
+            "rho=0.05": 11.29,
+            "rho=0.1": 13.83,
+            "rho=0.2": 17.62
+          },
+          "d=0.4": {
+            "rho=0.0": 8.99,
+            "rho=0.05": 13.03,
+            "rho=0.1": 15.96,
+            "rho=0.2": 20.35
+          }
+        },
+        "fixed_25_repositories": {
+          "d=0.15": {
+            "rho=0.0": 6.86,
+            "rho=0.05": 7.31,
+            "rho=0.1": 7.89,
+            "rho=0.2": 9.64
+          },
+          "d=0.21": {
+            "rho=0.0": 7.2,
+            "rho=0.05": 8.07,
+            "rho=0.1": 9.34,
+            "rho=0.2": 11.4
+          },
+          "d=0.3": {
+            "rho=0.0": 7.79,
+            "rho=0.05": 9.64,
+            "rho=0.1": 11.16,
+            "rho=0.2": 13.63
+          },
+          "d=0.4": {
+            "rho=0.0": 8.99,
+            "rho=0.05": 11.13,
+            "rho=0.1": 12.89,
+            "rho=0.2": 15.74
+          }
+        }
+      },
+      "power_analytic": {
+        "12_targets_per_repository": {
+          "rho=0.0": {
+            "10pp": 0.974,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.875
+          },
+          "rho=0.05": {
+            "10pp": 0.929,
+            "15pp": 0.999,
+            "5pp": 0.453,
+            "8pp": 0.794
+          },
+          "rho=0.1": {
+            "10pp": 0.848,
+            "15pp": 0.994,
+            "5pp": 0.37,
+            "8pp": 0.682
+          },
+          "rho=0.2": {
+            "10pp": 0.699,
+            "15pp": 0.956,
+            "5pp": 0.28,
+            "8pp": 0.529
+          }
+        },
+        "cap_bound_8pct": {
+          "rho=0.0": {
+            "10pp": 0.974,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.875
+          },
+          "rho=0.05": {
+            "10pp": 0.84,
+            "15pp": 0.993,
+            "5pp": 0.364,
+            "8pp": 0.673
+          },
+          "rho=0.1": {
+            "10pp": 0.687,
+            "15pp": 0.951,
+            "5pp": 0.275,
+            "8pp": 0.518
+          },
+          "rho=0.2": {
+            "10pp": 0.497,
+            "15pp": 0.813,
+            "5pp": 0.2,
+            "8pp": 0.364
+          }
+        },
+        "fixed_25_repositories": {
+          "rho=0.0": {
+            "10pp": 0.974,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.875
+          },
+          "rho=0.05": {
+            "10pp": 0.929,
+            "15pp": 0.999,
+            "5pp": 0.453,
+            "8pp": 0.794
+          },
+          "rho=0.1": {
+            "10pp": 0.848,
+            "15pp": 0.994,
+            "5pp": 0.37,
+            "8pp": 0.682
+          },
+          "rho=0.2": {
+            "10pp": 0.699,
+            "15pp": 0.956,
+            "5pp": 0.28,
+            "8pp": 0.529
+          }
+        }
+      },
+      "power_clustered_monte_carlo_12_targets_per_repository": {
+        "rho=0.0": {
+          "10pp": 0.9765,
+          "15pp": 1.0,
+          "5pp": 0.5272,
+          "8pp": 0.8825
+        },
+        "rho=0.05": {
+          "10pp": 0.8965,
+          "15pp": 0.9978,
+          "5pp": 0.4205,
+          "8pp": 0.7678
+        },
+        "rho=0.1": {
+          "10pp": 0.7678,
+          "15pp": 0.976,
+          "5pp": 0.3365,
+          "8pp": 0.612
+        },
+        "rho=0.2": {
+          "10pp": 0.578,
+          "15pp": 0.8705,
+          "5pp": 0.2432,
+          "8pp": 0.4385
+        }
+      },
+      "power_clustered_monte_carlo_25_repositories": {
+        "rho=0.0": {
+          "10pp": 0.9765,
+          "15pp": 1.0,
+          "5pp": 0.5272,
+          "8pp": 0.8825
+        },
+        "rho=0.05": {
+          "10pp": 0.8965,
+          "15pp": 0.9978,
+          "5pp": 0.4205,
+          "8pp": 0.7678
+        },
+        "rho=0.1": {
+          "10pp": 0.7678,
+          "15pp": 0.976,
+          "5pp": 0.3365,
+          "8pp": 0.612
+        },
+        "rho=0.2": {
+          "10pp": 0.578,
+          "15pp": 0.8705,
+          "5pp": 0.2432,
+          "8pp": 0.4385
+        }
+      },
+      "resources": {
+        "environment_build_wall_hours": 3.8,
+        "environment_storage_gb": {
+          "kept": 90,
+          "peak": 270
+        },
+        "mined_candidates_needed": {
+          "yield=0.07": 4286,
+          "yield=0.1": 3000,
+          "yield=0.15": 2000
+        },
+        "mining": {
+          "clone_storage_gb": [
+            8,
+            16
+          ],
+          "cpu_hours": 2.0,
+          "network_hours": [
+            2.0,
+            4.0
+          ]
+        },
+        "one_time_evaluation": {
+          "atheris_wall_hours": 18.8,
+          "gpu_minutes": 60,
+          "native_execution_wall_hours": 7.5,
+          "storage_gb": 2.0
+        },
+        "peak_storage_gb": 289,
+        "qualification_wall_hours": 4.2,
+        "repositories_needed": {
+          "at_12_targets_each": 25,
+          "at_8pct_cap_minimum": 13
+        },
+        "total_cpu_wall_hours": 37.2
+      }
+    },
+    "400": {
+      "lower_bound_binds_above_gate_rho0.05_25_repositories": false,
+      "mde_80pct_pp": {
+        "12_targets_per_repository": {
+          "d=0.15": {
+            "rho=0.0": 6.61,
+            "rho=0.05": 7.0,
+            "rho=0.1": 7.32,
+            "rho=0.2": 8.41
+          },
+          "d=0.21": {
+            "rho=0.0": 6.91,
+            "rho=0.05": 7.37,
+            "rho=0.1": 8.13,
+            "rho=0.2": 9.95
+          },
+          "d=0.3": {
+            "rho=0.0": 7.29,
+            "rho=0.05": 8.38,
+            "rho=0.1": 9.72,
+            "rho=0.2": 11.9
+          },
+          "d=0.4": {
+            "rho=0.0": 7.81,
+            "rho=0.05": 9.68,
+            "rho=0.1": 11.22,
+            "rho=0.2": 13.74
+          }
+        },
+        "cap_bound_8pct": {
+          "d=0.15": {
+            "rho=0.0": 6.61,
+            "rho=0.05": 7.56,
+            "rho=0.1": 9.46,
+            "rho=0.2": 12.26
+          },
+          "d=0.21": {
+            "rho=0.0": 6.91,
+            "rho=0.05": 8.93,
+            "rho=0.1": 11.19,
+            "rho=0.2": 14.51
+          },
+          "d=0.3": {
+            "rho=0.0": 7.29,
+            "rho=0.05": 10.67,
+            "rho=0.1": 13.38,
+            "rho=0.2": 17.34
+          },
+          "d=0.4": {
+            "rho=0.0": 7.81,
+            "rho=0.05": 12.32,
+            "rho=0.1": 15.44,
+            "rho=0.2": 20.02
+          }
+        },
+        "fixed_25_repositories": {
+          "d=0.15": {
+            "rho=0.0": 6.61,
+            "rho=0.05": 7.12,
+            "rho=0.1": 7.53,
+            "rho=0.2": 9.35
+          },
+          "d=0.21": {
+            "rho=0.0": 6.91,
+            "rho=0.05": 7.52,
+            "rho=0.1": 8.84,
+            "rho=0.2": 11.06
+          },
+          "d=0.3": {
+            "rho=0.0": 7.29,
+            "rho=0.05": 8.89,
+            "rho=0.1": 10.57,
+            "rho=0.2": 13.22
+          },
+          "d=0.4": {
+            "rho=0.0": 7.81,
+            "rho=0.05": 10.27,
+            "rho=0.1": 12.2,
+            "rho=0.2": 15.27
+          }
+        }
+      },
+      "power_analytic": {
+        "12_targets_per_repository": {
+          "rho=0.0": {
+            "10pp": 0.987,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.908
+          },
+          "rho=0.05": {
+            "10pp": 0.964,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.857
+          },
+          "rho=0.1": {
+            "10pp": 0.925,
+            "15pp": 0.999,
+            "5pp": 0.448,
+            "8pp": 0.789
+          },
+          "rho=0.2": {
+            "10pp": 0.804,
+            "15pp": 0.987,
+            "5pp": 0.338,
+            "8pp": 0.632
+          }
+        },
+        "cap_bound_8pct": {
+          "rho=0.0": {
+            "10pp": 0.987,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.908
+          },
+          "rho=0.05": {
+            "10pp": 0.876,
+            "15pp": 0.996,
+            "5pp": 0.394,
+            "8pp": 0.718
+          },
+          "rho=0.1": {
+            "10pp": 0.714,
+            "15pp": 0.962,
+            "5pp": 0.288,
+            "8pp": 0.542
+          },
+          "rho=0.2": {
+            "10pp": 0.509,
+            "15pp": 0.826,
+            "5pp": 0.204,
+            "8pp": 0.373
+          }
+        },
+        "fixed_25_repositories": {
+          "rho=0.0": {
+            "10pp": 0.987,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.908
+          },
+          "rho=0.05": {
+            "10pp": 0.955,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.843
+          },
+          "rho=0.1": {
+            "10pp": 0.882,
+            "15pp": 0.997,
+            "5pp": 0.399,
+            "8pp": 0.725
+          },
+          "rho=0.2": {
+            "10pp": 0.723,
+            "15pp": 0.966,
+            "5pp": 0.292,
+            "8pp": 0.551
+          }
+        }
+      },
+      "power_clustered_monte_carlo_12_targets_per_repository": {
+        "rho=0.0": {
+          "10pp": 0.9875,
+          "15pp": 1.0,
+          "5pp": 0.5095,
+          "8pp": 0.9205
+        },
+        "rho=0.05": {
+          "10pp": 0.9523,
+          "15pp": 0.9995,
+          "5pp": 0.467,
+          "8pp": 0.8233
+        },
+        "rho=0.1": {
+          "10pp": 0.854,
+          "15pp": 0.9925,
+          "5pp": 0.3877,
+          "8pp": 0.7043
+        },
+        "rho=0.2": {
+          "10pp": 0.6867,
+          "15pp": 0.9323,
+          "5pp": 0.2787,
+          "8pp": 0.5062
+        }
+      },
+      "power_clustered_monte_carlo_25_repositories": {
+        "rho=0.0": {
+          "10pp": 0.9905,
+          "15pp": 1.0,
+          "5pp": 0.5252,
+          "8pp": 0.9157
+        },
+        "rho=0.05": {
+          "10pp": 0.9373,
+          "15pp": 0.9995,
+          "5pp": 0.4607,
+          "8pp": 0.7953
+        },
+        "rho=0.1": {
+          "10pp": 0.815,
+          "15pp": 0.9885,
+          "5pp": 0.3633,
+          "8pp": 0.6522
+        },
+        "rho=0.2": {
+          "10pp": 0.6125,
+          "15pp": 0.9052,
+          "5pp": 0.2495,
+          "8pp": 0.4572
+        }
+      },
+      "resources": {
+        "environment_build_wall_hours": 5.0,
+        "environment_storage_gb": {
+          "kept": 120,
+          "peak": 360
+        },
+        "mined_candidates_needed": {
+          "yield=0.07": 5715,
+          "yield=0.1": 4000,
+          "yield=0.15": 2667
+        },
+        "mining": {
+          "clone_storage_gb": [
+            11,
+            21
+          ],
+          "cpu_hours": 2.7,
+          "network_hours": [
+            2.7,
+            5.3
+          ]
+        },
+        "one_time_evaluation": {
+          "atheris_wall_hours": 25.0,
+          "gpu_minutes": 80,
+          "native_execution_wall_hours": 10.0,
+          "storage_gb": 2.7
+        },
+        "peak_storage_gb": 384,
+        "qualification_wall_hours": 5.6,
+        "repositories_needed": {
+          "at_12_targets_each": 34,
+          "at_8pct_cap_minimum": 13
+        },
+        "total_cpu_wall_hours": 49.3
+      }
+    },
+    "500": {
+      "lower_bound_binds_above_gate_rho0.05_25_repositories": false,
+      "mde_80pct_pp": {
+        "12_targets_per_repository": {
+          "d=0.15": {
+            "rho=0.0": 6.44,
+            "rho=0.05": 6.79,
+            "rho=0.1": 7.08,
+            "rho=0.2": 7.56
+          },
+          "d=0.21": {
+            "rho=0.0": 6.71,
+            "rho=0.05": 7.13,
+            "rho=0.1": 7.47,
+            "rho=0.2": 8.95
+          },
+          "d=0.3": {
+            "rho=0.0": 7.05,
+            "rho=0.05": 7.55,
+            "rho=0.1": 8.72,
+            "rho=0.2": 10.69
+          },
+          "d=0.4": {
+            "rho=0.0": 7.37,
+            "rho=0.05": 8.68,
+            "rho=0.1": 10.07,
+            "rho=0.2": 12.34
+          }
+        },
+        "cap_bound_8pct": {
+          "d=0.15": {
+            "rho=0.0": 6.44,
+            "rho=0.05": 7.46,
+            "rho=0.1": 9.26,
+            "rho=0.2": 12.14
+          },
+          "d=0.21": {
+            "rho=0.0": 6.71,
+            "rho=0.05": 8.6,
+            "rho=0.1": 10.96,
+            "rho=0.2": 14.36
+          },
+          "d=0.3": {
+            "rho=0.0": 7.05,
+            "rho=0.05": 10.28,
+            "rho=0.1": 13.1,
+            "rho=0.2": 17.16
+          },
+          "d=0.4": {
+            "rho=0.0": 7.37,
+            "rho=0.05": 11.87,
+            "rho=0.1": 15.12,
+            "rho=0.2": 19.82
+          }
+        },
+        "fixed_25_repositories": {
+          "d=0.15": {
+            "rho=0.0": 6.44,
+            "rho=0.05": 7.01,
+            "rho=0.1": 7.44,
+            "rho=0.2": 9.17
+          },
+          "d=0.21": {
+            "rho=0.0": 6.71,
+            "rho=0.05": 7.38,
+            "rho=0.1": 8.53,
+            "rho=0.2": 10.85
+          },
+          "d=0.3": {
+            "rho=0.0": 7.05,
+            "rho=0.05": 8.41,
+            "rho=0.1": 10.2,
+            "rho=0.2": 12.97
+          },
+          "d=0.4": {
+            "rho=0.0": 7.37,
+            "rho=0.05": 9.71,
+            "rho=0.1": 11.77,
+            "rho=0.2": 14.98
+          }
+        }
+      },
+      "power_analytic": {
+        "12_targets_per_repository": {
+          "rho=0.0": {
+            "10pp": 0.994,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.931
+          },
+          "rho=0.05": {
+            "10pp": 0.978,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.884
+          },
+          "rho=0.1": {
+            "10pp": 0.958,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.848
+          },
+          "rho=0.2": {
+            "10pp": 0.875,
+            "15pp": 0.996,
+            "5pp": 0.393,
+            "8pp": 0.716
+          }
+        },
+        "cap_bound_8pct": {
+          "rho=0.0": {
+            "10pp": 0.994,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.931
+          },
+          "rho=0.05": {
+            "10pp": 0.897,
+            "15pp": 0.998,
+            "5pp": 0.415,
+            "8pp": 0.746
+          },
+          "rho=0.1": {
+            "10pp": 0.73,
+            "15pp": 0.968,
+            "5pp": 0.296,
+            "8pp": 0.558
+          },
+          "rho=0.2": {
+            "10pp": 0.516,
+            "15pp": 0.833,
+            "5pp": 0.207,
+            "8pp": 0.379
+          }
+        },
+        "fixed_25_repositories": {
+          "rho=0.0": {
+            "10pp": 0.994,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.931
+          },
+          "rho=0.05": {
+            "10pp": 0.963,
+            "15pp": 1.0,
+            "5pp": 0.5,
+            "8pp": 0.856
+          },
+          "rho=0.1": {
+            "10pp": 0.902,
+            "15pp": 0.998,
+            "5pp": 0.419,
+            "8pp": 0.753
+          },
+          "rho=0.2": {
+            "10pp": 0.738,
+            "15pp": 0.971,
+            "5pp": 0.3,
+            "8pp": 0.565
+          }
+        }
+      },
+      "power_clustered_monte_carlo_12_targets_per_repository": {
+        "rho=0.0": {
+          "10pp": 0.9955,
+          "15pp": 1.0,
+          "5pp": 0.5218,
+          "8pp": 0.9345
+        },
+        "rho=0.05": {
+          "10pp": 0.9653,
+          "15pp": 1.0,
+          "5pp": 0.4815,
+          "8pp": 0.8548
+        },
+        "rho=0.1": {
+          "10pp": 0.901,
+          "15pp": 0.9982,
+          "5pp": 0.3977,
+          "8pp": 0.7432
+        },
+        "rho=0.2": {
+          "10pp": 0.7342,
+          "15pp": 0.9728,
+          "5pp": 0.2948,
+          "8pp": 0.5693
+        }
+      },
+      "power_clustered_monte_carlo_25_repositories": {
+        "rho=0.0": {
+          "10pp": 0.9965,
+          "15pp": 1.0,
+          "5pp": 0.5098,
+          "8pp": 0.9333
+        },
+        "rho=0.05": {
+          "10pp": 0.9453,
+          "15pp": 1.0,
+          "5pp": 0.4582,
+          "8pp": 0.8123
+        },
+        "rho=0.1": {
+          "10pp": 0.8502,
+          "15pp": 0.9905,
+          "5pp": 0.364,
+          "8pp": 0.676
+        },
+        "rho=0.2": {
+          "10pp": 0.6302,
+          "15pp": 0.9153,
+          "5pp": 0.2627,
+          "8pp": 0.4883
+        }
+      },
+      "resources": {
+        "environment_build_wall_hours": 6.2,
+        "environment_storage_gb": {
+          "kept": 150,
+          "peak": 450
+        },
+        "mined_candidates_needed": {
+          "yield=0.07": 7143,
+          "yield=0.1": 5000,
+          "yield=0.15": 3334
+        },
+        "mining": {
+          "clone_storage_gb": [
+            14,
+            26
+          ],
+          "cpu_hours": 3.4,
+          "network_hours": [
+            3.4,
+            6.7
+          ]
+        },
+        "one_time_evaluation": {
+          "atheris_wall_hours": 31.2,
+          "gpu_minutes": 100,
+          "native_execution_wall_hours": 12.5,
+          "storage_gb": 3.3
+        },
+        "peak_storage_gb": 480,
+        "qualification_wall_hours": 7.0,
+        "repositories_needed": {
+          "at_12_targets_each": 42,
+          "at_8pct_cap_minimum": 13
+        },
+        "total_cpu_wall_hours": 61.4
       }
     }
   },
+  "recommendation": {
+    "composition_requirement": "at most 12 targets per repository; the draft 8% cap allows 32 per repository at N=400 and is insufficient",
+    "effect_exactly_at_gate": "a true gain of exactly +5 pp passes with probability at most 50% at every N, because the estimate itself must reach +5 pp; 80% power is impossible there",
+    "feasibility_option_label": "lower-power compromise, not adequately powered for the planning scenario; usable only with explicit approval",
+    "feasibility_option_n": 200,
+    "feasibility_option_power_at_planning_effect": {
+      "analytic": 0.644,
+      "clustered_monte_carlo": 0.6258
+    },
+    "planning_scenario": {
+      "discordance": 0.21,
+      "per_repository_cap_targets": 12,
+      "repository_scenario": "12_targets_per_repository",
+      "rho": 0.05,
+      "true_effect_pp": 8.0
+    },
+    "power_at_planning_effect_by_n": {
+      "100": {
+        "analytic": 0.413,
+        "clustered_monte_carlo": 0.4402
+      },
+      "150": {
+        "analytic": 0.54,
+        "clustered_monte_carlo": 0.5383
+      },
+      "200": {
+        "analytic": 0.644,
+        "clustered_monte_carlo": 0.6258
+      },
+      "300": {
+        "analytic": 0.794,
+        "clustered_monte_carlo": 0.7678
+      },
+      "400": {
+        "analytic": 0.857,
+        "clustered_monte_carlo": 0.8233
+      },
+      "500": {
+        "analytic": 0.884,
+        "clustered_monte_carlo": 0.8548
+      }
+    },
+    "power_at_recommendation": {
+      "analytic": 0.857,
+      "clustered_monte_carlo": 0.8233
+    },
+    "reasoning": [
+      "the planning effect is +8 pp: the smallest round effect meaningfully above the +5 pp gate (the largest paired gain observed so far is +6.4 pp, post hoc)",
+      "rho = 0.05 is the planning clustering; historical lineage clustering of paired differences is near zero, and 0.10/0.20 are reported as sensitivity",
+      "12 targets per repository keeps the design effect fixed as N grows; with a fixed 25 repositories the design effect grows with N and larger N buys little",
+      "the +5 pp gate is not changed to fit the sample"
+    ],
+    "recommended_final_n": 400,
+    "repositories_required_at_recommendation": 34
+  },
+  "resource_rates": {
+    "atheris_cpu_seconds": 600,
+    "atheris_modes": 2,
+    "atheris_seeds": 3,
+    "clone_gb_per_1000_candidates": [
+      2.7,
+      5.3
+    ],
+    "environment_build_minutes": 4,
+    "environment_gb_per_target": 0.3,
+    "evaluation_gb_per_300_targets": 2,
+    "generation_seconds_per_record": 6,
+    "heuristic_candidates_per_target": 3,
+    "mining_cpu_hours_per_1000_candidates": 0.67,
+    "models": 2,
+    "native_test_seconds": 45,
+    "network_hours_per_1000_candidates": [
+      0.67,
+      1.33
+    ],
+    "parallel_jobs": 16,
+    "qualification_repeats": 3,
+    "samples": 8
+  },
   "scenarios": {
+    "central_discordance": 0.21,
+    "design_effect": "1 + (m - 1) * rho",
     "discordance": [
       0.15,
       0.21,
       0.3,
       0.4
     ],
-    "central_discordance": 0.21,
+    "monte_carlo": {
+      "lower_bound": "cluster-robust normal approximation",
+      "repositories": "25, and ceil(N / 12)",
+      "runs": 4000,
+      "seed": 20260925
+    },
+    "repository_scenarios": [
+      "12_targets_per_repository",
+      "cap_bound_8pct",
+      "fixed_25_repositories"
+    ],
     "rho": [
       0.0,
       0.05,
       0.1,
       0.2
-    ],
-    "central_rho": 0.05,
-    "repositories_central": 25,
-    "per_repository_cap": 0.08,
-    "design_effect": "1 + (m - 1) * rho"
+    ]
   },
-  "power_by_n": {
+  "schema_version": "oneiros_repository_native_power_analysis_v2",
+  "sensitivity": {
     "100": {
-      "targets_per_repository_central": 4.0,
-      "targets_per_repository_at_cap": 8.0,
-      "power_central": {
-        "5pp": 0.267,
-        "8pp": 0.503,
-        "10pp": 0.67,
-        "15pp": 0.944
-      },
-      "mde_80pct_pp": {
-        "d=0.15": {
-          "rho=0.0": 9.35,
-          "rho=0.05": 9.98,
-          "rho=0.1": 10.57,
-          "rho=0.2": 11.63
-        },
-        "d=0.21": {
-          "rho=0.0": 11.06,
+      "mde_by_per_repository_cap_worst_case": {
+        "cap=0.04": {
           "rho=0.05": 11.81,
-          "rho=0.1": 12.5,
-          "rho=0.2": 13.75
+          "rho=0.1": 12.5
         },
-        "d=0.3": {
-          "rho=0.0": 13.22,
-          "rho=0.05": 14.12,
-          "rho=0.1": 14.94,
-          "rho=0.2": 16.44
+        "cap=0.08": {
+          "rho=0.05": 12.72,
+          "rho=0.1": 14.14
         },
-        "d=0.4": {
-          "rho=0.0": 15.27,
-          "rho=0.05": 16.3,
-          "rho=0.1": 17.26,
-          "rho=0.2": 18.98
+        "cap=0.15": {
+          "rho=0.05": 14.14,
+          "rho=0.1": 16.48
         }
       },
-      "mde_80pct_pp_at_cap_rho_0.10": {
-        "d=0.15": 11.95,
-        "d=0.21": 14.14,
-        "d=0.3": 16.9,
-        "d=0.4": 19.51
-      },
-      "lower_bound_binds_above_gate_central": true,
-      "monte_carlo_unclustered_power_d0.21": {
-        "8pp": 0.559,
-        "10pp": 0.7415
-      },
-      "analytic_unclustered_power_d0.21": {
-        "8pp": 0.551,
-        "10pp": 0.723
+      "mde_by_repository_count": {
+        "repositories=10": {
+          "rho=0.05": 13.15,
+          "rho=0.1": 14.86
+        },
+        "repositories=100": {
+          "rho=0.05": 11.06,
+          "rho=0.1": 11.06
+        },
+        "repositories=25": {
+          "rho=0.05": 11.81,
+          "rho=0.1": 12.5
+        },
+        "repositories=50": {
+          "rho=0.05": 11.32,
+          "rho=0.1": 11.57
+        }
       }
     },
     "150": {
-      "targets_per_repository_central": 6.0,
-      "targets_per_repository_at_cap": 12.0,
-      "power_central": {
-        "5pp": 0.329,
-        "8pp": 0.617,
-        "10pp": 0.789,
-        "15pp": 0.984
-      },
-      "mde_80pct_pp": {
-        "d=0.15": {
-          "rho=0.0": 7.71,
-          "rho=0.05": 8.58,
-          "rho=0.1": 9.35,
-          "rho=0.2": 10.69
-        },
-        "d=0.21": {
-          "rho=0.0": 9.12,
+      "mde_by_per_repository_cap_worst_case": {
+        "cap=0.04": {
           "rho=0.05": 10.15,
-          "rho=0.1": 11.06,
-          "rho=0.2": 12.65
+          "rho=0.1": 11.06
         },
-        "d=0.3": {
-          "rho=0.0": 10.9,
-          "rho=0.05": 12.13,
-          "rho=0.1": 13.22,
-          "rho=0.2": 15.12
+        "cap=0.08": {
+          "rho=0.05": 11.23,
+          "rho=0.1": 12.94
         },
-        "d=0.4": {
-          "rho=0.0": 12.59,
-          "rho=0.05": 14.0,
-          "rho=0.1": 15.27,
-          "rho=0.2": 17.46
+        "cap=0.15": {
+          "rho=0.05": 12.87,
+          "rho=0.1": 15.54
         }
       },
-      "mde_80pct_pp_at_cap_rho_0.10": {
-        "d=0.15": 10.94,
-        "d=0.21": 12.94,
-        "d=0.3": 15.46,
-        "d=0.4": 17.86
-      },
-      "lower_bound_binds_above_gate_central": true,
-      "monte_carlo_unclustered_power_d0.21": {
-        "8pp": 0.7205,
-        "10pp": 0.87225
-      },
-      "analytic_unclustered_power_d0.21": {
-        "8pp": 0.701,
-        "10pp": 0.863
+      "mde_by_repository_count": {
+        "repositories=10": {
+          "rho=0.05": 11.73,
+          "rho=0.1": 13.75
+        },
+        "repositories=100": {
+          "rho=0.05": 9.23,
+          "rho=0.1": 9.34
+        },
+        "repositories=25": {
+          "rho=0.05": 10.15,
+          "rho=0.1": 11.06
+        },
+        "repositories=50": {
+          "rho=0.05": 9.55,
+          "rho=0.1": 9.95
+        }
       }
     },
     "200": {
-      "targets_per_repository_central": 8.0,
-      "targets_per_repository_at_cap": 16.0,
-      "power_central": {
-        "5pp": 0.379,
-        "8pp": 0.696,
-        "10pp": 0.859,
-        "15pp": 0.995
-      },
-      "mde_80pct_pp": {
-        "d=0.15": {
-          "rho=0.0": 7.27,
-          "rho=0.05": 7.76,
-          "rho=0.1": 8.66,
-          "rho=0.2": 10.18
-        },
-        "d=0.21": {
-          "rho=0.0": 7.94,
+      "mde_by_per_repository_cap_worst_case": {
+        "cap=0.04": {
           "rho=0.05": 9.18,
-          "rho=0.1": 10.24,
-          "rho=0.2": 12.05
+          "rho=0.1": 10.24
         },
-        "d=0.3": {
-          "rho=0.0": 9.49,
-          "rho=0.05": 10.97,
-          "rho=0.1": 12.24,
-          "rho=0.2": 14.4
+        "cap=0.08": {
+          "rho=0.05": 10.39,
+          "rho=0.1": 12.28
         },
-        "d=0.4": {
-          "rho=0.0": 10.96,
-          "rho=0.05": 12.66,
-          "rho=0.1": 14.14,
-          "rho=0.2": 16.63
+        "cap=0.15": {
+          "rho=0.05": 12.16,
+          "rho=0.1": 15.04
         }
       },
-      "mde_80pct_pp_at_cap_rho_0.10": {
-        "d=0.15": 10.38,
-        "d=0.21": 12.28,
-        "d=0.3": 14.68,
-        "d=0.4": 16.94
-      },
-      "lower_bound_binds_above_gate_central": true,
-      "monte_carlo_unclustered_power_d0.21": {
-        "8pp": 0.81775,
-        "10pp": 0.93825
-      },
-      "analytic_unclustered_power_d0.21": {
-        "8pp": 0.806,
-        "10pp": 0.935
+      "mde_by_repository_count": {
+        "repositories=10": {
+          "rho=0.05": 10.93,
+          "rho=0.1": 13.15
+        },
+        "repositories=100": {
+          "rho=0.05": 8.13,
+          "rho=0.1": 8.32
+        },
+        "repositories=25": {
+          "rho=0.05": 9.18,
+          "rho=0.1": 10.24
+        },
+        "repositories=50": {
+          "rho=0.05": 8.5,
+          "rho=0.1": 9.01
+        }
       }
     },
     "300": {
-      "targets_per_repository_central": 12.0,
-      "targets_per_repository_at_cap": 24.0,
-      "power_central": {
-        "5pp": 0.453,
-        "8pp": 0.794,
-        "10pp": 0.929,
-        "15pp": 0.999
-      },
-      "mde_80pct_pp": {
-        "d=0.15": {
-          "rho=0.0": 6.86,
-          "rho=0.05": 7.31,
-          "rho=0.1": 7.89,
-          "rho=0.2": 9.64
-        },
-        "d=0.21": {
-          "rho=0.0": 7.2,
+      "mde_by_per_repository_cap_worst_case": {
+        "cap=0.04": {
           "rho=0.05": 8.07,
-          "rho=0.1": 9.34,
-          "rho=0.2": 11.4
+          "rho=0.1": 9.34
         },
-        "d=0.3": {
-          "rho=0.0": 7.79,
-          "rho=0.05": 9.64,
-          "rho=0.1": 11.16,
-          "rho=0.2": 13.63
+        "cap=0.08": {
+          "rho=0.05": 9.44,
+          "rho=0.1": 11.57
         },
-        "d=0.4": {
-          "rho=0.0": 8.99,
-          "rho=0.05": 11.13,
-          "rho=0.1": 12.89,
-          "rho=0.2": 15.74
+        "cap=0.15": {
+          "rho=0.05": 11.4,
+          "rho=0.1": 14.51
         }
       },
-      "mde_80pct_pp_at_cap_rho_0.10": {
-        "d=0.15": 9.78,
-        "d=0.21": 11.57,
-        "d=0.3": 13.83,
-        "d=0.4": 15.96
+      "mde_by_repository_count": {
+        "repositories=10": {
+          "rho=0.05": 10.05,
+          "rho=0.1": 12.5
+        },
+        "repositories=100": {
+          "rho=0.05": 7.31,
+          "rho=0.1": 7.41
+        },
+        "repositories=25": {
+          "rho=0.05": 8.07,
+          "rho=0.1": 9.34
+        },
+        "repositories=50": {
+          "rho=0.05": 7.46,
+          "rho=0.1": 7.94
+        }
+      }
+    },
+    "400": {
+      "mde_by_per_repository_cap_worst_case": {
+        "cap=0.04": {
+          "rho=0.05": 7.52,
+          "rho=0.1": 8.84
+        },
+        "cap=0.08": {
+          "rho=0.05": 8.93,
+          "rho=0.1": 11.19
+        },
+        "cap=0.15": {
+          "rho=0.05": 11.0,
+          "rho=0.1": 14.23
+        }
       },
-      "lower_bound_binds_above_gate_central": true,
-      "monte_carlo_unclustered_power_d0.21": {
-        "8pp": 0.886,
-        "10pp": 0.97825
+      "mde_by_repository_count": {
+        "repositories=10": {
+          "rho=0.05": 9.57,
+          "rho=0.1": 12.16
+        },
+        "repositories=100": {
+          "rho=0.05": 7.05,
+          "rho=0.1": 7.18
+        },
+        "repositories=25": {
+          "rho=0.05": 7.52,
+          "rho=0.1": 8.84
+        },
+        "repositories=50": {
+          "rho=0.05": 7.22,
+          "rho=0.1": 7.49
+        }
+      }
+    },
+    "500": {
+      "mde_by_per_repository_cap_worst_case": {
+        "cap=0.04": {
+          "rho=0.05": 7.38,
+          "rho=0.1": 8.53
+        },
+        "cap=0.08": {
+          "rho=0.05": 8.6,
+          "rho=0.1": 10.96
+        },
+        "cap=0.15": {
+          "rho=0.05": 10.74,
+          "rho=0.1": 14.06
+        }
       },
-      "analytic_unclustered_power_d0.21": {
-        "8pp": 0.875,
-        "10pp": 0.974
+      "mde_by_repository_count": {
+        "repositories=10": {
+          "rho=0.05": 9.27,
+          "rho=0.1": 11.95
+        },
+        "repositories=100": {
+          "rho=0.05": 6.87,
+          "rho=0.1": 7.02
+        },
+        "repositories=25": {
+          "rho=0.05": 7.38,
+          "rho=0.1": 8.53
+        },
+        "repositories=50": {
+          "rho=0.05": 7.06,
+          "rho=0.1": 7.35
+        }
       }
     }
   },
-  "attrition_required_mining_pool": {
-    "N=100": {
-      "yield=0.07": 1429,
-      "yield=0.1": 1000,
-      "yield=0.15": 667
+  "smallest_n_reaching_80pct_power": {
+    "12_targets_per_repository": {
+      "10pp": {
+        "rho=0.0": 150,
+        "rho=0.05": 200,
+        "rho=0.1": 300,
+        "rho=0.2": 400
+      },
+      "15pp": {
+        "rho=0.0": 100,
+        "rho=0.05": 100,
+        "rho=0.1": 150,
+        "rho=0.2": 200
+      },
+      "5pp": {
+        "rho=0.0": null,
+        "rho=0.05": null,
+        "rho=0.1": null,
+        "rho=0.2": null
+      },
+      "8pp": {
+        "rho=0.0": 200,
+        "rho=0.05": 400,
+        "rho=0.1": 500,
+        "rho=0.2": null
+      }
     },
-    "N=150": {
-      "yield=0.07": 2143,
-      "yield=0.1": 1500,
-      "yield=0.15": 1000
+    "cap_bound_8pct": {
+      "10pp": {
+        "rho=0.0": 150,
+        "rho=0.05": 300,
+        "rho=0.1": null,
+        "rho=0.2": null
+      },
+      "15pp": {
+        "rho=0.0": 100,
+        "rho=0.05": 100,
+        "rho=0.1": 100,
+        "rho=0.2": 300
+      },
+      "5pp": {
+        "rho=0.0": null,
+        "rho=0.05": null,
+        "rho=0.1": null,
+        "rho=0.2": null
+      },
+      "8pp": {
+        "rho=0.0": 200,
+        "rho=0.05": null,
+        "rho=0.1": null,
+        "rho=0.2": null
+      }
     },
-    "N=200": {
-      "yield=0.07": 2858,
-      "yield=0.1": 2000,
-      "yield=0.15": 1334
-    },
-    "N=300": {
-      "yield=0.07": 4286,
-      "yield=0.1": 3000,
-      "yield=0.15": 2000
+    "fixed_25_repositories": {
+      "10pp": {
+        "rho=0.0": 150,
+        "rho=0.05": 200,
+        "rho=0.1": 300,
+        "rho=0.2": null
+      },
+      "15pp": {
+        "rho=0.0": 100,
+        "rho=0.05": 100,
+        "rho=0.1": 100,
+        "rho=0.2": 100
+      },
+      "5pp": {
+        "rho=0.0": null,
+        "rho=0.05": null,
+        "rho=0.1": null,
+        "rho=0.2": null
+      },
+      "8pp": {
+        "rho=0.0": 200,
+        "rho=0.05": 400,
+        "rho=0.1": null,
+        "rho=0.2": null
+      }
     }
   },
-  "recommendation": {
-    "recommended_final_n": 300,
-    "minimum_acceptable_n": 200,
-    "reasoning": [
-      "the frozen gate needs the estimate to reach +5 pp AND a positive lower bound; in the central scenario the lower-bound requirement binds above 5 pp at every N considered (about 8.1 pp at N=100, 5.4 pp at N=300), so small N passes only large true effects",
-      "at N=300 (central discordance 0.21, rho 0.05, 25 repositories) the 80%-power minimum detectable effect is about 8 pp; at N=100 it is about 12 pp",
-      "historical lineage clustering of paired differences is near zero, but repository clustering in new data is unknown, so rho up to 0.20 is reported",
-      "the +5 pp gate is not changed to fit the sample; with the expected mining yield, N=300 needs roughly 2,000-4,300 mined candidate fix commits"
-    ]
-  },
-  "source_sha256": "5dc9179e3deeb1f59e3f5e658c05d58844e20e87178f4a7a3305229b17884f1f"
+  "source_sha256": "0e9939d7c4cc5bed491d1178c9b239e2aa53d64b228c7d8835fdc655df4ee546"
 }

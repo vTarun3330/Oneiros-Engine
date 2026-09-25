@@ -1,17 +1,33 @@
 {
  "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks",
  "collection_sha256": {
+  "code_input_files": "137c3a0d2ab70e0e7f293262a937ae4b14324fb5f1d556fa405d06346afb2486",
   "commits": "32ec4f8ac0953c9a0a0612832d4b30c9dc9a67288b631023daaca84b8a36f172",
-  "counts": "b5880fd0a36dff9e924a081177dc38a3e99b6e891d48f043ac62e545e11daa86",
+  "counts": "d3f1e86953a7f25d7a2422332c430777be410827cdb2d34037c7f5e361cb8610",
   "fork_parent_identities": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
   "function_fingerprints": "ca30865fd928cf5280515b838ffcf8730b1ce7e1be1a521621c25c0277463bd6",
-  "input_files": "6e0d0676cb7e336b0f6ff1a940aca9e2e76292d63a1f4bae182fe90da9cd8891",
+  "input_files": "b63324c1b4a5185c24d084f9919fe8990c27a8992c3d876d78a9646d5693e18e",
   "instance_ids": "2e39837398e36f4973ef072a0d3af407434f175a533352a92c5494adcd673123",
   "patch_hashes": "2a212d2232b132bdbc55f5e2a00b1515ea14438fda64d6ca01efdc3d4bcca4b8",
   "repository_full_names": "343d3f3ad2f85bd6bad866552945210401a278acd77e3bbd4f97362809280ae6",
   "repository_names": "7bce3bb35f9516b47b36ab68802e61b6111ca74e11458e0cbd20695215699a58"
  },
  "collections": {
+  "code_input_files": {
+   "corpus_manifest": {
+    "utils/dataset_identity.py": "0689dd52f468f06d9c9652cf77d4f66991feaa5dcafcf857172c14bf98f338ac"
+   },
+   "manual_curated_examples": {
+    "harness/bugsinpy_loader.py": "6c54a924d6943f0fd591f08df8745040627fd57e79870e63a847bb28367e7cd6",
+    "scripts/build_corpus_v1.py": "4c3476a09a83212cbeabd3102881adbeac4d151f19a5b5908c11575cb32d8cfd"
+   },
+   "train_shard": {
+    "harness/corpus.py": "1c9148bc6946031f0cb9af69405f64b385417e8cf71345cd5e84aa831d5a32d3",
+    "harness/corpus_view.py": "6c1c90909a8a92a3996ced782ed0acaffaf17fd54b716498bbfe552ecd2908b0",
+    "harness/function_complexity.py": "83c6e3dfa21374555ce35454838d0fe16668f407f241d05417918d428ca63497",
+    "utils/dataset_identity.py": "0689dd52f468f06d9c9652cf77d4f66991feaa5dcafcf857172c14bf98f338ac"
+   }
+  },
   "commits": [
    "001bda19450ad85c91345eea3cfa3991e1d492ba",
    "003bb34b218adb23d1a7e67932a6ba9b3c4dcc81",
@@ -1509,6 +1525,17 @@
     "functions": 500,
     "instances": 500,
     "patches": 500
+   },
+   "corpus_manifest": {
+    "path": "data/corpus/v4_1_research_hardened_candidate/manifest.json",
+    "records_by_source": {
+     "BugsInPy": 269,
+     "SWE-bench Verified": 324,
+     "humaneval": 1252,
+     "manual_curated_examples": 8,
+     "mbpp": 6384
+    },
+    "sha256": "7f68386fdc66c8fc102d07f4605971c6c2dcffee0e5732abb30d8c62e7485d3c"
    },
    "humaneval": {
     "functions": 179,
@@ -35789,6 +35816,9 @@
    "SWE-bench Verified": {
     "data/swebench_verified_source/SWE-bench_Verified.test.parquet": "a45b1fe4e2f0c8390b2b2938ac83e92ed5979000856808f3679c07812e9e6dcd"
    },
+   "corpus_manifest": {
+    "data/corpus/v4_1_research_hardened_candidate/manifest.json": "7f68386fdc66c8fc102d07f4605971c6c2dcffee0e5732abb30d8c62e7485d3c"
+   },
    "humaneval": {
     "data/humaneval/humaneval_cache.json": "56befa2ab382b033467aa2f9fdc79e2e4e4954eef002022d2d5827da93e11e83"
    },
@@ -36326,10 +36356,6 @@
     "data/bugsinpy/bugsinpy_youtube-dl_9_buggy.py": "d94171a602403cdd0351e1003290be68ea40c5037a10b3eadaf5f2a01d6bf63f",
     "data/bugsinpy/bugsinpy_youtube_dl_1_buggy.py": "5c2e72650ec178090e907524e312e5bce5b49d80267035219c23c85a340652e8",
     "data/bugsinpy/bugsinpy_youtube_dl_1_fixed.py": "d71b6bc7ba9a9dd102777c88739e28f8cc8b36d24a3bdf34f8413d602b41cc19"
-   },
-   "manual_curated_examples": {
-    "harness/bugsinpy_loader.py": "a92d2ad4800651f9beb8e1f63a7b6a37964ed3fe52d6f1a4b0e8b64f3bb4b9ff",
-    "scripts/build_corpus_v1.py": "4c3476a09a83212cbeabd3102881adbeac4d151f19a5b5908c11575cb32d8cfd"
    },
    "mbpp": {
     "data/mbpp/mbpp_full.jsonl": "ccf64ceae9c5403bf50a044cb6d505bfd2a2963ee58338ba268fd65beab92a9f"
@@ -38410,17 +38436,93 @@
    "youtube-dl"
   ]
  },
+ "coverage": {
+  "corpus_manifest_sha256": "7f68386fdc66c8fc102d07f4605971c6c2dcffee0e5732abb30d8c62e7485d3c",
+  "covered": true,
+  "per_source": {
+   "BugsInPy": {
+    "bound_inputs": 1019,
+    "declared_records": 269,
+    "indexed": {
+     "bugs": 501,
+     "functions": 500,
+     "patches": 501,
+     "projects": 17
+    }
+   },
+   "SWE-bench Verified": {
+    "bound_inputs": 1,
+    "declared_records": 324,
+    "indexed": {
+     "functions": 500,
+     "instances": 500,
+     "patches": 500
+    }
+   },
+   "humaneval": {
+    "bound_inputs": 1,
+    "declared_records": 1252,
+    "indexed": {
+     "functions": 179,
+     "tasks": 164
+    }
+   },
+   "manual_curated_examples": {
+    "bound_inputs": 2,
+    "declared_records": 8,
+    "indexed": {
+     "definition_ids": [
+      "curated::bugsinpy_black_1",
+      "curated::bugsinpy_cookiecutter_1",
+      "curated::bugsinpy_fastapi_1",
+      "curated::bugsinpy_httpie_1",
+      "curated::bugsinpy_pandas_1",
+      "curated::bugsinpy_requests_1",
+      "curated::bugsinpy_scrapy_1",
+      "curated::bugsinpy_thefuck_1",
+      "curated::bugsinpy_tornado_1",
+      "curated::bugsinpy_youtube_dl_1"
+     ],
+     "definitions": 10,
+     "definitions_sha256": "c76a7e5158311840fabca9ebba8902017f7e310c2bb60987fcb4e5837ee9d9b3",
+     "functions": 20
+    },
+    "non_train_seed_candidates": [
+     "curated::bugsinpy_black_1",
+     "curated::bugsinpy_cookiecutter_1",
+     "curated::bugsinpy_scrapy_1"
+    ],
+    "non_train_seeds_required": 1,
+    "note": "all definitions are indexed: a conservative superset of the seeds that entered any split"
+   },
+   "mbpp": {
+    "bound_inputs": 1,
+    "declared_records": 6384,
+    "indexed": {
+     "functions": 1029,
+     "tasks": 974
+    }
+   }
+  },
+  "problems": []
+ },
+ "curated_note": "all CURATED_BUGSINPY_BUGS definitions are indexed: a conservative superset of the curated seeds that entered any split",
  "fork_parent_note": "benchmark repositories are recorded as their canonical upstreams; no fork relation among them is asserted offline, so every candidate must supply verified fork evidence",
- "isolation_version": "oneiros_repository_isolation_v2",
+ "isolation_version": "oneiros_repository_isolation_v3",
  "min_function_shingles": 12,
  "near_duplicate_threshold": 0.8,
- "receipt_sha256": "2e7883a7e6675b78f5bcf8a3b0557d0d23573f21d269edc465b047c1a275608d",
- "schema_version": "oneiros_reference_universe_receipt_v1",
+ "receipt_sha256": "c3fabc474c48b403d08356265f123eed86b0cb3b59516e375df7b4bfc8c93603",
+ "schema_version": "oneiros_reference_universe_receipt_v2",
  "source_files_sha256": {
+  "harness/bugsinpy_loader.py": "6c54a924d6943f0fd591f08df8745040627fd57e79870e63a847bb28367e7cd6",
+  "harness/corpus.py": "1c9148bc6946031f0cb9af69405f64b385417e8cf71345cd5e84aa831d5a32d3",
   "harness/corpus_view.py": "6c1c90909a8a92a3996ced782ed0acaffaf17fd54b716498bbfe552ecd2908b0",
-  "harness/repository_isolation.py": "11a0183f13bfaa9484322c3aa1dd077a2bae597969694d62647a06d1840ea0cf",
+  "harness/function_complexity.py": "83c6e3dfa21374555ce35454838d0fe16668f407f241d05417918d428ca63497",
+  "harness/repository_isolation.py": "dd4da1f0ce975fbba55cc01008f9d8723127349525b101347c4598c39f3e2ee4",
+  "harness/source_identity.py": "619d28f5131fc5f268c1a53992b767ca57f566c8408ca88ef5ba7babb40a3f2c",
   "scripts/audit_cross_split_near_duplicates.py": "702e58a7f65b350ec9f3172234e89c717d37394f77adfcd5f5439027c4340c7d",
   "scripts/build_corpus_v1.py": "4c3476a09a83212cbeabd3102881adbeac4d151f19a5b5908c11575cb32d8cfd",
-  "scripts/build_next_direction_design.py": "03f00e5f5e296c8dcda81ea1f2e832de9984350d539200cf7b0471dea7143b6b"
+  "scripts/build_next_direction_design.py": "43df7dd1da64e1b0f0377e4dbfb6969ad02f489ac6cbb846f0f6dabbca766c51",
+  "utils/dataset_identity.py": "0689dd52f468f06d9c9652cf77d4f66991feaa5dcafcf857172c14bf98f338ac"
  }
 }

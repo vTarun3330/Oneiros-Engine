@@ -1,22 +1,25 @@
 """Build the next-direction design package and the reference-universe receipt (CPU only).
 
-From local upstream sources, the curated seed definition in code, the legacy
-real-bug files and the permitted train shard only, it:
+From the corpus manifest, local upstream sources, the curated seed definition
+in code, the legacy real-bug files and the permitted train shard only, it:
 
-* indexes the complete reference universe and runs the evidence-based
-  coverage audit (concrete counts and bound inputs per corpus source);
-* writes ``results/v4_3_reference_universe_receipt.json``, a deterministic
-  hash-bound receipt whose SHA-256 every future isolation record must carry;
-* runs executable self-checks with fully evidenced candidates (a known
-  benchmark patch, a renamed benchmark function and a fork of an excluded
-  repository are refused; an evidence-free candidate is refused; a novel,
-  fully evidenced candidate is admitted);
-* binds the prospective power analysis and records the protocol content.
+* indexes the complete reference universe, computes its deterministic receipt
+  and FREEZES the universe against it (collections, collection hashes, internal
+  receipt hash, every input file and every canonical source re-verified);
+* runs executable self-checks against the frozen universe with synthetic,
+  fully authenticated evidence (a known benchmark patch, a renamed benchmark
+  function and a fork of an excluded repository are refused by the overlap
+  stage; an evidence-free candidate is refused; a novel candidate is admitted;
+  an arbitrary receipt hash cannot be attached);
+* verifies the power artifact by recomputing it from its verified evidence;
+* verifies both closed pilots, each evaluation by envelope AND raw result hash.
 
-It mines nothing, creates no split, loads no model, and opens no protected
-split or canonical records.json.  The claim it supports is narrow: disjointness
-is enforced against the complete indexed source universe under the recorded
-checks.
+Nothing is published unless every gate passes.  The receipt and the design are
+staged, re-verified from the staged bytes, and only then promoted atomically;
+on any failure the previously accepted artifacts are left untouched.
+
+It mines nothing, makes no network call, creates no split, loads no model, and
+opens no protected split or canonical records.json.
 """
 from __future__ import annotations
 
@@ -27,64 +30,99 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+from typing import Any
 
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from harness.atomic_publish import PublicationRefused, publish_atomically
+from harness.closed_pilot_evidence import sha256_file, verify_closed_pilots
+from harness.isolation_evidence_fixtures import files_from_patch, synthetic_candidate
 from harness.repository_isolation import (
-    CLAIM, ISOLATION_VERSION, CandidateBug, audit_source_coverage, build_reference_universe,
-    check_candidate, reference_universe_receipt, verify_receipt,
+    ACQUISITION_REQUIREMENTS, CANONICAL_SOURCES, CLAIM, ISOLATION_VERSION, CandidateBug,
+    FrozenReferenceUniverse, ReferenceUniverseMismatch, build_reference_universe,
+    check_candidate, extract_functions, freeze_reference_universe, isolation_record_is_current,
+    reference_universe_receipt,
 )
 from harness.source_identity import canonical_sha256
 from scripts.audit_cross_split_near_duplicates import NEAR_DUPLICATE_JACCARD
+from scripts.build_repository_native_power_analysis import (
+    EvidenceRefused, verify_power_artifact,
+)
 
-SCHEMA = "oneiros_next_direction_design_v2"
-RECEIPT_PATH = ROOT / "results" / "v4_3_reference_universe_receipt.json"
-POWER_PATH = ROOT / "results" / "v4_3_repository_native_power_analysis.json"
-UNIVERSE_SOURCES = ("harness/repository_isolation.py", "scripts/audit_cross_split_near_duplicates.py",
-                    "scripts/build_next_direction_design.py", "scripts/build_corpus_v1.py",
-                    "harness/corpus_view.py")
+SCHEMA = "oneiros_next_direction_design_v3"
+RECEIPT = "results/v4_3_reference_universe_receipt.json"
+POWER = "results/v4_3_repository_native_power_analysis.json"
+DESIGN = "results/v4_3_next_direction_design.json"
+DESIGN_SOURCES = (*CANONICAL_SOURCES, "harness/isolation_evidence_fixtures.py",
+                  "harness/atomic_publish.py", "harness/closed_pilot_evidence.py",
+                  "scripts/build_repository_native_power_analysis.py",
+                  "docs/next_direction_design_content.json")
 NOVEL = ("def merge_ranges(pairs):\n    pairs = sorted(pairs)\n    merged = [pairs[0]]\n"
          "    for lo, hi in pairs[1:]:\n        if lo <= merged[-1][1]:\n"
          "            merged[-1] = (merged[-1][0], max(hi, merged[-1][1]))\n"
          "        else:\n            merged.append((lo, hi))\n    return merged\n")
-NOVEL_PATCH = ("--- a/src/ranges.py\n+++ b/src/ranges.py\n"
-               "-        if lo < merged[-1][1]:\n+        if lo <= merged[-1][1]:\n")
+BUGGY = NOVEL.replace("lo <= merged", "lo < merged")
 
 
-def sha(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+def novel_candidate(**overrides: Any) -> CandidateBug:
+    return synthetic_candidate(buggy_text=BUGGY, fixed_text=NOVEL, target_function=BUGGY,
+                               target_file="src/ranges.py", target_module="ranges", **overrides)
 
 
-def evidenced(**overrides) -> CandidateBug:
-    """A fully evidenced synthetic candidate; overrides make it collide or fail."""
-    values = dict(repository="example-org/ranges",
-                  repository_url="https://github.com/example-org/ranges", repository_id="1",
-                  fork_status="not_fork", buggy_commit="1" * 40, fixed_commit="2" * 40,
-                  patch=NOVEL_PATCH, target_function=NOVEL, target_file="src/ranges.py",
-                  target_module="ranges", issue_id="example-org/ranges#1", licence_spdx="MIT",
-                  licence_sha256="b" * 64)
-    values.update(overrides)
-    return CandidateBug(**values)
-
-
-def verify_closed_pilots() -> dict:
-    receipt = json.loads((ROOT / "results" / "v4_3_tool_assisted_decision_receipt.json")
-                         .read_text(encoding="utf-8"))
-    checks = {key: sha(ROOT / receipt[key]["path"]) == receipt[key]["sha256"]
-              for key in ("analysis", "lineage_manifest", "design_receipt", "panel", "journal")}
-    for arm, entry in receipt["evaluations"].items():
-        checks[f"eval_{arm}"] = sha(ROOT / entry["envelope"]["path"]) == entry["envelope"]["sha256"]
-    dose = json.loads((ROOT / "results" / "v4_3_execution_dose_decision_receipt.json")
-                      .read_text(encoding="utf-8"))
-    return {"tool_assisted": {"verdict": receipt["decision"]["outcome"],
-                              "artifact_hashes_verify": all(checks.values()),
-                              "protected_flags_false": not any(receipt["leakage"].values())},
-            "execution_dose": {"outcome": dose["decision"]["outcome"],
-                               "protected_flags_false": not any(
-                                   value for value in dose["leakage"].values()
-                                   if isinstance(value, bool))}}
+def run_self_checks(frozen: FrozenReferenceUniverse, root: Path = ROOT
+                    ) -> tuple[dict[str, Any], bool]:
+    """Synthetic, fully authenticated candidates against the frozen universe."""
+    patch = (root / "data/BugsInPy_repo/projects/tqdm/bugs/1/bug_patch.txt").read_text(
+        encoding="utf-8")
+    path, buggy, fixed = files_from_patch(patch, NOVEL)
+    mbpp = json.loads((root / "data/mbpp/mbpp_full.jsonl").read_text(
+        encoding="utf-8").splitlines()[0])["code"].replace("\r\n", "\n")
+    renamed = extract_functions(mbpp.replace("min_cost", "cheapest_path"))[0]
+    candidates = {
+        "known_benchmark_patch_in_excluded_repository_refused": (synthetic_candidate(
+            repository="tqdm/tqdm", buggy_text=buggy, fixed_text=fixed, target_function=NOVEL,
+            target_file=path, target_module="contrib", patch=patch),
+            {"patch_identical_to_known_bug", "repository_in_reference_universe:tqdm/tqdm"}),
+        "renamed_mbpp_function_refused": (synthetic_candidate(
+            buggy_text=renamed + "\n", fixed_text=renamed + "\n# fixed\n",
+            target_function=renamed, target_file="src/paths.py", target_module="paths"),
+            {"function_near_duplicate_of_reference"}),
+        "fork_of_excluded_repository_refused": (novel_candidate(
+            fork_parent="pandas-dev/pandas"),
+            {"fork_parent_in_reference_universe:pandas-dev/pandas"}),
+        "novel_fully_evidenced_candidate_admitted": (novel_candidate(), set()),
+    }
+    checks: dict[str, Any] = {}
+    passed = True
+    for name, (candidate, expected_overlap) in candidates.items():
+        record = check_candidate(candidate, frozen)
+        ok = (record["stages"]["schema"] == [] and record["stages"]["authentication"] == []
+              and expected_overlap <= set(record["stages"]["overlap"])
+              and record["admissible"] is (not expected_overlap)
+              and isolation_record_is_current(record, frozen))
+        checks[name] = {**record, "self_check_passed": ok}
+        passed &= ok
+    evidence_free = check_candidate(CandidateBug(repository="example-org/ranges"), frozen)
+    ok = evidence_free["admissible"] is False and evidence_free["insufficient_evidence"] is True
+    checks["evidence_free_candidate_refused"] = {**evidence_free, "self_check_passed": ok}
+    passed &= ok
+    try:
+        check_candidate(novel_candidate(), "a" * 64)  # type: ignore[arg-type]
+        refused = False
+    except TypeError:
+        refused = True
+    record = check_candidate(novel_candidate(), frozen)
+    forged = {**record, "reference_universe_sha256": "a" * 64}
+    ok = refused and not isolation_record_is_current(forged, frozen)
+    checks["arbitrary_receipt_hash_refused"] = {
+        "check_candidate_with_a_hash_raises_type_error": refused,
+        "record_with_a_substituted_hash_is_not_current": not isolation_record_is_current(
+            forged, frozen),
+        "self_check_passed": ok}
+    passed &= ok
+    return checks, passed
 
 
 def probe_wsl() -> dict:
@@ -109,62 +147,42 @@ def probe_wsl() -> dict:
             "probed_utc": datetime.now(timezone.utc).isoformat()}
 
 
-def main(argv=None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=ROOT / "results"
-                        / "v4_3_next_direction_design.json")
-    args = parser.parse_args(argv)
+def sha256_bytes(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
 
-    corpus_manifest = json.loads((ROOT / "data" / "corpus" / "v4_1_research_hardened_candidate"
-                                  / "manifest.json").read_text(encoding="utf-8"))
-    universe = build_reference_universe(ROOT)
-    coverage = audit_source_coverage(universe, corpus_manifest)
-    receipt = reference_universe_receipt(
-        universe, {relative: canonical_sha256(ROOT / relative) for relative in UNIVERSE_SOURCES})
-    if not verify_receipt(receipt):
-        print("REFUSED: reference-universe receipt does not verify")
-        return 2
-    RECEIPT_PATH.write_bytes((json.dumps(receipt, indent=1, sort_keys=True, ensure_ascii=False)
-                              + "\n").encode("utf-8"))
-    receipt_hash = receipt["receipt_sha256"]
 
-    bugsinpy_patch = (ROOT / "data" / "BugsInPy_repo" / "projects" / "tqdm" / "bugs" / "1"
-                      / "bug_patch.txt").read_text(encoding="utf-8")
-    mbpp_first = json.loads((ROOT / "data" / "mbpp" / "mbpp_full.jsonl")
-                            .read_text(encoding="utf-8").splitlines()[0])["code"]
-    self_checks = {
-        "known_benchmark_patch_in_excluded_repository_refused": check_candidate(
-            evidenced(repository="tqdm/tqdm", repository_url="https://github.com/tqdm/tqdm",
-                      issue_id="tqdm/tqdm#1", patch=bugsinpy_patch), universe, receipt_hash),
-        "renamed_mbpp_function_refused": check_candidate(
-            evidenced(target_function=mbpp_first.replace("min_cost", "cheapest_path")),
-            universe, receipt_hash),
-        "fork_of_excluded_repository_refused": check_candidate(
-            evidenced(fork_status="fork", fork_parent="pandas-dev/pandas", fork_parent_id="7"),
-            universe, receipt_hash),
-        "evidence_free_candidate_refused": check_candidate(
-            CandidateBug(repository="example-org/ranges"), universe, receipt_hash),
-        "novel_fully_evidenced_candidate_admitted": check_candidate(
-            evidenced(), universe, receipt_hash),
-    }
-    expected = {"known_benchmark_patch_in_excluded_repository_refused": False,
-                "renamed_mbpp_function_refused": False,
-                "fork_of_excluded_repository_refused": False,
-                "evidence_free_candidate_refused": False,
-                "novel_fully_evidenced_candidate_admitted": True}
-    self_checks_pass = all(self_checks[name]["admissible"] is admissible
-                           for name, admissible in expected.items()) and \
-        self_checks["evidence_free_candidate_refused"]["insufficient_evidence"]
+def encode_receipt(receipt: dict[str, Any]) -> bytes:
+    return (json.dumps(receipt, indent=1, sort_keys=True, ensure_ascii=False) + "\n").encode(
+        "utf-8")
 
-    power = json.loads(POWER_PATH.read_text(encoding="utf-8"))
-    design = json.loads((ROOT / "docs" / "next_direction_design_content.json")
-                        .read_text(encoding="utf-8"))
+
+def build_artifacts(root: Path, probe: bool = True) -> tuple[bytes, bytes, dict[str, Any]]:
+    """Every gate runs here, in memory; raises on any failure."""
+    universe = build_reference_universe(root)
+    receipt = reference_universe_receipt(universe)
+    frozen = freeze_reference_universe(universe, receipt, root=root)
+    coverage = receipt["coverage"]
+    if not coverage["covered"]:
+        raise PublicationRefused(f"coverage fails: {coverage['problems']}")
+    self_checks, self_checks_pass = run_self_checks(frozen, root)
+    if not self_checks_pass:
+        raise PublicationRefused("isolation self-checks fail")
+    power_bytes = (root / POWER).read_bytes()
+    power = verify_power_artifact(root, power_bytes)
+    pilots = verify_closed_pilots(root)
+    if not (pilots["all_evaluations_verify"] and pilots["tool_assisted"]["artifact_hashes_verify"]
+            and pilots["tool_assisted"]["protected_flags_false"]
+            and pilots["execution_dose"]["protected_flags_false"]):
+        raise PublicationRefused(f"closed-pilot evidence does not verify: {pilots}")
+    receipt_bytes = encode_receipt(receipt)
+    design = json.loads((root / "docs/next_direction_design_content.json").read_text(
+        encoding="utf-8"))
     names = receipt["collections"]["repository_names"]
     report = {
         "schema_version": SCHEMA,
         "label": "design only; no split created, no mining, no model, no protected access",
         "created_utc": datetime.now(timezone.utc).isoformat(),
-        "starting_state": {"closed_pilots": verify_closed_pilots()},
+        "starting_state": {"closed_pilots": pilots},
         "isolation": {
             "version": ISOLATION_VERSION,
             "claim": CLAIM,
@@ -172,47 +190,99 @@ def main(argv=None) -> int:
             "method": "AST-normalised, docstring-stripped code; exact Jaccard over 5-token "
                       "shingles; inverted-index candidates (reused from "
                       "scripts/audit_cross_split_near_duplicates.py)",
+            "stages": ["evidence schema", "evidence authentication (offline)",
+                       "source-universe overlap"],
+            "acquisition_requirements": ACQUISITION_REQUIREMENTS,
             "why_protected_splits_need_not_be_opened": (
                 "every split, the consumed test split included, is built only from MBPP, "
                 "HumanEval, BugsInPy, SWE-bench Verified and the curated seeds; the universe "
                 "indexes the complete upstream copy of each, verified by the coverage audit"),
             "coverage": coverage,
-            "reference_universe_receipt_path": RECEIPT_PATH.relative_to(ROOT).as_posix(),
-            "reference_universe_receipt_sha256": receipt_hash,
-            "reference_universe_receipt_file_sha256": sha(RECEIPT_PATH),
+            "reference_universe_receipt_path": RECEIPT,
+            "reference_universe_receipt_sha256": frozen.receipt_sha256,
+            "reference_universe_receipt_file_sha256": sha256_bytes(receipt_bytes),
+            "frozen_universe_verification": frozen.verification,
             "collection_sha256": receipt["collection_sha256"],
             "excluded_repository_names": names,
             "counts": receipt["collections"]["counts"],
             "bound_input_files": {source: len(files) for source, files in
                                   receipt["collections"]["input_files"].items()},
+            "bound_code_inputs": {source: sorted(files) for source, files in
+                                  receipt["collections"]["code_input_files"].items()},
             "self_checks": self_checks,
             "self_checks_pass": self_checks_pass,
         },
-        "power_analysis": {"path": POWER_PATH.relative_to(ROOT).as_posix(),
-                           "sha256": sha(POWER_PATH),
+        "power_analysis": {"path": POWER, "sha256": sha256_bytes(power_bytes),
+                           "verified_by_recomputation": True,
                            "recommendation": power["recommendation"],
                            "evidence": {name: {key: value for key, value in entry.items()
                                                if key != "inputs_sha256"}
                                         for name, entry in power["evidence"].items()}},
-        "environment_probe": probe_wsl(),
+        "environment_probe": probe_wsl() if probe else {"probe_skipped": True},
         **design,
-        "source_files_sha256": {relative: canonical_sha256(ROOT / relative) for relative in (
-            *UNIVERSE_SOURCES, "scripts/build_repository_native_power_analysis.py",
-            "docs/next_direction_design_content.json")},
+        "source_files_sha256": {relative: canonical_sha256(root / relative)
+                                for relative in DESIGN_SOURCES},
         "leakage": {"splits_opened": ["train"], "validation_accessed": False,
                     "ablation_dev_accessed": False, "test_accessed": False,
                     "sealed_final_test_accessed": False, "confirmation_opened": False,
                     "canonical_records_json_opened": False, "non_train_records_opened": False,
                     "network_accessed": False, "new_split_created": False},
     }
-    if not self_checks_pass or not coverage["covered"]:
-        print(f"REFUSED: self_checks_pass={self_checks_pass} coverage={coverage['problems']}")
+    design_bytes = (json.dumps(report, indent=2, default=sorted) + "\n").encode("utf-8")
+    return receipt_bytes, design_bytes, {"universe": universe, "power_bytes": power_bytes}
+
+
+def verify_staged(root: Path, receipt_target: Path, design_target: Path, universe: Any,
+                  power_bytes: bytes, staged: dict[Path, Path]) -> None:
+    """Re-verify the proposed artifacts from their staged bytes."""
+    receipt_bytes = staged[receipt_target].read_bytes()
+    receipt = json.loads(receipt_bytes)
+    try:
+        frozen = freeze_reference_universe(universe, receipt, root=root)
+    except ReferenceUniverseMismatch as exc:
+        raise PublicationRefused(f"staged receipt does not freeze: {exc}") from exc
+    design = json.loads(staged[design_target].read_bytes())
+    isolation = design["isolation"]
+    problems = []
+    if isolation["reference_universe_receipt_sha256"] != frozen.receipt_sha256:
+        problems.append("design names a different receipt hash")
+    if isolation["reference_universe_receipt_file_sha256"] != sha256_bytes(receipt_bytes):
+        problems.append("design does not bind the staged receipt file")
+    if design["power_analysis"]["sha256"] != sha256_bytes(power_bytes) or \
+            sha256_file(root / POWER) != sha256_bytes(power_bytes):
+        problems.append("power artifact changed during the build")
+    if not (isolation["coverage"]["covered"] and isolation["self_checks_pass"]):
+        problems.append("staged design records a failed gate")
+    if any(value for key, value in design["leakage"].items() if key != "splits_opened"):
+        problems.append("staged design reports protected access")
+    if problems:
+        raise PublicationRefused("; ".join(problems))
+
+
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--receipt", type=Path, default=ROOT / RECEIPT)
+    parser.add_argument("--output", type=Path, default=ROOT / DESIGN)
+    parser.add_argument("--no-probe", action="store_true")
+    args = parser.parse_args(argv)
+    try:
+        receipt_bytes, design_bytes, context = build_artifacts(ROOT, probe=not args.no_probe)
+        # Receipt first, then the design that binds it.
+        publish_atomically(
+            {args.receipt: receipt_bytes, args.output: design_bytes},
+            verify=lambda staged: verify_staged(ROOT, args.receipt, args.output,
+                                                context["universe"], context["power_bytes"],
+                                                staged))
+    except (PublicationRefused, ReferenceUniverseMismatch, EvidenceRefused) as exc:
+        print(f"REFUSED (previous artifacts preserved): {exc}")
         return 2
-    args.output.write_bytes((json.dumps(report, indent=2, default=sorted) + "\n")
-                            .encode("utf-8"))
-    print(json.dumps({"coverage": coverage["covered"], "self_checks_pass": self_checks_pass,
-                      "receipt_sha256": receipt_hash,
-                      "bound_input_files": report["isolation"]["bound_input_files"]}, indent=2))
+    receipt = json.loads(receipt_bytes)
+    print(json.dumps({"coverage": receipt["coverage"]["covered"],
+                      "receipt_sha256": receipt["receipt_sha256"],
+                      "receipt_file_sha256": sha256_bytes(receipt_bytes),
+                      "bound_input_files": sum(len(files) for files in
+                                               receipt["collections"]["input_files"].values())},
+                     indent=2))
     return 0
 
 

@@ -65,16 +65,16 @@
     "isolation_rules": {
       "claim": "disjointness is enforced against the complete indexed source universe under the recorded repository, fork, commit, patch, issue, and function-similarity checks; this is not a claim that no model has seen these repositories",
       "mandatory_evidence": [
-        "canonical lower-case owner/name",
-        "verified https://github.com/<owner>/<name> URL and numeric repository identity",
-        "explicit fork status: not_fork, or fork with verified parent owner/name and numeric parent identity",
-        "full 40-hex buggy commit SHA",
-        "full 40-hex fixed commit SHA",
-        "non-empty normalised patch",
-        "parseable target function with at least 12 comparison shingles",
-        "issue or PR identity owner/name#number in the same repository",
-        "licence SPDX identifier from the admitted list and the SHA-256 of the licence file",
-        "target file path and module"
+        "canonical lower-case owner/name, https://github.com/<owner>/<name> URL, numeric repository ID and node ID",
+        "repository API response (URL, raw bytes, SHA-256, UTC retrieval timestamp, ETag where available); the queried full_name must equal the returned full_name",
+        "explicit fork status; for a fork, the parent's full_name, numeric ID and node ID",
+        "full 40-hex buggy and fixed commit SHAs with their commit objects",
+        "the tree objects on the paths to the licence file and the target file at both revisions",
+        "licence SPDX identifier from the admitted list, licence file path at the buggy commit, its blob ID and SHA-256",
+        "target file path, module, and blob IDs at the buggy and fixed revisions",
+        "non-empty normalised patch touching the target file",
+        "parseable target function (>= 12 shingles) present in the buggy target file",
+        "issue or PR identity owner/name#number with its API response (URL, bytes, SHA-256, timestamp) naming the same repository"
       ],
       "fail_closed": "any missing, unknown or malformed evidence refuses with insufficient_isolation_evidence; nothing defaults to admission",
       "repository": "owner/name, bare name and verified fork parent outside the universe; same-organisation repositories are flagged for decision D2",
@@ -82,8 +82,15 @@
       "patch_lineage": "commits not known benchmark commits; normalised patch not identical to, and Jaccard < 0.80 against, every indexed BugsInPy and SWE-bench Verified patch",
       "function_lineage": "target function Jaccard < 0.80 against every indexed reference function; nearest match, score and fingerprint recorded",
       "within_set": "one target per fix commit and function lineage; pairwise near-duplicate check within the new set",
-      "coverage": "audit_source_coverage requires concrete indexed counts and bound input files for every corpus source and for the train view and legacy real-bug files; an unknown, unindexed or zero-count source fails",
-      "receipt": "every isolation record carries the SHA-256 of results/v4_3_reference_universe_receipt.json; a record made against any other universe is invalid and must be recomputed"
+      "coverage": "audit_source_coverage decides which sources require indexing from the corpus manifest bound in the universe, records its SHA-256 and re-verifies it on disk; an unknown, unindexed or zero-count source fails; the manifest, utils/dataset_identity.py, the curated definition and every module that affects classification, normalisation, curated-seed identification or train-view loading are bound in the receipt",
+      "receipt": "decisions are made only against a FrozenReferenceUniverse: loading rebuilds the universe, requires its collections and collection hashes to equal the receipt's, verifies the internal receipt hash, re-hashes every input file, code input and canonical source, and recomputes coverage; any mismatch refuses. check_candidate takes that object and reads the receipt hash from it; no caller can supply a hash. isolation_record_is_current accepts only the same verified universe and an unmodified record digest",
+      "stages": {
+        "1_evidence_schema": "every mandatory field present and well formed (evidence_problems)",
+        "2_evidence_authentication": "offline cross-checks of acquired evidence (authentication_problems): repository and issue API responses re-hashed and their full_name, id, node_id, html_url, fork, parent{full_name,id,node_id}, license.spdx_id, number, url and repository_url compared with the declared identity; git commit, tree and blob objects re-hashed to their IDs; the fixed commit's parent must be the buggy commit; the licence file and target file must resolve through the commit trees to the recorded blobs, whose contents must match the licence hash, the target function and the patch's removed/added lines",
+        "3_source_universe_overlap": "repository, fork parent, commit, issue, patch and function similarity against the frozen universe (overlap_problems)",
+        "later_network_acquisition": "a separate, separately approved step (D1) that fetches and stores the evidence listed in ACQUISITION_REQUIREMENTS; nothing in the checker makes a network call"
+      },
+      "curated_seeds": "all ten CURATED_BUGSINPY_BUGS definitions are indexed: a conservative source superset of the eight corpus seeds (seven in train, the eighth one of black_1, cookiecutter_1, scrapy_1); no non-train record opened"
     },
     "licensing_and_reproducibility": {
       "licences_admitted": [
@@ -151,13 +158,19 @@
     },
     "composition": {
       "target_size": {
-        "recommended": 300,
-        "minimum": 200,
-        "basis": "results/v4_3_repository_native_power_analysis.json: under the frozen +5 pp gate the 80%-power minimum detectable paired Kill@8 effect is about 11.8 pp at N=100, 10.1 at 150, 9.2 at 200 and 8.1 at 300 (discordance 0.21, rho 0.05, 25 repositories); the gate is not changed to fit the sample"
+        "recommended": 400,
+        "powered_for": "a true paired Kill@8 gain of +8 pp, discordance 0.21, within-repository correlation rho = 0.05, at most 12 targets per repository (>= 34 repositories): analytic power 0.857, clustered Monte Carlo 0.823",
+        "feasibility_option": {
+          "n": 200,
+          "label": "lower-power compromise (power about 0.64 at the planning effect); not adequately powered; usable only with explicit approval"
+        },
+        "effect_at_gate": "a true gain of exactly +5 pp passes with probability at most 50% at every N; no N gives 80% power there",
+        "basis": "results/v4_3_repository_native_power_analysis.json (verified by recomputation from repository-relative, hash-checked train-derived evidence); the +5 pp gate is not changed to fit the sample"
       },
       "unit": "one target function per unique bug; unique function lineages and fix commits",
       "caps": {
-        "per_repository_share_max": 0.08,
+        "per_repository_targets_max": 12,
+        "per_repository_note": "the earlier 8% share cap allows 32 targets per repository at N=400 and raises the design effect enough to lose 80% power; the cap is an absolute 12 targets",
         "per_bug_family_share_max": 0.25,
         "per_source_index_share_max": 0.5
       },
@@ -300,23 +313,25 @@
       "native_test_seconds_per_run": 45,
       "environment_build_minutes": 4,
       "parallel_native_jobs": 16,
-      "mining_funnel": "yield 7-15% from mined candidate fix commits to qualified single-function targets; N=300 needs about 2,000-4,300 candidates (3,000 at 10%)",
+      "mining_funnel": "yield 7-15% from mined candidate fix commits to qualified single-function targets; N=400 needs about 2,700-5,700 candidates (4,000 at 10%)",
       "generation_seconds_per_repository_record_8_samples": 6,
       "canonical_kill8_seconds_per_function_record": 1.07
     },
     "repository_native": {
-      "planning_n": 300,
+      "planning_n": 400,
       "mining": {
-        "network_hours": "2-4",
-        "cpu_hours": "about 2",
-        "storage_gb": "8-16 (clones)"
+        "network_hours": "2.7-5.3",
+        "cpu_hours": "about 2.7",
+        "candidates": "2667-5715 (4,000 at 10% yield)",
+        "repositories": ">= 34 at 12 targets each",
+        "storage_gb": "11-21 (clones)"
       },
       "environment_build": {
-        "wall_hours": "about 4 (about 900 heuristic candidates x 4 min / 16)",
-        "storage_gb": "about 90 kept (300 x 0.3), up to 270 before pruning"
+        "wall_hours": "about 5.0",
+        "storage_gb": "about 120 kept, up to 360 before pruning"
       },
       "qualification": {
-        "wall_hours": "about 4 (900 x 2 revisions x 3 repeats x 45 s / 16)"
+        "wall_hours": "about 5.6"
       },
       "dress_rehearsal": {
         "gpu_minutes": 5,
@@ -324,17 +339,17 @@
         "storage_gb": 1
       },
       "one_time_evaluation": {
-        "gpu_minutes": "about 60 (2 models x 300 x 6 s)",
-        "native_execution_wall_hours": "about 7.5 (2 models x 300 x 8 x 2 revisions x 45 s / 16)",
-        "atheris_wall_hours": "about 19 (2 modes x 300 targets x 600 CPU-s x 3 seeds / 16)",
-        "storage_gb": 2
+        "gpu_minutes": "about 80",
+        "native_execution_wall_hours": "about 10.0",
+        "atheris_wall_hours": "about 25.0",
+        "storage_gb": 2.7
       },
       "total": {
-        "gpu_hours": "about 1",
-        "cpu_wall_hours": "about 35-40",
-        "storage_gb": "about 110 kept, about 290 peak"
+        "gpu_hours": "about 1.4",
+        "cpu_wall_hours": "about 49.3",
+        "storage_gb": "about 384 peak"
       },
-      "smaller_alternative": "at N=200 the CPU totals scale by about two thirds; power is lower (see the power analysis)"
+      "by_n": "results/v4_3_repository_native_power_analysis.json power_by_n.<N>.resources gives mining, runtime and storage for N = 100, 150, 200, 300, 400, 500"
     },
     "sampling_budget_study": {
       "gpu_minutes": "about 20 (613 x one 16-sample call)",
@@ -371,7 +386,7 @@
     {
       "id": "B6",
       "blocker": "the consumed test split can never be read, so disjointness from it is ENFORCED only through complete indexing of the upstream sources that fed every split (coverage audit and hash-bound receipt), not by inspecting the split",
-      "resolution": "user acceptance of this enforcement method (D7)"
+      "resolution": "user acceptance (D7), now that each decision is bound to a verified frozen universe"
     },
     {
       "id": "B7",
@@ -380,14 +395,19 @@
     },
     {
       "id": "B8",
-      "blocker": "the power analysis recommends N=300 (minimum 200), which needs roughly 2,000-4,300 mined candidates and about 35-40 CPU-hours",
+      "blocker": "N=400 (powered for +8 pp at rho 0.05, <= 12 targets per repository) needs about 2,700-5,700 mined candidates from >= 34 repositories and about 50 CPU wall-hours; N=200 is only a lower-power feasibility option",
       "resolution": "decision D3"
+    },
+    {
+      "id": "B9",
+      "blocker": "candidate GitHub metadata (repository, fork parent, issue, licence) and git objects must be acquired and hash-bound before any isolation decision; the offline authenticator exists, the acquisition step does not",
+      "resolution": "part of the mining approval (D1)"
     }
   ],
   "required_user_decisions": [
     {
       "id": "D1",
-      "decision": "approve network mining of GitHub repositories and the temporal rule (fixes on or after 2025-01-01)"
+      "decision": "approve network mining of GitHub repositories, acquisition and hash-binding of repository/issue API responses and git objects, and the temporal rule (fixes on or after 2025-01-01, mitigation only)"
     },
     {
       "id": "D2",
@@ -395,7 +415,7 @@
     },
     {
       "id": "D3",
-      "decision": "final size: recommended N=300, minimum 200 (power analysis), with the 8% per-repository cap; the +5 pp gate is unchanged"
+      "decision": "final size: N=400 recommended, powered for a true +8 pp gain at rho 0.05 with at most 12 targets per repository; N=200 only as an explicitly approved lower-power feasibility compromise; the +5 pp gate is unchanged"
     },
     {
       "id": "D4",
@@ -411,7 +431,7 @@
     },
     {
       "id": "D7",
-      "decision": "accept that disjointness is enforced against the complete indexed source universe (coverage audit + hash-bound receipt), which does not require reading any protected split"
+      "decision": "accept that disjointness is enforced against the complete indexed source universe, with every decision bound to a FrozenReferenceUniverse verified against the receipt (pending)"
     },
     {
       "id": "D8",
@@ -440,13 +460,13 @@
     },
     {
       "step": 4,
-      "what": "mining, licence screening and per-candidate isolation records; split into rehearsal pool and final pool (final pool unseen by any model)",
-      "resources": "network + CPU about 4 h for N=300"
+      "what": "mining, metadata and git-object acquisition (hash-bound), licence screening and per-candidate isolation records against the frozen universe; split into rehearsal pool and final pool (final pool unseen by any model)",
+      "resources": "network + CPU about 5-8 h for N=400"
     },
     {
       "step": 5,
       "what": "environment build and official-test qualification for both pools",
-      "resources": "CPU about 8 h, disk about 290 GB peak for N=300"
+      "resources": "CPU about 10.6 h, disk about 360 GB peak for N=400"
     },
     {
       "step": 6,
@@ -461,7 +481,7 @@
     {
       "step": 8,
       "what": "one-time evaluation (only after explicit authorization)",
-      "resources": "GPU about 1 h, CPU about 26 h (native + Atheris) for N=300"
+      "resources": "GPU about 80 min, CPU about 35 h (native + Atheris) for N=400"
     }
   ]
 }

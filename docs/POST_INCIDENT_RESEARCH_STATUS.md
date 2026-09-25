@@ -571,7 +571,7 @@ reference, and confirmation stays closed. The receipts are
 `results/v4_3_tool_assisted_analysis.json` and
 `results/v4_3_tool_assisted_decision_receipt.json`.
 
-## 9. Next direction (design only, 2026-09-25; isolation repaired)
+## 9. Next direction (design only, 2026-09-25; isolation bound to a verified universe)
 
 **Recommended primary line: an independently constructed repository-native
 evaluation.** It uses new bugs from repositories outside every indexed source,
@@ -582,21 +582,29 @@ separate pool before any one-time run.
 with frozen text-only selection of 8 beat the nested first 8. It is exploratory
 and takes about 20 GPU minutes.
 
-**Isolation claim (narrow).** Disjointness is *enforced* against the complete
-indexed source universe under the recorded repository, fork, commit, patch,
-issue and function-similarity checks. It does not claim that no model has seen
-a repository, and the 2025 fix cutoff is contamination-risk mitigation only.
-Three properties back the claim:
-- **Fail-closed checks.** `harness/repository_isolation.py` refuses any candidate lacking complete evidence (`insufficient_isolation_evidence`).
-- **Evidence-based coverage.** Coverage requires concrete indexed counts and hash-bound inputs for every source. That includes all 10 curated seed definitions, reconstructed from code.
-- **A hash-bound universe.** The universe is bound by `results/v4_3_reference_universe_receipt.json`, which lists 1,559 input files, 1,484 commits, 998 patches and 33,192 function fingerprints. The receipt is deterministic, and every isolation decision carries its hash.
+**Isolation claim (narrow; D7 pending).** Disjointness is *enforced* against the
+complete indexed source universe under the recorded repository, fork, commit,
+patch, issue and function-similarity checks. It does not claim that no model
+has seen a repository, and the 2025 fix cutoff is contamination-risk mitigation
+only.
 
-**Power.** A prospective analysis from permitted evidence
-(`results/v4_3_repository_native_power_analysis.json`) recommends N = 300, with
-200 the minimum, under the unchanged +5 pp gate. The 80%-power minimum
-detectable effect is about 8.1 pp at N = 300 and 11.8 pp at N = 100.
+- **Bound decisions.** Every decision is made against a `FrozenReferenceUniverse`. Loading it re-verifies the recomputed collections, the collection hashes, the internal receipt hash, every input file and every canonical source against `results/v4_3_reference_universe_receipt.json` (`c3fabc47…`). The receipt hash comes from that object; no caller can supply one.
+- **Bound coverage inputs.** The receipt binds the corpus manifest, `utils/dataset_identity.py`, the curated definition and the train-view loader. All ten curated definitions are indexed, a conservative superset of the eight corpus seeds.
+- **Separate stages.** Candidate evidence goes through schema validation, then offline authentication (API responses and git objects are re-hashed and cross-checked), then source-universe overlap. Network acquisition is a later, separately approved step.
 
-The design, estimates, blockers (B1–B8) and required decisions (D1–D9) are in
+**Power.** Evidence paths are repository-relative, and every evidence file is
+hash-checked against the closed pilots' decision receipts. The artifact is
+verified by full recomputation before the design accepts it
+(`results/v4_3_repository_native_power_analysis.json`). Under the unchanged
++5 pp gate:
+- a true gain of exactly +5 pp passes with probability at most 50% at any N;
+- **N = 400 is recommended**, powered for a true +8 pp gain at ρ = 0.05 with at most 12 targets per repository (power 0.86 analytic, 0.82 clustered Monte Carlo);
+- N = 200 is only a lower-power feasibility compromise (power about 0.64).
+
+Artifacts are published atomically, after every gate passes.
+
+The design, estimates, blockers (B1–B9) and required decisions (D1–D9) are in
 [NEXT_DIRECTION_DECISION_MEMO.md](NEXT_DIRECTION_DECISION_MEMO.md).
 
-**Nothing has been mined or installed, no split exists, and no model has run.**
+**Nothing has been mined or installed, no split exists, no network call was
+made, and no model has run.**

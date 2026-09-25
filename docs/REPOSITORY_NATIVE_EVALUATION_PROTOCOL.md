@@ -38,24 +38,71 @@ in pretraining.
 Repositories in the same organisation as an excluded one are flagged for
 decision D2.
 
-## 2. Isolation (fail-closed, receipt-bound)
+## 2. Isolation (fail-closed, bound to a verified frozen universe)
 
-`harness/repository_isolation.check_candidate(candidate, universe, receipt_sha256)`
-writes a record for every candidate. Admission requires `admissible=true`.
+**Status: D7 is pending.** The universe-to-receipt binding below is new and
+awaits acceptance.
 
-**Mandatory evidence.** Anything missing, unknown or malformed is refused as
+### Three separate stages
+
+`harness/repository_isolation.check_candidate(candidate, frozen)` writes one
+record per candidate. It shows each stage's result separately, and admission
+requires every stage to be empty.
+
+| stage | function | what it decides |
+|---|---|---|
+| 1. evidence schema | `evidence_problems` | every mandatory field is present and well formed |
+| 2. evidence authentication | `authentication_problems` | the stored evidence is internally consistent and agrees with the declared identity (offline) |
+| 3. source-universe overlap | `overlap_problems` | repository, fork parent, commit, issue, patch and function similarity against the frozen universe |
+
+Network **acquisition** of the evidence is a later, separately approved step
+(D1). What it must store is listed in `ACQUISITION_REQUIREMENTS`. Nothing in the
+checker makes a network call.
+
+### Mandatory evidence (stage 1)
+
+Anything missing, unknown or malformed is refused as
 `insufficient_isolation_evidence`:
-- canonical lower-case owner/name;
-- a verified `https://github.com/<owner>/<name>` URL and numeric repository identity;
-- fork status of `not_fork`, or `fork` with a verified parent owner/name and numeric parent identity (unknown is refused);
-- full 40-hex buggy and fixed commit SHAs, which must differ;
+- canonical lower-case owner/name, the `https://github.com/<owner>/<name>` URL, numeric repository ID and node ID;
+- the repository API response: URL, raw bytes, SHA-256, UTC retrieval timestamp, and ETag where available;
+- explicit fork status; for a fork, the parent's full_name, numeric ID and node ID (unknown is refused);
+- full 40-hex buggy and fixed commit SHAs, which must differ, with their commit objects;
+- the tree objects on the paths to the licence file and the target file at both revisions;
+- an admitted SPDX licence, the licence-file path at the buggy commit, its blob ID and its SHA-256;
+- the target file path and module, and the target-file blob IDs at both revisions;
 - a non-empty normalised patch;
 - a parseable target function with at least 12 comparison shingles;
-- an issue or PR identity `owner/name#n` in the same repository;
-- an SPDX licence from the admitted list, plus the licence-file SHA-256;
-- the target file path and module.
+- the issue or PR identity `owner/name#n`, with its API response (URL, bytes, SHA-256, timestamp).
 
-**Disjointness checks:**
+### Authentication (stage 2, offline cross-checks)
+
+**Repository response.** It must hash to its recorded SHA-256. Its `full_name`
+must equal both the queried name (a rename or redirect is refused) and the
+declared repository. Its `id`, `node_id`, `html_url`, `fork`,
+`parent{full_name, id, node_id}` and `license.spdx_id` must each match the
+declared values.
+
+**Issue response.** It must hash to its recorded SHA-256. Its `number`, `url`
+and `repository_url` (or, for a PR, its base repository) must match.
+
+**Git objects.** Every object is re-hashed to its git object ID. In addition:
+- the fixed commit's parent is the buggy commit;
+- the licence path resolves through the buggy commit's trees to the recorded licence blob, and the blob's SHA-256 matches;
+- the target file resolves to the recorded blobs at both revisions, and the two blobs differ;
+- the target function is present in the buggy file;
+- the patch touches the target file, its removed lines appear in the buggy file, and its added lines appear in the fixed file;
+- the module is consistent with the file path.
+
+Tests use offline synthetic fixtures (`harness/isolation_evidence_fixtures.py`).
+They show that each of the following is refused:
+- an edited response whose hash was recomputed but whose content no longer matches;
+- a wrong parent;
+- an undeclared fork;
+- a licence mismatch;
+- a missing commit object;
+- a patch that does not match the file blobs.
+
+### Overlap (stage 3)
 
 | check | rule |
 |---|---|
@@ -65,29 +112,38 @@ writes a record for every candidate. Admission requires `admissible=true`.
 | function lineage | Jaccard against every indexed reference function is below 0.80; the nearest match, score and fingerprint are recorded |
 | within the new set | one target per fix commit and per function lineage; a pairwise near-duplicate check |
 
-**Coverage.** `audit_source_coverage` requires concrete indexed counts and bound
-input files for every corpus source, and for the train view and the legacy
-real-bug files. An unknown, unindexed or zero-count source fails, as does a
-missing input.
+### Frozen universe and receipt
 
-**Receipt.** `results/v4_3_reference_universe_receipt.json` hash-binds the
-entire universe:
-- repository names;
-- commits;
-- patch hashes;
-- instance IDs;
-- function fingerprints;
-- all 1,559 input files;
-- a SHA-256 for each collection;
-- the source hashes of the builder, checker and normaliser.
+**Loading refuses on any mismatch.**
+`load_frozen_reference_universe(root, receipt_path)` rebuilds the universe from
+disk and freezes it against `results/v4_3_reference_universe_receipt.json`. It
+refuses unless all of the following hold:
+- the recomputed collections equal the receipt's, and so do their hashes;
+- the internal receipt hash verifies;
+- all 1,558 data inputs, 6 code inputs and 10 canonical sources match their recorded hashes;
+- the recomputed coverage equals the receipt's, and passes.
 
-Every isolation record carries the receipt hash
-(`isolation_record_is_current`). If the universe changes, old decisions become
-invalid and must be recomputed.
+**Callers cannot supply a hash.** `check_candidate` accepts only the
+`FrozenReferenceUniverse` and reads the receipt hash from it. There is no
+receipt-hash parameter, and the object cannot be built directly.
+`isolation_record_is_current(record, frozen)` accepts only the same verified
+universe and an unmodified record digest.
+
+**Coverage.** `audit_source_coverage` takes the sources that need indexing from
+the corpus manifest bound in the universe. It records the manifest's SHA-256
+and re-verifies it on disk. A changed manifest invalidates the receipt. The
+receipt also binds, by canonical hash:
+- `utils/dataset_identity.py`;
+- the curated definition;
+- every module that affects classification, normalisation, curated-seed identification or train-view loading.
+
+**Curated seeds.** All ten `CURATED_BUGSINPY_BUGS` definitions are indexed. That
+is a **conservative superset** of the eight corpus seeds. No non-train record was
+opened.
 
 ## 3. Licensing and reproducibility
 
-- **Licences:** MIT, BSD-2-Clause, BSD-3-Clause, Apache-2.0, ISC or PSF-2.0. The SPDX identifier comes from the licence file at the buggy commit, and the file is hashed.
+- **Licences:** MIT, BSD-2-Clause, BSD-3-Clause, Apache-2.0, ISC or PSF-2.0. The SPDX identifier from the repository API must agree with the declaration. The licence file is resolved through the buggy commit's trees to its blob, and that blob is hashed (§2).
 - **Checkouts:** full clones only. The blob-less ingestion cache cannot check out files. Buggy and fixed SHAs and tree hashes are recorded.
 - **Python:** the versions available now are 3.8, 3.9, 3.11 and 3.12; 3.10 and 3.13 need approval (D6). Each target uses the lowest version its project supports.
 - **One shared, hash-locked environment per target:**
@@ -142,10 +198,10 @@ scanned for lines of the fixed function, the patch or the official test.
 
 ## 6. Composition
 
-- **Size: N = 300 recommended, 200 minimum**, from the power analysis (§9). The +5 pp gate is not changed to fit the sample.
+- **Size: N = 400 recommended**, powered for a true +8 pp gain at ρ = 0.05 with at most 12 targets per repository (§9). **N = 200 is a feasibility option only:** a lower-power compromise that needs explicit approval. The +5 pp gate is not changed to fit the sample.
 - **Uniqueness:** unique bugs, function lineages and fix commits.
 - **Caps:**
-  - no repository above 8%;
+  - no repository above 12 targets. The earlier 8% share would allow 32 per repository at N = 400, too many for the planned power;
   - no bug family above 25%;
   - no candidate index above 50%.
 - **Tiers:** simple, moderate and complex, with at least 20% each where supply allows. A shortfall is reported and never filled by repetition. All exclusions are reported with their reasons.
@@ -222,18 +278,40 @@ fixed seed).
 - **No selection on the final set:** no configuration is chosen using it.
 
 **Prospective power** (`results/v4_3_repository_native_power_analysis.json`):
-- **Evidence:** permitted train-derived data only (discordance 0.17–0.21; lineage ICC about 0).
-- **Clustering:** repository ρ is swept from 0 to 0.20.
-- **80%-power MDE** (discordance 0.21, ρ 0.05, 25 repositories): 11.8 pp at N=100, 10.2 at 150, 9.2 at 200 and 8.1 at 300.
-- **Lower bound binds:** the lower-bound requirement binds above 5 pp at every N (about 8.1 pp at N=100 and 5.4 pp at N=300).
-- **Mining pool:** 2,000–4,300 candidates are needed for N=300.
+- **Portable, verified evidence:** paired Kill@8 comes from the retention and tool-assisted panels, and every path is repository-relative. Before the artifact is written, and again when the design accepts it:
+  - each evaluation envelope and raw result hash is checked against the pilots' decision receipts;
+  - paired arms must cover identical record IDs;
+  - panel lineages must cover exactly the evaluated records;
+  - every record must be a train-view record.
+
+  The design builder recomputes the whole artifact and refuses any difference.
+- **Measured inputs:** discordance 0.17–0.21; lineage ICC about 0.
+- **Effect at the gate:** a true gain of exactly +5 pp passes with probability **at most 50% at every N**, so no N gives 80% power there.
+- **Planning scenario** (analytic / clustered Monte Carlo; true +8 pp, discordance 0.21, ρ 0.05, ≤ 12 targets per repository):
+
+| N | power at +8 pp | 80%-power MDE |
+|---|---|---|
+| 100 | 0.41 / 0.44 | 13.6 pp |
+| 150 | 0.54 / 0.54 | 11.2 pp |
+| 200 | 0.64 / 0.63 | 9.8 pp |
+| 300 | 0.79 / 0.77 | 8.1 pp |
+| **400** | **0.86 / 0.82** | **7.4 pp** |
+| 500 | 0.88 / 0.85 | 7.1 pp |
+
+- **Sensitivity:**
+  - with a fixed 25 repositories the design effect grows with N, and N = 500 still needs about 7.4 pp;
+  - with only 10 repositories at N = 300 the MDE is 10.1 pp (ρ 0.05);
+  - at ρ = 0.10 the planning effect needs N = 500, and at ρ = 0.20 no N up to 500 reaches it;
+  - clustered Monte Carlo covers ρ = 0, 0.05, 0.10 and 0.20.
+- **Recommendation:** N = 400 from at least 34 repositories. N = 200 is a feasibility compromise (power about 0.64).
 
 ## 10. Receipts and rollback
 
 **Per target:**
-- repository, licence and the licence-file hash;
+- repository and issue API responses, with their hashes and retrieval timestamps;
+- the licence file's blob and hash, and the commit and tree objects;
 - commit and tree hashes;
-- the isolation record, including the receipt hash;
+- the isolation record, including the frozen universe's receipt hash and the record digest;
 - the hash-locked environment;
 - the qualification runs;
 - the prompt hash and leakage scan.
@@ -252,18 +330,22 @@ fixed seed).
 - failed runs are preserved and marked invalid;
 - the one-time set is sealed by hash before any model sees it, and is never re-evaluated after a protocol change.
 
-## Estimates (N = 300)
+## Estimates (N = 400; every N in the power artifact)
 
 | stage | GPU | CPU wall | storage |
 |---|---|---|---|
-| mining + isolation | — | ~2 h (+2–4 h network) | 8–16 GB |
-| environment build | — | ~4 h | ~90 GB kept, ~270 GB peak |
-| qualification | — | ~4 h | — |
+| mining + acquisition + isolation | — | ~2.7 h (+2.7–5.3 h network) | 11–21 GB |
+| environment build | — | ~5 h | ~120 GB kept, ~360 GB peak |
+| qualification | — | ~5.6 h | — |
 | dress rehearsal | ~5 min | ~1 h | ~1 GB |
-| one-time evaluation | ~1 h | ~26 h | ~2 GB |
+| one-time evaluation | ~80 min | ~35 h (native 10 h + Atheris 25 h) | ~2.7 GB |
+
+At N = 200 the total is about 25 CPU wall-hours and 194 GB peak. At N = 300 it
+is about 37 hours and 289 GB, and at N = 500 about 61 hours and 480 GB. WSL
+has 952 GB free.
 
 The assumptions:
-- a 7–15% yield from mined candidates to targets;
+- a 7–15% yield from mined candidates to targets (N = 400 needs 2,700–5,700 candidates);
 - 45 s per native test run;
 - 4 minutes per environment build;
 - 16 parallel jobs;
