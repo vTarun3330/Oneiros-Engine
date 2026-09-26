@@ -1,0 +1,17 @@
+{
+  "label": "INDEPENDENT policy A-prime confirmation pilot on previously unused repositories; candidate pool only, no evaluation set, no model, no GPU",
+  "repositories_file": "docs/repository_native_confirmation_repositories.json",
+  "expected_repository_list_sha256": "87345799df7832d0d1e78e17a677f97dba56f8bc109f07781a808cf8276ee827",
+  "gate_file": "docs/repository_native_aprime_feasibility_gate.json",
+  "expected_gate_sha256": "09dcde5338ea807eaa2ad0833f95db3c91d159caebe332f4dd0f66be6cc769ff",
+  "store": "data/repository_native/aprime_confirmation_pilot",
+  "report": "results/v4_3_repository_native_aprime_confirmation_pilot.json",
+  "per_repository_cap": 10,
+  "max_candidates": 120,
+  "min_repositories": 10,
+  "fetch_since": "2024-12-01",
+  "candidates_since": "2025-01-01",
+  "exclude_journals": ["data/repository_native/acquisition_pilot/journal.jsonl"],
+  "exclude_repository_files": ["docs/repository_native_candidate_repositories.json"],
+  "pool_files": ["docs/repository_native_candidate_repositories.json", "docs/repository_native_confirmation_repositories.json"]
+}

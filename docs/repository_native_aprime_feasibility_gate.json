@@ -1,0 +1,32 @@
+{
+  "schema_version": "oneiros_aprime_feasibility_gate_v1",
+  "frozen_before": "any candidate of the independent A-prime confirmation pilot is inspected",
+  "policy": "A_prime_direct_parent_single_target_source_with_auxiliary_tests_docs",
+  "thresholds": {
+    "min_candidates": 100,
+    "min_new_repositories": 10,
+    "min_admitted_repositories": 5,
+    "max_repository_share": 0.4,
+    "min_wilson_lower_yield": 0.07
+  },
+  "budget": {
+    "max_candidates_to_inspect": 6000,
+    "max_acquisition_hours": 72,
+    "max_acquisition_storage_gb": 100,
+    "basis": "the design estimate for N=400 (2,700-5,700 candidates; acquisition network 2.7-5.3 h and clone storage 11-21 GB), with headroom; environment storage is budgeted separately in Phase 3"
+  },
+  "n400": {"target": 400, "min_repositories": 34, "max_per_repository": 12},
+  "gates": {
+    "minimum_scale": ">= 100 candidates from >= 10 repositories, all previously unused, and no commit ID from the policy-A journal",
+    "zero_incomplete_evidence_admissions": "no admitted candidate has insufficient evidence",
+    "zero_revalidation_failures": "every record revalidates byte for byte from its sidecar",
+    "zero_hash_inconsistencies": "no hash mismatch or integrity failure, and every stored object re-verifies",
+    "no_protected_data_access": "the audit-hook evidence shows no protected path opened (event protected_data_access is false)",
+    "zero_vendored_or_generated_admissions": "no admitted target is flagged by the frozen vendored/generated detector",
+    "admitted_repository_diversity": ">= 5 repositories with an admitted target",
+    "maximum_repository_share": "no repository above 40% of admitted targets",
+    "yield_or_projection": "Wilson 95% lower admission yield >= 7%, OR the conservative (Wilson-lower) supply projection over the frozen repository pool reaches N=400 within the budget",
+    "n400_projection_respects_repository_rules": "at the Wilson-lower rate the frozen pool projects >= 400 targets from >= 34 repositories with <= 12 per repository"
+  },
+  "note": "the gate does not fail because the yield is HIGHER than the old 7-15% estimate"
+}
