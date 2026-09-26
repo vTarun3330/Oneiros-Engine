@@ -1,0 +1,192 @@
+{
+ "cause": "receipt tooling defect in harness/acquisition_receipt.PROTECTED_PATTERNS: the bare pattern 'confirmation' (and likewise 'sealed') matches unrelated names, here the pilot's own store directory and its repository list file (false positives), while the development-view pattern does NOT match the validation shard val.records.json (a false-negative gap), so this session's evidence cannot prove validation data was never opened even though code inspection shows only the train shard is read",
+ "config": "docs/repository_native_aprime_confirmation_pilot.json",
+ "diagnostic_not_published": {
+  "admitted_per_repository": {
+   "agronholm/anyio": 5,
+   "agronholm/apscheduler": 5,
+   "delgan/loguru": 7,
+   "kludex/starlette": 1,
+   "pydantic/pydantic": 1,
+   "pygments/pygments": 1,
+   "python-markdown/markdown": 1,
+   "simonw/sqlite-utils": 3,
+   "suor/funcy": 3,
+   "tox-dev/tox": 2
+  },
+  "api": {
+   "api_calls": 102,
+   "api_retries": 1,
+   "api_seconds": 42.9,
+   "authenticated_requests": false,
+   "elapsed_seconds": 4124.7,
+   "rate_limit_and_backoff_wait_seconds": 2419.3,
+   "sessions": 1
+  },
+  "bug_family_shares_heuristic": {
+   "boundary_or_comparison": 0.103,
+   "call_or_argument": 0.172,
+   "exception_handling": 0.138,
+   "none_or_empty_handling": 0.103,
+   "other_logic": 0.448,
+   "type_or_conversion": 0.034
+  },
+  "changed_file_categories": {
+   "documentation": 82,
+   "production_source": 168,
+   "runtime_or_config": 23,
+   "test": 178
+  },
+  "complexity_shares": {
+   "complex": 0.759,
+   "moderate": 0.103,
+   "simple": 0.138
+  },
+  "counts": {
+   "acquisition_failures": {},
+   "admitted": 29,
+   "admitted_with_authenticated_regression_test": 22,
+   "authenticated": 33,
+   "auxiliary_evidence_failures": 0,
+   "candidates_inspected": 127,
+   "module_level_or_out_of_function_hunk_exclusions": 14,
+   "near_duplicate_function_exclusions": 0,
+   "near_duplicate_patch_exclusions": 7,
+   "other_production_source_exclusions": 23,
+   "pyi_or_other_source_file_exclusions": 0,
+   "reached_pipeline": 68,
+   "runtime_or_config_exclusions": 6,
+   "same_organisation_exclusions": 0,
+   "unique_fix_commits_admitted": 29,
+   "unique_functions_admitted": 29,
+   "unique_repositories_admitted": 10,
+   "unique_repositories_inspected": 15,
+   "vendored_or_generated_exclusions": 0,
+   "within_set_duplicates_removed": 0
+  },
+  "exclusions_primary_family": {
+   "auth:changed_production_source_outside_target": 11,
+   "auth:changed_runtime_or_config_outside_target": 5,
+   "auth:fixed_commit_is_not_a_direct_single_parent_commit": 9,
+   "auth:production_hunk_outside_target_function": 8,
+   "insufficient_isolation_evidence:target_function_too_short_for_comparison": 2,
+   "multiple_functions_changed": 12,
+   "no_existing_function_changed": 25,
+   "no_production_python_file_changed": 22,
+   "patch_near_duplicate_of_known_bug": 4
+  },
+  "journal_sha256": "a065e9138da96e40129088f849f62e38c70b3f0a836e94e2f4de6cc8a957326a",
+  "maximum_repository_share": 0.241,
+  "projection_for_n400": {
+   "at_point_estimate": {
+    "acquisition_hours_at_measured_rate": 21.9,
+    "acquisition_storage_gb": 0.77,
+    "admission_rate": 0.2283464566929134,
+    "candidates_to_inspect": 2460,
+    "feasible_within_pool_and_budget": true,
+    "median_fix_candidate_supply_per_repository": 18,
+    "pool_repositories": 156,
+    "projected_admitted_with_cap": 561.3,
+    "repositories_contributing_at_least_one": 148
+   },
+   "at_wilson_lower": {
+    "acquisition_hours_at_measured_rate": 22.6,
+    "acquisition_storage_gb": 0.8,
+    "admission_rate": 0.164,
+    "candidates_to_inspect": 2538,
+    "feasible_within_pool_and_budget": true,
+    "median_fix_candidate_supply_per_repository": 18,
+    "pool_repositories": 156,
+    "projected_admitted_with_cap": 415.8,
+    "repositories_contributing_at_least_one": 148
+   },
+   "at_wilson_upper": {
+    "acquisition_hours_at_measured_rate": 21.4,
+    "acquisition_storage_gb": 0.75,
+    "admission_rate": 0.3087,
+    "candidates_to_inspect": 2404,
+    "feasible_within_pool_and_budget": true,
+    "median_fix_candidate_supply_per_repository": 18,
+    "pool_repositories": 156,
+    "projected_admitted_with_cap": 741.9,
+    "repositories_contributing_at_least_one": 149
+   }
+  },
+  "protected_access_evidence": {
+   "cause": "pattern 'confirmation' matched the pilot's own store directory name",
+   "flagged_paths": 2067,
+   "flagged_paths_outside_the_pilot_store": [
+    "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\docs\\repository_native_confirmation_repositories.json"
+   ],
+   "opens_checked": 3464
+  },
+  "refusal": [
+   "events.protected_data_access must be the observed event and false"
+  ],
+  "renames": {
+   "kludex/starlette": [
+    {
+     "queried": "encode/starlette",
+     "redirected_to": "kludex/starlette"
+    }
+   ],
+   "kludex/uvicorn": [
+    {
+     "queried": "encode/uvicorn",
+     "redirected_to": "kludex/uvicorn"
+    }
+   ],
+   "prettytable/prettytable": [
+    {
+     "queried": "jazzband/prettytable",
+     "redirected_to": "prettytable/prettytable"
+    }
+   ]
+  },
+  "resources": {
+   "clone_bytes": 17538532,
+   "store_bytes": 39882840
+  },
+  "same_organisation_for_review": [],
+  "screened_out": {
+   "pexpect/pexpect": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "prettytable/prettytable": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "python/mypy": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ]
+  },
+  "status": "UNPUBLISHABLE DIAGNOSTIC: receipt validation refused publication",
+  "store_verification": {
+   "objects_checked": 1661,
+   "problems": 0
+  },
+  "would_be_gate": {
+   "admitted_repository_diversity": true,
+   "maximum_repository_share": true,
+   "minimum_scale": true,
+   "n400_projection_respects_repository_rules": true,
+   "no_protected_data_access": false,
+   "yield_or_projection": true,
+   "zero_hash_inconsistencies": true,
+   "zero_incomplete_evidence_admissions": true,
+   "zero_revalidation_failures": true,
+   "zero_vendored_or_generated_admissions": true
+  },
+  "yield": {
+   "admission_yield": 0.2283,
+   "note": "admission yield precedes native qualification (Phase 3); it is an upper bound on the mined-to-qualified yield",
+   "wilson_95": [
+    0.164,
+    0.3087
+   ]
+  }
+ },
+ "run_id": "20260926-174549-aprime-confirmation-pilot",
+ "schema_version": "oneiros_acquisition_refusal_record_v1",
+ "status": "FAILED STEP: receipt validation refused publication; this is NOT a published pilot report",
+ "store_preserved_at": "data/repository_native/aprime_confirmation_pilot"
+}
