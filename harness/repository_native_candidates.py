@@ -34,7 +34,8 @@ from harness.github_acquisition import (
 from harness.repository_isolation import (
     ADMITTED_LICENCES, API, ApiResponse, CandidateBug, FrozenReferenceUniverse, GitObject,
     IncompleteTreeEvidence, candidate_from_sidecar, candidate_to_sidecar, canonical_diff,
-    canonical_repository, changed_hunks, changed_paths, check_candidate, code_shingles,
+    canonical_repository, changed_entries, changed_hunks, check_candidate, classify_changed_path,
+    code_shingles,
     parse_commit, parse_tree, resolve_path, revalidate_isolation_record,
 )
 from scripts.audit_cross_split_near_duplicates import NEAR_DUPLICATE_JACCARD, jaccard, normalise
@@ -202,14 +203,22 @@ def build_candidate(context: RepositoryContext, commit_oid: str, number: int,
         raise AcquisitionFailure("git_object_missing", f"buggy commit {buggy_oid}")
     buggy_tree, fixed_tree = parse_commit(buggy[1])["tree"], parsed["tree"]
     try:
-        paths = changed_paths(objects, buggy_tree, fixed_tree)
+        entries = changed_entries(objects, buggy_tree, fixed_tree)
     except IncompleteTreeEvidence as exc:
         raise AcquisitionFailure("incomplete_tree_evidence", str(exc)) from exc
+    paths = [entry["path"] for entry in entries]
     info["changed_files"] = paths
-    code = [path for path in paths if path.endswith(".py") and not is_test_path(path)]
-    info["non_test_python_files"] = code
+    info["changed_file_categories"] = {path: classify_changed_path(path, None) for path in paths}
+    # Read every changed file's objects so they become evidence (auxiliary diffs).
+    for entry in entries:
+        for side in (entry["before"], entry["after"]):
+            if side and side[0] in ("100644", "100755"):
+                objects.get(side[1])
+    code = [path for path in paths if path.endswith(".py")
+            and info["changed_file_categories"][path] == "production_source"]
+    info["production_python_files"] = code
     if not code:
-        return None, {**info, "exclusion": "no_non_test_python_file_changed"}
+        return None, {**info, "exclusion": "no_production_python_file_changed"}
     target_file = sorted(code)[0]
     buggy_blob = resolve_path(objects, buggy_tree, target_file)
     fixed_blob = resolve_path(objects, fixed_tree, target_file)

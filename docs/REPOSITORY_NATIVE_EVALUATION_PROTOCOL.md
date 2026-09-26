@@ -94,15 +94,39 @@ and `repository_url` (or, for a PR, its base repository) must match.
 path must resolve through the buggy commit's trees to the recorded licence
 blob, and that blob's SHA-256 must match.
 
-**Exact diff (policy A, frozen in the receipt).** The submitted patch is
-**never authoritative**. The rules:
-- **Direct parent:** the fixed commit has exactly one parent, the buggy commit. Merge commits are refused.
-- **Single changed file:** comparing the authenticated buggy and fixed trees must show exactly one changed path, the target file. A changed subtree without its tree objects is refused (partial evidence is never accepted), and so is a multi-file fix. Policy B, multi-file fixes, is not selected.
-- **Derived diff:** the canonical diff is recomputed from the two authenticated target blobs (difflib unified diff, 3 context lines, `a/`/`b/` headers).
-- **Submitted patch (not authoritative):** it is only required to carry the same derived added and removed lines per file. Byte-identical patch text and identical hunk placement are not required. Its hunks are parsed by their header counts, so a line that looks like a header cannot hide.
-- **Patch lineage:** patch hashes, shingles, and identical and near-duplicate checks use only the derived diff.
-- **Target function changed:** the declared target function must occur exactly once in the buggy file. At least one derived hunk must overlap its AST span, the same qualified function must exist in the fixed file, and the normalised bodies must differ.
-- **Recorded:** the derived diff's SHA-256, the changed-file list, the hunks, the target-function spans (buggy and fixed) and the authentication result are stored in the isolation record.
+**Policy history.** Policy A (direct parent, exactly one changed file) FAILED its bounded acquisition-feasibility pilot (results/v4_3_repository_native_acquisition_pilot.json, SHA-256 119fae38..., admission 1/124, and that one admission was vendored Click code). Policy A-prime was DESIGNED using that pilot's 124 candidates; those candidates are policy-development data only and cannot confirm A-prime. An independent confirmation pilot on previously unused repositories is required.
+
+**Exact diff (policy A′, frozen in the receipt).** Its ID is
+`A_prime_direct_parent_single_target_source_with_auxiliary_tests_docs`. The
+submitted patch is **never authoritative**.
+
+- **Direct lineage.** The fixed commit has exactly one parent, the buggy commit. Merge commits are refused.
+- **Complete changed-path list.** It comes from the authenticated trees, and added or removed directories are listed file by file. A changed subtree without its tree objects is refused.
+- **Exactly one production file.** The target file is the only changed production or runtime file. Production source means any of `.py .pyi .pyx .pxd .pxi .c .cc .cpp .h .hpp .rs .js .jsx .ts .tsx .sh`. Changing any other source file refuses the candidate, and so does changing any configuration, packaging, dependency, lock, build, template, data or other file, or any symlink or submodule.
+- **Permitted auxiliary changes.** These are only:
+  - recognised test paths: a `test`/`tests` path component, a top-level `testing/`, or files named `test_*.py`, `*_test.py` or `conftest.py`;
+  - recognised documentation paths: a top-level `docs/`, `doc/` or `changelog.d/`, or files starting with `CHANGELOG`, `CHANGES`, `HISTORY`, `NEWS`, `README` or `AUTHORS`.
+
+  Each auxiliary path's buggy and fixed object IDs, blob evidence and derived diff hash, and its category, are recorded in the isolation record. Missing or inconsistent auxiliary evidence refuses the candidate.
+- **Exactly one production function.** It must occur exactly once in the buggy file, and the same qualified function must exist in the fixed file with a different normalised body. Every executable production hunk must lie within the target function's span, decorators included. Changed imports, globals, constants, class bodies or a second function refuse the candidate; comment-only or blank-line hunks are not executable.
+- **Patch lineage.** The target-production diff is derived from the authenticated blobs. Only it feeds known-patch identity and near-duplicate checks. The full changed-file set and the auxiliary diff hashes are recorded separately.
+- **Submitted patch.** It need only carry the same derived added and removed lines per file it covers, and it must cover the target file. Byte-identical text and identical hunk placement are not required.
+- **Official regression tests.** They may be used only for native qualification and oracle checking, and never in a model prompt or training context.
+
+**Issue/PR URLs.** These are compared case-insensitively on scheme, host and
+repository owner/name only. The issues-versus-pulls endpoint and the number must
+match exactly, and the response body and hash are still authenticated.
+
+**Vendored and generated code (conservative mitigation).** A candidate is refused
+if any of the following holds:
+- a directory component of the target path is a vendored marker (`_vendor`, `vendor`, `vendored`, `third_party`, `externals`, …);
+- the file is a generated file by name (`*_pb2.py`, …) or by header (`@generated`, `DO NOT EDIT`, `auto-generated`, `generated by`);
+- the path matches the hash-bound project exclusion map `harness/vendored_code_exclusions.json` (initially `fastapi/typer: typer/_click/**`);
+- any function of the target file is a near-duplicate of an indexed reference function.
+
+The detector version and its reasons are recorded. This does not prove that
+no vendored code remains. Internal modules whose names begin with an underscore
+are not rejected for that reason alone.
 
 **Temporal rule.** This is proved from the authenticated commit timestamps (§1).
 
@@ -114,10 +138,13 @@ They show that each of the following is refused:
 - a patch that omits one of two real changes, invents lines, or comes from another file;
 - a fix in an unrelated file, or a changed target file whose declared function is unchanged;
 - a known benchmark change disguised by submitting only a novel subset;
-- a multi-file fix;
+- another production or runtime file (`.pyi`, `.c`, `pyproject.toml`, lock files, templates, data);
+- a module-level or second-function change;
+- missing auxiliary evidence;
+- vendored or generated targets;
 - a fix before the cutoff, and each missing or contradictory timestamp.
 
-The exact, complete, single-file patch is admitted.
+Two cases are admitted: the target file alone, and the target file with authenticated tests and documentation.
 
 ### Overlap (stage 3)
 

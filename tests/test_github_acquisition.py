@@ -324,12 +324,20 @@ def test_an_exact_single_file_fix_is_admitted(fetched, frozen_universe, tmp_path
     assert outcome["derived"]["submitted_patch_matches_derived_diff"] is True
 
 
-def test_multi_file_fixes_are_refused_under_policy_a(fetched, frozen_universe, tmp_path):
-    for key in ("multi", "with_test"):
-        outcome, info = _evaluate(fetched, frozen_universe, tmp_path, key)
-        assert len(info["changed_files"]) == 2
-        assert outcome["admitted"] is False
-        assert any("multi_file_fix_not_admitted" in reason for reason in outcome["reasons"])
+def test_policy_a_prime_on_real_git_objects(fetched, frozen_universe, tmp_path):
+    # Two production files changed: refused.
+    outcome, info = _evaluate(fetched, frozen_universe, tmp_path, "multi")
+    assert len(info["changed_files"]) == 2 and outcome["admitted"] is False
+    assert ("insufficient_isolation_evidence:authentication:changed_production_source_outside_"
+            "target:src/ranges/util.py") in outcome["reasons"]
+    # The target file plus its regression test: admitted, test evidence recorded.
+    outcome, info = _evaluate(fetched, frozen_universe, tmp_path, "with_test")
+    assert outcome["admitted"] is True, outcome["reasons"]
+    assert info["changed_file_categories"] == {"src/ranges/core.py": "production_source",
+                                               "tests/test_core.py": "test"}
+    auxiliary = outcome["derived"]["auxiliary_changes"]
+    assert [item["path"] for item in auxiliary] == ["tests/test_core.py"]
+    assert outcome["derived"]["regression_test_changed"] is True
 
 
 def test_a_merge_commit_is_refused(fetched, frozen_universe, tmp_path):
@@ -398,25 +406,33 @@ def test_stored_evidence_is_re_hashed_on_read(fetched, frozen_universe, tmp_path
 
 # --- the durable pilot runner: interruption and resume -------------------------------------
 
+def _pilot_config(tmp_path, repo_list):
+    listing = tmp_path / "repositories.json"
+    listing.write_text(json.dumps({"repositories": repo_list}), encoding="utf-8")
+    return {"label": "fixture pilot", "repositories_file": str(listing),
+            "store": str(tmp_path / "pilot"), "report": str(tmp_path / "report.json"),
+            "per_repository_cap": 10, "max_candidates": 100, "min_repositories": 1,
+            "fetch_since": "2024-11-01", "candidates_since": "2025-01-01"}
+
+
 def test_pilot_resumes_after_a_process_death_without_rewriting(source_repo, frozen_universe,
                                                                tmp_path):
     from scripts import run_repository_native_acquisition_pilot as pilot
     repo, commits = source_repo
     store = tmp_path / "pilot"
+    config = _pilot_config(tmp_path, ["example-org/ranges"])
     first, transport, _ = _client(_routes())
     # Candidates are processed newest first: #10 (merge), #9, #8, #7.  Die at #8.
     transport.explode_on = f"{API}example-org/ranges/pulls/8"
-    kwargs = dict(frozen=frozen_universe, generation="test", repositories=["example-org/ranges"],
-                  git_url=lambda repository: repo.as_uri(), fetch_since="2024-11-01",
-                  candidates_since="2025-01-01", min_repositories=1)
+    kwargs = dict(frozen=frozen_universe, git_url=lambda repository: repo.as_uri())
     with pytest.raises(SystemExit):
-        pilot.run(store, 100, 10, client=first, **kwargs)
+        pilot.run(store, config, client=first, **kwargs)
     journal = Journal(store / "journal.jsonl")
     done_before = {entry["key"] for entry in journal.entries()}
     assert f"cand:example-org/ranges@{commits['with_test']}" in done_before
     assert f"cand:example-org/ranges@{commits['multi']}" not in done_before
     second, transport2, _ = _client(_routes())
-    assert pilot.run(store, 100, 10, client=second, **kwargs) == 0
+    assert pilot.run(store, config, client=second, **kwargs) == 0
     # Resumed work only: no repository or already-journaled candidate is fetched again.
     assert f"{API}example-org/ranges" not in transport2.calls
     assert f"{API}example-org/ranges/pulls/9" not in transport2.calls
@@ -425,13 +441,20 @@ def test_pilot_resumes_after_a_process_death_without_rewriting(source_repo, froz
     entries = Journal(store / "journal.jsonl").entries()
     keys = [entry["key"] for entry in entries]
     assert len(keys) == len(set(keys))
-    report = pilot.build_report(store)
+    identity = {"bundle_generation": "fixture", "bundle_manifest_sha256": "b" * 64,
+                "reference_universe_receipt_sha256": frozen_universe.receipt_sha256}
+    report = pilot.build_report(store, config, None, frozen_identity=identity, label="fixture")
     counts = report["counts"]
     assert counts["candidates_inspected"] == 4        # #7, #8, #9 and the merge (#10)
-    assert counts["admitted"] == 1 and counts["single_file_policy_losses"] == 2
+    assert counts["admitted"] == 2                    # #7 alone and #9 with its test
+    assert counts["other_production_source_exclusions"] == 1
+    assert counts["admitted_with_authenticated_regression_test"] == 1
     assert report["store_verification"]["problems"] == []
-    assert report["gate"]["admitted_with_incomplete_evidence"] is True
-    assert report["gate"]["record_or_sidecar_revalidation_failures"] is True
-    assert report["gate"]["hash_inconsistencies"] is True
-    assert report["gate"]["minimum_scale"] is False          # a fixture is not a pilot
-    assert report["admitted"][0]["target"] == "merge_ranges"
+    assert report["events"]["protected_data_access"] is False
+    assert report["gate"] == {"no_protected_data_access": True}
+    assert report["identity"]["api"]["sessions"] == 1          # the dead session left no entry
+    assert sorted(item["target"] for item in report["admitted"]) == ["clamp_all", "merge_ranges"]
+    from harness.acquisition_receipt import validate_receipt
+    assert validate_receipt(report) == []
+    pilot.publish(report, tmp_path / "report.json")
+    assert json.loads((tmp_path / "report.json").read_text())["identity"]["journal_sha256"]

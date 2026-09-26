@@ -153,6 +153,19 @@ changed with the declared function unchanged, a known benchmark change hidden
 behind a novel subset, a merge commit, missing tree evidence and a multi-file
 fix. The exact single-file patch is admitted.
 
+### Policy A failed its acquisition pilot; policy A′ replaces it
+
+Policy A (direct parent, exactly one changed file) FAILED its bounded acquisition-feasibility pilot (results/v4_3_repository_native_acquisition_pilot.json, SHA-256 119fae38..., admission 1/124, and that one admission was vendored Click code). Policy A-prime was DESIGNED using that pilot's 124 candidates; those candidates are policy-development data only and cannot confirm A-prime. An independent confirmation pilot on previously unused repositories is required.
+
+**What A′ allows.** A direct single-parent fix whose only changed production
+file is the target file, with exactly one changed production function and
+every executable production hunk inside it. Only recognised test and
+documentation paths may change alongside it, and their evidence and diffs are
+authenticated and recorded.
+- **Refused:** other source files (`.pyi`, …), configuration, packaging, lock and data files.
+- **URL fix:** issue/PR URLs are now compared case-insensitively on owner/name only.
+- **Vendored-code mitigation:** vendored and generated code is excluded by path markers, a hash-bound project map (`fastapi/typer: typer/_click/**`) and file-level near-duplicate checks. This is a conservative mitigation, not a proof.
+
 ### The temporal rule is executable
 
 **The rule:** the authenticated fixed-commit committer timestamp is on or after

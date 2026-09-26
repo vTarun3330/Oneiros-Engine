@@ -635,14 +635,16 @@ def test_patch_omitting_one_of_two_real_changes_is_refused():
         _two_change_candidate(function_only))
 
 
-def test_the_complete_two_change_patch_is_admitted_with_derived_facts(frozen):
+def test_a_module_level_change_outside_the_target_function_is_refused(frozen):
+    # Policy A-prime: every executable production hunk must lie in the target function.
     record = check_candidate(_two_change_candidate(None), frozen)
-    assert record["admissible"] is True, record["reasons"]
+    assert record["admissible"] is False
+    assert f"{INSUFFICIENT}:authentication:production_hunk_outside_target_function" in \
+        record["reasons"]
     derived = record["derived_from_verified_evidence"]
     assert derived["changed_files"] == ["src/ranges.py"]
     assert derived["target_span_buggy"] == [4, 12] and derived["target_span_fixed"] == [4, 12]
-    assert len(derived["changed_hunks"]) == 2
-    assert derived["canonical_diff_sha256"] and record["authentication_passed"] is True
+    assert len(derived["changed_hunks"]) == 2 and derived["production_hunks_outside_target"] == 1
 
 
 def test_patch_with_invented_lines_is_refused():
@@ -696,17 +698,18 @@ def test_known_benchmark_patch_disguised_as_a_novel_subset_is_refused(frozen):
     assert record["patch_sha256"] == patch_hash(canonical_diff("src/ranges.py", buggy, fixed))
 
 
-def test_a_complete_multi_file_fix_is_refused_under_policy_a():
+def test_another_production_source_file_is_refused_under_a_prime():
     candidate = synthetic_candidate(
         buggy_text=BUGGY, fixed_text=NOVEL, target_function=BUGGY, target_file="src/ranges.py",
         target_module="ranges", extra_files={"src/util.py": (OTHER_FUNCTION, OTHER_FUNCTION
                                                              + "\n# changed\n")})
     problems, derived = authentication_problems(candidate)
     assert derived["changed_files"] == ["src/ranges.py", "src/util.py"]
-    assert f"{INSUFFICIENT}:authentication:multi_file_fix_not_admitted_under_single_file_policy" \
+    assert f"{INSUFFICIENT}:authentication:changed_production_source_outside_target:src/util.py" \
         in problems
     from harness.repository_isolation import DIFF_POLICY
-    assert DIFF_POLICY["id"].startswith("A_") and "refused" in DIFF_POLICY["multi_file_fixes"]
+    assert DIFF_POLICY["id"] == \
+        "A_prime_direct_parent_single_target_source_with_auxiliary_tests_docs"
 
 
 def test_missing_tree_evidence_for_a_changed_subtree_is_refused():
@@ -821,6 +824,231 @@ def test_downstream_revalidation_rejects_an_edited_record_with_a_recomputed_hash
     tampered_sidecar = candidate_to_sidecar(dataclasses.replace(candidate,
                                                                 licence_sha256="0" * 64))
     assert revalidate_isolation_record(promoted, tampered_sidecar, reloaded)["valid"] is False
+
+
+# --- policy A-prime: auxiliary tests and documentation ---------------------------------
+
+TEST_BUGGY = "def test_merge():\n    assert merge_ranges([(1, 2)]) == [(1, 2)]\n"
+TEST_FIXED = TEST_BUGGY + "\n\ndef test_touching():\n    assert merge_ranges([(1, 2), (2, 3)]) == [(1, 3)]\n"
+
+
+def _aprime(extra: dict, **overrides) -> CandidateBug:
+    return complete_candidate(extra_files=extra, **overrides)
+
+
+def _auth_full(candidate: CandidateBug) -> list[str]:
+    assert evidence_problems(candidate) == []
+    prefix = f"{INSUFFICIENT}:authentication:"
+    return [problem[len(prefix):] for problem in authentication_problems(candidate)[0]]
+
+
+def test_a_fix_with_regression_test_and_changelog_is_admitted_with_auxiliary_evidence(frozen):
+    candidate = _aprime({"tests/test_ranges.py": (TEST_BUGGY, TEST_FIXED),
+                         "CHANGELOG.md": ("# Changes\n", "# Changes\n- fix touching ranges\n"),
+                         "docs/usage.md": ("Usage\n", "Usage, updated\n")})
+    record = check_candidate(candidate, frozen)
+    assert record["admissible"] is True, record["reasons"]
+    derived = record["derived_from_verified_evidence"]
+    assert derived["changed_file_categories"] == {
+        "CHANGELOG.md": "documentation", "docs/usage.md": "documentation",
+        "src/ranges.py": "target", "tests/test_ranges.py": "test"}
+    auxiliary = {item["path"]: item for item in derived["auxiliary_changes"]}
+    assert set(auxiliary) == {"CHANGELOG.md", "docs/usage.md", "tests/test_ranges.py"}
+    for item in auxiliary.values():
+        assert item["buggy_oid"] and item["fixed_oid"] and len(item["diff_sha256"]) == 64
+    assert derived["regression_test_changed"] is True
+    # Patch lineage uses the target-production diff only.
+    target_only = canonical_diff("src/ranges.py", BUGGY, NOVEL)
+    assert record["patch_sha256"] == patch_hash(target_only)
+
+
+@pytest.mark.parametrize("path, content, reason", [
+    ("src/ranges.pyi", ("def merge_ranges(p): ...\n", "def merge_ranges(p) -> list: ...\n"),
+     "changed_production_source_outside_target:src/ranges.pyi"),
+    ("src/_speedups.c", ("int x = 1;\n", "int x = 2;\n"),
+     "changed_production_source_outside_target:src/_speedups.c"),
+    ("pyproject.toml", ("[project]\nname='r'\n", "[project]\nname='r'\nversion='2'\n"),
+     "changed_runtime_or_config_outside_target:pyproject.toml"),
+    ("setup.cfg", ("[metadata]\n", "[metadata]\nname = r\n"),
+     "changed_runtime_or_config_outside_target:setup.cfg"),
+    ("uv.lock", ("a\n", "b\n"), "changed_runtime_or_config_outside_target:uv.lock"),
+    ("src/ranges/templates/page.html", ("<p>a</p>\n", "<p>b</p>\n"),
+     "changed_runtime_or_config_outside_target:src/ranges/templates/page.html"),
+    ("src/ranges/data.json", ("{}\n", "{\"a\": 1}\n"),
+     "changed_runtime_or_config_outside_target:src/ranges/data.json"),
+    ("notes.txt", ("a\n", "b\n"), "changed_runtime_or_config_outside_target:notes.txt"),
+])
+def test_other_source_config_and_arbitrary_files_are_refused(path, content, reason):
+    assert reason in _auth_full(_aprime({path: content}))
+
+
+def test_path_categories():
+    from harness.repository_isolation import classify_changed_path as classify
+    assert classify("tests/unit/test_a.py", None) == "test"
+    assert classify("src/pkg/tests/fixtures/data.json", None) == "test"
+    assert classify("testing/helpers.py", None) == "test"
+    assert classify("src/pkg/testing/helpers.py", None) == "production_source"
+    assert classify("src/pkg/test_utils_helper.py", None) == "test"
+    assert classify("docs/conf.py", None) == "documentation"
+    assert classify("src/docs/renderer.py", None) == "production_source"
+    assert classify("changelog.d/123.bugfix.rst", None) == "documentation"
+    assert classify("README.rst", None) == "documentation"
+    assert classify("HISTORY.md", None) == "documentation"
+    assert classify("src/pkg/_internal.py", None) == "production_source"
+    assert classify("tox.ini", None) == "runtime_or_config"
+    assert classify("src/pkg/config.yaml", None) == "runtime_or_config"
+
+
+def test_import_changes_and_second_functions_are_outside_the_target():
+    importing = "import math\n\n\n"
+    reasons = _auth_reasons(synthetic_candidate(
+        buggy_text=importing + BUGGY, fixed_text="import math\nimport os\n\n\n" + NOVEL,
+        target_function=BUGGY, target_file="src/ranges.py", target_module="ranges"))
+    assert "production_hunk_outside_target_function" in reasons
+    buggy = BUGGY + "\n\n" + OTHER_FUNCTION
+    fixed = NOVEL + "\n\n" + OTHER_FUNCTION.replace("window + 1", "window")
+    reasons = _auth_reasons(synthetic_candidate(
+        buggy_text=buggy, fixed_text=fixed, target_function=BUGGY,
+        target_file="src/ranges.py", target_module="ranges"))
+    assert "production_hunk_outside_target_function" in reasons
+
+
+def test_comment_only_changes_outside_and_decorators_inside_are_allowed(frozen):
+    buggy = "# helpers\n\n\n@staticmethod\n" + BUGGY
+    fixed = "# helpers for ranges\n\n\n@staticmethod\n" + NOVEL
+    record = check_candidate(synthetic_candidate(
+        buggy_text=buggy, fixed_text=fixed, target_function=BUGGY,
+        target_file="src/ranges.py", target_module="ranges"), frozen)
+    assert record["admissible"] is True, record["reasons"]
+    decorated_buggy = "@functools.lru_cache\n" + BUGGY
+    decorated_fixed = "@functools.lru_cache(maxsize=None)\n" + NOVEL
+    record = check_candidate(synthetic_candidate(
+        buggy_text=decorated_buggy, fixed_text=decorated_fixed,
+        target_function=BUGGY, target_file="src/ranges.py",
+        target_module="ranges"), frozen)
+    assert record["admissible"] is True, record["reasons"]
+
+
+def test_missing_auxiliary_evidence_is_refused():
+    candidate = _aprime({"tests/test_ranges.py": (TEST_BUGGY, TEST_FIXED)})
+    from harness.repository_isolation import git_object_id
+    test_blob = git_object_id("blob", TEST_FIXED.encode("utf-8"))
+    stripped = tuple(o for o in candidate.git_objects
+                     if git_object_id(o.kind, o.body) != test_blob)
+    reasons = _auth_full(dataclasses.replace(candidate, git_objects=stripped))
+    assert "auxiliary_evidence_missing:tests/test_ranges.py" in reasons
+
+
+def test_a_submitted_patch_may_cover_auxiliary_files_but_must_match_and_cover_the_target():
+    candidate = _aprime({"tests/test_ranges.py": (TEST_BUGGY, TEST_FIXED)})
+    test_diff = canonical_diff("tests/test_ranges.py", TEST_BUGGY, TEST_FIXED)
+    with_tests = candidate.patch + test_diff
+    assert "submitted_patch_does_not_match_derived_diff" not in _auth_reasons(
+        dataclasses.replace(candidate, patch=with_tests))
+    tampered = with_tests.replace("[(1, 3)]", "[(1, 4)]")
+    assert "submitted_patch_does_not_match_derived_diff" in _auth_reasons(
+        dataclasses.replace(candidate, patch=tampered))
+    assert "submitted_patch_does_not_match_derived_diff" in _auth_reasons(
+        dataclasses.replace(candidate, patch=test_diff))
+
+
+def test_the_target_itself_must_be_production_source():
+    reasons = _auth_reasons(synthetic_candidate(
+        buggy_text=BUGGY, fixed_text=NOVEL, target_function=BUGGY,
+        target_file="tests/ranges_helpers_test.py", target_module="ranges_helpers_test"))
+    assert "target_file_is_not_production_source" in reasons
+
+
+# --- issue/PR URL identity: case-insensitive repository, exact endpoint and number -------
+
+def test_issue_url_identity_ignores_owner_name_case_only():
+    from harness.repository_isolation import issue_url_identity
+    assert issue_url_identity("https://api.github.com/repos/Textualize/rich/pulls/4006") == \
+        issue_url_identity("https://api.github.com/repos/textualize/rich/pulls/4006") == \
+        ("textualize/rich", "pulls", 4006)
+    assert issue_url_identity("HTTPS://API.GITHUB.COM/repos/textualize/rich/pulls/1")[0] == \
+        "textualize/rich"
+    assert issue_url_identity("https://api.github.com/repos/textualize/rich/Pulls/1") is None
+    assert issue_url_identity("https://github.com/textualize/rich/pull/1") is None
+
+
+@pytest.mark.parametrize("body_url, refused", [
+    ("https://api.github.com/repos/Example-Org/Ranges/issues/1", False),
+    ("https://api.github.com/repos/other-org/ranges/issues/1", True),
+    ("https://api.github.com/repos/example-org/ranges/pulls/1", True),
+    ("https://api.github.com/repos/example-org/ranges/issues/2", True),
+])
+def test_issue_url_comparison_cases(body_url, refused):
+    candidate = complete_candidate()
+    reissued = reissue_response(candidate.issue_metadata, url=body_url)
+    reasons = _auth_reasons(dataclasses.replace(candidate, issue_metadata=reissued))
+    assert ("issue_url_mismatch" in reasons) is refused
+
+
+def test_a_wrong_issue_endpoint_or_number_in_the_request_url_is_refused():
+    candidate = complete_candidate()
+    wrong_number = dataclasses.replace(
+        candidate.issue_metadata, url=candidate.issue_metadata.url.replace("/issues/1", "/issues/9"))
+    assert f"{INSUFFICIENT}:issue_metadata_url_missing_or_inconsistent" in evidence_problems(
+        dataclasses.replace(candidate, issue_metadata=wrong_number))
+    upper = dataclasses.replace(candidate.issue_metadata,
+                                url=candidate.issue_metadata.url.replace("example-org",
+                                                                         "Example-Org"))
+    assert evidence_problems(dataclasses.replace(candidate, issue_metadata=upper)) == []
+
+
+# --- vendored / generated code (conservative mitigation) -----------------------------------
+
+def _vendored_reasons(frozen, record):
+    return [reason for reason in record["reasons"] if reason.startswith("vendored_or_generated")]
+
+
+@pytest.mark.parametrize("target_file, module, flagged", [
+    ("src/_vendor/ranges.py", "ranges", "vendored_or_generated:vendored_path_marker:_vendor"),
+    ("pkg/third_party/ranges.py", "ranges", "vendored_or_generated:vendored_path_marker:third_party"),
+    ("pkg/ranges_pb2.py", "ranges_pb2", "vendored_or_generated:generated_file_name:*_pb2.py"),
+    ("src/_internal.py", "_internal", None),
+    ("src/pkg/_utils.py", "_utils", None),
+    ("src/pkg/_click.py", "_click", None),
+])
+def test_vendored_path_markers(frozen, target_file, module, flagged):
+    record = check_candidate(synthetic_candidate(
+        buggy_text=BUGGY, fixed_text=NOVEL, target_function=BUGGY, target_file=target_file,
+        target_module=module), frozen)
+    reasons = _vendored_reasons(frozen, record)
+    if flagged:
+        assert flagged in reasons and record["admissible"] is False
+    else:
+        assert reasons == [] and record["admissible"] is True, record["reasons"]
+
+
+def test_the_project_exclusion_map_excludes_typer_vendored_click(frozen):
+    record = check_candidate(synthetic_candidate(
+        repository="fastapi/typer", buggy_text=BUGGY, fixed_text=NOVEL, target_function=BUGGY,
+        target_file="typer/_click/exceptions.py", target_module="exceptions"), frozen)
+    assert "vendored_or_generated:project_vendored_path:typer/_click/**" in record["reasons"]
+    elsewhere = check_candidate(synthetic_candidate(
+        repository="fastapi/typer", buggy_text=BUGGY, fixed_text=NOVEL, target_function=BUGGY,
+        target_file="typer/core.py", target_module="core"), frozen)
+    assert _vendored_reasons(frozen, elsewhere) == []
+    policy = frozen.receipt["vendored_policy"]
+    assert policy["exclusions"] == {"fastapi/typer": ["typer/_click/**"]}
+    assert "conservative" in policy["status"]
+
+
+def test_generated_headers_and_files_sharing_indexed_code_are_excluded(frozen):
+    header = "# Generated by the protocol buffer compiler.  DO NOT EDIT!\n"
+    record = check_candidate(synthetic_candidate(
+        buggy_text=header + BUGGY, fixed_text=header + NOVEL, target_function=BUGGY,
+        target_file="src/ranges.py", target_module="ranges"), frozen)
+    assert "vendored_or_generated:generated_file_header" in record["reasons"]
+    copied = REFERENCE_FUNCTION + "\n\n" + BUGGY
+    record = check_candidate(synthetic_candidate(
+        buggy_text=copied, fixed_text=REFERENCE_FUNCTION + "\n\n" + NOVEL,
+        target_function=BUGGY, target_file="src/ranges.py", target_module="ranges"), frozen)
+    assert "vendored_or_generated:target_file_contains_indexed_code" in record["reasons"]
+    similar = record["vendored_or_generated"]["similar_functions"]
+    assert similar and similar[0]["qualname"] == "rolling_mean"
 
 
 # --- the real universe -------------------------------------------------------------

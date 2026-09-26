@@ -273,6 +273,8 @@ class ApiClient:
         self.backoff = backoff
         self.calls = 0
         self.retries = 0
+        #: Wall time spent inside HTTP requests, excluding rate-limit and backoff waits.
+        self.api_seconds = 0.0
 
     def get(self, url: str) -> tuple[ApiResponse, HttpResponse]:
         headers = {"Accept": "application/vnd.github+json", "User-Agent": USER_AGENT,
@@ -283,13 +285,16 @@ class ApiClient:
         for attempt in range(self.max_attempts):
             self.limiter.before_call()
             self.calls += 1
+            began = time.monotonic()
             try:
                 response = self.transport.get(url, headers)
             except (urllib.error.URLError, OSError, TimeoutError) as exc:
+                self.api_seconds += time.monotonic() - began
                 last = f"network: {exc}"
                 self.retries += 1
                 self.limiter._wait(self.backoff(attempt))
                 continue
+            self.api_seconds += time.monotonic() - began
             if response.status in (301, 302, 307, 308):
                 raise AcquisitionFailure("redirected", response.headers.get("location", ""))
             if response.status == 404:

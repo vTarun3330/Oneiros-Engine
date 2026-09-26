@@ -1,0 +1,12 @@
+{
+  "schema_version": "oneiros_vendored_code_exclusions_v1",
+  "label": "project-specific vendored/copied-code paths excluded from target selection; conservative mitigation, not a proof that no vendored code remains",
+  "exclusions": {
+    "fastapi/typer": [
+      "typer/_click/**"
+    ]
+  },
+  "provenance": {
+    "fastapi/typer:typer/_click/**": "vendored copy of Click (pallets/click), an indexed repository; found as the only admission in the failed policy-A acquisition pilot"
+  }
+}
