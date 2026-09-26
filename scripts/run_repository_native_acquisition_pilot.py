@@ -414,7 +414,13 @@ def projection(summary: dict[str, Any], rate: float, pool: list[str],
     screened = {e["repository"] for e in summary["repos"]
                 if e.get("screen_problems") or e.get("failure")}
     queried_to_canonical = {e["key"][5:]: e["repository"] for e in summary["repos"]}
-    supplies = [scan.get("fix_candidate_supply", 0) for scan in scans.values()]
+    def supply_of(scan: dict[str, Any]) -> int:
+        if "fix_candidate_supply" in scan:
+            return scan["fix_candidate_supply"]
+        classes = scan.get("classification") or {}   # scans recorded before the field existed
+        return classes.get("fix_candidate", 0) + classes.get("fix_merge_commit", 0)
+
+    supplies = [supply_of(scan) for scan in scans.values()]
     median_supply = statistics.median(supplies) if supplies else 0
     pass_fraction = (len(scans) / max(1, len(summary["repos"]))) if summary["repos"] else 0.0
     expected, used_candidates = [], 0
@@ -427,7 +433,7 @@ def projection(summary: dict[str, Any], rate: float, pool: list[str],
         if canonical in screened:
             continue
         if canonical in scans:
-            supply, weight = scans[canonical].get("fix_candidate_supply", 0), 1.0
+            supply, weight = supply_of(scans[canonical]), 1.0
         else:
             supply, weight = median_supply, pass_fraction
         admitted = min(PLANNED_PER_REPOSITORY_CAP, supply * rate) * weight
