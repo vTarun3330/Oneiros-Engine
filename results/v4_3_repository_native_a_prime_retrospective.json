@@ -1,0 +1,876 @@
+{
+ "admitted": [
+  {
+   "auxiliary": [
+    [
+     "changelog.d/1593.change.md",
+     "documentation",
+     "4ecf8a8341d9b5c400155ac64f9cfaecbff9b884be43baaaaef560a747634da2"
+    ],
+    [
+     "tests/test_annotations.py",
+     "test",
+     "d2bafa912a97f3ef2264b9db2cf94d2edbccc6c1210c29d4c18ede3ccce646e6"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:python-attrs/attrs@97f8d175656bc03c373a1c9038048a4d312c307c",
+   "patch_sha256": "b36306a628bf8a97a5e99bfc2197f2e45359a2c4d92b2b33f8fb9bce48e2ca46",
+   "record_sha256": "5b2ae5505654aef521ceb0d4c129592985730904c22da6279fc0fc79cc1f3055",
+   "sidecar_address": "2e0c0a519d2e804bd5a97581aea0f8547cef09e03f0517c86c2c538dff633505",
+   "target": "_is_class_var",
+   "target_file": "src/attr/_make.py",
+   "tier": "moderate"
+  },
+  {
+   "auxiliary": [
+    [
+     "changelog.d/1513.change.md",
+     "documentation",
+     "ab545ccaf5bd280262e8ebb975f548b0b8013e7a38941a6052240ed93ca36a57"
+    ],
+    [
+     "tests/test_validators.py",
+     "test",
+     "79ec0fb8a975fcf747b7ee26e18e9ebc4e3c8b612b3db9bac1e31023d50d0050"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:python-attrs/attrs@af9c510912ce604a94896cc35c27368d5baf6ae6",
+   "patch_sha256": "4456a7f4879d6dff4dfdcb5a99da5a4b865f55ac146fdc05ffb0371a564ddbdd",
+   "record_sha256": "6b14ef8b762c2d4c7e30dba0bef5fb3c0d6b6e053fe10f0dc4de84c123623e27",
+   "sidecar_address": "9f99a0305493a4a59b8584be0c5b1507b7f9aad3f3190e09c80a6744e9371a14",
+   "target": "disabled",
+   "target_file": "src/attr/validators.py",
+   "tier": "simple"
+  },
+  {
+   "auxiliary": [
+    [
+     "HISTORY.md",
+     "documentation",
+     "4732207a9154d40efd1124b19eb2607a5b4c3400fc0f08eb9306853df7b55c9d"
+    ],
+    [
+     "tests/test_v.py",
+     "test",
+     "fcefb96e7e9f6d7777538f4d862a52f2c137004f01ddebf73b2ab8aecc7cb0fd"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:python-attrs/cattrs@bc34a466a878d3259d01d0169b3fb95420d7d50d",
+   "patch_sha256": "fc8b545be76f1dde953a73ed04ab49356678284baa296483b51488a55c695e0e",
+   "record_sha256": "c851b47138e31460df624ff589eb837c1eaff0d8656aa10914e7e1e31bf3d5ff",
+   "sidecar_address": "6fa0124204fbab197ae0225bda61205a75ea11e84b815bf566cbe73e848dd453",
+   "target": "format_exception",
+   "target_file": "src/cattrs/v.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "HISTORY.md",
+     "documentation",
+     "eebc86c5730b8b1a6ba4b3aaad7e8c20d33a8d492d4199c92ebd87fb7f5b42ef"
+    ],
+    [
+     "tests/test_disambiguators.py",
+     "test",
+     "ad3587ab2338e44a488811f766ef95aeaf4a523f93b5d5ed30f92a505ddb5b19"
+    ]
+   ],
+   "bug_family_heuristic": "exception_handling",
+   "key": "cand:python-attrs/cattrs@a6c0900533af780155510343c1472a46fcb984f5",
+   "patch_sha256": "1c0f2bdca8cc9f677a19d26f2f7fa18f600fec3f042cb605e428ba919e1ec501",
+   "record_sha256": "b32ff2aab3b602cbb7d54a77a8f3fd6be5b5a15973f970c11de61633de327fbc",
+   "sidecar_address": "677481ee0b9bd3f6ac2eb23b2f7d1f615f00aa6eb49cdcfad516481baec5ebbc",
+   "target": "create_default_dis_func",
+   "target_file": "src/cattrs/disambiguators.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "HISTORY.md",
+     "documentation",
+     "623a25569660231d00ca34b01b20c8cc7e9f9670105bec9022552cb6bc41fd92"
+    ],
+    [
+     "tests/test_tuples.py",
+     "test",
+     "0237bdbb655efb3d63e3d60465bae4116a2897a1bd7dd6333f84d716bc16e9c9"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:python-attrs/cattrs@304e3700198311c78a5c6993c0ac6f3307a2e28a",
+   "patch_sha256": "9904d66314e0c2fed5a3f58d4e801cc4c40f6d4e17aa8a833f5e1e9d5113dd95",
+   "record_sha256": "cbb090543bfe805b6668a69c95ec1d954b39edad47c11c46c87d37a5022276ff",
+   "sidecar_address": "2a30819ceacf1baea7b64fa7a34f86d9c6c0939fbd48d58090167ebc63904694",
+   "target": "namedtuple_dict_structure_factory",
+   "target_file": "src/cattrs/cols.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "HISTORY.md",
+     "documentation",
+     "d991fb397d828ed3587d0de9aa89a58850480c05620a4d2ddceded3a45b83a6a"
+    ],
+    [
+     "tests/strategies/test_include_subclasses.py",
+     "test",
+     "3a54d094b81051948c9a7e4ede9259f9461d6eb4b4e6ca90cf8297f311ebe358"
+    ]
+   ],
+   "bug_family_heuristic": "none_or_empty_handling",
+   "key": "cand:python-attrs/cattrs@573915b6b450c23eaf818370ac2e339dd9aee262",
+   "patch_sha256": "2256e88b7f72a5c109ad8145d9e39709fb4752416748ba271dd88b1ed5452d55",
+   "record_sha256": "75dda5f07d357f0ba539d0b25160ad3f57941b53b2683970eb1e268d50178e29",
+   "sidecar_address": "ad68af7ef4ccd008aa8b22be5600bacb9013449cf73ad6fc35bf93e7cb2a136f",
+   "target": "_include_subclasses_with_union_strategy",
+   "target_file": "src/cattrs/strategies/_subclasses.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "HISTORY.md",
+     "documentation",
+     "322f8ffc05610526d0e0e83d3a45f6c12c4f461833bc504cd8bd9c49c9b46bbd"
+    ],
+    [
+     "tests/strategies/test_include_subclasses.py",
+     "test",
+     "4ee153e8d817f90fdac9962cfefccede409640b98470fea764101f6b9273903a"
+    ]
+   ],
+   "bug_family_heuristic": "type_or_conversion",
+   "key": "cand:python-attrs/cattrs@31c19cee405100b084e139e2d955c568dcd1010a",
+   "patch_sha256": "fa2690d7b9fd4c362e827b875c6f62107f12ed924ee05a9654728a3d6d4c52e9",
+   "record_sha256": "f3de9ed970cfc9fd946c3f2a2bbe77a40ccc931990a0d0c0c9ce9e7aa2b1d814",
+   "sidecar_address": "785c7f85b814551affed064a483d0d4f4bc9bccbfcf5fc78addd0a1a760d4525",
+   "target": "_make_subclasses_tree",
+   "target_file": "src/cattrs/strategies/_subclasses.py",
+   "tier": "moderate"
+  },
+  {
+   "auxiliary": [
+    [
+     "AUTHORS.rst",
+     "documentation",
+     "4bca0a0053fd116b939766996f8f2af9793324d28061c2d2e1cb6157740bce94"
+    ],
+    [
+     "CHANGELOG.rst",
+     "documentation",
+     "ad1b4ed1598df02a40cca18c67ff300506b34827189b1f78e47b1eda93db568b"
+    ],
+    [
+     "tests/test_validate.py",
+     "test",
+     "c58ccecc6994fbed86c2612675dde517b729f42fc8e750aef25d6df91e68c6b2"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:marshmallow-code/marshmallow@902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+   "patch_sha256": "f76a3a469a5b2ea0018d251044b85600bf87f6003239a2120c48e0caa007892e",
+   "record_sha256": "153311318c0cd1f500faaba99f2b0b210632b0a502a31dfb02e91ecf51b6e266",
+   "sidecar_address": "75a675da06edeeea8ca82e4f3ef72e3aceb2f67b74707060a7d1d76b0c8854c6",
+   "target": "URL.RegexMemoizer._regex_generator",
+   "target_file": "src/marshmallow/validate.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "CHANGELOG.rst",
+     "documentation",
+     "247175312d182b33694443cd9ac2800a58977daa58a11e97fdb10d9b8eb588ff"
+    ],
+    [
+     "tests/test_deserialization.py",
+     "test",
+     "03ac323f187a902adc607c333c9b7815b736701724db578ac6ea7e5464bfbec1"
+    ],
+    [
+     "tests/test_utils.py",
+     "test",
+     "bd51361d48ef2a0da01110ce620b01e6143174662e1bacfd10f6faa599db3d5b"
+    ]
+   ],
+   "bug_family_heuristic": "exception_handling",
+   "key": "cand:marshmallow-code/marshmallow@72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+   "patch_sha256": "060b3bd2bfe8043c08f9a578a06ec2b49d2da473ef9eabe6e5ae54cb47092def",
+   "record_sha256": "1ac8254ad56aabbca0da4ac5606ff963f47ac90b1a77b7a58655e9984941a19a",
+   "sidecar_address": "974113624c29cda6ad475dd1dcc20fb647ce41082a1bb715eb90fd5df9a135b2",
+   "target": "from_timestamp_ms",
+   "target_file": "src/marshmallow/utils.py",
+   "tier": "simple"
+  },
+  {
+   "auxiliary": [
+    [
+     "CHANGELOG.rst",
+     "documentation",
+     "6e069d985c86379c7e7105c895d18b6e941c276ea44d999a0b71213fd4c3e613"
+    ],
+    [
+     "tests/test_deserialization.py",
+     "test",
+     "a94cd04c37f3a8791d947a440812bfa63c5d46fe81c003e6805b1b30b6c9d7c8"
+    ]
+   ],
+   "bug_family_heuristic": "exception_handling",
+   "key": "cand:marshmallow-code/marshmallow@024b5d09e9f026f0f96d220e243be69346687ce0",
+   "patch_sha256": "4325e7f09b409a6490975e9bf9070bceabc1cc7d7293af74dc16de6c0031f7d5",
+   "record_sha256": "f77714906fa4b71f974e444021a6fe19808fc18aa55241f90dc48d3751201829",
+   "sidecar_address": "6d86f90189e75752c2b6cd7db5229b9d4c72b9b9b04abce62accecd9e73c1f2f",
+   "target": "Enum._deserialize",
+   "target_file": "src/marshmallow/fields.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "AUTHORS.rst",
+     "documentation",
+     "f9a13a59d5a47a407a233da8010be6219d29511c9731b069f4dd188a67adfaf7"
+    ],
+    [
+     "CHANGELOG.rst",
+     "documentation",
+     "a353ff76ca0ea0b2f38148723b520c084c7e87a4605e6b29b5b328c921a25f39"
+    ],
+    [
+     "tests/test_deserialization.py",
+     "test",
+     "03c41e38a63517eef51e91aa23919bd7c7220e3156cee20f83880e157ecb8d11"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+   "patch_sha256": "b5f27ae0a128e25433dc6cfa0bfdcdbcb73e6acc454f3993864c33544b31f8c6",
+   "record_sha256": "b20db09d96cbdb0220631c97f1d5014036a1cfdd969cbbb054286703bab55112",
+   "sidecar_address": "6c21e11a5df71fc0e1fb2778cb94d169f68af4b196d83492c34a3910736bbd12",
+   "target": "Schema._deserialize",
+   "target_file": "src/marshmallow/schema.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/datetime/test_behavior.py",
+     "test",
+     "805967b4438b58322cecc3c4eb6f66eddf1db2e6b347b922b53e9e5a95da8ce6"
+    ],
+    [
+     "tests/datetime/test_construct.py",
+     "test",
+     "3e1de876fa2e042bdb2ee7fa7a799b1754b632489e0774c07df0b60c0e5e9cab"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:python-pendulum/pendulum@bd8908581471fa7b77b7aeb3dfb502b929c632d6",
+   "patch_sha256": "4f62871b9d668de918e15314b05db825030eec2edb82aa00019fefc1ef602176",
+   "record_sha256": "1c99de812f97f210edae14d75b812c5598df82082135d5e21dbe134fbb665bdf",
+   "sidecar_address": "a7f82ea5db25b3b4a5f914db501d34813724081307f5fdbef89203cea1082072",
+   "target": "DateTime.utcfromtimestamp",
+   "target_file": "src/pendulum/datetime.py",
+   "tier": "simple"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/test_time.py",
+     "test",
+     "76b95059c04d8c373bca3b523ec86f11c48fb2787a6b4145b1228db412560e8c"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:python-humanize/humanize@392aef707c0e74341ab4a51420984e9ea6b566c5",
+   "patch_sha256": "8fd52e4f0763287e38a7abdfb677543daebbfb7781dc3984dfd5a00a1ee18d2e",
+   "record_sha256": "78e0d0d39bb5cfd8683c5fd37a5845432c5e8276064dd19489e9947328f8fb03",
+   "sidecar_address": "352069b26c8a3d5a1c3170f7a2b86a4815bac87a410a97a2acf1768cc8d5b144",
+   "target": "naturaldelta",
+   "target_file": "src/humanize/time.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/test_number.py",
+     "test",
+     "782d6520a98915a167c7232fb3153c1278018af78702c4d3dc1524917bd8e5dc"
+    ]
+   ],
+   "bug_family_heuristic": "none_or_empty_handling",
+   "key": "cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652",
+   "patch_sha256": "0212de7b55b31b40863ac494b9993a7d6e4e67ae3aef3015dd9ea903ef60e346",
+   "record_sha256": "3cc7de2e14bbbd7a9cd448fe7de8ac18dc1084508316af87d7c8a2c416883883",
+   "sidecar_address": "31849e9d73f52c3ca5a4a918d8404f85bf4f748e6cb275048c0785eebda53e30",
+   "target": "intword",
+   "target_file": "src/humanize/number.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/test_number.py",
+     "test",
+     "68647fad0aa984b8385b262601e66a384fbf516c64dcbcb1e8eb235d2cc0e4d8"
+    ]
+   ],
+   "bug_family_heuristic": "boundary_or_comparison",
+   "key": "cand:python-humanize/humanize@e46732ed235019682b7bfc6c44443e247b332e95",
+   "patch_sha256": "e2dded0bf4bce1b17abbd12720dbc110f203720ca52a0636c85a90737cd33b3d",
+   "record_sha256": "57455719c5f447b320b9247a6b23c7d75be87fdde811fe019bd51f830702a8ff",
+   "sidecar_address": "313897925469521e63c243c1a424b2b262ca50cb2a1d4686b1724bb81b162d13",
+   "target": "metric",
+   "target_file": "src/humanize/number.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/test_number.py",
+     "test",
+     "31bf19da8491abd4d53ba59b8daa6d130fe89ab5879762afea9d8c580a5b8328"
+    ]
+   ],
+   "bug_family_heuristic": "type_or_conversion",
+   "key": "cand:python-humanize/humanize@984526c02448110a8392dde3f5e26096dfd7c729",
+   "patch_sha256": "ea55c6ed673cf8addb83ae17d2694c2257c1b9533a81e3ddd93577e5165cbc34",
+   "record_sha256": "1e98840575a87714a5931fafe1183868e9099d74c36bbe2a3d726390756c941b",
+   "sidecar_address": "0bbbe4e68aec98d0ae120979bfa883600dbccff3c7d8fca533f49ef708f861bd",
+   "target": "intcomma",
+   "target_file": "src/humanize/number.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/test_number.py",
+     "test",
+     "b335a14e69cf5350115cee62caa178c3dbd4936c9b6e02b9396fae4b79acb676"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978",
+   "patch_sha256": "bb9e1a3223103d84c2621bba334657f6220807260e96a068f12aa9e6f497ca9a",
+   "record_sha256": "7fddfe762304878a2417f823f03562d9d87fdc0b181fd4eb3c9822ba30df85a1",
+   "sidecar_address": "17406da5641ecabef0d68b5a6ffa9ab2b73d4f41ff1dea5ce544ed5e53032b41",
+   "target": "fractional",
+   "target_file": "src/humanize/number.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/dialects/test_clickhouse.py",
+     "test",
+     "0fa8499e341a3bff07535671382878ddee32eb6ec9840d7af84ffaa62a4f67a5"
+    ]
+   ],
+   "bug_family_heuristic": "none_or_empty_handling",
+   "key": "cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e",
+   "patch_sha256": "98e60dc2e5888840d2cdea10e999d164922d4c3eaf18bb84b6477c38e34ac2cc",
+   "record_sha256": "0c21b3027b8ace7c9c1d87379a1249aec4f4133764c8f4f6b6d07057014432f6",
+   "sidecar_address": "de8ab0983656acc988584a354768b5afc04293ec59d45b17a1ddcecd426fc447",
+   "target": "ClickHouseParser._parse_global_in",
+   "target_file": "sqlglot/parsers/clickhouse.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/test_unit.py",
+     "test",
+     "4287d3734d024037ae1b413c8146bb9cd0502022a8af388f317eece5d8cef64e"
+    ]
+   ],
+   "bug_family_heuristic": "boundary_or_comparison",
+   "key": "cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957",
+   "patch_sha256": "9556fd7eb15bc17fbd921e71db71ed76b2c61033a605682337f97d6fd5812d7f",
+   "record_sha256": "0f17a29c7c950ce2d3dc0512ae4da18b61bd0274f3af3007624be960ba0f09b8",
+   "sidecar_address": "a32bee8af36d20d578011dc6baac81943321ed2179dc5a9fb85624afda8738ea",
+   "target": "ParserElement._parseNoCache",
+   "target_file": "pyparsing/core.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "CHANGES",
+     "documentation",
+     "4e209985f7abd9db43fc2cb9c56fe6c04ae259e81e44d93428193c79220f7787"
+    ],
+    [
+     "tests/test_unit.py",
+     "test",
+     "00ae561628960f88b755379fa395b1f4a1e642f7afa57762cf76e33f301e25f9"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:pyparsing/pyparsing@0a2d906a3e6b9a30b6a0701588caec3937ff271f",
+   "patch_sha256": "de5b6e9e1948c47b456f1930185d0d1a37db0f34c967857726fa270e1a5bba60",
+   "record_sha256": "9bed045cfb76b95a92749b6ab74d8ea9f596e116020514ea051106cf6b066b40",
+   "sidecar_address": "c58d6eb6cfb8e2ef79bbfdebc1c186ec19fcb399183c0f1ec0658a8e1a9dd6e0",
+   "target": "Located.parseImpl",
+   "target_file": "pyparsing/core.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/test_items.py",
+     "test",
+     "546e328d6c8937defa53102c276ee86af3f88ca86b2d6f819248c50624eb04f7"
+    ]
+   ],
+   "bug_family_heuristic": "exception_handling",
+   "key": "cand:python-poetry/tomlkit@4b38becd75405e0f38ef3e47e9839eb407591c8a",
+   "patch_sha256": "59848bae65b261bf537cd655574fb59e101ed21fb8c0abd79329bdeefe7e4786",
+   "record_sha256": "bcf3f6bbabddbb971acffb45496d8adb452e5241e14e8e93c607f86d660ccd3f",
+   "sidecar_address": "c7305d04beeb36c34c1b702a6be1657cb3698f15e549d3f3b64711901b165a3b",
+   "target": "Array.__setitem__",
+   "target_file": "tomlkit/items.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "CHANGELOG.md",
+     "documentation",
+     "11396258af41ac99a9dcf6437f785baea8664cfb0d6e038e031018d3a531eb84"
+    ],
+    [
+     "tests/test_api.py",
+     "test",
+     "2cbefadbc4f145d709593b179209ae4681064e606b4b7713deb6b7ca773b0eab"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:python-poetry/tomlkit@8cd44f58b499da3c80a29bc877a512665a15e0bb",
+   "patch_sha256": "120566a7d830a9011e56541abe9d807136d97e3fbcb149a1f0f18a12d95e86e6",
+   "record_sha256": "7ddc9655c80bccb35f642f6d1e296c22d2add6cf1df62fb95d926231939c82df",
+   "sidecar_address": "984309b23589fc3e7646352770290fd5003714e14d2b73f74f99eb1458fe4a9c",
+   "target": "String.from_raw",
+   "target_file": "tomlkit/items.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "CHANGELOG.md",
+     "documentation",
+     "9eed0e8a0659928e4c039735fe13a353094063534149cc1128e9d267f276f666"
+    ],
+    [
+     "tests/test_toml_document.py",
+     "test",
+     "f3cf63a23d0875253fbf8e4e4fd485fc788e7f91dfd907c35c38335cd98f3f48"
+    ]
+   ],
+   "bug_family_heuristic": "none_or_empty_handling",
+   "key": "cand:python-poetry/tomlkit@e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3",
+   "patch_sha256": "349a454d8d602a518059cae6343e33417feddf19bdc431ca2d2b81a252ed79a8",
+   "record_sha256": "3e5df06ddef4334f5335050c60b898ae07429e9c459e590a55bec75667391005",
+   "sidecar_address": "5d8e8bc155bc615aa3bb4e75c81587486df345ae36257627e47a725a0f1dc932",
+   "target": "OutOfOrderTableProxy.__setitem__",
+   "target_file": "tomlkit/container.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/test_toml_document.py",
+     "test",
+     "a113c5ba39593eb011d756e628d9f2d6e579992285a7c973b43e3b031fb2ff01"
+    ]
+   ],
+   "bug_family_heuristic": "none_or_empty_handling",
+   "key": "cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897",
+   "patch_sha256": "b01f3fa7b9cd0e67fdf50386d98de08482f29f437a0b97309f0f15b6e3308cf7",
+   "record_sha256": "ca6ddd85f5b09f09ac48aafe70df3d044f4720578d6eb369beec7791f4c52b77",
+   "sidecar_address": "f8f2e7fd9e6f2341794f6a29619a5f5e997d199f12d5219301278f98ed050c83",
+   "target": "Container.append",
+   "target_file": "tomlkit/container.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/__init__.py",
+     "test",
+     "d44196ae839422081ec1a7650aa48cbe06b7293d54ec106bc45b61b6b361f028"
+    ]
+   ],
+   "bug_family_heuristic": "boundary_or_comparison",
+   "key": "cand:tkem/cachetools@39b31bc9b63abe98497409945e9d382d8918c8fb",
+   "patch_sha256": "2eaec2bb2ab598dfe505e000efbd256987998724f9869ab0251719b55f622414",
+   "record_sha256": "5e709a0844db5e4fadc68545f916cf5d0447daac714ae769afe98899c7503d73",
+   "sidecar_address": "f29f7ac5f127050bfac6362412a8d82a3368d3810b08c7ba58c6e2af9b4aeb1e",
+   "target": "Cache.__setitem__",
+   "target_file": "src/cachetools/__init__.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/test_cachedmethod.py",
+     "test",
+     "b4059a67c391c67bd994ef596632efe45dbc52ec3248c271f4a70c2f0116b4c8"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:tkem/cachetools@57d2e4813d9801f97034559e22428bac6f7c6c9b",
+   "patch_sha256": "9134c42e01a08a8fb8300b0a6cd157e7f96a0f73301acb0ea124f286689b2aba",
+   "record_sha256": "ace9572b7033601617f099e1a2d019bd7dbcfb0290cc8ba7239fe1c6a042d064",
+   "sidecar_address": "c25c6fd96013ea3371e07405f0e44a6a7a4a684cdbc64863ea1ec762c01ba89f",
+   "target": "_DescriptorBase.__get__",
+   "target_file": "src/cachetools/_cachedmethod.py",
+   "tier": "complex"
+  }
+ ],
+ "admitted_per_repository": {
+  "marshmallow-code/marshmallow": 4,
+  "pyparsing/pyparsing": 2,
+  "python-attrs/attrs": 2,
+  "python-attrs/cattrs": 5,
+  "python-humanize/humanize": 5,
+  "python-pendulum/pendulum": 1,
+  "python-poetry/tomlkit": 4,
+  "tkem/cachetools": 2,
+  "tobymao/sqlglot": 1
+ },
+ "bug_family_shares_heuristic": {
+  "boundary_or_comparison": 0.115,
+  "call_or_argument": 0.0,
+  "exception_handling": 0.154,
+  "none_or_empty_handling": 0.192,
+  "other_logic": 0.462,
+  "type_or_conversion": 0.077
+ },
+ "changed_file_categories": {
+  "documentation": 93,
+  "production_source": 143,
+  "runtime_or_config": 46,
+  "test": 111
+ },
+ "complexity_shares": {
+  "complex": 0.808,
+  "moderate": 0.077,
+  "simple": 0.115
+ },
+ "counts": {
+  "acquisition_failures": {},
+  "admitted": 26,
+  "admitted_with_authenticated_regression_test": 26,
+  "authenticated": 34,
+  "auxiliary_evidence_failures": 0,
+  "candidates_inspected": 124,
+  "module_level_or_out_of_function_hunk_exclusions": 8,
+  "near_duplicate_function_exclusions": 0,
+  "near_duplicate_patch_exclusions": 8,
+  "other_production_source_exclusions": 8,
+  "pyi_or_other_source_file_exclusions": 1,
+  "reached_pipeline": 56,
+  "runtime_or_config_exclusions": 1,
+  "same_organisation_exclusions": 0,
+  "unique_fix_commits_admitted": 26,
+  "unique_functions_admitted": 26,
+  "unique_repositories_admitted": 9,
+  "unique_repositories_inspected": 13,
+  "vendored_or_generated_exclusions": 1,
+  "within_set_duplicates_removed": 1
+ },
+ "created_utc": "2026-09-26T12:13:40Z",
+ "events": {
+  "evaluation_set_created": false,
+  "model_called": false,
+  "network_accessed": true,
+  "protected_data_access": false
+ },
+ "exclusions_all_reasons": {
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:rich/segment.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:sqlglot/generators/duckdb.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/attr/__init__.pyi": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/cachetools/_cachedmethod.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/cattrs/gen/__init__.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/cattrs/gen/_shared.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/cattrs/gen/typeddicts.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/marshmallow/types.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:pyproject.toml": 1,
+  "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 11,
+  "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 8,
+  "insufficient_isolation_evidence:authentication:target_function_missing_or_ambiguous_in_fixed_file": 3,
+  "multiple_functions_changed": 20,
+  "no_existing_function_changed": 19,
+  "no_production_python_file_changed": 27,
+  "patch_near_duplicate_of_known_bug": 8,
+  "target_file_added_by_fix": 2,
+  "vendored_or_generated:project_vendored_path:typer/_click/**": 1,
+  "within_set_near_duplicate_of:cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897": 1
+ },
+ "exclusions_primary_family": {
+  "auth:changed_production_source_outside_target": 5,
+  "auth:fixed_commit_is_not_a_direct_single_parent_commit": 11,
+  "auth:production_hunk_outside_target_function": 4,
+  "auth:target_function_missing_or_ambiguous_in_fixed_file": 2,
+  "multiple_functions_changed": 20,
+  "no_existing_function_changed": 19,
+  "no_production_python_file_changed": 27,
+  "patch_near_duplicate_of_known_bug": 6,
+  "target_file_added_by_fix": 2,
+  "vendored_or_generated": 1,
+  "within_set_near_duplicate_of:cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897": 1
+ },
+ "gate": {
+  "no_protected_data_access": true
+ },
+ "gate_definition": null,
+ "identity": {
+  "api": {
+   "api_calls": 0,
+   "api_retries": 0,
+   "api_seconds": 0.0,
+   "authenticated_requests": false,
+   "elapsed_seconds": 0.0,
+   "rate_limit_and_backoff_wait_seconds": 0.0,
+   "sessions": 2
+  },
+  "bundle_generation": "c6e31961ca90028f6ef59a07",
+  "bundle_manifest_sha256": "c6e31961ca90028f6ef59a073b5ede1c6d26a9b87b409079110e7e19615eac50",
+  "candidate_repository_list_sha256": "4efed779f706cc899749c370e64438745cfe3c01a292156c6d5e1e30a22179ee",
+  "command": "scripts/run_repository_native_acquisition_pilot.py",
+  "configuration": {
+   "candidates_since": "2025-01-01",
+   "label": "RETROSPECTIVE DEVELOPMENT RESCORE under policy A-prime of the failed policy-A pilot's 124 candidates, which were used to design A-prime; not an independent pilot and not confirmatory evidence",
+   "mode": "retrospective development rescore; no REST calls",
+   "per_repository_cap": 10,
+   "report": "results/v4_3_repository_native_a_prime_retrospective.json",
+   "repositories_file": "docs/repository_native_candidate_repositories.json",
+   "source_journal_sha256": "c48b2110cb974dcfa66eb9d321f771977e1d7a78372f6056d0a5168058264dc5",
+   "source_store": "data/repository_native/acquisition_pilot",
+   "store": "data/repository_native/a_prime_retrospective"
+  },
+  "diff_policy_id": "A_prime_direct_parent_single_target_source_with_auxiliary_tests_docs",
+  "dirty_paths": [],
+  "dirty_tree": false,
+  "end_utc": "2026-09-26T12:13:39Z",
+  "git_commit": "5b982b3060a72040fe76580ae663c02395e74fc9",
+  "isolation_version": "oneiros_repository_isolation_v5",
+  "journal_sha256": "d0d1eb07b71de4de74530c10f8b72cffaeeb3ae81a386def9e3f028e613754dc",
+  "reference_universe_receipt_sha256": "729c90cdc498683682f7637eda73a40dc70db2b604f7a6e6484b1a792cf63991",
+  "source_tree_files": 496,
+  "source_tree_sha256": "2de2ce6a478003ccb2d30a65b57d2569cea341b8852c3683b1f5d6fbc289a790",
+  "start_utc": "2026-09-26T10:38:30Z",
+  "store_verification": {
+   "objects_checked": 1242,
+   "problems": 0
+  },
+  "tool_source_sha256": {
+   "harness/acquisition_receipt.py": "8087b9475409de63529111d7425abe377141b2d52d7df6e1c8433ec8b3f793ec",
+   "harness/github_acquisition.py": "2f8a0ac7abcbf63794603e83267269358c4889bfde698593a709cb165fc7e167",
+   "harness/repository_isolation.py": "256edd9cf87a60047fa61706dc15eb3b1737b575fe66459a2c80877558bf418d",
+   "harness/repository_native_candidates.py": "49426ba394073f81cefefffc94c030180cb3fc54542dbc7458805c4ecf92adb7",
+   "harness/vendored_code_exclusions.json": "2a92e6def0b71a168efd83771379a58adebb9bad454fd1ce77a0699c55b74a2b",
+   "scripts/run_repository_native_acquisition_pilot.py": "1e2bbed4d9d365a07b0471c2723fe6561af7f7260609b8e0fb715c192a07b8d9"
+  }
+ },
+ "label": "RETROSPECTIVE DEVELOPMENT RESCORE under policy A-prime of the failed policy-A pilot's 124 candidates, which were used to design A-prime; not an independent pilot and not confirmatory evidence",
+ "maximum_repository_share": 0.192,
+ "native_qualification_workload": {
+  "admitted_targets": 26,
+  "note": "qualification is NOT performed here; 3 runs x 2 revisions per target",
+  "official_test_runs_needed": 156,
+  "with_authenticated_regression_test": 26
+ },
+ "policy": {
+  "candidates_since": "2025-01-01",
+  "diff_policy": "A_prime_direct_parent_single_target_source_with_auxiliary_tests_docs",
+  "fix_commit_selection": "first-parent default-branch commits whose message describes a fix and links a PR/issue (heuristic)",
+  "per_repository_candidate_cap": 10,
+  "temporal_cutoff_epoch": 1735689600
+ },
+ "projection_for_n400": {
+  "at_point_estimate": {
+   "acquisition_hours_at_measured_rate": 7.3,
+   "acquisition_storage_gb": 0.25,
+   "admission_rate": 0.20967741935483872,
+   "candidates_to_inspect": 587,
+   "feasible_within_pool_and_budget": false,
+   "median_fix_candidate_supply_per_repository": 27,
+   "pool_repositories": 30,
+   "projected_admitted_with_cap": 122.9,
+   "repositories_contributing_at_least_one": 25
+  },
+  "at_wilson_lower": {
+   "acquisition_hours_at_measured_rate": 7.6,
+   "acquisition_storage_gb": 0.26,
+   "admission_rate": 0.1473,
+   "candidates_to_inspect": 611,
+   "feasible_within_pool_and_budget": false,
+   "median_fix_candidate_supply_per_repository": 27,
+   "pool_repositories": 30,
+   "projected_admitted_with_cap": 89.9,
+   "repositories_contributing_at_least_one": 24
+  },
+  "at_wilson_upper": {
+   "acquisition_hours_at_measured_rate": 7.1,
+   "acquisition_storage_gb": 0.24,
+   "admission_rate": 0.2895,
+   "candidates_to_inspect": 570,
+   "feasible_within_pool_and_budget": false,
+   "median_fix_candidate_supply_per_repository": 27,
+   "pool_repositories": 30,
+   "projected_admitted_with_cap": 164.7,
+   "repositories_contributing_at_least_one": 25
+  }
+ },
+ "protected_access_evidence": {
+  "installed": true,
+  "method": "python audit hook on every file open, active for the whole run",
+  "opens_checked": 20178,
+  "protected_paths_opened": []
+ },
+ "report_schema": "oneiros_repository_native_acquisition_report_v2",
+ "repositories": {
+  "listed": 30,
+  "reached": 18,
+  "renames": {
+   "python-pendulum/pendulum": [
+    {
+     "queried": "sdispater/pendulum",
+     "redirected_to": "python-pendulum/pendulum"
+    }
+   ]
+  },
+  "same_organisation_for_review": [],
+  "scans": {
+   "arrow-py/arrow": {
+    "commits_scanned": 23,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   },
+   "fastapi/typer": {
+    "commits_scanned": 863,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   },
+   "marshmallow-code/marshmallow": {
+    "commits_scanned": 204,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   },
+   "more-itertools/more-itertools": {
+    "commits_scanned": 187,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   },
+   "pyparsing/pyparsing": {
+    "commits_scanned": 299,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   },
+   "python-attrs/attrs": {
+    "commits_scanned": 228,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   },
+   "python-attrs/cattrs": {
+    "commits_scanned": 105,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   },
+   "python-humanize/humanize": {
+    "commits_scanned": 112,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   },
+   "python-pendulum/pendulum": {
+    "commits_scanned": 68,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   },
+   "python-poetry/tomlkit": {
+    "commits_scanned": 119,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   },
+   "textualize/rich": {
+    "commits_scanned": 101,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   },
+   "tkem/cachetools": {
+    "commits_scanned": 170,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   },
+   "tobymao/sqlglot": {
+    "commits_scanned": 3357,
+    "failure": null,
+    "fix_candidate_supply": null,
+    "skipped_prior_commits": null
+   }
+  },
+  "screened_out": {
+   "dateutil/dateutil": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "grantjenks/python-sortedcontainers": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "mahmoud/boltons": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "networkx/networkx": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "pytoolz/toolz": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ]
+  }
+ },
+ "retrospective": {
+  "development_only": true,
+  "git_objects": {
+   "fetched": 0,
+   "from_clone": 0,
+   "from_store": 0
+  },
+  "not_confirmatory": true,
+  "provisional_estimate_superseded": "the earlier provisional 32/124 is replaced by this complete A-prime rescore",
+  "rest_calls": 0,
+  "source_journal_sha256": "c48b2110cb974dcfa66eb9d321f771977e1d7a78372f6056d0a5168058264dc5",
+  "source_report_sha256": "119fae38e1d7be0c8109e689ce5206ba61568a25316e896fba01f2b5444244ea",
+  "unretained_issue_urls": []
+ },
+ "schema_version": "oneiros_acquisition_receipt_v1",
+ "store_verification": {
+  "objects_checked": 1242,
+  "problems": []
+ },
+ "yield": {
+  "admission_yield": 0.2097,
+  "note": "admission yield precedes native qualification (Phase 3); it is an upper bound on the mined-to-qualified yield",
+  "wilson_95": [
+   0.1473,
+   0.2895
+  ]
+ }
+}
