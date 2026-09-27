@@ -1,0 +1,681 @@
+{
+ "admitted": [
+  {
+   "auxiliary": [
+    [
+     "tests/providers/test_python.py",
+     "test",
+     "90c355d8a42116e79f08ed24488a46cba06cd11267638ab78de55183e8002070"
+    ]
+   ],
+   "bug_family_heuristic": "none_or_empty_handling",
+   "key": "cand:joke2k/faker@fdf861dda79ec1ac149909605c7f279e882b96f9",
+   "patch_sha256": "2dd1d32ac0c30ba78ac1481782872ac69df232c65de2412c9094708928966931",
+   "record_sha256": "99206e37b22cef0bdf5065a0c15ed80b09dec3f3551b72f7d1ba26f24259738c",
+   "sidecar_address": "1800e182b0fcdcdf7286be5eb0cc983c380da89db1e9b295cb749e26d3d64094",
+   "target": "Provider.pydecimal",
+   "target_file": "faker/providers/python/__init__.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "test/with_dummyserver/test_socketlevel.py",
+     "test",
+     "556bfcba2fe9779d01a5334ab74a0f8bf555af816089d0ca91bb98ba42167b67"
+    ]
+   ],
+   "bug_family_heuristic": "exception_handling",
+   "key": "cand:urllib3/urllib3@0716e31534345dc1599ea95d903c79f276239bd8",
+   "patch_sha256": "b9d2b31279f19801a280555fd48c546926337bbd811ff1b21df22eacca6b072c",
+   "record_sha256": "35e720618496fed173e82884fa88ebd230f3bfafa1744c9b326e5c3c1228bee3",
+   "sidecar_address": "4181995fa29f6fa26529aad14ac79bddc2fc66a183de35f7f8be04fc2774e5ae",
+   "target": "PyOpenSSLContext.load_cert_chain",
+   "target_file": "src/urllib3/contrib/pyopenssl.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "docs/project/changelog.rst",
+     "documentation",
+     "2e1ae15a6040a091a8c79f26d6f0cf5efadb65ac4bfa5400451dca0ced000c59"
+    ],
+    [
+     "tests/legacy/test_http.py",
+     "test",
+     "6a4a5d52d709ea42408cfcc7b97ed967e11cf77b5077bb148f4bcd3db6114f77"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:python-websockets/websockets@acff86b3400d3998c09e4c8b836b565cd5973502",
+   "patch_sha256": "084b0186028000535eb26dcb90f29afdf1fb121117af08c918c8eaf4cc33c61d",
+   "record_sha256": "8425638c27cd875032abe393ce19500f95e7f2b5e20b2850105cf80fca7fda48",
+   "sidecar_address": "80677482a337fba1ec42a88a188edad7ec22aba51dd010dbf584a230a603263d",
+   "target": "read_headers",
+   "target_file": "src/websockets/legacy/http.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "CHANGELOG.rst",
+     "documentation",
+     "ab7ab876a80ba45080e9c3490845c3ceef05a41e8acdcfe8030b86a90fa68632"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:wireservice/csvkit@c327a1bb46910414366b4b7e79f18faca0e82604",
+   "patch_sha256": "26910ddf14aeb759169b325587fbf806a9de71e7a507b2a488fcb0b7ade0f5b3",
+   "record_sha256": "a63a47a62cc2d41f3a4161841b6f0b81932a6fd7ede08f65d493a3c6d4309d0d",
+   "sidecar_address": "e33b1fcbd0a3213c7812fcf38304f82bbdc4111f8fef96fb8c8c909721c0c48b",
+   "target": "CSVKitUtility.get_column_types",
+   "target_file": "csvkit/cli.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "CHANGELOG.md",
+     "documentation",
+     "20014a5edec407dbed0443707075fb60371e96bd301f12b85a29d6fcedb9f14a"
+    ]
+   ],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:mitmproxy/mitmproxy@f384cb740183e14582bd748b583b82d081f5c002",
+   "patch_sha256": "0ad5e8904c522a224bf1336f2b9edcdf2f49c9b0c7c913144347c76c79b155ed",
+   "record_sha256": "d154248d727bfdb47d11936b0cb02ba4564013481154650c7d1bffbc6170388c",
+   "sidecar_address": "18d096a7b92c43b29cd4673f7f58bde5f1117859b4b560a939584523667e99e6",
+   "target": "is_supported_version",
+   "target_file": "mitmproxy/net/tls.py",
+   "tier": "complex"
+  }
+ ],
+ "admitted_per_repository": {
+  "joke2k/faker": 1,
+  "mitmproxy/mitmproxy": 1,
+  "python-websockets/websockets": 1,
+  "urllib3/urllib3": 1,
+  "wireservice/csvkit": 1
+ },
+ "bug_family_shares_heuristic": {
+  "boundary_or_comparison": 0.0,
+  "call_or_argument": 0.0,
+  "exception_handling": 0.2,
+  "none_or_empty_handling": 0.2,
+  "other_logic": 0.6,
+  "type_or_conversion": 0.0
+ },
+ "candidate_comparison_with_reference": null,
+ "changed_file_categories": {
+  "documentation": 63,
+  "production_source": 198,
+  "runtime_or_config": 104,
+  "test": 130
+ },
+ "complexity_shares": {
+  "complex": 1.0
+ },
+ "counts": {
+  "acquisition_failures": {},
+  "admitted": 5,
+  "admitted_with_authenticated_regression_test": 3,
+  "authenticated": 6,
+  "auxiliary_evidence_failures": 0,
+  "candidates_inspected": 120,
+  "module_level_or_out_of_function_hunk_exclusions": 8,
+  "near_duplicate_function_exclusions": 0,
+  "near_duplicate_patch_exclusions": 6,
+  "other_production_source_exclusions": 78,
+  "pyi_or_other_source_file_exclusions": 14,
+  "reached_pipeline": 46,
+  "runtime_or_config_exclusions": 29,
+  "same_organisation_exclusions": 0,
+  "unique_fix_commits_admitted": 5,
+  "unique_functions_admitted": 5,
+  "unique_repositories_admitted": 5,
+  "unique_repositories_inspected": 17,
+  "vendored_or_generated_exclusions": 0,
+  "within_set_duplicates_removed": 0
+ },
+ "created_utc": "2026-09-27T11:33:38Z",
+ "events": {
+  "evaluation_set_created": false,
+  "model_called": false,
+  "network_accessed": true,
+  "protected_data_access": false
+ },
+ "exclusions_all_reasons": {
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:compliance/sync/server.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:example/asyncio/echo.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:example/asyncio/server.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:example/django/authentication.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:example/faq/health_check_server.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:example/quick/counter.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:example/quick/server.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:example/quick/show_time.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:example/tls/server.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:example/tutorial/step1/app.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:example/tutorial/step2/app.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:experiments/authentication/app.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:experiments/routing.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:faker/proxy.pyi": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/__init__.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/app.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/asgi/app.py": 2,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/asgi/request.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/asgi/ws.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/errors.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/http_error.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/http_status.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/inspect.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/media/handlers.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/media/multipart.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/middleware.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/request.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/response.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/routing/compiled.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/testing/client.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/testing/helpers.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/testing/resource.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/util/__init__.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/util/deprecation.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/util/mediatypes.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/util/misc.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/util/reader.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/util/structures.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/util/sync.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:falcon/util/uri.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:idna/idnadata.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:mitmproxy/command_lexer.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:mitmproxy/flowfilter.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:noxfile.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:piptools/sync.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:pyupgrade/_plugins/imports.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:pyupgrade/_plugins/typing_pep563.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pip/_internal/cli/cmdoptions.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pip/_internal/cli/index_command.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pip/_internal/commands/list.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pip/_internal/index/collector.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pip/_internal/index/package_finder.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pip/_internal/metadata/pkg_resources.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pip/_internal/network/session.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pip/_internal/utils/logging.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pip/_internal/utils/misc.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/urllib3/poolmanager.py": 2,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/urllib3/util/url.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/websockets/asyncio/router.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/websockets/asyncio/server.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/websockets/sync/server.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/websockets/trio/server.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/websockets/uri.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/setup-jest.js": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/src/js/__tests__/components/FlowTable/FlowColumnsSpec.tsx": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/src/js/__tests__/components/Header/OptionMenuSpec.tsx": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/src/js/__tests__/components/helpers/ThemeManagerSpec.tsx": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/src/js/components/FlowTable/FlowColumns.tsx": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/src/js/components/FlowView/HttpMessages.tsx": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/src/js/components/Header/FlowListMenu.tsx": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/src/js/components/Header/OptionMenu.tsx": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/src/js/components/ProxyApp.tsx": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/src/js/components/contentviews/CodeEditor.tsx": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/src/js/components/helpers/ThemeManager.tsx": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/src/js/components/helpers/useTheme.ts": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:web/src/js/ducks/_options_gen.ts": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.github/workflows/deploy.yml": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:beets/config_default.yaml": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:changelog/2577.bugfix.rst": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:changelog/5071.bugfix.rst": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:changelog/5166.misc.rst": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:news/13354.bugfix.rst": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:news/13634.bugfix.rst": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:news/13680.feature.rst": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:news/14190.bugfix.rst": 2,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:news/8573.bugfix.rst": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:pyproject.toml": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:tools/idna-data": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:tox.ini": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/package-lock.json": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/package.json": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/css/eventlog.less": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/css/flowdetail.less": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/css/footer.less": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/css/global.less": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/css/header.less": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/css/mode.less": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/css/tabs.less": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/js/__tests__/components/FlowTable/__snapshots__/FlowColumnsSpec.tsx.snap": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/js/__tests__/components/FlowTable/__snapshots__/FlowRowSpec.tsx.snap": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/js/__tests__/components/Header/__snapshots__/MainMenuSpec.tsx.snap": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/js/__tests__/components/Header/__snapshots__/OptionMenuSpec.tsx.snap": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/js/__tests__/components/__snapshots__/FlowTableSpec.tsx.snap": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:web/src/js/__tests__/components/__snapshots__/HeaderSpec.tsx.snap": 1,
+  "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 21,
+  "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 8,
+  "insufficient_isolation_evidence:authentication:target_function_missing_or_ambiguous_in_fixed_file": 1,
+  "insufficient_isolation_evidence:target_function_too_short_for_comparison": 1,
+  "multiple_functions_changed": 21,
+  "no_existing_function_changed": 16,
+  "no_production_python_file_changed": 37,
+  "patch_near_duplicate_of_known_bug": 6
+ },
+ "exclusions_primary_family": {
+  "auth:changed_production_source_outside_target": 7,
+  "auth:changed_runtime_or_config_outside_target": 10,
+  "auth:fixed_commit_is_not_a_direct_single_parent_commit": 21,
+  "auth:production_hunk_outside_target_function": 1,
+  "insufficient_isolation_evidence:target_function_too_short_for_comparison": 1,
+  "multiple_functions_changed": 21,
+  "no_existing_function_changed": 16,
+  "no_production_python_file_changed": 37,
+  "patch_near_duplicate_of_known_bug": 1
+ },
+ "gate": {
+  "admitted_repository_diversity": true,
+  "maximum_repository_share": true,
+  "minimum_scale": true,
+  "n400_projection_respects_repository_rules": false,
+  "no_protected_data_access": true,
+  "yield_or_projection": false,
+  "zero_hash_inconsistencies": true,
+  "zero_incomplete_evidence_admissions": true,
+  "zero_revalidation_failures": true,
+  "zero_vendored_or_generated_admissions": true
+ },
+ "gate_definition": {
+  "budget": {
+   "basis": "the design estimate for N=400 (2,700-5,700 candidates; acquisition network 2.7-5.3 h and clone storage 11-21 GB), with headroom; environment storage is budgeted separately in Phase 3",
+   "max_acquisition_hours": 72,
+   "max_acquisition_storage_gb": 100,
+   "max_candidates_to_inspect": 6000
+  },
+  "frozen_before": "any candidate of the independent A-prime confirmation pilot is inspected",
+  "gates": {
+   "admitted_repository_diversity": ">= 5 repositories with an admitted target",
+   "maximum_repository_share": "no repository above 40% of admitted targets",
+   "minimum_scale": ">= 100 candidates from >= 10 repositories, all previously unused, and no commit ID from the policy-A journal",
+   "n400_projection_respects_repository_rules": "at the Wilson-lower rate the frozen pool projects >= 400 targets from >= 34 repositories with <= 12 per repository",
+   "no_protected_data_access": "the audit-hook evidence shows no protected path opened (event protected_data_access is false)",
+   "yield_or_projection": "Wilson 95% lower admission yield >= 7%, OR the conservative (Wilson-lower) supply projection over the frozen repository pool reaches N=400 within the budget",
+   "zero_hash_inconsistencies": "no hash mismatch or integrity failure, and every stored object re-verifies",
+   "zero_incomplete_evidence_admissions": "no admitted candidate has insufficient evidence",
+   "zero_revalidation_failures": "every record revalidates byte for byte from its sidecar",
+   "zero_vendored_or_generated_admissions": "no admitted target is flagged by the frozen vendored/generated detector"
+  },
+  "n400": {
+   "max_per_repository": 12,
+   "min_repositories": 34,
+   "target": 400
+  },
+  "note": "the gate does not fail because the yield is HIGHER than the old 7-15% estimate",
+  "policy": "A_prime_direct_parent_single_target_source_with_auxiliary_tests_docs",
+  "schema_version": "oneiros_aprime_feasibility_gate_v1",
+  "thresholds": {
+   "max_repository_share": 0.4,
+   "min_admitted_repositories": 5,
+   "min_candidates": 100,
+   "min_new_repositories": 10,
+   "min_wilson_lower_yield": 0.07
+  }
+ },
+ "identity": {
+  "api": {
+   "api_calls": 77,
+   "api_retries": 1,
+   "api_seconds": 33.2,
+   "authenticated_requests": false,
+   "elapsed_seconds": 1969.2,
+   "rate_limit_and_backoff_wait_seconds": 862.3,
+   "sessions": 1
+  },
+  "bundle_generation": "aa95ab604888d405b59fa1e8",
+  "bundle_manifest_sha256": "aa95ab604888d405b59fa1e85d48a8f7ec9d6307323f750bcf3e58e505abb5c7",
+  "candidate_repository_list_sha256": "93a60d157cfc51c6e1e04322a500f12df6d509f1604d29335b9ce32e86ccf31e",
+  "command": "python scripts/run_repository_native_acquisition_pilot.py --config docs/repository_native_aprime_fresh_confirmation_pilot.json",
+  "configuration": {
+   "candidates_since": "2025-01-01",
+   "exclude_journals": [
+    "data/repository_native/acquisition_pilot/journal.jsonl",
+    "data/repository_native/aprime_confirmation_pilot/journal.jsonl"
+   ],
+   "exclude_repository_files": [
+    "docs/repository_native_previously_scanned_repositories.json"
+   ],
+   "expected_gate_sha256": "09dcde5338ea807eaa2ad0833f95db3c91d159caebe332f4dd0f66be6cc769ff",
+   "expected_repository_list_sha256": "93a60d157cfc51c6e1e04322a500f12df6d509f1604d29335b9ce32e86ccf31e",
+   "fetch_since": "2024-12-01",
+   "gate_file": "docs/repository_native_aprime_feasibility_gate.json",
+   "gate_sha256": "09dcde5338ea807eaa2ad0833f95db3c91d159caebe332f4dd0f66be6cc769ff",
+   "label": "FRESH independent policy A-prime confirmation pilot (isolation v6, receipt v5) on previously unscanned repositories and commits; candidate pool only, no evaluation set, no model, no GPU",
+   "max_candidates": 120,
+   "min_repositories": 10,
+   "per_repository_cap": 10,
+   "pool_files": [
+    "docs/repository_native_candidate_repositories.json",
+    "docs/repository_native_confirmation_repositories.json"
+   ],
+   "reference_journal": "data/repository_native/aprime_confirmation_pilot/journal.jsonl",
+   "report": "results/v4_3_repository_native_aprime_fresh_confirmation_pilot.json",
+   "repositories_file": "docs/repository_native_fresh_confirmation_repositories.json",
+   "stopping_rule": "stop after the repository in which the 120th candidate is reached, provided >= 10 repositories contributed candidates; independent of outcomes",
+   "store": "data/repository_native/aprime_fresh_confirmation_pilot"
+  },
+  "diff_policy_id": "A_prime_direct_parent_single_target_source_with_auxiliary_tests_docs",
+  "dirty_paths": [],
+  "dirty_tree": false,
+  "end_utc": "2026-09-27T11:33:32Z",
+  "gate_sha256": "09dcde5338ea807eaa2ad0833f95db3c91d159caebe332f4dd0f66be6cc769ff",
+  "git_commit": "ff6558d101a88b0a43f810d1f6e368846045b82a",
+  "isolation_version": "oneiros_repository_isolation_v6",
+  "journal_sha256": "f91b837d18fed2fb2669be549784b3f9aa9d63cc3988368d27a3f16c913f79e2",
+  "reference_journal_sha256": "a065e9138da96e40129088f849f62e38c70b3f0a836e94e2f4de6cc8a957326a",
+  "reference_universe_receipt_sha256": "53080a7a7d73d62e628ecfcaf615b0a825b050101e2a3efbdb7e7ff83afcd2bd",
+  "source_tree_files": 505,
+  "source_tree_sha256": "ba4c11bcff48545263e85b2dd208e528a8fc56c3a98c1404d64270f2dd75643b",
+  "start_utc": "2026-09-27T11:00:42Z",
+  "store_verification": {
+   "objects_checked": 1450,
+   "problems": 0
+  },
+  "tool_source_sha256": {
+   "harness/acquisition_receipt.py": "31ed3ac4335cba0dedda28b259f20e93b7444dcd1b34b95b26225fe0fd35b670",
+   "harness/github_acquisition.py": "3e8e7a421396e6f2d7878e8429d4c678a0965e8cfe5e9a12c9d3d024fbaf0805",
+   "harness/repository_isolation.py": "70ca1ab6dd1b6dc2d0e837a8b9490aa56764ac2ad33171130cc495a757ea11ab",
+   "harness/repository_native_candidates.py": "49426ba394073f81cefefffc94c030180cb3fc54542dbc7458805c4ecf92adb7",
+   "harness/vendored_code_exclusions.json": "2a92e6def0b71a168efd83771379a58adebb9bad454fd1ce77a0699c55b74a2b",
+   "scripts/run_repository_native_acquisition_pilot.py": "bc46bc2a0dc515aee1e2e6fd004859ac0b94e70043c817fb5e0e13c6901c5dd7"
+  }
+ },
+ "label": "FRESH independent policy A-prime confirmation pilot (isolation v6, receipt v5) on previously unscanned repositories and commits; candidate pool only, no evaluation set, no model, no GPU",
+ "maximum_repository_share": 0.2,
+ "n400_interpretation": {
+  "extrapolated": {
+   "assumptions": [
+    "unscanned repositories in the frozen pool pass repository screening at the observed pass fraction",
+    "unscanned repositories have the median observed fix-candidate supply since 2025",
+    "the pilot admission yield applies to every repository",
+    "at most 12 targets per repository"
+   ],
+   "projection": {
+    "acquisition_hours_at_measured_rate": 7.6,
+    "acquisition_storage_gb": 0.57,
+    "admission_rate": 0.0179,
+    "candidates_to_inspect": 1714,
+    "feasible_within_pool_and_budget": false,
+    "median_fix_candidate_supply_per_repository": 9.0,
+    "pool_repositories": 156,
+    "projected_admitted_with_cap": 30.7,
+    "repositories_contributing_at_least_one": 4
+   }
+  },
+  "interpretation": "a passing corrected confirmation pilot justifies a later 20-30 target native rehearsal; it does not guarantee 400 qualified targets",
+  "not_measured": [
+   "native qualification yield (official tests on both revisions)",
+   "N=400 supply is NOT proven by the scanned repositories"
+  ],
+  "observed": {
+   "admission_yield": 0.0417,
+   "candidates_inspected": 120,
+   "fix_candidate_supply_per_scanned_repository": {
+    "asottile/pyupgrade": 7,
+    "beetbox/beets": 289,
+    "bottlepy/bottle": 1,
+    "falconry/falcon": 39,
+    "google/yapf": 0,
+    "hhatto/autopep8": 1,
+    "jazzband/pip-tools": 33,
+    "jmespath/jmespath.py": 2,
+    "joke2k/faker": 61,
+    "keleshev/schema": 6,
+    "kjd/idna": 11,
+    "mitmproxy/mitmproxy": 153,
+    "pallets-eco/blinker": 0,
+    "pyeve/cerberus": 0,
+    "pypa/pip": 86,
+    "pypa/setuptools": 35,
+    "python-jsonschema/referencing": 1,
+    "python-websockets/websockets": 54,
+    "urllib3/urllib3": 33,
+    "wireservice/csvkit": 2
+   },
+   "repositories_scanned": 20,
+   "wilson_95": [
+    0.0179,
+    0.0938
+   ]
+  }
+ },
+ "native_qualification_workload": {
+  "admitted_targets": 5,
+  "note": "qualification is NOT performed here; 3 runs x 2 revisions per target",
+  "official_test_runs_needed": 30,
+  "with_authenticated_regression_test": 3
+ },
+ "policy": {
+  "candidates_since": "2025-01-01",
+  "diff_policy": "A_prime_direct_parent_single_target_source_with_auxiliary_tests_docs",
+  "fix_commit_selection": "first-parent default-branch commits whose message describes a fix and links a PR/issue (heuristic)",
+  "per_repository_candidate_cap": 10,
+  "temporal_cutoff_epoch": 1735689600
+ },
+ "projection_for_n400": {
+  "at_point_estimate": {
+   "acquisition_hours_at_measured_rate": 7.6,
+   "acquisition_storage_gb": 0.57,
+   "admission_rate": 0.041666666666666664,
+   "candidates_to_inspect": 1713,
+   "feasible_within_pool_and_budget": false,
+   "median_fix_candidate_supply_per_repository": 9.0,
+   "pool_repositories": 156,
+   "projected_admitted_with_cap": 71.4,
+   "repositories_contributing_at_least_one": 9
+  },
+  "at_wilson_lower": {
+   "acquisition_hours_at_measured_rate": 7.6,
+   "acquisition_storage_gb": 0.57,
+   "admission_rate": 0.0179,
+   "candidates_to_inspect": 1714,
+   "feasible_within_pool_and_budget": false,
+   "median_fix_candidate_supply_per_repository": 9.0,
+   "pool_repositories": 156,
+   "projected_admitted_with_cap": 30.7,
+   "repositories_contributing_at_least_one": 4
+  },
+  "at_wilson_upper": {
+   "acquisition_hours_at_measured_rate": 6.8,
+   "acquisition_storage_gb": 0.5,
+   "admission_rate": 0.0938,
+   "candidates_to_inspect": 1528,
+   "feasible_within_pool_and_budget": false,
+   "median_fix_candidate_supply_per_repository": 9.0,
+   "pool_repositories": 156,
+   "projected_admitted_with_cap": 143.3,
+   "repositories_contributing_at_least_one": 10
+  }
+ },
+ "protected_access_evidence": {
+  "complete": true,
+  "incomplete_sessions": [],
+  "installed": true,
+  "method": "sys.addaudithook: every Python-process file open ('open' events) and every subprocess launch ('subprocess.Popen' events: executable, arguments, working directory) is checked against the resolved protected locations; opens performed inside external subprocesses are NOT observed, so subprocess commands and their path arguments are recorded and git's local paths are confined to the store",
+  "protected_accesses": [],
+  "protection_policy": "oneiros_protected_locations_v2",
+  "scope_end_utc": "2026-09-27T11:33:38Z",
+  "scope_start_utc": "2026-09-27T11:00:10Z",
+  "sessions": [
+   {
+    "opens_checked": 24514,
+    "scope_end_utc": "2026-09-27T11:33:38Z",
+    "scope_start_utc": "2026-09-27T11:00:10Z",
+    "session": "2026-09-27T11:00:10Z:47784",
+    "subprocesses": 5157
+   }
+  ],
+  "subprocess_git_dirs_confined_to_store": true,
+  "subprocess_log_addresses": [
+   "0666b248c1729f0eefc3d34127a5fda6f12f31cd48467d7b40f17f0e241d43d4"
+  ]
+ },
+ "report_schema": "oneiros_repository_native_acquisition_report_v2",
+ "repositories": {
+  "listed": 106,
+  "reached": 26,
+  "renames": {},
+  "same_organisation_for_review": [],
+  "scans": {
+   "asottile/pyupgrade": {
+    "commits_scanned": 56,
+    "failure": null,
+    "fix_candidate_supply": 7,
+    "skipped_prior_commits": 0
+   },
+   "beetbox/beets": {
+    "commits_scanned": 588,
+    "failure": null,
+    "fix_candidate_supply": 289,
+    "skipped_prior_commits": 0
+   },
+   "bottlepy/bottle": {
+    "commits_scanned": 29,
+    "failure": null,
+    "fix_candidate_supply": 1,
+    "skipped_prior_commits": 0
+   },
+   "falconry/falcon": {
+    "commits_scanned": 170,
+    "failure": null,
+    "fix_candidate_supply": 39,
+    "skipped_prior_commits": 0
+   },
+   "google/yapf": {
+    "commits_scanned": 1,
+    "failure": null,
+    "fix_candidate_supply": 0,
+    "skipped_prior_commits": 0
+   },
+   "hhatto/autopep8": {
+    "commits_scanned": 21,
+    "failure": null,
+    "fix_candidate_supply": 1,
+    "skipped_prior_commits": 0
+   },
+   "jazzband/pip-tools": {
+    "commits_scanned": 168,
+    "failure": null,
+    "fix_candidate_supply": 33,
+    "skipped_prior_commits": 0
+   },
+   "jmespath/jmespath.py": {
+    "commits_scanned": 7,
+    "failure": null,
+    "fix_candidate_supply": 2,
+    "skipped_prior_commits": 0
+   },
+   "joke2k/faker": {
+    "commits_scanned": 469,
+    "failure": null,
+    "fix_candidate_supply": 61,
+    "skipped_prior_commits": 0
+   },
+   "keleshev/schema": {
+    "commits_scanned": 10,
+    "failure": null,
+    "fix_candidate_supply": 6,
+    "skipped_prior_commits": 0
+   },
+   "kjd/idna": {
+    "commits_scanned": 66,
+    "failure": null,
+    "fix_candidate_supply": 11,
+    "skipped_prior_commits": 0
+   },
+   "mitmproxy/mitmproxy": {
+    "commits_scanned": 427,
+    "failure": null,
+    "fix_candidate_supply": 153,
+    "skipped_prior_commits": 0
+   },
+   "pallets-eco/blinker": {
+    "commits_scanned": 3,
+    "failure": null,
+    "fix_candidate_supply": 0,
+    "skipped_prior_commits": 0
+   },
+   "pyeve/cerberus": {
+    "commits_scanned": 12,
+    "failure": null,
+    "fix_candidate_supply": 0,
+    "skipped_prior_commits": 0
+   },
+   "pypa/pip": {
+    "commits_scanned": 496,
+    "failure": null,
+    "fix_candidate_supply": 86,
+    "skipped_prior_commits": 0
+   },
+   "pypa/setuptools": {
+    "commits_scanned": 208,
+    "failure": null,
+    "fix_candidate_supply": 35,
+    "skipped_prior_commits": 0
+   },
+   "python-jsonschema/referencing": {
+    "commits_scanned": 201,
+    "failure": null,
+    "fix_candidate_supply": 1,
+    "skipped_prior_commits": 0
+   },
+   "python-websockets/websockets": {
+    "commits_scanned": 318,
+    "failure": null,
+    "fix_candidate_supply": 54,
+    "skipped_prior_commits": 0
+   },
+   "urllib3/urllib3": {
+    "commits_scanned": 226,
+    "failure": null,
+    "fix_candidate_supply": 33,
+    "skipped_prior_commits": 0
+   },
+   "wireservice/csvkit": {
+    "commits_scanned": 61,
+    "failure": null,
+    "fix_candidate_supply": 2,
+    "skipped_prior_commits": 0
+   }
+  },
+  "screened_out": {
+   "benoitc/gunicorn": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "eliben/pycparser": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "msgpack/msgpack-python": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "psycopg/psycopg": [
+    "licence_not_admitted_by_d2:LGPL-3.0"
+   ],
+   "pylons/waitress": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "pypa/packaging": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ]
+  }
+ },
+ "schema_version": "oneiros_acquisition_receipt_v2",
+ "store_verification": {
+  "objects_checked": 1450,
+  "problems": []
+ },
+ "yield": {
+  "admission_yield": 0.0417,
+  "note": "admission yield precedes native qualification (Phase 3); it is an upper bound on the mined-to-qualified yield",
+  "wilson_95": [
+   0.0179,
+   0.0938
+  ]
+ }
+}
