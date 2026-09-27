@@ -29,7 +29,10 @@ def _receipt() -> dict:
             "api": {"api_calls": 1}},
         "events": {"protected_data_access": False, "model_called": False,
                    "evaluation_set_created": False},
-        "protected_access_evidence": {"installed": True, "protected_paths_opened": []},
+        "protected_access_evidence": {"installed": True, "complete": True,
+                                      "scope_start_utc": "2026-09-26T00:00:00Z",
+                                      "scope_end_utc": "2026-09-26T01:00:00Z",
+                                      "protected_accesses": []},
         "gate": {"no_protected_data_access": True, "minimum_scale": False},
     }
 
@@ -54,8 +57,12 @@ def test_a_complete_consistent_receipt_is_accepted():
     (lambda r: r["identity"].update(dirty_tree=None), "identity.dirty_tree must be a boolean"),
     (lambda r: r["protected_access_evidence"].update(installed=False),
      "protected-access evidence was not collected"),
-    (lambda r: r["protected_access_evidence"].update(protected_paths_opened=["x/sealed.json"]),
+    (lambda r: r["protected_access_evidence"].update(protected_accesses=[{"path": "x"}]),
      "protected-access evidence contradicts the event"),
+    (lambda r: r["protected_access_evidence"].update(complete=False),
+     "protected-access evidence is incomplete (an audit session never closed)"),
+    (lambda r: r["protected_access_evidence"].update(scope_end_utc=None),
+     "protected-access evidence has no audit scope start/end"),
     (lambda r: r["gate"].update(minimum_scale="yes"), "gate.minimum_scale must be a boolean"),
 ])
 def test_contradictions_and_missing_identity_are_rejected(edit, expected):
@@ -71,20 +78,6 @@ def test_publication_is_refused_without_identity(tmp_path):
     with pytest.raises(SystemExit):
         publish(receipt, tmp_path / "report.json")
     assert not (tmp_path / "report.json").exists()
-
-
-def test_the_audit_hook_records_protected_opens_only(tmp_path):
-    ProtectedAccessMonitor.install()
-    since = ProtectedAccessMonitor.mark()
-    ordinary = tmp_path / "ordinary.json"
-    ordinary.write_text("{}", encoding="utf-8")
-    ordinary.read_text()
-    assert ProtectedAccessMonitor.evidence(since)["protected_paths_opened"] == []
-    protected = tmp_path / "sealed_final_items.json"
-    protected.write_text("{}", encoding="utf-8")
-    evidence = ProtectedAccessMonitor.evidence(since)
-    assert evidence["installed"] and any("sealed_final" in path
-                                         for path in evidence["protected_paths_opened"])
 
 
 def test_source_tree_identity_is_computed_from_git():

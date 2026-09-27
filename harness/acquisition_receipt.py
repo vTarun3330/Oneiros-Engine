@@ -14,76 +14,219 @@ false; ``no_protected_data_access`` is the pass/fail GATE and must be true.
 ``validate_receipt`` rejects any contradiction between them, and publication is
 refused when the frozen-universe or source identity is absent.
 
-Protected-access evidence comes from a Python audit hook that records every
-file open whose path matches a protected pattern (validation, ablation-dev,
-consumed test, confirmation, sealed-final data and the canonical corpus
-records.json).
+Protected-access evidence comes from a Python audit hook (``sys.addaudithook``)
+that checks every Python-process file open, and every subprocess command,
+working directory and path argument, against RESOLVED protected locations
+(``ProtectedLocations``): canonical corpus records, split assignments, every
+non-train development shard, sealed-final artifacts and the reserved
+confirmation IDs.  The hook cannot see opens made inside external subprocesses;
+those commands are recorded, and git's local paths are confined to the store.
+Schema v1 used substring patterns that both over-matched (a store named
+'...confirmation...') and missed val.records.json; v2 replaces them.
 """
 from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
+import shlex
 import subprocess
 import sys
 from typing import Any, Iterable, Mapping
 
 from harness.source_identity import canonical_sha256
 
-SCHEMA = "oneiros_acquisition_receipt_v1"
-PROTECTED_PATTERNS = (
-    r"development_view[/\\][^/\\]*(validation|ablation[_-]?dev|test|confirmation)[^/\\]*$",
-    r"sealed",
-    r"confirmation",
-    r"(^|[/\\])records\.json$",
-    r"[/\\](validation|test|ablation_dev)\.jsonl?$",
-)
+SCHEMA = "oneiros_acquisition_receipt_v2"
+PROTECTION_POLICY = "oneiros_protected_locations_v2"
 REQUIRED_IDENTITY = ("git_commit", "source_tree_sha256", "dirty_tree", "bundle_generation",
                      "bundle_manifest_sha256", "reference_universe_receipt_sha256",
                      "isolation_version", "diff_policy_id", "candidate_repository_list_sha256",
                      "tool_source_sha256", "journal_sha256", "store_verification", "command",
                      "configuration", "start_utc", "end_utc", "api")
 EXCLUDED_TREE_PREFIXES = ("results/", "data/", "runs/", "checkpoints/", "logs/")
+PROTECTED_LOCATIONS = {
+    "canonical_corpus_records": "data/corpus/<version>/records.json",
+    "corpus_split_assignment": "data/corpus/<version>/splits.json (conservative)",
+    "non_train_development_shard": "data/corpus/<version>/development_view/<split>.records.json "
+                                   "for every split except train (val, ablation_dev, ...)",
+    "sealed_final": "results/sealed_final* (files, and everything under such directories)",
+    "reserved_confirmation": "any file named unopened_confirmation.ids.json",
+}
+
+
+def _norm(path: Any) -> Path | None:
+    try:
+        text = os.fsdecode(path)
+    except TypeError:
+        return None
+    try:
+        resolved = Path(text).resolve(strict=False)
+    except (OSError, RuntimeError, ValueError):
+        resolved = Path(os.path.abspath(text))
+    return Path(os.path.normcase(str(resolved)))
+
+
+class ProtectedLocations:
+    """Resolved, case-normalised predicate over the ACTUAL protected locations.
+
+    Paths are compared as resolved absolute paths relative to the repository
+    root - never by substring - so a harmless name containing words such as
+    'confirmation' or 'sealed' is not flagged.
+    """
+
+    def __init__(self, root: Path):
+        self.root = _norm(root)
+
+    def reason(self, path: Any) -> str | None:
+        resolved = _norm(path)
+        if resolved is None or self.root is None:
+            return None
+        try:
+            parts = resolved.relative_to(self.root).parts
+        except ValueError:
+            return None
+        if not parts:
+            return None
+        name = parts[-1]
+        if len(parts) >= 2 and parts[0] == "data" and parts[1] == "corpus":
+            if len(parts) == 4 and name == "records.json":
+                return "canonical_corpus_records"
+            if len(parts) == 4 and name == "splits.json":
+                return "corpus_split_assignment"
+            if len(parts) == 5 and parts[3] == "development_view" and \
+                    name.endswith(".records.json") and name != "train.records.json":
+                return "non_train_development_shard"
+        if len(parts) >= 2 and parts[0] == "results" and parts[1].startswith("sealed_final"):
+            return "sealed_final"
+        if name == "unopened_confirmation.ids.json":
+            return "reserved_confirmation"
+        return None
+
+
+class AuditScope:
+    """One process's audit window: from before configuration loading until
+    immediately before publication validation."""
+
+    def __init__(self, monitor: type["ProtectedAccessMonitor"]):
+        self.monitor = monitor
+        self.start_utc = _utc()
+        self.events_from = len(monitor.events)
+        self.opens_from = monitor.opens_checked
+        self.subprocesses_from = len(monitor.subprocesses)
+        self.end_utc: str | None = None
+
+    def snapshot(self) -> dict[str, Any]:
+        events = self.monitor.events[self.events_from:]
+        return {"scope_start_utc": self.start_utc,
+                "opens_checked": self.monitor.opens_checked - self.opens_from,
+                "subprocesses": len(self.monitor.subprocesses) - self.subprocesses_from,
+                "protected_accesses": [dict(item) for item in events]}
+
+    def close(self) -> dict[str, Any]:
+        self.end_utc = _utc()
+        return {**self.snapshot(), "scope_end_utc": self.end_utc,
+                "installed": self.monitor._installed,
+                "protection_policy": PROTECTION_POLICY,
+                "protected_locations": PROTECTED_LOCATIONS,
+                "method": ("sys.addaudithook: every Python-process file open ('open' events) and "
+                           "every subprocess launch ('subprocess.Popen' events: executable, "
+                           "arguments, working directory) is checked against the resolved "
+                           "protected locations; opens performed inside external subprocesses "
+                           "are NOT observed, so subprocess commands and their path arguments "
+                           "are recorded and git's local paths are confined to the store"),
+                "subprocess_commands": [dict(item) for item in
+                                        self.monitor.subprocesses[self.subprocesses_from:]]}
 
 
 class ProtectedAccessMonitor:
-    """Records opens of protected paths for the rest of the process (audit hook)."""
+    """Process-wide audit hook: protected opens and every subprocess launch."""
     _installed = False
-    events: list[str] = []
+    locations: ProtectedLocations | None = None
+    events: list[dict[str, str]] = []
+    subprocesses: list[dict[str, Any]] = []
     opens_checked = 0
 
     @classmethod
-    def install(cls) -> None:
+    def configure(cls, root: Path) -> None:
+        cls.locations = ProtectedLocations(root)
+
+    @classmethod
+    def install(cls, root: Path | None = None) -> None:
+        if root is not None:
+            cls.configure(root)
         if cls._installed:
             return
-        patterns = [re.compile(pattern, re.IGNORECASE) for pattern in PROTECTED_PATTERNS]
 
         def hook(event: str, args: tuple) -> None:
-            if event != "open" or not args:
-                return
-            path = args[0]
-            if not isinstance(path, (str, bytes)):
-                return
-            text = path.decode("utf-8", "replace") if isinstance(path, bytes) else path
-            cls.opens_checked += 1
-            if any(pattern.search(text) for pattern in patterns):
-                cls.events.append(text)
+            if event == "open" and args:
+                cls.opens_checked += 1
+                if cls.locations is not None and isinstance(args[0], (str, bytes, os.PathLike)):
+                    reason = cls.locations.reason(args[0])
+                    if reason:
+                        cls.events.append({"kind": "open", "reason": reason,
+                                           "path": os.fsdecode(args[0])})
+            elif event == "subprocess.Popen" and len(args) >= 4:
+                executable, arguments, cwd = args[0], args[1], args[2]
+                if isinstance(arguments, (list, tuple)):
+                    argv = [os.fsdecode(item) if isinstance(item, (str, bytes, os.PathLike))
+                            else str(item) for item in arguments]
+                else:
+                    # Windows passes one command-line string: split it, keeping quoted
+                    # arguments whole, so every path argument is checked.
+                    text = os.fsdecode(arguments)
+                    try:
+                        argv = [item.strip('"') for item in shlex.split(text, posix=False)]
+                    except ValueError:
+                        argv = text.split()
+                record = {"executable": os.fsdecode(executable) if executable else None,
+                          "argv": argv, "cwd": os.fsdecode(cwd) if cwd else os.getcwd()}
+                cls.subprocesses.append(record)
+                if cls.locations is not None:
+                    for item in [record["cwd"], *argv]:
+                        reason = cls.locations.reason(item) if item else None
+                        if reason:
+                            cls.events.append({"kind": "subprocess_argument",
+                                               "reason": reason, "path": item})
 
         sys.addaudithook(hook)
         cls._installed = True
 
     @classmethod
+    def scope(cls) -> AuditScope:
+        return AuditScope(cls)
+
+    @classmethod
     def mark(cls) -> tuple[int, int]:
-        """A position to report evidence from (the hook is process-wide)."""
         return len(cls.events), cls.opens_checked
 
     @classmethod
     def evidence(cls, since: tuple[int, int] = (0, 0)) -> dict[str, Any]:
-        return {"method": "python audit hook on every file open, active for the whole run",
-                "installed": cls._installed, "opens_checked": cls.opens_checked - since[1],
-                "protected_patterns": list(PROTECTED_PATTERNS),
-                "protected_paths_opened": sorted(set(cls.events[since[0]:]))}
+        return {"method": "python audit hook", "installed": cls._installed,
+                "opens_checked": cls.opens_checked - since[1],
+                "protected_paths_opened": sorted({e["path"] for e in cls.events[since[0]:]})}
+
+
+def confine_to_store(path: Path, store_root: Path) -> Path:
+    """A local path handed to a subprocess must lie inside the acquisition store
+    and must not be a protected location."""
+    resolved, root = _norm(path), _norm(store_root)
+    if resolved is None or root is None:
+        raise ValueError(f"unresolvable subprocess path {path}")
+    try:
+        resolved.relative_to(root)
+    except ValueError:
+        raise ValueError(f"subprocess path {path} lies outside the acquisition store") from None
+    locations = ProtectedAccessMonitor.locations
+    if locations is not None and locations.reason(path):
+        raise ValueError(f"subprocess path {path} resolves into a protected location")
+    return Path(path)
+
+
+def _utc() -> str:
+    from datetime import datetime, timezone
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _git(root: Path, *args: str) -> str:
@@ -137,8 +280,14 @@ def validate_receipt(receipt: Mapping[str, Any]) -> list[str]:
     evidence = receipt.get("protected_access_evidence") or {}
     if not evidence.get("installed"):
         problems.append("protected-access evidence was not collected")
-    elif bool(evidence.get("protected_paths_opened")) != bool(events.get("protected_data_access")):
-        problems.append("protected-access evidence contradicts the event")
+    else:
+        if not evidence.get("complete"):
+            problems.append("protected-access evidence is incomplete (an audit session never "
+                            "closed)")
+        if not evidence.get("scope_start_utc") or not evidence.get("scope_end_utc"):
+            problems.append("protected-access evidence has no audit scope start/end")
+        if bool(evidence.get("protected_accesses")) != bool(events.get("protected_data_access")):
+            problems.append("protected-access evidence contradicts the event")
     for name, value in gate.items():
         if not isinstance(value, bool):
             problems.append(f"gate.{name} must be a boolean")

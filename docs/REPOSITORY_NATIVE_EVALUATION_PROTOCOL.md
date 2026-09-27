@@ -113,6 +113,18 @@ submitted patch is **never authoritative**.
 - **Submitted patch.** It need only carry the same derived added and removed lines per file it covers, and it must cover the target file. Byte-identical text and identical hunk placement are not required.
 - **Official regression tests.** They may be used only for native qualification and oracle checking, and never in a model prompt or training context.
 
+**Classification precedence (isolation v6).** A changed path is classified in
+this order:
+1. the exact target path;
+2. a recognised test path;
+3. **any source or runtime extension**;
+4. a recognised documentation path;
+5. anything else, which counts as runtime or configuration.
+
+So `src/pkg/changelog.py`, `docs/conf.py` and `docs/tool.py` are production
+source, never documentation. Isolation v5 wrongly classed source files with
+documentation-like names as documentation.
+
 **Issue/PR URLs.** These are compared case-insensitively on scheme, host and
 repository owner/name only. The issues-versus-pulls endpoint and the number must
 match exactly, and the response body and hash are still authenticated.
@@ -378,6 +390,18 @@ fixed seed).
 - logs, return codes, timeouts and durations for both revisions;
 - Atheris logs, corpora, coverage and seeds per mode;
 - the WSL environment details.
+
+**Protected-access audit (acquisition receipt v2):**
+- **How it checks:** a Python audit hook checks every Python-process file open, and every subprocess command, working directory and path argument, against **resolved** protected locations:
+  - canonical `data/corpus/*/records.json` and `splits.json`;
+  - every non-train `development_view/*.records.json`;
+  - `results/sealed_final*`;
+  - `unopened_confirmation.ids.json`.
+
+  It never uses substring matching.
+- **Scope:** the audit opens before configuration loading and closes immediately before publication validation. Each process journals an audit start and an audit end record, and every journaled result carries its process's audit snapshot.
+- **Refusal:** a session that never closed makes the evidence incomplete, which refuses publication.
+- **Limit:** opens made inside external subprocesses are not observed. Their commands are recorded, and git's local paths are confined to the acquisition store.
 
 **Publication:**
 - design artifacts are published as one immutable generation under `results/next_direction_bundle`: the receipt, the design, a verified copy of the power artifact, and a manifest of file hashes;

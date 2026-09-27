@@ -48,7 +48,7 @@ from harness.github_acquisition import (
 )
 from harness.repository_isolation import (
     DIFF_POLICY, ISOLATION_VERSION, TEMPORAL_CUTOFF_EPOCH, ApiResponse, build_reference_universe,
-    freeze_reference_universe, git_object_id,
+    freeze_reference_universe, git_object_id, parse_commit,
 )
 from harness.repository_native_candidates import (
     BUG_FAMILIES, RepositoryContext, bug_family, build_candidate, classify_commit,
@@ -109,13 +109,74 @@ def load_list(path: Path) -> list[str]:
     return json.loads(Path(path).read_text(encoding="utf-8"))["repositories"]
 
 
+class AuditedJournal:
+    """A journal whose every record carries the audit snapshot of this process."""
+
+    def __init__(self, journal: Journal, scope):
+        self.journal, self.scope = journal, scope
+
+    def __getattr__(self, name):
+        return getattr(self.journal, name)
+
+    def record(self, key: str, value: dict[str, Any]) -> None:
+        snapshot = self.scope.snapshot() if self.scope is not None else None
+        self.journal.record(key, {**value, "audit_snapshot": snapshot})
+
+
+def load_manifest(config: dict[str, Any]) -> dict[str, Any] | None:
+    if not config.get("candidate_manifest"):
+        return None
+    path = ROOT / config["candidate_manifest"]
+    if config.get("expected_candidate_manifest_sha256") and \
+            sha256_file(path) != config["expected_candidate_manifest_sha256"]:
+        raise SystemExit("REFUSED: the frozen retry-candidate manifest changed")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _repository_entry(journal, store, client, queried, used, frozen, progress) -> dict[str, Any]:
+    key = f"repo:{queried.lower()}"
+    entry = journal.get(key)
+    if entry is None:
+        try:
+            metadata, value, renames = resolve_repository(client, queried)
+            repository = str(value["full_name"]).lower()
+            problems = repository_screen(repository, value, frozen)
+            if repository in used and repository != queried.lower():
+                problems.append("renamed_to_a_previously_used_repository")
+            entry_value = {"repository": repository, "renames": renames,
+                           "metadata_address": store.put_raw(metadata.body),
+                           "metadata_url": metadata.url, "metadata_sha256": metadata.sha256,
+                           "retrieved_utc": metadata.retrieved_utc, "etag": metadata.etag,
+                           "default_branch": value.get("default_branch"),
+                           "spdx": (value.get("license") or {}).get("spdx_id"),
+                           "screen_problems": problems}
+        except AcquisitionFailure as failure:
+            entry_value = {"repository": queried.lower(), "failure": failure.category,
+                           "detail": failure.detail[:300]}
+        journal.record(key, entry_value)
+        entry = journal.get(key)
+        progress.line(f"repository {queried}: {entry.get('screen_problems', entry.get('failure'))}")
+    return entry
+
+
+def _context(store, entry) -> RepositoryContext:
+    metadata_body = store.get_raw(entry["metadata_address"])
+    return RepositoryContext(entry["repository"], ApiResponse(
+        url=entry["metadata_url"], body=metadata_body, sha256=entry["metadata_sha256"],
+        retrieved_utc=entry["retrieved_utc"], etag=entry["etag"]),
+        json.loads(metadata_body), entry["renames"])
+
+
 def run(store_root: Path, config: dict[str, Any], *, frozen=None,
-        client: ApiClient | None = None, git_url=None) -> int:
-    ProtectedAccessMonitor.install()
-    since = ProtectedAccessMonitor.mark()
+        client: ApiClient | None = None, git_url=None, scope=None) -> int:
+    """Acquire and evaluate.  ``scope`` is the process-wide audit scope opened by
+    ``main`` before configuration loading; it is never reset here."""
+    if scope is None:            # direct callers (tests) get a scope of their own
+        ProtectedAccessMonitor.install(ROOT)
+        scope = ProtectedAccessMonitor.scope()
     store_root.mkdir(parents=True, exist_ok=True)
     store = ContentStore(store_root / "objects")
-    journal = Journal(store_root / "journal.jsonl")
+    journal = AuditedJournal(Journal(store_root / "journal.jsonl"), scope)
     progress = Progress(store_root)
     if frozen is None:
         frozen, _ = load_frozen()
@@ -124,17 +185,42 @@ def run(store_root: Path, config: dict[str, Any], *, frozen=None,
         client = ApiClient(UrllibTransport(), RateLimiter(min_interval=1.0), token=token)
     if git_url is None:
         git_url = lambda repository: f"https://github.com/{repository}.git"  # noqa: E731
-    repositories = load_list(ROOT / config["repositories_file"])
+    manifest = load_manifest(config)
     used = {name.lower() for path in config.get("exclude_repository_files", [])
             for name in load_list(ROOT / path)}
-    overlap = sorted(name for name in repositories if name.lower() in used)
-    if overlap:
-        raise SystemExit(f"repository list reuses previously used repositories: {overlap}")
-    excluded_commits = prior_commits([ROOT / path for path in config.get("exclude_journals", [])])
     session_start = utc_now()
     started = time.time()
     progress.line(f"start {config['label']}; receipt {frozen.receipt_sha256[:12]}; "
                   f"policy {DIFF_POLICY['id']}; token={'yes' if client.token else 'no'}")
+    if manifest is not None:
+        _run_manifest(manifest, config, store_root, store, journal, progress, client, frozen,
+                      git_url)
+    else:
+        _run_discovery(config, store_root, store, journal, progress, client, frozen, git_url,
+                       used)
+    session = {"start_utc": session_start, "end_utc": utc_now(),
+               "elapsed_seconds": round(time.time() - started, 1), "api_calls": client.calls,
+               "api_retries": client.retries, "api_seconds": round(client.api_seconds, 1),
+               "rate_limit_and_backoff_wait_seconds": round(client.limiter.waited_seconds, 1),
+               "authenticated_requests": bool(client.token), "git_network": True}
+    journal.record(f"session:{session_start}:{os.getpid()}", session)
+    progress.beat(phase="finished", api_calls=client.calls)
+    progress.line(f"acquisition finished; api calls {client.calls}, retries {client.retries}, "
+                  f"api {client.api_seconds:.0f}s, waiting {client.limiter.waited_seconds:.0f}s")
+    return 0
+
+
+def _git_for(store_root, repository, git_url) -> LocalGitRepository:
+    return LocalGitRepository(store_root / "repos" / (repository.replace("/", "__") + ".git"),
+                              git_url(repository), allowed_root=store_root)
+
+
+def _run_discovery(config, store_root, store, journal, progress, client, frozen, git_url, used):
+    repositories = load_list(ROOT / config["repositories_file"])
+    overlap = sorted(name for name in repositories if name.lower() in used)
+    if overlap:
+        raise SystemExit(f"repository list reuses previously used repositories: {overlap}")
+    excluded_commits = prior_commits([ROOT / path for path in config.get("exclude_journals", [])])
     for queried in repositories:
         entries = journal.entries()
         candidates_done = sum(1 for e in entries if e["key"].startswith("cand:"))
@@ -145,39 +231,12 @@ def run(store_root: Path, config: dict[str, Any], *, frozen=None,
             break
         progress.beat(phase="repository", repository=queried, candidates=candidates_done,
                       api_calls=client.calls)
-        key = f"repo:{queried.lower()}"
-        entry = journal.get(key)
-        if entry is None:
-            try:
-                metadata, value, renames = resolve_repository(client, queried)
-                repository = str(value["full_name"]).lower()
-                problems = repository_screen(repository, value, frozen)
-                if repository in used and repository != queried.lower():
-                    problems.append("renamed_to_a_previously_used_repository")
-                entry_value = {"repository": repository, "renames": renames,
-                               "metadata_address": store.put_raw(metadata.body),
-                               "metadata_url": metadata.url, "metadata_sha256": metadata.sha256,
-                               "retrieved_utc": metadata.retrieved_utc, "etag": metadata.etag,
-                               "default_branch": value.get("default_branch"),
-                               "spdx": (value.get("license") or {}).get("spdx_id"),
-                               "screen_problems": problems}
-            except AcquisitionFailure as failure:
-                entry_value = {"repository": queried.lower(), "failure": failure.category,
-                               "detail": failure.detail[:300]}
-            journal.record(key, entry_value)
-            entry = journal.get(key)
-            progress.line(f"repository {queried}: "
-                          f"{entry.get('screen_problems', entry.get('failure'))}")
+        entry = _repository_entry(journal, store, client, queried, used, frozen, progress)
         if entry.get("failure") or entry.get("screen_problems"):
             continue
         repository = entry["repository"]
-        metadata_body = store.get_raw(entry["metadata_address"])
-        context = RepositoryContext(repository, ApiResponse(
-            url=entry["metadata_url"], body=metadata_body, sha256=entry["metadata_sha256"],
-            retrieved_utc=entry["retrieved_utc"], etag=entry["etag"]),
-            json.loads(metadata_body), entry["renames"])
-        git = LocalGitRepository(store_root / "repos" / (repository.replace("/", "__") + ".git"),
-                                 git_url(repository))
+        context = _context(store, entry)
+        git = _git_for(store_root, repository, git_url)
         scan_key = f"scan:{repository}"
         scan = journal.get(scan_key)
         if scan is None:
@@ -211,28 +270,80 @@ def run(store_root: Path, config: dict[str, Any], *, frozen=None,
             progress.line(f"scan {repository}: {scan.get('commits_scanned')} commits, "
                           f"{len(scan['selected'])} candidates {scan.get('failure', '')}")
         for item in scan["selected"]:
-            candidate_key = f"cand:{repository}@{item['oid']}"
-            if journal.done(candidate_key):
-                continue
-            progress.beat(phase="candidate", repository=repository, commit=item["oid"],
-                          api_calls=client.calls,
-                          candidates=sum(1 for e in journal.entries()
-                                         if e["key"].startswith("cand:")))
-            result = acquire_and_evaluate(repository, context, item, git, client, store,
-                                          frozen)
-            journal.record(candidate_key, result)
-            progress.line(f"candidate {repository}@{item['oid'][:10]}: {status_of(result)}")
-    session = {"start_utc": session_start, "end_utc": utc_now(),
-               "elapsed_seconds": round(time.time() - started, 1), "api_calls": client.calls,
-               "api_retries": client.retries, "api_seconds": round(client.api_seconds, 1),
-               "rate_limit_and_backoff_wait_seconds": round(client.limiter.waited_seconds, 1),
-               "authenticated_requests": bool(client.token), "git_network": True,
-               "protected_access_evidence": ProtectedAccessMonitor.evidence(since)}
-    journal.record(f"session:{session_start}:{os.getpid()}", session)
-    progress.beat(phase="finished", api_calls=client.calls)
-    progress.line(f"acquisition finished; api calls {client.calls}, retries {client.retries}, "
-                  f"api {client.api_seconds:.0f}s, waiting {client.limiter.waited_seconds:.0f}s")
-    return 0
+            _evaluate_item(journal, progress, client, store, frozen, repository, context, git,
+                           item)
+
+
+def _evaluate_item(journal, progress, client, store, frozen, repository, context, git, item,
+                   expected_parent: str | None = None):
+    candidate_key = f"cand:{repository}@{item['oid']}"
+    if journal.done(candidate_key):
+        return
+    progress.beat(phase="candidate", repository=repository, commit=item["oid"],
+                  api_calls=client.calls)
+    result = acquire_and_evaluate(repository, context, item, git, client, store, frozen)
+    if expected_parent is not None:
+        fixed = git.read(item["oid"])
+        parents = parse_commit(fixed[1])["parents"] if fixed else []
+        result["manifest_parent_matches"] = bool(parents) and parents[0] == expected_parent
+        if not result["manifest_parent_matches"]:
+            result.setdefault("failure", "integrity_violation")
+            result["detail"] = f"buggy parent differs from the frozen manifest: {parents[:2]}"
+    journal.record(candidate_key, result)
+    progress.line(f"candidate {repository}@{item['oid'][:10]}: {status_of(result)}")
+
+
+def _run_manifest(manifest, config, store_root, store, journal, progress, client, frozen,
+                  git_url):
+    """Evaluate EXACTLY the frozen candidate identities: no rediscovery, no
+    substitution, no early stop."""
+    by_repository: dict[str, list[dict[str, Any]]] = {}
+    for item in manifest["candidates"]:
+        by_repository.setdefault(item["repository"], []).append(item)
+    for repository, items in by_repository.items():
+        progress.beat(phase="repository", repository=repository, api_calls=client.calls)
+        entry = _repository_entry(journal, store, client, repository, set(), frozen, progress)
+        canonical = entry.get("repository", repository)
+        if entry.get("failure") or entry.get("screen_problems") or canonical != repository:
+            reason = entry.get("failure") or ("repository_renamed_since_manifest"
+                                              if canonical != repository
+                                              else "repository_screened_out")
+            for item in items:
+                key = f"cand:{repository}@{item['fixed_commit']}"
+                if not journal.done(key):
+                    journal.record(key, {"repository": repository,
+                                         "fixed_commit": item["fixed_commit"],
+                                         "failure": "repository_unavailable",
+                                         "detail": str(reason)[:300]})
+            continue
+        context = _context(store, entry)
+        git = _git_for(store_root, repository, git_url)
+        scan_key = f"scan:{repository}"
+        if journal.get(scan_key) is None:
+            try:
+                git.fetch_since(config["fetch_since"], entry["default_branch"])
+                commits = git.first_parent_commits(entry["default_branch"],
+                                                   config["candidates_since"])
+                classes = Counter(classify_commit(c["message"])[1] for c in commits)
+                missing = [item["fixed_commit"] for item in items
+                           if git.read(item["fixed_commit"]) is None]
+                if missing:
+                    git.fetch_commits(missing)
+                scan_value = {"repository": repository, "commits_scanned": len(commits),
+                              "classification": dict(classes),
+                              "fix_candidate_supply": classes["fix_candidate"]
+                              + classes["fix_merge_commit"],
+                              "selected": [], "manifest_candidates": len(items),
+                              "fetched_by_sha": missing}
+            except AcquisitionFailure as failure:
+                scan_value = {"repository": repository, "failure": failure.category,
+                              "detail": failure.detail[:300], "selected": []}
+            journal.record(scan_key, scan_value)
+        for item in items:
+            _evaluate_item(journal, progress, client, store, frozen, repository, context, git,
+                           {"oid": item["fixed_commit"], "number": item["linked_number"],
+                            "reason": item["commit_class"]},
+                           expected_parent=item["buggy_commit"])
 
 
 def status_of(result: dict[str, Any]) -> str:
@@ -472,9 +583,6 @@ def build_report(store_root: Path, config: dict[str, Any], gate_spec: dict[str, 
     point = len(admitted) / inspected if inspected else 0.0
     store_check = verify_store(summary["store"], summary["entries"])
     sessions = summary["sessions"]
-    evidence_sessions = [s["protected_access_evidence"] for s in sessions
-                         if s.get("protected_access_evidence")]
-    opened = sorted({path for ev in evidence_sessions for path in ev["protected_paths_opened"]})
     hash_failures = [c for c in summary["candidates"]
                      if c.get("failure") in ("hash_mismatch", "integrity_violation")]
     revalidation_failures = [c for c in summary["evaluated"]
@@ -491,11 +599,21 @@ def build_report(store_root: Path, config: dict[str, Any], gate_spec: dict[str, 
     projections = {"at_wilson_lower": projection(summary, interval[0], pool, budget),
                    "at_point_estimate": projection(summary, point, pool, budget),
                    "at_wilson_upper": projection(summary, interval[1], pool, budget)}
-    events = {"protected_data_access": bool(opened), "model_called": False,
+    events = {"protected_data_access": None, "model_called": False,
               "evaluation_set_created": False, "network_accessed": any(
                   s.get("api_calls") or s.get("git_network")
                   or (s.get("git_objects") or {}).get("fetched") for s in sessions)}
-    gate: dict[str, bool] = {"no_protected_data_access": not events["protected_data_access"]}
+    gate: dict[str, Any] = {"no_protected_data_access": None}   # set by finalise_report
+    manifest = load_manifest(config)
+    comparison = None
+    if manifest is not None:
+        required = {f"cand:{c['repository']}@{c['fixed_commit']}" for c in manifest["candidates"]}
+        seen = {c["key"] for c in summary["candidates"]}
+        gate["all_required_candidates_evaluated"] = required <= seen
+        gate["no_candidate_substituted"] = seen <= required
+        if config.get("reference_journal"):
+            comparison = compare_with_reference(summary["candidates"],
+                                                ROOT / config["reference_journal"])
     if gate_spec is not None:
         spec = gate_spec["thresholds"]
         new_repositories = counts["unique_repositories_inspected"]
@@ -540,6 +658,11 @@ def build_report(store_root: Path, config: dict[str, Any], gate_spec: dict[str, 
                 "api": api}
     if gate_spec is not None:
         identity["gate_sha256"] = config.get("gate_sha256")
+    if manifest is not None:
+        identity["candidate_manifest"] = config["candidate_manifest"]
+        identity["candidate_manifest_sha256"] = sha256_file(ROOT / config["candidate_manifest"])
+    if config.get("reference_journal"):
+        identity["reference_journal_sha256"] = sha256_file(ROOT / config["reference_journal"])
     return {
         "schema_version": RECEIPT_SCHEMA,
         "report_schema": REPORT_SCHEMA,
@@ -547,11 +670,9 @@ def build_report(store_root: Path, config: dict[str, Any], gate_spec: dict[str, 
         "created_utc": utc_now(),
         "identity": identity,
         "events": events,
-        "protected_access_evidence": {"installed": bool(evidence_sessions) and all(
-            ev["installed"] for ev in evidence_sessions),
-            "opens_checked": sum(ev["opens_checked"] for ev in evidence_sessions),
-            "protected_paths_opened": opened,
-            "method": evidence_sessions[0]["method"] if evidence_sessions else None},
+        "protected_access_evidence": None,   # set by finalise_report from audit records
+        "candidate_comparison_with_reference": comparison,
+        "n400_interpretation": interpret_n400(summary, counts, interval, point, projections),
         "policy": {"diff_policy": DIFF_POLICY["id"],
                    "temporal_cutoff_epoch": TEMPORAL_CUTOFF_EPOCH,
                    "candidates_since": config.get("candidates_since"),
@@ -609,6 +730,114 @@ def build_report(store_root: Path, config: dict[str, Any], gate_spec: dict[str, 
     }
 
 
+def _outcome(entry: dict[str, Any]) -> dict[str, Any]:
+    outcome = entry.get("outcome") or {}
+    return {"status": status_of(entry),
+            "admissible": bool(outcome.get("admitted")),
+            "reasons": sorted(outcome.get("reasons") or ([entry.get("pre_pipeline_exclusion")]
+                                                         if entry.get("pre_pipeline_exclusion")
+                                                         else [f"failure:{entry.get('failure')}"]
+                                                         if entry.get("failure") else [])),
+            "changed_file_categories": (entry.get("selection") or {}).get(
+                "changed_file_categories"),
+            "authenticated": bool(outcome) and outcome.get("stages", {}).get("schema") == []
+            and outcome.get("stages", {}).get("authentication") == [],
+            "patch_sha256": outcome.get("patch_sha256"),
+            "record_sha256": outcome.get("record_sha256")}
+
+
+def compare_with_reference(candidates: list[dict[str, Any]], reference: Path) -> dict[str, Any]:
+    """Candidate-by-candidate comparison against a reference journal."""
+    old = {e["key"]: e for e in Journal(reference).entries() if e["key"].startswith("cand:")}
+    rows, changed = [], []
+    for entry in sorted(candidates, key=lambda e: e["key"]):
+        before, after = _outcome(old[entry["key"]]) if entry["key"] in old else None, \
+            _outcome(entry)
+        row = {"key": entry["key"], "reference": before, "current": after}
+        if before is not None:
+            row.update({field: before[field] == after[field] for field in (
+                "admissible", "reasons", "changed_file_categories", "authenticated",
+                "patch_sha256", "record_sha256")})
+            row["substantive_outcome_changed"] = not (row["admissible"] and row["reasons"])
+            if row["substantive_outcome_changed"]:
+                changed.append(entry["key"])
+        rows.append(row)
+    return {"reference_journal_sha256": sha256_file(reference),
+            "candidates_compared": sum(1 for r in rows if r["reference"] is not None),
+            "substantive_outcome_changes": changed,
+            "admissibility_changes": [r["key"] for r in rows if r.get("admissible") is False],
+            "classification_changes": [r["key"] for r in rows
+                                       if r.get("changed_file_categories") is False],
+            "record_hash_changes": sum(1 for r in rows if r.get("record_sha256") is False),
+            "rows": rows}
+
+
+def interpret_n400(summary, counts, interval, point, projections) -> dict[str, Any]:
+    """Observed facts kept apart from extrapolation (no N=400 supply claim)."""
+    scans = [e for e in summary["scans"] if not e.get("failure")]
+    return {
+        "observed": {"admission_yield": round(point, 4), "wilson_95": interval,
+                     "candidates_inspected": counts["candidates_inspected"],
+                     "repositories_scanned": len(scans),
+                     "fix_candidate_supply_per_scanned_repository": {
+                         e["repository"]: e.get("fix_candidate_supply") for e in scans}},
+        "extrapolated": {"projection": projections["at_wilson_lower"],
+                         "assumptions": [
+                             "unscanned repositories in the frozen pool pass repository "
+                             "screening at the observed pass fraction",
+                             "unscanned repositories have the median observed fix-candidate "
+                             "supply since 2025",
+                             "the pilot admission yield applies to every repository",
+                             "at most 12 targets per repository"]},
+        "not_measured": ["native qualification yield (official tests on both revisions)",
+                         "N=400 supply is NOT proven by the scanned repositories"],
+        "interpretation": ("a passing corrected confirmation pilot justifies a later 20-30 "
+                           "target native rehearsal; it does not guarantee 400 qualified "
+                           "targets")}
+
+
+def finalise_report(report: dict[str, Any], store_root: Path) -> dict[str, Any]:
+    """Fold every process's audit evidence into the receipt (after audit_end)."""
+    entries = Journal(store_root / "journal.jsonl").entries()
+    starts = {e["key"].split(":", 1)[1]: e for e in entries if e["key"].startswith("audit_start:")}
+    ends = {e["key"].split(":", 1)[1]: e for e in entries if e["key"].startswith("audit_end:")}
+    accesses = []
+    for entry in entries:
+        snapshot = entry.get("audit_snapshot") or {}
+        accesses += snapshot.get("protected_accesses") or []
+    for end in ends.values():
+        accesses += end["evidence"].get("protected_accesses") or []
+    unique = sorted({json.dumps(a, sort_keys=True) for a in accesses})
+    complete = bool(starts) and set(starts) == set(ends)
+    subprocess_logs = [end["subprocess_log_address"] for end in ends.values()]
+    report["protected_access_evidence"] = {
+        "installed": bool(ends) and all(end["evidence"]["installed"] for end in ends.values()),
+        "complete": complete,
+        "sessions": [{"session": key, "scope_start_utc": starts[key]["scope_start_utc"],
+                      "scope_end_utc": (ends.get(key) or {}).get("evidence", {}).get(
+                          "scope_end_utc"),
+                      "opens_checked": (ends.get(key) or {}).get("evidence", {}).get(
+                          "opens_checked"),
+                      "subprocesses": (ends.get(key) or {}).get("evidence", {}).get(
+                          "subprocesses")} for key in sorted(starts)],
+        "incomplete_sessions": sorted(set(starts) - set(ends)),
+        "scope_start_utc": min((s["scope_start_utc"] for s in starts.values()), default=None),
+        "scope_end_utc": max((e["evidence"]["scope_end_utc"] for e in ends.values()),
+                             default=None),
+        "protected_accesses": [json.loads(item) for item in unique],
+        "method": next(iter(ends.values()))["evidence"]["method"] if ends else None,
+        "protection_policy": next(iter(ends.values()))["evidence"]["protection_policy"]
+        if ends else None,
+        "subprocess_log_addresses": subprocess_logs,
+        "subprocess_git_dirs_confined_to_store": all(
+            end.get("git_dirs_confined", False) for end in ends.values()),
+    }
+    report["events"]["protected_data_access"] = bool(unique)
+    report["gate"]["no_protected_data_access"] = not unique and complete
+    report["identity"]["journal_sha256"] = sha256_file(store_root / "journal.jsonl")
+    return report
+
+
 def _shares(counter: Counter) -> dict[str, float]:
     total = sum(counter.values())
     return {k: round(v / total, 3) for k, v in counter.items()} if total else {}
@@ -622,7 +851,27 @@ def publish(report: dict[str, Any], output: Path) -> None:
                                      + "\n").encode("utf-8"))
 
 
-def main(argv=None) -> int:
+def close_audit(scope, store_root: Path) -> None:
+    """Close this process's audit scope and journal its complete evidence."""
+    evidence = scope.close()
+    store = ContentStore(store_root / "objects")
+    commands = evidence.pop("subprocess_commands")
+    git_dirs = [argv[argv.index("--git-dir") + 1] for item in commands
+                for argv in [item["argv"]] if "--git-dir" in argv]
+    root = Path(os.path.normcase(str(store_root.resolve())))
+    confined = all(Path(os.path.normcase(str(Path(d).resolve()))).is_relative_to(root)
+                   for d in git_dirs)
+    Journal(store_root / "journal.jsonl").record(f"audit_end:{scope.session}", {
+        "evidence": evidence, "git_dirs_confined": confined,
+        "subprocess_log_address": store.put_json(commands)})
+
+
+def main(argv=None, audit_root: Path | None = None) -> int:
+    # The audit scope opens BEFORE configuration, gate and list loading, the
+    # frozen-universe build, acquisition and report construction.
+    ProtectedAccessMonitor.install(audit_root or ROOT)
+    scope = ProtectedAccessMonitor.scope()
+    scope.session = f"{scope.start_utc}:{os.getpid()}"
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, required=True,
                         help="pilot configuration JSON (repository list, store, gate, caps)")
@@ -642,17 +891,22 @@ def main(argv=None) -> int:
     if config.get("expected_repository_list_sha256") and sha256_file(
             ROOT / config["repositories_file"]) != config["expected_repository_list_sha256"]:
         raise SystemExit("REFUSED: the frozen repository list changed")
+    load_manifest(config)
     store_root = ROOT / config["store"]
-    ProtectedAccessMonitor.install()
+    store_root.mkdir(parents=True, exist_ok=True)
+    Journal(store_root / "journal.jsonl").record(f"audit_start:{scope.session}", {
+        "scope_start_utc": scope.start_utc, "pid": os.getpid()})
     frozen, frozen_identity = load_frozen()
     frozen_identity["reference_universe_receipt_sha256"] = frozen.receipt_sha256
     if not args.report_only:
-        run(store_root, config, frozen=frozen)
+        run(store_root, config, frozen=frozen, scope=scope)
     report = build_report(store_root, config, gate_spec, frozen_identity=frozen_identity,
                           label=config["label"])
+    close_audit(scope, store_root)           # immediately before publication validation
+    report = finalise_report(report, store_root)
     publish(report, ROOT / config["report"])
-    print(json.dumps({"counts": report["counts"], "gate": report["gate"],
-                      "yield": report["yield"]}, indent=1))
+    print(json.dumps({"counts": report.get("counts"), "gate": report["gate"],
+                      "yield": report.get("yield")}, indent=1))
     return 0
 
 

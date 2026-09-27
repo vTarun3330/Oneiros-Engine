@@ -70,9 +70,9 @@ from scripts.audit_cross_split_near_duplicates import (
     CANDIDATE_MIN_SHARED, NEAR_DUPLICATE_JACCARD, _index, jaccard, normalise, shingles,
 )
 
-ISOLATION_VERSION = "oneiros_repository_isolation_v5"
+ISOLATION_VERSION = "oneiros_repository_isolation_v6"
 CODE_ROOT = Path(__file__).resolve().parent.parent
-RECEIPT_SCHEMA = "oneiros_reference_universe_receipt_v4"
+RECEIPT_SCHEMA = "oneiros_reference_universe_receipt_v5"
 #: Production/runtime source extensions (never treated as documentation).
 SOURCE_EXTENSIONS = (".py", ".pyi", ".pyx", ".pxd", ".pxi", ".c", ".cc", ".cpp", ".h", ".hpp",
                      ".rs", ".js", ".jsx", ".ts", ".tsx", ".sh")
@@ -99,7 +99,11 @@ DIFF_POLICY = {
     "test_paths": ("any path component 'test' or 'tests', a top-level 'testing' directory, or "
                    "a file named test_*.py, *_test.py or conftest.py"),
     "documentation_paths": ("top-level docs/, doc/ or changelog.d/, or a file whose name "
-                            "starts with CHANGELOG, CHANGES, HISTORY, NEWS, README or AUTHORS"),
+                            "starts with CHANGELOG, CHANGES, HISTORY, NEWS, README or AUTHORS - "
+                            "never a file with a source/runtime extension"),
+    "classification_precedence": ["exact target path", "recognised test path",
+                                  "any source/runtime extension", "recognised documentation path",
+                                  "runtime/configuration/other"],
     "patch_lineage": "only the derived target-production diff feeds patch identity and "
                      "near-duplicate checks; auxiliary diffs are hashed and recorded separately",
     "official_tests": "auxiliary regression tests may be used only for native qualification "
@@ -924,7 +928,13 @@ def changed_entries(objects: Mapping[str, tuple[str, bytes]], buggy_tree: str, f
 
 
 def classify_changed_path(path: str, target_file: str | None) -> str:
-    """target | test | documentation | production_source | runtime_or_config."""
+    """target | test | production_source | documentation | runtime_or_config.
+
+    Precedence (frozen): exact target path; recognised test path; ANY source/
+    runtime extension (so ``src/pkg/changelog.py`` and ``docs/conf.py`` are
+    production source); recognised documentation/changelog path; everything
+    else is runtime/configuration/other.
+    """
     if target_file is not None and path == target_file:
         return "target"
     parts = path.split("/")
@@ -934,11 +944,11 @@ def classify_changed_path(path: str, target_file: str | None) -> str:
             and len(lower) > 1 or re.match(r"^test_.*\.py$", name) or name.endswith("_test.py")
             or name == "conftest.py"):
         return "test"
+    if any(name.endswith(extension) for extension in SOURCE_EXTENSIONS):
+        return "production_source"
     if (len(lower) > 1 and lower[0] in ("docs", "doc", "changelog.d")) or re.match(
             r"^(changelog|changes|history|news|readme|authors)", name):
         return "documentation"
-    if any(name.endswith(extension) for extension in SOURCE_EXTENSIONS):
-        return "production_source"
     return "runtime_or_config"
 
 

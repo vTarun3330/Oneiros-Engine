@@ -371,7 +371,14 @@ class LocalGitRepository:
     object is re-hashed to its ID before it is trusted.
     """
 
-    def __init__(self, path: Path, url: str, git: str = "git"):
+    def __init__(self, path: Path, url: str, git: str = "git",
+                 allowed_root: Path | None = None):
+        if allowed_root is not None:
+            from harness.acquisition_receipt import confine_to_store
+            try:
+                confine_to_store(Path(path), Path(allowed_root))
+            except ValueError as exc:
+                raise IntegrityViolation(str(exc)) from exc
         self.path = Path(path)
         self.url = url
         self.git = git
@@ -394,6 +401,11 @@ class LocalGitRepository:
             self._run("config", "remote.origin.partialclonefilter", "blob:none")
         self._run("fetch", "-q", "--filter=blob:none", f"--shallow-since={since}", "origin",
                   f"+refs/heads/{branch}:refs/heads/{branch}")
+
+    def fetch_commits(self, oids: list[str]) -> None:
+        """Fetch specific commits (and their parents) by SHA, blob-less."""
+        if oids:
+            self._run("fetch", "-q", "--filter=blob:none", "--depth=2", "origin", *oids)
 
     def first_parent_commits(self, branch: str, since: str) -> list[dict[str, Any]]:
         output = self._run("log", "--first-parent", f"--since={since}",

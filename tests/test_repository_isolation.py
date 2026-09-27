@@ -889,7 +889,6 @@ def test_path_categories():
     assert classify("testing/helpers.py", None) == "test"
     assert classify("src/pkg/testing/helpers.py", None) == "production_source"
     assert classify("src/pkg/test_utils_helper.py", None) == "test"
-    assert classify("docs/conf.py", None) == "documentation"
     assert classify("src/docs/renderer.py", None) == "production_source"
     assert classify("changelog.d/123.bugfix.rst", None) == "documentation"
     assert classify("README.rst", None) == "documentation"
@@ -897,6 +896,49 @@ def test_path_categories():
     assert classify("src/pkg/_internal.py", None) == "production_source"
     assert classify("tox.ini", None) == "runtime_or_config"
     assert classify("src/pkg/config.yaml", None) == "runtime_or_config"
+
+
+@pytest.mark.parametrize("path, expected", [
+    # Source extensions win over documentation-like names and directories.
+    ("src/pkg/changelog.py", "production_source"),
+    ("src/pkg/history.py", "production_source"),
+    ("src/pkg/readme.py", "production_source"),
+    ("src/pkg/news.py", "production_source"),
+    ("src/pkg/authors.py", "production_source"),
+    ("CHANGELOG.sh", "production_source"),
+    ("docs/conf.py", "production_source"),
+    ("docs/tool.py", "production_source"),
+    ("docs/_ext/directive.js", "production_source"),
+    ("doc/snippets/example.ts", "production_source"),
+    ("changelog.d/generate.py", "production_source"),
+    ("README.pyi", "production_source"),
+    *[(f"src/pkg/module{ext}", "production_source") for ext in (
+        ".py", ".pyi", ".pyx", ".pxd", ".pxi", ".c", ".cc", ".cpp", ".h", ".hpp", ".rs",
+        ".js", ".jsx", ".ts", ".tsx", ".sh")],
+    # Documentation only when not source.
+    ("CHANGELOG.md", "documentation"),
+    ("docs/usage.md", "documentation"),
+    ("HISTORY.rst", "documentation"),
+    # Tests take precedence over the source-extension rule.
+    ("tests/test_x.py", "test"),
+    ("tests/fixtures/config.json", "test"),
+    ("src/pkg/tests/helpers.sh", "test"),
+    # Everything else is runtime/configuration.
+    ("pyproject.toml", "runtime_or_config"),
+    ("setup.cfg", "runtime_or_config"),
+    ("requirements.txt", "runtime_or_config"),
+])
+def test_classification_precedence(path, expected):
+    from harness.repository_isolation import classify_changed_path as classify
+    assert classify(path, None) == expected
+    assert classify(path, path) == "target"
+
+
+def test_a_changed_source_file_named_like_documentation_is_refused():
+    reasons = _auth_full(_aprime({"src/pkg/changelog.py": ("X = 1\n", "X = 2\n")}))
+    assert "changed_production_source_outside_target:src/pkg/changelog.py" in reasons
+    reasons = _auth_full(_aprime({"docs/conf.py": ("project = 'a'\n", "project = 'b'\n")}))
+    assert "changed_production_source_outside_target:docs/conf.py" in reasons
 
 
 def test_import_changes_and_second_functions_are_outside_the_target():

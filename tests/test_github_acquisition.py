@@ -415,6 +415,23 @@ def _pilot_config(tmp_path, repo_list):
             "fetch_since": "2024-11-01", "candidates_since": "2025-01-01"}
 
 
+def _session(store, pilot):
+    from harness.acquisition_receipt import ProtectedAccessMonitor
+    from harness.github_acquisition import Journal as _Journal
+    ProtectedAccessMonitor.install(pilot.ROOT)
+    scope = ProtectedAccessMonitor.scope()
+    scope.session = f"{scope.start_utc}:{id(scope)}"
+    store.mkdir(parents=True, exist_ok=True)
+    _Journal(store / "journal.jsonl").record(f"audit_start:{scope.session}",
+                                             {"scope_start_utc": scope.start_utc})
+    return scope
+
+
+def _identity(frozen_universe):
+    return {"bundle_generation": "fixture", "bundle_manifest_sha256": "b" * 64,
+            "reference_universe_receipt_sha256": frozen_universe.receipt_sha256}
+
+
 def test_pilot_resumes_after_a_process_death_without_rewriting(source_repo, frozen_universe,
                                                                tmp_path):
     from scripts import run_repository_native_acquisition_pilot as pilot
@@ -425,14 +442,19 @@ def test_pilot_resumes_after_a_process_death_without_rewriting(source_repo, froz
     # Candidates are processed newest first: #10 (merge), #9, #8, #7.  Die at #8.
     transport.explode_on = f"{API}example-org/ranges/pulls/8"
     kwargs = dict(frozen=frozen_universe, git_url=lambda repository: repo.as_uri())
+    dead = _session(store, pilot)
     with pytest.raises(SystemExit):
-        pilot.run(store, config, client=first, **kwargs)
+        pilot.run(store, config, client=first, scope=dead, **kwargs)
     journal = Journal(store / "journal.jsonl")
     done_before = {entry["key"] for entry in journal.entries()}
     assert f"cand:example-org/ranges@{commits['with_test']}" in done_before
     assert f"cand:example-org/ranges@{commits['multi']}" not in done_before
+    # Every journaled result carries the audit snapshot of its process.
+    assert all("audit_snapshot" in entry for entry in journal.entries()
+               if entry["key"].startswith(("repo:", "scan:", "cand:")))
     second, transport2, _ = _client(_routes())
-    assert pilot.run(store, config, client=second, **kwargs) == 0
+    alive = _session(store, pilot)
+    assert pilot.run(store, config, client=second, scope=alive, **kwargs) == 0
     # Resumed work only: no repository or already-journaled candidate is fetched again.
     assert f"{API}example-org/ranges" not in transport2.calls
     assert f"{API}example-org/ranges/pulls/9" not in transport2.calls
@@ -441,20 +463,47 @@ def test_pilot_resumes_after_a_process_death_without_rewriting(source_repo, froz
     entries = Journal(store / "journal.jsonl").entries()
     keys = [entry["key"] for entry in entries]
     assert len(keys) == len(set(keys))
-    identity = {"bundle_generation": "fixture", "bundle_manifest_sha256": "b" * 64,
-                "reference_universe_receipt_sha256": frozen_universe.receipt_sha256}
-    report = pilot.build_report(store, config, None, frozen_identity=identity, label="fixture")
+    report = pilot.build_report(store, config, None, frozen_identity=_identity(frozen_universe),
+                                label="fixture")
     counts = report["counts"]
     assert counts["candidates_inspected"] == 4        # #7, #8, #9 and the merge (#10)
     assert counts["admitted"] == 2                    # #7 alone and #9 with its test
     assert counts["other_production_source_exclusions"] == 1
     assert counts["admitted_with_authenticated_regression_test"] == 1
     assert report["store_verification"]["problems"] == []
-    assert report["events"]["protected_data_access"] is False
-    assert report["gate"] == {"no_protected_data_access": True}
-    assert report["identity"]["api"]["sessions"] == 1          # the dead session left no entry
     assert sorted(item["target"] for item in report["admitted"]) == ["clamp_all", "merge_ranges"]
-    from harness.acquisition_receipt import validate_receipt
-    assert validate_receipt(report) == []
+    pilot.close_audit(alive, store)
+    report = pilot.finalise_report(report, store)
+    # The dead process never closed its audit scope: its evidence is incomplete,
+    # so publication is refused even though no protected path was opened.
+    evidence = report["protected_access_evidence"]
+    assert evidence["complete"] is False and evidence["incomplete_sessions"] == [dead.session]
+    assert report["events"]["protected_data_access"] is False
+    assert report["gate"]["no_protected_data_access"] is False
+    with pytest.raises(SystemExit):
+        pilot.publish(report, tmp_path / "report.json")
+    assert not (tmp_path / "report.json").exists()
+
+
+def test_a_single_complete_session_publishes(source_repo, frozen_universe, tmp_path):
+    from scripts import run_repository_native_acquisition_pilot as pilot
+    repo, _ = source_repo
+    store = tmp_path / "pilot"
+    config = _pilot_config(tmp_path, ["example-org/ranges"])
+    client, _, _ = _client(_routes())
+    scope = _session(store, pilot)
+    pilot.run(store, config, client=client, scope=scope, frozen=frozen_universe,
+              git_url=lambda repository: repo.as_uri())
+    report = pilot.build_report(store, config, None, frozen_identity=_identity(frozen_universe),
+                                label="fixture")
+    pilot.close_audit(scope, store)
+    report = pilot.finalise_report(report, store)
+    evidence = report["protected_access_evidence"]
+    assert evidence["complete"] and evidence["protected_accesses"] == []
+    assert evidence["subprocess_git_dirs_confined_to_store"] is True
+    assert evidence["scope_start_utc"] and evidence["scope_end_utc"]
+    assert report["gate"]["no_protected_data_access"] is True
     pilot.publish(report, tmp_path / "report.json")
-    assert json.loads((tmp_path / "report.json").read_text())["identity"]["journal_sha256"]
+    published = json.loads((tmp_path / "report.json").read_text())
+    assert published["identity"]["journal_sha256"]
+    assert published["n400_interpretation"]["not_measured"]

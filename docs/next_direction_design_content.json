@@ -97,7 +97,8 @@
       "submitted_patch": "not authoritative: the authenticated canonical diff is authoritative; the submitted patch is only required to carry the same derived added and removed lines per file (as multisets); byte-identical patch text and identical hunk placement are NOT required",
       "policy_history": "Policy A (direct parent, exactly one changed file) FAILED its bounded acquisition-feasibility pilot (results/v4_3_repository_native_acquisition_pilot.json, SHA-256 119fae38..., admission 1/124, and that one admission was vendored Click code). Policy A-prime was DESIGNED using that pilot's 124 candidates; those candidates are policy-development data only and cannot confirm A-prime. An independent confirmation pilot on previously unused repositories is required.",
       "official_tests": "authenticated regression tests changed by the fix may be used only for native qualification and oracle checking, never in a model prompt or training context",
-      "vendored_code": "conservative mitigation, receipt-bound (detector oneiros_vendored_generated_detector_v1, map harness/vendored_code_exclusions.json, initially fastapi/typer: typer/_click/**); it does not prove the absence of vendored code"
+      "vendored_code": "conservative mitigation, receipt-bound (detector oneiros_vendored_generated_detector_v1, map harness/vendored_code_exclusions.json, initially fastapi/typer: typer/_click/**); it does not prove the absence of vendored code",
+      "classification_precedence": "exact target path; recognised test path; ANY source/runtime extension; recognised documentation path; everything else runtime/configuration (isolation v6; v5 wrongly classified source files with documentation-like names as documentation)"
     },
     "licensing_and_reproducibility": {
       "licences_admitted": [
@@ -267,7 +268,8 @@
         "WSL distribution, kernel, CPU and memory"
       ],
       "rollback": "no artifact is overwritten; a failed run is preserved and marked invalid; the one-time set is sealed by hash before any model sees it and is never re-evaluated after a protocol change",
-      "publication": "generated design artifacts are published as one immutable generation under results/next_direction_bundle (receipt, design, verified power copy, manifest), selected by replacing a single CURRENT pointer; readers accept only a complete manifest-verified generation; accepted generations are never overwritten"
+      "publication": "generated design artifacts are published as one immutable generation under results/next_direction_bundle (receipt, design, verified power copy, manifest), selected by replacing a single CURRENT pointer; readers accept only a complete manifest-verified generation; accepted generations are never overwritten",
+      "protected_access_audit": "acquisition receipt v2: resolved protected-location predicate (no substring patterns); audit scope from before configuration loading until immediately before publication validation; per-process audit start/end records; incomplete evidence refuses publication; subprocess commands recorded and git paths confined to the store"
     }
   },
   "sampling_budget_protocol": {
