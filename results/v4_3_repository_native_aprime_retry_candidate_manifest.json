@@ -1,0 +1,1045 @@
+{
+ "candidate_count": 127,
+ "candidates": [
+  {
+   "buggy_commit": "435e1dac899adeb0c156c00721ecbb1124d75842",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "def4778d622e8bf49a9fea4dda78cca4cf666d8a",
+   "linked_number": 3692,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "encode/httpx"
+  },
+  {
+   "buggy_commit": "e70d0b08c929e5140e38aa92a419de0c6d494148",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "4189b7f051c6c51ce74c3bee1a5f269f9c50c6b2",
+   "linked_number": 3519,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:httpx/_models.py",
+   "repository": "encode/httpx"
+  },
+  {
+   "buggy_commit": "07715a3eba77905d498adf8778a5594c29b37080",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "ba504c555fbd6d02ea584c295667185a10453700",
+   "linked_number": 3570,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "kludex/starlette"
+  },
+  {
+   "buggy_commit": "e7a0b007b601f5e4ff98424333fd2fb794a3f1e6",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "8a55ce12c02b4a52363f587706e39c2c71738fb3",
+   "linked_number": 3473,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "kludex/starlette"
+  },
+  {
+   "buggy_commit": "d96887ea7b49db3d1d15994be6438c7fe99936f4",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "00d10167523f819d39d5ca36732348d58645a447",
+   "linked_number": 3386,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "kludex/starlette"
+  },
+  {
+   "buggy_commit": "4a18cd4a0869158f830e9bf519979d6f6f60f36a",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "1a2f97293966f3e6549e4da3d00d526915b03b3b",
+   "linked_number": 3317,
+   "refused_run_status": "ADMITTED",
+   "repository": "kludex/starlette"
+  },
+  {
+   "buggy_commit": "96af9521a7e46bc0d00b5227186f03b70b6d242f",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "e935b6b5d4616c2317bbdadfb4cf07a8e7637955",
+   "linked_number": 3269,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "kludex/starlette"
+  },
+  {
+   "buggy_commit": "bddc9759757929a24ef0a02812095442143213c7",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "1894d0d89badf43bc8bfe03ed221a8b2e100b2ab",
+   "linked_number": 3221,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "kludex/starlette"
+  },
+  {
+   "buggy_commit": "41dfca28131c28020ceb78f2b9eb036627a022cd",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "496b7106a6223b1bb95785790766ec5e9b9f1c9d",
+   "linked_number": 3148,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "kludex/starlette"
+  },
+  {
+   "buggy_commit": "02b6ed7b18c741c00795010e9d716b58006af2c3",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "5668ce62872de48aa3f87c620eb9a7e25d40a782",
+   "linked_number": 3132,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "kludex/starlette"
+  },
+  {
+   "buggy_commit": "aff6df756b231c42ca088788db4bf4b193f7cc5b",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "9138e5597285c6120821a6ad862880d479f329f3",
+   "linked_number": 3102,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "kludex/starlette"
+  },
+  {
+   "buggy_commit": "bcdf0ad017168408060b6faab156636ced4c94f7",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "d278cafb96c082f4d0e4494fc717ffeb72e23ba8",
+   "linked_number": 2913,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "kludex/starlette"
+  },
+  {
+   "buggy_commit": "a68da608147c5f79d962352dce11de8f6e32d972",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "1b6427311bb84a15addee688f6d41d96e33f8b0a",
+   "linked_number": 3006,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "kludex/uvicorn"
+  },
+  {
+   "buggy_commit": "ad5ff87c869e8a34e9b04fcd5ca38d65c526893c",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "8782666189a3d36c978de5698620db705659bf44",
+   "linked_number": 2932,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "kludex/uvicorn"
+  },
+  {
+   "buggy_commit": "6cdd61d15e4225488b719f447dfb74be77a9fe91",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "f05fc928c06bcfa72757b1b823a74b587f61e22d",
+   "linked_number": 2901,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "kludex/uvicorn"
+  },
+  {
+   "buggy_commit": "28efbb24bd590f1f943cbc2bf84f197268a8c6d8",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "1cb8e747e2817ee46a4c0d44139e46b3b1f8fab6",
+   "linked_number": 2874,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "kludex/uvicorn"
+  },
+  {
+   "buggy_commit": "59ec1de7a4f07afbd139812f033f3af8b784de74",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "1fa697651bacf10d72f74de104ead814ce6fcdc0",
+   "linked_number": 2824,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "kludex/uvicorn"
+  },
+  {
+   "buggy_commit": "2fc0efcdd958abd3adbe6ea19682408d6b2e1b18",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "59ec1de7a4f07afbd139812f033f3af8b784de74",
+   "linked_number": 2825,
+   "refused_run_status": "multiple_functions_changed",
+   "repository": "kludex/uvicorn"
+  },
+  {
+   "buggy_commit": "c825f4eb6e243aa6955c763e499b0a32d5e5a0eb",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "2fc0efcdd958abd3adbe6ea19682408d6b2e1b18",
+   "linked_number": 2843,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "kludex/uvicorn"
+  },
+  {
+   "buggy_commit": "2ce65bde1509faa958775df8153bdeb5dbaf6f58",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "a01a33eb8f3ac044cab5964421b9aa308a2bcfca",
+   "linked_number": 2707,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:uvicorn/main.py",
+   "repository": "kludex/uvicorn"
+  },
+  {
+   "buggy_commit": "0779f7f8a4df1cc98433eb30d69027499a0cb7f8",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "e377de40d0a2a1b1d9f55483ee4c1cceb2474502",
+   "linked_number": 2561,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:uvicorn/protocols/http/httptools_impl.py",
+   "repository": "kludex/uvicorn"
+  },
+  {
+   "buggy_commit": "7e9ce2c974f1d78d192e81caa7890e2bbae8e711",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "0779f7f8a4df1cc98433eb30d69027499a0cb7f8",
+   "linked_number": 2816,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "kludex/uvicorn"
+  },
+  {
+   "buggy_commit": "1f35b5072ca6382e23efe92b92e11a065eda27fa",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "dae7e2065283db4d3d677ebae9d2dc8423131c62",
+   "linked_number": 13858,
+   "refused_run_status": "ADMITTED",
+   "repository": "pydantic/pydantic"
+  },
+  {
+   "buggy_commit": "5da36b5de4f44a572ca5c12104fd2f8669dfeaca",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "0077acf393f9ccef1ad06f9a189ca6d6764235b4",
+   "linked_number": 13863,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "pydantic/pydantic"
+  },
+  {
+   "buggy_commit": "6aca42d7718b6a6de8f5dfc31043bbe662b01c93",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "c124df7fb7348a3d6779c41fb5f4e5a73531e678",
+   "linked_number": 13828,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "pydantic/pydantic"
+  },
+  {
+   "buggy_commit": "617abdb1bb95b6a5d7808937cac7ef2fdbe918d9",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "6aca42d7718b6a6de8f5dfc31043bbe662b01c93",
+   "linked_number": 13827,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "pydantic/pydantic"
+  },
+  {
+   "buggy_commit": "7b15a786a755ec4089a34c9bb5f957f8b8ce3690",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "51d2b27aa90a4cce5d2acc8d9c44cd170f26c3e4",
+   "linked_number": 13821,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "pydantic/pydantic"
+  },
+  {
+   "buggy_commit": "0f80fe89cf2e723562c9ff837244dee1b4987178",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "7b15a786a755ec4089a34c9bb5f957f8b8ce3690",
+   "linked_number": 13815,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "pydantic/pydantic"
+  },
+  {
+   "buggy_commit": "0c0541b342c971dc5c6148f5345db7b0e02e103a",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "ec71b0323a84bda8b2c1fb4b88f2f0ff801ebe7b",
+   "linked_number": 13805,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "pydantic/pydantic"
+  },
+  {
+   "buggy_commit": "831893ed0411d45c20aacae88e067c9c33a89501",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "2e7a559acf682804f8e148548f7b9a70a7d39cc8",
+   "linked_number": 13789,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "pydantic/pydantic"
+  },
+  {
+   "buggy_commit": "e2683e14d3c449cc74cde3efc94bf19f4ee9d95f",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "831893ed0411d45c20aacae88e067c9c33a89501",
+   "linked_number": 13785,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:pydantic/_internal/_namespace_utils.py",
+   "repository": "pydantic/pydantic"
+  },
+  {
+   "buggy_commit": "0f0798bd7ef98dae45eaeb107ad7ba5c34874b15",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "c7a192c57ae2ff80a9a00bfba541c76222076d7c",
+   "linked_number": 13772,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:pydantic/_internal/_known_annotated_metadata.py",
+   "repository": "pydantic/pydantic"
+  },
+  {
+   "buggy_commit": "d2b98600021ef2d6760ca7db84b266decb4f2e3b",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "e61bbc38c3fce0187546ea7b0e8199ee0213a3c0",
+   "linked_number": 168,
+   "refused_run_status": "ADMITTED",
+   "repository": "suor/funcy"
+  },
+  {
+   "buggy_commit": "46a1fc44da97eae8d6382427c59508dcb88c52ae",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "848dd6dd2b13f86a6c414d8834c781185f398450",
+   "linked_number": 177,
+   "refused_run_status": "ADMITTED",
+   "repository": "suor/funcy"
+  },
+  {
+   "buggy_commit": "19e9617383cd48dfbc4074dab11df9157ece98b0",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "c72bfae84581458ac17fa3da3d9b92a8962ba682",
+   "linked_number": 178,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function",
+   "repository": "suor/funcy"
+  },
+  {
+   "buggy_commit": "9eb04473e31b6b60bd459e4dda24f6b1db5a3773",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "19e9617383cd48dfbc4074dab11df9157ece98b0",
+   "linked_number": 169,
+   "refused_run_status": "ADMITTED",
+   "repository": "suor/funcy"
+  },
+  {
+   "buggy_commit": "750365149f72cec5f3fa5c15cfd7c73725e28776",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "b8c6606dd48f004980775ffd3721fd6349264ced",
+   "linked_number": 287,
+   "refused_run_status": "multiple_functions_changed",
+   "repository": "jazzband/tablib"
+  },
+  {
+   "buggy_commit": "d3c590573edb41884feb206823a47c3a9e14aa68",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "48acf77ac2b3296acc67069511b99cc3ca3d0c41",
+   "linked_number": 1510,
+   "refused_run_status": "ADMITTED",
+   "repository": "delgan/loguru"
+  },
+  {
+   "buggy_commit": "8052eff4c1ba86793a6f38ee890a898e902bc1ea",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "5672e7d0ad610d70c5e549939b049303edefda19",
+   "linked_number": 1508,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function",
+   "repository": "delgan/loguru"
+  },
+  {
+   "buggy_commit": "54c89d609fc98a63b5bf7f801119c5bc526e2016",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "8052eff4c1ba86793a6f38ee890a898e902bc1ea",
+   "linked_number": 1507,
+   "refused_run_status": "ADMITTED",
+   "repository": "delgan/loguru"
+  },
+  {
+   "buggy_commit": "c97d8a9044df63dc2cd407355cc73c9eeb93a594",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "9df5c033771a94fd150a42f19dbda69093fd542d",
+   "linked_number": 1477,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "delgan/loguru"
+  },
+  {
+   "buggy_commit": "97a50cf75faff7c141ffc93095ab905b4ef051b6",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "7b30cd046a593f34696f6c574813b9727ae5c35e",
+   "linked_number": 1474,
+   "refused_run_status": "ADMITTED",
+   "repository": "delgan/loguru"
+  },
+  {
+   "buggy_commit": "13fcffa441374d7e2eda4b99aca8896558aa9c8c",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "1315750610b108129d2fa432230a9a92c608cbcd",
+   "linked_number": 1462,
+   "refused_run_status": "ADMITTED",
+   "repository": "delgan/loguru"
+  },
+  {
+   "buggy_commit": "3caaa73ea6542751dcb5a17708033d6b15f9a72d",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "2feb8549807587da88f4d151492ab443d8c5c320",
+   "linked_number": 1442,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:loguru/_logger.py",
+   "repository": "delgan/loguru"
+  },
+  {
+   "buggy_commit": "764cd30d4b285ca01718ab3162a9f1a022bc49c6",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "e49d1539042e18ca17b96fd28727234a0705d22a",
+   "linked_number": 1441,
+   "refused_run_status": "ADMITTED",
+   "repository": "delgan/loguru"
+  },
+  {
+   "buggy_commit": "48fff58c6b5dc26953da95f564815e66fbddd309",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "764cd30d4b285ca01718ab3162a9f1a022bc49c6",
+   "linked_number": 1429,
+   "refused_run_status": "ADMITTED",
+   "repository": "delgan/loguru"
+  },
+  {
+   "buggy_commit": "36da8cca14457f6e1d1bbca25fb29ba42b2d70cb",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "2a2c59e1c47d02c6f28e92cd0161e3f01fd74b31",
+   "linked_number": 1425,
+   "refused_run_status": "ADMITTED",
+   "repository": "delgan/loguru"
+  },
+  {
+   "buggy_commit": "bc57a65d6154913a8fbb071c762a35e135bccde1",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "8549c5a79686ebc733ed5970d27b9e9659bafe6f",
+   "linked_number": 3217,
+   "refused_run_status": "patch_near_duplicate_of_known_bug",
+   "repository": "pygments/pygments"
+  },
+  {
+   "buggy_commit": "82e3442fa3c797820e5fdad2a9b6457f4d1327b5",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "bc57a65d6154913a8fbb071c762a35e135bccde1",
+   "linked_number": 3209,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "pygments/pygments"
+  },
+  {
+   "buggy_commit": "d0588828dc613bdaed6f7ad687610097c94c88d2",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "82e3442fa3c797820e5fdad2a9b6457f4d1327b5",
+   "linked_number": 2969,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "pygments/pygments"
+  },
+  {
+   "buggy_commit": "6a7aa837d5001dd199f0094165d85568faa1142a",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "2f0d713b396de53e8780c114b00a7adad99cbffc",
+   "linked_number": 3215,
+   "refused_run_status": "ADMITTED",
+   "repository": "pygments/pygments"
+  },
+  {
+   "buggy_commit": "57c372782935233c45b00c32cc9d40e6cc0a2949",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "5b57beacc2115ff748fdfb7d596faa4f055c51b5",
+   "linked_number": 3214,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "pygments/pygments"
+  },
+  {
+   "buggy_commit": "7a45519e886fb5bda97830535720c7a56d9bf150",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "57c372782935233c45b00c32cc9d40e6cc0a2949",
+   "linked_number": 3213,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "pygments/pygments"
+  },
+  {
+   "buggy_commit": "5b7a089b1578a29af494cc8625518e601ba53151",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "7a45519e886fb5bda97830535720c7a56d9bf150",
+   "linked_number": 3211,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "pygments/pygments"
+  },
+  {
+   "buggy_commit": "f05190042c1926f35108bc5219b217a111675b86",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "5b7a089b1578a29af494cc8625518e601ba53151",
+   "linked_number": 3206,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "pygments/pygments"
+  },
+  {
+   "buggy_commit": "e1d0cd038c7e7d241ff1b0c7c5ee84c210ddbbd8",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "f05190042c1926f35108bc5219b217a111675b86",
+   "linked_number": 3212,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "pygments/pygments"
+  },
+  {
+   "buggy_commit": "86ee7c61a5333c9136f6e12e2b128e17d4f5ef16",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "e1d0cd038c7e7d241ff1b0c7c5ee84c210ddbbd8",
+   "linked_number": 3208,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "pygments/pygments"
+  },
+  {
+   "buggy_commit": "a8fa8cc0db19360dbd57ae0a726c5d34f247ae74",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "c2b87d2ff342f23afaee218bc28aa5f96e89453b",
+   "linked_number": 4092,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/tox/session/cmd/run/common.py",
+   "repository": "tox-dev/tox"
+  },
+  {
+   "buggy_commit": "e40e8e666838ddb4e3ae4936a9f8b162119d9190",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "a8fa8cc0db19360dbd57ae0a726c5d34f247ae74",
+   "linked_number": 4091,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/tox/session/cmd/run/common.py",
+   "repository": "tox-dev/tox"
+  },
+  {
+   "buggy_commit": "fff62f65ed4bab06a31a73a32c361afc054a7b9b",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "eacd4e9374a65f9e2c0c199b8ecf035fe8769fc3",
+   "linked_number": 4089,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/tox/config/source/ini.py",
+   "repository": "tox-dev/tox"
+  },
+  {
+   "buggy_commit": "8e1967e98f6480b0d99847c6a058463b7cce5416",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "551ad34007aa656f79edef82f873a93119acb1c3",
+   "linked_number": 4088,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "tox-dev/tox"
+  },
+  {
+   "buggy_commit": "12bf3a68f1200945e6da2d7576ee1cfd695038ed",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "8e1967e98f6480b0d99847c6a058463b7cce5416",
+   "linked_number": 4086,
+   "refused_run_status": "ADMITTED",
+   "repository": "tox-dev/tox"
+  },
+  {
+   "buggy_commit": "20febc547f99bb5c2c1e8ae7077cc82724489dc8",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "02d1f967f292d84b15888d28db089f1a081ca02a",
+   "linked_number": 4083,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "tox-dev/tox"
+  },
+  {
+   "buggy_commit": "62a37e5e846e4baa3b1137c68ebdb224f41e17ad",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "f9d6ff1f2eb9351f0422a17d1564e124f9735246",
+   "linked_number": 4080,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "tox-dev/tox"
+  },
+  {
+   "buggy_commit": "b2894bda5f390dc19f34c74ebec0726de7c9bb54",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "62a37e5e846e4baa3b1137c68ebdb224f41e17ad",
+   "linked_number": 4079,
+   "refused_run_status": "multiple_functions_changed",
+   "repository": "tox-dev/tox"
+  },
+  {
+   "buggy_commit": "2f96e32e30ad646bc30006b23ba7dafcd0b2fb1c",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "472ed02ccbd240bccad5a2746f82bbc37fe5cf7c",
+   "linked_number": 4077,
+   "refused_run_status": "multiple_functions_changed",
+   "repository": "tox-dev/tox"
+  },
+  {
+   "buggy_commit": "e521d6e9c71f74993f9e8f60854b7e24a3eebbb9",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "176c68f3f065155e3db5a6c333b8182a31fd50ce",
+   "linked_number": 4074,
+   "refused_run_status": "ADMITTED",
+   "repository": "tox-dev/tox"
+  },
+  {
+   "buggy_commit": "949dcfa6c0a4f0109dbbd019ff58208a580d185b",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "26f719dc73d3c5612b9c1b8d18a7883837790ad8",
+   "linked_number": 645,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:tenacity/asyncio/__init__.py",
+   "repository": "jd/tenacity"
+  },
+  {
+   "buggy_commit": "389aab8b2688f7a1df41c2dd7797eeb18c8baff9",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "949dcfa6c0a4f0109dbbd019ff58208a580d185b",
+   "linked_number": 696,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:releasenotes/notes/fix-tornado-global-desync-8c2d40fa71b9e35a.yaml",
+   "repository": "jd/tenacity"
+  },
+  {
+   "buggy_commit": "a09999688c8d3bb3d4ca1716748009954cc7c4d0",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "389aab8b2688f7a1df41c2dd7797eeb18c8baff9",
+   "linked_number": 694,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:releasenotes/notes/fix-falsy-wait-regression-3b7e91c4a5d20f68.yaml",
+   "repository": "jd/tenacity"
+  },
+  {
+   "buggy_commit": "b189e156164c970c15a3ffc54842c878f3695289",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "a09999688c8d3bb3d4ca1716748009954cc7c4d0",
+   "linked_number": 682,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "jd/tenacity"
+  },
+  {
+   "buggy_commit": "4299cdf82e9b65bc52a85a53d6b62cf068db0723",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "7c3c45cf57a3f10f6ee1334b137d607ead4974c1",
+   "linked_number": 677,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:releasenotes/notes/wait-radd-int-6f1a3c9d84b2e057.yaml",
+   "repository": "jd/tenacity"
+  },
+  {
+   "buggy_commit": "6fec22548ba654d39028248b7a9f07153a4ef81a",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "a2af454834c6bb5a1e39d67334031cdaf0f475b5",
+   "linked_number": 668,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "jd/tenacity"
+  },
+  {
+   "buggy_commit": "c650fb45204635f07910948d5fc59a8c551ffdda",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "b3c5a9f9212187aaf96353378daa9a9ebd800742",
+   "linked_number": 660,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function",
+   "repository": "jd/tenacity"
+  },
+  {
+   "buggy_commit": "40fad186bae14796567ea6786d8701bdd9d79312",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "c650fb45204635f07910948d5fc59a8c551ffdda",
+   "linked_number": 656,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:releasenotes/notes/fix-exponential-multiplier-underflow-4fd1d6d6b9c8e2a1.yaml",
+   "repository": "jd/tenacity"
+  },
+  {
+   "buggy_commit": "29d398bd21af492abeecd9fc9d33c48dc4d5fc08",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "40fad186bae14796567ea6786d8701bdd9d79312",
+   "linked_number": 651,
+   "refused_run_status": "multiple_functions_changed",
+   "repository": "jd/tenacity"
+  },
+  {
+   "buggy_commit": "4213bad9560479e71ce294b52501765068e38f80",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "29d398bd21af492abeecd9fc9d33c48dc4d5fc08",
+   "linked_number": 654,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:releasenotes/notes/fix-exponential-max-computation-526.yaml",
+   "repository": "jd/tenacity"
+  },
+  {
+   "buggy_commit": "0d6afd131223dc5f1d0c68d60ebb9513221d5c43",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "5d1363ce4b86ea91c204b6215bb038df40e7119d",
+   "linked_number": 798,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "python-markdown/markdown"
+  },
+  {
+   "buggy_commit": "4c8a8d6dba941046f9d43e67ab02e628419bbac1",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "c74b8d84aee380847dd28d16f6b827d027623908",
+   "linked_number": 1246,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function",
+   "repository": "python-markdown/markdown"
+  },
+  {
+   "buggy_commit": "136df23a5ae798347c1edc5f5c023e663254ca26",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "8a9ae23fd33bf1d810b81d801f2f7530c6c98212",
+   "linked_number": 1620,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function",
+   "repository": "python-markdown/markdown"
+  },
+  {
+   "buggy_commit": "7be0cff7318f9e0abf8a9481a4238a86e626530a",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "152a16fb1a926eabbfc5ab1af83f2b6cf9979314",
+   "linked_number": 1621,
+   "refused_run_status": "patch_near_duplicate_of_known_bug",
+   "repository": "python-markdown/markdown"
+  },
+  {
+   "buggy_commit": "bb50627dc07fde6ee5ed7478464062c537ebad2c",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "7be0cff7318f9e0abf8a9481a4238a86e626530a",
+   "linked_number": 1617,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function",
+   "repository": "python-markdown/markdown"
+  },
+  {
+   "buggy_commit": "e7a0efb3a7c36d6b8005403122705662bc17c904",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "ddead47873e7918829e1d8b0eaee6ab725793cc9",
+   "linked_number": 1604,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "python-markdown/markdown"
+  },
+  {
+   "buggy_commit": "e5fa5b86e8ec380cbc520cfc637d72c779e5c601",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "c4386475a6b6daea43b7d7717add4271adc9a3c1",
+   "linked_number": 1590,
+   "refused_run_status": "ADMITTED",
+   "repository": "python-markdown/markdown"
+  },
+  {
+   "buggy_commit": "9933a0a4699f3dea91f46528a2bf54863f531c08",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "f9253495f5d9919f2fdd5e147832b5fc21330f65",
+   "linked_number": 1586,
+   "refused_run_status": "multiple_functions_changed",
+   "repository": "python-markdown/markdown"
+  },
+  {
+   "buggy_commit": "fb6b27a6ff90980b5bcb0cd51528a7c9dc3a93ca",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "07dfa4eb43f7a2ab3181b4f842a960a03a6c1221",
+   "linked_number": 495,
+   "refused_run_status": "multiple_functions_changed",
+   "repository": "python-markdown/markdown"
+  },
+  {
+   "buggy_commit": "89112c293f7b399ae8808f3a06306f46601e9684",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "fb6b27a6ff90980b5bcb0cd51528a7c9dc3a93ca",
+   "linked_number": 1578,
+   "refused_run_status": "multiple_functions_changed",
+   "repository": "python-markdown/markdown"
+  },
+  {
+   "buggy_commit": "b5dd9949baf3729a709ef8ae591eab86e72a9e46",
+   "commit_class": "fix_merge_commit",
+   "fixed_commit": "75cab785a339eadfa7e760ed7ab2b0a3ad98c642",
+   "linked_number": 471,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit",
+   "repository": "lepture/mistune"
+  },
+  {
+   "buggy_commit": "89cbd567d7ddefb96fb2d02c68f15ed6d74ed658",
+   "commit_class": "fix_merge_commit",
+   "fixed_commit": "b5dd9949baf3729a709ef8ae591eab86e72a9e46",
+   "linked_number": 465,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit",
+   "repository": "lepture/mistune"
+  },
+  {
+   "buggy_commit": "7da7e1b69bedd9caecc53f1e7d0d37b31d9a0110",
+   "commit_class": "fix_merge_commit",
+   "fixed_commit": "46da727365487b2414f097d019c0ad1f4b8d34df",
+   "linked_number": 466,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit",
+   "repository": "lepture/mistune"
+  },
+  {
+   "buggy_commit": "b3a2a7a99b0da72209806ba6d0bf4df66a317232",
+   "commit_class": "fix_merge_commit",
+   "fixed_commit": "7da7e1b69bedd9caecc53f1e7d0d37b31d9a0110",
+   "linked_number": 467,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit",
+   "repository": "lepture/mistune"
+  },
+  {
+   "buggy_commit": "d3f22af45e43435f62777652b649678e4173badb",
+   "commit_class": "fix_merge_commit",
+   "fixed_commit": "b3a2a7a99b0da72209806ba6d0bf4df66a317232",
+   "linked_number": 468,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit",
+   "repository": "lepture/mistune"
+  },
+  {
+   "buggy_commit": "534127f933f4b6a0efc2c8b9142fcd59853a1ebe",
+   "commit_class": "fix_merge_commit",
+   "fixed_commit": "d3f22af45e43435f62777652b649678e4173badb",
+   "linked_number": 469,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit",
+   "repository": "lepture/mistune"
+  },
+  {
+   "buggy_commit": "060f73ac87e8cf6d9e9b48f2df28c0654d845a4c",
+   "commit_class": "fix_merge_commit",
+   "fixed_commit": "719107f8fbc01c07af5eb51822c6888122d56afc",
+   "linked_number": 464,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit",
+   "repository": "lepture/mistune"
+  },
+  {
+   "buggy_commit": "fe02f40faf091f86da9ed62c865f31e11da111d7",
+   "commit_class": "fix_merge_commit",
+   "fixed_commit": "30255494bc8fdd14c7a0fd5b0e2c5fc3d4243745",
+   "linked_number": 462,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit",
+   "repository": "lepture/mistune"
+  },
+  {
+   "buggy_commit": "ecd435a39f13bda731fa8bd40db0fa210fe3b724",
+   "commit_class": "fix_merge_commit",
+   "fixed_commit": "59c35e2b743b9996284126f8019f2811a2315c5c",
+   "linked_number": 460,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit",
+   "repository": "lepture/mistune"
+  },
+  {
+   "buggy_commit": "0799e194b388551e7a3607e7d64450b0b979b9ee",
+   "commit_class": "fix_merge_commit",
+   "fixed_commit": "ecd435a39f13bda731fa8bd40db0fa210fe3b724",
+   "linked_number": 459,
+   "refused_run_status": "multiple_functions_changed",
+   "repository": "lepture/mistune"
+  },
+  {
+   "buggy_commit": "1d98613f28b8edab5fd0deb5ba65d54fb286e7ba",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "f6d73112c8368cd6eb2ac596966e8148747c7b4e",
+   "linked_number": 843,
+   "refused_run_status": "insufficient_isolation_evidence:target_function_too_short_for_comparison",
+   "repository": "simonw/sqlite-utils"
+  },
+  {
+   "buggy_commit": "75ba58846206b2c1beb39836134e763bf34177aa",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "e4935e064407bc995f77795c025c33cef52d742e",
+   "linked_number": 805,
+   "refused_run_status": "patch_near_duplicate_of_known_bug",
+   "repository": "simonw/sqlite-utils"
+  },
+  {
+   "buggy_commit": "e6be6267a4eda2d35e57a50400208fe1bb66d6d3",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "88b48fa1674c396bfda330d1c609bc7108f952f2",
+   "linked_number": 836,
+   "refused_run_status": "ADMITTED",
+   "repository": "simonw/sqlite-utils"
+  },
+  {
+   "buggy_commit": "38fe4667006bc03b0dc22852de3bd891645b5707",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "ebb04a97de765ce5f0b6d1149c992062fa25629a",
+   "linked_number": 833,
+   "refused_run_status": "multiple_functions_changed",
+   "repository": "simonw/sqlite-utils"
+  },
+  {
+   "buggy_commit": "2d3c6b9a1e5068fcee6923c9ed74cbd158ee9db4",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "43d5d3331f5bd056d20ee61903142b86a2ee0efb",
+   "linked_number": 821,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:sqlite_utils/db.py",
+   "repository": "simonw/sqlite-utils"
+  },
+  {
+   "buggy_commit": "b37b8cf8c83515a022e7ec0b1599004bb2f7eb55",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "2d3c6b9a1e5068fcee6923c9ed74cbd158ee9db4",
+   "linked_number": 828,
+   "refused_run_status": "ADMITTED",
+   "repository": "simonw/sqlite-utils"
+  },
+  {
+   "buggy_commit": "a7b734946f95341f52d866321c183e3532ac0aad",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "6a456830ca33eb5edaa634a9b0febe5d71bea2be",
+   "linked_number": 811,
+   "refused_run_status": "patch_near_duplicate_of_known_bug",
+   "repository": "simonw/sqlite-utils"
+  },
+  {
+   "buggy_commit": "a947dc673923ff6e95b41d3dfabe1cbd95e6de86",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "69a1c0d960abb20ac03a085142bd59f7fbe002f7",
+   "linked_number": 814,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "simonw/sqlite-utils"
+  },
+  {
+   "buggy_commit": "d314d04215f7337d42c847214861ec7ffe0bf757",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "60811e730509667f702bc08f9bf5fc3fe13b7f45",
+   "linked_number": 781,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function",
+   "repository": "simonw/sqlite-utils"
+  },
+  {
+   "buggy_commit": "6225eba5c8daf97a5e459e9fcce2e46bcd022f50",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "221774f25a53c76874b28af1c2dd170c76bbd9f1",
+   "linked_number": 554,
+   "refused_run_status": "ADMITTED",
+   "repository": "simonw/sqlite-utils"
+  },
+  {
+   "buggy_commit": "5d3830d5540f08969387eefc06bb8c5a4f4157da",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "219bb58e6212b4e16f4376d6504b2008c6b3142e",
+   "linked_number": 1348,
+   "refused_run_status": "ADMITTED",
+   "repository": "agronholm/anyio"
+  },
+  {
+   "buggy_commit": "f7df6827cb7814b47b7cafa704f6a09792e4f388",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "5d3830d5540f08969387eefc06bb8c5a4f4157da",
+   "linked_number": 1330,
+   "refused_run_status": "multiple_functions_changed",
+   "repository": "agronholm/anyio"
+  },
+  {
+   "buggy_commit": "ab7123d1c583e2b26efc8aaf61abcd5f0fe061f2",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "f7df6827cb7814b47b7cafa704f6a09792e4f388",
+   "linked_number": 1334,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "agronholm/anyio"
+  },
+  {
+   "buggy_commit": "dff3a4cccee445d068d6b7341ae403f0ab3c957f",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "f69590012c0c563b0b586e1ee32e4f900f911960",
+   "linked_number": 1312,
+   "refused_run_status": "insufficient_isolation_evidence:target_function_too_short_for_comparison",
+   "repository": "agronholm/anyio"
+  },
+  {
+   "buggy_commit": "e52d5fd179829feeafb4e194abd529e85c8f2494",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "a87a823ccc0ffc98a9d21e6f2d55127a2a49ef6d",
+   "linked_number": 1299,
+   "refused_run_status": "ADMITTED",
+   "repository": "agronholm/anyio"
+  },
+  {
+   "buggy_commit": "4e72d8667818d4a972a549cd910a4e4340c504a0",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "e52d5fd179829feeafb4e194abd529e85c8f2494",
+   "linked_number": 1321,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "agronholm/anyio"
+  },
+  {
+   "buggy_commit": "c716c786c1b8800ba6172ec9f1585af6644d2025",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "4e72d8667818d4a972a549cd910a4e4340c504a0",
+   "linked_number": 1323,
+   "refused_run_status": "ADMITTED",
+   "repository": "agronholm/anyio"
+  },
+  {
+   "buggy_commit": "9b88008e9de1fc62244354ee0df33edd1a21b496",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "5c570abd2768f524bef6486d4e9e5c18b66c85d8",
+   "linked_number": 1313,
+   "refused_run_status": "ADMITTED",
+   "repository": "agronholm/anyio"
+  },
+  {
+   "buggy_commit": "ffcd1542cd6d127980205f90a0100078849dd703",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "d0e32aa18162ec1cec065af805f8224f6731f01c",
+   "linked_number": 1307,
+   "refused_run_status": "ADMITTED",
+   "repository": "agronholm/anyio"
+  },
+  {
+   "buggy_commit": "942e9a6552cc10b5aaa779d84bfc8e2c3d5fcffc",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "033fc52b8fa8e90c5d0ef24b10b3860e974a6265",
+   "linked_number": 1304,
+   "refused_run_status": "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function",
+   "repository": "agronholm/anyio"
+  },
+  {
+   "buggy_commit": "e1afa7471d1fc2c3ea7a2b730ef68db20743774a",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "6a2a8851bafeb01dfe48e3b54be6dd3b3d4eae96",
+   "linked_number": 1138,
+   "refused_run_status": "ADMITTED",
+   "repository": "agronholm/apscheduler"
+  },
+  {
+   "buggy_commit": "b38973eba40b4845d0c8b3687c546ff0bfaa5d2f",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "e1afa7471d1fc2c3ea7a2b730ef68db20743774a",
+   "linked_number": 1136,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "agronholm/apscheduler"
+  },
+  {
+   "buggy_commit": "b35d7adacbc352b5fc063bf3e9dee526d11f798b",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "b38973eba40b4845d0c8b3687c546ff0bfaa5d2f",
+   "linked_number": 1135,
+   "refused_run_status": "ADMITTED",
+   "repository": "agronholm/apscheduler"
+  },
+  {
+   "buggy_commit": "f2337f7aa675718ba5f0af33e0cb53006304ab0a",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "ff65a444f83083ceef865f4eb97fccd2186fef01",
+   "linked_number": 1100,
+   "refused_run_status": "ADMITTED",
+   "repository": "agronholm/apscheduler"
+  },
+  {
+   "buggy_commit": "1b184f55b13f20caddecf18101b322f0ec5c815c",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "ab90d713e8ae72c986d4ebdf16ce36a80a1c612c",
+   "linked_number": 1093,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "agronholm/apscheduler"
+  },
+  {
+   "buggy_commit": "19c3153e45fbcd7c33773bb7508dc4377b76c82f",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "d52b957fd481423c3f6576a934b74506796ce6a0",
+   "linked_number": 946,
+   "refused_run_status": "no_production_python_file_changed",
+   "repository": "agronholm/apscheduler"
+  },
+  {
+   "buggy_commit": "307896e9f47627b4b752d5745407ee4a989ae24e",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "c5a0346d303f64a044ef744aa75d5d6a18593d34",
+   "linked_number": 1060,
+   "refused_run_status": "no_existing_function_changed",
+   "repository": "agronholm/apscheduler"
+  },
+  {
+   "buggy_commit": "dcf83131ad7650b514a7d75d9d132ef112ea8063",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "c3b7623dc13584eeff581c8269fca56d6bcd8593",
+   "linked_number": 993,
+   "refused_run_status": "ADMITTED",
+   "repository": "agronholm/apscheduler"
+  },
+  {
+   "buggy_commit": "e4b1db1dcb8d9e88d10f4688f0c6f72e844f8bf7",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "de06b8a7bffcc3370f58e75a6caa590c158457ba",
+   "linked_number": 1030,
+   "refused_run_status": "ADMITTED",
+   "repository": "agronholm/apscheduler"
+  },
+  {
+   "buggy_commit": "45a1dfa623e9f607b4abf081c6f01d9e01d68c64",
+   "commit_class": "fix_candidate",
+   "fixed_commit": "0fe2c7c50cda8e594c8e88f875d6d59e12e12db3",
+   "linked_number": 981,
+   "refused_run_status": "multiple_functions_changed",
+   "repository": "agronholm/apscheduler"
+  }
+ ],
+ "label": "exact retry sample: ALL candidate identities of the refused A-prime confirmation pilot, unfiltered by outcome; the retry must evaluate exactly these, with no rediscovery, substitution or early stop",
+ "refused_record": "results/v4_3_repository_native_aprime_confirmation_pilot_REFUSED.json",
+ "refused_record_sha256": "54c6ed050da7761ffb7f37a184b76350b98e458a9a586e5a8395e645e1705008",
+ "repositories": [
+  "encode/httpx",
+  "kludex/starlette",
+  "kludex/uvicorn",
+  "pydantic/pydantic",
+  "suor/funcy",
+  "jazzband/tablib",
+  "delgan/loguru",
+  "pygments/pygments",
+  "tox-dev/tox",
+  "jd/tenacity",
+  "python-markdown/markdown",
+  "lepture/mistune",
+  "simonw/sqlite-utils",
+  "agronholm/anyio",
+  "agronholm/apscheduler"
+ ],
+ "repository_count": 15,
+ "schema_version": "oneiros_retry_candidate_manifest_v1",
+ "source_journal_sha256": "a065e9138da96e40129088f849f62e38c70b3f0a836e94e2f4de6cc8a957326a",
+ "source_store": "data/repository_native/aprime_confirmation_pilot"
+}
