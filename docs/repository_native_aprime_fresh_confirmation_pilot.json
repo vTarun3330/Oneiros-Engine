@@ -1,0 +1,27 @@
+{
+  "label": "FRESH independent policy A-prime confirmation pilot (isolation v6, receipt v5) on previously unscanned repositories and commits; candidate pool only, no evaluation set, no model, no GPU",
+  "repositories_file": "docs/repository_native_fresh_confirmation_repositories.json",
+  "expected_repository_list_sha256": "93a60d157cfc51c6e1e04322a500f12df6d509f1604d29335b9ce32e86ccf31e",
+  "gate_file": "docs/repository_native_aprime_feasibility_gate.json",
+  "expected_gate_sha256": "09dcde5338ea807eaa2ad0833f95db3c91d159caebe332f4dd0f66be6cc769ff",
+  "store": "data/repository_native/aprime_fresh_confirmation_pilot",
+  "report": "results/v4_3_repository_native_aprime_fresh_confirmation_pilot.json",
+  "per_repository_cap": 10,
+  "max_candidates": 120,
+  "min_repositories": 10,
+  "fetch_since": "2024-12-01",
+  "candidates_since": "2025-01-01",
+  "exclude_journals": [
+    "data/repository_native/acquisition_pilot/journal.jsonl",
+    "data/repository_native/aprime_confirmation_pilot/journal.jsonl"
+  ],
+  "exclude_repository_files": [
+    "docs/repository_native_previously_scanned_repositories.json"
+  ],
+  "reference_journal": "data/repository_native/aprime_confirmation_pilot/journal.jsonl",
+  "pool_files": [
+    "docs/repository_native_candidate_repositories.json",
+    "docs/repository_native_confirmation_repositories.json"
+  ],
+  "stopping_rule": "stop after the repository in which the 120th candidate is reached, provided >= 10 repositories contributed candidates; independent of outcomes"
+}
