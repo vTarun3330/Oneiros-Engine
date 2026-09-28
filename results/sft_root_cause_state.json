@@ -1,141 +1,241 @@
 {
- "schema_version": "oneiros_sft_root_cause_state_v1",
- "protocol": "docs/SFT_ROOT_CAUSE_PROTOCOL.md",
- "hypotheses": "results/sft_root_cause_hypotheses.json",
- "terminal_state": null,
+ "budget": {
+  "gpu_hours_used": 0.268,
+  "phase3_gpu_hours": 12,
+  "phase4_arms_max": 3,
+  "phase4_gpu_hours_per_arm": 8,
+  "phase6_gpu_hours": 6
+ },
  "current_phase": 4,
- "phases": [
+ "data_status": {
+  "ablation_dev": "spent (descriptive only)",
+  "reserved_confirmation": "never read",
+  "sealed_final": "never read",
+  "test": "consumed (never read)",
+  "train": "available",
+  "val": "spent (descriptive only)"
+ },
+ "hypotheses": "results/sft_root_cause_hypotheses.json",
+ "log": [
   {
-   "phase": 0,
-   "name": "freeze",
-   "status": "complete",
-   "completed_utc": "2026-09-28",
-   "evidence": {
-    "head": "e56af51808562ec179d238425881e0c51fa4eb52",
-    "origin_equal": true,
-    "clean_tree": true,
-    "full_suite": "2042 passed, 3 skipped (261.7 s)",
-    "gpu": "RTX 4500 Ada, 521/24570 MiB, 0% utilisation, no job running"
-   }
+   "event": "phase 2 complete",
+   "finding": "SFT changed assertion form (equality 0.725 -> 0.995) and input choice (P(disc|execute) +4.4), not value prediction (equality-stratified -4.3, CI [-11.1, +2.7]); the -11.9 validity change is dominated by the form shift; Kill@8 MDE 10.7 points at 78 clusters",
+   "historical": true,
+   "next_decision": "Phase 3: fixed-input value-prediction probes. Open questions for the user: (1) the frozen reference-validity guardrail is form-confounded; (2) Probe B (constrained output) is deprioritised because contract stages did not degrade",
+   "utc": "2026-09-28"
   },
   {
-   "phase": 1,
-   "name": "candidate-level causal ledger",
-   "status": "complete",
+   "correction_receipt": "results/sft_root_cause_phase2_interpretation_correction_2026-09-28.json",
+   "correction_sha256": "4ec504e00730e48a46a9cde62868ed9f886c212c7dae85d192a73f501d738813",
+   "event": "phase 2 interpretation corrected (dated receipt); phase 3A designed and frozen",
+   "historical": true,
+   "next_decision": "launch Phase 3A generation (3,840 greedy generations, <30 GPU-minutes) after commit/push and HEAD==origin",
+   "utc": "2026-09-28"
+  },
+  {
+   "event": "phase 3A complete",
+   "finding": "SFT does not improve fixed-input value prediction even on exposed/literal-target inputs; A3 no effect; A4 +5-6 points but absolute 0.33",
+   "historical": true,
+   "next_decision": "Phase 3C capacity probe (Qwen2.5-Coder-7B local snapshot c03e6d35) with an answer-rate non-inferiority gate",
+   "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+   "utc": "2026-09-28"
+  },
+  {
+   "event": "phase 3C complete; Phase 4 not started (not authorised)",
+   "finding": "1.5B value prediction is limited mainly by execution reasoning (A4 0.33); 7B relieves it (A4 0.58, A0 0.39); at 7B specification becomes the larger gap; SFT at 1.5B did not move value prediction",
+   "historical": true,
+   "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+   "terminal_state": "not reached: no training intervention, ablation or independent replication yet",
+   "utc": "2026-09-28"
+  },
+  {
+   "correction_receipt": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
+   "correction_sha256": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83",
+   "event": "phase 3 correction (CPU only, v2 analyses)",
+   "finding": "H4 open (schema-dependent exposure result); H1/H3 strengthened with qualifiers; no root cause terminally supported",
+   "historical": true,
+   "next_decision": "Phase 4 data preflight and design draft; training awaits authorisation",
+   "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+   "utc": "2026-09-28"
+  },
+  {
+   "event": "phase 4 data preflight (read-only) and design draft",
+   "finding": "strict fresh pool 42 groups (33 feasible, MDE80 ~15.7 pts): too small alone; arm-A-exposed remainder 401 groups (352 feasible) is lineage-disjoint for base-initialised Phase 4 arms",
+   "historical": true,
+   "next_decision": "user: approve partition, Phase 6 repository-disjoint limitation, timing step and single-seed pilot",
+   "utc": "2026-09-28"
+  },
+  {
+   "current": "phase3_results.current",
+   "event": "phase 3 correction addendum v2",
+   "finding": "H1 open; H2 strengthened (not supported); H3 strengthened as a model-scale association only; H4 open (schema-dependent exposure result); no hypothesis terminally supported",
+   "receipt": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+   "receipt_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+   "utc": "2026-09-28"
+  }
+ ],
+ "phase3_results": {
+  "current": {
+   "3A": {
+    "path": "results/sft_root_cause_phase3a_result_receipt_v3.json",
+    "sha256": "09885cfbfca3d8291e40459217746fbc8cebf3a8cf719f7753c3828266f1b713"
+   },
+   "3C": {
+    "path": "results/sft_root_cause_phase3c_result_receipt_v3.json",
+    "sha256": "723a983cf2237c8bee91dddcf8ba0029682e385b17b471c7b62d45e81af6bfb9"
+   },
+   "interpretation": {
+    "path": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+    "sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f"
+   }
+  },
+  "history": {
+   "commit_2e7ddba_correction": {
+    "path": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
+    "sha256": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83"
+   },
+   "v1": {
+    "3A": {
+     "path": "results/sft_root_cause_phase3a_result_receipt.json",
+     "sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7"
+    },
+    "3C": {
+     "path": "results/sft_root_cause_phase3c_result_receipt.json",
+     "sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3"
+    }
+   },
+   "v2": {
+    "3A": {
+     "path": "results/sft_root_cause_phase3a_result_receipt_v2.json",
+     "sha256": "3f572f16047417377fb977ee8080fd44d629c3c2c5fa1b3211d3704f264281fe"
+    },
+    "3C": {
+     "path": "results/sft_root_cause_phase3c_result_receipt_v2.json",
+     "sha256": "f622bbb51af8e0e378c3de1c7989c4b47b6c457160b6a1dadaa02ba3777fca25"
+    }
+   }
+  }
+ },
+ "phases": [
+  {
    "completed_utc": "2026-09-28",
+   "evidence": {
+    "clean_tree": true,
+    "full_suite": "2042 passed, 3 skipped (261.7 s)",
+    "gpu": "RTX 4500 Ada, 521/24570 MiB, 0% utilisation, no job running",
+    "head": "e56af51808562ec179d238425881e0c51fa4eb52",
+    "origin_equal": true
+   },
+   "name": "freeze",
+   "phase": 0,
+   "status": "complete"
+  },
+  {
+   "completed_utc": "2026-09-28",
+   "name": "candidate-level causal ledger",
+   "phase": 1,
    "receipt": "results/sft_root_cause_phase1_ledger_receipt.json",
    "receipt_sha256": "23cab95b4d9b6a4779184b0bcbc8004448ff38f4ee0021dcbbb619bf304063b5",
+   "status": "complete",
    "summary": {
     "arms": 12,
     "candidates": 52112,
-    "evaluator_verdicts_reproduced": "all",
-    "duration_seconds": 69.3
+    "duration_seconds": 69.3,
+    "evaluator_verdicts_reproduced": "all"
    }
   },
   {
-   "phase": 2,
-   "name": "decomposition",
-   "status": "complete",
    "completed_utc": "2026-09-28",
+   "name": "decomposition",
+   "phase": 2,
    "receipt": "results/sft_root_cause_phase2_decomposition_receipt.json",
-   "receipt_sha256": "39aa1c4880387980d7fdcc47003f0dd48abffd2399308dd022e76a85581fe932"
+   "receipt_sha256": "39aa1c4880387980d7fdcc47003f0dd48abffd2399308dd022e76a85581fe932",
+   "status": "complete"
   },
   {
-   "phase": 3,
-   "name": "cheap causal probes",
-   "status": "complete",
-   "design_receipt": "results/sft_root_cause_phase3a_design_receipt.json",
-   "design_receipt_sha256": "d85249b264c00bb330ec2f1313b09ce292433de2386b4674c479af1ee5181d46",
    "census": "results/sft_root_cause_phase3_cohort_census.json",
    "cohort_sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
-   "phase3a_result_receipt": "results/sft_root_cause_phase3a_result_receipt.json",
-   "phase3a_result_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
+   "design_receipt": "results/sft_root_cause_phase3a_design_receipt.json",
+   "design_receipt_sha256": "d85249b264c00bb330ec2f1313b09ce292433de2386b4674c479af1ee5181d46",
+   "history_as_recorded_before_v3": {
+    "phase3a_result_receipt": "results/sft_root_cause_phase3a_result_receipt.json",
+    "phase3a_result_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
+    "phase3c_result_receipt": "results/sft_root_cause_phase3c_result_receipt.json",
+    "phase3c_result_sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3",
+    "result_receipts": {
+     "correction": {
+      "path": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
+      "sha256": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83"
+     },
+     "current": {
+      "3A": {
+       "path": "results/sft_root_cause_phase3a_result_receipt_v2.json",
+       "sha256": "3f572f16047417377fb977ee8080fd44d629c3c2c5fa1b3211d3704f264281fe"
+      },
+      "3C": {
+       "path": "results/sft_root_cause_phase3c_result_receipt_v2.json",
+       "sha256": "f622bbb51af8e0e378c3de1c7989c4b47b6c457160b6a1dadaa02ba3777fca25"
+      }
+     },
+     "history_v1": {
+      "3A": {
+       "path": "results/sft_root_cause_phase3a_result_receipt.json",
+       "sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
+       "superseded_by": "results/sft_root_cause_phase3a_result_receipt_v2.json"
+      },
+      "3C": {
+       "path": "results/sft_root_cause_phase3c_result_receipt.json",
+       "sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3",
+       "superseded_by": "results/sft_root_cause_phase3c_result_receipt_v2.json"
+      }
+     }
+    }
+   },
+   "name": "cheap causal probes",
+   "phase": 3,
    "phase3a_run": {
-    "run_id": "20260928-164103-phase3a_fixed_input",
-    "exit_code": 0,
     "duration_seconds": 426.6,
+    "exit_code": 0,
     "generations": 3840,
     "outputs": {
-     "base": "e41bdf29533210e16a64997161cded1806a77079edf436bbb61f326ab4a46583",
-     "arm_a_431": "2caa6659a73df3aceeaea13ff0c91eef3e32b0e6032dbdb92d0cdee46250356c"
-    }
+     "arm_a_431": "2caa6659a73df3aceeaea13ff0c91eef3e32b0e6032dbdb92d0cdee46250356c",
+     "base": "e41bdf29533210e16a64997161cded1806a77079edf436bbb61f326ab4a46583"
+    },
+    "run_id": "20260928-164103-phase3a_fixed_input"
    },
-   "phase3c_result_receipt": "results/sft_root_cause_phase3c_result_receipt.json",
-   "phase3c_result_sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3",
    "phase3c_run": {
-    "run_id": "20260928-165113-phase3c_capacity",
-    "exit_code": 0,
     "duration_seconds": 534.7,
+    "exit_code": 0,
     "generations": 1920,
-    "output_sha256": "722a70c019180f4733f63af48982e43639af897d54bf4ceaefb4b17ce735124a"
+    "output_sha256": "722a70c019180f4733f63af48982e43639af897d54bf4ceaefb4b17ce735124a",
+    "run_id": "20260928-165113-phase3c_capacity"
    },
-   "result_receipts": {
-    "current": {
-     "3A": {
-      "path": "results/sft_root_cause_phase3a_result_receipt_v2.json",
-      "sha256": "3f572f16047417377fb977ee8080fd44d629c3c2c5fa1b3211d3704f264281fe"
-     },
-     "3C": {
-      "path": "results/sft_root_cause_phase3c_result_receipt_v2.json",
-      "sha256": "f622bbb51af8e0e378c3de1c7989c4b47b6c457160b6a1dadaa02ba3777fca25"
-     }
-    },
-    "history_v1": {
-     "3A": {
-      "path": "results/sft_root_cause_phase3a_result_receipt.json",
-      "sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
-      "superseded_by": "results/sft_root_cause_phase3a_result_receipt_v2.json"
-     },
-     "3C": {
-      "path": "results/sft_root_cause_phase3c_result_receipt.json",
-      "sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3",
-      "superseded_by": "results/sft_root_cause_phase3c_result_receipt_v2.json"
-     }
-    },
-    "correction": {
-     "path": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
-     "sha256": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83"
-    }
-   }
+   "status": "complete"
   },
   {
-   "phase": 4,
+   "design_draft": "docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT.md",
+   "frozen": false,
    "name": "single-factor training arm",
-   "status": "awaiting_authorisation",
+   "phase": 4,
    "preflight_census": {
     "path": "results/sft_root_cause_phase4_cohort_census.json",
     "sha256": "391bcba2b3c383fb488688b82242a3e8a430e81d4e7dfb54eca93b2f873d8464"
    },
-   "design_draft": "docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT.md",
-   "frozen": false,
+   "status": "awaiting_authorisation",
    "training_started": false
   },
   {
-   "phase": 5,
    "name": "mediator gate",
+   "phase": 5,
    "status": "pending"
   },
   {
-   "phase": 6,
    "name": "independent confirmation",
+   "phase": 6,
    "status": "pending"
   }
  ],
- "budget": {
-  "phase3_gpu_hours": 12,
-  "phase4_arms_max": 3,
-  "phase4_gpu_hours_per_arm": 8,
-  "phase6_gpu_hours": 6,
-  "gpu_hours_used": 0.268
- },
- "data_status": {
-  "val": "spent (descriptive only)",
-  "ablation_dev": "spent (descriptive only)",
-  "test": "consumed (never read)",
-  "sealed_final": "never read",
-  "reserved_confirmation": "never read",
-  "train": "available"
- },
+ "protocol": "docs/SFT_ROOT_CAUSE_PROTOCOL.md",
  "quarantined_artifacts": [
   {
    "path": "results/sft_root_cause/quarantine/phase2_first_run_SUPERSEDED.json",
@@ -146,45 +246,6 @@
    ]
   }
  ],
- "log": [
-  {
-   "utc": "2026-09-28",
-   "event": "phase 2 complete",
-   "finding": "SFT changed assertion form (equality 0.725 -> 0.995) and input choice (P(disc|execute) +4.4), not value prediction (equality-stratified -4.3, CI [-11.1, +2.7]); the -11.9 validity change is dominated by the form shift; Kill@8 MDE 10.7 points at 78 clusters",
-   "next_decision": "Phase 3: fixed-input value-prediction probes. Open questions for the user: (1) the frozen reference-validity guardrail is form-confounded; (2) Probe B (constrained output) is deprioritised because contract stages did not degrade"
-  },
-  {
-   "utc": "2026-09-28",
-   "event": "phase 2 interpretation corrected (dated receipt); phase 3A designed and frozen",
-   "correction_receipt": "results/sft_root_cause_phase2_interpretation_correction_2026-09-28.json",
-   "correction_sha256": "4ec504e00730e48a46a9cde62868ed9f886c212c7dae85d192a73f501d738813",
-   "next_decision": "launch Phase 3A generation (3,840 greedy generations, <30 GPU-minutes) after commit/push and HEAD==origin"
-  },
-  {
-   "utc": "2026-09-28",
-   "event": "phase 3A complete",
-   "finding": "SFT does not improve fixed-input value prediction even on exposed/literal-target inputs; A3 no effect; A4 +5-6 points but absolute 0.33",
-   "next_decision": "Phase 3C capacity probe (Qwen2.5-Coder-7B local snapshot c03e6d35) with an answer-rate non-inferiority gate"
-  },
-  {
-   "utc": "2026-09-28",
-   "event": "phase 3C complete; Phase 4 not started (not authorised)",
-   "finding": "1.5B value prediction is limited mainly by execution reasoning (A4 0.33); 7B relieves it (A4 0.58, A0 0.39); at 7B specification becomes the larger gap; SFT at 1.5B did not move value prediction",
-   "terminal_state": "not reached: no training intervention, ablation or independent replication yet"
-  },
-  {
-   "utc": "2026-09-28",
-   "event": "phase 3 correction (CPU only, v2 analyses)",
-   "correction_receipt": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
-   "correction_sha256": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83",
-   "finding": "H4 open (schema-dependent exposure result); H1/H3 strengthened with qualifiers; no root cause terminally supported",
-   "next_decision": "Phase 4 data preflight and design draft; training awaits authorisation"
-  },
-  {
-   "utc": "2026-09-28",
-   "event": "phase 4 data preflight (read-only) and design draft",
-   "finding": "strict fresh pool 42 groups (33 feasible, MDE80 ~15.7 pts): too small alone; arm-A-exposed remainder 401 groups (352 feasible) is lineage-disjoint for base-initialised Phase 4 arms",
-   "next_decision": "user: approve partition, Phase 6 repository-disjoint limitation, timing step and single-seed pilot"
-  }
- ]
+ "schema_version": "oneiros_sft_root_cause_state_v1",
+ "terminal_state": null
 }

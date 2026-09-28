@@ -1,0 +1,157 @@
+{
+ "current_result_receipts": {
+  "3A": {
+   "path": "results/sft_root_cause_phase3a_result_receipt_v3.json",
+   "sha256": "09885cfbfca3d8291e40459217746fbc8cebf3a8cf719f7753c3828266f1b713"
+  },
+  "3C": {
+   "path": "results/sft_root_cause_phase3c_result_receipt_v3.json",
+   "sha256": "723a983cf2237c8bee91dddcf8ba0029682e385b17b471c7b62d45e81af6bfb9"
+  }
+ },
+ "date": "2026-09-28",
+ "first_correction_modified": false,
+ "gpu_used": false,
+ "history_result_receipts": {
+  "v1": {
+   "3A": {
+    "path": "results/sft_root_cause_phase3a_result_receipt.json",
+    "sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7"
+   },
+   "3C": {
+    "path": "results/sft_root_cause_phase3c_result_receipt.json",
+    "sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3"
+   }
+  },
+  "v2": {
+   "3A": {
+    "path": "results/sft_root_cause_phase3a_result_receipt_v2.json",
+    "sha256": "3f572f16047417377fb977ee8080fd44d629c3c2c5fa1b3211d3704f264281fe"
+   },
+   "3C": {
+    "path": "results/sft_root_cause_phase3c_result_receipt_v2.json",
+    "sha256": "f622bbb51af8e0e378c3de1c7989c4b47b6c457160b6a1dadaa02ba3777fca25"
+   }
+  }
+ },
+ "hypotheses_current": {
+  "H1": {
+   "claim": "The prompt may not contain enough information to deduce the correct value.",
+   "qualifier": null,
+   "status": "open",
+   "why": "A1 and A2 were not run; A3 shows only that this specific oracle-derived type/length hint was insufficient; A4 reveals the complete fixed implementation and is not an identifying manipulation of public specification quality. Current evidence neither supports nor rejects natural-language specification insufficiency."
+  },
+  "H2": {
+   "qualifier": "not_supported",
+   "status": "strengthened",
+   "why": "Phase 2 showed input-choice and assertion-form changes. Whether SFT improves fixed-input value prediction is schema-dependent and unresolved (Phase 3A v3). Causal support still requires a valid Phase 4 objective intervention."
+  },
+  "H3": {
+   "qualifier": "model_scale_association_only",
+   "status": "strengthened",
+   "subclaims": {
+    "adapter_or_parameter_capacity_causal": {
+     "statement": "LoRA rank, adapter capacity, full fine-tuning and parameter count as causal factors are untested; the two checkpoints differ in scale and learned representation together.",
+     "status": "open"
+    },
+    "model_scale_association": {
+     "statement": "Within the Qwen2.5-Coder family, 7B beats 1.5B on this fixed-input panel (A0 +11.46, CI [6.46, 16.67]; A4 +24.79, CI [19.38, 30.42]; recomputed answer-rate gate passed).",
+     "status": "strengthened"
+    }
+   },
+   "why": "7B beats 1.5B on this panel; no causal parameter-count or capacity claim."
+  },
+  "H4": {
+   "qualifier": "schema_dependent_exposure_result",
+   "status": "open",
+   "why": "On exposed functions the SFT effect is -1.67 points under assertion-prefill and +5.00 under the ANSWER schema; the route-exact rule stops at the exposed schema check. Distribution shift is untested: no external diagnostic cohort exists."
+  },
+  "H5": {
+   "qualifier": "narrowed_syntactic_structural_scope",
+   "status": "weakened",
+   "why": "Syntactic/structural contract degradation only; semantic validity unresolved."
+  },
+  "H6": {
+   "qualifier": "narrowed_progressive_degradation_scope",
+   "status": "weakened",
+   "why": "Progressive degradation after step 100 only; a rapid early shift or forgetting remains open."
+  },
+  "H7": {
+   "qualifier": "uncertainty_power_diagnosis",
+   "status": "strengthened",
+   "why": "An uncertainty/power diagnosis (Kill@8 +3.43, clustered CI [-4.03, 10.88]); not proof of a positive final effect."
+  }
+ },
+ "model_calls": 0,
+ "numerical_changes": "none in any primary or stratum estimate; four exploratory 3C subgroup intervals move by <= 0.3 points (subgroup-only resampling, documented in the 3C v3 receipt)",
+ "restricted_splits_accessed": "none",
+ "schema_version": "oneiros_sft_root_cause_phase3_correction_addendum_v2",
+ "superseded_ledger_evidence": [
+  {
+   "hypothesis": "H1",
+   "phase": "3-correction",
+   "reason": "set H1 strengthened; H1 is open"
+  },
+  {
+   "hypothesis": "H1",
+   "phase": "3A",
+   "reason": "described A3 as non-revealing context"
+  },
+  {
+   "hypothesis": "H1",
+   "phase": "3C",
+   "reason": "read A4 as specification insufficiency; 'specification became the larger gap at 7B'"
+  },
+  {
+   "hypothesis": "H2",
+   "phase": "3-correction",
+   "reason": "replaced by the addendum wording (strengthened, not supported)"
+  },
+  {
+   "hypothesis": "H2",
+   "phase": "3A",
+   "reason": "'SFT did not improve output prediction even on its training inputs'"
+  },
+  {
+   "hypothesis": "H3",
+   "phase": "3-correction",
+   "reason": "reported Holm 'p <= 0.0002' as a bound; replaced by v3 Monte Carlo wording and explicit subclaims"
+  },
+  {
+   "hypothesis": "H3",
+   "phase": "3A",
+   "reason": "'1.5B execution reasoning is limited' framed as a capacity finding"
+  },
+  {
+   "hypothesis": "H3",
+   "phase": "3C",
+   "reason": "'1.5B execution reasoning is capacity-limited' (causal claim)"
+  },
+  {
+   "hypothesis": "H4",
+   "phase": "3-correction",
+   "reason": "replaced by the route-exact v3 decision (same status: open)"
+  },
+  {
+   "hypothesis": "H4",
+   "phase": "3A",
+   "reason": "'H4 weakened' from a schema-dependent exposed result"
+  }
+ ],
+ "supersedes_interpretation_of": {
+  "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83"
+ },
+ "terminal_support": "none: no hypothesis is terminally supported",
+ "training": false,
+ "withdrawn_statements": [
+  "SFT did not improve output prediction even on its training functions.",
+  "H4 was weakened (Phase 3A).",
+  "A3 is non-revealing context.",
+  "A0/specification insufficiency follows from A4.",
+  "1.5B execution semantics were causally capacity-limited.",
+  "Specification became the larger gap at 7B.",
+  "Bootstrap p-values were zero (Phase 3C v1: bootstrap_p_two_sided 0.0, holm_p 0.0).",
+  "H1 strengthened (first correction receipt, commit 2e7ddba).",
+  "Holm 'p <= 0.0002' as a bound (first correction receipt)."
+ ]
+}

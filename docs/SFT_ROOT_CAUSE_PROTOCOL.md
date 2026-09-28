@@ -291,3 +291,30 @@ withdrawn claim.
   lineage-disjoint mediator-gate cohort must be frozen before any Phase 4 training (see
   `results/sft_root_cause_phase4_cohort_census.json` and
   `docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT.md`). Phase 6 confirmation stays separate.
+
+**2026-09-28, amendment 4: v3 analyses and correction addendum (additive; amendment 3's text
+is kept as written).**
+
+Amendment 3 is superseded where it conflicts with this amendment:
+
+- **Hypotheses:**
+  - Amendment 3's "H1 `strengthened`" is superseded: **H1 is `open`**. A1 and A2 were not
+    run, A3 is an oracle-derived type/length hint, and A4 exposes the complete fixed
+    implementation. None of these identifies natural-language specification
+    insufficiency.
+  - **H3 is only a model-scale association.** Its adapter/parameter-capacity subclaim is
+    `open`.
+  - **H4 remains `open`** and schema-dependent. The route-exact rule stops at the exposed
+    schema check.
+- **Current receipts:** `results/sft_root_cause_phase3a_result_receipt_v3.json` and
+  `results/sft_root_cause_phase3c_result_receipt_v3.json`, interpreted by
+  `results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json`.
+  The v1 and v2 receipts and the first correction receipt remain unchanged history.
+- **Analysis rules from v3 on:**
+  - Every paired contrast validates exact item identity.
+  - The Phase 3C gate is recomputed from rows and enforced before interpretation.
+  - Monte Carlo p-values are reported at their resolution, and a Holm-adjusted
+    zero-effect p never establishes a ≥ 5-point effect.
+  - The frozen ≥ 5-point rule uses per-contrast (unadjusted) intervals and supports no
+    familywise claim.
+- **No hypothesis is terminally supported.**

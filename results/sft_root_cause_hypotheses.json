@@ -1,40 +1,10 @@
 {
- "schema_version": "oneiros_sft_root_cause_hypotheses_v1",
- "frozen_utc": "2026-09-28",
  "frozen_at_commit": "e56af51808562ec179d238425881e0c51fa4eb52",
- "protocol": "docs/SFT_ROOT_CAUSE_PROTOCOL.md",
- "minimum_meaningful_effects": {
-  "kill_at_8_points": 3.0,
-  "conditional_oracle_points": 5.0,
-  "max_reference_validity_regression_points": 3.0,
-  "max_exact_unique_ratio_relative_regression": 0.1
- },
- "status_values": [
-  "open",
-  "weakened",
-  "strengthened",
-  "supported",
-  "rejected",
-  "inconclusive_power",
-  "invalid_pipeline",
-  "under_specified",
-  "not_identifiable"
- ],
+ "frozen_utc": "2026-09-28",
  "hypotheses": [
   {
-   "id": "H1",
-   "name": "specification insufficiency",
    "claim": "the prompt does not contain enough information to deduce the correct expected value",
-   "mediator": "P(correct oracle | discriminating input)",
-   "supporting_signature": [
-    "base and SFT both low on P(correct oracle | disc)",
-    "Probe A: only A4 (behavioural evidence) raises the conditional oracle rate; A1-A3 do not"
-   ],
-   "weakening_signature": [
-    "Probe A: A1/A2/A3 raise the conditional oracle rate by >= 5 points"
-   ],
    "decisive_test": "Phase 3 Probe A",
-   "status": "strengthened",
    "evidence": [
     {
      "phase": 2,
@@ -48,6 +18,10 @@
      "receipt": "results/sft_root_cause_phase3a_result_receipt.json",
      "receipt_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
      "status_after": "weakened",
+     "status_after_as_recorded": "weakened",
+     "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "superseded_by_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "superseded_reason": "described A3 as non-revealing context",
      "why": "A3 (non-revealing type/length) - A0: base -0.42 [-3.125, 2.292], SFT +1.25 [-1.458, 3.958]; A4 (fixed code shown) - A0: base +6.04 [3.125, 9.167], SFT +5.21 [2.292, 8.333]. Specification contributes directionally (A4) but is not the dominant limit: accuracy with the fixed implementation shown is only 0.331 (base) / 0.338 (SFT).",
      "withdrawn": true,
      "withdrawn_by": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
@@ -58,37 +32,54 @@
      "receipt": "results/sft_root_cause_phase3c_result_receipt.json",
      "receipt_sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3",
      "status_after": "strengthened",
+     "status_after_as_recorded": "scale_dependent",
+     "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "superseded_by_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "superseded_reason": "read A4 as specification insufficiency; 'specification became the larger gap at 7B'",
      "why": "Non-revealing invariants (A3) do not help at 1.5B or 7B (7B A3-A0 +1.25 [-1.04, 3.54]). The fixed implementation (A4) helps modestly at 1.5B (+6.0) but strongly at 7B (+19.38 [14.79, 24.17]): once execution reasoning is adequate, the production information (buggy code + one-line specification) becomes the binding limit.",
      "withdrawn": true,
      "withdrawn_by": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
-     "withdrawn_reason": "undeclared status 'scale_dependent'; treated A4 as specification evidence",
-     "status_after_as_recorded": "scale_dependent"
+     "withdrawn_reason": "undeclared status 'scale_dependent'; treated A4 as specification evidence"
     },
     {
      "phase": "3-correction",
+     "qualifier": "scale_qualification",
      "receipt": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
      "receipt_sha256": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83",
      "status_after": "strengthened",
-     "qualifier": "scale_qualification",
-     "why": "A3 (oracle-derived type/length hint) did not measurably help at 1.5B or 7B: this particular hint was insufficient, nothing more. A4 (access to the fixed implementation) helps modestly at 1.5B and strongly at 7B (+19.4, CI [14.8, 24.2]); that shows access to the correct implementation improves prediction, not that the natural-language specification is under-specified. A1/A2 were not run, so richer public context remains untested."
+     "status_after_as_recorded": "strengthened",
+     "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "superseded_by_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "superseded_reason": "set H1 strengthened; H1 is open",
+     "why": "A3 (oracle-derived type/length hint) did not measurably help at 1.5B or 7B: this particular hint was insufficient, nothing more. A4 (access to the fixed implementation) helps modestly at 1.5B and strongly at 7B (+19.4, CI [14.8, 24.2]); that shows access to the correct implementation improves prediction, not that the natural-language specification is under-specified. A1/A2 were not run, so richer public context remains untested.",
+     "withdrawn": true,
+     "withdrawn_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json"
+    },
+    {
+     "phase": "3-correction-addendum-v2",
+     "qualifier": null,
+     "receipt": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "receipt_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "status_after": "open",
+     "why": "A1 and A2 were not run; A3 shows only that this specific oracle-derived type/length hint was insufficient; A4 reveals the complete fixed implementation and is not an identifying manipulation of public specification quality. Current evidence neither supports nor rejects natural-language specification insufficiency."
     }
    ],
-   "qualifier": "scale_qualification"
-  },
-  {
-   "id": "H2",
-   "name": "objective mismatch",
-   "claim": "next-token imitation of whole tests does not optimise oracle correctness; it shifts input choice more than value prediction",
-   "mediator": "P(disc | execute) up and P(correct oracle | disc) flat or down under SFT",
+   "id": "H1",
+   "mediator": "P(correct oracle | discriminating input)",
+   "name": "specification insufficiency",
+   "qualifier": null,
+   "status": "open",
    "supporting_signature": [
-    "Phase 2: SFT raises P(disc|execute) while P(correct oracle|disc) falls",
-    "Phase 4: oracle-only or verifier-filtered supervision raises P(correct oracle|disc) >= 5 points where arm-A-style SFT does not"
+    "base and SFT both low on P(correct oracle | disc)",
+    "Probe A: only A4 (behavioural evidence) raises the conditional oracle rate; A1-A3 do not"
    ],
    "weakening_signature": [
-    "Phase 2: SFT raises P(correct oracle | disc)"
-   ],
+    "Probe A: A1/A2/A3 raise the conditional oracle rate by >= 5 points"
+   ]
+  },
+  {
+   "claim": "next-token imitation of whole tests does not optimise oracle correctness; it shifts input choice more than value prediction",
    "decisive_test": "Phase 2, then a Phase 4 single-factor arm",
-   "status": "strengthened",
    "evidence": [
     {
      "phase": 2,
@@ -109,6 +100,10 @@
      "receipt": "results/sft_root_cause_phase3a_result_receipt.json",
      "receipt_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
      "status_after": "strengthened",
+     "status_after_as_recorded": "strengthened",
+     "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "superseded_by_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "superseded_reason": "'SFT did not improve output prediction even on its training inputs'",
      "why": "fixed-input value prediction, all items, A0: SFT-base +1.46 [-2.5, 5.625]: no value-prediction improvement demonstrated from SFT on its own supervision distribution, including literal training targets; imitation moved form and input choice (Phase 2), not values.",
      "withdrawn": true,
      "withdrawn_by": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
@@ -116,29 +111,44 @@
     },
     {
      "phase": "3-correction",
+     "qualifier": null,
      "receipt": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
      "receipt_sha256": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83",
      "status_after": "strengthened",
-     "qualifier": null,
-     "why": "Rests on Phase 2 (input choice and assertion form moved). Whether SFT improves fixed-input output prediction is schema-dependent and unresolved (Phase 3A v2)."
+     "status_after_as_recorded": "strengthened",
+     "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "superseded_by_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "superseded_reason": "replaced by the addendum wording (strengthened, not supported)",
+     "why": "Rests on Phase 2 (input choice and assertion form moved). Whether SFT improves fixed-input output prediction is schema-dependent and unresolved (Phase 3A v2).",
+     "withdrawn": true,
+     "withdrawn_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json"
+    },
+    {
+     "phase": "3-correction-addendum-v2",
+     "qualifier": "not_supported",
+     "receipt": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "receipt_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "status_after": "strengthened",
+     "why": "Phase 2 showed input-choice and assertion-form changes. Whether SFT improves fixed-input value prediction is schema-dependent and unresolved (Phase 3A v3). Causal support still requires a valid Phase 4 objective intervention."
     }
    ],
+   "id": "H2",
+   "mediator": "P(disc | execute) up and P(correct oracle | disc) flat or down under SFT",
+   "name": "objective mismatch",
+   "qualifier": "not_supported",
    "scope_note": "input choice and assertion form moved under imitation; no value-prediction improvement is demonstrated. Causal support requires a Phase 4 arm.",
-   "qualifier": null
-  },
-  {
-   "id": "H3",
-   "name": "adapter/model capacity",
-   "claim": "a 1.5B model with the current LoRA cannot acquire execution semantics",
-   "mediator": "output-prediction accuracy on fixed discriminating inputs",
+   "status": "strengthened",
    "supporting_signature": [
-    "Probe C: a larger or full-capacity model raises constrained output-prediction accuracy while the 1.5B adapters do not"
+    "Phase 2: SFT raises P(disc|execute) while P(correct oracle|disc) falls",
+    "Phase 4: oracle-only or verifier-filtered supervision raises P(correct oracle|disc) >= 5 points where arm-A-style SFT does not"
    ],
    "weakening_signature": [
-    "Probe C: a larger model does not beat 1.5B base on constrained output prediction"
-   ],
+    "Phase 2: SFT raises P(correct oracle | disc)"
+   ]
+  },
+  {
+   "claim": "a 1.5B model with the current LoRA cannot acquire execution semantics",
    "decisive_test": "Phase 3 Probe C",
-   "status": "strengthened",
    "evidence": [
     {
      "phase": 2,
@@ -152,43 +162,76 @@
      "receipt": "results/sft_root_cause_phase3a_result_receipt.json",
      "receipt_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
      "status_after": "strengthened",
-     "why": "pre-registered flag fired: base A4 accuracy 0.331 < 0.5 - execution reasoning is limited even when the fixed code is shown. Phase 3C (larger model, same items) is the decisive test."
+     "status_after_as_recorded": "strengthened",
+     "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "superseded_by_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "superseded_reason": "'1.5B execution reasoning is limited' framed as a capacity finding",
+     "why": "pre-registered flag fired: base A4 accuracy 0.331 < 0.5 - execution reasoning is limited even when the fixed code is shown. Phase 3C (larger model, same items) is the decisive test.",
+     "withdrawn": true,
+     "withdrawn_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json"
     },
     {
      "phase": "3C",
      "receipt": "results/sft_root_cause_phase3c_result_receipt.json",
      "receipt_sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3",
      "status_after": "strengthened",
+     "status_after_as_recorded": "supported_at_model_scale",
+     "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "superseded_by_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "superseded_reason": "'1.5B execution reasoning is capacity-limited' (causal claim)",
      "why": "Gate passed (answer rate 1.0 all levels; strict 1.0). C1 A4 7B-1.5B +24.79 [19.38, 30.42]; C2 A0 +11.46 [6.46, 16.67], Holm p<0.001 both. LIMITATION: a scale contrast (7B also differs in pretraining), not a manipulation of adapter capacity; LoRA rank / full fine-tuning untested.",
      "withdrawn": true,
      "withdrawn_by": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
-     "withdrawn_reason": "undeclared status 'supported_at_model_scale'; a checkpoint-scale contrast does not establish parameter-count or adapter capacity",
-     "status_after_as_recorded": "supported_at_model_scale"
+     "withdrawn_reason": "undeclared status 'supported_at_model_scale'; a checkpoint-scale contrast does not establish parameter-count or adapter capacity"
     },
     {
      "phase": "3-correction",
+     "qualifier": "model_scale_association",
      "receipt": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
      "receipt_sha256": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83",
      "status_after": "strengthened",
-     "qualifier": "model_scale_association",
-     "why": "Within the Qwen2.5-Coder family, 7B beats 1.5B on fixed-input prediction: A0 +11.46 [6.46, 16.67], A4 +24.79 [19.38, 30.42], answer-rate gate passed, sign-flip Holm p <= 0.0002. The checkpoints differ in scale and learned representation together; adapter rank and full fine-tuning are untested."
+     "status_after_as_recorded": "strengthened",
+     "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "superseded_by_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "superseded_reason": "reported Holm 'p <= 0.0002' as a bound; replaced by v3 Monte Carlo wording and explicit subclaims",
+     "why": "Within the Qwen2.5-Coder family, 7B beats 1.5B on fixed-input prediction: A0 +11.46 [6.46, 16.67], A4 +24.79 [19.38, 30.42], answer-rate gate passed, sign-flip Holm p <= 0.0002. The checkpoints differ in scale and learned representation together; adapter rank and full fine-tuning are untested.",
+     "withdrawn": true,
+     "withdrawn_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json"
+    },
+    {
+     "phase": "3-correction-addendum-v2",
+     "qualifier": "model_scale_association_only",
+     "receipt": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "receipt_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "status_after": "strengthened",
+     "why": "7B beats 1.5B on this panel; no causal parameter-count or capacity claim."
     }
    ],
-   "qualifier": "model_scale_association"
-  },
-  {
-   "id": "H4",
-   "name": "dataset-distribution shift",
-   "claim": "synthetic supervision does not represent the evaluated behaviour; gains stay on the training distribution",
-   "mediator": "train-vs-held-out gap in P(correct oracle | disc) for the same checkpoint",
+   "id": "H3",
+   "mediator": "output-prediction accuracy on fixed discriminating inputs",
+   "name": "adapter/model capacity",
+   "qualifier": "model_scale_association_only",
+   "status": "strengthened",
+   "subclaims": {
+    "adapter_or_parameter_capacity_causal": {
+     "statement": "LoRA rank, adapter capacity, full fine-tuning and parameter count as causal factors are untested; the two checkpoints differ in scale and learned representation together.",
+     "status": "open"
+    },
+    "model_scale_association": {
+     "statement": "Within the Qwen2.5-Coder family, 7B beats 1.5B on this fixed-input panel (A0 +11.46, CI [6.46, 16.67]; A4 +24.79, CI [19.38, 30.42]; recomputed answer-rate gate passed).",
+     "status": "strengthened"
+    }
+   },
    "supporting_signature": [
-    "SFT raises P(correct oracle|disc) on training functions but not on held-out functions"
+    "Probe C: a larger or full-capacity model raises constrained output-prediction accuracy while the 1.5B adapters do not"
    ],
    "weakening_signature": [
-    "SFT does not raise P(correct oracle|disc) even on its own training functions"
-   ],
+    "Probe C: a larger model does not beat 1.5B base on constrained output prediction"
+   ]
+  },
+  {
+   "claim": "synthetic supervision does not represent the evaluated behaviour; gains stay on the training distribution",
    "decisive_test": "Phase 3 (SFT generations on train functions)",
-   "status": "open",
    "evidence": [
     {
      "phase": 2,
@@ -209,6 +252,10 @@
      "receipt": "results/sft_root_cause_phase3a_result_receipt.json",
      "receipt_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
      "status_after": "weakened",
+     "status_after_as_recorded": "weakened",
+     "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "superseded_by_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "superseded_reason": "'H4 weakened' from a schema-dependent exposed result",
      "why": "primary (prefill) schema, A0: SFT-base on exposed -1.67 [-7.6, 4.202], on literal SFT-target inputs -3.33 [-9.85, 3.252], unexposed +4.58 [-0.877, 10.081]; interaction -6.25 [-14.583, 1.667]. Rule 1: no improvement even on exposed training functions. SCHEMA SENSITIVITY: under the answer-schema control the exposed stratum is +5.00 [0.42, 9.836] (secondary, uncorrected). Distribution-shift arm untestable (no external cohort).",
      "withdrawn": true,
      "withdrawn_by": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
@@ -216,31 +263,44 @@
     },
     {
      "phase": "3-correction",
+     "qualifier": "schema_dependent_exposure_result",
      "receipt": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
      "receipt_sha256": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83",
      "status_after": "open",
+     "status_after_as_recorded": "open",
+     "superseded_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "superseded_by_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "superseded_reason": "replaced by the route-exact v3 decision (same status: open)",
+     "why": "On exposed functions, the estimated SFT effect changes from -1.67 points under assertion-prefill to +5.00 points under the ANSWER schema. Therefore the exposure result is answer-schema dependent and cannot currently support or weaken memorization or distribution shift. Distribution shift stays open: no external diagnostic cohort exists.",
+     "withdrawn": true,
+     "withdrawn_by": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json"
+    },
+    {
+     "phase": "3-correction-addendum-v2",
      "qualifier": "schema_dependent_exposure_result",
-     "why": "On exposed functions, the estimated SFT effect changes from -1.67 points under assertion-prefill to +5.00 points under the ANSWER schema. Therefore the exposure result is answer-schema dependent and cannot currently support or weaken memorization or distribution shift. Distribution shift stays open: no external diagnostic cohort exists."
+     "receipt": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "receipt_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "status_after": "open",
+     "why": "On exposed functions the SFT effect is -1.67 points under assertion-prefill and +5.00 under the ANSWER schema; the route-exact rule stops at the exposed schema check. Distribution shift is untested: no external diagnostic cohort exists."
     }
    ],
+   "id": "H4",
+   "mediator": "train-vs-held-out gap in P(correct oracle | disc) for the same checkpoint",
+   "name": "dataset-distribution shift",
+   "qualifier": "schema_dependent_exposure_result",
    "scope_note": "a train-only probe cannot support distribution shift; it can only weaken it (see protocol amendment 2 decision rules).",
+   "status": "open",
+   "supporting_signature": [
+    "SFT raises P(correct oracle|disc) on training functions but not on held-out functions"
+   ],
    "testable_scope": "exposure/memorisation only (exposed vs lineage-disjoint unexposed train, MBPP simple/moderate); no adequate external cohort exists, so distribution shift cannot be supported",
-   "qualifier": "schema_dependent_exposure_result"
+   "weakening_signature": [
+    "SFT does not raise P(correct oracle|disc) even on its own training functions"
+   ]
   },
   {
-   "id": "H5",
-   "name": "contract degradation",
    "claim": "SFT damages output form (parse, policy, execution, verbosity, non-answers) and that causes the validity loss",
-   "mediator": "P(parse), P(execute|parse), policy-invalid rate, assertion count",
-   "supporting_signature": [
-    "Phase 2: the validity loss sits in parse/execute/contract stages",
-    "Probe B: constrained output recovers validity and Kill@8"
-   ],
-   "weakening_signature": [
-    "Phase 2: parse and execution are unchanged or better and the validity loss sits at the oracle stage"
-   ],
    "decisive_test": "Phase 2, then Probe B",
-   "status": "weakened",
    "evidence": [
     {
      "phase": 2,
@@ -255,24 +315,33 @@
      "receipt_sha256": "4ec504e00730e48a46a9cde62868ed9f886c212c7dae85d192a73f501d738813",
      "status_after": "weakened",
      "why": "narrowed: syntactic/structural contract degradation is weakened. Semantic-oracle validity remains unresolved."
+    },
+    {
+     "phase": "3-correction-addendum-v2",
+     "qualifier": "narrowed_syntactic_structural_scope",
+     "receipt": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "receipt_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "status_after": "weakened",
+     "why": "Syntactic/structural contract degradation only; semantic validity unresolved."
     }
    ],
-   "scope_note": "narrowed: syntactic/structural contract degradation is weakened. Semantic-oracle validity remains unresolved."
-  },
-  {
-   "id": "H6",
-   "name": "overfitting / forgetting",
-   "claim": "training fits development-specific patterns and loses broadly useful base behaviour as steps increase",
-   "mediator": "P(correct oracle | disc) and diversity along the training trajectory",
+   "id": "H5",
+   "mediator": "P(parse), P(execute|parse), policy-invalid rate, assertion count",
+   "name": "contract degradation",
+   "qualifier": "narrowed_syntactic_structural_scope",
+   "scope_note": "narrowed: syntactic/structural contract degradation is weakened. Semantic-oracle validity remains unresolved.",
+   "status": "weakened",
    "supporting_signature": [
-    "Phase 2 trajectory: the conditional oracle rate declines with steps while training loss falls",
-    "the decline is steepest where diversity collapses (duplicates rise)"
+    "Phase 2: the validity loss sits in parse/execute/contract stages",
+    "Probe B: constrained output recovers validity and Kill@8"
    ],
    "weakening_signature": [
-    "the conditional oracle rate is flat or rising across steps"
-   ],
+    "Phase 2: parse and execution are unchanged or better and the validity loss sits at the oracle stage"
+   ]
+  },
+  {
+   "claim": "training fits development-specific patterns and loses broadly useful base behaviour as steps increase",
    "decisive_test": "Phase 2 trajectory, then regularised-replay arm",
-   "status": "weakened",
    "evidence": [
     {
      "phase": 2,
@@ -287,23 +356,33 @@
      "receipt_sha256": "4ec504e00730e48a46a9cde62868ed9f886c212c7dae85d192a73f501d738813",
      "status_after": "weakened",
      "why": "narrowed: progressive late-checkpoint degradation after step 100 is weakened. A rapid early SFT-induced capability shift or forgetting (steps 0-100) remains open."
+    },
+    {
+     "phase": "3-correction-addendum-v2",
+     "qualifier": "narrowed_progressive_degradation_scope",
+     "receipt": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "receipt_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "status_after": "weakened",
+     "why": "Progressive degradation after step 100 only; a rapid early shift or forgetting remains open."
     }
    ],
-   "scope_note": "narrowed: progressive late-checkpoint degradation after step 100 is weakened. A rapid early SFT-induced capability shift or forgetting (steps 0-100) remains open."
-  },
-  {
-   "id": "H7",
-   "name": "insufficient evaluation power",
-   "claim": "+3.43 points may be real but unresolvable at the available cluster count",
-   "mediator": "cluster-bootstrap interval width of the Kill@8 difference",
+   "id": "H6",
+   "mediator": "P(correct oracle | disc) and diversity along the training trajectory",
+   "name": "overfitting / forgetting",
+   "qualifier": "narrowed_progressive_degradation_scope",
+   "scope_note": "narrowed: progressive late-checkpoint degradation after step 100 is weakened. A rapid early SFT-induced capability shift or forgetting (steps 0-100) remains open.",
+   "status": "weakened",
    "supporting_signature": [
-    "the clustered 95% interval of the Kill@8 difference includes both 0 and +3 points"
+    "Phase 2 trajectory: the conditional oracle rate declines with steps while training loss falls",
+    "the decline is steepest where diversity collapses (duplicates rise)"
    ],
    "weakening_signature": [
-    "the clustered interval excludes +3 points (either side)"
-   ],
+    "the conditional oracle rate is flat or rising across steps"
+   ]
+  },
+  {
+   "claim": "+3.43 points may be real but unresolvable at the available cluster count",
    "decisive_test": "Phase 2 clustered inference plus a minimum-detectable-effect calculation",
-   "status": "strengthened",
    "evidence": [
     {
      "phase": 2,
@@ -311,9 +390,48 @@
      "receipt_sha256": "39aa1c4880387980d7fdcc47003f0dd48abffd2399308dd022e76a85581fe932",
      "status_after": "strengthened",
      "why": "Kill@8 +3.43 points, clustered CI [-4.0303, 10.8757] over 78 semantic clusters; minimum detectable effect at 80% power is 10.681 points"
+    },
+    {
+     "phase": "3-correction-addendum-v2",
+     "qualifier": "uncertainty_power_diagnosis",
+     "receipt": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
+     "receipt_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
+     "status_after": "strengthened",
+     "why": "An uncertainty/power diagnosis (Kill@8 +3.43, clustered CI [-4.03, 10.88]); not proof of a positive final effect."
     }
+   ],
+   "id": "H7",
+   "mediator": "cluster-bootstrap interval width of the Kill@8 difference",
+   "name": "insufficient evaluation power",
+   "qualifier": "uncertainty_power_diagnosis",
+   "status": "strengthened",
+   "supporting_signature": [
+    "the clustered 95% interval of the Kill@8 difference includes both 0 and +3 points"
+   ],
+   "weakening_signature": [
+    "the clustered interval excludes +3 points (either side)"
    ]
   }
  ],
- "phase2_note": "Superseded wording: see results/sft_root_cause_phase2_interpretation_correction_2026-09-28.json. No value-prediction improvement is demonstrated; a >=5-point improvement is excluded, but meaningful degradation remains possible. From Phase 3 the primary oracle mediator is fixed-input exact-output accuracy."
+ "minimum_meaningful_effects": {
+  "conditional_oracle_points": 5.0,
+  "kill_at_8_points": 3.0,
+  "max_exact_unique_ratio_relative_regression": 0.1,
+  "max_reference_validity_regression_points": 3.0
+ },
+ "phase2_note": "Superseded wording: see results/sft_root_cause_phase2_interpretation_correction_2026-09-28.json. No value-prediction improvement is demonstrated; a >=5-point improvement is excluded, but meaningful degradation remains possible. From Phase 3 the primary oracle mediator is fixed-input exact-output accuracy.",
+ "protocol": "docs/SFT_ROOT_CAUSE_PROTOCOL.md",
+ "schema_version": "oneiros_sft_root_cause_hypotheses_v1",
+ "status_values": [
+  "open",
+  "weakened",
+  "strengthened",
+  "supported",
+  "rejected",
+  "inconclusive_power",
+  "invalid_pipeline",
+  "under_specified",
+  "not_identifiable"
+ ],
+ "terminal_support": "none"
 }
