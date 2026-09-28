@@ -1,0 +1,36 @@
+{
+ "schema_version": "oneiros_sft_root_cause_phase3c_design_v1",
+ "phase": "3C",
+ "frozen_utc": "2026-09-28",
+ "frozen_before_any_generation": true,
+ "why_informative": "Phase 3A: base 1.5B exact-output accuracy with the fixed implementation shown (A4) is 0.331 < 0.5 - execution reasoning is limited even with full specification; whether scale relieves it is the open capacity question (H3)",
+ "cohort": {"path": "results/sft_root_cause_phase3a_cohort.json", "sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7", "items": 480, "same_as_phase3a": true},
+ "levels_and_schema": "identical to Phase 3A: A0, A3, A4 with the bare prefill 'assert <call> == ', and the A0 answer-schema control; greedy; max_new_tokens 48/96",
+ "arms": {
+  "base_1_5b": "reused unchanged from Phase 3A (generations sha256 e41bdf29...)",
+  "arm_a_431": "reused unchanged from Phase 3A (generations sha256 2caa6659...)",
+  "qwen7b_base": "Qwen/Qwen2.5-Coder-7B-Instruct @ c03e6d358207e414f1eca0bb1891e29f1db0e242 (local snapshot, 4 shards, 15 GB; pinned in config.IMMUTABLE_MODEL_REVISIONS; no download), 4-bit NF4, sdpa, same chat template and system prompt"
+ },
+ "not_run_in_phase3": "higher-rank adapter or full fine-tuning (a Phase 4 capacity arm, if selected)",
+ "runner": "python scripts/gpu_run.py start --name phase3c_capacity -- .venv-gpu/Scripts/python.exe scripts/run_fixed_input_probe.py --arms qwen7b_base --out results/sft_root_cause/phase3c",
+ "gate": {
+  "name": "answer-rate non-inferiority (required before any accuracy is interpreted)",
+  "rule": "7B answer rate >= (1.5B base answer rate - 2 points) at each of A0, A3, A4, and 7B strict 'ANSWER:' rate >= 0.95 on the control; otherwise no capacity conclusion is drawn",
+  "reason": "an earlier 7B experiment suffered an answer-contract collapse; a larger model that emits nonanswers does not establish a capacity result"
+ },
+ "primary_contrasts": {
+  "C1": "A4 exact-output accuracy, 7B minus 1.5B base (execution reasoning with the fixed code shown)",
+  "C2": "A0 exact-output accuracy, 7B minus 1.5B base (value prediction from production information)"
+ },
+ "secondary": ["7B minus arm A 431 at A0 and A4", "7B A4 - A0 and A3 - A0", "by cohort (exposed/unexposed) and complexity tier"],
+ "inference": {"method": "paired cluster bootstrap over semantic group", "resamples": 10000, "seed": 20260928, "looks": 1, "multiplicity": "Holm across C1 and C2"},
+ "decision_rules": {
+  "gate_failed": "no capacity conclusion; H3 unchanged",
+  "C1_lower_bound_ge_5": "H3 supported at model scale: 1.5B execution reasoning is capacity-limited",
+  "C1_lower_bound_gt_0_lt_5": "H3 directional",
+  "C1_not_improved": "H3 weakened: scaling to 7B does not relieve the execution-reasoning ceiling",
+  "C2": "reported with the same regions; if C1 improves but C2 does not, A0 information (specification) is the binding limit at 7B"
+ },
+ "limitations": ["7B vs 1.5B differs in pretraining data and recipe as well as parameters: this is a scale contrast, not a pure capacity manipulation", "does not test LoRA rank or full fine-tuning", "MBPP simple/moderate only"],
+ "data_status": {"test_or_sealed_or_confirmation_read": false, "training": false}
+}

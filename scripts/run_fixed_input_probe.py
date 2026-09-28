@@ -30,6 +30,11 @@ MODEL = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
 REVISION = "2e1fd397ee46e1388853d2af2c993145b0f1098a"
 ADAPTER = "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter"
 ADAPTER_SHA256 = "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7"
+#: arm -> (model, pinned revision).  Phase 3C adds the larger base model; its
+#: snapshot is local and pinned in config.IMMUTABLE_MODEL_REVISIONS.
+MODELS = {"base": (MODEL, REVISION), "arm_a_431": (MODEL, REVISION),
+          "qwen7b_base": ("Qwen/Qwen2.5-Coder-7B-Instruct",
+                          "c03e6d358207e414f1eca0bb1891e29f1db0e242")}
 MAX_NEW_TOKENS = {"prefill": 48, "control": 96}
 BATCH = 8
 
@@ -41,7 +46,11 @@ def sha(path: Path) -> str:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--arms", default="base,arm_a_431")
+    parser.add_argument("--out", default=OUT)
     args = parser.parse_args(argv)
+    arms = args.arms.split(",")
+    if len({MODELS[a] for a in arms}) != 1:
+        raise SystemExit("REFUSED: one run loads one base model; launch other models separately")
     import torch
     from engine.generator import Phi3Generator
     from engine.test_generation_prompt import format_chat_prompt
@@ -65,17 +74,20 @@ def main(argv=None) -> int:
                 prompt = build_prompt(record, item["call"], item["expected_repr"], level)
                 work.append({"key": f"{function['record_id']}::{item['input_kind']}::{level}",
                              "level": level, **prompt})
-    out = ROOT / OUT
+    out = ROOT / args.out
     out.mkdir(parents=True, exist_ok=True)
-    generator = Phi3Generator(model_name=MODEL, model_revision=REVISION,
+    model_name, revision = MODELS[arms[0]]
+    generator = Phi3Generator(model_name=model_name, model_revision=revision,
                               attention_implementation="sdpa")
     generator.load_model()
+    if generator.model_revision != revision:
+        raise SystemExit("REFUSED: loaded revision differs from the pinned one")
     tokenizer = generator.tokenizer
     tokenizer.padding_side = "left"
-    for arm in args.arms.split(","):
+    for arm in arms:
         if arm == "arm_a_431":
             generator.load_lora_adapter(ROOT / ADAPTER)
-        elif arm != "base":
+        elif arm not in MODELS:
             raise SystemExit(f"unknown arm {arm}")
         generator.model.eval()
         path = out / f"generations_{arm}.jsonl"
@@ -111,7 +123,7 @@ def main(argv=None) -> int:
                 if finished % (BATCH * 10) == 0 or finished == len(batch_items):
                     print(f"[{arm}] heartbeat {kind} {finished}/{len(batch_items)} "
                           f"{time.time() - started:.0f}s", flush=True)
-        receipt = {"arm": arm, "model": MODEL, "revision": REVISION,
+        receipt = {"arm": arm, "model": model_name, "revision": revision,
                    "adapter_sha256": ADAPTER_SHA256 if arm == "arm_a_431" else None,
                    "cohort_sha256": design["cohort"]["sha256"], "decoding": "greedy",
                    "max_new_tokens": MAX_NEW_TOKENS, "generations": len(work),
