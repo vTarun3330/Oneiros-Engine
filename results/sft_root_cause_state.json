@@ -3,7 +3,7 @@
  "protocol": "docs/SFT_ROOT_CAUSE_PROTOCOL.md",
  "hypotheses": "results/sft_root_cause_hypotheses.json",
  "terminal_state": null,
- "current_phase": 3,
+ "current_phase": 4,
  "phases": [
   {
    "phase": 0,
@@ -43,7 +43,7 @@
   {
    "phase": 3,
    "name": "cheap causal probes",
-   "status": "3A_complete",
+   "status": "complete",
    "design_receipt": "results/sft_root_cause_phase3a_design_receipt.json",
    "design_receipt_sha256": "d85249b264c00bb330ec2f1313b09ce292433de2386b4674c479af1ee5181d46",
    "census": "results/sft_root_cause_phase3_cohort_census.json",
@@ -59,12 +59,21 @@
      "base": "e41bdf29533210e16a64997161cded1806a77079edf436bbb61f326ab4a46583",
      "arm_a_431": "2caa6659a73df3aceeaea13ff0c91eef3e32b0e6032dbdb92d0cdee46250356c"
     }
+   },
+   "phase3c_result_receipt": "results/sft_root_cause_phase3c_result_receipt.json",
+   "phase3c_result_sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3",
+   "phase3c_run": {
+    "run_id": "20260928-165113-phase3c_capacity",
+    "exit_code": 0,
+    "duration_seconds": 534.7,
+    "generations": 1920,
+    "output_sha256": "722a70c019180f4733f63af48982e43639af897d54bf4ceaefb4b17ce735124a"
    }
   },
   {
    "phase": 4,
    "name": "single-factor training arm",
-   "status": "pending"
+   "status": "awaiting_authorisation"
   },
   {
    "phase": 5,
@@ -82,7 +91,7 @@
   "phase4_arms_max": 3,
   "phase4_gpu_hours_per_arm": 8,
   "phase6_gpu_hours": 6,
-  "gpu_hours_used": 0.119
+  "gpu_hours_used": 0.268
  },
  "data_status": {
   "val": "spent (descriptive only)",
@@ -121,6 +130,12 @@
    "event": "phase 3A complete",
    "finding": "SFT does not improve fixed-input value prediction even on exposed/literal-target inputs; A3 no effect; A4 +5-6 points but absolute 0.33",
    "next_decision": "Phase 3C capacity probe (Qwen2.5-Coder-7B local snapshot c03e6d35) with an answer-rate non-inferiority gate"
+  },
+  {
+   "utc": "2026-09-28",
+   "event": "phase 3C complete; Phase 4 not started (not authorised)",
+   "finding": "1.5B value prediction is limited mainly by execution reasoning (A4 0.33); 7B relieves it (A4 0.58, A0 0.39); at 7B specification becomes the larger gap; SFT at 1.5B did not move value prediction",
+   "terminal_state": "not reached: no training intervention, ablation or independent replication yet"
   }
  ]
 }

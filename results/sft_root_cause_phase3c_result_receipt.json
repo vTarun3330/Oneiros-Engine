@@ -1,0 +1,414 @@
+{
+ "schema_version": "oneiros_sft_root_cause_phase3c_result_v1",
+ "phase": "3C",
+ "command": "python scripts/analyze_capacity_probe.py",
+ "design_receipt": {
+  "path": "results/sft_root_cause_phase3c_design_receipt.json",
+  "sha256": "fbdfef6bca0f347ef6b8531810d679eb4446ff8bc80c1fd7ae57708534060858"
+ },
+ "generation_completions": {
+  "base": {
+   "arm": "base",
+   "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+   "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+   "adapter_sha256": null,
+   "cohort_sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
+   "decoding": "greedy",
+   "max_new_tokens": {
+    "prefill": 48,
+    "control": 96
+   },
+   "generations": 1920,
+   "output": "results/sft_root_cause/phase3a/generations_base.jsonl",
+   "output_sha256": "e41bdf29533210e16a64997161cded1806a77079edf436bbb61f326ab4a46583",
+   "seconds": 172.4,
+   "completed_utc": "2026-09-28T11:14:03Z"
+  },
+  "arm_a_431": {
+   "arm": "arm_a_431",
+   "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+   "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+   "adapter_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+   "cohort_sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
+   "decoding": "greedy",
+   "max_new_tokens": {
+    "prefill": 48,
+    "control": 96
+   },
+   "generations": 1920,
+   "output": "results/sft_root_cause/phase3a/generations_arm_a_431.jsonl",
+   "output_sha256": "2caa6659a73df3aceeaea13ff0c91eef3e32b0e6032dbdb92d0cdee46250356c",
+   "seconds": 246.4,
+   "completed_utc": "2026-09-28T11:18:10Z"
+  },
+  "qwen7b_base": {
+   "arm": "qwen7b_base",
+   "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+   "revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
+   "adapter_sha256": null,
+   "cohort_sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
+   "decoding": "greedy",
+   "max_new_tokens": {
+    "prefill": 48,
+    "control": 96
+   },
+   "generations": 1920,
+   "output": "results/sft_root_cause/phase3c/generations_qwen7b_base.jsonl",
+   "output_sha256": "722a70c019180f4733f63af48982e43639af897d54bf4ceaefb4b17ce735124a",
+   "seconds": 520.8,
+   "completed_utc": "2026-09-28T11:30:07Z"
+  }
+ },
+ "cells": {
+  "base/A0": {
+   "items": 480,
+   "answer_rate": 1.0,
+   "accuracy": 0.2708,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "base/A3": {
+   "items": 480,
+   "answer_rate": 1.0,
+   "accuracy": 0.2667,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "base/A4": {
+   "items": 480,
+   "answer_rate": 1.0,
+   "accuracy": 0.3312,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "base/A0_answer_schema": {
+   "items": 480,
+   "answer_rate": 1.0,
+   "accuracy": 0.2917,
+   "methods": {
+    "strict": 480
+   }
+  },
+  "arm_a_431/A0": {
+   "items": 480,
+   "answer_rate": 1.0,
+   "accuracy": 0.2854,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "arm_a_431/A3": {
+   "items": 480,
+   "answer_rate": 0.9958,
+   "accuracy": 0.2979,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "arm_a_431/A4": {
+   "items": 480,
+   "answer_rate": 1.0,
+   "accuracy": 0.3375,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "arm_a_431/A0_answer_schema": {
+   "items": 480,
+   "answer_rate": 1.0,
+   "accuracy": 0.3187,
+   "methods": {
+    "strict": 480
+   }
+  },
+  "qwen7b_base/A0": {
+   "items": 480,
+   "answer_rate": 1.0,
+   "accuracy": 0.3854,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "qwen7b_base/A3": {
+   "items": 480,
+   "answer_rate": 1.0,
+   "accuracy": 0.3979,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "qwen7b_base/A4": {
+   "items": 480,
+   "answer_rate": 1.0,
+   "accuracy": 0.5792,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "qwen7b_base/A0_answer_schema": {
+   "items": 480,
+   "answer_rate": 1.0,
+   "accuracy": 0.4437,
+   "methods": {
+    "strict": 480
+   }
+  }
+ },
+ "gate": {
+  "per_level": {
+   "A0": {
+    "qwen7b": 1.0,
+    "base_1_5b": 1.0
+   },
+   "A3": {
+    "qwen7b": 1.0,
+    "base_1_5b": 1.0
+   },
+   "A4": {
+    "qwen7b": 1.0,
+    "base_1_5b": 1.0
+   }
+  },
+  "control_strict_rate": 1.0,
+  "passed": true
+ },
+ "primary": {
+  "C1_A4": {
+   "a": {
+    "cell": [
+     "base",
+     "A4"
+    ],
+    "accuracy": 0.3312
+   },
+   "b": {
+    "cell": [
+     "qwen7b_base",
+     "A4"
+    ],
+    "accuracy": 0.5792
+   },
+   "difference_points": 24.792,
+   "ci95_points": [
+    19.375,
+    30.417
+   ],
+   "bootstrap_p_two_sided": 0.0,
+   "holm_p": 0.0,
+   "region": "supported"
+  },
+  "C2_A0": {
+   "a": {
+    "cell": [
+     "base",
+     "A0"
+    ],
+    "accuracy": 0.2708
+   },
+   "b": {
+    "cell": [
+     "qwen7b_base",
+     "A0"
+    ],
+    "accuracy": 0.3854
+   },
+   "difference_points": 11.458,
+   "ci95_points": [
+    6.458,
+    16.667
+   ],
+   "bootstrap_p_two_sided": 0.0,
+   "holm_p": 0.0,
+   "region": "supported"
+  }
+ },
+ "secondary": {
+  "7b_minus_arm_a_A0": {
+   "a": {
+    "cell": [
+     "arm_a_431",
+     "A0"
+    ],
+    "accuracy": 0.2854
+   },
+   "b": {
+    "cell": [
+     "qwen7b_base",
+     "A0"
+    ],
+    "accuracy": 0.3854
+   },
+   "difference_points": 10.0,
+   "ci95_points": [
+    4.792,
+    15.208
+   ],
+   "bootstrap_p_two_sided": 0.0
+  },
+  "7b_minus_arm_a_A4": {
+   "a": {
+    "cell": [
+     "arm_a_431",
+     "A4"
+    ],
+    "accuracy": 0.3375
+   },
+   "b": {
+    "cell": [
+     "qwen7b_base",
+     "A4"
+    ],
+    "accuracy": 0.5792
+   },
+   "difference_points": 24.167,
+   "ci95_points": [
+    18.125,
+    30.208
+   ],
+   "bootstrap_p_two_sided": 0.0
+  },
+  "7b_A4_minus_A0": {
+   "a": {
+    "cell": [
+     "qwen7b_base",
+     "A0"
+    ],
+    "accuracy": 0.3854
+   },
+   "b": {
+    "cell": [
+     "qwen7b_base",
+     "A4"
+    ],
+    "accuracy": 0.5792
+   },
+   "difference_points": 19.375,
+   "ci95_points": [
+    14.792,
+    24.167
+   ],
+   "bootstrap_p_two_sided": 0.0
+  },
+  "7b_A3_minus_A0": {
+   "a": {
+    "cell": [
+     "qwen7b_base",
+     "A0"
+    ],
+    "accuracy": 0.3854
+   },
+   "b": {
+    "cell": [
+     "qwen7b_base",
+     "A3"
+    ],
+    "accuracy": 0.3979
+   },
+   "difference_points": 1.25,
+   "ci95_points": [
+    -1.042,
+    3.542
+   ],
+   "bootstrap_p_two_sided": 0.3458
+  },
+  "C1_by_cohort": {
+   "exposed": {
+    "a": {
+     "cell": [
+      "base",
+      "A4"
+     ],
+     "accuracy": 0.3417
+    },
+    "b": {
+     "cell": [
+      "qwen7b_base",
+      "A4"
+     ],
+     "accuracy": 0.5417
+    },
+    "difference_points": 20.0,
+    "ci95_points": [
+     11.904,
+     28.39
+    ],
+    "bootstrap_p_two_sided": 0.0
+   },
+   "unexposed": {
+    "a": {
+     "cell": [
+      "base",
+      "A4"
+     ],
+     "accuracy": 0.3208
+    },
+    "b": {
+     "cell": [
+      "qwen7b_base",
+      "A4"
+     ],
+     "accuracy": 0.6167
+    },
+    "difference_points": 29.583,
+    "ci95_points": [
+     22.273,
+     37.398
+    ],
+    "bootstrap_p_two_sided": 0.0
+   }
+  },
+  "C2_by_tier": {
+   "simple": {
+    "a": {
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "accuracy": 0.2841
+    },
+    "b": {
+     "cell": [
+      "qwen7b_base",
+      "A0"
+     ],
+     "accuracy": 0.3598
+    },
+    "difference_points": 7.576,
+    "ci95_points": [
+     1.056,
+     14.341
+    ],
+    "bootstrap_p_two_sided": 0.0278
+   },
+   "moderate": {
+    "a": {
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "accuracy": 0.2546
+    },
+    "b": {
+     "cell": [
+      "qwen7b_base",
+      "A0"
+     ],
+     "accuracy": 0.4167
+    },
+    "difference_points": 16.204,
+    "ci95_points": [
+     8.416,
+     24.123
+    ],
+    "bootstrap_p_two_sided": 0.0
+   }
+  }
+ },
+ "decision": {
+  "H3": "H3 supported at model scale: 1.5B execution reasoning is capacity-limited",
+  "C2_note": null
+ }
+}

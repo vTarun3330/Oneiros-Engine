@@ -34,7 +34,7 @@
     "Probe A: A1/A2/A3 raise the conditional oracle rate by >= 5 points"
    ],
    "decisive_test": "Phase 3 Probe A",
-   "status": "weakened",
+   "status": "scale_dependent",
    "evidence": [
     {
      "phase": 2,
@@ -49,6 +49,13 @@
      "receipt_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
      "status_after": "weakened",
      "why": "A3 (non-revealing type/length) - A0: base -0.42 [-3.125, 2.292], SFT +1.25 [-1.458, 3.958]; A4 (fixed code shown) - A0: base +6.04 [3.125, 9.167], SFT +5.21 [2.292, 8.333]. Specification contributes directionally (A4) but is not the dominant limit: accuracy with the fixed implementation shown is only 0.331 (base) / 0.338 (SFT)."
+    },
+    {
+     "phase": "3C",
+     "receipt": "results/sft_root_cause_phase3c_result_receipt.json",
+     "receipt_sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3",
+     "status_after": "scale_dependent",
+     "why": "Non-revealing invariants (A3) do not help at 1.5B or 7B (7B A3-A0 +1.25 [-1.04, 3.54]). The fixed implementation (A4) helps modestly at 1.5B (+6.0) but strongly at 7B (+19.38 [14.79, 24.17]): once execution reasoning is adequate, the production information (buggy code + one-line specification) becomes the binding limit."
     }
    ]
   },
@@ -103,7 +110,7 @@
     "Probe C: a larger model does not beat 1.5B base on constrained output prediction"
    ],
    "decisive_test": "Phase 3 Probe C",
-   "status": "strengthened",
+   "status": "supported_at_model_scale",
    "evidence": [
     {
      "phase": 2,
@@ -118,6 +125,13 @@
      "receipt_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
      "status_after": "strengthened",
      "why": "pre-registered flag fired: base A4 accuracy 0.331 < 0.5 - execution reasoning is limited even when the fixed code is shown. Phase 3C (larger model, same items) is the decisive test."
+    },
+    {
+     "phase": "3C",
+     "receipt": "results/sft_root_cause_phase3c_result_receipt.json",
+     "receipt_sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3",
+     "status_after": "supported_at_model_scale",
+     "why": "Gate passed (answer rate 1.0 all levels; strict 1.0). C1 A4 7B-1.5B +24.79 [19.38, 30.42]; C2 A0 +11.46 [6.46, 16.67], Holm p<0.001 both. LIMITATION: a scale contrast (7B also differs in pretraining), not a manipulation of adapter capacity; LoRA rank / full fine-tuning untested."
     }
    ]
   },
