@@ -1,0 +1,1927 @@
+{
+ "schema_version": "oneiros_sft_root_cause_phase3a_result_v1",
+ "phase": "3A",
+ "command": "python scripts/analyze_fixed_input_probe.py",
+ "design_receipt": {
+  "path": "results/sft_root_cause_phase3a_design_receipt.json",
+  "sha256": "d85249b264c00bb330ec2f1313b09ce292433de2386b4674c479af1ee5181d46"
+ },
+ "generation_completions": {
+  "base": {
+   "arm": "base",
+   "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+   "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+   "adapter_sha256": null,
+   "cohort_sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
+   "decoding": "greedy",
+   "max_new_tokens": {
+    "prefill": 48,
+    "control": 96
+   },
+   "generations": 1920,
+   "output": "results/sft_root_cause/phase3a/generations_base.jsonl",
+   "output_sha256": "e41bdf29533210e16a64997161cded1806a77079edf436bbb61f326ab4a46583",
+   "seconds": 172.4,
+   "completed_utc": "2026-09-28T11:14:03Z"
+  },
+  "arm_a_431": {
+   "arm": "arm_a_431",
+   "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+   "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+   "adapter_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+   "cohort_sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
+   "decoding": "greedy",
+   "max_new_tokens": {
+    "prefill": 48,
+    "control": 96
+   },
+   "generations": 1920,
+   "output": "results/sft_root_cause/phase3a/generations_arm_a_431.jsonl",
+   "output_sha256": "2caa6659a73df3aceeaea13ff0c91eef3e32b0e6032dbdb92d0cdee46250356c",
+   "seconds": 246.4,
+   "completed_utc": "2026-09-28T11:18:10Z"
+  }
+ },
+ "scored_ledger": {
+  "path": "results/sft_root_cause/phase3a/scored.jsonl",
+  "sha256": "0422efe7784562aa28997865bf26d5f88990d2c8e5068997c6f55818d54e8c4e",
+  "rows": 3840
+ },
+ "descriptive": {
+  "all": {
+   "base/A0": {
+    "items": 480,
+    "accuracy_per_requested": 0.2708,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2708,
+    "token_limit_hits": 7,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 480
+    }
+   },
+   "base/A3": {
+    "items": 480,
+    "accuracy_per_requested": 0.2667,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2667,
+    "token_limit_hits": 6,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 480
+    }
+   },
+   "base/A4": {
+    "items": 480,
+    "accuracy_per_requested": 0.3312,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3312,
+    "token_limit_hits": 7,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 480
+    }
+   },
+   "base/A0_answer_schema": {
+    "items": 480,
+    "accuracy_per_requested": 0.2917,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2917,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 480
+    }
+   },
+   "arm_a_431/A0": {
+    "items": 480,
+    "accuracy_per_requested": 0.2854,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2854,
+    "token_limit_hits": 6,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 480
+    }
+   },
+   "arm_a_431/A3": {
+    "items": 480,
+    "accuracy_per_requested": 0.2979,
+    "answer_rate": 0.9958,
+    "accuracy_per_answered": 0.2992,
+    "token_limit_hits": 11,
+    "nonanswers": 2,
+    "extraction_methods": {
+     "prefill_line": 480
+    }
+   },
+   "arm_a_431/A4": {
+    "items": 480,
+    "accuracy_per_requested": 0.3375,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3375,
+    "token_limit_hits": 5,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 480
+    }
+   },
+   "arm_a_431/A0_answer_schema": {
+    "items": 480,
+    "accuracy_per_requested": 0.3187,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3187,
+    "token_limit_hits": 1,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 480
+    }
+   }
+  },
+  "exposed": {
+   "base/A0": {
+    "items": 240,
+    "accuracy_per_requested": 0.2875,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2875,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 240
+    }
+   },
+   "base/A3": {
+    "items": 240,
+    "accuracy_per_requested": 0.2875,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2875,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 240
+    }
+   },
+   "base/A4": {
+    "items": 240,
+    "accuracy_per_requested": 0.3417,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3417,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 240
+    }
+   },
+   "base/A0_answer_schema": {
+    "items": 240,
+    "accuracy_per_requested": 0.2667,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2667,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 240
+    }
+   },
+   "arm_a_431/A0": {
+    "items": 240,
+    "accuracy_per_requested": 0.2708,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2708,
+    "token_limit_hits": 1,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 240
+    }
+   },
+   "arm_a_431/A3": {
+    "items": 240,
+    "accuracy_per_requested": 0.2875,
+    "answer_rate": 0.9917,
+    "accuracy_per_answered": 0.2899,
+    "token_limit_hits": 4,
+    "nonanswers": 2,
+    "extraction_methods": {
+     "prefill_line": 240
+    }
+   },
+   "arm_a_431/A4": {
+    "items": 240,
+    "accuracy_per_requested": 0.3167,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3167,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 240
+    }
+   },
+   "arm_a_431/A0_answer_schema": {
+    "items": 240,
+    "accuracy_per_requested": 0.3167,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3167,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 240
+    }
+   }
+  },
+  "unexposed": {
+   "base/A0": {
+    "items": 240,
+    "accuracy_per_requested": 0.2542,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2542,
+    "token_limit_hits": 5,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 240
+    }
+   },
+   "base/A3": {
+    "items": 240,
+    "accuracy_per_requested": 0.2458,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2458,
+    "token_limit_hits": 4,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 240
+    }
+   },
+   "base/A4": {
+    "items": 240,
+    "accuracy_per_requested": 0.3208,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3208,
+    "token_limit_hits": 5,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 240
+    }
+   },
+   "base/A0_answer_schema": {
+    "items": 240,
+    "accuracy_per_requested": 0.3167,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3167,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 240
+    }
+   },
+   "arm_a_431/A0": {
+    "items": 240,
+    "accuracy_per_requested": 0.3,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3,
+    "token_limit_hits": 5,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 240
+    }
+   },
+   "arm_a_431/A3": {
+    "items": 240,
+    "accuracy_per_requested": 0.3083,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3083,
+    "token_limit_hits": 7,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 240
+    }
+   },
+   "arm_a_431/A4": {
+    "items": 240,
+    "accuracy_per_requested": 0.3583,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3583,
+    "token_limit_hits": 5,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 240
+    }
+   },
+   "arm_a_431/A0_answer_schema": {
+    "items": 240,
+    "accuracy_per_requested": 0.3208,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3208,
+    "token_limit_hits": 1,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 240
+    }
+   }
+  },
+  "exposed_upstream_sft_target": {
+   "base/A0": {
+    "items": 120,
+    "accuracy_per_requested": 0.3083,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3083,
+    "token_limit_hits": 1,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "base/A3": {
+    "items": 120,
+    "accuracy_per_requested": 0.275,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.275,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "base/A4": {
+    "items": 120,
+    "accuracy_per_requested": 0.35,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.35,
+    "token_limit_hits": 1,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "base/A0_answer_schema": {
+    "items": 120,
+    "accuracy_per_requested": 0.275,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.275,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 120
+    }
+   },
+   "arm_a_431/A0": {
+    "items": 120,
+    "accuracy_per_requested": 0.275,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.275,
+    "token_limit_hits": 1,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "arm_a_431/A3": {
+    "items": 120,
+    "accuracy_per_requested": 0.2833,
+    "answer_rate": 0.9917,
+    "accuracy_per_answered": 0.2857,
+    "token_limit_hits": 2,
+    "nonanswers": 1,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "arm_a_431/A4": {
+    "items": 120,
+    "accuracy_per_requested": 0.3083,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3083,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "arm_a_431/A0_answer_schema": {
+    "items": 120,
+    "accuracy_per_requested": 0.3333,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3333,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 120
+    }
+   }
+  },
+  "exposed_novel": {
+   "base/A0": {
+    "items": 120,
+    "accuracy_per_requested": 0.2667,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2667,
+    "token_limit_hits": 1,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "base/A3": {
+    "items": 120,
+    "accuracy_per_requested": 0.3,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "base/A4": {
+    "items": 120,
+    "accuracy_per_requested": 0.3333,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3333,
+    "token_limit_hits": 1,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "base/A0_answer_schema": {
+    "items": 120,
+    "accuracy_per_requested": 0.2583,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2583,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 120
+    }
+   },
+   "arm_a_431/A0": {
+    "items": 120,
+    "accuracy_per_requested": 0.2667,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2667,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "arm_a_431/A3": {
+    "items": 120,
+    "accuracy_per_requested": 0.2917,
+    "answer_rate": 0.9917,
+    "accuracy_per_answered": 0.2941,
+    "token_limit_hits": 2,
+    "nonanswers": 1,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "arm_a_431/A4": {
+    "items": 120,
+    "accuracy_per_requested": 0.325,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.325,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "arm_a_431/A0_answer_schema": {
+    "items": 120,
+    "accuracy_per_requested": 0.3,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 120
+    }
+   }
+  },
+  "unexposed_upstream": {
+   "base/A0": {
+    "items": 120,
+    "accuracy_per_requested": 0.2583,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2583,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "base/A3": {
+    "items": 120,
+    "accuracy_per_requested": 0.2583,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2583,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "base/A4": {
+    "items": 120,
+    "accuracy_per_requested": 0.325,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.325,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "base/A0_answer_schema": {
+    "items": 120,
+    "accuracy_per_requested": 0.3583,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3583,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 120
+    }
+   },
+   "arm_a_431/A0": {
+    "items": 120,
+    "accuracy_per_requested": 0.3083,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3083,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "arm_a_431/A3": {
+    "items": 120,
+    "accuracy_per_requested": 0.3167,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3167,
+    "token_limit_hits": 3,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "arm_a_431/A4": {
+    "items": 120,
+    "accuracy_per_requested": 0.375,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.375,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "arm_a_431/A0_answer_schema": {
+    "items": 120,
+    "accuracy_per_requested": 0.3333,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3333,
+    "token_limit_hits": 1,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 120
+    }
+   }
+  },
+  "unexposed_novel": {
+   "base/A0": {
+    "items": 120,
+    "accuracy_per_requested": 0.25,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.25,
+    "token_limit_hits": 3,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "base/A3": {
+    "items": 120,
+    "accuracy_per_requested": 0.2333,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2333,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "base/A4": {
+    "items": 120,
+    "accuracy_per_requested": 0.3167,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3167,
+    "token_limit_hits": 3,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "base/A0_answer_schema": {
+    "items": 120,
+    "accuracy_per_requested": 0.275,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.275,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 120
+    }
+   },
+   "arm_a_431/A0": {
+    "items": 120,
+    "accuracy_per_requested": 0.2917,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2917,
+    "token_limit_hits": 3,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "arm_a_431/A3": {
+    "items": 120,
+    "accuracy_per_requested": 0.3,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3,
+    "token_limit_hits": 4,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "arm_a_431/A4": {
+    "items": 120,
+    "accuracy_per_requested": 0.3417,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3417,
+    "token_limit_hits": 3,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 120
+    }
+   },
+   "arm_a_431/A0_answer_schema": {
+    "items": 120,
+    "accuracy_per_requested": 0.3083,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3083,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 120
+    }
+   }
+  },
+  "tier_simple": {
+   "base/A0": {
+    "items": 264,
+    "accuracy_per_requested": 0.2841,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2841,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 264
+    }
+   },
+   "base/A3": {
+    "items": 264,
+    "accuracy_per_requested": 0.2765,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2765,
+    "token_limit_hits": 3,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 264
+    }
+   },
+   "base/A4": {
+    "items": 264,
+    "accuracy_per_requested": 0.3712,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3712,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 264
+    }
+   },
+   "base/A0_answer_schema": {
+    "items": 264,
+    "accuracy_per_requested": 0.2955,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2955,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 264
+    }
+   },
+   "arm_a_431/A0": {
+    "items": 264,
+    "accuracy_per_requested": 0.2917,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2917,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 264
+    }
+   },
+   "arm_a_431/A3": {
+    "items": 264,
+    "accuracy_per_requested": 0.3068,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3068,
+    "token_limit_hits": 4,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 264
+    }
+   },
+   "arm_a_431/A4": {
+    "items": 264,
+    "accuracy_per_requested": 0.3712,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3712,
+    "token_limit_hits": 2,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 264
+    }
+   },
+   "arm_a_431/A0_answer_schema": {
+    "items": 264,
+    "accuracy_per_requested": 0.3144,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3144,
+    "token_limit_hits": 1,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 264
+    }
+   }
+  },
+  "tier_moderate": {
+   "base/A0": {
+    "items": 216,
+    "accuracy_per_requested": 0.2546,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2546,
+    "token_limit_hits": 5,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 216
+    }
+   },
+   "base/A3": {
+    "items": 216,
+    "accuracy_per_requested": 0.2546,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2546,
+    "token_limit_hits": 3,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 216
+    }
+   },
+   "base/A4": {
+    "items": 216,
+    "accuracy_per_requested": 0.2824,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2824,
+    "token_limit_hits": 5,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 216
+    }
+   },
+   "base/A0_answer_schema": {
+    "items": 216,
+    "accuracy_per_requested": 0.287,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.287,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 216
+    }
+   },
+   "arm_a_431/A0": {
+    "items": 216,
+    "accuracy_per_requested": 0.2778,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2778,
+    "token_limit_hits": 4,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 216
+    }
+   },
+   "arm_a_431/A3": {
+    "items": 216,
+    "accuracy_per_requested": 0.287,
+    "answer_rate": 0.9907,
+    "accuracy_per_answered": 0.2897,
+    "token_limit_hits": 7,
+    "nonanswers": 2,
+    "extraction_methods": {
+     "prefill_line": 216
+    }
+   },
+   "arm_a_431/A4": {
+    "items": 216,
+    "accuracy_per_requested": 0.2963,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.2963,
+    "token_limit_hits": 3,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "prefill_line": 216
+    }
+   },
+   "arm_a_431/A0_answer_schema": {
+    "items": 216,
+    "accuracy_per_requested": 0.3241,
+    "answer_rate": 1.0,
+    "accuracy_per_answered": 0.3241,
+    "token_limit_hits": 0,
+    "nonanswers": 0,
+    "extraction_methods": {
+     "strict": 216
+    }
+   }
+  }
+ },
+ "sft_minus_base": {
+  "all": {
+   "A0": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2708,
+      "correct": 130,
+      "items": 480
+     },
+     "sft": {
+      "accuracy": 0.2854,
+      "correct": 137,
+      "items": 480
+     }
+    },
+    "difference_points": 1.458,
+    "ci95_points": [
+     -2.5,
+     5.625
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A3": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2667,
+      "correct": 128,
+      "items": 480
+     },
+     "sft": {
+      "accuracy": 0.2979,
+      "correct": 143,
+      "items": 480
+     }
+    },
+    "difference_points": 3.125,
+    "ci95_points": [
+     -0.625,
+     6.875
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A4": {
+    "cells": {
+     "base": {
+      "accuracy": 0.3312,
+      "correct": 159,
+      "items": 480
+     },
+     "sft": {
+      "accuracy": 0.3375,
+      "correct": 162,
+      "items": 480
+     }
+    },
+    "difference_points": 0.625,
+    "ci95_points": [
+     -3.542,
+     4.792
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A0_answer_schema": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2917,
+      "correct": 140,
+      "items": 480
+     },
+     "sft": {
+      "accuracy": 0.3187,
+      "correct": 153,
+      "items": 480
+     }
+    },
+    "difference_points": 2.708,
+    "ci95_points": [
+     -1.042,
+     6.458
+    ],
+    "improves": false,
+    "supported": false
+   }
+  },
+  "exposed": {
+   "A0": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2875,
+      "correct": 69,
+      "items": 240
+     },
+     "sft": {
+      "accuracy": 0.2708,
+      "correct": 65,
+      "items": 240
+     }
+    },
+    "difference_points": -1.667,
+    "ci95_points": [
+     -7.6,
+     4.202
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A3": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2875,
+      "correct": 69,
+      "items": 240
+     },
+     "sft": {
+      "accuracy": 0.2875,
+      "correct": 69,
+      "items": 240
+     }
+    },
+    "difference_points": 0.0,
+    "ci95_points": [
+     -5.691,
+     5.608
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A4": {
+    "cells": {
+     "base": {
+      "accuracy": 0.3417,
+      "correct": 82,
+      "items": 240
+     },
+     "sft": {
+      "accuracy": 0.3167,
+      "correct": 76,
+      "items": 240
+     }
+    },
+    "difference_points": -2.5,
+    "ci95_points": [
+     -8.261,
+     3.125
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A0_answer_schema": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2667,
+      "correct": 64,
+      "items": 240
+     },
+     "sft": {
+      "accuracy": 0.3167,
+      "correct": 76,
+      "items": 240
+     }
+    },
+    "difference_points": 5.0,
+    "ci95_points": [
+     0.42,
+     9.836
+    ],
+    "improves": true,
+    "supported": false
+   }
+  },
+  "unexposed": {
+   "A0": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2542,
+      "correct": 61,
+      "items": 240
+     },
+     "sft": {
+      "accuracy": 0.3,
+      "correct": 72,
+      "items": 240
+     }
+    },
+    "difference_points": 4.583,
+    "ci95_points": [
+     -0.877,
+     10.081
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A3": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2458,
+      "correct": 59,
+      "items": 240
+     },
+     "sft": {
+      "accuracy": 0.3083,
+      "correct": 74,
+      "items": 240
+     }
+    },
+    "difference_points": 6.25,
+    "ci95_points": [
+     1.6,
+     11.111
+    ],
+    "improves": true,
+    "supported": false
+   },
+   "A4": {
+    "cells": {
+     "base": {
+      "accuracy": 0.3208,
+      "correct": 77,
+      "items": 240
+     },
+     "sft": {
+      "accuracy": 0.3583,
+      "correct": 86,
+      "items": 240
+     }
+    },
+    "difference_points": 3.75,
+    "ci95_points": [
+     -2.362,
+     9.836
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A0_answer_schema": {
+    "cells": {
+     "base": {
+      "accuracy": 0.3167,
+      "correct": 76,
+      "items": 240
+     },
+     "sft": {
+      "accuracy": 0.3208,
+      "correct": 77,
+      "items": 240
+     }
+    },
+    "difference_points": 0.417,
+    "ci95_points": [
+     -5.285,
+     6.202
+    ],
+    "improves": false,
+    "supported": false
+   }
+  },
+  "exposed_upstream_sft_target": {
+   "A0": {
+    "cells": {
+     "base": {
+      "accuracy": 0.3083,
+      "correct": 37,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.275,
+      "correct": 33,
+      "items": 120
+     }
+    },
+    "difference_points": -3.333,
+    "ci95_points": [
+     -9.85,
+     3.252
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A3": {
+    "cells": {
+     "base": {
+      "accuracy": 0.275,
+      "correct": 33,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.2833,
+      "correct": 34,
+      "items": 120
+     }
+    },
+    "difference_points": 0.833,
+    "ci95_points": [
+     -5.786,
+     7.634
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A4": {
+    "cells": {
+     "base": {
+      "accuracy": 0.35,
+      "correct": 42,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.3083,
+      "correct": 37,
+      "items": 120
+     }
+    },
+    "difference_points": -4.167,
+    "ci95_points": [
+     -10.526,
+     2.362
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A0_answer_schema": {
+    "cells": {
+     "base": {
+      "accuracy": 0.275,
+      "correct": 33,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.3333,
+      "correct": 40,
+      "items": 120
+     }
+    },
+    "difference_points": 5.833,
+    "ci95_points": [
+     0.0,
+     12.281
+    ],
+    "improves": false,
+    "supported": false
+   }
+  },
+  "exposed_novel": {
+   "A0": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2667,
+      "correct": 32,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.2667,
+      "correct": 32,
+      "items": 120
+     }
+    },
+    "difference_points": 0.0,
+    "ci95_points": [
+     -7.143,
+     7.318
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A3": {
+    "cells": {
+     "base": {
+      "accuracy": 0.3,
+      "correct": 36,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.2917,
+      "correct": 35,
+      "items": 120
+     }
+    },
+    "difference_points": -0.833,
+    "ci95_points": [
+     -7.759,
+     5.786
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A4": {
+    "cells": {
+     "base": {
+      "accuracy": 0.3333,
+      "correct": 40,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.325,
+      "correct": 39,
+      "items": 120
+     }
+    },
+    "difference_points": -0.833,
+    "ci95_points": [
+     -7.937,
+     6.25
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A0_answer_schema": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2583,
+      "correct": 31,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.3,
+      "correct": 36,
+      "items": 120
+     }
+    },
+    "difference_points": 4.167,
+    "ci95_points": [
+     -0.901,
+     9.615
+    ],
+    "improves": false,
+    "supported": false
+   }
+  },
+  "unexposed_upstream": {
+   "A0": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2583,
+      "correct": 31,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.3083,
+      "correct": 37,
+      "items": 120
+     }
+    },
+    "difference_points": 5.0,
+    "ci95_points": [
+     -1.613,
+     11.451
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A3": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2583,
+      "correct": 31,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.3167,
+      "correct": 38,
+      "items": 120
+     }
+    },
+    "difference_points": 5.833,
+    "ci95_points": [
+     0.0,
+     12.15
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A4": {
+    "cells": {
+     "base": {
+      "accuracy": 0.325,
+      "correct": 39,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.375,
+      "correct": 45,
+      "items": 120
+     }
+    },
+    "difference_points": 5.0,
+    "ci95_points": [
+     -2.362,
+     12.295
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A0_answer_schema": {
+    "cells": {
+     "base": {
+      "accuracy": 0.3583,
+      "correct": 43,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.3333,
+      "correct": 40,
+      "items": 120
+     }
+    },
+    "difference_points": -2.5,
+    "ci95_points": [
+     -9.524,
+     4.63
+    ],
+    "improves": false,
+    "supported": false
+   }
+  },
+  "unexposed_novel": {
+   "A0": {
+    "cells": {
+     "base": {
+      "accuracy": 0.25,
+      "correct": 30,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.2917,
+      "correct": 35,
+      "items": 120
+     }
+    },
+    "difference_points": 4.167,
+    "ci95_points": [
+     -1.681,
+     10.0
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A3": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2333,
+      "correct": 28,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.3,
+      "correct": 36,
+      "items": 120
+     }
+    },
+    "difference_points": 6.667,
+    "ci95_points": [
+     1.538,
+     12.403
+    ],
+    "improves": true,
+    "supported": false
+   },
+   "A4": {
+    "cells": {
+     "base": {
+      "accuracy": 0.3167,
+      "correct": 38,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.3417,
+      "correct": 41,
+      "items": 120
+     }
+    },
+    "difference_points": 2.5,
+    "ci95_points": [
+     -3.876,
+     8.85
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A0_answer_schema": {
+    "cells": {
+     "base": {
+      "accuracy": 0.275,
+      "correct": 33,
+      "items": 120
+     },
+     "sft": {
+      "accuracy": 0.3083,
+      "correct": 37,
+      "items": 120
+     }
+    },
+    "difference_points": 3.333,
+    "ci95_points": [
+     -3.54,
+     10.257
+    ],
+    "improves": false,
+    "supported": false
+   }
+  },
+  "tier_simple": {
+   "A0": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2841,
+      "correct": 75,
+      "items": 264
+     },
+     "sft": {
+      "accuracy": 0.2917,
+      "correct": 77,
+      "items": 264
+     }
+    },
+    "difference_points": 0.758,
+    "ci95_points": [
+     -5.264,
+     6.855
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A3": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2765,
+      "correct": 73,
+      "items": 264
+     },
+     "sft": {
+      "accuracy": 0.3068,
+      "correct": 81,
+      "items": 264
+     }
+    },
+    "difference_points": 3.03,
+    "ci95_points": [
+     -2.479,
+     8.594
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A4": {
+    "cells": {
+     "base": {
+      "accuracy": 0.3712,
+      "correct": 98,
+      "items": 264
+     },
+     "sft": {
+      "accuracy": 0.3712,
+      "correct": 98,
+      "items": 264
+     }
+    },
+    "difference_points": 0.0,
+    "ci95_points": [
+     -5.84,
+     5.798
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A0_answer_schema": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2955,
+      "correct": 78,
+      "items": 264
+     },
+     "sft": {
+      "accuracy": 0.3144,
+      "correct": 83,
+      "items": 264
+     }
+    },
+    "difference_points": 1.894,
+    "ci95_points": [
+     -3.516,
+     7.519
+    ],
+    "improves": false,
+    "supported": false
+   }
+  },
+  "tier_moderate": {
+   "A0": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2546,
+      "correct": 55,
+      "items": 216
+     },
+     "sft": {
+      "accuracy": 0.2778,
+      "correct": 60,
+      "items": 216
+     }
+    },
+    "difference_points": 2.315,
+    "ci95_points": [
+     -2.885,
+     7.576
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A3": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2546,
+      "correct": 55,
+      "items": 216
+     },
+     "sft": {
+      "accuracy": 0.287,
+      "correct": 62,
+      "items": 216
+     }
+    },
+    "difference_points": 3.241,
+    "ci95_points": [
+     -1.429,
+     8.108
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A4": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2824,
+      "correct": 61,
+      "items": 216
+     },
+     "sft": {
+      "accuracy": 0.2963,
+      "correct": 64,
+      "items": 216
+     }
+    },
+    "difference_points": 1.389,
+    "ci95_points": [
+     -4.673,
+     7.477
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A0_answer_schema": {
+    "cells": {
+     "base": {
+      "accuracy": 0.287,
+      "correct": 62,
+      "items": 216
+     },
+     "sft": {
+      "accuracy": 0.3241,
+      "correct": 70,
+      "items": 216
+     }
+    },
+    "difference_points": 3.704,
+    "ci95_points": [
+     -1.064,
+     8.654
+    ],
+    "improves": false,
+    "supported": false
+   }
+  }
+ },
+ "level_contrasts": {
+  "base": {
+   "A3_minus_A0": {
+    "cells": {
+     "A0": {
+      "accuracy": 0.2708,
+      "correct": 130,
+      "items": 480
+     },
+     "A3": {
+      "accuracy": 0.2667,
+      "correct": 128,
+      "items": 480
+     }
+    },
+    "difference_points": -0.417,
+    "ci95_points": [
+     -3.125,
+     2.292
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A4_minus_A0": {
+    "cells": {
+     "A0": {
+      "accuracy": 0.2708,
+      "correct": 130,
+      "items": 480
+     },
+     "A4": {
+      "accuracy": 0.3312,
+      "correct": 159,
+      "items": 480
+     }
+    },
+    "difference_points": 6.042,
+    "ci95_points": [
+     3.125,
+     9.167
+    ],
+    "improves": true,
+    "supported": false
+   }
+  },
+  "arm_a_431": {
+   "A3_minus_A0": {
+    "cells": {
+     "A0": {
+      "accuracy": 0.2854,
+      "correct": 137,
+      "items": 480
+     },
+     "A3": {
+      "accuracy": 0.2979,
+      "correct": 143,
+      "items": 480
+     }
+    },
+    "difference_points": 1.25,
+    "ci95_points": [
+     -1.458,
+     3.958
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "A4_minus_A0": {
+    "cells": {
+     "A0": {
+      "accuracy": 0.2854,
+      "correct": 137,
+      "items": 480
+     },
+     "A4": {
+      "accuracy": 0.3375,
+      "correct": 162,
+      "items": 480
+     }
+    },
+    "difference_points": 5.208,
+    "ci95_points": [
+     2.292,
+     8.333
+    ],
+    "improves": true,
+    "supported": false
+   }
+  }
+ },
+ "exposure_interaction_A0": {
+  "level": "A0",
+  "sft_minus_base_exposed": -1.667,
+  "sft_minus_base_unexposed": 4.583,
+  "interaction_points": -6.25,
+  "ci95_points": [
+   -14.583,
+   1.667
+  ]
+ },
+ "family_sensitivity_A0": {
+  "arithmetic": {
+   "exposed": {
+    "cells": {
+     "base": {
+      "accuracy": 0.1531,
+      "correct": 15,
+      "items": 98
+     },
+     "sft": {
+      "accuracy": 0.1735,
+      "correct": 17,
+      "items": 98
+     }
+    },
+    "difference_points": 2.041,
+    "ci95_points": [
+     -7.273,
+     11.458
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "unexposed": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2019,
+      "correct": 21,
+      "items": 104
+     },
+     "sft": {
+      "accuracy": 0.25,
+      "correct": 26,
+      "items": 104
+     }
+    },
+    "difference_points": 4.808,
+    "ci95_points": [
+     -0.909,
+     11.607
+    ],
+    "improves": false,
+    "supported": false
+   }
+  },
+  "boundary": {
+   "exposed": {
+    "cells": {
+     "base": {
+      "accuracy": 0.3289,
+      "correct": 25,
+      "items": 76
+     },
+     "sft": {
+      "accuracy": 0.2895,
+      "correct": 22,
+      "items": 76
+     }
+    },
+    "difference_points": -3.947,
+    "ci95_points": [
+     -14.516,
+     5.682
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "unexposed": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2857,
+      "correct": 12,
+      "items": 42
+     },
+     "sft": {
+      "accuracy": 0.3333,
+      "correct": 14,
+      "items": 42
+     }
+    },
+    "difference_points": 4.762,
+    "ci95_points": [
+     -10.0,
+     17.391
+    ],
+    "improves": false,
+    "supported": false
+   }
+  },
+  "comparison": {
+   "exposed": {
+    "cells": {
+     "base": {
+      "accuracy": 0.4,
+      "correct": 12,
+      "items": 30
+     },
+     "sft": {
+      "accuracy": 0.4,
+      "correct": 12,
+      "items": 30
+     }
+    },
+    "difference_points": 0.0,
+    "ci95_points": [
+     -15.0,
+     18.182
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "unexposed": {
+    "cells": {
+     "base": {
+      "accuracy": 0.3036,
+      "correct": 17,
+      "items": 56
+     },
+     "sft": {
+      "accuracy": 0.3571,
+      "correct": 20,
+      "items": 56
+     }
+    },
+    "difference_points": 5.357,
+    "ci95_points": [
+     -11.29,
+     22.222
+    ],
+    "improves": false,
+    "supported": false
+   }
+  }
+ },
+ "decisions": {
+  "schema_dependent_A0": false,
+  "H4": {
+   "verdict": "weakened",
+   "why": "SFT does not improve fixed-input output prediction even on exposed training functions: weaken distribution shift; strengthen objective/capacity",
+   "exposed_A0": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2875,
+      "correct": 69,
+      "items": 240
+     },
+     "sft": {
+      "accuracy": 0.2708,
+      "correct": 65,
+      "items": 240
+     }
+    },
+    "difference_points": -1.667,
+    "ci95_points": [
+     -7.6,
+     4.202
+    ],
+    "improves": false,
+    "supported": false
+   },
+   "unexposed_A0": {
+    "cells": {
+     "base": {
+      "accuracy": 0.2542,
+      "correct": 61,
+      "items": 240
+     },
+     "sft": {
+      "accuracy": 0.3,
+      "correct": 72,
+      "items": 240
+     }
+    },
+    "difference_points": 4.583,
+    "ci95_points": [
+     -0.877,
+     10.081
+    ],
+    "improves": false,
+    "supported": false
+   }
+  },
+  "H1_H3": {
+   "verdict": "A0 is under-specified for value prediction: only the fixed implementation (A4) raises accuracy",
+   "base_A4_accuracy": 0.3312,
+   "execution_reasoning_limited_even_with_fixed_code": true
+  }
+ },
+ "duration_seconds": 8.8
+}

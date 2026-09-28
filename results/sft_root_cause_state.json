@@ -43,11 +43,23 @@
   {
    "phase": 3,
    "name": "cheap causal probes",
-   "status": "design_frozen",
+   "status": "3A_complete",
    "design_receipt": "results/sft_root_cause_phase3a_design_receipt.json",
    "design_receipt_sha256": "d85249b264c00bb330ec2f1313b09ce292433de2386b4674c479af1ee5181d46",
    "census": "results/sft_root_cause_phase3_cohort_census.json",
-   "cohort_sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7"
+   "cohort_sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
+   "phase3a_result_receipt": "results/sft_root_cause_phase3a_result_receipt.json",
+   "phase3a_result_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
+   "phase3a_run": {
+    "run_id": "20260928-164103-phase3a_fixed_input",
+    "exit_code": 0,
+    "duration_seconds": 426.6,
+    "generations": 3840,
+    "outputs": {
+     "base": "e41bdf29533210e16a64997161cded1806a77079edf436bbb61f326ab4a46583",
+     "arm_a_431": "2caa6659a73df3aceeaea13ff0c91eef3e32b0e6032dbdb92d0cdee46250356c"
+    }
+   }
   },
   {
    "phase": 4,
@@ -70,7 +82,7 @@
   "phase4_arms_max": 3,
   "phase4_gpu_hours_per_arm": 8,
   "phase6_gpu_hours": 6,
-  "gpu_hours_used": 0.0
+  "gpu_hours_used": 0.119
  },
  "data_status": {
   "val": "spent (descriptive only)",
@@ -103,6 +115,12 @@
    "correction_receipt": "results/sft_root_cause_phase2_interpretation_correction_2026-09-28.json",
    "correction_sha256": "4ec504e00730e48a46a9cde62868ed9f886c212c7dae85d192a73f501d738813",
    "next_decision": "launch Phase 3A generation (3,840 greedy generations, <30 GPU-minutes) after commit/push and HEAD==origin"
+  },
+  {
+   "utc": "2026-09-28",
+   "event": "phase 3A complete",
+   "finding": "SFT does not improve fixed-input value prediction even on exposed/literal-target inputs; A3 no effect; A4 +5-6 points but absolute 0.33",
+   "next_decision": "Phase 3C capacity probe (Qwen2.5-Coder-7B local snapshot c03e6d35) with an answer-rate non-inferiority gate"
   }
  ]
 }

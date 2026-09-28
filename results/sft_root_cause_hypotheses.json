@@ -34,7 +34,7 @@
     "Probe A: A1/A2/A3 raise the conditional oracle rate by >= 5 points"
    ],
    "decisive_test": "Phase 3 Probe A",
-   "status": "open",
+   "status": "weakened",
    "evidence": [
     {
      "phase": 2,
@@ -42,6 +42,13 @@
      "receipt_sha256": "39aa1c4880387980d7fdcc47003f0dd48abffd2399308dd022e76a85581fe932",
      "status_after": "open",
      "why": "not identifiable from retained outputs; needs a Phase 3 probe"
+    },
+    {
+     "phase": "3A",
+     "receipt": "results/sft_root_cause_phase3a_result_receipt.json",
+     "receipt_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
+     "status_after": "weakened",
+     "why": "A3 (non-revealing type/length) - A0: base -0.42 [-3.125, 2.292], SFT +1.25 [-1.458, 3.958]; A4 (fixed code shown) - A0: base +6.04 [3.125, 9.167], SFT +5.21 [2.292, 8.333]. Specification contributes directionally (A4) but is not the dominant limit: accuracy with the fixed implementation shown is only 0.331 (base) / 0.338 (SFT)."
     }
    ]
   },
@@ -73,6 +80,13 @@
      "receipt_sha256": "4ec504e00730e48a46a9cde62868ed9f886c212c7dae85d192a73f501d738813",
      "status_after": "strengthened",
      "why": "input choice and assertion form moved under imitation; no value-prediction improvement is demonstrated. Causal support requires a Phase 4 arm."
+    },
+    {
+     "phase": "3A",
+     "receipt": "results/sft_root_cause_phase3a_result_receipt.json",
+     "receipt_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
+     "status_after": "strengthened",
+     "why": "fixed-input value prediction, all items, A0: SFT-base +1.46 [-2.5, 5.625]: no value-prediction improvement demonstrated from SFT on its own supervision distribution, including literal training targets; imitation moved form and input choice (Phase 2), not values."
     }
    ],
    "scope_note": "input choice and assertion form moved under imitation; no value-prediction improvement is demonstrated. Causal support requires a Phase 4 arm."
@@ -89,7 +103,7 @@
     "Probe C: a larger model does not beat 1.5B base on constrained output prediction"
    ],
    "decisive_test": "Phase 3 Probe C",
-   "status": "open",
+   "status": "strengthened",
    "evidence": [
     {
      "phase": 2,
@@ -97,6 +111,13 @@
      "receipt_sha256": "39aa1c4880387980d7fdcc47003f0dd48abffd2399308dd022e76a85581fe932",
      "status_after": "open",
      "why": "not identifiable from retained outputs; needs a Phase 3 probe"
+    },
+    {
+     "phase": "3A",
+     "receipt": "results/sft_root_cause_phase3a_result_receipt.json",
+     "receipt_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
+     "status_after": "strengthened",
+     "why": "pre-registered flag fired: base A4 accuracy 0.331 < 0.5 - execution reasoning is limited even when the fixed code is shown. Phase 3C (larger model, same items) is the decisive test."
     }
    ]
   },
@@ -112,7 +133,7 @@
     "SFT does not raise P(correct oracle|disc) even on its own training functions"
    ],
    "decisive_test": "Phase 3 (SFT generations on train functions)",
-   "status": "open",
+   "status": "weakened",
    "evidence": [
     {
      "phase": 2,
@@ -127,6 +148,13 @@
      "receipt_sha256": "4ec504e00730e48a46a9cde62868ed9f886c212c7dae85d192a73f501d738813",
      "status_after": "open",
      "why": "a train-only probe cannot support distribution shift; it can only weaken it (see protocol amendment 2 decision rules)."
+    },
+    {
+     "phase": "3A",
+     "receipt": "results/sft_root_cause_phase3a_result_receipt.json",
+     "receipt_sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
+     "status_after": "weakened",
+     "why": "primary (prefill) schema, A0: SFT-base on exposed -1.67 [-7.6, 4.202], on literal SFT-target inputs -3.33 [-9.85, 3.252], unexposed +4.58 [-0.877, 10.081]; interaction -6.25 [-14.583, 1.667]. Rule 1: no improvement even on exposed training functions. SCHEMA SENSITIVITY: under the answer-schema control the exposed stratum is +5.00 [0.42, 9.836] (secondary, uncorrected). Distribution-shift arm untestable (no external cohort)."
     }
    ],
    "scope_note": "a train-only probe cannot support distribution shift; it can only weaken it (see protocol amendment 2 decision rules).",
