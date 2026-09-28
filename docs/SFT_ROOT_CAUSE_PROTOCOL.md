@@ -174,4 +174,19 @@ Otherwise, each hypothesis is closed as one of:
 
 ## Amendments
 
-(none)
+**2026-09-28, after Phase 2: oracle mediator refined (exploratory; nothing
+removed).**
+
+- **Finding.** SFT moved about 99.5% of policy-valid assertions to exact equality; the
+  base used 72.5%, with 1,308 `!=` assertions. A weak oracle holds on the reference far
+  more often than an exact value, so the frozen `P(correct oracle | discriminating
+  input)` mixes value-prediction ability with assertion form.
+- **Refinement.** From Phase 3 on, the primary oracle mediator is **exact-value accuracy
+  on a fixed discriminating input**. The frozen unstratified mediator is still reported
+  alongside it. Phase 2 also reports equality-stratified accuracy.
+- **Superseded receipt.** The first Phase 2 receipt is quarantined, with its sha256, in
+  `results/sft_root_cause_state.json`.
+- **Guardrail for user decision (not changed here).** The frozen
+  reference-validity bound (at most 3 points of regression) is also form-confounded. An
+  intervention that replaces weak oracles with correct exact ones can lower reference
+  validity while making tests stronger.

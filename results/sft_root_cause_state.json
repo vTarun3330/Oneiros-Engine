@@ -3,7 +3,7 @@
  "protocol": "docs/SFT_ROOT_CAUSE_PROTOCOL.md",
  "hypotheses": "results/sft_root_cause_hypotheses.json",
  "terminal_state": null,
- "current_phase": 1,
+ "current_phase": 3,
  "phases": [
   {
    "phase": 0,
@@ -21,12 +21,24 @@
   {
    "phase": 1,
    "name": "candidate-level causal ledger",
-   "status": "in_progress"
+   "status": "complete",
+   "completed_utc": "2026-09-28",
+   "receipt": "results/sft_root_cause_phase1_ledger_receipt.json",
+   "receipt_sha256": "23cab95b4d9b6a4779184b0bcbc8004448ff38f4ee0021dcbbb619bf304063b5",
+   "summary": {
+    "arms": 12,
+    "candidates": 52112,
+    "evaluator_verdicts_reproduced": "all",
+    "duration_seconds": 69.3
+   }
   },
   {
    "phase": 2,
    "name": "decomposition",
-   "status": "pending"
+   "status": "complete",
+   "completed_utc": "2026-09-28",
+   "receipt": "results/sft_root_cause_phase2_decomposition_receipt.json",
+   "receipt_sha256": "39aa1c4880387980d7fdcc47003f0dd48abffd2399308dd022e76a85581fe932"
   },
   {
    "phase": 3,
@@ -64,6 +76,22 @@
   "reserved_confirmation": "never read",
   "train": "available"
  },
- "quarantined_artifacts": [],
- "log": []
+ "quarantined_artifacts": [
+  {
+   "path": "results/sft_root_cause/quarantine/phase2_first_run_SUPERSEDED.json",
+   "sha256": "f4465e58f7887d46c40bf4065315608bb944500b8375d48a56f198839690070f",
+   "why_superseded": [
+    "its H6 rule tested 'below step 0 at every step >= 100', not the frozen signature 'declines with steps'; the data show a drop by step 100 and then a plateau, which the frozen signature treats as weakening",
+    "it lacked form-stratified oracle accuracy: SFT moved ~99.5% of assertions to exact equality, so the unstratified conditional oracle rate mixes value prediction with assertion form"
+   ]
+  }
+ ],
+ "log": [
+  {
+   "utc": "2026-09-28",
+   "event": "phase 2 complete",
+   "finding": "SFT changed assertion form (equality 0.725 -> 0.995) and input choice (P(disc|execute) +4.4), not value prediction (equality-stratified -4.3, CI [-11.1, +2.7]); the -11.9 validity change is dominated by the form shift; Kill@8 MDE 10.7 points at 78 clusters",
+   "next_decision": "Phase 3: fixed-input value-prediction probes. Open questions for the user: (1) the frozen reference-validity guardrail is form-confounded; (2) Probe B (constrained output) is deprioritised because contract stages did not degrade"
+  }
+ ]
 }
