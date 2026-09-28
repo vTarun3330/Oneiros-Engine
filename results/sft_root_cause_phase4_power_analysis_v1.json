@@ -1,0 +1,3537 @@
+{
+ "calibration": {
+  "bootstrap_se_points_from_v3_ci": {
+   "A0": 2.073,
+   "A0_answer_schema": 1.913
+  },
+  "note": "the simulation's interval uses the cluster-robust sandwich SE; these two columns show it matches the v3 cluster bootstrap",
+  "sandwich_se_points": {
+   "A0": 2.075,
+   "A0_answer_schema": 1.894
+  }
+ },
+ "cohort_frozen": false,
+ "empirical_basis": {
+  "caveat": "the gate cohort would be drawn from different train groups; Phase 3A's MBPP simple/moderate outcomes are the closest permitted evidence",
+  "control": "base 1.5B outcomes",
+  "groups": 240,
+  "items_per_group": 2,
+  "schemas": [
+   "A0",
+   "A0_answer_schema"
+  ],
+  "treatment_template": "arm A 431 outcomes on the same items (a realistic second model), shifted to each target effect"
+ },
+ "gate_definitions": {
+  "confirmatory_five_point_pass": [
+   "effect directionally correct under both schemas",
+   "no schema sign flip",
+   "answer-rate gate passes",
+   "declared lower 95% bound > +5 under both schemas",
+   "validity and diversity guardrails pass"
+  ],
+  "exploratory_pilot_outcomes": {
+   "harm": "upper bound < 0 under either schema, or a guardrail fails",
+   "inconclusive_power": "anything else; an underpowered non-pass never automatically rejects the intervention",
+   "promising": "lower bound > 0 under both schemas, no flip, guardrails pass"
+  }
+ },
+ "gpu_used": false,
+ "inputs": {
+  "canonical_scored_rows_sha256": "b454ca55467739da0c22a864a072f42ee36f9408f85665b85bd84dc9bfbb71b1",
+  "harness/power_simulation.py": "408e568111c239fdd0010442cf44570d96b6c7ee506b58467ed0b40fc08ae21c",
+  "results/sft_root_cause_phase3a_result_receipt_v3.json": "09885cfbfca3d8291e40459217746fbc8cebf3a8cf719f7753c3828266f1b713",
+  "results/sft_root_cause_phase4_cohort_census.json": "391bcba2b3c383fb488688b82242a3e8a430e81d4e7dfb54eca93b2f873d8464",
+  "scripts/phase4_power_analysis.py": "7098c26d4d7b40a859f1e17e2fa139d7d2513d62b202449e2d843a0b27a79546"
+ },
+ "method": {
+  "alpha_and_power": "alpha = 0.05 two-sided (the protocol's 95% intervals); target power 0.80",
+  "effects_points": [
+   3,
+   5,
+   7,
+   10
+  ],
+  "grid_groups": [
+   33,
+   50,
+   75,
+   100,
+   150,
+   200,
+   250,
+   300,
+   352,
+   400,
+   500,
+   700,
+   1000,
+   1500,
+   2000,
+   3000
+  ],
+  "interval": "two-sided 95%: difference +/- 1.96 x cluster-robust SE over groups",
+  "not_modelled": [
+   "training-seed variance: no permitted evidence (every retained multi-seed run was evaluated on restricted splits), so it is NOT estimated and real power is lower than shown",
+   "the answer-rate gate and validity/diversity guardrails",
+   "more than two fixed inputs per function"
+  ],
+  "scenarios": {
+   "group": "effect injected by whole-group flips (high intragroup correlation of the effect)",
+   "item": "effect injected by independent item flips (low intragroup correlation of the effect)"
+  },
+  "seeds": "per cell sha256(20260928:G:delta:scenario)",
+  "simulations_per_cell": 2000
+ },
+ "model_calls": 0,
+ "old_150_150_rest_proposal": "NOT frozen: its 150-group gate is underpowered for a five-point target",
+ "pools": {
+  "arm_a_exposed_remainder": {
+   "feasible": 352,
+   "groups": 401,
+   "label": "USED in arm A training, not in Phase 3; can be held out from new C/T training; an internal within-corpus development pool only; NOT untouched by the research process; NOT repository-disjoint; never independent final confirmation",
+   "power_at_150": {
+    "10": {
+     "confirmatory_5": 0.1175,
+     "positive_both": 0.9955
+    },
+    "3": {
+     "confirmatory_5": 0.0,
+     "positive_both": 0.0
+    },
+    "5": {
+     "confirmatory_5": 0.0,
+     "positive_both": 0.195
+    },
+    "7": {
+     "confirmatory_5": 0.0,
+     "positive_both": 0.823
+    }
+   },
+   "power_at_all_352": {
+    "10": {
+     "confirmatory_5": 0.8595,
+     "positive_both": 1.0
+    },
+    "3": {
+     "confirmatory_5": 0.0,
+     "positive_both": 0.0765
+    },
+    "5": {
+     "confirmatory_5": 0.0,
+     "positive_both": 0.979
+    },
+    "7": {
+     "confirmatory_5": 0.0015,
+     "positive_both": 0.9995
+    }
+   }
+  },
+  "phase3_unexposed_cohort": "development evidence only (inspected; 120 groups)",
+  "strict_untouched": {
+   "feasible": 33,
+   "groups": 42,
+   "label": "not used by arm A training and in neither Phase 3 cohort: genuinely untouched under the current definition; underpowered",
+   "power_at_feasible_count": {
+    "10": {
+     "confirmatory_5": 0.0015,
+     "positive_both": 0.131
+    },
+    "3": {
+     "confirmatory_5": 0.0,
+     "positive_both": 0.0
+    },
+    "5": {
+     "confirmatory_5": 0.0,
+     "positive_both": 0.0015
+    },
+    "7": {
+     "confirmatory_5": 0.0,
+     "positive_both": 0.0115
+    }
+   }
+  }
+ },
+ "repository_disjoint_phase6": "UNRESOLVED BLOCKER: no repository-disjoint cohort exists; an internal split of arm A's source distribution cannot satisfy it; terminal rule A and real-world generalisation claims remain blocked",
+ "required_groups_for_80pct_power": {
+  "group": {
+   "confirmatory_5": {
+    "10": 500,
+    "3": null,
+    "5": null,
+    "7": 3000
+   },
+   "old_rule": {
+    "10": 150,
+    "3": null,
+    "5": null,
+    "7": 200
+   },
+   "positive_both": {
+    "10": 150,
+    "3": 700,
+    "5": 352,
+    "7": 200
+   }
+  },
+  "item": {
+   "confirmatory_5": {
+    "10": 352,
+    "3": null,
+    "5": null,
+    "7": 2000
+   },
+   "old_rule": {
+    "10": 100,
+    "3": null,
+    "5": null,
+    "7": 150
+   },
+   "positive_both": {
+    "10": 100,
+    "3": 700,
+    "5": 300,
+    "7": 150
+   }
+  }
+ },
+ "required_groups_note": "None means not reached within the grid (up to 3000 groups). A true effect of exactly 5 points can essentially never clear a lower bound of +5; the confirmatory five-point rule needs true effects well above 5",
+ "restricted_splits_accessed": "none (train-side Phase 3A retained outcomes and the committed Phase 4 census only)",
+ "results": [
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 33,
+   "mean_se_points": [
+    5.755,
+    5.283
+   ],
+   "mean_simulated_effect_points": [
+    2.992,
+    3.02
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 50,
+   "mean_se_points": [
+    4.684,
+    4.278
+   ],
+   "mean_simulated_effect_points": [
+    2.977,
+    3.017
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 75,
+   "mean_se_points": [
+    3.817,
+    3.484
+   ],
+   "mean_simulated_effect_points": [
+    2.97,
+    2.988
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 100,
+   "mean_se_points": [
+    3.327,
+    3.022
+   ],
+   "mean_simulated_effect_points": [
+    2.965,
+    2.978
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 150,
+   "mean_se_points": [
+    2.688,
+    2.446
+   ],
+   "mean_simulated_effect_points": [
+    2.994,
+    3.009
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 200,
+   "mean_se_points": [
+    2.332,
+    2.118
+   ],
+   "mean_simulated_effect_points": [
+    2.986,
+    2.995
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0005,
+    "power": 0.0005
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 250,
+   "mean_se_points": [
+    2.093,
+    1.891
+   ],
+   "mean_simulated_effect_points": [
+    3.01,
+    2.99
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0013,
+    "power": 0.0035
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 300,
+   "mean_se_points": [
+    1.899,
+    1.724
+   ],
+   "mean_simulated_effect_points": [
+    3.001,
+    2.996
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0032,
+    "power": 0.0205
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 352,
+   "mean_se_points": [
+    1.759,
+    1.593
+   ],
+   "mean_simulated_effect_points": [
+    3.013,
+    2.99
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0059,
+    "power": 0.0765
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 400,
+   "mean_se_points": [
+    1.65,
+    1.491
+   ],
+   "mean_simulated_effect_points": [
+    3.012,
+    2.988
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0089,
+    "power": 0.1965
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 500,
+   "mean_se_points": [
+    1.471,
+    1.332
+   ],
+   "mean_simulated_effect_points": [
+    3.001,
+    3.008
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0111,
+    "power": 0.5505
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 700,
+   "mean_se_points": [
+    1.246,
+    1.123
+   ],
+   "mean_simulated_effect_points": [
+    2.991,
+    3.001
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0054,
+    "power": 0.9385
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 1000,
+   "mean_se_points": [
+    1.04,
+    0.937
+   ],
+   "mean_simulated_effect_points": [
+    3.008,
+    2.997
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0007,
+    "power": 0.999
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 1500,
+   "mean_se_points": [
+    0.85,
+    0.765
+   ],
+   "mean_simulated_effect_points": [
+    3.0,
+    3.004
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 2000,
+   "mean_se_points": [
+    0.735,
+    0.661
+   ],
+   "mean_simulated_effect_points": [
+    2.988,
+    2.999
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 3000,
+   "mean_se_points": [
+    0.6,
+    0.54
+   ],
+   "mean_simulated_effect_points": [
+    2.999,
+    3.004
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 33,
+   "mean_se_points": [
+    5.85,
+    5.359
+   ],
+   "mean_simulated_effect_points": [
+    4.898,
+    5.121
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0009,
+    "power": 0.0015
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0009,
+    "power": 0.0015
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 50,
+   "mean_se_points": [
+    4.78,
+    4.365
+   ],
+   "mean_simulated_effect_points": [
+    4.974,
+    4.979
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 75,
+   "mean_se_points": [
+    3.879,
+    3.555
+   ],
+   "mean_simulated_effect_points": [
+    4.958,
+    4.948
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.002,
+    "power": 0.008
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0022,
+    "power": 0.0095
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 100,
+   "mean_se_points": [
+    3.384,
+    3.075
+   ],
+   "mean_simulated_effect_points": [
+    5.035,
+    5.05
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0036,
+    "power": 0.026
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0036,
+    "power": 0.0265
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 150,
+   "mean_se_points": [
+    2.754,
+    2.498
+   ],
+   "mean_simulated_effect_points": [
+    4.964,
+    4.996
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0082,
+    "power": 0.1595
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0089,
+    "power": 0.195
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 200,
+   "mean_se_points": [
+    2.391,
+    2.158
+   ],
+   "mean_simulated_effect_points": [
+    5.018,
+    4.981
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0101,
+    "power": 0.289
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0111,
+    "power": 0.5495
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 250,
+   "mean_se_points": [
+    2.138,
+    1.936
+   ],
+   "mean_simulated_effect_points": [
+    4.985,
+    4.981
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0101,
+    "power": 0.2865
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.009,
+    "power": 0.7945
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 300,
+   "mean_se_points": [
+    1.951,
+    1.768
+   ],
+   "mean_simulated_effect_points": [
+    4.992,
+    5.008
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0102,
+    "power": 0.2975
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0057,
+    "power": 0.9305
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 352,
+   "mean_se_points": [
+    1.804,
+    1.63
+   ],
+   "mean_simulated_effect_points": [
+    5.001,
+    4.975
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0089,
+    "power": 0.198
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0032,
+    "power": 0.979
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 400,
+   "mean_se_points": [
+    1.695,
+    1.53
+   ],
+   "mean_simulated_effect_points": [
+    4.972,
+    4.998
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0099,
+    "power": 0.2715
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0023,
+    "power": 0.989
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 500,
+   "mean_se_points": [
+    1.513,
+    1.368
+   ],
+   "mean_simulated_effect_points": [
+    5.029,
+    5.003
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0103,
+    "power": 0.3065
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 700,
+   "mean_se_points": [
+    1.283,
+    1.157
+   ],
+   "mean_simulated_effect_points": [
+    5.012,
+    5.005
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0099,
+    "power": 0.2685
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 1000,
+   "mean_se_points": [
+    1.072,
+    0.967
+   ],
+   "mean_simulated_effect_points": [
+    4.993,
+    5.002
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.01,
+    "power": 0.275
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 1500,
+   "mean_se_points": [
+    0.876,
+    0.791
+   ],
+   "mean_simulated_effect_points": [
+    4.996,
+    5.002
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.01,
+    "power": 0.2745
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 2000,
+   "mean_se_points": [
+    0.758,
+    0.684
+   ],
+   "mean_simulated_effect_points": [
+    4.991,
+    5.012
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0099,
+    "power": 0.2655
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 3000,
+   "mean_se_points": [
+    0.619,
+    0.559
+   ],
+   "mean_simulated_effect_points": [
+    4.996,
+    5.004
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0098,
+    "power": 0.2625
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 33,
+   "mean_se_points": [
+    5.999,
+    5.425
+   ],
+   "mean_simulated_effect_points": [
+    7.008,
+    6.949
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0024,
+    "power": 0.0115
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0024,
+    "power": 0.0115
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 50,
+   "mean_se_points": [
+    4.887,
+    4.44
+   ],
+   "mean_simulated_effect_points": [
+    7.106,
+    7.011
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0042,
+    "power": 0.036
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0042,
+    "power": 0.036
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 75,
+   "mean_se_points": [
+    3.994,
+    3.637
+   ],
+   "mean_simulated_effect_points": [
+    6.992,
+    7.045
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0084,
+    "power": 0.1685
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0084,
+    "power": 0.1685
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 100,
+   "mean_se_points": [
+    3.465,
+    3.161
+   ],
+   "mean_simulated_effect_points": [
+    6.943,
+    7.019
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.011,
+    "power": 0.4075
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.011,
+    "power": 0.409
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 150,
+   "mean_se_points": [
+    2.84,
+    2.579
+   ],
+   "mean_simulated_effect_points": [
+    6.998,
+    7.006
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0086,
+    "power": 0.818
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0085,
+    "power": 0.823
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 200,
+   "mean_se_points": [
+    2.462,
+    2.238
+   ],
+   "mean_simulated_effect_points": [
+    7.038,
+    7.017
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0047,
+    "power": 0.954
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0039,
+    "power": 0.9685
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 250,
+   "mean_se_points": [
+    2.201,
+    2.002
+   ],
+   "mean_simulated_effect_points": [
+    7.024,
+    7.022
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0038,
+    "power": 0.97
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0019,
+    "power": 0.993
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0005,
+    "power": 0.0005
+   },
+   "delta_points": 7,
+   "groups": 300,
+   "mean_se_points": [
+    2.006,
+    1.82
+   ],
+   "mean_simulated_effect_points": [
+    7.006,
+    7.007
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0028,
+    "power": 0.9845
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0007,
+    "power": 0.999
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0009,
+    "power": 0.0015
+   },
+   "delta_points": 7,
+   "groups": 352,
+   "mean_se_points": [
+    1.85,
+    1.685
+   ],
+   "mean_simulated_effect_points": [
+    6.983,
+    6.999
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0024,
+    "power": 0.9885
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0005,
+    "power": 0.9995
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0014,
+    "power": 0.004
+   },
+   "delta_points": 7,
+   "groups": 400,
+   "mean_se_points": [
+    1.74,
+    1.581
+   ],
+   "mean_simulated_effect_points": [
+    7.018,
+    7.006
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0012,
+    "power": 0.997
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0017,
+    "power": 0.006
+   },
+   "delta_points": 7,
+   "groups": 500,
+   "mean_se_points": [
+    1.559,
+    1.416
+   ],
+   "mean_simulated_effect_points": [
+    7.01,
+    6.995
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0011,
+    "power": 0.9975
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0041,
+    "power": 0.0345
+   },
+   "delta_points": 7,
+   "groups": 700,
+   "mean_se_points": [
+    1.316,
+    1.196
+   ],
+   "mean_simulated_effect_points": [
+    6.993,
+    6.986
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0088,
+    "power": 0.1925
+   },
+   "delta_points": 7,
+   "groups": 1000,
+   "mean_se_points": [
+    1.101,
+    1.001
+   ],
+   "mean_simulated_effect_points": [
+    7.001,
+    6.993
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0108,
+    "power": 0.632
+   },
+   "delta_points": 7,
+   "groups": 1500,
+   "mean_se_points": [
+    0.9,
+    0.817
+   ],
+   "mean_simulated_effect_points": [
+    7.006,
+    6.995
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0068,
+    "power": 0.897
+   },
+   "delta_points": 7,
+   "groups": 2000,
+   "mean_se_points": [
+    0.78,
+    0.708
+   ],
+   "mean_simulated_effect_points": [
+    7.016,
+    6.993
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0014,
+    "power": 0.996
+   },
+   "delta_points": 7,
+   "groups": 3000,
+   "mean_se_points": [
+    0.637,
+    0.579
+   ],
+   "mean_simulated_effect_points": [
+    6.997,
+    6.996
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0009,
+    "power": 0.0015
+   },
+   "delta_points": 10,
+   "groups": 33,
+   "mean_se_points": [
+    6.14,
+    5.669
+   ],
+   "mean_simulated_effect_points": [
+    9.905,
+    10.008
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0075,
+    "power": 0.131
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0075,
+    "power": 0.131
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0011,
+    "power": 0.0025
+   },
+   "delta_points": 10,
+   "groups": 50,
+   "mean_se_points": [
+    5.046,
+    4.684
+   ],
+   "mean_simulated_effect_points": [
+    10.023,
+    10.025
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0106,
+    "power": 0.3355
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0106,
+    "power": 0.3355
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0027,
+    "power": 0.0145
+   },
+   "delta_points": 10,
+   "groups": 75,
+   "mean_se_points": [
+    4.117,
+    3.816
+   ],
+   "mean_simulated_effect_points": [
+    10.023,
+    10.008
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0101,
+    "power": 0.7175
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0101,
+    "power": 0.7175
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0038,
+    "power": 0.0305
+   },
+   "delta_points": 10,
+   "groups": 100,
+   "mean_se_points": [
+    3.593,
+    3.298
+   ],
+   "mean_simulated_effect_points": [
+    10.011,
+    9.99
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0058,
+    "power": 0.927
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0058,
+    "power": 0.927
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0072,
+    "power": 0.1175
+   },
+   "delta_points": 10,
+   "groups": 150,
+   "mean_se_points": [
+    2.94,
+    2.704
+   ],
+   "mean_simulated_effect_points": [
+    9.994,
+    10.001
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0015,
+    "power": 0.9955
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0015,
+    "power": 0.9955
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0105,
+    "power": 0.326
+   },
+   "delta_points": 10,
+   "groups": 200,
+   "mean_se_points": [
+    2.549,
+    2.339
+   ],
+   "mean_simulated_effect_points": [
+    10.062,
+    10.006
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0112,
+    "power": 0.5275
+   },
+   "delta_points": 10,
+   "groups": 250,
+   "mean_se_points": [
+    2.276,
+    2.093
+   ],
+   "mean_simulated_effect_points": [
+    9.956,
+    9.97
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0101,
+    "power": 0.7115
+   },
+   "delta_points": 10,
+   "groups": 300,
+   "mean_se_points": [
+    2.079,
+    1.906
+   ],
+   "mean_simulated_effect_points": [
+    9.979,
+    10.007
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0078,
+    "power": 0.8595
+   },
+   "delta_points": 10,
+   "groups": 352,
+   "mean_se_points": [
+    1.925,
+    1.767
+   ],
+   "mean_simulated_effect_points": [
+    10.038,
+    9.998
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.006,
+    "power": 0.921
+   },
+   "delta_points": 10,
+   "groups": 400,
+   "mean_se_points": [
+    1.803,
+    1.655
+   ],
+   "mean_simulated_effect_points": [
+    10.011,
+    10.006
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0026,
+    "power": 0.9865
+   },
+   "delta_points": 10,
+   "groups": 500,
+   "mean_se_points": [
+    1.615,
+    1.482
+   ],
+   "mean_simulated_effect_points": [
+    10.008,
+    9.992
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0005,
+    "power": 0.9995
+   },
+   "delta_points": 10,
+   "groups": 700,
+   "mean_se_points": [
+    1.364,
+    1.251
+   ],
+   "mean_simulated_effect_points": [
+    10.017,
+    9.989
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "delta_points": 10,
+   "groups": 1000,
+   "mean_se_points": [
+    1.141,
+    1.046
+   ],
+   "mean_simulated_effect_points": [
+    10.008,
+    9.99
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "delta_points": 10,
+   "groups": 1500,
+   "mean_se_points": [
+    0.933,
+    0.855
+   ],
+   "mean_simulated_effect_points": [
+    9.996,
+    10.0
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "delta_points": 10,
+   "groups": 2000,
+   "mean_se_points": [
+    0.808,
+    0.741
+   ],
+   "mean_simulated_effect_points": [
+    9.991,
+    10.009
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "delta_points": 10,
+   "groups": 3000,
+   "mean_se_points": [
+    0.66,
+    0.605
+   ],
+   "mean_simulated_effect_points": [
+    10.0,
+    10.0
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "item",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 33,
+   "mean_se_points": [
+    6.003,
+    5.61
+   ],
+   "mean_simulated_effect_points": [
+    2.939,
+    3.031
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 50,
+   "mean_se_points": [
+    4.953,
+    4.516
+   ],
+   "mean_simulated_effect_points": [
+    3.067,
+    3.027
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 75,
+   "mean_se_points": [
+    4.018,
+    3.651
+   ],
+   "mean_simulated_effect_points": [
+    3.082,
+    2.948
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 100,
+   "mean_se_points": [
+    3.476,
+    3.167
+   ],
+   "mean_simulated_effect_points": [
+    3.013,
+    3.006
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 150,
+   "mean_se_points": [
+    2.815,
+    2.547
+   ],
+   "mean_simulated_effect_points": [
+    3.051,
+    3.012
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0007,
+    "power": 0.001
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0009,
+    "power": 0.0015
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 200,
+   "mean_se_points": [
+    2.42,
+    2.202
+   ],
+   "mean_simulated_effect_points": [
+    2.957,
+    3.027
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0005,
+    "power": 0.0005
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0012,
+    "power": 0.003
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 250,
+   "mean_se_points": [
+    2.156,
+    1.954
+   ],
+   "mean_simulated_effect_points": [
+    2.999,
+    3.04
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0007,
+    "power": 0.001
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0022,
+    "power": 0.01
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 300,
+   "mean_se_points": [
+    1.967,
+    1.772
+   ],
+   "mean_simulated_effect_points": [
+    3.031,
+    2.997
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0035,
+    "power": 0.025
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 352,
+   "mean_se_points": [
+    1.816,
+    1.629
+   ],
+   "mean_simulated_effect_points": [
+    3.02,
+    3.0
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0056,
+    "power": 0.0665
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 400,
+   "mean_se_points": [
+    1.702,
+    1.529
+   ],
+   "mean_simulated_effect_points": [
+    3.003,
+    2.995
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0081,
+    "power": 0.1555
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 500,
+   "mean_se_points": [
+    1.522,
+    1.362
+   ],
+   "mean_simulated_effect_points": [
+    3.022,
+    2.996
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0111,
+    "power": 0.4355
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 700,
+   "mean_se_points": [
+    1.283,
+    1.146
+   ],
+   "mean_simulated_effect_points": [
+    2.999,
+    2.987
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.008,
+    "power": 0.8485
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 1000,
+   "mean_se_points": [
+    1.07,
+    0.954
+   ],
+   "mean_simulated_effect_points": [
+    3.005,
+    2.996
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0024,
+    "power": 0.9885
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 1500,
+   "mean_se_points": [
+    0.875,
+    0.776
+   ],
+   "mean_simulated_effect_points": [
+    2.987,
+    3.008
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 2000,
+   "mean_se_points": [
+    0.758,
+    0.67
+   ],
+   "mean_simulated_effect_points": [
+    3.003,
+    2.996
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 3,
+   "groups": 3000,
+   "mean_se_points": [
+    0.618,
+    0.546
+   ],
+   "mean_simulated_effect_points": [
+    2.996,
+    3.004
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 33,
+   "mean_se_points": [
+    6.277,
+    5.73
+   ],
+   "mean_simulated_effect_points": [
+    5.063,
+    5.058
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0007,
+    "power": 0.001
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0007,
+    "power": 0.001
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 50,
+   "mean_se_points": [
+    5.116,
+    4.685
+   ],
+   "mean_simulated_effect_points": [
+    4.973,
+    5.037
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.001,
+    "power": 0.002
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.001,
+    "power": 0.002
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 75,
+   "mean_se_points": [
+    4.129,
+    3.775
+   ],
+   "mean_simulated_effect_points": [
+    4.922,
+    4.99
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0013,
+    "power": 0.0035
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0013,
+    "power": 0.0035
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 100,
+   "mean_se_points": [
+    3.606,
+    3.271
+   ],
+   "mean_simulated_effect_points": [
+    4.946,
+    4.994
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0027,
+    "power": 0.0145
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0027,
+    "power": 0.015
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 150,
+   "mean_se_points": [
+    2.928,
+    2.644
+   ],
+   "mean_simulated_effect_points": [
+    4.997,
+    5.009
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0072,
+    "power": 0.117
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0076,
+    "power": 0.1335
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 200,
+   "mean_se_points": [
+    2.543,
+    2.275
+   ],
+   "mean_simulated_effect_points": [
+    4.975,
+    4.985
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0096,
+    "power": 0.241
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0108,
+    "power": 0.3695
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 250,
+   "mean_se_points": [
+    2.266,
+    2.041
+   ],
+   "mean_simulated_effect_points": [
+    4.954,
+    5.032
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.01,
+    "power": 0.28
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0109,
+    "power": 0.6145
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 300,
+   "mean_se_points": [
+    2.072,
+    1.858
+   ],
+   "mean_simulated_effect_points": [
+    4.951,
+    4.976
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0099,
+    "power": 0.264
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0093,
+    "power": 0.7795
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 352,
+   "mean_se_points": [
+    1.916,
+    1.72
+   ],
+   "mean_simulated_effect_points": [
+    5.023,
+    4.979
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0092,
+    "power": 0.216
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0065,
+    "power": 0.9055
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 400,
+   "mean_se_points": [
+    1.795,
+    1.608
+   ],
+   "mean_simulated_effect_points": [
+    5.001,
+    4.997
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0098,
+    "power": 0.2585
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0046,
+    "power": 0.956
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 500,
+   "mean_se_points": [
+    1.611,
+    1.439
+   ],
+   "mean_simulated_effect_points": [
+    5.008,
+    5.001
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0098,
+    "power": 0.257
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0023,
+    "power": 0.9895
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 700,
+   "mean_se_points": [
+    1.359,
+    1.214
+   ],
+   "mean_simulated_effect_points": [
+    5.007,
+    4.999
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0098,
+    "power": 0.26
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 1000,
+   "mean_se_points": [
+    1.135,
+    1.015
+   ],
+   "mean_simulated_effect_points": [
+    5.013,
+    5.007
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.01,
+    "power": 0.276
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 1500,
+   "mean_se_points": [
+    0.929,
+    0.829
+   ],
+   "mean_simulated_effect_points": [
+    5.006,
+    4.99
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0098,
+    "power": 0.2605
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 2000,
+   "mean_se_points": [
+    0.804,
+    0.718
+   ],
+   "mean_simulated_effect_points": [
+    5.002,
+    5.003
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0097,
+    "power": 0.2495
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 5,
+   "groups": 3000,
+   "mean_se_points": [
+    0.658,
+    0.586
+   ],
+   "mean_simulated_effect_points": [
+    4.994,
+    4.996
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0098,
+    "power": 0.259
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 33,
+   "mean_se_points": [
+    6.56,
+    5.949
+   ],
+   "mean_simulated_effect_points": [
+    7.082,
+    6.992
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0018,
+    "power": 0.0065
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0018,
+    "power": 0.0065
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 50,
+   "mean_se_points": [
+    5.34,
+    4.836
+   ],
+   "mean_simulated_effect_points": [
+    7.126,
+    6.989
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0032,
+    "power": 0.0215
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0032,
+    "power": 0.0215
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 75,
+   "mean_se_points": [
+    4.338,
+    3.937
+   ],
+   "mean_simulated_effect_points": [
+    7.026,
+    7.023
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0069,
+    "power": 0.1075
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0069,
+    "power": 0.108
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 100,
+   "mean_se_points": [
+    3.759,
+    3.405
+   ],
+   "mean_simulated_effect_points": [
+    6.993,
+    7.018
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0099,
+    "power": 0.2645
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0099,
+    "power": 0.266
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 150,
+   "mean_se_points": [
+    3.072,
+    2.791
+   ],
+   "mean_simulated_effect_points": [
+    6.977,
+    7.011
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0109,
+    "power": 0.617
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0109,
+    "power": 0.6205
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 200,
+   "mean_se_points": [
+    2.66,
+    2.428
+   ],
+   "mean_simulated_effect_points": [
+    6.992,
+    6.994
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.008,
+    "power": 0.8505
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0075,
+    "power": 0.8715
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 7,
+   "groups": 250,
+   "mean_se_points": [
+    2.387,
+    2.165
+   ],
+   "mean_simulated_effect_points": [
+    7.026,
+    7.016
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0064,
+    "power": 0.9115
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0043,
+    "power": 0.961
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0005,
+    "power": 0.0005
+   },
+   "delta_points": 7,
+   "groups": 300,
+   "mean_se_points": [
+    2.187,
+    1.969
+   ],
+   "mean_simulated_effect_points": [
+    7.0,
+    6.923
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0061,
+    "power": 0.919
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0025,
+    "power": 0.987
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0012,
+    "power": 0.003
+   },
+   "delta_points": 7,
+   "groups": 352,
+   "mean_se_points": [
+    2.018,
+    1.821
+   ],
+   "mean_simulated_effect_points": [
+    6.979,
+    6.99
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.005,
+    "power": 0.9475
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0013,
+    "power": 0.9965
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.001,
+    "power": 0.002
+   },
+   "delta_points": 7,
+   "groups": 400,
+   "mean_se_points": [
+    1.892,
+    1.707
+   ],
+   "mean_simulated_effect_points": [
+    7.016,
+    6.976
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0046,
+    "power": 0.956
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0007,
+    "power": 0.999
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0017,
+    "power": 0.006
+   },
+   "delta_points": 7,
+   "groups": 500,
+   "mean_se_points": [
+    1.691,
+    1.531
+   ],
+   "mean_simulated_effect_points": [
+    6.974,
+    6.986
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0032,
+    "power": 0.979
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0039,
+    "power": 0.031
+   },
+   "delta_points": 7,
+   "groups": 700,
+   "mean_se_points": [
+    1.43,
+    1.293
+   ],
+   "mean_simulated_effect_points": [
+    7.002,
+    6.995
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0018,
+    "power": 0.9935
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0075,
+    "power": 0.1285
+   },
+   "delta_points": 7,
+   "groups": 1000,
+   "mean_se_points": [
+    1.197,
+    1.084
+   ],
+   "mean_simulated_effect_points": [
+    7.018,
+    6.992
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0108,
+    "power": 0.379
+   },
+   "delta_points": 7,
+   "groups": 1500,
+   "mean_se_points": [
+    0.977,
+    0.885
+   ],
+   "mean_simulated_effect_points": [
+    7.002,
+    6.985
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0104,
+    "power": 0.6825
+   },
+   "delta_points": 7,
+   "groups": 2000,
+   "mean_se_points": [
+    0.848,
+    0.767
+   ],
+   "mean_simulated_effect_points": [
+    6.991,
+    6.998
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.005,
+    "power": 0.948
+   },
+   "delta_points": 7,
+   "groups": 3000,
+   "mean_se_points": [
+    0.692,
+    0.626
+   ],
+   "mean_simulated_effect_points": [
+    7.0,
+    6.995
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 0.0
+   },
+   "delta_points": 10,
+   "groups": 33,
+   "mean_se_points": [
+    6.925,
+    6.414
+   ],
+   "mean_simulated_effect_points": [
+    10.039,
+    10.208
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0058,
+    "power": 0.073
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0058,
+    "power": 0.073
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0011,
+    "power": 0.0025
+   },
+   "delta_points": 10,
+   "groups": 50,
+   "mean_se_points": [
+    5.615,
+    5.204
+   ],
+   "mean_simulated_effect_points": [
+    10.101,
+    10.013
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0089,
+    "power": 0.198
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0089,
+    "power": 0.198
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0018,
+    "power": 0.0065
+   },
+   "delta_points": 10,
+   "groups": 75,
+   "mean_se_points": [
+    4.655,
+    4.265
+   ],
+   "mean_simulated_effect_points": [
+    10.153,
+    9.936
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0112,
+    "power": 0.495
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0112,
+    "power": 0.495
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0023,
+    "power": 0.0105
+   },
+   "delta_points": 10,
+   "groups": 100,
+   "mean_se_points": [
+    4.012,
+    3.694
+   ],
+   "mean_simulated_effect_points": [
+    10.076,
+    10.012
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0096,
+    "power": 0.7535
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0096,
+    "power": 0.7535
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0059,
+    "power": 0.075
+   },
+   "delta_points": 10,
+   "groups": 150,
+   "mean_se_points": [
+    3.286,
+    3.022
+   ],
+   "mean_simulated_effect_points": [
+    10.04,
+    10.128
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0045,
+    "power": 0.957
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0045,
+    "power": 0.957
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0086,
+    "power": 0.1805
+   },
+   "delta_points": 10,
+   "groups": 200,
+   "mean_se_points": [
+    2.849,
+    2.617
+   ],
+   "mean_simulated_effect_points": [
+    10.114,
+    10.002
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0018,
+    "power": 0.9935
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0017,
+    "power": 0.9945
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0102,
+    "power": 0.293
+   },
+   "delta_points": 10,
+   "groups": 250,
+   "mean_se_points": [
+    2.555,
+    2.347
+   ],
+   "mean_simulated_effect_points": [
+    10.007,
+    10.037
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0005,
+    "power": 0.9995
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0005,
+    "power": 0.9995
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0112,
+    "power": 0.466
+   },
+   "delta_points": 10,
+   "groups": 300,
+   "mean_se_points": [
+    2.327,
+    2.138
+   ],
+   "mean_simulated_effect_points": [
+    10.063,
+    9.988
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0005,
+    "power": 0.9995
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.011,
+    "power": 0.592
+   },
+   "delta_points": 10,
+   "groups": 352,
+   "mean_se_points": [
+    2.147,
+    1.973
+   ],
+   "mean_simulated_effect_points": [
+    10.0,
+    10.042
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0103,
+    "power": 0.6965
+   },
+   "delta_points": 10,
+   "groups": 400,
+   "mean_se_points": [
+    2.018,
+    1.855
+   ],
+   "mean_simulated_effect_points": [
+    9.996,
+    9.992
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0075,
+    "power": 0.8695
+   },
+   "delta_points": 10,
+   "groups": 500,
+   "mean_se_points": [
+    1.804,
+    1.659
+   ],
+   "mean_simulated_effect_points": [
+    10.016,
+    9.971
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.003,
+    "power": 0.9815
+   },
+   "delta_points": 10,
+   "groups": 700,
+   "mean_se_points": [
+    1.525,
+    1.4
+   ],
+   "mean_simulated_effect_points": [
+    10.018,
+    9.978
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0009,
+    "power": 0.9985
+   },
+   "delta_points": 10,
+   "groups": 1000,
+   "mean_se_points": [
+    1.276,
+    1.175
+   ],
+   "mean_simulated_effect_points": [
+    9.966,
+    10.007
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "delta_points": 10,
+   "groups": 1500,
+   "mean_se_points": [
+    1.042,
+    0.959
+   ],
+   "mean_simulated_effect_points": [
+    10.003,
+    10.013
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "delta_points": 10,
+   "groups": 2000,
+   "mean_se_points": [
+    0.902,
+    0.83
+   ],
+   "mean_simulated_effect_points": [
+    9.999,
+    9.993
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  },
+  {
+   "confirmatory_5": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "delta_points": 10,
+   "groups": 3000,
+   "mean_se_points": [
+    0.737,
+    0.678
+   ],
+   "mean_simulated_effect_points": [
+    10.007,
+    10.025
+   ],
+   "old_rule": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "positive_both": {
+    "monte_carlo_se": 0.0,
+    "power": 1.0
+   },
+   "scenario": "group",
+   "sims": 2000
+  }
+ ],
+ "rules": {
+  "confirmatory_5": "CORRECTED confirmatory rule: lower 95% bound > +5 under both schemas, no sign flip (plus answer-rate and guardrail gates, not simulated)",
+  "old_rule": "SUPERSEDED V1-draft gate (point >= 5 and lower bound > 0): shows a positive effect with a point estimate >= 5, not an effect >= 5; reported for comparison only",
+  "positive_both": "lower 95% bound > 0 under both schemas, no sign flip"
+ },
+ "schema_version": "oneiros_sft_root_cause_phase4_power_v1",
+ "training": false
+}

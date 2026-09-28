@@ -72,6 +72,12 @@
    "receipt": "results/sft_root_cause_phase3_interpretation_correction_addendum_2026-09-28_v2.json",
    "receipt_sha256": "eae100aaf806831d501cb18e4139d66a3684fe4477dee3c4477bf516a001470f",
    "utc": "2026-09-28"
+  },
+  {
+   "event": "phase 4 redesign (V2 loss-mask design, simulation power, A/B choice)",
+   "finding": "only the label mask differs in the V2 primary design; a five-point confirmatory gate needs ~352-500 groups for a true 10-point effect and is unreachable for a true 5-point effect; strict untouched pool (33 feasible) unusable; repository-disjoint Phase 6 unresolved",
+   "next_decision": "user: Choice A (acquire) or Choice B (internal exploratory pilot); no GPU step without separate authorisation",
+   "utc": "2026-09-28"
   }
  ],
  "phase3_results": {
@@ -213,15 +219,43 @@
    "status": "complete"
   },
   {
-   "design_draft": "docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT.md",
+   "current": {
+    "census": {
+     "path": "results/sft_root_cause_phase4_cohort_census.json",
+     "sha256": "391bcba2b3c383fb488688b82242a3e8a430e81d4e7dfb54eca93b2f873d8464"
+    },
+    "choices": {
+     "path": "docs/SFT_ROOT_CAUSE_PHASE4_CHOICES.md",
+     "sha256": "f09b836f926ab118431a8eeecadddaca465371a3b8e399dd0594c32d4ff93e8a"
+    },
+    "design": {
+     "path": "docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT_V2.md",
+     "sha256": "825453ed10556edcf3730b466ce9b97452b54bde426d8be1994349dbeeee8ac6"
+    },
+    "power_analysis": {
+     "path": "results/sft_root_cause_phase4_power_analysis_v1.json",
+     "sha256": "5addf520a32a0d5182e1a4944bb6c7bad4fc3a548f0722c14979298751be7a20"
+    }
+   },
    "frozen": false,
+   "history_as_recorded_before_v2": {
+    "design_draft": "docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT.md",
+    "preflight_census": {
+     "path": "results/sft_root_cause_phase4_cohort_census.json",
+     "sha256": "391bcba2b3c383fb488688b82242a3e8a430e81d4e7dfb54eca93b2f873d8464"
+    }
+   },
    "name": "single-factor training arm",
    "phase": 4,
-   "preflight_census": {
-    "path": "results/sft_root_cause_phase4_cohort_census.json",
-    "sha256": "391bcba2b3c383fb488688b82242a3e8a430e81d4e7dfb54eca93b2f873d8464"
-   },
-   "status": "awaiting_authorisation",
+   "status": "awaiting_user_choice_A_or_B",
+   "superseded_designs": [
+    {
+     "path": "docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT.md",
+     "reason": "changed input conditioning and loss masking together (not single-factor)",
+     "sha256": "8296e9fa8c5191360a3e4a9a4d43c7cb6a8c5d81173a3221b947950b0250c4af",
+     "superseded_by": "docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT_V2.md"
+    }
+   ],
    "training_started": false
   },
   {

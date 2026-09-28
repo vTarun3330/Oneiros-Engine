@@ -318,3 +318,38 @@ Amendment 3 is superseded where it conflicts with this amendment:
   - The frozen ≥ 5-point rule uses per-contrast (unadjusted) intervals and supports no
     familywise claim.
 - **No hypothesis is terminally supported.**
+
+**2026-09-28, amendment 5: Phase 4 redesign (draft; nothing frozen or launched).**
+
+- **Current design:** `docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT_V2.md`. The V1 draft is
+  superseded because it changed input conditioning and loss masking together. It is kept
+  byte-identical and recorded as superseded in `results/sft_root_cause_state.json`.
+- **Primary comparison:** C and T share one fixed-call prompt, one verified
+  (call, value) pair, one target text and identical `input_ids`. **Only the label mask
+  differs**: C supervises every completion token; T supervises only the value span and
+  EOS.
+- **Optional three-arm decomposition** (C0/C1/T): documented only; needs separate
+  authorisation.
+- **Corrected confirmatory five-point rule:**
+  - the declared lower 95% bound is above +5 under **both** schemas;
+  - no schema sign flip;
+  - the answer-rate gate passes;
+  - the validity and diversity guardrails pass.
+
+  The earlier rule (point estimate ≥ 5 and lower bound > 0) is superseded. It shows a
+  positive effect, not an effect of at least 5.
+- **Exploratory pilot outcomes:** `promising`, `harm` or `inconclusive_power`. An
+  underpowered non-pass never automatically rejects the intervention.
+- **Power:** `results/sft_root_cause_phase4_power_analysis_v1.json` (simulation from
+  train-side Phase 3A outcomes; training-seed variance not modelled). A true 5-point
+  effect cannot pass the confirmatory rule at any feasible size.
+- **Pool labels:**
+  - The strict untouched pool (33 feasible groups) is unusable as a gate.
+  - The 352-group arm-A-exposed remainder is internal and exploratory only. It was used
+    by arm A, is not untouched and is not repository-disjoint.
+  - The 150/150/rest proposal is not frozen.
+- **Repository-disjoint Phase 6** remains an unresolved blocker. No internal split can
+  satisfy it.
+- **Next step:** Choice A or Choice B (`docs/SFT_ROOT_CAUSE_PHASE4_CHOICES.md`) is the
+  user's decision. No GPU step (including a timing run) happens without separate
+  authorisation.
