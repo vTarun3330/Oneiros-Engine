@@ -1,0 +1,715 @@
+{
+ "schema_version": "oneiros_sft_root_cause_phase3a_result_v2",
+ "phase": "3A",
+ "version": 2,
+ "command": "python scripts/analyze_fixed_input_probe_v2.py",
+ "supersedes": {
+  "path": "results/sft_root_cause_phase3a_result_receipt.json",
+  "sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
+  "modified": false
+ },
+ "model_calls": 0,
+ "gpu_used": false,
+ "design_receipt": {
+  "path": "results/sft_root_cause_phase3a_design_receipt.json",
+  "sha256": "d85249b264c00bb330ec2f1313b09ce292433de2386b4674c479af1ee5181d46"
+ },
+ "generation_completions": {
+  "base": {
+   "arm": "base",
+   "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+   "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+   "adapter_sha256": null,
+   "cohort_sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
+   "decoding": "greedy",
+   "max_new_tokens": {
+    "prefill": 48,
+    "control": 96
+   },
+   "generations": 1920,
+   "output": "results/sft_root_cause/phase3a/generations_base.jsonl",
+   "output_sha256": "e41bdf29533210e16a64997161cded1806a77079edf436bbb61f326ab4a46583",
+   "seconds": 172.4,
+   "completed_utc": "2026-09-28T11:14:03Z"
+  },
+  "arm_a_431": {
+   "arm": "arm_a_431",
+   "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+   "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+   "adapter_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+   "cohort_sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
+   "decoding": "greedy",
+   "max_new_tokens": {
+    "prefill": 48,
+    "control": 96
+   },
+   "generations": 1920,
+   "output": "results/sft_root_cause/phase3a/generations_arm_a_431.jsonl",
+   "output_sha256": "2caa6659a73df3aceeaea13ff0c91eef3e32b0e6032dbdb92d0cdee46250356c",
+   "seconds": 246.4,
+   "completed_utc": "2026-09-28T11:18:10Z"
+  }
+ },
+ "rescoring_reproduces_v1": true,
+ "level_labels": {
+  "A0": "production information (buggy code under test and record specification)",
+  "A3": "DIAGNOSTIC, oracle-derived partial behavioural hint: the correct result's type and, where sized, its correct length; does not expose the complete value; non-deployable; prohibited from training and confirmation",
+  "A4": "DIAGNOSTIC: access to the complete fixed implementation instead of the buggy one; non-deployable; prohibited from training and confirmation",
+  "A0_answer_schema": "A0 information with the one-line 'ANSWER: <literal>' schema (no prefill)"
+ },
+ "inference": {
+  "interval": "paired cluster bootstrap over semantic group_id, 10,000 resamples, seed 20260928",
+  "p_values": "none reported"
+ },
+ "strata": {
+  "all": {
+   "prefill": {
+    "a": {
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "accuracy": 0.2708,
+     "items": 480
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "accuracy": 0.2854,
+     "items": 480
+    },
+    "groups": 240,
+    "difference_points": 1.458,
+    "ci95_points": [
+     -2.5,
+     5.625
+    ]
+   },
+   "answer": {
+    "a": {
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.2917,
+     "items": 480
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.3187,
+     "items": 480
+    },
+    "groups": 240,
+    "difference_points": 2.708,
+    "ci95_points": [
+     -1.042,
+     6.458
+    ]
+   },
+   "schema_interaction_answer_minus_prefill": {
+    "groups": 240,
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": 1.458,
+    "second_contrast_points": 2.708,
+    "interaction_points": 1.25,
+    "ci95_points": [
+     -3.75,
+     6.25
+    ]
+   },
+   "schema_dependent": false
+  },
+  "exposed": {
+   "prefill": {
+    "a": {
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "accuracy": 0.2875,
+     "items": 240
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "accuracy": 0.2708,
+     "items": 240
+    },
+    "groups": 120,
+    "difference_points": -1.667,
+    "ci95_points": [
+     -7.5,
+     4.167
+    ]
+   },
+   "answer": {
+    "a": {
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.2667,
+     "items": 240
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.3167,
+     "items": 240
+    },
+    "groups": 120,
+    "difference_points": 5.0,
+    "ci95_points": [
+     0.417,
+     10.0
+    ]
+   },
+   "schema_interaction_answer_minus_prefill": {
+    "groups": 120,
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": -1.667,
+    "second_contrast_points": 5.0,
+    "interaction_points": 6.667,
+    "ci95_points": [
+     -0.0,
+     13.75
+    ]
+   },
+   "schema_dependent": true
+  },
+  "unexposed": {
+   "prefill": {
+    "a": {
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "accuracy": 0.2542,
+     "items": 240
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "accuracy": 0.3,
+     "items": 240
+    },
+    "groups": 120,
+    "difference_points": 4.583,
+    "ci95_points": [
+     -0.833,
+     10.417
+    ]
+   },
+   "answer": {
+    "a": {
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.3167,
+     "items": 240
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.3208,
+     "items": 240
+    },
+    "groups": 120,
+    "difference_points": 0.417,
+    "ci95_points": [
+     -5.417,
+     6.25
+    ]
+   },
+   "schema_interaction_answer_minus_prefill": {
+    "groups": 120,
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": 4.583,
+    "second_contrast_points": 0.417,
+    "interaction_points": -4.167,
+    "ci95_points": [
+     -11.25,
+     2.917
+    ]
+   },
+   "schema_dependent": false
+  },
+  "exposed_upstream_sft_target": {
+   "prefill": {
+    "a": {
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "accuracy": 0.3083,
+     "items": 120
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "accuracy": 0.275,
+     "items": 120
+    },
+    "groups": 120,
+    "difference_points": -3.333,
+    "ci95_points": [
+     -10.0,
+     3.333
+    ]
+   },
+   "answer": {
+    "a": {
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.275,
+     "items": 120
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.3333,
+     "items": 120
+    },
+    "groups": 120,
+    "difference_points": 5.833,
+    "ci95_points": [
+     0.0,
+     12.5
+    ]
+   },
+   "schema_interaction_answer_minus_prefill": {
+    "groups": 120,
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": -3.333,
+    "second_contrast_points": 5.833,
+    "interaction_points": 9.167,
+    "ci95_points": [
+     1.667,
+     16.667
+    ]
+   },
+   "schema_dependent": true
+  },
+  "exposed_novel": {
+   "prefill": {
+    "a": {
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "accuracy": 0.2667,
+     "items": 120
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "accuracy": 0.2667,
+     "items": 120
+    },
+    "groups": 120,
+    "difference_points": 0.0,
+    "ci95_points": [
+     -7.5,
+     7.5
+    ]
+   },
+   "answer": {
+    "a": {
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.2583,
+     "items": 120
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.3,
+     "items": 120
+    },
+    "groups": 120,
+    "difference_points": 4.167,
+    "ci95_points": [
+     -0.833,
+     10.0
+    ]
+   },
+   "schema_interaction_answer_minus_prefill": {
+    "groups": 120,
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": 0.0,
+    "second_contrast_points": 4.167,
+    "interaction_points": 4.167,
+    "ci95_points": [
+     -4.167,
+     13.333
+    ]
+   },
+   "schema_dependent": false
+  },
+  "unexposed_upstream": {
+   "prefill": {
+    "a": {
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "accuracy": 0.2583,
+     "items": 120
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "accuracy": 0.3083,
+     "items": 120
+    },
+    "groups": 120,
+    "difference_points": 5.0,
+    "ci95_points": [
+     -1.667,
+     11.667
+    ]
+   },
+   "answer": {
+    "a": {
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.3583,
+     "items": 120
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.3333,
+     "items": 120
+    },
+    "groups": 120,
+    "difference_points": -2.5,
+    "ci95_points": [
+     -10.0,
+     5.0
+    ]
+   },
+   "schema_interaction_answer_minus_prefill": {
+    "groups": 120,
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": 5.0,
+    "second_contrast_points": -2.5,
+    "interaction_points": -7.5,
+    "ci95_points": [
+     -15.833,
+     0.0
+    ]
+   },
+   "schema_dependent": true
+  },
+  "unexposed_novel": {
+   "prefill": {
+    "a": {
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "accuracy": 0.25,
+     "items": 120
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "accuracy": 0.2917,
+     "items": 120
+    },
+    "groups": 120,
+    "difference_points": 4.167,
+    "ci95_points": [
+     -1.667,
+     10.0
+    ]
+   },
+   "answer": {
+    "a": {
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.275,
+     "items": 120
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "accuracy": 0.3083,
+     "items": 120
+    },
+    "groups": 120,
+    "difference_points": 3.333,
+    "ci95_points": [
+     -3.333,
+     10.0
+    ]
+   },
+   "schema_interaction_answer_minus_prefill": {
+    "groups": 120,
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": 4.167,
+    "second_contrast_points": 3.333,
+    "interaction_points": -0.833,
+    "ci95_points": [
+     -10.0,
+     7.5
+    ]
+   },
+   "schema_dependent": false
+  }
+ },
+ "sft_minus_base_by_level": {
+  "A0": {
+   "a": {
+    "cell": [
+     "base",
+     "A0"
+    ],
+    "accuracy": 0.2708,
+    "items": 480
+   },
+   "b": {
+    "cell": [
+     "arm_a_431",
+     "A0"
+    ],
+    "accuracy": 0.2854,
+    "items": 480
+   },
+   "groups": 240,
+   "difference_points": 1.458,
+   "ci95_points": [
+    -2.5,
+    5.625
+   ]
+  },
+  "A3": {
+   "a": {
+    "cell": [
+     "base",
+     "A3"
+    ],
+    "accuracy": 0.2667,
+    "items": 480
+   },
+   "b": {
+    "cell": [
+     "arm_a_431",
+     "A3"
+    ],
+    "accuracy": 0.2979,
+    "items": 480
+   },
+   "groups": 240,
+   "difference_points": 3.125,
+   "ci95_points": [
+    -0.625,
+    6.875
+   ]
+  },
+  "A4": {
+   "a": {
+    "cell": [
+     "base",
+     "A4"
+    ],
+    "accuracy": 0.3312,
+    "items": 480
+   },
+   "b": {
+    "cell": [
+     "arm_a_431",
+     "A4"
+    ],
+    "accuracy": 0.3375,
+    "items": 480
+   },
+   "groups": 240,
+   "difference_points": 0.625,
+   "ci95_points": [
+    -3.542,
+    4.792
+   ]
+  },
+  "A0_answer_schema": {
+   "a": {
+    "cell": [
+     "base",
+     "A0_answer_schema"
+    ],
+    "accuracy": 0.2917,
+    "items": 480
+   },
+   "b": {
+    "cell": [
+     "arm_a_431",
+     "A0_answer_schema"
+    ],
+    "accuracy": 0.3187,
+    "items": 480
+   },
+   "groups": 240,
+   "difference_points": 2.708,
+   "ci95_points": [
+    -1.042,
+    6.458
+   ]
+  }
+ },
+ "level_contrasts_within_arm": {
+  "base": {
+   "A3_minus_A0": {
+    "a": {
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "accuracy": 0.2708,
+     "items": 480
+    },
+    "b": {
+     "cell": [
+      "base",
+      "A3"
+     ],
+     "accuracy": 0.2667,
+     "items": 480
+    },
+    "groups": 240,
+    "difference_points": -0.417,
+    "ci95_points": [
+     -3.125,
+     2.292
+    ]
+   },
+   "A4_minus_A0": {
+    "a": {
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "accuracy": 0.2708,
+     "items": 480
+    },
+    "b": {
+     "cell": [
+      "base",
+      "A4"
+     ],
+     "accuracy": 0.3312,
+     "items": 480
+    },
+    "groups": 240,
+    "difference_points": 6.042,
+    "ci95_points": [
+     3.125,
+     9.167
+    ]
+   }
+  },
+  "arm_a_431": {
+   "A3_minus_A0": {
+    "a": {
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "accuracy": 0.2854,
+     "items": 480
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A3"
+     ],
+     "accuracy": 0.2979,
+     "items": 480
+    },
+    "groups": 240,
+    "difference_points": 1.25,
+    "ci95_points": [
+     -1.458,
+     3.958
+    ]
+   },
+   "A4_minus_A0": {
+    "a": {
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "accuracy": 0.2854,
+     "items": 480
+    },
+    "b": {
+     "cell": [
+      "arm_a_431",
+      "A4"
+     ],
+     "accuracy": 0.3375,
+     "items": 480
+    },
+    "groups": 240,
+    "difference_points": 5.208,
+    "ci95_points": [
+     2.292,
+     8.333
+    ]
+   }
+  }
+ },
+ "decisions": {
+  "H4": {
+   "status": "open",
+   "qualifier": "schema_dependent_exposure_result",
+   "verdict": "inconclusive: the exposure result is answer-schema dependent",
+   "schema_dependent_strata_used": [
+    "exposed"
+   ],
+   "distribution_shift": "open: no external diagnostic cohort exists"
+  },
+  "schema_rule": "frozen: an SFT effect that changes sign between the prefilled assertion schema and the ANSWER schema is schema-dependent and not interpreted; v2 applies it to the exact strata the H4 rules read",
+  "A3": "this particular type/length hint did not measurably improve accuracy",
+  "A4": "access to the correct implementation improves fixed-input prediction; it does not independently establish natural-language specification insufficiency"
+ },
+ "duration_seconds": 4.2
+}

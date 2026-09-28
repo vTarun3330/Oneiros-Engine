@@ -34,11 +34,15 @@ LEVEL_DEFINITIONS = {
     "A1": ("NOT RUN: the records' specification already is the full public upstream "
            "statement; no additional public docstring or type information exists"),
     "A2": "NOT APPLICABLE: synthetic function records have no repository context",
-    "A3": ("A0 plus a semantic invariant that does not reveal the value: the result's Python "
-           "type, and its length for sized results"),
-    "A4": ("DIAGNOSTIC, NON-DEPLOYABLE upper bound: the fixed implementation is shown instead "
-           "of the buggy one (pure execution reasoning); never used for training or "
+    # Relabelled 2026-09-28 (Phase 3 correction).  The frozen v1 cohort and design
+    # receipts keep their original wording so their hashes stay valid.
+    "A3": ("DIAGNOSTIC, oracle-derived partial behavioural hint: the correct result's type "
+           "and, where sized, its correct length (computed from the reference output); does "
+           "not expose the complete value; non-deployable; prohibited from training and "
            "confirmation"),
+    "A4": ("DIAGNOSTIC, NON-DEPLOYABLE: access to the complete fixed implementation instead of "
+           "the buggy one; changes far more than specification detail; never used for training "
+           "or confirmation"),
     CONTROL_LEVEL: ("schema/extraction control: A0 information, no prefill, answer requested as "
                     "one line 'ANSWER: <Python literal>'"),
 }
