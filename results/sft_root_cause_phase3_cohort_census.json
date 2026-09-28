@@ -1,0 +1,152 @@
+{
+ "schema_version": "oneiros_sft_root_cause_phase3_census_v1",
+ "read_only": true,
+ "model_calls": 0,
+ "gpu_used": false,
+ "test_or_sealed_or_confirmation_read": false,
+ "inputs": {
+  "results/v4_2_armA_clean_preflight.json": "cb1d1f0d3649e0f97c73d6b2726f9961bcc79f2fffd7ccc5806edb74492752c6",
+  "results/v4_2_armA_successor_preflight.json": "d7e5965bb505ac8a3cfe33f1ca0249fa096bd0202d547f966f4fe7a2b97bb3d3",
+  "results/v4_2_armA_successor_preflight_c1024.json": "abf9934e6041094572bbbae07a1f065b53da5962730aee452f12c17ff9e59ed3",
+  "checkpoints/local_sft_armA_baseline_successor_s42/sft_metadata.json": "e5a4ec85160436d7c03e6c560d74d62fb7e6527ec31c81f163349ca9c5847d79",
+  "data/corpus/v4_1_research_hardened_candidate/development_view/train.records.json": "d3507cba9dbd78b36b1e704275cb245811dc62e4669ed582a0c34fab157d3908",
+  "data/corpus/v4_1_research_hardened_candidate/development_view/training_exclusions.json": "ef9d25566d79454ee85b268eeeac736de00d16d0f97d3cecccc4b1c073c279fb",
+  "data/corpus/v4_1_research_hardened_candidate/development_view/val.records.json": "2e67ad983627dd4970c5ed16b914b2feeb1592d77ce35990d9461904726cf14a",
+  "data/corpus/v4_1_research_hardened_candidate/development_view/ablation_dev.records.json": "2b12008a21c5427d2557628cfa26bbc0601e1ff8bd8dcdc4ce43ae2c280a1288"
+ },
+ "arm_a_exposure": {
+  "selection_sha256": "598eef61c18e3e394d73a4fc2b72aa91309c7bf5a97a06eddb20be5f372eef23",
+  "selected_records": 2400,
+  "selected_record_ids_sha256": "29eaf25c75fae651bab76fe341082628885a2113ab1472bf7d7b37825be159e3",
+  "consistent_with_training_metadata": true,
+  "multi_mutant_examples_used": 0,
+  "supervision_targets": "first 3 policy-valid, reference-valid, killing upstream tests of each selected record (evaluate_pair)",
+  "training_exclusions_file_records": 144
+ },
+ "cohorts": {
+  "exposed_selected_function_records": {
+   "records": 2194,
+   "complexity_tier": {
+    "complex": 1317,
+    "moderate": 610,
+    "simple": 267
+   },
+   "semantic_groups": 508,
+   "max_records_per_group": 30,
+   "dataset": {
+    "mbpp": 1776,
+    "humaneval": 413,
+    "manual_curated_examples": 5
+   },
+   "bug_family": {
+    "boundary": 890,
+    "arithmetic": 620,
+    "comparison": 318,
+    "off_by_one": 166,
+    "logical": 53,
+    "boolean": 37,
+    "return": 36,
+    "index": 32,
+    "negate_removal": 17,
+    "membership": 15,
+    "null": 5,
+    "string": 3,
+    "identity": 2
+   },
+   "group_ids_sha256": "a97009e3a9e0b3e1ef4b238721814dad01bc1c11e65d095b0eebae9b41f3abe7",
+   "record_ids_sha256": "f9d92b51a45af0a96978b37aef19a1f2d521c0a698a628b131c385a93c554298"
+  },
+  "exposed_group_unselected_siblings": {
+   "records": 2731,
+   "complexity_tier": {
+    "complex": 1431,
+    "moderate": 925,
+    "simple": 375
+   },
+   "semantic_groups": 472,
+   "max_records_per_group": 33,
+   "dataset": {
+    "mbpp": 2219,
+    "humaneval": 512
+   },
+   "bug_family": {
+    "boundary": 1087,
+    "arithmetic": 800,
+    "comparison": 379,
+    "off_by_one": 215,
+    "logical": 72,
+    "boolean": 49,
+    "return": 43,
+    "index": 40,
+    "membership": 26,
+    "negate_removal": 15,
+    "identity": 3,
+    "string": 2
+   },
+   "group_ids_sha256": "7c043fa12458ea4f496543e61035ffeecd6a8c83c1c0f94c0f924e27496419af",
+   "record_ids_sha256": "65ac4710e8656f59c98c65422a4c504372035d04e8a2815945bb2351488c86fe",
+   "siblings_sharing_a_test_with_a_selected_record": 2731
+  },
+  "unexposed_lineage_disjoint_function_records": {
+   "records": 670,
+   "complexity_tier": {
+    "moderate": 464,
+    "simple": 200,
+    "complex": 6
+   },
+   "semantic_groups": 162,
+   "max_records_per_group": 45,
+   "dataset": {
+    "mbpp": 655,
+    "humaneval": 13,
+    "manual_curated_examples": 2
+   },
+   "bug_family": {
+    "arithmetic": 237,
+    "boundary": 222,
+    "comparison": 93,
+    "off_by_one": 45,
+    "boolean": 19,
+    "return": 16,
+    "logical": 14,
+    "membership": 10,
+    "negate_removal": 4,
+    "index": 4,
+    "null": 2,
+    "identity": 2,
+    "string": 2
+   },
+   "group_ids_sha256": "33e412bdcab8aa3faa5f0835b61d13228d69285080ffa858805dce2356dd4b16",
+   "record_ids_sha256": "2c74f53a2c99255a33a12cbb1536b2e78d24578077a366934637443ee9824e5a"
+  }
+ },
+ "disjointness": {
+  "exposed_vs_unexposed_groups": 0,
+  "train_vs_val_groups": 0,
+  "train_vs_ablation_dev_groups": 0
+ },
+ "external_cohort_options": [
+  {
+   "cohort": "val / ablation_dev",
+   "lineage_disjoint": true,
+   "usable": false,
+   "why": "spent; the protocol permits only descriptive analysis of retained outputs, and they share the synthetic MBPP/HumanEval mutation distribution, so they are unexposed but not external"
+  },
+  {
+   "cohort": "repository-native A-prime admitted targets",
+   "lineage_disjoint": true,
+   "usable": false,
+   "why": "genuinely external, but native qualification (installed environments, official tests on both revisions) has not been run, so no fixed input can be executed on buggy and fixed revisions; 5 admitted targets in the fresh pilot"
+  },
+  {
+   "cohort": "reserved confirmation / consumed test / sealed final",
+   "usable": false,
+   "why": "forbidden"
+  }
+ ],
+ "h4_capability": {
+  "exposure_effect_testable": true,
+  "distribution_shift_testable": false,
+  "consequence": "exposed-vs-unexposed comparison can support or weaken memorisation/exposure failure and can weaken distribution shift; with no adequate external cohort, distribution shift cannot be supported and H4's distribution-shift arm stays open"
+ }
+}

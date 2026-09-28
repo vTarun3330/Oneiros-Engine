@@ -1,0 +1,65 @@
+{
+ "schema_version": "oneiros_sft_root_cause_phase3a_design_v1",
+ "phase": "3A",
+ "frozen_utc": "2026-09-28",
+ "frozen_before_any_generation": true,
+ "objective": "fixed-input exact-output prediction, base vs arm A checkpoint 431, across specification levels, exposed vs lineage-disjoint unexposed train functions",
+ "protocol": "docs/SFT_ROOT_CAUSE_PROTOCOL.md (amendments 1 and 2)",
+ "census": {"path": "results/sft_root_cause_phase3_cohort_census.json", "sha256": "b1ffc81237859d78a83a0291019ee23d1cc8f61c827ca544a82ce11df796679e"},
+ "cohort": {
+  "path": "results/sft_root_cause_phase3a_cohort.json",
+  "sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
+  "builder": "scripts/freeze_fixed_input_cohort.py",
+  "functions": 240, "items": 480, "semantic_groups": 240, "max_functions_per_group": 1,
+  "unexposed": {"functions": 120, "complexity_tier": {"simple": 66, "moderate": 54}},
+  "exposed": {"functions": 120, "complexity_tier": {"simple": 66, "moderate": 54},
+              "definition": "a record in arm A's 2,400-record selection (preflight selection_sha256 598eef61...)"},
+  "input_kinds": {
+   "upstream": "first discriminating call from the record's own upstream tests (exposed: 120/120 were literal arm A SFT targets; unexposed: never shown to arm A)",
+   "novel": "first discriminating fixed-order literal perturbation of an upstream call, absent from every test of every record in the group"},
+  "scope_limits": ["MBPP only: the unexposed groups contain 13 HumanEval records", "simple and moderate tiers only: the unexposed groups contain 6 complex records; arm A's selection was 60% complex, so exposure is confounded with complexity outside this matched stratum", "bug-family mix differs between cohorts (exposed boundary 38 vs 21, comparison 15 vs 28); a family-stratified sensitivity analysis is pre-registered"],
+  "selection": "deterministic, arm-blind: seeded-hash order of groups and records; discrimination verified by executing each call on reference and mutant under ==; reference result must round-trip as a Python literal of <= 120 characters; items whose call appears in any prompt level are excluded"
+ },
+ "record_shard": {"path": "data/corpus/v4_1_research_hardened_candidate/development_view/train.records.json", "sha256": "d3507cba9dbd78b36b1e704275cb245811dc62e4669ed582a0c34fab157d3908"},
+ "levels": {
+  "A0": "production information: buggy code under test and record specification",
+  "A1": "NOT RUN: the specification already is the full public upstream statement; no further public docstring/type information exists for MBPP",
+  "A2": "NOT APPLICABLE: synthetic function records have no repository context",
+  "A3": "A0 plus a non-revealing invariant: the result's Python type, and its length when sized",
+  "A4": "DIAGNOSTIC, NON-DEPLOYABLE: the fixed implementation is shown instead of the buggy one (pure execution reasoning); never enters training or confirmation",
+  "A0_answer_schema": "schema/extraction control (replaces Probe 3B): A0 information, no prefill, 'ANSWER: <Python literal>' requested; strict and lenient extraction reported"
+ },
+ "generation": {
+  "models": {"base": "Qwen/Qwen2.5-Coder-1.5B-Instruct @ 2e1fd397ee46e1388853d2af2c993145b0f1098a, 4-bit NF4, sdpa", "arm_a_431": "same base + adapter e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7"},
+  "chat": "production system prompt and user prompt layout (engine/test_generation_prompt.py); A0/A3/A4 assistant turn prefilled with the bare, unfenced 'assert <frozen call> == ' (the production instruction forbids fences and arm A's SFT targets are bare assertions)",
+  "decoding": "greedy, max_new_tokens 48 (prefill) / 96 (control), batch 8 left-padded",
+  "generations": 3840,
+  "runner": "scripts/run_fixed_input_probe.py via scripts/gpu_run.py start (detached, logs, PID, heartbeat, completion receipt per arm); resumable per (item, level)",
+  "estimated_gpu_minutes": "under 30"
+ },
+ "scoring": {
+  "answer": "prefill levels: text up to the first newline (a stray trailing ``` removed); control: an 'ANSWER:' line (strict), else 'assert <call> == X' (lenient), else nonanswer",
+  "correct": "the sandboxed reference passes `assert <call> == (<answer>)` - the evaluator's own reference-validity semantics",
+  "primary_mediator": "exact-output accuracy per requested item",
+  "secondary": ["answer rate", "accuracy per answered item", "token-limit truncation", "nonanswer count"],
+  "strata": ["cohort (exposed/unexposed)", "input kind (upstream/novel)", "complexity tier", "bug family"]
+ },
+ "inference": {"method": "paired cluster bootstrap over semantic group (one function per group)", "resamples": 10000, "seed": 20260928, "looks": 1, "multiplicity": "Holm across the primary H4 and H1 contrasts"},
+ "decision_rules": {
+  "improves": "paired lower 95% bound > 0; 'supported' needs lower bound >= +5 points",
+  "H4": [
+   "SFT-base A0 on exposed items not improved -> weaken distribution shift; strengthen objective/capacity explanations",
+   "improved on exposed but not on unexposed -> support memorisation/exposure failure (also report exposed-minus-unexposed interaction with its CI)",
+   "improved on both train cohorts -> distribution shift can be neither supported nor rejected here: no adequate external cohort exists (census), so H4's distribution-shift arm stays open"],
+  "H4_sub": "exposed upstream items were literal SFT targets; exposed novel items test within-function generalisation; report both",
+  "H1_H3": [
+   "A3-A0 lower bound > 0 and point >= 5 (either arm): non-revealing missing context matters",
+   "only A4-A0 improves: A0 is under-specified for value prediction; execution given the fixed code is feasible",
+   "neither A3 nor A4 improves over A0: capacity/reasoning more likely limiting (H3 strengthened)",
+   "A4 absolute accuracy (base) < 0.5: execution reasoning itself is limited even with the fixed code shown"],
+  "control": "if SFT-base at A0 changes sign between the prefill schema and the answer-schema control, the A0 result is flagged schema-dependent and not interpreted",
+  "sensitivity": "bug-family-stratified SFT-base difference (families with >= 10 functions per cohort)"
+ },
+ "guardrail_metrics_reported_not_replacing_original": ["overall reference validity", "exact-equality reference validity", "fixed-input exact-output accuracy", "function-level P(>=1 valid killing candidate)", "assertion-form distribution", "diversity", "nonanswer rate"],
+ "data_status": {"test_or_sealed_or_confirmation_read": false, "val_or_ablation_dev_used": false, "training": false}
+}

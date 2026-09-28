@@ -66,8 +66,16 @@
      "receipt_sha256": "39aa1c4880387980d7fdcc47003f0dd48abffd2399308dd022e76a85581fe932",
      "status_after": "strengthened",
      "why": "P(disc|execute) +4.37 points, CI [1.9382, 6.9406]. The frozen signature (P(correct oracle|disc) falls) holds unstratified: -13.85, CI [-22.5204, -4.7957]. Stratified by assertion form (added after the first look), exact-value accuracy on discriminating inputs moves -4.25, CI [-11.0905, 2.6711]: SFT neither measurably damaged nor improved value prediction (an improvement of >= 5 points is excluded). Imitation transferred assertion form and input choice, not the value. Causal support needs a Phase 4 single-factor arm"
+    },
+    {
+     "phase": "2-correction",
+     "receipt": "results/sft_root_cause_phase2_interpretation_correction_2026-09-28.json",
+     "receipt_sha256": "4ec504e00730e48a46a9cde62868ed9f886c212c7dae85d192a73f501d738813",
+     "status_after": "strengthened",
+     "why": "input choice and assertion form moved under imitation; no value-prediction improvement is demonstrated. Causal support requires a Phase 4 arm."
     }
-   ]
+   ],
+   "scope_note": "input choice and assertion form moved under imitation; no value-prediction improvement is demonstrated. Causal support requires a Phase 4 arm."
   },
   {
    "id": "H3",
@@ -112,8 +120,17 @@
      "receipt_sha256": "39aa1c4880387980d7fdcc47003f0dd48abffd2399308dd022e76a85581fe932",
      "status_after": "open",
      "why": "not identifiable from retained outputs; needs a Phase 3 probe"
+    },
+    {
+     "phase": "2-correction",
+     "receipt": "results/sft_root_cause_phase2_interpretation_correction_2026-09-28.json",
+     "receipt_sha256": "4ec504e00730e48a46a9cde62868ed9f886c212c7dae85d192a73f501d738813",
+     "status_after": "open",
+     "why": "a train-only probe cannot support distribution shift; it can only weaken it (see protocol amendment 2 decision rules)."
     }
-   ]
+   ],
+   "scope_note": "a train-only probe cannot support distribution shift; it can only weaken it (see protocol amendment 2 decision rules).",
+   "testable_scope": "exposure/memorisation only (exposed vs lineage-disjoint unexposed train, MBPP simple/moderate); no adequate external cohort exists, so distribution shift cannot be supported"
   },
   {
    "id": "H5",
@@ -136,8 +153,16 @@
      "receipt_sha256": "39aa1c4880387980d7fdcc47003f0dd48abffd2399308dd022e76a85581fe932",
      "status_after": "weakened",
      "why": "parse +0.15, policy +0.00, execute|parse +1.26 points: no contract stage falls by more than 1 point. The form DID change, toward exact-equality oracles (0.725 -> 0.995 of policy-valid candidates), i.e. stronger, not degraded, tests"
+    },
+    {
+     "phase": "2-correction",
+     "receipt": "results/sft_root_cause_phase2_interpretation_correction_2026-09-28.json",
+     "receipt_sha256": "4ec504e00730e48a46a9cde62868ed9f886c212c7dae85d192a73f501d738813",
+     "status_after": "weakened",
+     "why": "narrowed: syntactic/structural contract degradation is weakened. Semantic-oracle validity remains unresolved."
     }
-   ]
+   ],
+   "scope_note": "narrowed: syntactic/structural contract degradation is weakened. Semantic-oracle validity remains unresolved."
   },
   {
    "id": "H6",
@@ -160,8 +185,16 @@
      "receipt_sha256": "39aa1c4880387980d7fdcc47003f0dd48abffd2399308dd022e76a85581fe932",
      "status_after": "weakened",
      "why": "frozen signature: the conditional oracle rate declines WITH STEPS. Step 431 vs step 100 on ablation_dev: unstratified +0.22 [-7.1181, 6.884], equality-stratified +2.59 [-3.4409, 8.288]. Versus step 0 the unstratified rate drops by step 100 and then plateaus (50: -2.9, 100: -13.3, 150: -15.3, 200: -15.3, 250: -16.0, 300: -15.5, 350: -14.6, 400: -14.2, 431: -13.1), tracking the equality-form share (50: 0.77, 100: 0.94, 150: 0.98, 200: 0.99, 250: 1.00, 300: 1.00, 350: 1.00, 400: 1.00, 431: 1.00)"
+    },
+    {
+     "phase": "2-correction",
+     "receipt": "results/sft_root_cause_phase2_interpretation_correction_2026-09-28.json",
+     "receipt_sha256": "4ec504e00730e48a46a9cde62868ed9f886c212c7dae85d192a73f501d738813",
+     "status_after": "weakened",
+     "why": "narrowed: progressive late-checkpoint degradation after step 100 is weakened. A rapid early SFT-induced capability shift or forgetting (steps 0-100) remains open."
     }
-   ]
+   ],
+   "scope_note": "narrowed: progressive late-checkpoint degradation after step 100 is weakened. A rapid early SFT-induced capability shift or forgetting (steps 0-100) remains open."
   },
   {
    "id": "H7",
@@ -187,5 +220,5 @@
    ]
   }
  ],
- "phase2_note": "Mediator refined after the first Phase 2 look (exploratory): the unstratified P(correct oracle | disc) mixes value-prediction ability with assertion form. From Phase 3 on, the primary oracle mediator is exact-value accuracy on a FIXED discriminating input, which removes both input selection and form from the measurement. The unstratified rate is still reported."
+ "phase2_note": "Superseded wording: see results/sft_root_cause_phase2_interpretation_correction_2026-09-28.json. No value-prediction improvement is demonstrated; a >=5-point improvement is excluded, but meaningful degradation remains possible. From Phase 3 the primary oracle mediator is fixed-input exact-output accuracy."
 }

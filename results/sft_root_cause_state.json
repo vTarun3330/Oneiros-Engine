@@ -43,7 +43,11 @@
   {
    "phase": 3,
    "name": "cheap causal probes",
-   "status": "pending"
+   "status": "design_frozen",
+   "design_receipt": "results/sft_root_cause_phase3a_design_receipt.json",
+   "design_receipt_sha256": "d85249b264c00bb330ec2f1313b09ce292433de2386b4674c479af1ee5181d46",
+   "census": "results/sft_root_cause_phase3_cohort_census.json",
+   "cohort_sha256": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7"
   },
   {
    "phase": 4,
@@ -92,6 +96,13 @@
    "event": "phase 2 complete",
    "finding": "SFT changed assertion form (equality 0.725 -> 0.995) and input choice (P(disc|execute) +4.4), not value prediction (equality-stratified -4.3, CI [-11.1, +2.7]); the -11.9 validity change is dominated by the form shift; Kill@8 MDE 10.7 points at 78 clusters",
    "next_decision": "Phase 3: fixed-input value-prediction probes. Open questions for the user: (1) the frozen reference-validity guardrail is form-confounded; (2) Probe B (constrained output) is deprioritised because contract stages did not degrade"
+  },
+  {
+   "utc": "2026-09-28",
+   "event": "phase 2 interpretation corrected (dated receipt); phase 3A designed and frozen",
+   "correction_receipt": "results/sft_root_cause_phase2_interpretation_correction_2026-09-28.json",
+   "correction_sha256": "4ec504e00730e48a46a9cde62868ed9f886c212c7dae85d192a73f501d738813",
+   "next_decision": "launch Phase 3A generation (3,840 greedy generations, <30 GPU-minutes) after commit/push and HEAD==origin"
   }
  ]
 }

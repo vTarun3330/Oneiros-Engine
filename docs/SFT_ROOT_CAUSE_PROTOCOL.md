@@ -190,3 +190,74 @@ removed).**
   reference-validity bound (at most 3 points of regression) is also form-confounded. An
   intervention that replaces weak oracles with correct exact ones can lower reference
   validity while making tests stronger.
+
+**2026-09-28, amendment 2: interpretation correction and Phase 3 rules (prospective,
+after review).**
+
+*Phase 2 interpretation.* The dated receipt
+`results/sft_root_cause_phase2_interpretation_correction_2026-09-28.json` supersedes the
+interpretive wording of amendment 1 and of the Phase 2 receipt. Neither earlier receipt is
+modified.
+
+- Value prediction: "No value-prediction improvement is demonstrated; a ≥5-point
+  improvement is excluded, but meaningful degradation remains possible."
+- Assertion form and validity: "The regression is consistent with the large
+  assertion-form composition shift, but causal attribution is not possible from this
+  post-hoc, model-selected stratum."
+- `P(kill | reference-valid)` is descriptive only. It conditions on a treatment-affected
+  outcome, which produces survivor/selection bias.
+- H5 is narrowed to syntactic/structural contract degradation (weakened). H6 is narrowed
+  to progressive degradation after step 100 (weakened). A rapid early shift or
+  forgetting remains open.
+- Power is reported as two separate questions: (A) the effect is greater than zero;
+  (B) the lower bound is at least +3 points. The ~296× multiplier answers only B, at 50%
+  power.
+
+*Guardrail.* The original three-point reference-validity guardrail is kept unchanged for
+every historical and future promotion decision. From Phase 3 on, these are reported
+alongside it and never replace it:
+
+- overall reference-validity rate;
+- exact-equality reference-validity rate;
+- fixed-input exact-output accuracy;
+- function-level probability of at least one valid killing candidate;
+- assertion-form distribution;
+- diversity;
+- nonanswer rate.
+
+*H4 decision rules (fixed-input exact-output accuracy, SFT minus base):*
+
+1. If SFT does not improve on exposed training functions, weaken distribution shift and
+   strengthen the objective and capacity explanations.
+2. If SFT improves on exposed functions but not on lineage-disjoint unexposed functions,
+   support a memorisation/exposure failure.
+3. If SFT improves on both train cohorts but not on a genuinely external cohort, support
+   distribution shift.
+4. If no adequate unseen external cohort exists, H4's distribution-shift arm stays open
+   and is not described as tested.
+
+"Improves" means the paired cluster-bootstrap lower bound is above 0. The threshold for
+"supported" is +5 points.
+
+*Fixed-input probe requirements (Phase 3A and 3C):*
+
+- **Input selection:** inputs are chosen by a deterministic, arm-blind rule before any
+  generation. The rule never inspects model outputs and never picks inputs because a
+  model produced them.
+- **Verification:** each input is mechanically verified to discriminate buggy from fixed.
+- **Concealment:** A0–A3 never show the fixed implementation, the mutation diff or the
+  correct output.
+- **Freezing and identity:** the cohort, inputs and expected outputs are hashed and
+  frozen before generation. Every model and specification level receives identical
+  inputs.
+- **Group cap:** representation of each semantic group is capped.
+- **Answer format:** answers use a short machine-readable schema, and the answer rate,
+  truncation and nonanswers are reported.
+- **A4:** the level showing behavioural evidence is diagnostic and non-deployable. It
+  never enters training or confirmation.
+- **Probe 3B:** the constrained-test probe is replaced by the output-schema/extraction
+  control inside the fixed-input probe.
+- **Probe 3C:** runs only after 3A is verified. A larger model is interpreted only if it
+  passes an answer-rate non-inferiority gate. A non-local snapshot is reported
+  (download size, disk space, time) before any download, and no revision is ever
+  silently substituted.

@@ -1,0 +1,148 @@
+{
+ "schema_version": "oneiros_sft_root_cause_phase2_correction_v1",
+ "date": "2026-09-28",
+ "corrects": {
+  "path": "results/sft_root_cause_phase2_decomposition_receipt.json",
+  "sha256": "39aa1c4880387980d7fdcc47003f0dd48abffd2399308dd022e76a85581fe932",
+  "modified": false
+ },
+ "quarantined_first_receipt": {
+  "path": "results/sft_root_cause/quarantine/phase2_first_run_SUPERSEDED.json",
+  "sha256": "f4465e58f7887d46c40bf4065315608bb944500b8375d48a56f198839690070f",
+  "modified": false
+ },
+ "accepted_conclusions": {
+  "input_discrimination_improves": {
+   "candidate_level_p_disc_given_execute": {
+    "base": 0.733725,
+    "sft": 0.777427,
+    "difference_points": 4.3703,
+    "ci95_points": [
+     1.9382,
+     6.9406
+    ]
+   },
+   "unique_candidate_p_disc_given_execute": {
+    "base": 0.731199,
+    "sft": 0.773194,
+    "difference_points": 4.1995,
+    "ci95_points": [
+     2.328,
+     6.2065
+    ]
+   },
+   "function_level_discrimination_recall": {
+    "base": 0.90753,
+    "sft": 0.952444,
+    "difference_points": 4.4914,
+    "ci95_points": [
+     1.3158,
+     8.4677
+    ]
+   }
+  },
+  "assertion_form_shifts_to_exact_equality": {
+   "base": 0.724703,
+   "sft": 0.99499,
+   "difference_points": 27.0287,
+   "ci95_points": [
+    18.5648,
+    35.6194
+   ]
+  },
+  "no_material_overall_contract_degradation": {
+   "parse": {
+    "base": 0.987285,
+    "sft": 0.988771,
+    "difference_points": 0.1486,
+    "ci95_points": [
+     -2.1074,
+     1.5556
+    ]
+   },
+   "policy_acceptance": {
+    "base": 1.0,
+    "sft": 1.0,
+    "difference_points": 0.0,
+    "ci95_points": [
+     0.0,
+     0.0
+    ]
+   },
+   "execute_given_parse": {
+    "base": 0.940291,
+    "sft": 0.952906,
+    "difference_points": 1.2615,
+    "ci95_points": [
+     -1.9245,
+     5.5796
+    ]
+   }
+  },
+  "unstratified_oracle_validity_regression_partly_form_confounded": {
+   "base": 0.470303,
+   "sft": 0.33183,
+   "difference_points": -13.8473,
+   "ci95_points": [
+    -22.5204,
+    -4.7957
+   ]
+  },
+  "exploratory_exact_equality_subset": {
+   "base": 0.373887,
+   "sft": 0.331374,
+   "difference_points": -4.2513,
+   "ci95_points": [
+    -11.0905,
+    2.6711
+   ]
+  }
+ },
+ "required_wording": {
+  "value_prediction": "No value-prediction improvement is demonstrated; a >=5-point improvement is excluded, but meaningful degradation remains possible.",
+  "form_and_validity": "The regression is consistent with the large assertion-form composition shift, but causal attribution is not possible from this post-hoc, model-selected stratum.",
+  "kill_given_reference_valid": "The +21.76-point change in P(kill | reference-valid) is descriptive only: reference validity is affected by treatment, so conditioning on it produces survivor/selection bias. It is not evidence that SFT became better at killing."
+ },
+ "withdrawn_statements": [
+  "'value prediction is unchanged'",
+  "'most of the validity loss comes from the form change' (as a causal claim)",
+  "any causal reading of the P(kill | reference-valid) change",
+  "the ~296x multiplier described as the sample needed to establish the effect"
+ ],
+ "hypothesis_scope_corrections": {
+  "H5": {
+   "status": "weakened",
+   "scope": "narrowed: syntactic/structural contract degradation is weakened. Semantic-oracle validity remains unresolved."
+  },
+  "H6": {
+   "status": "weakened",
+   "scope": "narrowed: progressive late-checkpoint degradation after step 100 is weakened. A rapid early SFT-induced capability shift or forgetting (steps 0-100) remains open."
+  },
+  "H2": {
+   "status": "strengthened",
+   "scope": "input choice and assertion form moved under imitation; no value-prediction improvement is demonstrated. Causal support requires a Phase 4 arm."
+  },
+  "H4": {
+   "status": "open",
+   "scope": "a train-only probe cannot support distribution shift; it can only weaken it (see protocol amendment 2 decision rules)."
+  }
+ },
+ "power": {
+  "observed_kill_at_8_difference_points": 3.4346,
+  "clustered_se_points": 3.8146,
+  "clusters": 78,
+  "assumption": "the true difference equals the observed +3.4346 points and the SE scales as 1/sqrt(independent clusters)",
+  "A_effect_greater_than_zero": {
+   "current_power": 0.145,
+   "cluster_multiplier_50pct_power": 4.74,
+   "cluster_multiplier_80pct_power": 9.68
+  },
+  "B_lower_bound_at_least_3_points": {
+   "current_power": 0.032,
+   "cluster_multiplier_50pct_power": 295.9,
+   "cluster_multiplier_80pct_power": 604.7,
+   "why_so_large": "the point estimate is only 0.4346 points above the +3-point practical threshold"
+  },
+  "correction": "the ~296x figure in the Phase 2 receipt is B at 50% power (the point estimate's lower bound just reaching +3). It is NOT the sample increase needed to show a positive effect, which is question A"
+ }
+}

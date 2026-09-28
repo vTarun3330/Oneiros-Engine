@@ -1,0 +1,6020 @@
+{
+ "control_level": "A0_answer_schema",
+ "functions": [
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "new_tuple",
+   "group_id": "function:semantic:612abf0f96ac0536ae4580f56bd6271075e01ebec644bb4a20d588e7b11b2728",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "new_tuple(['WEB', 'is'], 'best')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "('WEB', 'is', 'best')",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "new_tuple(['is', 'WEB'], 'best')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "('is', 'WEB', 'best')",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "cc9f19bf7bcbb9c622e33bb4ed037893d21fb6297444bd4c298bd73c7ba2b6c1",
+   "record_id": "mutation::mbpp_788_mut_08553"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "sequence",
+   "group_id": "function:semantic:308061b33119777bbded468c05d711fe5e686ec044384006b143d9a30ab59882",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "sequence(10)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "6",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "sequence(11)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "7",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "5b1328d79704b72a7ec7d1116a33de16dece1bcb42f8e8c7231e5cd136a02205",
+   "record_id": "mutation::mbpp_84_mut_02452"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "remove_char",
+   "group_id": "function:semantic:7974b50cce764163e4f234dc0a151b1464e1586ae08c12c711473eb8f6322025",
+   "items": [
+    {
+     "buggy_repr": "'123abcjw:, .@! eiw'",
+     "call": "remove_char('123abcjw:, .@! eiw')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'123abcjweiw'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'123abcjw:, .@! eiwa'",
+     "call": "remove_char('123abcjw:, .@! eiwa')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'123abcjweiwa'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "8e719c58ecb22f4678f8f059f82b5475000fff4cf159f484ddf608a922646cd6",
+   "record_id": "mutation::mbpp_727_mut_08008"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "area_trapezium",
+   "group_id": "function:semantic:fb3a6a50fdebf40f09af65dbcb8e3117d8ca8c370686f1030012703ed5f1f928",
+   "items": [
+    {
+     "buggy_repr": "0.13333333333333333",
+     "call": "area_trapezium(6, 9, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "30.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0.125",
+     "call": "area_trapezium(7, 9, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "32.0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "fcf79626a36244eddf79591bc67f6d64da3ece8c9868cb8b09953afbfca80442",
+   "record_id": "mutation::mbpp_848_mut_09075"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "neg_nos",
+   "group_id": "function:semantic:409548728ad1470a37fc1db31f043129c74f5bb8dad4f85990d61919fadc73b4",
+   "items": [
+    {
+     "buggy_repr": "4",
+     "call": "neg_nos([-1, 4, 5, -6])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "-1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "5",
+     "call": "neg_nos([-6, 5, 4, -1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "-6",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "8e92403af7f30acb3ccdbc4ee4a0ca69af7a6767061640d645e39c182d3087a9",
+   "record_id": "mutation::mbpp_436_mut_05549"
+  },
+  {
+   "bug_family": "identity",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "check_none",
+   "group_id": "function:semantic:3fdadf0c8adea57efa5f12a19d7b6b9fc6bf1bcaa3ed2d53f6d19b0244530e3e",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "check_none((7, 8, 9, 11, 14))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "check_none((10, 4, 5, 6))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "2e35f3153282060c5a2ec0a6c40457be85215c021008fa8a27159a2964c3e908",
+   "record_id": "mutation::mbpp_744_mut_08103"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "anagram_lambda",
+   "group_id": "function:semantic:b15aba9ef41cd9f4d38c0c20a5a54c2462eb58930ae12f14000285a130b7d965",
+   "items": [
+    {
+     "buggy_repr": "['abce', 'cbea']",
+     "call": "anagram_lambda(['bcda', 'abce', 'cbda', 'cbea', 'adcb'], 'abcd')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['bcda', 'cbda', 'adcb']",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "['cbea', 'abce']",
+     "call": "anagram_lambda(['adcb', 'cbea', 'cbda', 'abce', 'bcda'], 'abcd')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['adcb', 'cbda', 'bcda']",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "959d38673e8ce6fec3e686fe8749490fbc0d6b3e3a22da4d877edbd4901dd797",
+   "record_id": "mutation::mbpp_861_mut_09210"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "substract_elements",
+   "group_id": "function:semantic:a58e1c2f8fd5836121a3aade1df5e7b72731da37bf620e05795d98719bc339da",
+   "items": [
+    {
+     "buggy_repr": "((7, 10), (7, 14), (3, 10), (8, 13))",
+     "call": "substract_elements(((1, 3), (4, 5), (2, 9), (1, 10)), ((6, 7), (3, 9), (1, 1), (7, 3)))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "((-5, -4), (1, -4), (1, 8), (-6, 7))",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "((7, 17), (5, 18), (5, 6), (8, 6))",
+     "call": "substract_elements(((1, 10), (2, 9), (4, 5), (1, 3)), ((6, 7), (3, 9), (1, 1), (7, 3)))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "((-5, 3), (-1, 0), (3, 4), (-6, 0))",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "2db68b781a6a0158f5863023a6ba7393b1decc9d9d5a80bf581c6390cc9da4de",
+   "record_id": "mutation::mbpp_888_mut_09405"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "div_list",
+   "group_id": "function:semantic:c9e4af5275923592f595579e492b4b22755b0802b9efd37c40e539de35abd474",
+   "items": [
+    {
+     "buggy_repr": "[4, 10, 18]",
+     "call": "div_list([4, 5, 6], [1, 2, 3])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[4.0, 2.5, 2.0]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[6, 10, 12]",
+     "call": "div_list([6, 5, 4], [1, 2, 3])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[6.0, 2.5, 1.3333333333333333]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "c54313a423ab3bf04c06c3dd89d8d667e00c2b5e0a3be91e88f942841a257d9b",
+   "record_id": "mutation::mbpp_618_mut_07184"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "check_Concat",
+   "group_id": "function:semantic:a88d11cefdb349dbed7153ead8c6325017a5d2a82d27ba6c1913f8d270ce9b9a",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "check_Concat('abcabcabc', 'abc')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "check_Concat('ABCABCABC', 'abc')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "ee4221f7c9e0b2bc53df223199d05e5f75cc6a001ac3a22450032418a558a6f9",
+   "record_id": "mutation::mbpp_874_mut_09313"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "test_duplicate",
+   "group_id": "function:semantic:8d1e403a7ea0a554ff5e724cd732e4d21e2a945a61d4be10b75f2217e3dbcebf",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "test_duplicate([1, 2, 3, 4, 5])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "test_duplicate([5, 4, 3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "b8f8898ba584c88d3a50dd21a7561462142952611caa7f4bd9cd26679049c144",
+   "record_id": "mutation::mbpp_19_mut_01795"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "sum_of_square",
+   "group_id": "function:semantic:1a49a66c012ffb3a13899f330a88b53f9ccd6d71a87f1a5e83f4b83682ab4a2d",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "sum_of_square(4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "70",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "sum_of_square(3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "20",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "e00aa116775d4adafb155374d33b338a431e85fdf0510152f3a39b948bb51375",
+   "record_id": "mutation::mbpp_905_mut_09553"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "find_combinations",
+   "group_id": "function:semantic:079a562a5547ebd67aa9a1873a8641a6a8afe0df80b269d710e362f91d0b8b4b",
+   "items": [
+    {
+     "buggy_repr": "[(4, 11), (3, 5), (4, 14), (-1, 8), (0, 17), (1, 11)]",
+     "call": "find_combinations([(2, 4), (6, 7), (5, 1), (6, 10)])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[(8, 11), (7, 5), (8, 14), (11, 8), (12, 17), (11, 11)]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[(-1, 11), (0, 17), (-4, 14), (1, 8), (-3, 5), (-4, 11)]",
+     "call": "find_combinations([(6, 10), (5, 1), (6, 7), (2, 4)])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[(11, 11), (12, 17), (8, 14), (11, 8), (7, 5), (8, 11)]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "6bd65dd94525beeac7e440fec806de8d9c50178ab479e9e9a0a1a9b5971466d4",
+   "record_id": "mutation::mbpp_780_mut_08478"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "previous_palindrome",
+   "group_id": "function:semantic:38d0dff4a1ca4b0ff2734adcf3cb56aaca801723a57238d2a9a3007824a95eec",
+   "items": [
+    {
+     "buggy_repr": "898",
+     "call": "previous_palindrome(1221)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1111",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "77",
+     "call": "previous_palindrome(98)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "88",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "6e64d6eed596589bce67bf32c898ecaee2967113b4230f1ab88fa1f2af86c02f",
+   "record_id": "mutation::mbpp_909_mut_09594"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "long_words",
+   "group_id": "function:semantic:4608e167a7882dac4faeda2a66f33b9eda52103ffa3fb5de45d1423b0cbdec80",
+   "items": [
+    {
+     "buggy_repr": "['is', 'a']",
+     "call": "long_words(3, 'python is a programming language')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['python', 'programming', 'language']",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "['is', 'a']",
+     "call": "long_words(4, 'python is a programming language')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['python', 'programming', 'language']",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "ce7842dd9b3c0a520eed465ff43497b46201ac0b8d3c9dae4a63186c35c7c656",
+   "record_id": "mutation::mbpp_128_mut_02789"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "perimeter_pentagon",
+   "group_id": "function:semantic:2fb3d7ef75d2e5d2a240f4db22a70811b1f8ed4ba34c7858791af17a79c511c6",
+   "items": [
+    {
+     "buggy_repr": "1.0",
+     "call": "perimeter_pentagon(5)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "25",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0.8333333333333334",
+     "call": "perimeter_pentagon(6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "30",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "be2115dd9f2a88ba922424c909699bda5b500f10b4ce0ee1437f6b3643486322",
+   "record_id": "mutation::mbpp_171_mut_03220"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "word_len",
+   "group_id": "function:semantic:ce02b74938e0b67ebe76b28bf2578f83200c25c8fc4dc0d7f9a92aead90fb285",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "word_len('Hadoop')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "word_len('Hadoopa')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "09fbe5eac442b0a6b7448e78898045a33a6fd8904ec8366d5c9b86d6742e6e52",
+   "record_id": "mutation::mbpp_79_mut_02410"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "split_Arr",
+   "group_id": "function:semantic:7c2ba175f7a5de04065f121e0cac0303ac8be062d302ea5d6998d30948003220",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "split_Arr([12, 10, 5, 6, 52, 36], 6, 2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[5, 6, 52, 36, 12, 10]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "split_Arr([36, 52, 6, 5, 10, 12], 6, 2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[6, 5, 10, 12, 36, 52]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "225312a1595afcb49900f74548022c79aecb4b9fc8606585fef0a9d816495352",
+   "record_id": "mutation::mbpp_586_mut_06886"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "is_Two_Alter",
+   "group_id": "function:semantic:63c6625ca2b8f8b1a82441d366e3e0714450fb6eb1d8f0a642b187ea10d52592",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "is_Two_Alter('abab')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "is_Two_Alter('ababa')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "a9789c83d38b43c4c0195235021824053f02c7c3a8c21ad44670226748fc99b0",
+   "record_id": "mutation::mbpp_914_mut_09674"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "palindrome_lambda",
+   "group_id": "function:semantic:684bb3be458e15cb2d39d3407252a7ab9d80b56b3c607451e62add205de15c0c",
+   "items": [
+    {
+     "buggy_repr": "['res', 'Python', 'abcd', 'Java']",
+     "call": "palindrome_lambda(['php', 'res', 'Python', 'abcd', 'Java', 'aaa'])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['php', 'aaa']",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "['Java', 'abcd', 'Python', 'res']",
+     "call": "palindrome_lambda(['aaa', 'Java', 'abcd', 'Python', 'res', 'php'])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['aaa', 'php']",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "94a9c1dcda4e1aba2322a31a2880c9899028b8f5b603b0cdfe226da344fbe6c0",
+   "record_id": "mutation::mbpp_864_mut_09240"
+  },
+  {
+   "bug_family": "logical",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "div_of_nums",
+   "group_id": "function:semantic:ff7e1375eaa0390358bfa431a823d64033c46468ce277f9959f1a2c08a45621c",
+   "items": [
+    {
+     "buggy_repr": "[]",
+     "call": "div_of_nums([19, 65, 57, 39, 152, 639, 121, 44, 90, 190], 19, 13)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[19, 65, 57, 39, 152, 190]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[]",
+     "call": "div_of_nums([190, 90, 44, 121, 639, 152, 39, 57, 65, 19], 19, 13)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[190, 152, 39, 57, 65, 19]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "ff05cde0b7a0e29ab29fbd8aa7c54eb9abc72d72641fb089695e90e45776729e",
+   "record_id": "mutation::mbpp_817_mut_08704"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "find_Sum",
+   "group_id": "function:semantic:d63a608594bebabd5be8750fa2c2f8ca5696f63a23bf6f63f133e98da9a03e0f",
+   "items": [
+    {
+     "buggy_repr": "15",
+     "call": "find_Sum([1, 2, 3, 1, 1, 4, 5, 6], 8)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "21",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "15",
+     "call": "find_Sum([6, 5, 4, 1, 1, 3, 2, 1], 8)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "21",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "3f707e6fdc607fdeb4ca6c2afb2c781690f0d8cc7945ac9ba0e8f9b5646c47ef",
+   "record_id": "mutation::mbpp_777_mut_08467"
+  },
+  {
+   "bug_family": "membership",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "check_substring",
+   "group_id": "function:semantic:7a57dda3f9b74a1f959bd41ac927f1b6a3e54180912437104ce963f93a1f4641",
+   "items": [
+    {
+     "buggy_repr": "'entered string isnt a substring'",
+     "call": "check_substring('dreams for dreams makes life fun', 'makes')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'string doesnt start with the given substring'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'entered string isnt a substring'",
+     "call": "check_substring('dreams for dreams makes life funa', 'makes')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'string doesnt start with the given substring'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "92d9a83f4f27c103a7a1decf155488aa032912410154694569743f77a9d235d1",
+   "record_id": "mutation::mbpp_823_mut_08753"
+  },
+  {
+   "bug_family": "return",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "is_odd",
+   "group_id": "function:semantic:a00cc25e353df1a9b658f8071e2210207ceef88b2af119dbf3ab6b20f2500c8c",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "is_odd(6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "is_odd(4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "8aead14b6fefe06918dbc8c26d62f53f6e30a689a7d9192e4388d4dcb5522107",
+   "record_id": "mutation::mbpp_887_mut_09395"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "largest_neg",
+   "group_id": "function:semantic:23720a91828451c837f87dd75d00bf964fc7ed9995bc2346b8a47161feccbeef",
+   "items": [
+    {
+     "buggy_repr": "3",
+     "call": "largest_neg([1, 2, 3, -4, -6])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "-6",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3",
+     "call": "largest_neg([-6, -4, 3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "-6",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "4ceefa0c4b081ed0a3c74d7fcbab415cc1430e6770268639b66f76c6cd9fade0",
+   "record_id": "mutation::mbpp_443_mut_05593"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "odd_position",
+   "group_id": "function:semantic:9fd4c86ca36ff7fdc97381d9cd6dd9924f5b4e0b17b4e87f3fb592df2ab38477",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "odd_position([2, 1, 4, 3, 6, 7, 6, 3])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "odd_position([3, 6, 7, 6, 3, 4, 1, 2])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "7f6293a320920060850398f2e43c7acbfa87e0d49251e653bd78af2c0f0206e6",
+   "record_id": "mutation::mbpp_775_mut_08413"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "n_common_words",
+   "group_id": "function:semantic:4068661374630b79428efd04dacb13c53a21df85eeab95693c1b55c69ef39800",
+   "items": [
+    {
+     "buggy_repr": "[]",
+     "call": "n_common_words('python is a programming language', 1)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[('python', 1)]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[]",
+     "call": "n_common_words('python is a programming languagea', 1)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[('python', 1)]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "58f40f131ed89eb1d586a74c340044c750adaef1a501b1abbab4aa0e5efa46ea",
+   "record_id": "mutation::mbpp_862_mut_09211"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "extract_date",
+   "group_id": "function:semantic:bf0dd844aa3322acf8b97d02f0a827cd497da0b1aa33ecb5692af21f07d9298c",
+   "items": [
+    {
+     "buggy_repr": "[('2016', '0', '9')]",
+     "call": "extract_date('https://www.washingtonpost.com/news/football-insider/wp/2016/09/02/odell-beckhams-fame-rests-on-one-stupid-little-ball-josh-norman-tells-author/')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[('2016', '09', '02')]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[('2016', '0', '9')]",
+     "call": "extract_date('https://www.washingtonpost.com/news/football-insider/wp/2016/09/02/odell-beckhams-fame-rests-on-one-stupid-little-ball-josh-norman-tells-author/a')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[('2016', '09', '02')]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "a77b80860c764218c87aaaa0fe47a72f42578a5915a78f8c12e4cdb6c0efc477",
+   "record_id": "mutation::mbpp_906_mut_09561"
+  },
+  {
+   "bug_family": "boolean",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "reverse_list_lists",
+   "group_id": "function:semantic:05ec6db49d6255170040e7921f6e7923a89a9817ec9cba93cff902a4f0e2e141",
+   "items": [
+    {
+     "buggy_repr": "[[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]",
+     "call": "reverse_list_lists([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[[4, 3, 2, 1], [8, 7, 6, 5], [12, 11, 10, 9], [16, 15, 14, 13]]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[[13, 14, 15, 16], [9, 10, 11, 12], [5, 6, 7, 8], [1, 2, 3, 4]]",
+     "call": "reverse_list_lists([[13, 14, 15, 16], [9, 10, 11, 12], [5, 6, 7, 8], [1, 2, 3, 4]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[[16, 15, 14, 13], [12, 11, 10, 9], [8, 7, 6, 5], [4, 3, 2, 1]]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "1f41173681d6915e18481d20fac712e219a0050564994606ff09fae70953b0e7",
+   "record_id": "mutation::mbpp_889_mut_09406"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "rombus_area",
+   "group_id": "function:semantic:823ba1eda868c75cd07245b1d27e4b1fc95cfdebb984033cc3a987ba416a5254",
+   "items": [
+    {
+     "buggy_repr": "400",
+     "call": "rombus_area(10, 20)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "100.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "440",
+     "call": "rombus_area(11, 20)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "110.0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "e1cd073f9995ffc8c4bd27a6c2f0968b75eb3077a0e63eea02a4fa11d4790501",
+   "record_id": "mutation::mbpp_814_mut_08669"
+  },
+  {
+   "bug_family": "logical",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "lcm",
+   "group_id": "function:semantic:bf05ebc430c78f193fe0d50f91723eebdde3ff47199008a75d688291936f93b1",
+   "items": [
+    {
+     "buggy_repr": "6",
+     "call": "lcm(4, 6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "12",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "6",
+     "call": "lcm(5, 6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "30",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "59abec3cbbd7267697c1e97235e01950561e1eee3f4853cbbe3590c98f9df63e",
+   "record_id": "mutation::mbpp_876_mut_09324"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "find_Divisor",
+   "group_id": "function:semantic:2324f825f127fdfb3770425ca8b07f0d2815a8706f07863363661d45cb687625",
+   "items": [
+    {
+     "buggy_repr": "5",
+     "call": "find_Divisor(2, 5)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "2",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3",
+     "call": "find_Divisor(2, 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "2",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "7eab9ec8fa956270a18e2d243234cd69210ad223c8d41a072e293db9ca4d9828",
+   "record_id": "mutation::mbpp_339_mut_04719"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "remove_spaces",
+   "group_id": "function:semantic:81a825bea490c040973fc04aabf9d4708fc67baa5109b2908d79d2bdb119c616",
+   "items": [
+    {
+     "buggy_repr": "'python  program'",
+     "call": "remove_spaces('python  program')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'python program'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'python  programa'",
+     "call": "remove_spaces('python  programa')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'python programa'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "914461d50eb415cd124e440b10f23d77273aba52ad37960e787a1a154849e058",
+   "record_id": "mutation::mbpp_892_mut_09426"
+  },
+  {
+   "bug_family": "off_by_one",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "empty_list",
+   "group_id": "function:semantic:88f2386dc586c7947a78301d231183f587ac5b756291f7ef7d9f04bc5a450a22",
+   "items": [
+    {
+     "buggy_repr": "[{}, {}, {}, {}]",
+     "call": "empty_list(5)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[{}, {}, {}, {}, {}]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[{}, {}, {}]",
+     "call": "empty_list(4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[{}, {}, {}, {}]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "9e0dd4b96d931d992e15a24175263e43eee3f79fd35c2d1a03e3073909271d84",
+   "record_id": "mutation::mbpp_568_mut_06762"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "add_list",
+   "group_id": "function:semantic:99f45d179f727465dc0efcb75cba2ef78b0aed06de314c00cee7326cc8e8783f",
+   "items": [
+    {
+     "buggy_repr": "[-3, -3, -3]",
+     "call": "add_list([1, 2, 3], [4, 5, 6])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[5, 7, 9]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[-1, -3, -5]",
+     "call": "add_list([3, 2, 1], [4, 5, 6])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[7, 7, 7]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "8ea82aec78cf35915e79563eb861e5caca9c96d03befc2afc64125b08c97beaa",
+   "record_id": "mutation::mbpp_729_mut_08011"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "extract_symmetric",
+   "group_id": "function:semantic:eb877702753ceb32ab6bf18e80cb271d48e9172f4832c06bb4f74fe0ab0b575d",
+   "items": [
+    {
+     "buggy_repr": "{(7, 6), (9, 8)}",
+     "call": "extract_symmetric([(6, 7), (2, 3), (7, 6), (9, 8), (10, 2), (8, 9)])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "{(6, 7), (8, 9)}",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "{(7, 6), (9, 8)}",
+     "call": "extract_symmetric([(8, 9), (10, 2), (9, 8), (7, 6), (2, 3), (6, 7)])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "{(6, 7), (8, 9)}",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "94e2958726877317ccaa97fceb8944ac64944f398a6cdd0b30b4927b128c42c1",
+   "record_id": "mutation::mbpp_490_mut_06021"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "length_Of_Last_Word",
+   "group_id": "function:semantic:ce06efcb09d625ff90dfa49d6b5695930f44e75ae25aca1ae674b78f4500a85f",
+   "items": [
+    {
+     "buggy_repr": "4",
+     "call": "length_Of_Last_Word('PHP')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "3",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "5",
+     "call": "length_Of_Last_Word('PHPa')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "4",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "4459f4c05a5d15996b9144dc6137c93427a89e69fbb794cfd9e93f77fd07d8fd",
+   "record_id": "mutation::mbpp_868_mut_09271"
+  },
+  {
+   "bug_family": "membership",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "check_tuples",
+   "group_id": "function:semantic:133835b895c08e68c3a7893169647c3a449c9577f03c30e98d1b2077698a3fef",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "check_tuples((3, 5, 6, 5, 3, 6), [3, 6, 5])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "check_tuples((6, 3, 5, 6, 5, 3), [3, 6, 5])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "392148c4403dbcd0b32eef9ff995574b9fce789be15b1aac10b330c6aed90e25",
+   "record_id": "mutation::mbpp_878_mut_09328"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "is_Perfect_Square",
+   "group_id": "function:semantic:c83b7ae06e0ce19ef0ebc9b5dfc1b0a6dfd86f552119defd56d0a3f6630c1d9d",
+   "items": [
+    {
+     "buggy_repr": "<timeout>",
+     "call": "is_Perfect_Square(10)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<timeout>",
+     "call": "is_Perfect_Square(11)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "d6ea5e7953a65f1a7f336c17df53e1117c3095e1ec4c5c19dbeacb03f426aa13",
+   "record_id": "mutation::mbpp_803_mut_08617"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "rotate_left",
+   "group_id": "function:semantic:5c385a640e27b4c17010453ea7a69a3df12d88c7f803f2d3d24cc87af8e68de4",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "rotate_left([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 3, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "rotate_left([10, 9, 8, 7, 6, 5, 4, 3, 2, 1], 3, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[7, 6, 5, 4, 3, 2, 1, 10, 9, 8, 7]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "0b3b96c2873d6c8c63d6c9449a61640f08bc71ab51971e008ee40748de115f89",
+   "record_id": "mutation::mbpp_328_mut_04646"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "position_max",
+   "group_id": "function:semantic:354d47a3548883bf4deb2275883cd5a2dd636eeb8c4ca17b784d46e441a207d7",
+   "items": [
+    {
+     "buggy_repr": "[0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12]",
+     "call": "position_max([12, 33, 23, 10, 67, 89, 45, 667, 23, 12, 11, 10, 54])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[7]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[0, 1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12]",
+     "call": "position_max([54, 10, 11, 12, 23, 667, 45, 89, 67, 10, 23, 33, 12])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[5]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "2137c58262408b2212c5ec1cfdad590bde67eac0e524e76bde3c8cc0de4995b7",
+   "record_id": "mutation::mbpp_200_mut_03504"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "Diff",
+   "group_id": "function:semantic:b3beea7fdbaf64147f52f1d980b0e9d2530501a3ab0e42623d81bc3ee1b49676",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "Diff([10, 15, 20, 25, 30, 35, 40], [25, 40, 35])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[10, 20, 30, 15]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "Diff([40, 35, 30, 25, 20, 15, 10], [25, 40, 35])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[10, 20, 30, 15]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "72dc6f5b2a5f85c497d2b7b82abfa30bea0d64325d45953e8439b986ecd933ad",
+   "record_id": "mutation::mbpp_769_mut_08359"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "chunk_tuples",
+   "group_id": "function:semantic:2df8b066f2902b01d220b295d018204084184ebc2d6f34d6cbbad43a07a21775",
+   "items": [
+    {
+     "buggy_repr": "[(4, 5, 6), (7, 6, 8), (3, 4)]",
+     "call": "chunk_tuples((10, 4, 5, 6, 7, 6, 8, 3, 4), 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[(10, 4, 5), (6, 7, 6), (8, 3, 4)]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[(3, 8, 6), (7, 6, 5), (4, 10)]",
+     "call": "chunk_tuples((4, 3, 8, 6, 7, 6, 5, 4, 10), 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[(4, 3, 8), (6, 7, 6), (5, 4, 10)]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "26507f6ae8e4c867715bd661751c74e4fb54abc2df96d51784aaee559dada9e3",
+   "record_id": "mutation::mbpp_921_mut_09760"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "number_ctr",
+   "group_id": "function:semantic:a5d8c4ade7d22cd4d011a8fdd7e427aebb6a0b4c4790167352b8b2fb8351f4f7",
+   "items": [
+    {
+     "buggy_repr": "2",
+     "call": "number_ctr('program2bedone')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "2",
+     "call": "number_ctr('program2bedonea')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "0ad9c290ce7efdf8d1186887b28c4aa88f57229c4a4d0568a2e0f0bd49232e06",
+   "record_id": "mutation::mbpp_764_mut_08315"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "check",
+   "group_id": "function:semantic:6efefec8295b42d38093f726c3d2f3cbe296e09abc4454ebde50b3b167ee4dfb",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "check([3, 2, 1, 2, 3, 4], 6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "check([4, 3, 2, 1, 2, 3], 6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "7419de0314ed277a7dc5d12fe2b2777387da002dc104674985228fe56efe13d8",
+   "record_id": "mutation::mbpp_899_mut_09485"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "series_sum",
+   "group_id": "function:semantic:f3f98b9bdc8702d06fbe962d80d358450845840b5f26dcb2f15e888110035f2f",
+   "items": [
+    {
+     "buggy_repr": "9.333333333333334",
+     "call": "series_sum(6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "91.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "7.0",
+     "call": "series_sum(5)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "55.0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "48202e24300f207a225ee73f070a92c59479c83d9917ebf11c954fef470a60fa",
+   "record_id": "mutation::mbpp_935_mut_09937"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "find",
+   "group_id": "function:semantic:8f59ff527485f9821f478c428cd6290c8e0169c816d72c99aa5eed216edafe96",
+   "items": [
+    {
+     "buggy_repr": "1",
+     "call": "find(3, 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0",
+     "call": "find(2, 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "2",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "d8a5903331ed9ea2a86d80eda3db555032847bd6a1a0b2bff550c67f6bbf49b0",
+   "record_id": "mutation::mbpp_502_mut_06143"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "_sum",
+   "group_id": "function:semantic:0c6dba7bf6f8a07ba528de0fadde7bc5cb2d2dc0846a0bce1c0132afc77563ec",
+   "items": [
+    {
+     "buggy_repr": "7",
+     "call": "_sum([1, 2, 3])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "6",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "7",
+     "call": "_sum([3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "6",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "fa9cfc1d3ff7880dda92d98f3897de4c362c3da5ad1ad486a938167c94dfc848",
+   "record_id": "mutation::mbpp_798_mut_08601"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "find_Min_Diff",
+   "group_id": "function:semantic:c4a14ae17cfd5ea45eb6cdb15f0c2f68697495e75337d3f6f3213b03894a2162",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "find_Min_Diff((1, 5, 3, 19, 18, 25), 6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "find_Min_Diff((25, 18, 19, 3, 5, 1), 6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "4df9679c7a43c8c4e69669c0b953135ada167c9751bdba17674203a2275ed8b4",
+   "record_id": "mutation::mbpp_763_mut_08298"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "add_lists",
+   "group_id": "function:semantic:0fa881491c85f459ac85f02c82f71b194a4bfd1aeccca899a8ca7c121a267a17",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "add_lists([5, 6, 7], (9, 10))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(9, 10, 5, 6, 7)",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "add_lists([7, 6, 5], (9, 10))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(9, 10, 7, 6, 5)",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "c10f3a6111b75659df1ceb0961240ae5dbb74314ef211ef790105c28f7ea3b8c",
+   "record_id": "mutation::mbpp_106_mut_02598"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "find_Extra",
+   "group_id": "function:semantic:631ad13d344bb2eb8c82f4535bed825d39647b26aac6f8c5f531ec15de6f62af",
+   "items": [
+    {
+     "buggy_repr": "0",
+     "call": "find_Extra([1, 2, 3, 4], [1, 2, 3], 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "3",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3",
+     "call": "find_Extra([4, 3, 2, 1], [1, 2, 3], 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "c380ff69fc91bde5c67edc33ed23274063e8dd79797caa6816a44a6106a0f3b8",
+   "record_id": "mutation::mbpp_890_mut_09407"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "remove_multiple_spaces",
+   "group_id": "function:semantic:02e90091bc8de5755ec3975f638098fc058d349cfda56056b527458c60fd2bad",
+   "items": [
+    {
+     "buggy_repr": "'Google      Assistant'",
+     "call": "remove_multiple_spaces('Google      Assistant')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'Google Assistant'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'Google      Assistanta'",
+     "call": "remove_multiple_spaces('Google      Assistanta')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'Google Assistanta'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "a695ecb0213b36a07ec471a60b655f3f35140d68d8bf5a1e8d1350993b504a44",
+   "record_id": "mutation::mbpp_693_mut_07737"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "sum_negativenum",
+   "group_id": "function:semantic:c83960893b1a017af8d7fec34611bb1ea6ad4b645f9a95489bc4b94865769e2b",
+   "items": [
+    {
+     "buggy_repr": "48",
+     "call": "sum_negativenum([2, 4, -6, -9, 11, -12, 14, -5, 17])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "-32",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "48",
+     "call": "sum_negativenum([17, -5, 14, -12, 11, -9, -6, 4, 2])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "-32",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "b6c816cda820f789fe205443bd7f992e2d0677d776655069303e5bebd21bd310",
+   "record_id": "mutation::mbpp_133_mut_02828"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "max_run_uppercase",
+   "group_id": "function:semantic:436242c84d4cfba575fbd64b0d9ba43525dbf28f1fd5a3c4b7efc70cdf91ffc1",
+   "items": [
+    {
+     "buggy_repr": "0",
+     "call": "max_run_uppercase('GeMKSForGERksISBESt')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "5",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0",
+     "call": "max_run_uppercase('eMKSForGERksISBESt')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "5",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "d0b9e99791d0cacaa2138d63fd87a165ff5955431b06516db7e2a42f0c3c8dd8",
+   "record_id": "mutation::mbpp_806_mut_08645"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "mutiple_tuple",
+   "group_id": "function:semantic:3f8da93de72bf3d3a635ba57fc377662c9cea4257784ebb474ffc1298ab16fd8",
+   "items": [
+    {
+     "buggy_repr": "-0.0011574074074074073",
+     "call": "mutiple_tuple((4, 3, 2, 2, -1, 18))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "-864",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "-0.0011574074074074073",
+     "call": "mutiple_tuple((18, -1, 2, 2, 3, 4))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "-864",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "18a0def3fb70c84cc521661db40a9a267e38bb0edd1475cd406bdeab4e623550",
+   "record_id": "mutation::mbpp_925_mut_09809"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "Check_Solution",
+   "group_id": "function:semantic:7342d803fe5f018f01dc2fbe6952051830168f041e1cc81ab29074387c7497f8",
+   "items": [
+    {
+     "buggy_repr": "'No'",
+     "call": "Check_Solution(2, 0, -1)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'Yes'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'No'",
+     "call": "Check_Solution(3, 0, -1)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'Yes'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "5fac737094df3b631aef3725864acb20bf0e9a63b70a7851ceed379d3c811b1e",
+   "record_id": "mutation::mbpp_840_mut_08976"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "sub_lists",
+   "group_id": "function:semantic:d5fddb2c76126c6708b12a58e393e5e63a3ed54e27d686f0b6faeb4b3572858b",
+   "items": [
+    {
+     "buggy_repr": "[[], ['X'], ['Y'], ['Z'], ['X', 'Y'], ['X', 'Z'], ['Y', 'Z']]",
+     "call": "sub_lists(['X', 'Y', 'Z'])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[[], ['X'], ['Y'], ['Z'], ['X', 'Y'], ['X', 'Z'], ['Y', 'Z'], ['X', 'Y', 'Z']]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[[], [10], [20], [30], [10, 20], [10, 30], [20, 30]]",
+     "call": "sub_lists([10, 20, 30])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[[], [10], [20], [30], [10, 20], [10, 30], [20, 30], [10, 20, 30]]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "f174d3236b46bd201d69defe6d492932844b6a98b6c474c31dcc703046e86d21",
+   "record_id": "mutation::mbpp_859_mut_09207"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "count_Rotation",
+   "group_id": "function:semantic:6cdb76e7298cbc8cfbfba49436c7539ec3a3d38af34f7d12087f69adfd920d45",
+   "items": [
+    {
+     "buggy_repr": "0",
+     "call": "count_Rotation([3, 2, 1], 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "count_Rotation([3, 2], 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "d596343b7c78b2f55273ca3ef64055ef5fccbf25d48008b4e88e936ac2c01984",
+   "record_id": "mutation::mbpp_802_mut_08616"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "same_Length",
+   "group_id": "function:semantic:f8e285ff6a03fac07953ce0c05191853f30535801dfaa7769ce4e4fcd930dd96",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "same_Length(2, 2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "same_Length(12, 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "cb67725a20c0db98f50d3cc8dac9670cacd6c6658af5438bbdd8b1d2c26957d8",
+   "record_id": "mutation::mbpp_891_mut_09411"
+  },
+  {
+   "bug_family": "off_by_one",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "Odd_Length_Sum",
+   "group_id": "function:semantic:eda673b2d6f59349a4290563a7a8545a34bfac0cc30018f0a309b74a60af7528",
+   "items": [
+    {
+     "buggy_repr": "6",
+     "call": "Odd_Length_Sum([1, 2, 4])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "14",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3",
+     "call": "Odd_Length_Sum([4, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "14",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "15cd35e0d96dffbe3f8f00d445dbbfcc3f6cf4f41c3c75e3bbcd307b74ae7e94",
+   "record_id": "mutation::mbpp_782_mut_08499"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "check_monthnum_number",
+   "group_id": "function:semantic:4d21fbf5e29f7d3ff41e5864bd1c1c4d0ffaddcac425b74c784aef3f69a965d2",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "check_monthnum_number(2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "check_monthnum_number(4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "9a9a899fd22f79fb26d0d6053cd6b3239a03715f7480416535987f0b58671112",
+   "record_id": "mutation::mbpp_820_mut_08735"
+  },
+  {
+   "bug_family": "negate_removal",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "remove_nested",
+   "group_id": "function:semantic:57b9b7519d240550f6040e3a5bcb1c1734d3526230ac03bfad569926daee0a60",
+   "items": [
+    {
+     "buggy_repr": "((4, 6),)",
+     "call": "remove_nested((1, 5, 7, (4, 6), 10))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(1, 5, 7, 10)",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "((4, 6),)",
+     "call": "remove_nested((10, (4, 6), 7, 5, 1))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(10, 7, 5, 1)",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "4255b77fa4ea123ca29ade52c20cd85892db1e550febf4101a469e451c8c22f7",
+   "record_id": "mutation::mbpp_791_mut_08560"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "parallelogram_perimeter",
+   "group_id": "function:semantic:9d8987ae219d2b9db383c5aa0b7a2612d366cf6c92f8de99e7ace0976427472c",
+   "items": [
+    {
+     "buggy_repr": "1.0",
+     "call": "parallelogram_perimeter(10, 20)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "400",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "1.1",
+     "call": "parallelogram_perimeter(11, 20)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "440",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "11dac2130e6b6c9b70171ea763a720a746eb975ee8027457e5ef7977579572d4",
+   "record_id": "mutation::mbpp_882_mut_09358"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "even_position",
+   "group_id": "function:semantic:594d7bb12b2a1c2cf745a272057b4361f5496d6a7ccc09ea09f96553143facd8",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "even_position([3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "even_position([3, 2])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "9b9188a118da46f0aa87adfa675c700bf3082d30b6cd04cc942488ea9d7c2f71",
+   "record_id": "mutation::mbpp_790_mut_08558"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "remove_negs",
+   "group_id": "function:semantic:c0e8ef37c04b4ca378983e58138f94333b88a29f9e8e1d3653bdfbeb4ce067c5",
+   "items": [
+    {
+     "buggy_repr": "[-2, -4]",
+     "call": "remove_negs([1, -2, 3, -4])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[1, 3]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[-4, -2]",
+     "call": "remove_negs([-4, 3, -2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[3, 1]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "ccb54b3330cb700e1fa284f6fad4814d9d0d2887cb7d607197d08348e083a04e",
+   "record_id": "mutation::mbpp_852_mut_09123"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "remove_all_spaces",
+   "group_id": "function:semantic:0b11db00a3e4512737bafe20d203db43983c4f13d28cf865e1f53148f7b3a533",
+   "items": [
+    {
+     "buggy_repr": "'python  program'",
+     "call": "remove_all_spaces('python  program')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'pythonprogram'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'python  programa'",
+     "call": "remove_all_spaces('python  programa')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'pythonprograma'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "b9160432382bb8037eaa931c960cd0c2d1d657b3ecd3df19ad36d80a7079dc54",
+   "record_id": "mutation::mbpp_800_mut_08603"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "lobb_num",
+   "group_id": "function:semantic:642eed60eaf19f132d26778d1278d1e4d10ef117fa9f6887690fca306d182f00",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "lobb_num(5, 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "35.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "lobb_num(6, 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "154.0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "38200ca18e07cae0221844536d37d483ca2bea042eef38206fcda61213b4e620",
+   "record_id": "mutation::mbpp_912_mut_09655"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "sum_num",
+   "group_id": "function:semantic:f09c87d7aeb2b81029cad39fe192b896369002f2af3448c0307cd6a8a2657543",
+   "items": [
+    {
+     "buggy_repr": "100",
+     "call": "sum_num((8, 2, 3, 0, 7))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "4.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "100",
+     "call": "sum_num((7, 0, 3, 2, 8))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "4.0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "e5c18605f6c9b154b6af3f5fff4fc77abf1222a134da0f523e214cc594ac9615",
+   "record_id": "mutation::mbpp_886_mut_09392"
+  },
+  {
+   "bug_family": "index",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "Extract",
+   "group_id": "function:semantic:bb50571092787c7b7e836f5a23b6503829ce7667c316c66cc2dde37f564c68be",
+   "items": [
+    {
+     "buggy_repr": "[2, 4, 7]",
+     "call": "Extract([[1, 2], [3, 4, 5], [6, 7, 8, 9]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[1, 3, 6]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[7, 4, 2]",
+     "call": "Extract([[6, 7, 8, 9], [3, 4, 5], [1, 2]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[6, 3, 1]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "e4035824824f49310a6fe03d8a5887854eeadf07f63beea880f84e07d1295b6a",
+   "record_id": "mutation::mbpp_460_mut_05694"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "substract_elements",
+   "group_id": "function:semantic:004784d3a922aa3c7736f768f7f7a4a760e8cf3fa416eed97cad8987e0d5a962",
+   "items": [
+    {
+     "buggy_repr": "(12, 9, 23)",
+     "call": "substract_elements((10, 4, 5), (2, 5, 18))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(8, -1, -13)",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "(7, 9, 28)",
+     "call": "substract_elements((5, 4, 10), (2, 5, 18))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(3, -1, -8)",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "6164c869125ccce498dfcbe6b99f748d75b02d136282b1404a5c9df2e6b0e2d9",
+   "record_id": "mutation::mbpp_273_mut_04142"
+  },
+  {
+   "bug_family": "off_by_one",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "heap_sort",
+   "group_id": "function:semantic:1682957e782e98ca041d0259b325fe078518fd6dffdd5f76e26fdcc5bbc6e9de",
+   "items": [
+    {
+     "buggy_repr": "[0, 1, 2, 3, 4, 5, 6, 7, 8]",
+     "call": "heap_sort([1, 3, 5, 7, 9, 2, 4, 6, 8, 0])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[0, 1, 2, 3, 4, 5, 6, 7, 8]",
+     "call": "heap_sort([0, 8, 6, 4, 2, 9, 7, 5, 3, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "78651975728c0f1628da057c56daf1652a28c80c6105b0d7fe0f5cd58c9ab3aa",
+   "record_id": "mutation::mbpp_635_mut_07353"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "Sum_of_Inverse_Divisors",
+   "group_id": "function:semantic:b0cbd17ad013b8f87500897aac55b1d875646e25e1064241285a80122a1d1241",
+   "items": [
+    {
+     "buggy_repr": "72.0",
+     "call": "Sum_of_Inverse_Divisors(6, 12)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "2.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "84.0",
+     "call": "Sum_of_Inverse_Divisors(7, 12)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1.71",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "3379b8b3e2c887da86c58b8c060b25f145b9a83ed2da2ab0197fe2e2e045a84b",
+   "record_id": "mutation::mbpp_851_mut_09121"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "volume_cuboid",
+   "group_id": "function:semantic:7fed866e55a11ac8b37fc83c295261f8e579a30ed864ee275860ae0dd46955e9",
+   "items": [
+    {
+     "buggy_repr": "1.5",
+     "call": "volume_cuboid(1, 2, 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "6",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3.0",
+     "call": "volume_cuboid(2, 2, 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "12",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "4a9ab628d3fca3568228f0cb005452722eac50142dda98af98fc7390d52b9ac0",
+   "record_id": "mutation::mbpp_373_mut_04986"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "check_identical",
+   "group_id": "function:semantic:da9696ad93a8c45efc34b8ef7ae86b32fbf0b76abce44f6d1a7511ac9d5111b3",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "check_identical([(10, 4), (2, 5)], [(10, 4), (2, 5)])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "check_identical([(2, 5), (10, 4)], [(10, 4), (2, 5)])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "18895bc31bebf30c4efae66c55259ecb5483466853e6de2f4ec1be428f5333ec",
+   "record_id": "mutation::mbpp_811_mut_08664"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "min_difference",
+   "group_id": "function:semantic:81ccbcc8866e25f3b6b0530ce0626828ce513a9858c4fef9d92944d82f0543df",
+   "items": [
+    {
+     "buggy_repr": "3",
+     "call": "min_difference([(3, 5), (1, 7), (10, 3), (1, 2)])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3",
+     "call": "min_difference([(1, 2), (10, 3), (1, 7), (3, 5)])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "42f497589d1bc386a67d3744ec4eb571dd8fc50f92adb1009ec0478a2e26b21e",
+   "record_id": "mutation::mbpp_875_mut_09316"
+  },
+  {
+   "bug_family": "membership",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "intersection_nested_lists",
+   "group_id": "function:semantic:27a7d42df4c46342ed5aacac053aec9c994cdbf967902954da02c4a95d622a65",
+   "items": [
+    {
+     "buggy_repr": "[[18, 23, 25, 45], [19, 24, 28], [18, 15, 16]]",
+     "call": "intersection_nested_lists([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], [[12, 18, 23, 25, 45], [7, 11, 19, 24, 28], [1, 5, 8, 18, 15, 16]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[[12], [7, 11], [1, 5, 8]]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[[18, 23, 25, 45], [19, 24, 28], [18, 15, 16]]",
+     "call": "intersection_nested_lists([14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1], [[12, 18, 23, 25, 45], [7, 11, 19, 24, 28], [1, 5, 8, 18, 15, 16]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[[12], [7, 11], [1, 5, 8]]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "d439c6cc43140859fcc448577230e503419c77be721fc09571972d94dff50728",
+   "record_id": "mutation::mbpp_298_mut_04299"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "dealnnoy_num",
+   "group_id": "function:semantic:d01bc58d6a116f1e1f493a255309d7a09912755115644cc34bb92e038cab73fb",
+   "items": [
+    {
+     "buggy_repr": "325",
+     "call": "dealnnoy_num(3, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "129",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "1035",
+     "call": "dealnnoy_num(4, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "321",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "624a78d4cc75af79811128bba77f8062c81af1fc87b422c7bbd936996cfdc429",
+   "record_id": "mutation::mbpp_934_mut_09925"
+  },
+  {
+   "bug_family": "string",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "camel_to_snake",
+   "group_id": "function:semantic:359eb9f0a890809dfed94d53482808aa5b258e0e7b68c7597498be02ecd13b44",
+   "items": [
+    {
+     "buggy_repr": "'GOOGLE_ASSISTANT'",
+     "call": "camel_to_snake('GoogleAssistant')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'google_assistant'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'GOOGLE_ASSISTANTA'",
+     "call": "camel_to_snake('GoogleAssistanta')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'google_assistanta'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "fe68c394387670ecaf237657e68b32a6bab9efb6cd6d8cfcf87f813939358e20",
+   "record_id": "mutation::mbpp_933_mut_09897"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "topbottom_surfacearea",
+   "group_id": "function:semantic:59839a79cda3db8dc5cf4899f93ca50deb7038b0ab1058f3ab59c7635fbff538",
+   "items": [
+    {
+     "buggy_repr": "3.1415",
+     "call": "topbottom_surfacearea(10)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "314.15000000000003",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3.1415",
+     "call": "topbottom_surfacearea(11)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "380.12149999999997",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "96e547492ff306f020b271c67a5a1d7d272e7ae9e236dcbd7761ed9b9e5257c5",
+   "record_id": "mutation::mbpp_535_mut_06531"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "rectangle_area",
+   "group_id": "function:semantic:70c2e86574b35b6718e4631ecfc49a205e917a4ce8d8a5439105279d868ec469",
+   "items": [
+    {
+     "buggy_repr": "0.5",
+     "call": "rectangle_area(10, 20)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "200",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0.55",
+     "call": "rectangle_area(11, 20)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "220",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "2ae0af7e971b4e980781caa8146ecf69d2dc0d38e2aab80a8c1e322fac497992",
+   "record_id": "mutation::mbpp_458_mut_05692"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "div_of_nums",
+   "group_id": "function:semantic:997766c5041d259539759ae30952718bd424a4ff480946275dcb0a6cda7c85ec",
+   "items": [
+    {
+     "buggy_repr": "[]",
+     "call": "div_of_nums([19, 65, 57, 39, 152, 639, 121, 44, 90, 190], 2, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[152, 44]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[]",
+     "call": "div_of_nums([190, 90, 44, 121, 639, 152, 39, 57, 65, 19], 2, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[44, 152]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "6df334cc3929a5d1b39628d32c53fa54fca0d8257269fdbc697edf34f234f351",
+   "record_id": "mutation::mbpp_883_mut_09365"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "fibonacci",
+   "group_id": "function:semantic:fa3af4c08ee367934f92dba7b10f6d303ea5d191939c188d1726fcafe08ce55b",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "fibonacci(7)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "13",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "fibonacci(6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "8",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "78de0a024cc098d0516d9c2e8801ce105dd0d24d45e92d6afabd776c0821f34c",
+   "record_id": "mutation::mbpp_873_mut_09292"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "union_elements",
+   "group_id": "function:semantic:d0a10de34a9335362030e5d52f92d70313c3aedf606b7a9a27146bc44fffe46c",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "union_elements((3, 4, 5, 6), (5, 7, 4, 10))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(3, 4, 5, 6, 7, 10)",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "union_elements((6, 5, 4, 3), (5, 7, 4, 10))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(3, 4, 5, 6, 7, 10)",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "79a98d443b77a09611315ba24cc9be8b1a500b09a291c770bdabe1d0014a6c05",
+   "record_id": "mutation::mbpp_560_mut_06736"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "find_exponentio",
+   "group_id": "function:semantic:c0bd6f2b98dd4dc32f8828aaac4c54a35ef62aecc9d666084be421afb596db08",
+   "items": [
+    {
+     "buggy_repr": "(50, 24, 35, 30)",
+     "call": "find_exponentio((10, 4, 5, 6), (5, 6, 7, 5))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(100000, 4096, 78125, 7776)",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "(30, 30, 28, 50)",
+     "call": "find_exponentio((6, 5, 4, 10), (5, 6, 7, 5))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(7776, 15625, 16384, 100000)",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "bc19f911dedec055fb5ba98b6b65ff6adea2391d0ecf5564618775335644606e",
+   "record_id": "mutation::mbpp_197_mut_03479"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "rearrange_numbs",
+   "group_id": "function:semantic:fecd3b01fd9d8fe8989222560341181338410769a888f7c430705669717176d6",
+   "items": [
+    {
+     "buggy_repr": "[9, 8, 7, 5, 2, -1, -3, -10]",
+     "call": "rearrange_numbs([-1, 2, -3, 5, 7, 8, 9, -10])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[2, 5, 7, 8, 9, -10, -3, -1]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[9, 8, 7, 5, 2, -1, -3, -10]",
+     "call": "rearrange_numbs([-10, 9, 8, 7, 5, -3, 2, -1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[2, 5, 7, 8, 9, -10, -3, -1]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "2dd3dcd926fa366d4a0cd3d97f5c7626d3b5d35c641b9db91073e4efd81c3d1c",
+   "record_id": "mutation::mbpp_915_mut_09689"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "maximum_Sum",
+   "group_id": "function:semantic:00c1044be9b96c2d39a820d5af69c82d98cc6d44e67f592d3ff985dd8cf17e42",
+   "items": [
+    {
+     "buggy_repr": "100000",
+     "call": "maximum_Sum([[1, 2, 3], [4, 5, 6], [10, 11, 12], [7, 8, 9]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "33",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "100000",
+     "call": "maximum_Sum([[7, 8, 9], [10, 11, 12], [4, 5, 6], [1, 2, 3]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "33",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "ba99cba4ab512ad9eb930a3a0a64c91bd7acb5e431b38aaa2b9e000ed9454199",
+   "record_id": "mutation::mbpp_23_mut_01834"
+  },
+  {
+   "bug_family": "membership",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "remove_matching_tuple",
+   "group_id": "function:semantic:0865a3739b710fbe85f7e384832080b2eb9c304ae3168acaf26edf067874eda6",
+   "items": [
+    {
+     "buggy_repr": "[('Hello', 'dude'), ('How', 'are')]",
+     "call": "remove_matching_tuple([('Hello', 'dude'), ('How', 'are'), ('you', '?')], [('Hello', 'dude'), ('How', 'are')])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[('you', '?')]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[('How', 'are'), ('Hello', 'dude')]",
+     "call": "remove_matching_tuple([('you', '?'), ('How', 'are'), ('Hello', 'dude')], [('Hello', 'dude'), ('How', 'are')])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[('you', '?')]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "a714cdfbfefb16c3034183d6e5ac7951e485b87be80b6c153ffc5734d0bd4caf",
+   "record_id": "mutation::mbpp_484_mut_05918"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "odd_Num_Sum",
+   "group_id": "function:semantic:b172b405b83e0cb77de74a2f7b19ffbe52f092ceb4a4aa4588097483f99fb82e",
+   "items": [
+    {
+     "buggy_repr": "83",
+     "call": "odd_Num_Sum(2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "82",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "2",
+     "call": "odd_Num_Sum(1)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "d4690093915391a78c7f088e851530c2b1c0a8565846bb3470a9ebefb2ccf863",
+   "record_id": "mutation::mbpp_770_mut_08378"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "add_nested_tuples",
+   "group_id": "function:semantic:26e61d836265aed98ce5e7b1ab8aebe2277e4b2f0247aa6b49a281ce8e3370e4",
+   "items": [
+    {
+     "buggy_repr": "((-5, -4), (1, -4), (1, 8), (-6, 7))",
+     "call": "add_nested_tuples(((1, 3), (4, 5), (2, 9), (1, 10)), ((6, 7), (3, 9), (1, 1), (7, 3)))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "((7, 10), (7, 14), (3, 10), (8, 13))",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "((-5, 3), (-1, 0), (3, 4), (-6, 0))",
+     "call": "add_nested_tuples(((1, 10), (2, 9), (4, 5), (1, 3)), ((6, 7), (3, 9), (1, 1), (7, 3)))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "((7, 17), (5, 18), (5, 6), (8, 6))",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "37981343593216b35aed1cc0ec0643e9cce2a1f719bc711cdb5d02cca01f6c36",
+   "record_id": "mutation::mbpp_401_mut_05231"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "Check_Solution",
+   "group_id": "function:semantic:6311b7aeaa57bec7d4d138d513dbf6ccbd893a3d534a189e8468becbd6c6f843",
+   "items": [
+    {
+     "buggy_repr": "'No solutions'",
+     "call": "Check_Solution(1, 2, 1)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'1 solution'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'No solutions'",
+     "call": "Check_Solution(2, 4, 2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'1 solution'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "eca2dba9123937ab160cda4047505f23f0d0cc762860bf97697e0d9366f7a595",
+   "record_id": "mutation::mbpp_880_mut_09336"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "count_Squares",
+   "group_id": "function:semantic:82b1eb444d4ef78dbdf2d6d1534d13de6136b604432181a326ac6cb78b1fae24",
+   "items": [
+    {
+     "buggy_repr": "14.666666666666666",
+     "call": "count_Squares(4, 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "20.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "15.333333333333334",
+     "call": "count_Squares(5, 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "26.0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "9ffe0a04a8600a93087ba6d252df9121b9988d1127b0718d5d39419afb1a0701",
+   "record_id": "mutation::mbpp_76_mut_02371"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "ntimes_list",
+   "group_id": "function:semantic:2925997c2d25c88be81489cf2466536e2f879450f832b34726d7959100728c01",
+   "items": [
+    {
+     "buggy_repr": "[3.0, 1.5, 1.0, 0.75, 0.6, 0.5, 0.42857142857142855]",
+     "call": "ntimes_list([1, 2, 3, 4, 5, 6, 7], 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[3, 6, 9, 12, 15, 18, 21]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[0.42857142857142855, 0.5, 0.6, 0.75, 1.0, 1.5, 3.0]",
+     "call": "ntimes_list([7, 6, 5, 4, 3, 2, 1], 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[21, 18, 15, 12, 9, 6, 3]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "303693cecf2c15973a07c7a0b4c17157fcb23e707dae3f96791f1e136bf2f0c6",
+   "record_id": "mutation::mbpp_865_mut_09241"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "test_three_equal",
+   "group_id": "function:semantic:2e4a5a626faba2904731ccb05100856b13df810cdb9b7632bef23cf3353b2bf0",
+   "items": [
+    {
+     "buggy_repr": "0",
+     "call": "test_three_equal(1, 1, 1)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "3",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0",
+     "call": "test_three_equal(2, 1, 1)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "2",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "219d38e77e7b9a87993b0c498d43b6efbc64005b1161b485dfbfc1a4f1bca0f3",
+   "record_id": "mutation::mbpp_801_mut_08607"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "is_polite",
+   "group_id": "function:semantic:3a8510c1e95d4c6e34d5fb5e48ee4a05b8eb7acd1001db6cebcb4c13b08489bc",
+   "items": [
+    {
+     "buggy_repr": "9",
+     "call": "is_polite(7)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "11",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "10",
+     "call": "is_polite(8)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "12",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "0cee93a11cc99076c6761b57b5859403aa24181596d8829b29094a1323bd6ab9",
+   "record_id": "mutation::mbpp_765_mut_08320"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "closest_num",
+   "group_id": "function:semantic:a1307bba0ed72e405143859b6cafd5cf730dd64d1a51f62a4ff576c69f462c9b",
+   "items": [
+    {
+     "buggy_repr": "9",
+     "call": "closest_num(11)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "10",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "8",
+     "call": "closest_num(10)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "9",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "0b2f777b089b7eed12a6c3a8d43609eb879a987f39535bc4b164f1f256688ba1",
+   "record_id": "mutation::mbpp_89_mut_02476"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "multiple_split",
+   "group_id": "function:semantic:cf4d94a8e3a09572af3ddc86684b4c29503a1ff4149851f8c594467cde5d09f5",
+   "items": [
+    {
+     "buggy_repr": "['Forces of the ', 'darkness*are coming into the play.']",
+     "call": "multiple_split('Forces of the \\ndarkness*are coming into the play.')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['Forces of the ', 'darkness', 'are coming into the play.']",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "['Forces of the ', 'darkness*are coming into the play.a']",
+     "call": "multiple_split('Forces of the \\ndarkness*are coming into the play.a')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['Forces of the ', 'darkness', 'are coming into the play.a']",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "e45cb82697647fb277728f8717068d0751b7a63d615eca8f66d168f8efc2df5d",
+   "record_id": "mutation::mbpp_73_mut_02345"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "perimeter",
+   "group_id": "function:semantic:7bed55bf6c571df5e547d45255139999fd72cac724180b4a525c9f32b55208dc",
+   "items": [
+    {
+     "buggy_repr": "0.3333333333333333",
+     "call": "perimeter(2, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "12",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0.2857142857142857",
+     "call": "perimeter(3, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "14",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "32cc6384e9107c1c8cd5793e19582db8ae068667518182b6d1d62032186c6951",
+   "record_id": "mutation::mbpp_112_mut_02635"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "sum_even_odd",
+   "group_id": "function:semantic:3a6b48b7d99e23d3c26aa3498203b9f889a8d9fca59fd736b5ee350ba355570e",
+   "items": [
+    {
+     "buggy_repr": "3",
+     "call": "sum_even_odd([1, 3, 5, 7, 4, 1, 6, 8])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "5",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "7",
+     "call": "sum_even_odd([8, 6, 1, 4, 7, 5, 3, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "9",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "5ebc024a927323c7c76697a702ecf0412c34f8e8e03b9ec206ca69d2d2a99073",
+   "record_id": "mutation::mbpp_881_mut_09353"
+  },
+  {
+   "bug_family": "membership",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "frequency_lists",
+   "group_id": "function:semantic:2cf85f2672584f1a9881a4bad03853d2b3f555ccdb55cad37988d4453cab030d",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "frequency_lists([[1, 2, 3, 2], [4, 5, 6, 2], [7, 8, 9, 5]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "{1: 1, 2: 3, 3: 1, 4: 1, 5: 2, 6: 1, 7: 1, 8: 1, 9: 1}",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "frequency_lists([[7, 8, 9, 5], [4, 5, 6, 2], [1, 2, 3, 2]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "{7: 1, 8: 1, 9: 1, 5: 2, 4: 1, 6: 1, 2: 3, 1: 1, 3: 1}",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "62573f3c1261bbb818cab1a9087d8d03e8e52e053cd6f64e57448ac780ad096b",
+   "record_id": "mutation::mbpp_97_mut_02525"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "check_Even_Parity",
+   "group_id": "function:semantic:42e610112ae34672f065e5428a5842bb9cb3a9e019c1cdbff8d7bfeab87bf0c4",
+   "items": [
+    {
+     "buggy_repr": "<timeout>",
+     "call": "check_Even_Parity(10)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<timeout>",
+     "call": "check_Even_Parity(9)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "0e8bafe2eb19e28a66099adf930cc2c193e5699bc60804858120ebbd6992ca81",
+   "record_id": "mutation::mbpp_855_mut_09158"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "last_Digit",
+   "group_id": "function:semantic:8d38348d53cbab4ce380909ee234c2719833311c1e85b589cf62e7e82192094f",
+   "items": [
+    {
+     "buggy_repr": "12",
+     "call": "last_Digit(123)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "3",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "12",
+     "call": "last_Digit(124)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "4",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "5ebbc09414139c06d37ae62801f822bd7cbfc198d9472d71e21a80bbc7b552e5",
+   "record_id": "mutation::mbpp_435_mut_05547"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "remove",
+   "group_id": "function:semantic:3c1f43bd774458d201c4bacd2c5a4628680ed4b174e847da2ffd9a54a348981b",
+   "items": [
+    {
+     "buggy_repr": "['4words', '3letters', '4digits']",
+     "call": "remove(['4words', '3letters', '4digits'])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['words', 'letters', 'digits']",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "['4digits', '3letters', '4words']",
+     "call": "remove(['4digits', '3letters', '4words'])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['digits', 'letters', 'words']",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "cb573e1aab286be0fcbac0d168b56f37817a5e46f521f3a208bb397c7f914f13",
+   "record_id": "mutation::mbpp_27_mut_01861"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "heap_sort",
+   "group_id": "function:semantic:25ad8de3474154f8a3d51904bce4abada732f0d146adb0a976fae623d3727253",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "heap_sort([12, 2, 4, 5, 2, 3])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[2, 2, 3, 4, 5, 12]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "heap_sort([3, 2, 5, 4, 2, 12])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[2, 2, 3, 4, 5, 12]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "ac6cb31a41b75d6be114f7bd3e54e49dc1208c62eb45f3c7d9fc76fad64b3b6a",
+   "record_id": "mutation::mbpp_940_mut_09981"
+  },
+  {
+   "bug_family": "logical",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "snake_to_camel",
+   "group_id": "function:semantic:8057687e8f072151c8b9b203ed4c9c71fba6789ed2a31f7eba11d8fec1fe55b3",
+   "items": [
+    {
+     "buggy_repr": "'__'",
+     "call": "snake_to_camel('android_tv')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'AndroidTv'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'__'",
+     "call": "snake_to_camel('android_tva')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'AndroidTva'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "22e4d3425c272ef8d5388c473a43cc698d379f049f9b55651e7c47d82e3c2bfb",
+   "record_id": "mutation::mbpp_411_mut_05335"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "len_log",
+   "group_id": "function:semantic:1cf61e4740b15493571ab1592d4043a4c85905f90497b1727053b6b3635c9cf7",
+   "items": [
+    {
+     "buggy_repr": "3",
+     "call": "len_log(['python', 'PHP', 'bigdata'])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "7",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3",
+     "call": "len_log(['bigdata', 'PHP', 'python'])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "7",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "2663b33d2e6ca21b83325ef718c76debd0b7fe63f3c851de52b2bb955ada33d1",
+   "record_id": "mutation::mbpp_90_mut_02478"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "remove_even",
+   "group_id": "function:semantic:b9c5b512e90262d09962a230d86c054991f5540835dd504996b78c96e584a7a1",
+   "items": [
+    {
+     "buggy_repr": "[3, 2]",
+     "call": "remove_even([1, 3, 5, 2])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[1, 3, 5]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[2, 3]",
+     "call": "remove_even([2, 5, 3, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[5, 3, 1]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "87d31197b23beaf4714a6c7cc1256dd47bbe3c69ba2bf5ebe3778d301d7b7dc7",
+   "record_id": "mutation::mbpp_824_mut_08757"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "maximum",
+   "group_id": "function:semantic:ace792f1face31ed2d43c9ad61e01c5f4e3afd3b15dafec647b30b9f3de29be7",
+   "items": [
+    {
+     "buggy_repr": "5",
+     "call": "maximum(5, 10)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "10",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "6",
+     "call": "maximum(6, 10)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "10",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "70211be44599a344b1e0508811b7fe0427057c6c04ff8a08c8825017e2bcd3dd",
+   "record_id": "mutation::mbpp_309_mut_04426"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "even_num",
+   "group_id": "function:semantic:dc9967bd73478c431aa8403f91d2b7e26c9587c539d0577afd6d1e44fa1d0b73",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "even_num(0)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "even_num(0.0)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "5c108bea0f2fc5ee240f1957ad49278593e71005c7f0d5d519e506e52e1ade9c",
+   "record_id": "mutation::mbpp_904_mut_09536"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "count_With_Odd_SetBits",
+   "group_id": "function:semantic:816577ef1082372edf09fac461ce3cd3dd227edbb663e9dc7d12d6afda76598c",
+   "items": [
+    {
+     "buggy_repr": "6.0",
+     "call": "count_With_Odd_SetBits(10)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "5.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "4.0",
+     "call": "count_With_Odd_SetBits(6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "3.0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "44368c4ee4948fa254e5e78a07f0e8e401e33154a60418d860ae72aa53da15ab",
+   "record_id": "mutation::mbpp_78_mut_02402"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "extract_string",
+   "group_id": "function:semantic:6ea7445b83dea0bb0a84b819194771d8acb89b03e8ce9b733f44746831de4276",
+   "items": [
+    {
+     "buggy_repr": "['Python', 'list', 'exercises']",
+     "call": "extract_string(['Python', 'list', 'exercises', 'practice', 'solution'], 8)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['practice', 'solution']",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "['exercises', 'list', 'Python']",
+     "call": "extract_string(['solution', 'practice', 'exercises', 'list', 'Python'], 8)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['solution', 'practice']",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "de95fdc9c66846afddffe8c40d9d949dcd157d941b26027de11e5c45e078a978",
+   "record_id": "mutation::mbpp_450_mut_05626"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "find_Rotations",
+   "group_id": "function:semantic:c9dd676da5296848072f264914763b8b93bc0428a05df845739873750f131653",
+   "items": [
+    {
+     "buggy_repr": "4",
+     "call": "find_Rotations('aaaa')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "5",
+     "call": "find_Rotations('aaaaa')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "12145e2e5b66126286af2322a5761161e09c93a3520fb397f25f78337c19396f",
+   "record_id": "mutation::mbpp_9_mut_01741"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "sum_positivenum",
+   "group_id": "function:semantic:a1870390cb51e5dff3a4946f814e0eb14ed7dcbf900178d31bc22945219961f8",
+   "items": [
+    {
+     "buggy_repr": "-32",
+     "call": "sum_positivenum([2, 4, -6, -9, 11, -12, 14, -5, 17])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "48",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "-32",
+     "call": "sum_positivenum([17, -5, 14, -12, 11, -9, -6, 4, 2])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "48",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "574c5bc051a0d5832c6dc902809f405f4a71d967d542839a98256e82b3c0587c",
+   "record_id": "mutation::mbpp_870_mut_09279"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "count_list",
+   "group_id": "function:semantic:a172e35ce34b7ab9a940aff2f29be9a5ecca4cd7eddb640ce01705d1374ac0fa",
+   "items": [
+    {
+     "buggy_repr": "10",
+     "call": "count_list([[0], [1, 3], [5, 7], [9, 11], [13, 15, 17]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "25",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "10",
+     "call": "count_list([[13, 15, 17], [9, 11], [5, 7], [1, 3], [0]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "25",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "a48803523e666c74efb380bc598f13c06dff4716e850c1f95bec85391cf0c7bb",
+   "record_id": "mutation::mbpp_858_mut_09203"
+  },
+  {
+   "bug_family": "string",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "is_upper",
+   "group_id": "function:semantic:54e4a5e66845a1a64cd047a0cac73d7f7ab911e98f190ec8a87974e8e99d99a4",
+   "items": [
+    {
+     "buggy_repr": "'person'",
+     "call": "is_upper('person')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'PERSON'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'persona'",
+     "call": "is_upper('persona')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'PERSONA'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "53a05c8f4e462a515405974dd0645b487fe185fe3eb36acb59163a721dc176a9",
+   "record_id": "mutation::mbpp_624_mut_07246"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "perimeter_polygon",
+   "group_id": "function:semantic:12edaf34772b2516b5bf6f9ce063537d41f1190d903978285d092dcd2713481a",
+   "items": [
+    {
+     "buggy_repr": "0.2",
+     "call": "perimeter_polygon(4, 20)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "80",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0.25",
+     "call": "perimeter_polygon(5, 20)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "100",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "ed4e18029fd4724fab7f39fc3c818b61f520941ac713cda36ae7caedd286e6ca",
+   "record_id": "mutation::mbpp_789_mut_08554"
+  },
+  {
+   "bug_family": "off_by_one",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "check_Odd_Parity",
+   "group_id": "function:semantic:7cc536b6961926a99b73f54501bccaae9cbeb8b9b33d870e7201e830c77f050b",
+   "items": [
+    {
+     "buggy_repr": "<timeout>",
+     "call": "check_Odd_Parity(13)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<timeout>",
+     "call": "check_Odd_Parity(14)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "4224e2e5803ed962ec9a5eccd87f5634ab0f80a1ea3b3c0066e86c1a73548d2e",
+   "record_id": "mutation::mbpp_768_mut_08349"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "is_Diff",
+   "group_id": "function:semantic:204e19f6c00fc3f138fbe1cd5efbd2894ea985d5f261e54b26840429e5c80768",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "is_Diff(12345)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "is_Diff(12346)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "69e438f3501f49f6d2558fe228afc4fb211b0fc6f08d71b2e7092706f8ffd946",
+   "record_id": "mutation::mbpp_77_mut_02392"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "sum_in_Range",
+   "group_id": "function:semantic:c820b71d380036f40eca2e350754bd5b2a80a3dd4c3cb8c4d8b4a61d01767752",
+   "items": [
+    {
+     "buggy_repr": "4",
+     "call": "sum_in_Range(2, 5)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "8",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3",
+     "call": "sum_in_Range(3, 5)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "8",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "6be5fdb3ead4172114e734b9271999d6be009f973f16380231312536aaad1887",
+   "record_id": "mutation::mbpp_797_mut_08598"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "unexposed",
+   "complexity_tier": "simple",
+   "entry_point": "opposite_Signs",
+   "group_id": "function:semantic:6f3447c2146dd6590a6dbbf3c61040e467667c956cbd6d781e0880b70397f5e0",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "opposite_Signs(-10, -10)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "opposite_Signs(2, 2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "d8091086391bae6c494e58acf4fe022030e97622d3fb7e3bc7b2fe5a61d2a49b",
+   "record_id": "mutation::mbpp_58_mut_02167"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "unexposed",
+   "complexity_tier": "moderate",
+   "entry_point": "min_Num",
+   "group_id": "function:semantic:5db3aad5749b5dff76e48ac39797834212d97e49d0667e6ac6ab34837d94b690",
+   "items": [
+    {
+     "buggy_repr": "2",
+     "call": "min_Num([1, 2, 3, 4, 5, 6, 7, 8, 9], 9)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "2",
+     "call": "min_Num([9, 8, 7, 6, 5, 4, 3, 2, 1], 9)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "f0699e188389d0417c3aea2ffc4d32496b30c1c57c8de141bbd42b30e4b788d6",
+   "record_id": "mutation::mbpp_867_mut_09264"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "average_Odd",
+   "group_id": "function:semantic:d3adfce8b3713914b26c5eccb3546f679f369f932318bc03146e8992769666c7",
+   "items": [
+    {
+     "buggy_repr": "2",
+     "call": "average_Odd(9)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "5",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "2",
+     "call": "average_Odd(7)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "4",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "35f894c6f62dbca56cd2dc69c223025e229ad42ccbb04c76dbbb26f77bf97bc5",
+   "record_id": "mutation::mbpp_509_mut_06221"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "find_demlo",
+   "group_id": "function:semantic:7743c8354bc692181cc07981587ff187724787367550b4f838af5e8c2a5b723a",
+   "items": [
+    {
+     "buggy_repr": "'123454321'",
+     "call": "find_demlo('111111')",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "'12345654321'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'12345654321'",
+     "call": "find_demlo('111111a')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'1234567654321'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "8f5e0f57a1ddcf275f65fae31859f19802e0ca4a0fd59dddfba9eb5930aa84e4",
+   "record_id": "mutation::mbpp_321_mut_04564"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "is_num_decagonal",
+   "group_id": "function:semantic:6a141a2b187f641f96ebf32cb22a3359c6df22aa8af325da3269a7239442c5d8",
+   "items": [
+    {
+     "buggy_repr": "45",
+     "call": "is_num_decagonal(3)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "27",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "76",
+     "call": "is_num_decagonal(4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "52",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "6488d52dcce29c3c458e98806727dba5c2e6d267ec09c5afe38098c116b6c2bf",
+   "record_id": "mutation::mbpp_279_mut_04182"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "volume_cone",
+   "group_id": "function:semantic:16d822c27facb140d341a79984de241369846017a9e616c66d37c1a3808187ea",
+   "items": [
+    {
+     "buggy_repr": "31.830988618379063",
+     "call": "volume_cone(5, 12)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "314.15926535897927",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "45.83662361046585",
+     "call": "volume_cone(6, 12)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "452.3893421169302",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "4728ba9ad1ee7ed4a21050f7b7508f670c64a7c9bb9f12b20a170fcd9028fbed",
+   "record_id": "mutation::mbpp_312_mut_04447"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "count_Num",
+   "group_id": "function:semantic:daa1ec784409cea329ae799e5b8ae65912f3940d06347e80587245ab07e352e3",
+   "items": [
+    {
+     "buggy_repr": "0.5",
+     "call": "count_Num(1)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "1",
+     "call": "count_Num(0)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "0.25",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "7a124d2910add410d41c4dc76165ac4cbc5d901b204a965bbc58b89735db122f",
+   "record_id": "mutation::mbpp_211_mut_03592"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "div_even_odd",
+   "group_id": "function:semantic:763ded0b3694c73a44100dcc4856ff58176f60bbb4486294b3e4ab62c839e7c9",
+   "items": [
+    {
+     "buggy_repr": "1.0",
+     "call": "div_even_odd([1, 3, 5, 7, 4, 1, 6, 8])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "4.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "1.0",
+     "call": "div_even_odd([8, 6, 1, 4, 7, 5, 3, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "8.0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "87bf6eb65a021529f3e088f73bd3f3639030c9d27506a1e1aa94506063159164",
+   "record_id": "mutation::mbpp_38_mut_02009"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "filter_data",
+   "group_id": "function:semantic:7b07aa9878b2daf9c769bab0d77f05ae19c29778e70ee31c68a71c0bbcc33a5b",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "filter_data({'Cierra Vega': (6.2, 70), 'Alden Cantrell': (5.9, 65), 'Kierra Gentry': (6.0, 68), 'Pierre Cox': (5.8, 66)}, 6.0, 70)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "{'Cierra Vega': (6.2, 70)}",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "filter_data({'Cierra Vega': (6.2, 70), 'Alden Cantrell': (5.9, 65), 'Kierra Gentry': (6.0, 68), 'Pierre Cox': (5.8, 66)}, 3.0, 70)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "{'Cierra Vega': (6.2, 70)}",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "173092455b7a4a82952b4be813f300e1d1933ccb4ebf2322dec0135e2d10526a",
+   "record_id": "mutation::mbpp_722_mut_07997"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "area_polygon",
+   "group_id": "function:semantic:a84ad40e1745ce6bf8c82847e69870a55243ed087abbf79031786936b4d4a5e9",
+   "items": [
+    {
+     "buggy_repr": "6399.999999999999",
+     "call": "area_polygon(4, 20)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "400.00000000000006",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "5812.340224042886",
+     "call": "area_polygon(5, 20)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "688.1909602355869",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "b2864a36f3435e9b55f34b3d3fa43f18500200c9b550e9df0ff3017049e4a1bb",
+   "record_id": "mutation::mbpp_163_mut_03147"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "get_gcd",
+   "group_id": "function:semantic:a9796ab830594c49a39748f0c4d67eb3b645ed22e384182d2a8884d99c0c6c95",
+   "items": [
+    {
+     "buggy_repr": "16",
+     "call": "get_gcd([2, 4, 6, 8, 16])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "2",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "8",
+     "call": "get_gcd([2, 4, 6, 8, 16, 2])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "2",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "8f7c55182155f64cb7ef94522ab0537e26afcb2e0004a373866c20c516910ebc",
+   "record_id": "mutation::mbpp_45_mut_02063"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "otherside_rightangle",
+   "group_id": "function:semantic:fa50319047349565e3966ab9cb6de45dc0d09df8d97113bbdddf659978efe868",
+   "items": [
+    {
+     "buggy_repr": "7.0710678118654755",
+     "call": "otherside_rightangle(7, 8)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "10.63014581273465",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "8.06225774829855",
+     "call": "otherside_rightangle(8, 8)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "11.313708498984761",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "bd08510224314dcb4f2664cec3f9332ebec853a70e27518ad1db83a0668fc8d3",
+   "record_id": "mutation::mbpp_293_mut_04282"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "wind_chill",
+   "group_id": "function:semantic:5e50be07632fea7731dbb87c920ca0cb1b57232e97434eca00f0da20a836da8c",
+   "items": [
+    {
+     "buggy_repr": "19",
+     "call": "wind_chill(120, 35)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "40",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "19",
+     "call": "wind_chill(121, 35)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "40",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "d1937299d9d78edb9bb8964fe94408ce0f9b6a569d8d2ba41722848b20c0b59a",
+   "record_id": "mutation::mbpp_638_mut_07361"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "max_volume",
+   "group_id": "function:semantic:081b866ca9abac5b6bb61f0df1e4a56f4256e3f602ae96d542085ecf6ffeca51",
+   "items": [
+    {
+     "buggy_repr": "1",
+     "call": "max_volume(1)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "1",
+     "call": "max_volume(0)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "df56c48a78111958e4dbea42297787fb54296d2c4eaeb7435d9195e44178daea",
+   "record_id": "mutation::mbpp_318_mut_04539"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "min_product_tuple",
+   "group_id": "function:semantic:18cab690dba3e5b815c911fad7d85404f6012ab536b863ad4c5ad09f8eca343f",
+   "items": [
+    {
+     "buggy_repr": "0.125",
+     "call": "min_product_tuple([(2, 7), (2, 6), (1, 8), (4, 9)])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "8",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0.125",
+     "call": "min_product_tuple([(4, 9), (1, 8), (2, 6), (2, 7)])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "8",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "a211222c32dbdb9018d9c03d6fe50d8fc0933feb1a7f7d3c46fe598b3984cfac",
+   "record_id": "mutation::mbpp_409_mut_05334"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "count_Squares",
+   "group_id": "function:semantic:966e4e298cdca22ce92db302f02711e9a7136d4e0c1f39f6cb4cb93a456db614",
+   "items": [
+    {
+     "buggy_repr": "0.0",
+     "call": "count_Squares(4, 3)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "20",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "1.0",
+     "call": "count_Squares(5, 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "25",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "76081db1e926a7e076416f1f375bde2cfab70b181a3870ef5d5b974dc12bebb3",
+   "record_id": "mutation::mbpp_347_mut_04798"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "min_Jumps",
+   "group_id": "function:semantic:8dfe92e3fe7a8ab49a1a633b1bceb91ced0c668454ba1223f588481f9ea948fa",
+   "items": [
+    {
+     "buggy_repr": "3.25",
+     "call": "min_Jumps(3, 4, 11)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "3.5",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3.25",
+     "call": "min_Jumps(4, 4, 11)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "3.5",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "5d4b217fd49846b9b020f4a938333e50a1772ad9046bbb3d2562b97db3f377da",
+   "record_id": "mutation::mbpp_617_mut_07178"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "find_remainder",
+   "group_id": "function:semantic:ce724c76fec9842600ce0867f3dfc2ef612da46bd6a5956166f6b4f3db7a50f8",
+   "items": [
+    {
+     "buggy_repr": "0",
+     "call": "find_remainder([100, 10, 5, 25, 35, 14], 6, 11)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "9",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0",
+     "call": "find_remainder([14, 35, 25, 5, 10, 100], 6, 11)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "9",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "b9cfd178b884d00e721527efd16efb691e9bd74c2401e36612e84976ec3d7012",
+   "record_id": "mutation::mbpp_471_mut_05849"
+  },
+  {
+   "bug_family": "off_by_one",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "list_split",
+   "group_id": "function:semantic:59ebce398f3b0fb38437283d0dc20e707653c09be4fba964ea4f59802d03a80b",
+   "items": [
+    {
+     "buggy_repr": "[['a', 'd', 'g', 'j', 'm'], ['b', 'e', 'h', 'k', 'n']]",
+     "call": "list_split(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'], 3)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[['a', 'd', 'g', 'j', 'm'], ['b', 'e', 'h', 'k', 'n'], ['c', 'f', 'i', 'l']]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[['n', 'k', 'h', 'e', 'b'], ['m', 'j', 'g', 'd', 'a']]",
+     "call": "list_split(['n', 'm', 'l', 'k', 'j', 'i', 'h', 'g', 'f', 'e', 'd', 'c', 'b', 'a'], 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[['n', 'k', 'h', 'e', 'b'], ['m', 'j', 'g', 'd', 'a'], ['l', 'i', 'f', 'c']]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "ce4c89ae9ef3cd1ac01927ce6c5f3c4ddad9a9e32bf27bc6d3cce4af3074c72c",
+   "record_id": "mutation::mbpp_265_mut_04098"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "Split",
+   "group_id": "function:semantic:ce0600a667de5bb81a219023c1f8f1010a486cc246429c347cc0dd14cf3a9640",
+   "items": [
+    {
+     "buggy_repr": "[1]",
+     "call": "Split([1, 2, 3, 4, 5])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[2, 4]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[1]",
+     "call": "Split([5, 4, 3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[4, 2]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "5ade4374da8fd1a66ba4095674f5228ad22df2729a5db6cf90a3e145da7040da",
+   "record_id": "mutation::mbpp_629_mut_07315"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "difference",
+   "group_id": "function:semantic:b1146e62db8fc98203fad5c086d3c1cc74ea2959a7e7b68332b5ae0f85414efe",
+   "items": [
+    {
+     "buggy_repr": "-0.0",
+     "call": "difference(3)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "30",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "-0.0",
+     "call": "difference(4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "90",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "e0feffadd44cd80434b17021f60e783f15cd1f603b4e551cc4d871892ec3e20a",
+   "record_id": "mutation::mbpp_555_mut_06710"
+  },
+  {
+   "bug_family": "membership",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "check_distinct",
+   "group_id": "function:semantic:a3866acaf071be7e75368d9d5aabff7ee0360ed0adb3b9af3f879b6a1d74cd9d",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "check_distinct((1, 4, 5, 6))",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "check_distinct((6, 5, 4, 1))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "7fb629c582918b2036622b07f22d7dbe2077233a4d4096482300718a16918718",
+   "record_id": "mutation::mbpp_394_mut_05216"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "is_Sum_Of_Powers_Of_Two",
+   "group_id": "function:semantic:0c46bf0ed0d9fc13e28c66ec413bc4ef87419873b8cd5aeba70a1969705b270e",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "is_Sum_Of_Powers_Of_Two(7)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "is_Sum_Of_Powers_Of_Two(11)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "1c13acf70849d66e76c324db468b6bd28c3a23c3345510a866f4bc1ef6a07e54",
+   "record_id": "mutation::mbpp_138_mut_02873"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "first_non_repeating_character",
+   "group_id": "function:semantic:30dee7609bddf4f50cd3276a384f029d03ad6aea07891418d535a7db7db14bc9",
+   "items": [
+    {
+     "buggy_repr": "None",
+     "call": "first_non_repeating_character('abc')",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "'a'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "None",
+     "call": "first_non_repeating_character('bcabc')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'a'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "a57dca6516374493e72eb6b0ca8afc20ddcefcbbc0880965e87de7c77bd83f6a",
+   "record_id": "mutation::mbpp_395_mut_05221"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "first_repeated_char",
+   "group_id": "function:semantic:b7f29cb36c176a7c99f897090fdca66f514e35b6828ed2777dcb45b6b86b08ef",
+   "items": [
+    {
+     "buggy_repr": "'None'",
+     "call": "first_repeated_char('abcabc')",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "'a'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'None'",
+     "call": "first_repeated_char('bcabc')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'b'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "03fd4c7927fe98fc53eec8b13a6742c242dafb5291bf184cb56b9501dd6ff489",
+   "record_id": "mutation::mbpp_602_mut_07071"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "odd_bit_set_number",
+   "group_id": "function:semantic:572a2602f90a142c66a9e3eaad94f86463653bacf7abdc1228d2df8960504c39",
+   "items": [
+    {
+     "buggy_repr": "10",
+     "call": "odd_bit_set_number(10)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "15",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "11",
+     "call": "odd_bit_set_number(11)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "15",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "2ae2e4b8b53b476a9aef3b55395ff51b1c7ffaf4a33b892f2d275b5db763d24b",
+   "record_id": "mutation::mbpp_48_mut_02097"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "sum_Range_list",
+   "group_id": "function:semantic:6de462640c16f1b9654851826e42367f6020d11dfc0e984f18db0584b8db7c2d",
+   "items": [
+    {
+     "buggy_repr": "21",
+     "call": "sum_Range_list([2, 1, 5, 6, 8, 3, 4, 9, 10, 11, 8, 12], 8, 10)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "29",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "11",
+     "call": "sum_Range_list([12, 8, 11, 10, 9, 4, 3, 8, 6, 5, 1, 2], 8, 10)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "12",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "bcd15033a154d73c0e307b1f86a9425cff0b3929b4ae4cb56b98d685375f2d7b",
+   "record_id": "mutation::mbpp_649_mut_07404"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "count_Intgral_Points",
+   "group_id": "function:semantic:c8cda8d314d29f129a8af8cbce584bf7a37e17d37d9a1ffa07b81558607f2650",
+   "items": [
+    {
+     "buggy_repr": "8",
+     "call": "count_Intgral_Points(1, 1, 4, 4)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "4",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "6",
+     "call": "count_Intgral_Points(2, 1, 4, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "2",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "ac0bec9af6c98a39a30123751c9b5e416825c5f2c330b16c31550920205cfb28",
+   "record_id": "mutation::mbpp_190_mut_03424"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "count_unset_bits",
+   "group_id": "function:semantic:f18aabe688fafaafbefa3075534180f2f562746479ef42b42bfec0e522b3d143",
+   "items": [
+    {
+     "buggy_repr": "0",
+     "call": "count_unset_bits(2)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "1",
+     "call": "count_unset_bits(3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "485467237523ea8227820183f45f12f264bd3c22801212ca96c950e0a7bbfe8f",
+   "record_id": "mutation::mbpp_331_mut_04654"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "move_last",
+   "group_id": "function:semantic:6d111b560ee00e07c2d55e0e2a571ea8958d360d5a173876610a94b023fd7db7",
+   "items": [
+    {
+     "buggy_repr": "[1, 1]",
+     "call": "move_last([1, 2, 3, 4])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[2, 3, 4, 1]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[4, 4]",
+     "call": "move_last([4, 3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[3, 2, 1, 4]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "f43db804aea69fef31d9f49bf0f32bc8dc2eaa318ecb5444a8774c130454ab9a",
+   "record_id": "mutation::mbpp_665_mut_07552"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "index_multiplication",
+   "group_id": "function:semantic:d95f6872024a380ea3418c7c9e655f38ba557de682219ee05f20b4f8f5b76c81",
+   "items": [
+    {
+     "buggy_repr": "((0.16666666666666666, 0.42857142857142855), (1.3333333333333333, 0.5555555555555556), (2.0, 9.0), (0.14285714285714285,",
+     "call": "index_multiplication(((1, 3), (4, 5), (2, 9), (1, 10)), ((6, 7), (3, 9), (1, 1), (7, 3)))",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "((6, 21), (12, 45), (2, 9), (7, 30))",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "((0.16666666666666666, 1.4285714285714286), (0.6666666666666666, 1.0), (4.0, 5.0), (0.14285714285714285, 1.0))",
+     "call": "index_multiplication(((1, 10), (2, 9), (4, 5), (1, 3)), ((6, 7), (3, 9), (1, 1), (7, 3)))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "((6, 70), (6, 81), (4, 5), (7, 9))",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "0788feb04e0699bb04c617f3fee24672a50a8241c643b7b00fdfb94fea777df3",
+   "record_id": "mutation::mbpp_445_mut_05596"
+  },
+  {
+   "bug_family": "membership",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "check_greater",
+   "group_id": "function:semantic:15578d912ec9db4da0cc1197c34085aedf49fb35c9d4da14929c2c4933bae5d8",
+   "items": [
+    {
+     "buggy_repr": "'No, entered number is less than those not in the array'",
+     "call": "check_greater([1, 2, 3, 4, 5], 4)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "'No, entered number is less than those in the array'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'No, entered number is less than those not in the array'",
+     "call": "check_greater([5, 4, 3, 2, 1], 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'No, entered number is less than those in the array'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "0cc13d999ac46caa3976d5020c792fbc6462793313d6ae83c8f4cc11a20a14f5",
+   "record_id": "mutation::mbpp_433_mut_05542"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "move_first",
+   "group_id": "function:semantic:973d746e1db0b97fb70dd3c87559aee4e3b7f098ead10ce71932b28a106ec2dc",
+   "items": [
+    {
+     "buggy_repr": "[4]",
+     "call": "move_first([1, 2, 3, 4])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[4, 1, 2, 3]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[1]",
+     "call": "move_first([4, 3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[1, 4, 3, 2]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "d1a4a1a8b59e0319e2807ddf3e06ce0b9a0296e8117bb77cb62c97b677ca1d72",
+   "record_id": "mutation::mbpp_378_mut_05019"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "lateralsurface_cuboid",
+   "group_id": "function:semantic:9fd5b43961884e334038591135ca6e259557a63ff135f38c96d27a6f64c21ada",
+   "items": [
+    {
+     "buggy_repr": "0.9230769230769231",
+     "call": "lateralsurface_cuboid(8, 5, 6)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "156",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0.8571428571428571",
+     "call": "lateralsurface_cuboid(9, 5, 6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "168",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "04419d5cd34501c75cf0c47f4448da52899ee9ef3fb6253040e0ba4ec4cf0d6e",
+   "record_id": "mutation::mbpp_369_mut_04966"
+  },
+  {
+   "bug_family": "membership",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "intersection_array",
+   "group_id": "function:semantic:beaaac0ebfa46247e284d3715d6395deaf19b2b6c25620ac807518021dcb3dc0",
+   "items": [
+    {
+     "buggy_repr": "[4]",
+     "call": "intersection_array([1, 2, 3, 5, 7, 8, 9, 10], [1, 2, 4, 8, 9])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[1, 2, 8, 9]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[4]",
+     "call": "intersection_array([10, 9, 8, 7, 5, 3, 2, 1], [1, 2, 4, 8, 9])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[1, 2, 8, 9]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "576a888088e3ed6becef870471c02d1d546cdd5adcac7431b64418d151e224fc",
+   "record_id": "mutation::mbpp_249_mut_04047"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "even_Power_Sum",
+   "group_id": "function:semantic:9f7f427d0245b58a70978b015bac224fca64927a735f827c7dd9628022277359",
+   "items": [
+    {
+     "buggy_repr": "32",
+     "call": "even_Power_Sum(2)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "1056",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "8832",
+     "call": "even_Power_Sum(4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "41600",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "43e4c1773041819894884980ad3f48b56ff671b2b627e11bcd69810efd0ec164",
+   "record_id": "mutation::mbpp_271_mut_04124"
+  },
+  {
+   "bug_family": "off_by_one",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "sum_Of_Series",
+   "group_id": "function:semantic:b3ae0411d5249e7bd1fc2faed1b663e9496ec9a6dbe8e5c56fdbee1d4ff485d6",
+   "items": [
+    {
+     "buggy_repr": "100",
+     "call": "sum_Of_Series(5)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "225",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "225",
+     "call": "sum_Of_Series(6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "441",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "667c6619c09de5d1a68092ab8f0209e4c25c90b159622ef3e57b52690b166a59",
+   "record_id": "mutation::mbpp_504_mut_06153"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "triangle_area",
+   "group_id": "function:semantic:d1cd61a85c78d43b6f4b5068ca0818de47778e0966611a1780fee85c2b317561",
+   "items": [
+    {
+     "buggy_repr": "1",
+     "call": "triangle_area(-1)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "-1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "1",
+     "call": "triangle_area(-2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "-1",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "566f00dd8531dc96f0a7cad3a1e09958312b9580a4dafb9f9c4dadb8eeeb4e57",
+   "record_id": "mutation::mbpp_626_mut_07265"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "tuple_int_str",
+   "group_id": "function:semantic:20f5317225b331c1e816601945686ed2a17fc2065edd49d61eddc5236b1c9dc9",
+   "items": [
+    {
+     "buggy_repr": "((33, 33), (55, 55))",
+     "call": "tuple_int_str((('333', '33'), ('1416', '55')))",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "((333, 33), (1416, 55))",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "((55, 55), (33, 33))",
+     "call": "tuple_int_str((('1416', '55'), ('333', '33')))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "((1416, 55), (333, 33))",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "59f4d42edf0ce3865eadcefdb49362b1137255099eab9e6f198b8bfab46437a5",
+   "record_id": "mutation::mbpp_156_mut_03083"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "circle_circumference",
+   "group_id": "function:semantic:e6f699f0b6513974158bd4d59150d8f66b84f294fc4b0c2fe5279368b95b6271",
+   "items": [
+    {
+     "buggy_repr": "6.3663854846410945",
+     "call": "circle_circumference(10)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "62.830000000000005",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "7.003024033105205",
+     "call": "circle_circumference(11)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "69.113",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "2f65ae39a56968a36e81eae5fafe3c7d19816732408fcd620a7a0926797f84d7",
+   "record_id": "mutation::mbpp_139_mut_02877"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "recursive_list_sum",
+   "group_id": "function:semantic:f61be797d5afbd547b8f14cf26165dd84632f8aef8d273bb2bcabdffeaf0239d",
+   "items": [
+    {
+     "buggy_repr": "-21",
+     "call": "recursive_list_sum([1, 2, [3, 4], [5, 6]])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "21",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "-21",
+     "call": "recursive_list_sum([[5, 6], [3, 4], 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "21",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "2cedf39a5c16df55bda04f8d1bf047adc98faa49fd1deafed95043c95dde65fd",
+   "record_id": "mutation::mbpp_65_mut_02219"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "find_lists",
+   "group_id": "function:semantic:c36aaf6008ec0d3fbed1c2ae24a1a66a45f881a73adc657a3d25eb68a2164587",
+   "items": [
+    {
+     "buggy_repr": "0",
+     "call": "find_lists([9, 8, 7, 6, 5, 4, 3, 2, 1])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0",
+     "call": "find_lists([1, 2, 3, 4, 5, 6, 7, 8, 9])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "1",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "34061f9fa916adb41c080bd19359c23de2fc95bec10aeaa0648afd6bd9d2f5aa",
+   "record_id": "mutation::mbpp_143_mut_02905"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "fifth_Power_Sum",
+   "group_id": "function:semantic:c29f46f3aca8b16be3212019adfa31999adef61036d50bcfe1b56b7e49df7ac7",
+   "items": [
+    {
+     "buggy_repr": "9.0",
+     "call": "fifth_Power_Sum(2)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "33",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "225.0",
+     "call": "fifth_Power_Sum(5)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "4425",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "0793e07dfc296b6ccd34218416339edb5c6823252904b30c2a149047ccfefece",
+   "record_id": "mutation::mbpp_655_mut_07433"
+  },
+  {
+   "bug_family": "negate_removal",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "empty_dit",
+   "group_id": "function:semantic:594fdc08f56ad0111aa72d5c1feeb04d5c34843e2ef985b6ccac20c397fca3d8",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "empty_dit([{}, {}, {}])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "empty_dit([{}, {}])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "e5cbbdb8f702ed9344dc34a269c6344d090b0baadca36d83daeb74fde4636103",
+   "record_id": "mutation::mbpp_115_mut_02659"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "last_Two_Digits",
+   "group_id": "function:semantic:d0a73820a99555d1181e8b613e8201deb9c2e3549eace965a0a71f2f662a7937",
+   "items": [
+    {
+     "buggy_repr": "0",
+     "call": "last_Two_Digits(7)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "40",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0",
+     "call": "last_Two_Digits(8)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "20",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "1e3ed55547b752d6c72b9d5f39de77845908ff5a3bbe65c3dd848130715b182e",
+   "record_id": "mutation::mbpp_692_mut_07734"
+  },
+  {
+   "bug_family": "boolean",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "is_not_prime",
+   "group_id": "function:semantic:5197f3877294d8325a5b345f7d69a8fd52a8d85533ce4e229605b2a7180e68be",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "is_not_prime(2)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "is_not_prime(3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "9dcd6253d3e6426413befc37ee9e883e708373d50e5e95ea6d971bcf2cbc265c",
+   "record_id": "mutation::mbpp_3_mut_01683"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "filter_oddnumbers",
+   "group_id": "function:semantic:1189ac28f232e2fa44dd4eb635f74c9d5465fcbb31dd9e130dba56053ad4715a",
+   "items": [
+    {
+     "buggy_repr": "[2, 4, 6, 8, 10]",
+     "call": "filter_oddnumbers([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[1, 3, 5, 7, 9]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[10, 8, 6, 4, 2]",
+     "call": "filter_oddnumbers([10, 9, 8, 7, 6, 5, 4, 3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[9, 7, 5, 3, 1]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "179f180420b3f2cdcb8e5844387f7ada6ba4c226feefb09171fa1bf5e9815804",
+   "record_id": "mutation::mbpp_426_mut_05502"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "check_isosceles",
+   "group_id": "function:semantic:a211c2f876b9b6ebec31f6ae03348175a9b4a53df7d45c1e409da57eaa1aee60",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "check_isosceles(6, 8, 12)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "check_isosceles(7, 8, 12)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "6f3a885e9204206e3044f3f20631f4b7d3176010e93ee5b7251ca80d61b96afb",
+   "record_id": "mutation::mbpp_327_mut_04640"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "chkList",
+   "group_id": "function:semantic:75f537de26a3b985645dfa3c92c9a2d8974a3dd9ec1907c8eec289c10892d1b3",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "chkList(['one', 'one', 'one'])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "chkList(['one', 'one'])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "bafa6f126b2ae138fdd258851ff90b669353ce10d9f2546d7a2d7f92dc84f985",
+   "record_id": "mutation::mbpp_201_mut_03505"
+  },
+  {
+   "bug_family": "boolean",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "check_String",
+   "group_id": "function:semantic:53d9ba7259d1633f75887b2ce515760f517899edb792ba3269358725ac80f514",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "check_String('thishasboth29')",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "check_String('thishasboth29a')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "e169976b564e1201cccac4ec7aa3da70143a25a406c51b5eada21b0d745059e2",
+   "record_id": "mutation::mbpp_192_mut_03442"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "loss_amount",
+   "group_id": "function:semantic:481a48001dea2047af7d43825d74159b4d56287a18bd26a3a2a70654b3bca673",
+   "items": [
+    {
+     "buggy_repr": "300",
+     "call": "loss_amount(100, 200)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "100",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3900",
+     "call": "loss_amount(1500, 2400)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "900",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "0486d5b0e5f64d3bed01de8a87a6dee35f9dc79a6529be2f582cea8b692e1e1b",
+   "record_id": "mutation::mbpp_452_mut_05629"
+  },
+  {
+   "bug_family": "negate_removal",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "string_list_to_tuple",
+   "group_id": "function:semantic:0cb8c1db0b23b7c54b5b4ef23b07ac31e101e3ad2c952a9cf17a0a6cd7e51890",
+   "items": [
+    {
+     "buggy_repr": "(' ',)",
+     "call": "string_list_to_tuple('python 3.0')",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "('p', 'y', 't', 'h', 'o', 'n', '3', '.', '0')",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "(' ',)",
+     "call": "string_list_to_tuple('python 3.0a')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "('p', 'y', 't', 'h', 'o', 'n', '3', '.', '0', 'a')",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "3e2cbd45691b2fb5a793372bbdffdd3b1afb2489a524fac2192f67ae894c876f",
+   "record_id": "mutation::mbpp_538_mut_06533"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "sum_range_list",
+   "group_id": "function:semantic:ab36b2a0538ae6954693083aa593299a09f40c8fed5f2150359477a40b589220",
+   "items": [
+    {
+     "buggy_repr": "30",
+     "call": "sum_range_list([2, 1, 5, 6, 8, 3, 4, 9, 10, 11, 8, 12], 8, 10)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "29",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "13",
+     "call": "sum_range_list([12, 8, 11, 10, 9, 4, 3, 8, 6, 5, 1, 2], 8, 10)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "12",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "4a0a535ad4c1752932f4f59b7fa3b9f67d4db3ca3771d4cb27ae4956e189a129",
+   "record_id": "mutation::mbpp_170_mut_03219"
+  },
+  {
+   "bug_family": "off_by_one",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "find_ways",
+   "group_id": "function:semantic:fbe3810df90e74eb12dfcd90203ae6d68cecc9e4d2b4960b62e26aa14dd1d13b",
+   "items": [
+    {
+     "buggy_repr": "1",
+     "call": "find_ways(4)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "2",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "1",
+     "call": "find_ways(5)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "2",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "0d3b6f20d79c9b4e8d58b05131866d6934a2f4df26d6700192abf6284e662c4d",
+   "record_id": "mutation::mbpp_348_mut_04818"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "sum_difference",
+   "group_id": "function:semantic:c66b1bd1e37a5a772bcad73bf3ee6fe7d46f07d89164e6d4e1e0fc1fe697e07e",
+   "items": [
+    {
+     "buggy_repr": "6072.0",
+     "call": "sum_difference(12)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "5434",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "8268.0",
+     "call": "sum_difference(13)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "7462",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "669b76251d36b912337c892fae5841e72f977f9eacc8fa548ed5103cc0e2cef6",
+   "record_id": "mutation::mbpp_320_mut_04550"
+  },
+  {
+   "bug_family": "negate_removal",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "get_coordinates",
+   "group_id": "function:semantic:ed801365e6e8750fe597461d2cab7d4713b80a8589d591dce0907ff99ee2087e",
+   "items": [
+    {
+     "buggy_repr": "[[]]",
+     "call": "get_coordinates((3, 4))",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[[2, 3], [2, 4], [2, 5], [3, 3], [3, 4], [3, 5], [4, 3], [4, 4], [4, 5]]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[[]]",
+     "call": "get_coordinates((4, 3))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[[3, 2], [3, 3], [3, 4], [4, 2], [4, 3], [4, 4], [5, 2], [5, 3], [5, 4]]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "142f6dd65e82791a38b69798a2ef3424423f0cd69af2898a22350e7110fc245f",
+   "record_id": "mutation::mbpp_630_mut_07323"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "large_product",
+   "group_id": "function:semantic:787d67e256b199cae81a3114428f6b31028d6bee716fa5dbbff9442b2f357173",
+   "items": [
+    {
+     "buggy_repr": "[2.0, 1.6666666666666667, 1.3333333333333333]",
+     "call": "large_product([1, 2, 3, 4, 5, 6], [3, 6, 8, 9, 10, 6], 3)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[60, 54, 50]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[2.0, 1.6666666666666667, 1.3333333333333333]",
+     "call": "large_product([6, 5, 4, 3, 2, 1], [3, 6, 8, 9, 10, 6], 3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[60, 54, 50]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "0504ffe1b5e4f78b434c898478c00cd21f03c1f4bd79e412a3910d96b5f0152d",
+   "record_id": "mutation::mbpp_308_mut_04424"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "swap_List",
+   "group_id": "function:semantic:e197f606ec6d4ed8af65b7cab6f7b7096b7309bafded27ba418496ed6593aca5",
+   "items": [
+    {
+     "buggy_repr": "[2, 2, 1]",
+     "call": "swap_List([1, 2, 3])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[3, 2, 1]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[2, 2, 3]",
+     "call": "swap_List([3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[1, 2, 3]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "dceb83a99cbd925c0d7dae0d58d40f595619e940e6c3db69b7f73ea10bb17fe2",
+   "record_id": "mutation::mbpp_625_mut_07257"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "start_withp",
+   "group_id": "function:semantic:438dfdcf9622c32b202366e1c7e67aaa35fa3ca45a25b258242e1726b2b80646",
+   "items": [
+    {
+     "buggy_repr": "None",
+     "call": "start_withp(['Python PHP', 'Java JavaScript', 'c c++'])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "('Python', 'PHP')",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "None",
+     "call": "start_withp(['c c++', 'Java JavaScript', 'Python PHP'])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "('Python', 'PHP')",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "cff5fd53b3973fedb83a3437700289a0c5583bf5c5d3119fc2d1262933646de1",
+   "record_id": "mutation::mbpp_305_mut_04380"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "find_Sum",
+   "group_id": "function:semantic:2cee0042b8abbc670fb036c0f4da35dd39e2920a4707817d900bfbe5ebdb1cad",
+   "items": [
+    {
+     "buggy_repr": "0",
+     "call": "find_Sum([1, 2, 3, 1, 1, 4, 5, 6], 8)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "3",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0",
+     "call": "find_Sum([6, 5, 4, 1, 1, 3, 2, 1], 8)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "3",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "daa84676c39dd7c6e0bada8209f4e41059abb27979167f9568e1fda3e4da6352",
+   "record_id": "mutation::mbpp_42_mut_02057"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "smallest_Divisor",
+   "group_id": "function:semantic:6eba7d7dc51383cdbeeab2d2295fe30d4c67533c0aa0a99b8b076c445a3e4e1c",
+   "items": [
+    {
+     "buggy_repr": "10",
+     "call": "smallest_Divisor(10)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "2",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3",
+     "call": "smallest_Divisor(12)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "2",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "05678fe22bb4cf599de1937bd742b2b98ed51ac8a14391362d32892d8eb5ddfb",
+   "record_id": "mutation::mbpp_681_mut_07616"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "find_Parity",
+   "group_id": "function:semantic:d656baa788254f31f248a2cb5dfef1b79558d0a45122f098f053b46e0f08ebea",
+   "items": [
+    {
+     "buggy_repr": "'Even Parity'",
+     "call": "find_Parity(7)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "'Odd Parity'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'Even Parity'",
+     "call": "find_Parity(13)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'Odd Parity'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "bc0a293d43166d898c20102e5aa4264911ee204fe45bb778bb8de86357136d13",
+   "record_id": "mutation::mbpp_406_mut_05294"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "newman_prime",
+   "group_id": "function:semantic:3b1e9dd8c71e428f8e54bc3b9de210bab5cad4789e2b6addb84a0e4b7638b600",
+   "items": [
+    {
+     "buggy_repr": "14",
+     "call": "newman_prime(3)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "7",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "6",
+     "call": "newman_prime(2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "3",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "73289b2aca8bc09154cf5271abe445dad87a83341b4ce568321794f58289ba9e",
+   "record_id": "mutation::mbpp_260_mut_04076"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "Seq_Linear",
+   "group_id": "function:semantic:6e66817311af854eb836cdfc990e0f29703e69e8db65f125ba71219e375aae1c",
+   "items": [
+    {
+     "buggy_repr": "'Non Linear Sequence'",
+     "call": "Seq_Linear([0, 2, 4, 6, 8, 10])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "'Linear Sequence'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'Non Linear Sequence'",
+     "call": "Seq_Linear([10, 8, 6, 4, 2, 0])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'Linear Sequence'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "30959c34b1587c53499e7a4cc78e9d52bb956ceb64786c08cb6c0c865030abc3",
+   "record_id": "mutation::mbpp_552_mut_06692"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "rear_extract",
+   "group_id": "function:semantic:7f047c4d0d6354692a6ba8f83a64e9ccdfcbb17e15ca93c561470ea45aeeb851",
+   "items": [
+    {
+     "buggy_repr": "[1, 2, 3]",
+     "call": "rear_extract([(1, 'Rash', 21), (2, 'Varsha', 20), (3, 'Kil', 19)])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[21, 20, 19]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[3, 2, 1]",
+     "call": "rear_extract([(3, 'Kil', 19), (2, 'Varsha', 20), (1, 'Rash', 21)])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[19, 20, 21]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "f7d2793a16a89a95f4e15f6cf4ca06b1c876dc7b143538a39aaac80091cc70de",
+   "record_id": "mutation::mbpp_272_mut_04138"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "dog_age",
+   "group_id": "function:semantic:226d34f8641830f82688f799922fb46173108131ab9fb2c198917b10e6b15b02",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "dog_age(12)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "61",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "dog_age(13)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "65",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "7a4fa4f53fb9c8fd2174050dbf4a91287b7780ff2ed337fc2391ee4b952784fb",
+   "record_id": "mutation::mbpp_264_mut_04094"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "min_Operations",
+   "group_id": "function:semantic:538f689d555c97a6056ebb8271073fd42a1b9eceac132073c426d4dacff159fa",
+   "items": [
+    {
+     "buggy_repr": "3",
+     "call": "min_Operations(2, 4)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "5",
+     "call": "min_Operations(3, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "3",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "bf8d1975d20601e69602e2c7f5047728c378a954e805948d6f83245eb9b80087",
+   "record_id": "mutation::mbpp_218_mut_03627"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "freq_element",
+   "group_id": "function:semantic:de42446fbea7ceaf0397eae8de8fcb135c6f3764f6a4457f28100ca00abb7404",
+   "items": [
+    {
+     "buggy_repr": "'{4: 0, 5: 0, 6: 0}'",
+     "call": "freq_element((4, 5, 4, 5, 6, 6, 5, 5, 4))",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "'{4: 3, 5: 4, 6: 2}'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'{4: 0, 5: 0, 6: 0}'",
+     "call": "freq_element((4, 5, 5, 6, 6, 5, 4, 5, 4))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'{4: 3, 5: 4, 6: 2}'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "e10fea9223f5821f2a45b8620c753ac0f7b6dc28d1dadbd5a3f82592b3011868",
+   "record_id": "mutation::mbpp_686_mut_07676"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "multiply_elements",
+   "group_id": "function:semantic:6db625a4595d54892c930b5e4d46e9352025b27cae14af9c6918132fbef8d148",
+   "items": [
+    {
+     "buggy_repr": "(0.2, 0.7142857142857143, 0.875, 0.8)",
+     "call": "multiply_elements((1, 5, 7, 8, 10))",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "(5, 35, 56, 80)",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "(1.25, 1.1428571428571428, 1.4, 5.0)",
+     "call": "multiply_elements((10, 8, 7, 5, 1))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(80, 56, 35, 5)",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "81d8e11aedd1c037c60dc824244c57102aead4224ac6c69d50763d1f59733384",
+   "record_id": "mutation::mbpp_726_mut_08005"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "sample_nam",
+   "group_id": "function:semantic:3194f98b68977952db337001c857ed1e3507814bd9dadd81f8e8aa1c53a4dbaa",
+   "items": [
+    {
+     "buggy_repr": "0",
+     "call": "sample_nam(['sally', 'Dylan', 'rebecca', 'Diana', 'Joanne', 'keith'])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "16",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0",
+     "call": "sample_nam(['keith', 'Joanne', 'Diana', 'rebecca', 'Dylan', 'sally'])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "16",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "c6822777c66184652b5dcee8df95e9b78a44002a907fedce419bc96aa8ce2e12",
+   "record_id": "mutation::mbpp_639_mut_07370"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "pair_OR_Sum",
+   "group_id": "function:semantic:5d7beb114f4d9909e9fe3f321313951f177e43c69a91a4d79b9327c0ba4b7482",
+   "items": [
+    {
+     "buggy_repr": "30",
+     "call": "pair_OR_Sum([5, 9, 7, 6], 4)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "47",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "28",
+     "call": "pair_OR_Sum([6, 7, 9, 5], 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "47",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "fe08e3f817ae6b85694f0b4ab0a0f90953aecbdc396e4cdf65e5a92b2db29259",
+   "record_id": "mutation::mbpp_633_mut_07333"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "is_Even",
+   "group_id": "function:semantic:a3039f18eece820bbc4eb347a09085e541df5c85a5e8e3551d5f1e74ba105b01",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "is_Even(2)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "is_Even(0)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "940ad6283db28a8c8ead32495e5addf0ed69e3b3979353be98497769802b2ab9",
+   "record_id": "mutation::mbpp_600_mut_07043"
+  },
+  {
+   "bug_family": "membership",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "same_order",
+   "group_id": "function:semantic:c1bc157a9ac5ee3a5284adff6e01c9ffcb8739fbcb296519e1ceae5080fd92cb",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "same_order(['red', 'green', 'black', 'orange'], ['red', 'pink', 'green', 'white', 'black'])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "same_order(['red', 'green', 'black'], ['red', 'pink', 'green', 'white', 'black'])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "7851001283be05953505c2a5247d3774ea6c8860304e98b33e3538d7121ee6dc",
+   "record_id": "mutation::mbpp_508_mut_06205"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "count_occurance",
+   "group_id": "function:semantic:076e35b1b570cbb5e30eff7116378a8b687b487c0af1738ab999d9902f1d993f",
+   "items": [
+    {
+     "buggy_repr": "-3",
+     "call": "count_occurance('letstdlenstdporstd')",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "3",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "-3",
+     "call": "count_occurance('letstdlenstdporstda')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "3",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "f499317ba5c9e23373c76c47a1f1ad30cd5c801e4afb2b391ca1d0b4fdaaccc0",
+   "record_id": "mutation::mbpp_172_mut_03232"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "ap_sum",
+   "group_id": "function:semantic:417a8cd2e0f5e6baa794c452bcd2341079c27476fd54451971a59cde7f1b098e",
+   "items": [
+    {
+     "buggy_repr": "20.0",
+     "call": "ap_sum(1, 5, 2)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "25.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "25.0",
+     "call": "ap_sum(2, 5, 2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "30.0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "23001099481ca52a0d84c2492d02cd564e0539599d42f75b7d062652a35d140d",
+   "record_id": "mutation::mbpp_335_mut_04692"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "increment_numerics",
+   "group_id": "function:semantic:dde54791ee93364c9b7b21757d541641b13b0a8d9ae6c87162d773f9211ed6a0",
+   "items": [
+    {
+     "buggy_repr": "['MSM', '228', 'is', '92', '117', 'best', '-2']",
+     "call": "increment_numerics(['MSM', '234', 'is', '98', '123', 'best', '4'], 6)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "['MSM', '240', 'is', '104', '129', 'best', '10']",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "['-2', 'best', '117', '92', 'is', '228', 'MSM']",
+     "call": "increment_numerics(['4', 'best', '123', '98', 'is', '234', 'MSM'], 6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['10', 'best', '129', '104', 'is', '240', 'MSM']",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "c7c0ab1d374868861d120ab14723d97c7d9d5755c13374b02097583f1590873a",
+   "record_id": "mutation::mbpp_621_mut_07215"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "tn_ap",
+   "group_id": "function:semantic:e67e8c29bec5cf9b26725ad58dd90e19f3571a2346dbe57e819e5723e6debd20",
+   "items": [
+    {
+     "buggy_repr": "13",
+     "call": "tn_ap(1, 5, 2)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "9",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "14",
+     "call": "tn_ap(2, 5, 2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "10",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "e4bb249056c670a55bcaefe90939e9c1fb7e82f3bbdf4f97356df98af7d9e313",
+   "record_id": "mutation::mbpp_354_mut_04881"
+  },
+  {
+   "bug_family": "off_by_one",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "find_lucas",
+   "group_id": "function:semantic:ee95836b4a8fc9713436430ef2c7f5ef4f71b6949b84d40f20481145044b88c1",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "find_lucas(9)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "76",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "find_lucas(10)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "123",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "2f92c295ca7c3666666ead88a636af906a3c01ca888db7d2b3154d38bb46f6fe",
+   "record_id": "mutation::mbpp_389_mut_05181"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "all_Characters_Same",
+   "group_id": "function:semantic:8160521732d38de2769c18e410deca4309b7e29325c9d7a67473718ea4a6528d",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "all_Characters_Same('python')",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "all_Characters_Same('pythona')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "ee413721607735e2e2679e155ef6727f1d5f310d6d4e8f0d5976b0229198b695",
+   "record_id": "mutation::mbpp_741_mut_08092"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "check_subset_list",
+   "group_id": "function:semantic:f1c7b633df6ca2b3dbb517ed04c7d306a289f39c8f0515c576e275692f931d61",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "check_subset_list([['a', 'b'], ['e'], ['c', 'd']], [['g']])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "check_subset_list([[2, 3, 1], [4, 5], [6, 8]], [[4, 5]])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "319f6531e588821fc046675419ae89ed383e23902f9e1613a3d0a4f84c55c3e1",
+   "record_id": "mutation::mbpp_216_mut_03617"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "add_pairwise",
+   "group_id": "function:semantic:2af8161a72039c4e994d4828aca679c6dab3a104fbbfed1e0eec1a4951b28e7b",
+   "items": [
+    {
+     "buggy_repr": "(8, 13, 17)",
+     "call": "add_pairwise((1, 5, 7, 8, 10))",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "(6, 12, 15, 18)",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "(17, 13, 8)",
+     "call": "add_pairwise((10, 8, 7, 5, 1))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(18, 15, 12, 6)",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "cef2290c2e3d28dd7e10b46d81bd647554b0767589936cf2692d74619a804372",
+   "record_id": "mutation::mbpp_470_mut_05846"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "extract_index_list",
+   "group_id": "function:semantic:fe4c5afed8026acdadc29359db63107d55a8b6552764e6427a00849ba4f417dc",
+   "items": [
+    {
+     "buggy_repr": "[1, 3, 4, 5, 6]",
+     "call": "extract_index_list([1, 1, 3, 4, 5, 6, 7], [0, 1, 2, 3, 4, 5, 7], [0, 1, 2, 3, 4, 5, 7])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[1, 7]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[7, 6, 5, 4, 3, 1, 1]",
+     "call": "extract_index_list([7, 6, 5, 4, 3, 1, 1], [0, 1, 2, 3, 4, 5, 7], [0, 1, 2, 3, 4, 5, 7])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "7beeee88674c8a2197b8180ad6ec231644f137cbdc84352a4c93508e5fbc18c4",
+   "record_id": "mutation::mbpp_754_mut_08254"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "text_match",
+   "group_id": "function:semantic:bbd2c0beaecfa8b7223ecc79ea6d0cba1286f3b70382c5048e561857b4521f96",
+   "items": [
+    {
+     "buggy_repr": "'Not matched!'",
+     "call": "text_match('aab_cbbbc')",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "'Found a match!'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'Not matched!'",
+     "call": "text_match('aab_cbbbca')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'Found a match!'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "00681664062f02f704f9d074aa3eb1edeeb3cd8b4ba0e013713a3e73334f4ce7",
+   "record_id": "mutation::mbpp_43_mut_02060"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "remove_odd",
+   "group_id": "function:semantic:54168ee5f8b2c62627195fc2acd032217b943187e239fd676f939a4e3dcbf4a1",
+   "items": [
+    {
+     "buggy_repr": "[1, 3]",
+     "call": "remove_odd([1, 2, 3])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[2]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[3, 1]",
+     "call": "remove_odd([3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[2]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "b9b8aa8f10e89b1901e972ba0719e351c744128a4d7c787d23452c909c4b66e0",
+   "record_id": "mutation::mbpp_412_mut_05337"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "moddiv_list",
+   "group_id": "function:semantic:a4135b361dca588446dae28e123d9290b8060abc3d0701014263c766f935735e",
+   "items": [
+    {
+     "buggy_repr": "[4, 2, 2]",
+     "call": "moddiv_list([4, 5, 6], [1, 2, 3])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[0, 1, 0]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[6, 2, 1]",
+     "call": "moddiv_list([6, 5, 4], [1, 2, 3])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[0, 1, 1]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "6efc30d81ca2e0c8c330edbc41a973415730d65d584c628c80ef1a46070ef651",
+   "record_id": "mutation::mbpp_358_mut_04903"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "min_flip_to_make_string_alternate",
+   "group_id": "function:semantic:85858ffc97c800c9733c0a31a2f95241e89769489c676b4a241c9330a054b74a",
+   "items": [
+    {
+     "buggy_repr": "4",
+     "call": "min_flip_to_make_string_alternate('0001010111')",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "2",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "5",
+     "call": "min_flip_to_make_string_alternate('0001010111a')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "3",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "223e95d0f2042251fc8e8332cd075f32bb55bcc41976bf28cc31f9b203ca9645",
+   "record_id": "mutation::mbpp_364_mut_04929"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "sum_of_alternates",
+   "group_id": "function:semantic:1f25f2d3447acba0cfab88fae05ceb58ca91c847cd87bfda20109aa823ea89d2",
+   "items": [
+    {
+     "buggy_repr": "(46, 19)",
+     "call": "sum_of_alternates((5, 6, 3, 6, 10, 34))",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "(46, 18)",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "(18, 47)",
+     "call": "sum_of_alternates((34, 10, 6, 3, 6, 5))",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(18, 46)",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "c948d32cb9d130f718cf4a09956465256dbf4d7754269e563fd0e6c24a0dbabe",
+   "record_id": "mutation::mbpp_324_mut_04620"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "sum_average",
+   "group_id": "function:semantic:d1e9d95b3e316f2c081a830306340d1c0c41eecae6f7f85bee5f15f307b416e3",
+   "items": [
+    {
+     "buggy_repr": "(-55, -5.5)",
+     "call": "sum_average(10)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "(55, 5.5)",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "(-66, -6.0)",
+     "call": "sum_average(11)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(66, 6.0)",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "928c25315e00273a58a8a9f5a952eaab3b83eb631d3aed8d0e535e412d739aa6",
+   "record_id": "mutation::mbpp_599_mut_07030"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "minimum",
+   "group_id": "function:semantic:c633d2acdfb09f88cfb02d77ab45f481a5247409b91a568b91a8dfe88094677a",
+   "items": [
+    {
+     "buggy_repr": "2",
+     "call": "minimum(1, 2)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "1",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "2",
+     "call": "minimum(0, 2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "3d241e8c45def2bda71ef41cf60ac7e2b07e9399dfc3c5fa523cc26f87f6e01e",
+   "record_id": "mutation::mbpp_404_mut_05287"
+  },
+  {
+   "bug_family": "negate_removal",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "remove_datatype",
+   "group_id": "function:semantic:a3d8063fb3d8da57cff700c9589edde6d10b2d26291646f39bdbd995c0d911b9",
+   "items": [
+    {
+     "buggy_repr": "[4, 5, 4]",
+     "call": "remove_datatype((4, 5, 4, 7.7, 1.2), int)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[7.7, 1.2]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[4, 5, 4]",
+     "call": "remove_datatype((1.2, 7.7, 4, 5, 4), int)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[1.2, 7.7]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "f9b936a678bb2dfa4ab2dbaba202269f8dbc88f712fb66c26c5bf36f622e170e",
+   "record_id": "mutation::mbpp_533_mut_06529"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "remove_tuples",
+   "group_id": "function:semantic:f7b365d45357d93e451b95ec19823fa0e7f0df8eff86e153ca1eb56472e3c9b9",
+   "items": [
+    {
+     "buggy_repr": "[(4,), (1,)]",
+     "call": "remove_tuples([(4, 5), (4,), (8, 6, 7), (1,), (3, 4, 6, 7)], 1)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[(4, 5), (8, 6, 7), (3, 4, 6, 7)]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[(1,), (4,)]",
+     "call": "remove_tuples([(3, 4, 6, 7), (1,), (8, 6, 7), (4,), (4, 5)], 1)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[(3, 4, 6, 7), (8, 6, 7), (4, 5)]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "cc65326298c9bf5826e31671c858bdafec8e79817abcfc35494f56a4e8b05b8f",
+   "record_id": "mutation::mbpp_196_mut_03478"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "mul_list",
+   "group_id": "function:semantic:36ebfd1973f192cd9ec256306446d8f9be8d883acba3d813528cf6ada2b9f15b",
+   "items": [
+    {
+     "buggy_repr": "[0.25, 0.4, 0.5]",
+     "call": "mul_list([1, 2, 3], [4, 5, 6])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[4, 10, 18]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "[0.75, 0.4, 0.16666666666666666]",
+     "call": "mul_list([3, 2, 1], [4, 5, 6])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[12, 10, 6]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "4fc27efacb8d730a10021a910ce84ba34348f8b242e49e63eed15d04e98a53e6",
+   "record_id": "mutation::mbpp_682_mut_07619"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "sum_gp",
+   "group_id": "function:semantic:bfd0e1c776e610f27f28c6075d11910589a030df8ff4d0579d1e501a790985d8",
+   "items": [
+    {
+     "buggy_repr": "30.0",
+     "call": "sum_gp(1, 5, 2)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "31.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "60.0",
+     "call": "sum_gp(2, 5, 2)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "62.0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "6e4b9f1eed90db2fd3526bafb793c3634bacaedda16a4b3aacdd3c2b0c613e63",
+   "record_id": "mutation::mbpp_491_mut_06025"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "count_samepair",
+   "group_id": "function:semantic:675e003b6d8054a63d42eb12743c2358f43f66dfbb21de36f9d8780cd4107e24",
+   "items": [
+    {
+     "buggy_repr": "1",
+     "call": "count_samepair([1, 2, 3, 4, 5, 6, 7, 8], [2, 2, 3, 1, 2, 6, 7, 9], [2, 1, 3, 1, 2, 6, 7, 9])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "3",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "1",
+     "call": "count_samepair([1, 2, 3, 4, 5, 6, 7], [2, 2, 3, 1, 2, 6, 7, 9], [2, 1, 3, 1, 2, 6, 7, 9])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "3",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "3ab9d19086db7d8819dde51204a7fb777dfbfbafdc4825e8d6f850e424576050",
+   "record_id": "mutation::mbpp_142_mut_02903"
+  },
+  {
+   "bug_family": "return",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "is_key_present",
+   "group_id": "function:semantic:177465080735a3cec0c4a85ade9b9eccf7b216b4cb5738956378803c77fdfcb8",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "is_key_present({1: 10, 2: 20, 3: 30, 4: 40, 5: 50, 6: 60}, 10)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "is_key_present({1: 10, 2: 20, 3: 30, 4: 40, 5: 50, 6: 60}, 7)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "275be1f1707e79d86f51947a19600f0fc6900df46e2a67bc87496daf190b2934",
+   "record_id": "mutation::mbpp_703_mut_07806"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "find_tuples",
+   "group_id": "function:semantic:dafe1ee4218536abcbed1cd8d324ea77d7bcd91ca5a59146248e8095ccb830ac",
+   "items": [
+    {
+     "buggy_repr": "'[]'",
+     "call": "find_tuples([(6, 24, 12), (7, 9, 6), (12, 18, 21)], 6)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "'[(6, 24, 12)]'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'[]'",
+     "call": "find_tuples([(12, 18, 21), (7, 9, 6), (6, 24, 12)], 6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'[(6, 24, 12)]'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "2f3e468214b304e003d7e3bb6437bc0509bbc782a8bf38e4fc0bb417071d2499",
+   "record_id": "mutation::mbpp_75_mut_02369"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "find_angle",
+   "group_id": "function:semantic:26e031e47e97bf4f5fedc1b410d645724c9db248ad3ce9795fac8e9e94e4bdca",
+   "items": [
+    {
+     "buggy_repr": "316",
+     "call": "find_angle(47, 89)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "44",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "317",
+     "call": "find_angle(48, 89)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "43",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "086117d1d4ea67228a0a1f7508e7a1fae6bab60f7ec58f74a5f932bc15b90cba",
+   "record_id": "mutation::mbpp_356_mut_04901"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "count_Digit",
+   "group_id": "function:semantic:596a4cc52c9d96adb68b04534858c97dbe84c82572a9f46ca9cf80ffb54b261c",
+   "items": [
+    {
+     "buggy_repr": "6",
+     "call": "count_Digit(12345)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "5",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "6",
+     "call": "count_Digit(12346)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "5",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "a509eac4cb6bd568c7da924f1ff5b7b420a84392b6220bec3840ed51dc905b1e",
+   "record_id": "mutation::mbpp_365_mut_04936"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "moderate",
+   "entry_point": "get_Min_Squares",
+   "group_id": "function:semantic:962edb3c789e45ea9967b3727aab37d4e7f4f9273df5f3439a623905d030c533",
+   "items": [
+    {
+     "buggy_repr": "-1",
+     "call": "get_Min_Squares(6)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "3",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "-2",
+     "call": "get_Min_Squares(7)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "4",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "07bb3159cc451466a2c5729c344f9d2c2d8343c6111c4a77890719eff7506e48",
+   "record_id": "mutation::mbpp_325_mut_04627"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "is_nonagonal",
+   "group_id": "function:semantic:1934765c8b897fc1a8581dcf80484595a805fb99ac345411054d9f2e39ebb48d",
+   "items": [
+    {
+     "buggy_repr": "-21",
+     "call": "is_nonagonal(10)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "325",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "-24",
+     "call": "is_nonagonal(11)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "396",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "cada6052ee226ea6f3aebc0a95682c5345ee6fc8137153093729f87482048ba3",
+   "record_id": "mutation::mbpp_641_mut_07375"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "median_trapezium",
+   "group_id": "function:semantic:1478655ff659523d7d918572ee4d487a3656dc5f7e8c4b9f2449a85f20e72576",
+   "items": [
+    {
+     "buggy_repr": "-5.0",
+     "call": "median_trapezium(15, 25, 35)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "20.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "-4.5",
+     "call": "median_trapezium(16, 25, 35)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "20.5",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "9344684e1a4ac27dfd1e8337e7fae683bbb54bcdc8d502bfb57d20f46fad8daa",
+   "record_id": "mutation::mbpp_432_mut_05534"
+  },
+  {
+   "bug_family": "return",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "noprofit_noloss",
+   "group_id": "function:semantic:be7a99d20b41ec33c6b22cc488d7911b7edbc8dd8e1d64024d4daf4afab491fb",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "noprofit_noloss(1500, 1200)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "noprofit_noloss(1501, 1200)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "65cb99b01a8c90ec7a2f6ee200e870195dd845da240567f8780543fcef57310d",
+   "record_id": "mutation::mbpp_637_mut_07356"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "subject_marks",
+   "group_id": "function:semantic:9f6e827bfe7d54cbfe88e9ab2e2bee6898707a5384f756fa966171fb803ac011",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "subject_marks([('English', 88), ('Science', 90), ('Maths', 97), ('Social sciences', 82)])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "[('Social sciences', 82), ('English', 88), ('Science', 90), ('Maths', 97)]",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "subject_marks([('Social sciences', 82), ('Maths', 97), ('Science', 90), ('English', 88)])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "[('Social sciences', 82), ('English', 88), ('Science', 90), ('Maths', 97)]",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "c0d4c9b0dcfe81fa71387564842684592547f6579d2415a4d85d2b8afd8e26d2",
+   "record_id": "mutation::mbpp_64_mut_02216"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "area_tetrahedron",
+   "group_id": "function:semantic:f83eba5aed853b7b08739b546a95484c61bd24fdc3407c62e26bd32a29b5519d",
+   "items": [
+    {
+     "buggy_repr": "0.19245008972987523",
+     "call": "area_tetrahedron(3)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "15.588457268119894",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0.10825317547305482",
+     "call": "area_tetrahedron(4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "27.712812921102035",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "b3d313861f0650c2b38d9bd97e4f68ff9e196536cb7635ad4d3c783f52b6b157",
+   "record_id": "mutation::mbpp_742_mut_08098"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "count_odd",
+   "group_id": "function:semantic:8d13708115c173c3bf0e6d39d5befe586418b5d4380abd773a8ba72e5d254cfe",
+   "items": [
+    {
+     "buggy_repr": "3",
+     "call": "count_odd([1, 2, 3, 5, 7, 8, 10])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "4",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "3",
+     "call": "count_odd([10, 8, 7, 5, 3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "4",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "26bf377a106ac581d525806dcdaae2c6c03d04f0c553772d08494769b5c698e5",
+   "record_id": "mutation::mbpp_258_mut_04073"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "find_star_num",
+   "group_id": "function:semantic:259e88b089a78a51bec2db09ba6b7bd8280f8cf8102e1736a9894af61bfcd705",
+   "items": [
+    {
+     "buggy_repr": "10.0",
+     "call": "find_star_num(3)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "37",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "8.2",
+     "call": "find_star_num(6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "181",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "f98b8c9517075426bfb7bdc0c374162e4f8a033edf3e0a2d90f1f9ae1e3334ed",
+   "record_id": "mutation::mbpp_268_mut_04113"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "check_Consecutive",
+   "group_id": "function:semantic:0f25fef8f1465c01423c17589548def1335f6799dcd2682d8b58b50687e803cd",
+   "items": [
+    {
+     "buggy_repr": "False",
+     "call": "check_Consecutive([1, 2, 3, 4, 5])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "True",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "False",
+     "call": "check_Consecutive([5, 4, 3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "True",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "465fe6f00de95c78a3bfcbb9eed7fbba663def4ea066016140828fd4c07f1856",
+   "record_id": "mutation::mbpp_472_mut_05857"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "areEquivalent",
+   "group_id": "function:semantic:43b7f4255183377f0ad07db7dc9195d3a19781dcf27e81d5f4cae015557ebd3d",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "areEquivalent(2, 4)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "areEquivalent(3, 4)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "853b76b36afa07c72292e0e4a7980e88972705829487cd0fb38a344f29c4a2d1",
+   "record_id": "mutation::mbpp_164_mut_03152"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "text_match_wordz",
+   "group_id": "function:semantic:1d11a1ab8413927806b713751f5f1105547a787c9beb2f7526cc63ffc4f1ec28",
+   "items": [
+    {
+     "buggy_repr": "'Not matched!'",
+     "call": "text_match_wordz('pythonz.')",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "'Found a match!'",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "'Not matched!'",
+     "call": "text_match_wordz('pythonz.a')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "'Found a match!'",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "4e89f04681e640a02b3476b0a3989d59589689cbbae14394c6a592e7d9f9ae41",
+   "record_id": "mutation::mbpp_454_mut_05669"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "find_Index",
+   "group_id": "function:semantic:374c518ee907898d222083d6ea535633b3fea2ef77bfa6c1167e92feba48d10c",
+   "items": [
+    {
+     "buggy_repr": "0",
+     "call": "find_Index(2)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "4",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "4",
+     "call": "find_Index(0)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "05d68eb798f1d5c33a0cce92a37f4745ab7dbc79e6ff8dc36915dcae3ce0c142",
+   "record_id": "mutation::mbpp_739_mut_08082"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "find_Volume",
+   "group_id": "function:semantic:b88d8cd2a60dda386d3cc89d5325ab389af535e0fc2599f1e3c2bc80782819f7",
+   "items": [
+    {
+     "buggy_repr": "3.75",
+     "call": "find_Volume(10, 8, 6)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "240.0",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "4.125",
+     "call": "find_Volume(11, 8, 6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "264.0",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "42d0c7af559ac01960129a4f3f0715c4b1574202aaa9c4647d8907517308f9d5",
+   "record_id": "mutation::mbpp_14_mut_01769"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "volume_tetrahedron",
+   "group_id": "function:semantic:fbc110bb49f6801869e849aec97797572f7eec34121493560b80817e9d70c8fa",
+   "items": [
+    {
+     "buggy_repr": "8485.28",
+     "call": "volume_tetrahedron(10)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "117.85",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "11293.91",
+     "call": "volume_tetrahedron(11)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "156.86",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "287549bd0a1d75abc32c212de9e7b4555d1868387a3710ec3d3c760557b73f28",
+   "record_id": "mutation::mbpp_519_mut_06330"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "find_rect_num",
+   "group_id": "function:semantic:59a15d45afc51f5e9afe857f7d2ded58864acca26f35714c3522bd928a1be66a",
+   "items": [
+    {
+     "buggy_repr": "0.8",
+     "call": "find_rect_num(4)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "20",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0.75",
+     "call": "find_rect_num(3)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "12",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "e95c2bdc5972796fcd28290adf00ce499206489f382e1cd4577ab18a845312ce",
+   "record_id": "mutation::mbpp_35_mut_01994"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "split_upperstring",
+   "group_id": "function:semantic:03477f8a2812074b2f9e2494329d0fa1b92aabb6dffbb73453a6c4a3294e6a13",
+   "items": [
+    {
+     "buggy_repr": "['PythonProgramLanguage']",
+     "call": "split_upperstring('PythonProgramLanguage')",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "['Python', 'Program', 'Language']",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "['PythonProgramLanguagea']",
+     "call": "split_upperstring('PythonProgramLanguagea')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "['Python', 'Program', 'Languagea']",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "802020cde8563554eb263624289144928f3b54f82f79ce7ba60350bc30f126de",
+   "record_id": "mutation::mbpp_647_mut_07397"
+  },
+  {
+   "bug_family": "boolean",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "dif_Square",
+   "group_id": "function:semantic:0774a920e341491096b2e53efded53208aa37c056d6e6a4868fc325ef17d9fd0",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "dif_Square(10)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "dif_Square(6)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "390eece2b246a2d67977b17c078f4d54645057f3bee60abc76ea1e8d4eddc476",
+   "record_id": "mutation::mbpp_72_mut_02339"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "validity_triangle",
+   "group_id": "function:semantic:cf89618cb4498799da8ac99fed39076986169fba9dc665052a6f4fefc49c598f",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "validity_triangle(60, 50, 90)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "validity_triangle(61, 50, 90)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "89d76748dda48a77d99800ccbdffb4c2f3da13b9c72b50260febb5f7dcd45101",
+   "record_id": "mutation::mbpp_677_mut_07605"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "adjacent_num_product",
+   "group_id": "function:semantic:587da4f47706e984ec9d935b33a2a77f23a7f0c12ce7037609144981cfb9a2cf",
+   "items": [
+    {
+     "buggy_repr": "0.8333333333333334",
+     "call": "adjacent_num_product([1, 2, 3, 4, 5, 6])",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "30",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "2.0",
+     "call": "adjacent_num_product([6, 5, 4, 3, 2, 1])",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "30",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "e06c85aca8190662d6550745509bafdef4a0b1a57fc141dd67e1dabe7833ebc8",
+   "record_id": "mutation::mbpp_366_mut_04939"
+  },
+  {
+   "bug_family": "comparison",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "harmonic_sum",
+   "group_id": "function:semantic:2083e7da799ff4d79a6dcbe5a54935d49436a82de6f08a18c19f2697b09e3842",
+   "items": [
+    {
+     "buggy_repr": "1",
+     "call": "harmonic_sum(7)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "2.5928571428571425",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "1",
+     "call": "harmonic_sum(8)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "2.7178571428571425",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "b875259e75b1ef99a447a1ddf2f600057369a3dd1a638d77aef3377e3ee79a3e",
+   "record_id": "mutation::mbpp_248_mut_04045"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "square_Sum",
+   "group_id": "function:semantic:b70d4004b9f213242a5a2314b2caf117206932b3a2864c39771ac7527554e7a5",
+   "items": [
+    {
+     "buggy_repr": "6",
+     "call": "square_Sum(2)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "20",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "0",
+     "call": "square_Sum(1)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "4",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "b45f472ede14461a2d7beb43687606b6309fa8dca51cae480c86c404cf1e5ff7",
+   "record_id": "mutation::mbpp_287_mut_04227"
+  },
+  {
+   "bug_family": "boolean",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "check_equilateral",
+   "group_id": "function:semantic:bc17666d05947d71ee0cd8076be5a0ad4319f3ab09285ff8196d3fe95408dc31",
+   "items": [
+    {
+     "buggy_repr": "True",
+     "call": "check_equilateral(6, 8, 12)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "False",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "True",
+     "call": "check_equilateral(7, 8, 12)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "False",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "82377ff11c125f62f4d1f6ce70175c4fdcc76b1ed5d0d3f1db9741ff0244be7c",
+   "record_id": "mutation::mbpp_51_mut_02111"
+  },
+  {
+   "bug_family": "boundary",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "find_adverb_position",
+   "group_id": "function:semantic:96d674b425c8fc32116aa53bb9e724fda7c9c6c3908b0fc9271f71f32402d054",
+   "items": [
+    {
+     "buggy_repr": "<error>",
+     "call": "find_adverb_position('clearly!! we can see the sky')",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "(0, 7, 'clearly')",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "<error>",
+     "call": "find_adverb_position('clearly!! we can see the skya')",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "(0, 7, 'clearly')",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "85d5d4bab8915cf6f5afae8a50dfe111eb48f0e42530b28972d13218eb287ba7",
+   "record_id": "mutation::mbpp_440_mut_05582"
+  },
+  {
+   "bug_family": "arithmetic",
+   "cohort": "exposed",
+   "complexity_tier": "simple",
+   "entry_point": "degree_radian",
+   "group_id": "function:semantic:fef1877df2b6abcaaeb3631ea6ccf2d721d333244a448bf6b9fcd2ec71c97f55",
+   "items": [
+    {
+     "buggy_repr": "1.5707963267948966",
+     "call": "degree_radian(90)",
+     "call_in_arm_a_sft_target": true,
+     "expected_repr": "5156.620156177409",
+     "input_kind": "upstream"
+    },
+    {
+     "buggy_repr": "1.5882496193148399",
+     "call": "degree_radian(91)",
+     "call_in_arm_a_sft_target": false,
+     "expected_repr": "5213.915935690491",
+     "input_kind": "novel"
+    }
+   ],
+   "record_content_hash": "17d228672924ff7999ac56f4bdd916a88cfbece7e937040eade96d2b0d52442d",
+   "record_id": "mutation::mbpp_214_mut_03609"
+  }
+ ],
+ "level_definitions": {
+  "A0": "production information: buggy code under test and the record specification",
+  "A0_answer_schema": "schema/extraction control: A0 information, no prefill, answer requested as one line 'ANSWER: <Python literal>'",
+  "A1": "NOT RUN: the records' specification already is the full public upstream statement; no additional public docstring or type information exists",
+  "A2": "NOT APPLICABLE: synthetic function records have no repository context",
+  "A3": "A0 plus a semantic invariant that does not reveal the value: the result's Python type, and its length for sized results",
+  "A4": "DIAGNOSTIC, NON-DEPLOYABLE upper bound: the fixed implementation is shown instead of the buggy one (pure execution reasoning); never used for training or confirmation"
+ },
+ "levels": [
+  "A0",
+  "A3",
+  "A4"
+ ],
+ "schema_version": "oneiros_fixed_input_probe_v1",
+ "selection_seed": "20260928"
+}
