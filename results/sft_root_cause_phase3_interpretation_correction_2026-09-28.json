@@ -1,0 +1,166 @@
+{
+ "schema_version": "oneiros_sft_root_cause_phase3_correction_v1",
+ "date": "2026-09-28",
+ "model_calls": 0,
+ "gpu_used": false,
+ "training": false,
+ "v1_receipts_unchanged": {
+  "3A": {
+   "path": "results/sft_root_cause_phase3a_result_receipt.json",
+   "sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7"
+  },
+  "3C": {
+   "path": "results/sft_root_cause_phase3c_result_receipt.json",
+   "sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3"
+  }
+ },
+ "v2_receipts": {
+  "3A": {
+   "path": "results/sft_root_cause_phase3a_result_receipt_v2.json",
+   "sha256": "3f572f16047417377fb977ee8080fd44d629c3c2c5fa1b3211d3704f264281fe"
+  },
+  "3C": {
+   "path": "results/sft_root_cause_phase3c_result_receipt_v2.json",
+   "sha256": "f622bbb51af8e0e378c3de1c7989c4b47b6c457160b6a1dadaa02ba3777fca25"
+  }
+ },
+ "unchanged_artifacts": {
+  "results/sft_root_cause_phase3a_cohort.json": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
+  "results/sft_root_cause_phase3a_design_receipt.json": "d85249b264c00bb330ec2f1313b09ce292433de2386b4674c479af1ee5181d46",
+  "results/sft_root_cause_phase3c_design_receipt.json": "fbdfef6bca0f347ef6b8531810d679eb4446ff8bc80c1fd7ae57708534060858",
+  "results/sft_root_cause/phase3a/generations_base.jsonl": "e41bdf29533210e16a64997161cded1806a77079edf436bbb61f326ab4a46583",
+  "results/sft_root_cause/phase3a/generations_arm_a_431.jsonl": "2caa6659a73df3aceeaea13ff0c91eef3e32b0e6032dbdb92d0cdee46250356c",
+  "results/sft_root_cause/phase3c/generations_qwen7b_base.jsonl": "722a70c019180f4733f63af48982e43639af897d54bf4ceaefb4b17ce735124a",
+  "results/sft_root_cause/phase3a/completion_base.json": "8beaa97ab0279afdc789b6fde4bc249614ca8296397b0d3ec4628c3c6cf43657",
+  "results/sft_root_cause/phase3a/completion_arm_a_431.json": "a9097b9e3cc65f412fa482d6153eab284f215741bed34335ed067a7707c14641",
+  "results/sft_root_cause/phase3c/completion_qwen7b_base.json": "07f2113755841382e7d1256d03fbc07f8893c9e5bffe70164a2e6158ea983805"
+ },
+ "defects_corrected": [
+  "3A v1 checked the frozen schema-control rule only on the pooled stratum but decided H4 from the exposed stratum, where the SFT effect flips sign",
+  "ledger statuses 'scale_dependent' and 'supported_at_model_scale' were not in status_values",
+  "3C capacity claim stated as causal although two different pretrained checkpoints were compared",
+  "A3 was described as non-revealing context; it is an oracle-derived partial hint",
+  "A4 was read as evidence of specification insufficiency; it gives access to the full fixed implementation",
+  "3C v1 reported bootstrap tail proportions as p = 0.0"
+ ],
+ "withdrawn_claims": [
+  "SFT did not improve output prediction even on its training functions.",
+  "H4 is weakened (based on Phase 3A).",
+  "A3 is non-revealing context / non-revealing missing context does not matter.",
+  "A0 is under-specified for value prediction (from A4 alone).",
+  "H3 supported: 1.5B execution reasoning is capacity-limited.",
+  "bootstrap_p_two_sided: 0.0 and holm_p: 0.0 (Phase 3C v1)."
+ ],
+ "schema_dependence_by_stratum": {
+  "all": {
+   "prefill": 1.458,
+   "answer": 2.708,
+   "interaction": 1.25,
+   "interaction_ci95": [
+    -3.75,
+    6.25
+   ],
+   "schema_dependent": false
+  },
+  "exposed": {
+   "prefill": -1.667,
+   "answer": 5.0,
+   "interaction": 6.667,
+   "interaction_ci95": [
+    -0.0,
+    13.75
+   ],
+   "schema_dependent": true
+  },
+  "unexposed": {
+   "prefill": 4.583,
+   "answer": 0.417,
+   "interaction": -4.167,
+   "interaction_ci95": [
+    -11.25,
+    2.917
+   ],
+   "schema_dependent": false
+  },
+  "exposed_upstream_sft_target": {
+   "prefill": -3.333,
+   "answer": 5.833,
+   "interaction": 9.167,
+   "interaction_ci95": [
+    1.667,
+    16.667
+   ],
+   "schema_dependent": true
+  },
+  "exposed_novel": {
+   "prefill": 0.0,
+   "answer": 4.167,
+   "interaction": 4.167,
+   "interaction_ci95": [
+    -4.167,
+    13.333
+   ],
+   "schema_dependent": false
+  },
+  "unexposed_upstream": {
+   "prefill": 5.0,
+   "answer": -2.5,
+   "interaction": -7.5,
+   "interaction_ci95": [
+    -15.833,
+    0.0
+   ],
+   "schema_dependent": true
+  },
+  "unexposed_novel": {
+   "prefill": 4.167,
+   "answer": 3.333,
+   "interaction": -0.833,
+   "interaction_ci95": [
+    -10.0,
+    7.5
+   ],
+   "schema_dependent": false
+  }
+ },
+ "relabels": {
+  "A3": "diagnostic, oracle-derived partial behavioural hint containing the correct result type and, where sized, its correct length; does not expose the complete value; non-deployable; prohibited from training and confirmation",
+  "A4": "diagnostic access to the complete fixed implementation; non-deployable",
+  "note": "the frozen v1 cohort and design receipts keep their original wording so their hashes stay valid; this receipt supersedes that wording"
+ },
+ "corrected_hypotheses": {
+  "H1": {
+   "status": "strengthened",
+   "qualifier": "scale_qualification",
+   "why": "A3 (oracle-derived type/length hint) did not measurably help at 1.5B or 7B: this particular hint was insufficient, nothing more. A4 (access to the fixed implementation) helps modestly at 1.5B and strongly at 7B (+19.4, CI [14.8, 24.2]); that shows access to the correct implementation improves prediction, not that the natural-language specification is under-specified. A1/A2 were not run, so richer public context remains untested."
+  },
+  "H2": {
+   "status": "strengthened",
+   "qualifier": null,
+   "why": "Rests on Phase 2 (input choice and assertion form moved). Whether SFT improves fixed-input output prediction is schema-dependent and unresolved (Phase 3A v2)."
+  },
+  "H3": {
+   "status": "strengthened",
+   "qualifier": "model_scale_association",
+   "why": "Within the Qwen2.5-Coder family, 7B beats 1.5B on fixed-input prediction: A0 +11.46 [6.46, 16.67], A4 +24.79 [19.38, 30.42], answer-rate gate passed, sign-flip Holm p <= 0.0002. The checkpoints differ in scale and learned representation together; adapter rank and full fine-tuning are untested."
+  },
+  "H4": {
+   "status": "open",
+   "qualifier": "schema_dependent_exposure_result",
+   "why": "On exposed functions, the estimated SFT effect changes from -1.67 points under assertion-prefill to +5.00 points under the ANSWER schema. Therefore the exposure result is answer-schema dependent and cannot currently support or weaken memorization or distribution shift. Distribution shift stays open: no external diagnostic cohort exists."
+  }
+ },
+ "unchanged_hypotheses": {
+  "H5": "weakened (syntactic/structural contract only)",
+  "H6": "weakened (progressive degradation after step 100 only)",
+  "H7": "strengthened"
+ },
+ "corrected_interpretation": [
+  "SFT clearly changes input choice and assertion form.",
+  "Whether it improves fixed-output prediction on exposed training inputs is schema-dependent and unresolved.",
+  "Qwen 7B is substantially stronger than Qwen 1.5B on fixed-input prediction; this is a model-scale association, not isolated proof of adapter capacity.",
+  "Partial oracle information consisting only of type/length does not help.",
+  "Full access to the fixed implementation helps, particularly at 7B, but does not by itself establish natural-language specification insufficiency.",
+  "No root cause is yet terminally supported."
+ ]
+}

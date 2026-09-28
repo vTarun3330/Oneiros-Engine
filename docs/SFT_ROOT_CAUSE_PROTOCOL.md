@@ -261,3 +261,33 @@ alongside it and never replace it:
   passes an answer-rate non-inferiority gate. A non-local snapshot is reported
   (download size, disk space, time) before any download, and no revision is ever
   silently substituted.
+
+**2026-09-28, amendment 3: Phase 3 correction (CPU only; nothing overwritten).**
+
+The v2 receipts `results/sft_root_cause_phase3a_result_receipt_v2.json` and
+`results/sft_root_cause_phase3c_result_receipt_v2.json` supersede the v1 receipts, which
+remain unchanged. The dated receipt
+`results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json` lists every
+withdrawn claim.
+
+- **Schema rule.** The schema-control rule is applied to the exact strata a hypothesis
+  decision reads. Every stratum reports SFT − base under both schemas and their
+  difference-in-differences, with a semantic-group-clustered interval. The exposed
+  stratum flips sign, so **H4 is `open`**, qualified as a schema-dependent exposure
+  result.
+- **Status values.** Every status must be one of `status_values`, and a test enforces
+  this. Qualifiers go in a separate field. H1 is `strengthened` (scale qualification),
+  H3 is `strengthened` (model-scale association), and H4 is `open`.
+- **A3** is a diagnostic, oracle-derived partial behavioural hint (the correct type and,
+  where sized, length). It is non-deployable and prohibited from training and
+  confirmation. Its null result means only that this hint was insufficient.
+- **A4** is access to the complete fixed implementation. Its gain does not independently
+  establish natural-language specification insufficiency.
+- **P-values.** Finite-resample p-values use a paired semantic-group sign-flip test with
+  p = (extreme + 1) / (resamples + 1), with Holm correction across frozen primaries. A
+  p-value is never reported as zero, and bootstrap tail proportions are not reported as
+  p-values.
+- **Phase 4.** The Phase 3 unexposed cohort is development evidence only. A fresh
+  lineage-disjoint mediator-gate cohort must be frozen before any Phase 4 training (see
+  `results/sft_root_cause_phase4_cohort_census.json` and
+  `docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT.md`). Phase 6 confirmation stays separate.

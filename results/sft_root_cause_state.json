@@ -68,12 +68,47 @@
     "duration_seconds": 534.7,
     "generations": 1920,
     "output_sha256": "722a70c019180f4733f63af48982e43639af897d54bf4ceaefb4b17ce735124a"
+   },
+   "result_receipts": {
+    "current": {
+     "3A": {
+      "path": "results/sft_root_cause_phase3a_result_receipt_v2.json",
+      "sha256": "3f572f16047417377fb977ee8080fd44d629c3c2c5fa1b3211d3704f264281fe"
+     },
+     "3C": {
+      "path": "results/sft_root_cause_phase3c_result_receipt_v2.json",
+      "sha256": "f622bbb51af8e0e378c3de1c7989c4b47b6c457160b6a1dadaa02ba3777fca25"
+     }
+    },
+    "history_v1": {
+     "3A": {
+      "path": "results/sft_root_cause_phase3a_result_receipt.json",
+      "sha256": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
+      "superseded_by": "results/sft_root_cause_phase3a_result_receipt_v2.json"
+     },
+     "3C": {
+      "path": "results/sft_root_cause_phase3c_result_receipt.json",
+      "sha256": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3",
+      "superseded_by": "results/sft_root_cause_phase3c_result_receipt_v2.json"
+     }
+    },
+    "correction": {
+     "path": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
+     "sha256": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83"
+    }
    }
   },
   {
    "phase": 4,
    "name": "single-factor training arm",
-   "status": "awaiting_authorisation"
+   "status": "awaiting_authorisation",
+   "preflight_census": {
+    "path": "results/sft_root_cause_phase4_cohort_census.json",
+    "sha256": "391bcba2b3c383fb488688b82242a3e8a430e81d4e7dfb54eca93b2f873d8464"
+   },
+   "design_draft": "docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT.md",
+   "frozen": false,
+   "training_started": false
   },
   {
    "phase": 5,
@@ -136,6 +171,20 @@
    "event": "phase 3C complete; Phase 4 not started (not authorised)",
    "finding": "1.5B value prediction is limited mainly by execution reasoning (A4 0.33); 7B relieves it (A4 0.58, A0 0.39); at 7B specification becomes the larger gap; SFT at 1.5B did not move value prediction",
    "terminal_state": "not reached: no training intervention, ablation or independent replication yet"
+  },
+  {
+   "utc": "2026-09-28",
+   "event": "phase 3 correction (CPU only, v2 analyses)",
+   "correction_receipt": "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json",
+   "correction_sha256": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83",
+   "finding": "H4 open (schema-dependent exposure result); H1/H3 strengthened with qualifiers; no root cause terminally supported",
+   "next_decision": "Phase 4 data preflight and design draft; training awaits authorisation"
+  },
+  {
+   "utc": "2026-09-28",
+   "event": "phase 4 data preflight (read-only) and design draft",
+   "finding": "strict fresh pool 42 groups (33 feasible, MDE80 ~15.7 pts): too small alone; arm-A-exposed remainder 401 groups (352 feasible) is lineage-disjoint for base-initialised Phase 4 arms",
+   "next_decision": "user: approve partition, Phase 6 repository-disjoint limitation, timing step and single-seed pilot"
   }
  ]
 }

@@ -82,6 +82,21 @@ def test_an_exposed_sign_flip_blocks_h4_even_when_the_pooled_stratum_does_not_fl
     assert decision["schema_dependent_strata_used"] == ["exposed"]
 
 
+def test_the_v2_analyzer_reports_every_required_stratum():
+    import json
+    from pathlib import Path
+    from scripts.analyze_fixed_input_probe_v2 import STRATA
+    assert set(H4_STRATA) <= set(STRATA)
+    receipt = Path(__file__).resolve().parent.parent / \
+        "results/sft_root_cause_phase3a_result_receipt_v2.json"
+    strata = json.loads(receipt.read_text(encoding="utf-8"))["strata"]
+    for name in H4_STRATA:
+        assert {"prefill", "answer", "schema_interaction_answer_minus_prefill",
+                "schema_dependent"} <= set(strata[name])
+        assert strata[name]["schema_interaction_answer_minus_prefill"]["clustered_by"] == \
+            "semantic group_id"
+
+
 def test_without_a_flip_rule_one_still_applies_and_missing_strata_are_refused():
     strata = {s: {"prefill": _contrast(-1.0, -6.0, 4.0), "answer": _contrast(-0.5, -5, 4)}
               for s in H4_STRATA}

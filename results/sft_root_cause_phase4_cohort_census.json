@@ -1,0 +1,107 @@
+{
+ "schema_version": "oneiros_sft_root_cause_phase4_census_v1",
+ "read_only": true,
+ "model_calls": 0,
+ "gpu_used": false,
+ "training": false,
+ "frozen_cohort": null,
+ "not_read": [
+  "val",
+  "ablation_dev",
+  "test",
+  "sealed_final",
+  "reserved_confirmation",
+  "A-prime confirmation (outside the corpus)"
+ ],
+ "inputs": {
+  "results/v4_2_armA_successor_preflight.json": "d7e5965bb505ac8a3cfe33f1ca0249fa096bd0202d547f966f4fe7a2b97bb3d3",
+  "results/sft_root_cause_phase3a_cohort.json": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
+  "results/sft_root_cause_phase3a_result_receipt_v2.json": "3f572f16047417377fb977ee8080fd44d629c3c2c5fa1b3211d3704f264281fe",
+  "data/corpus/v4_1_research_hardened_candidate/development_view/train.records.json": "d3507cba9dbd78b36b1e704275cb245811dc62e4669ed582a0c34fab157d3908",
+  "data/corpus/v4_1_research_hardened_candidate/development_view/complexity_manifest.json": "f31a670ff216433da2d7cb2043a3ed257f616b5d93ed878cdc6f60082062f54d"
+ },
+ "used_lineages": {
+  "arm_a_training_groups": 521,
+  "phase3_exposed_cohort_groups": 120,
+  "phase3_unexposed_cohort_groups": 120,
+  "train_groups_total": 683
+ },
+ "pools": {
+  "strict": {
+   "groups": 42,
+   "records": 97,
+   "execution_mode": {
+    "function": 97
+   },
+   "dataset": {
+    "mbpp": 82,
+    "humaneval": 13,
+    "manual_curated_examples": 2
+   },
+   "complexity_tier": {
+    "simple": 52,
+    "complex": 6,
+    "moderate": 39
+   },
+   "groups_with_a_feasible_fixed_input_function": 33,
+   "feasible_function_dataset": {
+    "mbpp": 26,
+    "manual_curated_examples": 2,
+    "humaneval": 5
+   },
+   "feasible_function_tier": {
+    "complex": 3,
+    "moderate": 13,
+    "simple": 17
+   },
+   "group_ids_sha256": "fafea1cc83d2f5b1f3666ae57da38420958cc1807e15f8dcd28aa1f7fae569c0",
+   "feasible_group_ids_sha256": "65c1a977295bae37092f12bfb8be631c28b6431a94b0216b40d90528738f8ef3",
+   "power_estimate": {
+    "basis": "SE of a paired accuracy difference scaled from Phase 3A (240 groups, 2 items each) as 1/sqrt(groups); one function per group",
+    "se_points": 5.59,
+    "mde_80pct_power_points": 15.7
+   }
+  },
+  "arm_a_exposed_remainder": {
+   "groups": 401,
+   "records": 4720,
+   "execution_mode": {
+    "function": 4263,
+    "repository_pytest_fragment": 399,
+    "repository_unittest_fragment": 58
+   },
+   "dataset": {
+    "mbpp": 3333,
+    "humaneval": 925,
+    "SWE-bench Verified": 303,
+    "BugsInPy": 154,
+    "manual_curated_examples": 5
+   },
+   "complexity_tier": {
+    "complex": 2748,
+    "moderate": 1192,
+    "simple": 323,
+    "none": 457
+   },
+   "groups_with_a_feasible_fixed_input_function": 352,
+   "feasible_function_dataset": {
+    "mbpp": 283,
+    "humaneval": 66,
+    "manual_curated_examples": 3
+   },
+   "feasible_function_tier": {
+    "moderate": 140,
+    "complex": 150,
+    "simple": 62
+   },
+   "group_ids_sha256": "597175da09961069368b53027a5a9ab1651038d65ed6bd98d017ec4a12e0faca",
+   "feasible_group_ids_sha256": "68b7cd7c640da5a01e12e70b8b795049660438301c205894930df6e18dcbc896",
+   "power_estimate": {
+    "basis": "SE of a paired accuracy difference scaled from Phase 3A (240 groups, 2 items each) as 1/sqrt(groups); one function per group",
+    "se_points": 1.71,
+    "mde_80pct_power_points": 4.8
+   }
+  }
+ },
+ "phase3_unexposed_status": "development evidence only: inspected and used to choose the Phase 4 intervention, so never the sole acceptance or confirmation panel"
+}
