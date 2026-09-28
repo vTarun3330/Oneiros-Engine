@@ -76,7 +76,22 @@ def test_current_state_and_links(tmp_path):
     assert current["3A"]["path"].endswith("_v3.json") and current["3C"]["path"].endswith("_v3.json")
     assert set(state["phase3_results"]["history"]) == {"v1", "v2", "commit_2e7ddba_correction"}
     assert "phase3a_result_receipt" not in state["phases"][3]
-    assert all(entry.get("historical") for entry in state["log"][:-1])
+    events = [entry.get("event") for entry in state["log"]]
+    own = events.index("phase 3 correction addendum v2")
+    assert all(entry.get("historical") for entry in state["log"][:own])
+    assert not any(entry.get("historical") for entry in state["log"][own:])
+
+
+def test_later_log_entries_are_not_touched_by_a_rerun(tmp_path):
+    root = _copy_inputs(tmp_path)
+    _pre_addendum(root)
+    addendum.run(root)
+    state = json.loads((root / addendum.STATE).read_text(encoding="utf-8"))
+    state["log"].append({"event": "a later phase", "utc": "2026-09-29"})
+    (root / addendum.STATE).write_bytes(addendum._dump(state))
+    before = (root / addendum.STATE).read_bytes()
+    addendum.run(root)
+    assert (root / addendum.STATE).read_bytes() == before
 
 
 def test_a_failed_write_leaves_nothing_half_published(tmp_path, monkeypatch):

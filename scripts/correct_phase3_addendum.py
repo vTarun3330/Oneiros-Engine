@@ -193,9 +193,12 @@ def apply_state(state: dict, root: Path, receipt_path: str, receipt_sha: str) ->
             "commit_2e7ddba_correction": {"path": FIRST_CORRECTION,
                                           "sha256": sha(FIRST_CORRECTION)}},
     }
-    for entry in state["log"]:
-        if entry.get("event") == "phase 3 correction addendum v2":
-            continue
+    events = [e.get("event") for e in state["log"]]
+    own = "phase 3 correction addendum v2"
+    # Only entries recorded BEFORE this addendum are history; later entries (e.g. the
+    # Phase 4 redesign) are left untouched so a rerun stays a no-op.
+    cutoff = events.index(own) if own in events else len(state["log"])
+    for entry in state["log"][:cutoff]:
         entry["historical"] = True
         if str(entry.get("event", "")).startswith(("phase 3", "phase 3A", "phase 3C")):
             entry["superseded_by"] = receipt_path
