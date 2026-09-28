@@ -1,0 +1,134 @@
+{
+ "schema_version": "oneiros_sft_root_cause_hypotheses_v1",
+ "frozen_utc": "2026-09-28",
+ "frozen_at_commit": "e56af51808562ec179d238425881e0c51fa4eb52",
+ "protocol": "docs/SFT_ROOT_CAUSE_PROTOCOL.md",
+ "minimum_meaningful_effects": {
+  "kill_at_8_points": 3.0,
+  "conditional_oracle_points": 5.0,
+  "max_reference_validity_regression_points": 3.0,
+  "max_exact_unique_ratio_relative_regression": 0.1
+ },
+ "status_values": [
+  "open",
+  "weakened",
+  "strengthened",
+  "supported",
+  "rejected",
+  "inconclusive_power",
+  "invalid_pipeline",
+  "under_specified",
+  "not_identifiable"
+ ],
+ "hypotheses": [
+  {
+   "id": "H1",
+   "name": "specification insufficiency",
+   "claim": "the prompt does not contain enough information to deduce the correct expected value",
+   "mediator": "P(correct oracle | discriminating input)",
+   "supporting_signature": [
+    "base and SFT both low on P(correct oracle | disc)",
+    "Probe A: only A4 (behavioural evidence) raises the conditional oracle rate; A1-A3 do not"
+   ],
+   "weakening_signature": [
+    "Probe A: A1/A2/A3 raise the conditional oracle rate by >= 5 points"
+   ],
+   "decisive_test": "Phase 3 Probe A",
+   "status": "open",
+   "evidence": []
+  },
+  {
+   "id": "H2",
+   "name": "objective mismatch",
+   "claim": "next-token imitation of whole tests does not optimise oracle correctness; it shifts input choice more than value prediction",
+   "mediator": "P(disc | execute) up and P(correct oracle | disc) flat or down under SFT",
+   "supporting_signature": [
+    "Phase 2: SFT raises P(disc|execute) while P(correct oracle|disc) falls",
+    "Phase 4: oracle-only or verifier-filtered supervision raises P(correct oracle|disc) >= 5 points where arm-A-style SFT does not"
+   ],
+   "weakening_signature": [
+    "Phase 2: SFT raises P(correct oracle | disc)"
+   ],
+   "decisive_test": "Phase 2, then a Phase 4 single-factor arm",
+   "status": "open",
+   "evidence": []
+  },
+  {
+   "id": "H3",
+   "name": "adapter/model capacity",
+   "claim": "a 1.5B model with the current LoRA cannot acquire execution semantics",
+   "mediator": "output-prediction accuracy on fixed discriminating inputs",
+   "supporting_signature": [
+    "Probe C: a larger or full-capacity model raises constrained output-prediction accuracy while the 1.5B adapters do not"
+   ],
+   "weakening_signature": [
+    "Probe C: a larger model does not beat 1.5B base on constrained output prediction"
+   ],
+   "decisive_test": "Phase 3 Probe C",
+   "status": "open",
+   "evidence": []
+  },
+  {
+   "id": "H4",
+   "name": "dataset-distribution shift",
+   "claim": "synthetic supervision does not represent the evaluated behaviour; gains stay on the training distribution",
+   "mediator": "train-vs-held-out gap in P(correct oracle | disc) for the same checkpoint",
+   "supporting_signature": [
+    "SFT raises P(correct oracle|disc) on training functions but not on held-out functions"
+   ],
+   "weakening_signature": [
+    "SFT does not raise P(correct oracle|disc) even on its own training functions"
+   ],
+   "decisive_test": "Phase 3 (SFT generations on train functions)",
+   "status": "open",
+   "evidence": []
+  },
+  {
+   "id": "H5",
+   "name": "contract degradation",
+   "claim": "SFT damages output form (parse, policy, execution, verbosity, non-answers) and that causes the validity loss",
+   "mediator": "P(parse), P(execute|parse), policy-invalid rate, assertion count",
+   "supporting_signature": [
+    "Phase 2: the validity loss sits in parse/execute/contract stages",
+    "Probe B: constrained output recovers validity and Kill@8"
+   ],
+   "weakening_signature": [
+    "Phase 2: parse and execution are unchanged or better and the validity loss sits at the oracle stage"
+   ],
+   "decisive_test": "Phase 2, then Probe B",
+   "status": "open",
+   "evidence": []
+  },
+  {
+   "id": "H6",
+   "name": "overfitting / forgetting",
+   "claim": "training fits development-specific patterns and loses broadly useful base behaviour as steps increase",
+   "mediator": "P(correct oracle | disc) and diversity along the training trajectory",
+   "supporting_signature": [
+    "Phase 2 trajectory: the conditional oracle rate declines with steps while training loss falls",
+    "the decline is steepest where diversity collapses (duplicates rise)"
+   ],
+   "weakening_signature": [
+    "the conditional oracle rate is flat or rising across steps"
+   ],
+   "decisive_test": "Phase 2 trajectory, then regularised-replay arm",
+   "status": "open",
+   "evidence": []
+  },
+  {
+   "id": "H7",
+   "name": "insufficient evaluation power",
+   "claim": "+3.43 points may be real but unresolvable at the available cluster count",
+   "mediator": "cluster-bootstrap interval width of the Kill@8 difference",
+   "supporting_signature": [
+    "the clustered 95% interval of the Kill@8 difference includes both 0 and +3 points"
+   ],
+   "weakening_signature": [
+    "the clustered interval excludes +3 points (either side)"
+   ],
+   "decisive_test": "Phase 2 clustered inference plus a minimum-detectable-effect calculation",
+   "status": "open",
+   "evidence": []
+  }
+ ]
+}

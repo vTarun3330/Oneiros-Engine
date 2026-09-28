@@ -126,3 +126,7 @@ data/corpus/*/development_view/
 # fuzz target raises. The Atheris driver now runs each target in a scratch dir,
 # but an interrupted or hand-run harness can still drop one here.
 crash-*
+# SFT root-cause loop: protocol state, hypotheses and phase receipts are small
+# and must be reproducible from the repository; the ledgers they hash stay local.
+!results/sft_root_cause_*.json
+!results/sft_root_cause_*.md

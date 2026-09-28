@@ -1,0 +1,69 @@
+{
+ "schema_version": "oneiros_sft_root_cause_state_v1",
+ "protocol": "docs/SFT_ROOT_CAUSE_PROTOCOL.md",
+ "hypotheses": "results/sft_root_cause_hypotheses.json",
+ "terminal_state": null,
+ "current_phase": 1,
+ "phases": [
+  {
+   "phase": 0,
+   "name": "freeze",
+   "status": "complete",
+   "completed_utc": "2026-09-28",
+   "evidence": {
+    "head": "e56af51808562ec179d238425881e0c51fa4eb52",
+    "origin_equal": true,
+    "clean_tree": true,
+    "full_suite": "2042 passed, 3 skipped (261.7 s)",
+    "gpu": "RTX 4500 Ada, 521/24570 MiB, 0% utilisation, no job running"
+   }
+  },
+  {
+   "phase": 1,
+   "name": "candidate-level causal ledger",
+   "status": "in_progress"
+  },
+  {
+   "phase": 2,
+   "name": "decomposition",
+   "status": "pending"
+  },
+  {
+   "phase": 3,
+   "name": "cheap causal probes",
+   "status": "pending"
+  },
+  {
+   "phase": 4,
+   "name": "single-factor training arm",
+   "status": "pending"
+  },
+  {
+   "phase": 5,
+   "name": "mediator gate",
+   "status": "pending"
+  },
+  {
+   "phase": 6,
+   "name": "independent confirmation",
+   "status": "pending"
+  }
+ ],
+ "budget": {
+  "phase3_gpu_hours": 12,
+  "phase4_arms_max": 3,
+  "phase4_gpu_hours_per_arm": 8,
+  "phase6_gpu_hours": 6,
+  "gpu_hours_used": 0.0
+ },
+ "data_status": {
+  "val": "spent (descriptive only)",
+  "ablation_dev": "spent (descriptive only)",
+  "test": "consumed (never read)",
+  "sealed_final": "never read",
+  "reserved_confirmation": "never read",
+  "train": "available"
+ },
+ "quarantined_artifacts": [],
+ "log": []
+}
