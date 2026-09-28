@@ -34,17 +34,32 @@ LEVEL_DEFINITIONS = {
     "A1": ("NOT RUN: the records' specification already is the full public upstream "
            "statement; no additional public docstring or type information exists"),
     "A2": "NOT APPLICABLE: synthetic function records have no repository context",
-    # Relabelled 2026-09-28 (Phase 3 correction).  The frozen v1 cohort and design
-    # receipts keep their original wording so their hashes stay valid.
+    # FROZEN v1 wording.  It is written into the Phase 3A cohort under
+    # PROBE_SCHEMA_VERSION "oneiros_fixed_input_probe_v1" and must stay byte-identical so
+    # the freezer reproduces that cohort.  Its A3/A4 descriptions are scientifically
+    # superseded: use CORRECTED_LEVEL_LABELS for any interpretation.
+    "A3": ("A0 plus a semantic invariant that does not reveal the value: the result's Python "
+           "type, and its length for sized results"),
+    "A4": ("DIAGNOSTIC, NON-DEPLOYABLE upper bound: the fixed implementation is shown instead "
+           "of the buggy one (pure execution reasoning); never used for training or "
+           "confirmation"),
+    CONTROL_LEVEL: ("schema/extraction control: A0 information, no prefill, answer requested as "
+                    "one line 'ANSWER: <Python literal>'"),
+}
+
+#: Corrected scientific labels (Phase 3 corrections, 2026-09-28).  Analysis
+#: metadata only; never written into v1 cohort metadata.
+CORRECTED_LEVEL_LABELS = {
+    "A0": "production information (buggy code under test and record specification)",
     "A3": ("DIAGNOSTIC, oracle-derived partial behavioural hint: the correct result's type "
            "and, where sized, its correct length (computed from the reference output); does "
            "not expose the complete value; non-deployable; prohibited from training and "
            "confirmation"),
     "A4": ("DIAGNOSTIC, NON-DEPLOYABLE: access to the complete fixed implementation instead of "
-           "the buggy one; changes far more than specification detail; never used for training "
-           "or confirmation"),
-    CONTROL_LEVEL: ("schema/extraction control: A0 information, no prefill, answer requested as "
-                    "one line 'ANSWER: <Python literal>'"),
+           "the buggy one; changes far more than specification detail; not an identifying "
+           "manipulation of public specification quality; never used for training or "
+           "confirmation"),
+    CONTROL_LEVEL: "A0 information with the one-line 'ANSWER: <literal>' schema (no prefill)",
 }
 
 

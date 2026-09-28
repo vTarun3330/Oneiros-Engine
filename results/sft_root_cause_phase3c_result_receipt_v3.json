@@ -1,0 +1,670 @@
+{
+ "branch": "experiment/research-eval-ablations",
+ "cells": {
+  "arm_a_431/A0": {
+   "accuracy": 0.2854,
+   "answer_rate": 1.0,
+   "correct": 137,
+   "items": 480,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "arm_a_431/A0_answer_schema": {
+   "accuracy": 0.3187,
+   "answer_rate": 1.0,
+   "correct": 153,
+   "items": 480,
+   "methods": {
+    "strict": 480
+   }
+  },
+  "arm_a_431/A3": {
+   "accuracy": 0.2979,
+   "answer_rate": 0.9958,
+   "correct": 143,
+   "items": 480,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "arm_a_431/A4": {
+   "accuracy": 0.3375,
+   "answer_rate": 1.0,
+   "correct": 162,
+   "items": 480,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "base/A0": {
+   "accuracy": 0.2708,
+   "answer_rate": 1.0,
+   "correct": 130,
+   "items": 480,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "base/A0_answer_schema": {
+   "accuracy": 0.2917,
+   "answer_rate": 1.0,
+   "correct": 140,
+   "items": 480,
+   "methods": {
+    "strict": 480
+   }
+  },
+  "base/A3": {
+   "accuracy": 0.2667,
+   "answer_rate": 1.0,
+   "correct": 128,
+   "items": 480,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "base/A4": {
+   "accuracy": 0.3312,
+   "answer_rate": 1.0,
+   "correct": 159,
+   "items": 480,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "qwen7b_base/A0": {
+   "accuracy": 0.3854,
+   "answer_rate": 1.0,
+   "correct": 185,
+   "items": 480,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "qwen7b_base/A0_answer_schema": {
+   "accuracy": 0.4437,
+   "answer_rate": 1.0,
+   "correct": 213,
+   "items": 480,
+   "methods": {
+    "strict": 480
+   }
+  },
+  "qwen7b_base/A3": {
+   "accuracy": 0.3979,
+   "answer_rate": 1.0,
+   "correct": 191,
+   "items": 480,
+   "methods": {
+    "prefill_line": 480
+   }
+  },
+  "qwen7b_base/A4": {
+   "accuracy": 0.5792,
+   "answer_rate": 1.0,
+   "correct": 278,
+   "items": 480,
+   "methods": {
+    "prefill_line": 480
+   }
+  }
+ },
+ "command": "python scripts/analyze_capacity_probe_v3.py",
+ "duration_seconds": 2.7,
+ "gate": {
+  "control_strict_rate": 1.0,
+  "frozen_in": "results/sft_root_cause_phase3c_design_receipt.json",
+  "margin": 0.02,
+  "passed": true,
+  "per_level": {
+   "A0": {
+    "large": 1.0,
+    "non_inferior": true,
+    "small": 1.0
+   },
+   "A3": {
+    "large": 1.0,
+    "non_inferior": true,
+    "small": 1.0
+   },
+   "A4": {
+    "large": 1.0,
+    "non_inferior": true,
+    "small": 1.0
+   }
+  },
+  "recomputed_from_rows": true,
+  "strict_min": 0.95
+ },
+ "gpu_used": false,
+ "inference": {
+  "intervals": "paired cluster bootstrap over semantic group_id on exactly paired items, 10000 resamples, seed 20260928",
+  "tests": "paired semantic-group sign-flip, Monte Carlo p = (extreme + 1) / (resamples + 1), Holm across the frozen C1/C2 family"
+ },
+ "interpretation": {
+  "A3": "this particular oracle-derived type/length hint did not measurably improve accuracy at 7B",
+  "H3": {
+   "not_established": "parameter count, LoRA rank, adapter capacity, pretraining data or recipe as the causal factor",
+   "qualifier": "model_scale_association",
+   "statement": "Within the Qwen2.5-Coder family, the 7B checkpoint is substantially better than the 1.5B checkpoint on this fixed-input panel.",
+   "status": "strengthened"
+  },
+  "available": true,
+  "within_7b_A4_minus_A0": "+19.38 points is a within-7B contrast (fixed implementation vs production information); it is not the +24.79 7B-minus-1.5B A4 contrast and does not show that specification became the binding limit at 7B"
+ },
+ "level_labels": {
+  "A0": "production information (buggy code under test and record specification)",
+  "A0_answer_schema": "A0 information with the one-line 'ANSWER: <literal>' schema (no prefill)",
+  "A3": "DIAGNOSTIC, oracle-derived partial behavioural hint: the correct result's type and, where sized, its correct length (computed from the reference output); does not expose the complete value; non-deployable; prohibited from training and confirmation",
+  "A4": "DIAGNOSTIC, NON-DEPLOYABLE: access to the complete fixed implementation instead of the buggy one; changes far more than specification detail; not an identifying manipulation of public specification quality; never used for training or confirmation"
+ },
+ "model_calls": 0,
+ "phase": "3C",
+ "primary": {
+  "C1_A4": {
+   "a": {
+    "accuracy": 0.3312,
+    "cell": [
+     "base",
+     "A4"
+    ],
+    "correct": 159,
+    "items": 480
+   },
+   "b": {
+    "accuracy": 0.5792,
+    "cell": [
+     "qwen7b_base",
+     "A4"
+    ],
+    "correct": 278,
+    "items": 480
+   },
+   "ci95_points": [
+    19.375,
+    30.417
+   ],
+   "ci97.5_points": [
+    18.542,
+    31.25
+   ],
+   "difference_points": 24.792,
+   "groups": 240,
+   "meaningful_effect_frozen_rule": {
+    "clears_5_points_per_contrast": true,
+    "familywise_claim": "none: the frozen intervals are ordinary per-contrast intervals",
+    "lower_bound_points": 19.375,
+    "multiplicity_adjusted": false,
+    "rule": "per-contrast 95% cluster-bootstrap lower bound >= +5 points (frozen)"
+   },
+   "paired_items": 480,
+   "post_hoc_sensitivity_bonferroni_97_5": {
+    "interval_points": [
+     18.542,
+     31.25
+    ],
+    "label": "POST HOC sensitivity, not part of the frozen analysis",
+    "lower_bound_clears_5": true
+   },
+   "sign_flip": {
+    "extreme": 0,
+    "groups": 240,
+    "monte_carlo_p": 9.999000099990002e-05,
+    "paired_items": 480,
+    "report": "Monte Carlo p = 0.00010; 0/10000 sampled permutations were as extreme; 0.00010 is the minimum reportable resolution at this resample count.",
+    "resamples": 10000
+   },
+   "zero_effect": {
+    "family": "C1 and C2 (frozen)",
+    "holm_adjusted_monte_carlo_p": 0.0002,
+    "resolution_note": "adjusted from Monte Carlo p-values at the minimum reportable resolution (0/10000 as extreme); it is a Monte Carlo value, not an exact p",
+    "statement": "evidence against a zero effect only; it does not establish an effect of at least 5 points"
+   }
+  },
+  "C2_A0": {
+   "a": {
+    "accuracy": 0.2708,
+    "cell": [
+     "base",
+     "A0"
+    ],
+    "correct": 130,
+    "items": 480
+   },
+   "b": {
+    "accuracy": 0.3854,
+    "cell": [
+     "qwen7b_base",
+     "A0"
+    ],
+    "correct": 185,
+    "items": 480
+   },
+   "ci95_points": [
+    6.458,
+    16.667
+   ],
+   "ci97.5_points": [
+    5.833,
+    17.292
+   ],
+   "difference_points": 11.458,
+   "groups": 240,
+   "meaningful_effect_frozen_rule": {
+    "clears_5_points_per_contrast": true,
+    "familywise_claim": "none: the frozen intervals are ordinary per-contrast intervals",
+    "lower_bound_points": 6.458,
+    "multiplicity_adjusted": false,
+    "rule": "per-contrast 95% cluster-bootstrap lower bound >= +5 points (frozen)"
+   },
+   "paired_items": 480,
+   "post_hoc_sensitivity_bonferroni_97_5": {
+    "interval_points": [
+     5.833,
+     17.292
+    ],
+    "label": "POST HOC sensitivity, not part of the frozen analysis",
+    "lower_bound_clears_5": true
+   },
+   "sign_flip": {
+    "extreme": 0,
+    "groups": 240,
+    "monte_carlo_p": 9.999000099990002e-05,
+    "paired_items": 480,
+    "report": "Monte Carlo p = 0.00010; 0/10000 sampled permutations were as extreme; 0.00010 is the minimum reportable resolution at this resample count.",
+    "resamples": 10000
+   },
+   "zero_effect": {
+    "family": "C1 and C2 (frozen)",
+    "holm_adjusted_monte_carlo_p": 0.0002,
+    "resolution_note": "adjusted from Monte Carlo p-values at the minimum reportable resolution (0/10000 as extreme); it is a Monte Carlo value, not an exact p",
+    "statement": "evidence against a zero effect only; it does not establish an effect of at least 5 points"
+   }
+  }
+ },
+ "primary_suppressed_because_gate_failed": false,
+ "provenance": {
+  "cohort": {
+   "results/sft_root_cause_phase3a_cohort.json": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7"
+  },
+  "design_receipts": {
+   "results/sft_root_cause_phase3a_design_receipt.json": "d85249b264c00bb330ec2f1313b09ce292433de2386b4674c479af1ee5181d46",
+   "results/sft_root_cause_phase3c_design_receipt.json": "fbdfef6bca0f347ef6b8531810d679eb4446ff8bc80c1fd7ae57708534060858"
+  },
+  "generations": {
+   "arm_a_431": {
+    "adapter_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+    "completion_receipt": "results/sft_root_cause/phase3a/completion_arm_a_431.json",
+    "completion_receipt_sha256": "a9097b9e3cc65f412fa482d6153eab284f215741bed34335ed067a7707c14641",
+    "generations": 1920,
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "output": "results/sft_root_cause/phase3a/generations_arm_a_431.jsonl",
+    "output_sha256": "2caa6659a73df3aceeaea13ff0c91eef3e32b0e6032dbdb92d0cdee46250356c",
+    "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+   },
+   "base": {
+    "adapter_sha256": null,
+    "completion_receipt": "results/sft_root_cause/phase3a/completion_base.json",
+    "completion_receipt_sha256": "8beaa97ab0279afdc789b6fde4bc249614ca8296397b0d3ec4628c3c6cf43657",
+    "generations": 1920,
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "output": "results/sft_root_cause/phase3a/generations_base.jsonl",
+    "output_sha256": "e41bdf29533210e16a64997161cded1806a77079edf436bbb61f326ab4a46583",
+    "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+   },
+   "qwen7b_base": {
+    "adapter_sha256": null,
+    "completion_receipt": "results/sft_root_cause/phase3c/completion_qwen7b_base.json",
+    "completion_receipt_sha256": "07f2113755841382e7d1256d03fbc07f8893c9e5bffe70164a2e6158ea983805",
+    "generations": 1920,
+    "model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "output": "results/sft_root_cause/phase3c/generations_qwen7b_base.jsonl",
+    "output_sha256": "722a70c019180f4733f63af48982e43639af897d54bf4ceaefb4b17ce735124a",
+    "revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242"
+   }
+  },
+  "record_shard": {
+   "data/corpus/v4_1_research_hardened_candidate/development_view/train.records.json": "d3507cba9dbd78b36b1e704275cb245811dc62e4669ed582a0c34fab157d3908"
+  },
+  "sources": {
+   "engine/test_generation_prompt.py": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+   "harness/fixed_input_probe.py": "0d26313e620bdb8bada676387e4f5b3f982ba1ce164ac200ccd42f0f67e53cc5",
+   "harness/fixed_input_rescoring.py": "9c09a5278baf1a8e8424d634c619579ccaa3831ac62e6488d7eb3e8395c531ce",
+   "harness/probe_statistics.py": "2c3556daee65c5f1ea62306057978df9f9bba29fb59f276db3eac4b8df67093f",
+   "harness/safe_execution.py": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+   "scripts/analyze_capacity_probe_v3.py": "59bfae390e1db51d217cb3d2dbec115291db5eb0505eca9db43c64d8e81396c4"
+  },
+  "supersedes": {
+   "results/sft_root_cause_phase3c_result_receipt.json": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3",
+   "results/sft_root_cause_phase3c_result_receipt_v2.json": "f622bbb51af8e0e378c3de1c7989c4b47b6c457160b6a1dadaa02ba3777fca25"
+  },
+  "v1_v2_modified": false
+ },
+ "rescoring": {
+  "canonical_scored_rows_sha256": "acbf76c31a76b1b11b9439cdf90f3065dcc5d0410b191c26e16f98425e20aa33",
+  "duplicates": 0,
+  "expected_rows": 5760,
+  "fields": [
+   "arm",
+   "level",
+   "item_key",
+   "group_id",
+   "answer",
+   "method",
+   "correct",
+   "status",
+   "hit_token_limit"
+  ],
+  "numerical_changes": {
+   "everything_else": "unchanged",
+   "exploratory_subgroup_intervals": {
+    "C1_by_cohort/exposed": {
+     "v1_ci95_resampling_all_240_groups": [
+      11.904,
+      28.39
+     ],
+     "v3_ci95_resampling_subgroup_groups_only": [
+      12.083,
+      28.333
+     ]
+    },
+    "C1_by_cohort/unexposed": {
+     "v1_ci95_resampling_all_240_groups": [
+      22.273,
+      37.398
+     ],
+     "v3_ci95_resampling_subgroup_groups_only": [
+      22.083,
+      37.083
+     ]
+    },
+    "C2_by_tier/moderate": {
+     "v1_ci95_resampling_all_240_groups": [
+      8.416,
+      24.123
+     ],
+     "v3_ci95_resampling_subgroup_groups_only": [
+      8.333,
+      24.074
+     ]
+    },
+    "C2_by_tier/simple": {
+     "v1_ci95_resampling_all_240_groups": [
+      1.056,
+      14.341
+     ],
+     "v3_ci95_resampling_subgroup_groups_only": [
+      1.127,
+      14.394
+     ]
+    }
+   },
+   "why": "v1's subgroup bootstrap resampled all 240 semantic groups (non-members contribute zero, so the subgroup's size was random); v3 resamples the subgroup's own groups, as v2 and every other v3 contrast do. Point estimates are identical; only these exploratory intervals move, by at most ~0.3 points"
+  },
+  "reconciliation": {
+   "fields_compared": 85,
+   "mismatches": []
+  },
+  "reproduction": "all retained v1 aggregate statistics and the v1 gate reproduced; all v2 primary and secondary contrasts, intervals and permutation counts reproduced; exact row-level reproduction of v1 is not claimed (v1 kept no row hash)",
+  "rows": 5760,
+  "unique_keys": 5760
+ },
+ "restricted_splits_accessed": "none (frozen cohort, train shard and retained Phase 3 generations only)",
+ "schema_version": "oneiros_sft_root_cause_phase3c_result_v3",
+ "secondary_exploratory": {
+  "contrasts": {
+   "7b_A3_minus_A0": {
+    "a": {
+     "accuracy": 0.3854,
+     "cell": [
+      "qwen7b_base",
+      "A0"
+     ],
+     "correct": 185,
+     "items": 480
+    },
+    "b": {
+     "accuracy": 0.3979,
+     "cell": [
+      "qwen7b_base",
+      "A3"
+     ],
+     "correct": 191,
+     "items": 480
+    },
+    "ci95_points": [
+     -1.042,
+     3.542
+    ],
+    "difference_points": 1.25,
+    "groups": 240,
+    "paired_items": 480
+   },
+   "7b_A4_minus_A0": {
+    "a": {
+     "accuracy": 0.3854,
+     "cell": [
+      "qwen7b_base",
+      "A0"
+     ],
+     "correct": 185,
+     "items": 480
+    },
+    "b": {
+     "accuracy": 0.5792,
+     "cell": [
+      "qwen7b_base",
+      "A4"
+     ],
+     "correct": 278,
+     "items": 480
+    },
+    "ci95_points": [
+     14.792,
+     24.167
+    ],
+    "difference_points": 19.375,
+    "groups": 240,
+    "paired_items": 480
+   },
+   "7b_minus_1_5b_answer_schema": {
+    "a": {
+     "accuracy": 0.2917,
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "correct": 140,
+     "items": 480
+    },
+    "b": {
+     "accuracy": 0.4437,
+     "cell": [
+      "qwen7b_base",
+      "A0_answer_schema"
+     ],
+     "correct": 213,
+     "items": 480
+    },
+    "ci95_points": [
+     9.792,
+     20.417
+    ],
+    "difference_points": 15.208,
+    "groups": 240,
+    "paired_items": 480
+   },
+   "7b_minus_arm_a_A0": {
+    "a": {
+     "accuracy": 0.2854,
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "correct": 137,
+     "items": 480
+    },
+    "b": {
+     "accuracy": 0.3854,
+     "cell": [
+      "qwen7b_base",
+      "A0"
+     ],
+     "correct": 185,
+     "items": 480
+    },
+    "ci95_points": [
+     4.792,
+     15.208
+    ],
+    "difference_points": 10.0,
+    "groups": 240,
+    "paired_items": 480
+   },
+   "7b_minus_arm_a_A4": {
+    "a": {
+     "accuracy": 0.3375,
+     "cell": [
+      "arm_a_431",
+      "A4"
+     ],
+     "correct": 162,
+     "items": 480
+    },
+    "b": {
+     "accuracy": 0.5792,
+     "cell": [
+      "qwen7b_base",
+      "A4"
+     ],
+     "correct": 278,
+     "items": 480
+    },
+    "ci95_points": [
+     18.125,
+     30.208
+    ],
+    "difference_points": 24.167,
+    "groups": 240,
+    "paired_items": 480
+   },
+   "C1_by_cohort": {
+    "exposed": {
+     "a": {
+      "accuracy": 0.3417,
+      "cell": [
+       "base",
+       "A4"
+      ],
+      "correct": 82,
+      "items": 240
+     },
+     "b": {
+      "accuracy": 0.5417,
+      "cell": [
+       "qwen7b_base",
+       "A4"
+      ],
+      "correct": 130,
+      "items": 240
+     },
+     "ci95_points": [
+      12.083,
+      28.333
+     ],
+     "difference_points": 20.0,
+     "groups": 120,
+     "paired_items": 240
+    },
+    "unexposed": {
+     "a": {
+      "accuracy": 0.3208,
+      "cell": [
+       "base",
+       "A4"
+      ],
+      "correct": 77,
+      "items": 240
+     },
+     "b": {
+      "accuracy": 0.6167,
+      "cell": [
+       "qwen7b_base",
+       "A4"
+      ],
+      "correct": 148,
+      "items": 240
+     },
+     "ci95_points": [
+      22.083,
+      37.083
+     ],
+     "difference_points": 29.583,
+     "groups": 120,
+     "paired_items": 240
+    }
+   },
+   "C2_by_tier": {
+    "moderate": {
+     "a": {
+      "accuracy": 0.2546,
+      "cell": [
+       "base",
+       "A0"
+      ],
+      "correct": 55,
+      "items": 216
+     },
+     "b": {
+      "accuracy": 0.4167,
+      "cell": [
+       "qwen7b_base",
+       "A0"
+      ],
+      "correct": 90,
+      "items": 216
+     },
+     "ci95_points": [
+      8.333,
+      24.074
+     ],
+     "difference_points": 16.204,
+     "groups": 108,
+     "paired_items": 216
+    },
+    "simple": {
+     "a": {
+      "accuracy": 0.2841,
+      "cell": [
+       "base",
+       "A0"
+      ],
+      "correct": 75,
+      "items": 264
+     },
+     "b": {
+      "accuracy": 0.3598,
+      "cell": [
+       "qwen7b_base",
+       "A0"
+      ],
+      "correct": 95,
+      "items": 264
+     },
+     "ci95_points": [
+      1.127,
+      14.394
+     ],
+     "difference_points": 7.576,
+     "groups": 132,
+     "paired_items": 264
+    }
+   }
+  },
+  "label": "EXPLORATORY: clustered intervals and denominators; no confirmatory p-value claims"
+ },
+ "starting_commit": "2e7ddbaff0418dae7485a3c25b1e7f00decfb42e",
+ "training": false,
+ "version": 3
+}

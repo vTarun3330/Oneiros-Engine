@@ -1,0 +1,1963 @@
+{
+ "branch": "experiment/research-eval-ablations",
+ "command": "python scripts/analyze_fixed_input_probe_v3.py",
+ "decisions": {
+  "A3": "this particular oracle-derived type/length hint did not measurably improve accuracy",
+  "A4": "access to the correct implementation improves fixed-input prediction",
+  "H1": {
+   "status": "open",
+   "why": "A1 and A2 were not run; A3 shows only that this oracle-derived type/length hint was insufficient; A4 reveals the complete fixed implementation and is not an identifying manipulation of public specification quality"
+  },
+  "H4": {
+   "distribution_shift": "open: no external diagnostic cohort exists",
+   "qualifier": "schema_dependent_exposure_result",
+   "route": [
+    "exposed_schema_check"
+   ],
+   "status": "open",
+   "verdict": "inconclusive: the exposed result is answer-schema dependent"
+  }
+ },
+ "declared_family_zero_effect_tests": {
+  "H1_arm_a_A3_minus_A0": {
+   "a": {
+    "accuracy": 0.2854,
+    "cell": [
+     "arm_a_431",
+     "A0"
+    ],
+    "correct": 137,
+    "items": 480
+   },
+   "b": {
+    "accuracy": 0.2979,
+    "cell": [
+     "arm_a_431",
+     "A3"
+    ],
+    "correct": 143,
+    "items": 480
+   },
+   "ci95_points": [
+    -1.458,
+    3.958
+   ],
+   "difference_points": 1.25,
+   "groups": 240,
+   "holm_adjusted_monte_carlo_p": 1.0,
+   "paired_items": 480,
+   "sign_flip": {
+    "extreme": 4527,
+    "groups": 240,
+    "monte_carlo_p": 0.4527547245275472,
+    "paired_items": 480,
+    "report": "Monte Carlo p = 0.45275; 4527/10000 sampled permutations were as extreme.",
+    "resamples": 10000
+   }
+  },
+  "H1_arm_a_A4_minus_A0": {
+   "a": {
+    "accuracy": 0.2854,
+    "cell": [
+     "arm_a_431",
+     "A0"
+    ],
+    "correct": 137,
+    "items": 480
+   },
+   "b": {
+    "accuracy": 0.3375,
+    "cell": [
+     "arm_a_431",
+     "A4"
+    ],
+    "correct": 162,
+    "items": 480
+   },
+   "ci95_points": [
+    2.292,
+    8.333
+   ],
+   "difference_points": 5.208,
+   "groups": 240,
+   "holm_adjusted_monte_carlo_p": 0.007,
+   "paired_items": 480,
+   "sign_flip": {
+    "extreme": 13,
+    "groups": 240,
+    "monte_carlo_p": 0.0013998600139986002,
+    "paired_items": 480,
+    "report": "Monte Carlo p = 0.00140; 13/10000 sampled permutations were as extreme.",
+    "resamples": 10000
+   }
+  },
+  "H1_base_A3_minus_A0": {
+   "a": {
+    "accuracy": 0.2708,
+    "cell": [
+     "base",
+     "A0"
+    ],
+    "correct": 130,
+    "items": 480
+   },
+   "b": {
+    "accuracy": 0.2667,
+    "cell": [
+     "base",
+     "A3"
+    ],
+    "correct": 128,
+    "items": 480
+   },
+   "ci95_points": [
+    -3.125,
+    2.292
+   ],
+   "difference_points": -0.417,
+   "groups": 240,
+   "holm_adjusted_monte_carlo_p": 1.0,
+   "paired_items": 480,
+   "sign_flip": {
+    "extreme": 8817,
+    "groups": 240,
+    "monte_carlo_p": 0.8817118288171183,
+    "paired_items": 480,
+    "report": "Monte Carlo p = 0.88171; 8817/10000 sampled permutations were as extreme.",
+    "resamples": 10000
+   }
+  },
+  "H1_base_A4_minus_A0": {
+   "a": {
+    "accuracy": 0.2708,
+    "cell": [
+     "base",
+     "A0"
+    ],
+    "correct": 130,
+    "items": 480
+   },
+   "b": {
+    "accuracy": 0.3312,
+    "cell": [
+     "base",
+     "A4"
+    ],
+    "correct": 159,
+    "items": 480
+   },
+   "ci95_points": [
+    3.125,
+    9.167
+   ],
+   "difference_points": 6.042,
+   "groups": 240,
+   "holm_adjusted_monte_carlo_p": 0.0012,
+   "paired_items": 480,
+   "sign_flip": {
+    "extreme": 1,
+    "groups": 240,
+    "monte_carlo_p": 0.00019998000199980003,
+    "paired_items": 480,
+    "report": "Monte Carlo p = 0.00020; 1/10000 sampled permutations were as extreme.",
+    "resamples": 10000
+   }
+  },
+  "H4_exposed_A0_sft_minus_base": {
+   "a": {
+    "accuracy": 0.2875,
+    "cell": [
+     "base",
+     "A0"
+    ],
+    "correct": 69,
+    "items": 240
+   },
+   "b": {
+    "accuracy": 0.2708,
+    "cell": [
+     "arm_a_431",
+     "A0"
+    ],
+    "correct": 65,
+    "items": 240
+   },
+   "ci95_points": [
+    -7.5,
+    4.167
+   ],
+   "difference_points": -1.667,
+   "groups": 120,
+   "holm_adjusted_monte_carlo_p": 1.0,
+   "paired_items": 240,
+   "sign_flip": {
+    "extreme": 6869,
+    "groups": 120,
+    "monte_carlo_p": 0.686931306869313,
+    "paired_items": 240,
+    "report": "Monte Carlo p = 0.68693; 6869/10000 sampled permutations were as extreme.",
+    "resamples": 10000
+   }
+  },
+  "H4_unexposed_A0_sft_minus_base": {
+   "a": {
+    "accuracy": 0.2542,
+    "cell": [
+     "base",
+     "A0"
+    ],
+    "correct": 61,
+    "items": 240
+   },
+   "b": {
+    "accuracy": 0.3,
+    "cell": [
+     "arm_a_431",
+     "A0"
+    ],
+    "correct": 72,
+    "items": 240
+   },
+   "ci95_points": [
+    -0.833,
+    10.417
+   ],
+   "difference_points": 4.583,
+   "groups": 120,
+   "holm_adjusted_monte_carlo_p": 0.58554,
+   "paired_items": 240,
+   "sign_flip": {
+    "extreme": 1463,
+    "groups": 120,
+    "monte_carlo_p": 0.1463853614638536,
+    "paired_items": 240,
+    "report": "Monte Carlo p = 0.14639; 1463/10000 sampled permutations were as extreme.",
+    "resamples": 10000
+   }
+  }
+ },
+ "descriptive": {
+  "all": {
+   "arm_a_431/A0": {
+    "accuracy_per_answered": 0.2854,
+    "accuracy_per_requested": 0.2854,
+    "answer_rate": 1.0,
+    "correct": 137,
+    "extraction_methods": {
+     "prefill_line": 480
+    },
+    "items": 480,
+    "nonanswers": 0,
+    "token_limit_hits": 6
+   },
+   "arm_a_431/A0_answer_schema": {
+    "accuracy_per_answered": 0.3187,
+    "accuracy_per_requested": 0.3187,
+    "answer_rate": 1.0,
+    "correct": 153,
+    "extraction_methods": {
+     "strict": 480
+    },
+    "items": 480,
+    "nonanswers": 0,
+    "token_limit_hits": 1
+   },
+   "arm_a_431/A3": {
+    "accuracy_per_answered": 0.2992,
+    "accuracy_per_requested": 0.2979,
+    "answer_rate": 0.9958,
+    "correct": 143,
+    "extraction_methods": {
+     "prefill_line": 480
+    },
+    "items": 480,
+    "nonanswers": 2,
+    "token_limit_hits": 11
+   },
+   "arm_a_431/A4": {
+    "accuracy_per_answered": 0.3375,
+    "accuracy_per_requested": 0.3375,
+    "answer_rate": 1.0,
+    "correct": 162,
+    "extraction_methods": {
+     "prefill_line": 480
+    },
+    "items": 480,
+    "nonanswers": 0,
+    "token_limit_hits": 5
+   },
+   "base/A0": {
+    "accuracy_per_answered": 0.2708,
+    "accuracy_per_requested": 0.2708,
+    "answer_rate": 1.0,
+    "correct": 130,
+    "extraction_methods": {
+     "prefill_line": 480
+    },
+    "items": 480,
+    "nonanswers": 0,
+    "token_limit_hits": 7
+   },
+   "base/A0_answer_schema": {
+    "accuracy_per_answered": 0.2917,
+    "accuracy_per_requested": 0.2917,
+    "answer_rate": 1.0,
+    "correct": 140,
+    "extraction_methods": {
+     "strict": 480
+    },
+    "items": 480,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A3": {
+    "accuracy_per_answered": 0.2667,
+    "accuracy_per_requested": 0.2667,
+    "answer_rate": 1.0,
+    "correct": 128,
+    "extraction_methods": {
+     "prefill_line": 480
+    },
+    "items": 480,
+    "nonanswers": 0,
+    "token_limit_hits": 6
+   },
+   "base/A4": {
+    "accuracy_per_answered": 0.3312,
+    "accuracy_per_requested": 0.3312,
+    "answer_rate": 1.0,
+    "correct": 159,
+    "extraction_methods": {
+     "prefill_line": 480
+    },
+    "items": 480,
+    "nonanswers": 0,
+    "token_limit_hits": 7
+   }
+  },
+  "exposed": {
+   "arm_a_431/A0": {
+    "accuracy_per_answered": 0.2708,
+    "accuracy_per_requested": 0.2708,
+    "answer_rate": 1.0,
+    "correct": 65,
+    "extraction_methods": {
+     "prefill_line": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 1
+   },
+   "arm_a_431/A0_answer_schema": {
+    "accuracy_per_answered": 0.3167,
+    "accuracy_per_requested": 0.3167,
+    "answer_rate": 1.0,
+    "correct": 76,
+    "extraction_methods": {
+     "strict": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "arm_a_431/A3": {
+    "accuracy_per_answered": 0.2899,
+    "accuracy_per_requested": 0.2875,
+    "answer_rate": 0.9917,
+    "correct": 69,
+    "extraction_methods": {
+     "prefill_line": 240
+    },
+    "items": 240,
+    "nonanswers": 2,
+    "token_limit_hits": 4
+   },
+   "arm_a_431/A4": {
+    "accuracy_per_answered": 0.3167,
+    "accuracy_per_requested": 0.3167,
+    "answer_rate": 1.0,
+    "correct": 76,
+    "extraction_methods": {
+     "prefill_line": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A0": {
+    "accuracy_per_answered": 0.2875,
+    "accuracy_per_requested": 0.2875,
+    "answer_rate": 1.0,
+    "correct": 69,
+    "extraction_methods": {
+     "prefill_line": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   },
+   "base/A0_answer_schema": {
+    "accuracy_per_answered": 0.2667,
+    "accuracy_per_requested": 0.2667,
+    "answer_rate": 1.0,
+    "correct": 64,
+    "extraction_methods": {
+     "strict": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A3": {
+    "accuracy_per_answered": 0.2875,
+    "accuracy_per_requested": 0.2875,
+    "answer_rate": 1.0,
+    "correct": 69,
+    "extraction_methods": {
+     "prefill_line": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   },
+   "base/A4": {
+    "accuracy_per_answered": 0.3417,
+    "accuracy_per_requested": 0.3417,
+    "answer_rate": 1.0,
+    "correct": 82,
+    "extraction_methods": {
+     "prefill_line": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   }
+  },
+  "exposed_novel": {
+   "arm_a_431/A0": {
+    "accuracy_per_answered": 0.2667,
+    "accuracy_per_requested": 0.2667,
+    "answer_rate": 1.0,
+    "correct": 32,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "arm_a_431/A0_answer_schema": {
+    "accuracy_per_answered": 0.3,
+    "accuracy_per_requested": 0.3,
+    "answer_rate": 1.0,
+    "correct": 36,
+    "extraction_methods": {
+     "strict": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "arm_a_431/A3": {
+    "accuracy_per_answered": 0.2941,
+    "accuracy_per_requested": 0.2917,
+    "answer_rate": 0.9917,
+    "correct": 35,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 1,
+    "token_limit_hits": 2
+   },
+   "arm_a_431/A4": {
+    "accuracy_per_answered": 0.325,
+    "accuracy_per_requested": 0.325,
+    "answer_rate": 1.0,
+    "correct": 39,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A0": {
+    "accuracy_per_answered": 0.2667,
+    "accuracy_per_requested": 0.2667,
+    "answer_rate": 1.0,
+    "correct": 32,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 1
+   },
+   "base/A0_answer_schema": {
+    "accuracy_per_answered": 0.2583,
+    "accuracy_per_requested": 0.2583,
+    "answer_rate": 1.0,
+    "correct": 31,
+    "extraction_methods": {
+     "strict": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A3": {
+    "accuracy_per_answered": 0.3,
+    "accuracy_per_requested": 0.3,
+    "answer_rate": 1.0,
+    "correct": 36,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   },
+   "base/A4": {
+    "accuracy_per_answered": 0.3333,
+    "accuracy_per_requested": 0.3333,
+    "answer_rate": 1.0,
+    "correct": 40,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 1
+   }
+  },
+  "exposed_upstream_sft_target": {
+   "arm_a_431/A0": {
+    "accuracy_per_answered": 0.275,
+    "accuracy_per_requested": 0.275,
+    "answer_rate": 1.0,
+    "correct": 33,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 1
+   },
+   "arm_a_431/A0_answer_schema": {
+    "accuracy_per_answered": 0.3333,
+    "accuracy_per_requested": 0.3333,
+    "answer_rate": 1.0,
+    "correct": 40,
+    "extraction_methods": {
+     "strict": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "arm_a_431/A3": {
+    "accuracy_per_answered": 0.2857,
+    "accuracy_per_requested": 0.2833,
+    "answer_rate": 0.9917,
+    "correct": 34,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 1,
+    "token_limit_hits": 2
+   },
+   "arm_a_431/A4": {
+    "accuracy_per_answered": 0.3083,
+    "accuracy_per_requested": 0.3083,
+    "answer_rate": 1.0,
+    "correct": 37,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A0": {
+    "accuracy_per_answered": 0.3083,
+    "accuracy_per_requested": 0.3083,
+    "answer_rate": 1.0,
+    "correct": 37,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 1
+   },
+   "base/A0_answer_schema": {
+    "accuracy_per_answered": 0.275,
+    "accuracy_per_requested": 0.275,
+    "answer_rate": 1.0,
+    "correct": 33,
+    "extraction_methods": {
+     "strict": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A3": {
+    "accuracy_per_answered": 0.275,
+    "accuracy_per_requested": 0.275,
+    "answer_rate": 1.0,
+    "correct": 33,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A4": {
+    "accuracy_per_answered": 0.35,
+    "accuracy_per_requested": 0.35,
+    "answer_rate": 1.0,
+    "correct": 42,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 1
+   }
+  },
+  "tier_moderate": {
+   "arm_a_431/A0": {
+    "accuracy_per_answered": 0.2778,
+    "accuracy_per_requested": 0.2778,
+    "answer_rate": 1.0,
+    "correct": 60,
+    "extraction_methods": {
+     "prefill_line": 216
+    },
+    "items": 216,
+    "nonanswers": 0,
+    "token_limit_hits": 4
+   },
+   "arm_a_431/A0_answer_schema": {
+    "accuracy_per_answered": 0.3241,
+    "accuracy_per_requested": 0.3241,
+    "answer_rate": 1.0,
+    "correct": 70,
+    "extraction_methods": {
+     "strict": 216
+    },
+    "items": 216,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "arm_a_431/A3": {
+    "accuracy_per_answered": 0.2897,
+    "accuracy_per_requested": 0.287,
+    "answer_rate": 0.9907,
+    "correct": 62,
+    "extraction_methods": {
+     "prefill_line": 216
+    },
+    "items": 216,
+    "nonanswers": 2,
+    "token_limit_hits": 7
+   },
+   "arm_a_431/A4": {
+    "accuracy_per_answered": 0.2963,
+    "accuracy_per_requested": 0.2963,
+    "answer_rate": 1.0,
+    "correct": 64,
+    "extraction_methods": {
+     "prefill_line": 216
+    },
+    "items": 216,
+    "nonanswers": 0,
+    "token_limit_hits": 3
+   },
+   "base/A0": {
+    "accuracy_per_answered": 0.2546,
+    "accuracy_per_requested": 0.2546,
+    "answer_rate": 1.0,
+    "correct": 55,
+    "extraction_methods": {
+     "prefill_line": 216
+    },
+    "items": 216,
+    "nonanswers": 0,
+    "token_limit_hits": 5
+   },
+   "base/A0_answer_schema": {
+    "accuracy_per_answered": 0.287,
+    "accuracy_per_requested": 0.287,
+    "answer_rate": 1.0,
+    "correct": 62,
+    "extraction_methods": {
+     "strict": 216
+    },
+    "items": 216,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A3": {
+    "accuracy_per_answered": 0.2546,
+    "accuracy_per_requested": 0.2546,
+    "answer_rate": 1.0,
+    "correct": 55,
+    "extraction_methods": {
+     "prefill_line": 216
+    },
+    "items": 216,
+    "nonanswers": 0,
+    "token_limit_hits": 3
+   },
+   "base/A4": {
+    "accuracy_per_answered": 0.2824,
+    "accuracy_per_requested": 0.2824,
+    "answer_rate": 1.0,
+    "correct": 61,
+    "extraction_methods": {
+     "prefill_line": 216
+    },
+    "items": 216,
+    "nonanswers": 0,
+    "token_limit_hits": 5
+   }
+  },
+  "tier_simple": {
+   "arm_a_431/A0": {
+    "accuracy_per_answered": 0.2917,
+    "accuracy_per_requested": 0.2917,
+    "answer_rate": 1.0,
+    "correct": 77,
+    "extraction_methods": {
+     "prefill_line": 264
+    },
+    "items": 264,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   },
+   "arm_a_431/A0_answer_schema": {
+    "accuracy_per_answered": 0.3144,
+    "accuracy_per_requested": 0.3144,
+    "answer_rate": 1.0,
+    "correct": 83,
+    "extraction_methods": {
+     "strict": 264
+    },
+    "items": 264,
+    "nonanswers": 0,
+    "token_limit_hits": 1
+   },
+   "arm_a_431/A3": {
+    "accuracy_per_answered": 0.3068,
+    "accuracy_per_requested": 0.3068,
+    "answer_rate": 1.0,
+    "correct": 81,
+    "extraction_methods": {
+     "prefill_line": 264
+    },
+    "items": 264,
+    "nonanswers": 0,
+    "token_limit_hits": 4
+   },
+   "arm_a_431/A4": {
+    "accuracy_per_answered": 0.3712,
+    "accuracy_per_requested": 0.3712,
+    "answer_rate": 1.0,
+    "correct": 98,
+    "extraction_methods": {
+     "prefill_line": 264
+    },
+    "items": 264,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   },
+   "base/A0": {
+    "accuracy_per_answered": 0.2841,
+    "accuracy_per_requested": 0.2841,
+    "answer_rate": 1.0,
+    "correct": 75,
+    "extraction_methods": {
+     "prefill_line": 264
+    },
+    "items": 264,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   },
+   "base/A0_answer_schema": {
+    "accuracy_per_answered": 0.2955,
+    "accuracy_per_requested": 0.2955,
+    "answer_rate": 1.0,
+    "correct": 78,
+    "extraction_methods": {
+     "strict": 264
+    },
+    "items": 264,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A3": {
+    "accuracy_per_answered": 0.2765,
+    "accuracy_per_requested": 0.2765,
+    "answer_rate": 1.0,
+    "correct": 73,
+    "extraction_methods": {
+     "prefill_line": 264
+    },
+    "items": 264,
+    "nonanswers": 0,
+    "token_limit_hits": 3
+   },
+   "base/A4": {
+    "accuracy_per_answered": 0.3712,
+    "accuracy_per_requested": 0.3712,
+    "answer_rate": 1.0,
+    "correct": 98,
+    "extraction_methods": {
+     "prefill_line": 264
+    },
+    "items": 264,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   }
+  },
+  "unexposed": {
+   "arm_a_431/A0": {
+    "accuracy_per_answered": 0.3,
+    "accuracy_per_requested": 0.3,
+    "answer_rate": 1.0,
+    "correct": 72,
+    "extraction_methods": {
+     "prefill_line": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 5
+   },
+   "arm_a_431/A0_answer_schema": {
+    "accuracy_per_answered": 0.3208,
+    "accuracy_per_requested": 0.3208,
+    "answer_rate": 1.0,
+    "correct": 77,
+    "extraction_methods": {
+     "strict": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 1
+   },
+   "arm_a_431/A3": {
+    "accuracy_per_answered": 0.3083,
+    "accuracy_per_requested": 0.3083,
+    "answer_rate": 1.0,
+    "correct": 74,
+    "extraction_methods": {
+     "prefill_line": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 7
+   },
+   "arm_a_431/A4": {
+    "accuracy_per_answered": 0.3583,
+    "accuracy_per_requested": 0.3583,
+    "answer_rate": 1.0,
+    "correct": 86,
+    "extraction_methods": {
+     "prefill_line": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 5
+   },
+   "base/A0": {
+    "accuracy_per_answered": 0.2542,
+    "accuracy_per_requested": 0.2542,
+    "answer_rate": 1.0,
+    "correct": 61,
+    "extraction_methods": {
+     "prefill_line": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 5
+   },
+   "base/A0_answer_schema": {
+    "accuracy_per_answered": 0.3167,
+    "accuracy_per_requested": 0.3167,
+    "answer_rate": 1.0,
+    "correct": 76,
+    "extraction_methods": {
+     "strict": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A3": {
+    "accuracy_per_answered": 0.2458,
+    "accuracy_per_requested": 0.2458,
+    "answer_rate": 1.0,
+    "correct": 59,
+    "extraction_methods": {
+     "prefill_line": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 4
+   },
+   "base/A4": {
+    "accuracy_per_answered": 0.3208,
+    "accuracy_per_requested": 0.3208,
+    "answer_rate": 1.0,
+    "correct": 77,
+    "extraction_methods": {
+     "prefill_line": 240
+    },
+    "items": 240,
+    "nonanswers": 0,
+    "token_limit_hits": 5
+   }
+  },
+  "unexposed_novel": {
+   "arm_a_431/A0": {
+    "accuracy_per_answered": 0.2917,
+    "accuracy_per_requested": 0.2917,
+    "answer_rate": 1.0,
+    "correct": 35,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 3
+   },
+   "arm_a_431/A0_answer_schema": {
+    "accuracy_per_answered": 0.3083,
+    "accuracy_per_requested": 0.3083,
+    "answer_rate": 1.0,
+    "correct": 37,
+    "extraction_methods": {
+     "strict": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "arm_a_431/A3": {
+    "accuracy_per_answered": 0.3,
+    "accuracy_per_requested": 0.3,
+    "answer_rate": 1.0,
+    "correct": 36,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 4
+   },
+   "arm_a_431/A4": {
+    "accuracy_per_answered": 0.3417,
+    "accuracy_per_requested": 0.3417,
+    "answer_rate": 1.0,
+    "correct": 41,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 3
+   },
+   "base/A0": {
+    "accuracy_per_answered": 0.25,
+    "accuracy_per_requested": 0.25,
+    "answer_rate": 1.0,
+    "correct": 30,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 3
+   },
+   "base/A0_answer_schema": {
+    "accuracy_per_answered": 0.275,
+    "accuracy_per_requested": 0.275,
+    "answer_rate": 1.0,
+    "correct": 33,
+    "extraction_methods": {
+     "strict": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A3": {
+    "accuracy_per_answered": 0.2333,
+    "accuracy_per_requested": 0.2333,
+    "answer_rate": 1.0,
+    "correct": 28,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   },
+   "base/A4": {
+    "accuracy_per_answered": 0.3167,
+    "accuracy_per_requested": 0.3167,
+    "answer_rate": 1.0,
+    "correct": 38,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 3
+   }
+  },
+  "unexposed_upstream": {
+   "arm_a_431/A0": {
+    "accuracy_per_answered": 0.3083,
+    "accuracy_per_requested": 0.3083,
+    "answer_rate": 1.0,
+    "correct": 37,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   },
+   "arm_a_431/A0_answer_schema": {
+    "accuracy_per_answered": 0.3333,
+    "accuracy_per_requested": 0.3333,
+    "answer_rate": 1.0,
+    "correct": 40,
+    "extraction_methods": {
+     "strict": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 1
+   },
+   "arm_a_431/A3": {
+    "accuracy_per_answered": 0.3167,
+    "accuracy_per_requested": 0.3167,
+    "answer_rate": 1.0,
+    "correct": 38,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 3
+   },
+   "arm_a_431/A4": {
+    "accuracy_per_answered": 0.375,
+    "accuracy_per_requested": 0.375,
+    "answer_rate": 1.0,
+    "correct": 45,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   },
+   "base/A0": {
+    "accuracy_per_answered": 0.2583,
+    "accuracy_per_requested": 0.2583,
+    "answer_rate": 1.0,
+    "correct": 31,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   },
+   "base/A0_answer_schema": {
+    "accuracy_per_answered": 0.3583,
+    "accuracy_per_requested": 0.3583,
+    "answer_rate": 1.0,
+    "correct": 43,
+    "extraction_methods": {
+     "strict": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 0
+   },
+   "base/A3": {
+    "accuracy_per_answered": 0.2583,
+    "accuracy_per_requested": 0.2583,
+    "answer_rate": 1.0,
+    "correct": 31,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   },
+   "base/A4": {
+    "accuracy_per_answered": 0.325,
+    "accuracy_per_requested": 0.325,
+    "answer_rate": 1.0,
+    "correct": 39,
+    "extraction_methods": {
+     "prefill_line": 120
+    },
+    "items": 120,
+    "nonanswers": 0,
+    "token_limit_hits": 2
+   }
+  }
+ },
+ "duration_seconds": 4.9,
+ "gpu_used": false,
+ "inference": {
+  "declared_multiplicity": "Holm across the primary H4 and H1 contrasts",
+  "family_operationalisation": [
+   "H4_exposed_A0_sft_minus_base",
+   "H4_unexposed_A0_sft_minus_base",
+   "H1_base_A3_minus_A0",
+   "H1_base_A4_minus_A0",
+   "H1_arm_a_A3_minus_A0",
+   "H1_arm_a_A4_minus_A0"
+  ],
+  "intervals": "paired cluster bootstrap over semantic group_id on exactly paired items, 10000 resamples, seed 20260928; per-contrast 95% percentile intervals, not multiplicity-adjusted",
+  "note": "the design names the family as 'the primary H4 and H1 contrasts' without listing them; this operationalisation is stated here, before use in any decision, and changes no decision because H4 is decided by the frozen interval rules and H1 is not decided from A3/A4",
+  "tests": "paired semantic-group sign-flip, 10000 resamples, Monte Carlo p = (extreme + 1) / (resamples + 1)"
+ },
+ "level_contrasts_within_arm": {
+  "arm_a_431": {
+   "A3_minus_A0": {
+    "a": {
+     "accuracy": 0.2854,
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "correct": 137,
+     "items": 480
+    },
+    "b": {
+     "accuracy": 0.2979,
+     "cell": [
+      "arm_a_431",
+      "A3"
+     ],
+     "correct": 143,
+     "items": 480
+    },
+    "ci95_points": [
+     -1.458,
+     3.958
+    ],
+    "difference_points": 1.25,
+    "groups": 240,
+    "paired_items": 480
+   },
+   "A4_minus_A0": {
+    "a": {
+     "accuracy": 0.2854,
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "correct": 137,
+     "items": 480
+    },
+    "b": {
+     "accuracy": 0.3375,
+     "cell": [
+      "arm_a_431",
+      "A4"
+     ],
+     "correct": 162,
+     "items": 480
+    },
+    "ci95_points": [
+     2.292,
+     8.333
+    ],
+    "difference_points": 5.208,
+    "groups": 240,
+    "paired_items": 480
+   }
+  },
+  "base": {
+   "A3_minus_A0": {
+    "a": {
+     "accuracy": 0.2708,
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "correct": 130,
+     "items": 480
+    },
+    "b": {
+     "accuracy": 0.2667,
+     "cell": [
+      "base",
+      "A3"
+     ],
+     "correct": 128,
+     "items": 480
+    },
+    "ci95_points": [
+     -3.125,
+     2.292
+    ],
+    "difference_points": -0.417,
+    "groups": 240,
+    "paired_items": 480
+   },
+   "A4_minus_A0": {
+    "a": {
+     "accuracy": 0.2708,
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "correct": 130,
+     "items": 480
+    },
+    "b": {
+     "accuracy": 0.3312,
+     "cell": [
+      "base",
+      "A4"
+     ],
+     "correct": 159,
+     "items": 480
+    },
+    "ci95_points": [
+     3.125,
+     9.167
+    ],
+    "difference_points": 6.042,
+    "groups": 240,
+    "paired_items": 480
+   }
+  }
+ },
+ "level_labels": {
+  "A0": "production information (buggy code under test and record specification)",
+  "A0_answer_schema": "A0 information with the one-line 'ANSWER: <literal>' schema (no prefill)",
+  "A3": "DIAGNOSTIC, oracle-derived partial behavioural hint: the correct result's type and, where sized, its correct length (computed from the reference output); does not expose the complete value; non-deployable; prohibited from training and confirmation",
+  "A4": "DIAGNOSTIC, NON-DEPLOYABLE: access to the complete fixed implementation instead of the buggy one; changes far more than specification detail; not an identifying manipulation of public specification quality; never used for training or confirmation"
+ },
+ "level_notes": {
+  "A1": "not run",
+  "A2": "not applicable (no repository context)"
+ },
+ "model_calls": 0,
+ "phase": "3A",
+ "provenance": {
+  "cohort": {
+   "results/sft_root_cause_phase3a_cohort.json": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7"
+  },
+  "design_receipt": {
+   "results/sft_root_cause_phase3a_design_receipt.json": "d85249b264c00bb330ec2f1313b09ce292433de2386b4674c479af1ee5181d46"
+  },
+  "generations": {
+   "arm_a_431": {
+    "adapter_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+    "completion_receipt": "results/sft_root_cause/phase3a/completion_arm_a_431.json",
+    "completion_receipt_sha256": "a9097b9e3cc65f412fa482d6153eab284f215741bed34335ed067a7707c14641",
+    "generations": 1920,
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "output": "results/sft_root_cause/phase3a/generations_arm_a_431.jsonl",
+    "output_sha256": "2caa6659a73df3aceeaea13ff0c91eef3e32b0e6032dbdb92d0cdee46250356c",
+    "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+   },
+   "base": {
+    "adapter_sha256": null,
+    "completion_receipt": "results/sft_root_cause/phase3a/completion_base.json",
+    "completion_receipt_sha256": "8beaa97ab0279afdc789b6fde4bc249614ca8296397b0d3ec4628c3c6cf43657",
+    "generations": 1920,
+    "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "output": "results/sft_root_cause/phase3a/generations_base.jsonl",
+    "output_sha256": "e41bdf29533210e16a64997161cded1806a77079edf436bbb61f326ab4a46583",
+    "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+   }
+  },
+  "historical_analyzers_not_rerunnable": "the v1/v2 analyzers build rows without item identity; the repaired pairing checks refuse them, which is the defect v3 fixes",
+  "record_shard": {
+   "data/corpus/v4_1_research_hardened_candidate/development_view/train.records.json": "d3507cba9dbd78b36b1e704275cb245811dc62e4669ed582a0c34fab157d3908"
+  },
+  "sources": {
+   "engine/test_generation_prompt.py": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+   "harness/fixed_input_probe.py": "0d26313e620bdb8bada676387e4f5b3f982ba1ce164ac200ccd42f0f67e53cc5",
+   "harness/fixed_input_rescoring.py": "9c09a5278baf1a8e8424d634c619579ccaa3831ac62e6488d7eb3e8395c531ce",
+   "harness/probe_statistics.py": "2c3556daee65c5f1ea62306057978df9f9bba29fb59f276db3eac4b8df67093f",
+   "harness/safe_execution.py": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+   "scripts/analyze_fixed_input_probe_v3.py": "6291c6718b5607fe2ff219bea7df915fd9c41870ac187538fe690770017a5202"
+  },
+  "supersedes": {
+   "results/sft_root_cause_phase3a_result_receipt.json": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
+   "results/sft_root_cause_phase3a_result_receipt_v2.json": "3f572f16047417377fb977ee8080fd44d629c3c2c5fa1b3211d3704f264281fe"
+  },
+  "v1_v2_modified": false
+ },
+ "rescoring": {
+  "canonical_scored_rows_sha256": "b454ca55467739da0c22a864a072f42ee36f9408f85665b85bd84dc9bfbb71b1",
+  "duplicates": 0,
+  "expected_rows": 3840,
+  "fields": [
+   "arm",
+   "level",
+   "item_key",
+   "group_id",
+   "answer",
+   "method",
+   "correct",
+   "status",
+   "hit_token_limit"
+  ],
+  "reconciliation": {
+   "fields_compared": 760,
+   "mismatches": []
+  },
+  "reproduction": "all retained v1 aggregate statistics reproduced (v1 kept no row-level hash, so exact row-level reproduction is not claimed); all v2 contrasts and intervals reproduced",
+  "rows": 3840,
+  "unique_keys": 3840
+ },
+ "restricted_splits_accessed": "none (reads the frozen cohort, the train shard and retained Phase 3A generations only)",
+ "schema_version": "oneiros_sft_root_cause_phase3a_result_v3",
+ "starting_commit": "2e7ddbaff0418dae7485a3c25b1e7f00decfb42e",
+ "strata": {
+  "all": {
+   "answer": {
+    "a": {
+     "accuracy": 0.2917,
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "correct": 140,
+     "items": 480
+    },
+    "b": {
+     "accuracy": 0.3187,
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "correct": 153,
+     "items": 480
+    },
+    "ci95_points": [
+     -1.042,
+     6.458
+    ],
+    "difference_points": 2.708,
+    "groups": 240,
+    "paired_items": 480
+   },
+   "prefill": {
+    "a": {
+     "accuracy": 0.2708,
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "correct": 130,
+     "items": 480
+    },
+    "b": {
+     "accuracy": 0.2854,
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "correct": 137,
+     "items": 480
+    },
+    "ci95_points": [
+     -2.5,
+     5.625
+    ],
+    "difference_points": 1.458,
+    "groups": 240,
+    "paired_items": 480
+   },
+   "schema_dependent": false,
+   "schema_interaction_answer_minus_prefill": {
+    "ci95_points": [
+     -3.75,
+     6.25
+    ],
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": 1.458,
+    "groups": 240,
+    "interaction_points": 1.25,
+    "paired_items": 480,
+    "second_contrast_points": 2.708
+   }
+  },
+  "exposed": {
+   "answer": {
+    "a": {
+     "accuracy": 0.2667,
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "correct": 64,
+     "items": 240
+    },
+    "b": {
+     "accuracy": 0.3167,
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "correct": 76,
+     "items": 240
+    },
+    "ci95_points": [
+     0.417,
+     10.0
+    ],
+    "difference_points": 5.0,
+    "groups": 120,
+    "paired_items": 240
+   },
+   "prefill": {
+    "a": {
+     "accuracy": 0.2875,
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "correct": 69,
+     "items": 240
+    },
+    "b": {
+     "accuracy": 0.2708,
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "correct": 65,
+     "items": 240
+    },
+    "ci95_points": [
+     -7.5,
+     4.167
+    ],
+    "difference_points": -1.667,
+    "groups": 120,
+    "paired_items": 240
+   },
+   "schema_dependent": true,
+   "schema_interaction_answer_minus_prefill": {
+    "ci95_points": [
+     -0.0,
+     13.75
+    ],
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": -1.667,
+    "groups": 120,
+    "interaction_points": 6.667,
+    "paired_items": 240,
+    "second_contrast_points": 5.0
+   }
+  },
+  "exposed_novel": {
+   "answer": {
+    "a": {
+     "accuracy": 0.2583,
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "correct": 31,
+     "items": 120
+    },
+    "b": {
+     "accuracy": 0.3,
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "correct": 36,
+     "items": 120
+    },
+    "ci95_points": [
+     -0.833,
+     10.0
+    ],
+    "difference_points": 4.167,
+    "groups": 120,
+    "paired_items": 120
+   },
+   "prefill": {
+    "a": {
+     "accuracy": 0.2667,
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "correct": 32,
+     "items": 120
+    },
+    "b": {
+     "accuracy": 0.2667,
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "correct": 32,
+     "items": 120
+    },
+    "ci95_points": [
+     -7.5,
+     7.5
+    ],
+    "difference_points": 0.0,
+    "groups": 120,
+    "paired_items": 120
+   },
+   "schema_dependent": false,
+   "schema_interaction_answer_minus_prefill": {
+    "ci95_points": [
+     -4.167,
+     13.333
+    ],
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": 0.0,
+    "groups": 120,
+    "interaction_points": 4.167,
+    "paired_items": 120,
+    "second_contrast_points": 4.167
+   }
+  },
+  "exposed_upstream_sft_target": {
+   "answer": {
+    "a": {
+     "accuracy": 0.275,
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "correct": 33,
+     "items": 120
+    },
+    "b": {
+     "accuracy": 0.3333,
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "correct": 40,
+     "items": 120
+    },
+    "ci95_points": [
+     0.0,
+     12.5
+    ],
+    "difference_points": 5.833,
+    "groups": 120,
+    "paired_items": 120
+   },
+   "prefill": {
+    "a": {
+     "accuracy": 0.3083,
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "correct": 37,
+     "items": 120
+    },
+    "b": {
+     "accuracy": 0.275,
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "correct": 33,
+     "items": 120
+    },
+    "ci95_points": [
+     -10.0,
+     3.333
+    ],
+    "difference_points": -3.333,
+    "groups": 120,
+    "paired_items": 120
+   },
+   "schema_dependent": true,
+   "schema_interaction_answer_minus_prefill": {
+    "ci95_points": [
+     1.667,
+     16.667
+    ],
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": -3.333,
+    "groups": 120,
+    "interaction_points": 9.167,
+    "paired_items": 120,
+    "second_contrast_points": 5.833
+   }
+  },
+  "tier_moderate": {
+   "answer": {
+    "a": {
+     "accuracy": 0.287,
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "correct": 62,
+     "items": 216
+    },
+    "b": {
+     "accuracy": 0.3241,
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "correct": 70,
+     "items": 216
+    },
+    "ci95_points": [
+     -1.389,
+     8.345
+    ],
+    "difference_points": 3.704,
+    "groups": 108,
+    "paired_items": 216
+   },
+   "prefill": {
+    "a": {
+     "accuracy": 0.2546,
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "correct": 55,
+     "items": 216
+    },
+    "b": {
+     "accuracy": 0.2778,
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "correct": 60,
+     "items": 216
+    },
+    "ci95_points": [
+     -2.778,
+     7.407
+    ],
+    "difference_points": 2.315,
+    "groups": 108,
+    "paired_items": 216
+   },
+   "schema_dependent": false,
+   "schema_interaction_answer_minus_prefill": {
+    "ci95_points": [
+     -5.556,
+     8.333
+    ],
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": 2.315,
+    "groups": 108,
+    "interaction_points": 1.389,
+    "paired_items": 216,
+    "second_contrast_points": 3.704
+   }
+  },
+  "tier_simple": {
+   "answer": {
+    "a": {
+     "accuracy": 0.2955,
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "correct": 78,
+     "items": 264
+    },
+    "b": {
+     "accuracy": 0.3144,
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "correct": 83,
+     "items": 264
+    },
+    "ci95_points": [
+     -3.409,
+     7.197
+    ],
+    "difference_points": 1.894,
+    "groups": 132,
+    "paired_items": 264
+   },
+   "prefill": {
+    "a": {
+     "accuracy": 0.2841,
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "correct": 75,
+     "items": 264
+    },
+    "b": {
+     "accuracy": 0.2917,
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "correct": 77,
+     "items": 264
+    },
+    "ci95_points": [
+     -5.303,
+     6.818
+    ],
+    "difference_points": 0.758,
+    "groups": 132,
+    "paired_items": 264
+   },
+   "schema_dependent": false,
+   "schema_interaction_answer_minus_prefill": {
+    "ci95_points": [
+     -6.061,
+     7.964
+    ],
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": 0.758,
+    "groups": 132,
+    "interaction_points": 1.136,
+    "paired_items": 264,
+    "second_contrast_points": 1.894
+   }
+  },
+  "unexposed": {
+   "answer": {
+    "a": {
+     "accuracy": 0.3167,
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "correct": 76,
+     "items": 240
+    },
+    "b": {
+     "accuracy": 0.3208,
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "correct": 77,
+     "items": 240
+    },
+    "ci95_points": [
+     -5.417,
+     6.25
+    ],
+    "difference_points": 0.417,
+    "groups": 120,
+    "paired_items": 240
+   },
+   "prefill": {
+    "a": {
+     "accuracy": 0.2542,
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "correct": 61,
+     "items": 240
+    },
+    "b": {
+     "accuracy": 0.3,
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "correct": 72,
+     "items": 240
+    },
+    "ci95_points": [
+     -0.833,
+     10.417
+    ],
+    "difference_points": 4.583,
+    "groups": 120,
+    "paired_items": 240
+   },
+   "schema_dependent": false,
+   "schema_interaction_answer_minus_prefill": {
+    "ci95_points": [
+     -11.25,
+     2.917
+    ],
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": 4.583,
+    "groups": 120,
+    "interaction_points": -4.167,
+    "paired_items": 240,
+    "second_contrast_points": 0.417
+   }
+  },
+  "unexposed_novel": {
+   "answer": {
+    "a": {
+     "accuracy": 0.275,
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "correct": 33,
+     "items": 120
+    },
+    "b": {
+     "accuracy": 0.3083,
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "correct": 37,
+     "items": 120
+    },
+    "ci95_points": [
+     -3.333,
+     10.0
+    ],
+    "difference_points": 3.333,
+    "groups": 120,
+    "paired_items": 120
+   },
+   "prefill": {
+    "a": {
+     "accuracy": 0.25,
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "correct": 30,
+     "items": 120
+    },
+    "b": {
+     "accuracy": 0.2917,
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "correct": 35,
+     "items": 120
+    },
+    "ci95_points": [
+     -1.667,
+     10.0
+    ],
+    "difference_points": 4.167,
+    "groups": 120,
+    "paired_items": 120
+   },
+   "schema_dependent": false,
+   "schema_interaction_answer_minus_prefill": {
+    "ci95_points": [
+     -10.0,
+     7.5
+    ],
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": 4.167,
+    "groups": 120,
+    "interaction_points": -0.833,
+    "paired_items": 120,
+    "second_contrast_points": 3.333
+   }
+  },
+  "unexposed_upstream": {
+   "answer": {
+    "a": {
+     "accuracy": 0.3583,
+     "cell": [
+      "base",
+      "A0_answer_schema"
+     ],
+     "correct": 43,
+     "items": 120
+    },
+    "b": {
+     "accuracy": 0.3333,
+     "cell": [
+      "arm_a_431",
+      "A0_answer_schema"
+     ],
+     "correct": 40,
+     "items": 120
+    },
+    "ci95_points": [
+     -10.0,
+     5.0
+    ],
+    "difference_points": -2.5,
+    "groups": 120,
+    "paired_items": 120
+   },
+   "prefill": {
+    "a": {
+     "accuracy": 0.2583,
+     "cell": [
+      "base",
+      "A0"
+     ],
+     "correct": 31,
+     "items": 120
+    },
+    "b": {
+     "accuracy": 0.3083,
+     "cell": [
+      "arm_a_431",
+      "A0"
+     ],
+     "correct": 37,
+     "items": 120
+    },
+    "ci95_points": [
+     -1.667,
+     11.667
+    ],
+    "difference_points": 5.0,
+    "groups": 120,
+    "paired_items": 120
+   },
+   "schema_dependent": true,
+   "schema_interaction_answer_minus_prefill": {
+    "ci95_points": [
+     -15.833,
+     0.0
+    ],
+    "clustered_by": "semantic group_id",
+    "first_contrast_points": 5.0,
+    "groups": 120,
+    "interaction_points": -7.5,
+    "paired_items": 120,
+    "second_contrast_points": -2.5
+   }
+  }
+ },
+ "training": false,
+ "version": 3
+}

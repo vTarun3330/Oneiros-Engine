@@ -1,0 +1,53 @@
+{
+ "schema_version": "oneiros_sft_root_cause_phase3_v3_preflight_v1",
+ "branch": "experiment/research-eval-ablations",
+ "head": "2e7ddbaff0418dae7485a3c25b1e7f00decfb42e",
+ "origin_head": "2e7ddbaff0418dae7485a3c25b1e7f00decfb42e",
+ "working_tree_changes_at_start": [],
+ "model_calls": 0,
+ "gpu_used": false,
+ "training": false,
+ "restricted_data_isolation": "this preflight reads only the listed Phase 3 artifacts and sources; it opens no validation, ablation_dev, test, sealed-final, reserved-confirmation or A-prime record",
+ "immutable_artifacts": {
+  "results/sft_root_cause_phase3a_result_receipt.json": "4e33b2f1d31cacf1167d18eb15d795dc7a179efc34d1bad6610648c7a6c7bca7",
+  "results/sft_root_cause_phase3c_result_receipt.json": "4dd8d937bd3dbd670cad322c364526b9a5013ce077355b9d01283acae13111f3",
+  "results/sft_root_cause_phase3a_result_receipt_v2.json": "3f572f16047417377fb977ee8080fd44d629c3c2c5fa1b3211d3704f264281fe",
+  "results/sft_root_cause_phase3c_result_receipt_v2.json": "f622bbb51af8e0e378c3de1c7989c4b47b6c457160b6a1dadaa02ba3777fca25",
+  "results/sft_root_cause_phase3_interpretation_correction_2026-09-28.json": "c1a45f2610f2aa859cb875e244da63fd194a1b61b3518d573d4ddbcedda8db83",
+  "results/sft_root_cause_phase3a_cohort.json": "1316956a66f718ec1b900438132eb0ae3bc7e8e6da718a58b0b5fcc18d718ce7",
+  "results/sft_root_cause_phase3a_design_receipt.json": "d85249b264c00bb330ec2f1313b09ce292433de2386b4674c479af1ee5181d46",
+  "results/sft_root_cause_phase3c_design_receipt.json": "fbdfef6bca0f347ef6b8531810d679eb4446ff8bc80c1fd7ae57708534060858",
+  "results/sft_root_cause_phase3_cohort_census.json": "b1ffc81237859d78a83a0291019ee23d1cc8f61c827ca544a82ce11df796679e",
+  "results/sft_root_cause_phase4_cohort_census.json": "391bcba2b3c383fb488688b82242a3e8a430e81d4e7dfb54eca93b2f873d8464",
+  "results/sft_root_cause/phase3a/generations_base.jsonl": "e41bdf29533210e16a64997161cded1806a77079edf436bbb61f326ab4a46583",
+  "results/sft_root_cause/phase3a/generations_arm_a_431.jsonl": "2caa6659a73df3aceeaea13ff0c91eef3e32b0e6032dbdb92d0cdee46250356c",
+  "results/sft_root_cause/phase3c/generations_qwen7b_base.jsonl": "722a70c019180f4733f63af48982e43639af897d54bf4ceaefb4b17ce735124a",
+  "results/sft_root_cause/phase3a/completion_base.json": "8beaa97ab0279afdc789b6fde4bc249614ca8296397b0d3ec4628c3c6cf43657",
+  "results/sft_root_cause/phase3a/completion_arm_a_431.json": "a9097b9e3cc65f412fa482d6153eab284f215741bed34335ed067a7707c14641",
+  "results/sft_root_cause/phase3c/completion_qwen7b_base.json": "07f2113755841382e7d1256d03fbc07f8893c9e5bffe70164a2e6158ea983805",
+  "docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT.md": "8296e9fa8c5191360a3e4a9a4d43c7cb6a8c5d81173a3221b947950b0250c4af"
+ },
+ "sources": {
+  "harness/fixed_input_probe.py": "c6d0bbfb5a8328a63a59e815b5af0ab7eb751a8dd4c08c36743faed13f23a819",
+  "harness/probe_statistics.py": "200cc09880acd7ca5abdfc092147acb308d5e422428ac4316360fbdd5cd1c720",
+  "harness/safe_execution.py": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+  "engine/test_generation_prompt.py": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+  "scripts/analyze_fixed_input_probe.py": "b1e51bfc0cbecb5256d2aac1de7a3d768ba6625557a3f35e4b3cfb4ccef41f3f",
+  "scripts/analyze_fixed_input_probe_v2.py": "fd3073f7307527222d354dcf465adb8e745b2f0342bd584130983d6bc1859c24",
+  "scripts/analyze_capacity_probe.py": "bd70f21b4fdc8334e2c49719c43e3c5093cc0f998b55045c3df9a428292289a6",
+  "scripts/analyze_capacity_probe_v2.py": "18304a98ef5eb781083b934807c25169963e9ae6243171c4b2f9db3a047117cd",
+  "scripts/freeze_fixed_input_cohort.py": "a7d2f8cd403a939ec827b35a1e4062921800a1e8360fc5aa56c37412c3bda948",
+  "scripts/correct_phase3_interpretation.py": "cccd410eba11180900488e5e95598663abf3d03a268423ba8b79246a8252aa2b",
+  "docs/SFT_ROOT_CAUSE_PROTOCOL.md": "8686e07f4f412e883f867b53ded51d941b699380b4014d94ec20c0eaf34ab9be"
+ },
+ "sources_declared_to_change": [
+  "harness/probe_statistics.py",
+  "harness/fixed_input_probe.py",
+  "scripts/freeze_fixed_input_cohort.py",
+  "docs/SFT_ROOT_CAUSE_PROTOCOL.md",
+  "docs/SFT_ROOT_CAUSE_PHASE4_DESIGN_DRAFT.md (superseded notice appended at top only if declared in Phase C; otherwise unchanged)",
+  "results/sft_root_cause_hypotheses.json (additive: withdrawals and new evidence)",
+  "results/sft_root_cause_state.json (additive: current/history sections)"
+ ],
+ "v1_probe_definitions_commit": "c9c89608c3f2be188b2003a3bf126d124809c41d"
+}

@@ -78,7 +78,14 @@ def choose(record, group_upstream):
     return items
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", default=None,
+                        help="write the cohort here instead (reproduction check); the frozen "
+                             "cohort is never overwritten with different bytes")
+    args = parser.parse_args(argv)
+    output = args.output or COHORT
     census = load(CENSUS)
     selected = set(load(PREFLIGHT)["selection"]["selected_record_ids"])
     if hashlib.sha256("\n".join(sorted(selected)).encode()).hexdigest() != \
@@ -148,7 +155,10 @@ def main() -> int:
             "levels": list(LEVELS), "control_level": CONTROL_LEVEL,
             "level_definitions": LEVEL_DEFINITIONS, "functions": functions}
     text = (json.dumps(body, indent=1, sort_keys=True) + "\n").encode("utf-8")
-    publish_file_atomically(ROOT / COHORT, text)
+    target = ROOT / output
+    if output == COHORT and target.exists() and target.read_bytes() != text:
+        raise SystemExit("REFUSED: would overwrite the frozen cohort with different bytes")
+    publish_file_atomically(target, text)
 
     def balance(cohort):
         fs = [f for f in functions if f["cohort"] == cohort]
@@ -160,12 +170,14 @@ def main() -> int:
                     i["call_in_arm_a_sft_target"] for f in fs for i in f["items"]
                     if i["input_kind"] == "upstream")}
 
-    summary = {"cohort_path": COHORT, "cohort_sha256": hashlib.sha256(text).hexdigest(),
+    summary = {"cohort_path": output, "cohort_sha256": hashlib.sha256(text).hexdigest(),
                "items": len(items), "unexposed": balance("unexposed"),
                "exposed": balance("exposed"), "skipped": dict(skipped),
                "inputs": {p: sha(p) for p in (CENSUS, PREFLIGHT, f"{VIEW}/train.records.json",
                                               f"{VIEW}/complexity_manifest.json")}}
     print(json.dumps(summary, indent=1))
+    if args.output:
+        return 0
     (ROOT / "results/sft_root_cause/phase3a_freeze_summary.json").write_text(
         json.dumps(summary, indent=1), encoding="utf-8")
     return 0
