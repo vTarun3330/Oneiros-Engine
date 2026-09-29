@@ -1,0 +1,382 @@
+{
+ "distinct_gate_texts": 204,
+ "distinct_train_texts": 198,
+ "excluded_training_groups": [
+  "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+  "function:semantic:90ac39a48a891b8b13db17e622df1dd463ab3165f5802a36d647b71821058cfd",
+  "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+  "function:semantic:df4f1c31e3d3ee7e2428522d9d170293c447997e16cac862f34ea0a6cf539c10"
+ ],
+ "flag_reasons": {
+  "reference_clone": 9,
+  "reference_similar": 9,
+  "specification_similar": 26
+ },
+ "flags": [
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+   "train_record": "mutation::mbpp_497_mut_06088"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+   "train_record": "mutation::mbpp_497_mut_06088"
+  },
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+   "train_record": "mutation::mbpp_497_mut_06089"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+   "train_record": "mutation::mbpp_497_mut_06089"
+  },
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+   "train_record": "mutation::mbpp_497_mut_06090"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+   "train_record": "mutation::mbpp_497_mut_06090"
+  },
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+   "train_record": "mutation::mbpp_497_mut_06091"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+   "train_record": "mutation::mbpp_497_mut_06091"
+  },
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+   "train_record": "mutation::mbpp_497_mut_06092"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+   "train_record": "mutation::mbpp_497_mut_06092"
+  },
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+   "train_record": "mutation::mbpp_497_mut_06093"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:bbdc29433ca6e53895e46ba394fc6197a13addede9efaa98d2097475c816ad89",
+   "train_record": "mutation::mbpp_497_mut_06093"
+  },
+  {
+   "gate_group": "function:semantic:554d28f74a77ec92cf72ccda09da25231d908fa0136238b6b80cb43ae7c768fa",
+   "gate_record": "mutation::mbpp_166_mut_03173",
+   "reason": "reference_similar",
+   "score": 0.8421,
+   "train_group": "function:semantic:df4f1c31e3d3ee7e2428522d9d170293c447997e16cac862f34ea0a6cf539c10",
+   "train_record": "mutation::mbpp_556_mut_06715"
+  },
+  {
+   "gate_group": "function:semantic:554d28f74a77ec92cf72ccda09da25231d908fa0136238b6b80cb43ae7c768fa",
+   "gate_record": "mutation::mbpp_166_mut_03173",
+   "reason": "reference_similar",
+   "score": 0.8421,
+   "train_group": "function:semantic:df4f1c31e3d3ee7e2428522d9d170293c447997e16cac862f34ea0a6cf539c10",
+   "train_record": "mutation::mbpp_556_mut_06716"
+  },
+  {
+   "gate_group": "function:semantic:554d28f74a77ec92cf72ccda09da25231d908fa0136238b6b80cb43ae7c768fa",
+   "gate_record": "mutation::mbpp_166_mut_03173",
+   "reason": "reference_similar",
+   "score": 0.8421,
+   "train_group": "function:semantic:df4f1c31e3d3ee7e2428522d9d170293c447997e16cac862f34ea0a6cf539c10",
+   "train_record": "mutation::mbpp_556_mut_06717"
+  },
+  {
+   "gate_group": "function:semantic:554d28f74a77ec92cf72ccda09da25231d908fa0136238b6b80cb43ae7c768fa",
+   "gate_record": "mutation::mbpp_166_mut_03173",
+   "reason": "reference_similar",
+   "score": 0.8421,
+   "train_group": "function:semantic:df4f1c31e3d3ee7e2428522d9d170293c447997e16cac862f34ea0a6cf539c10",
+   "train_record": "mutation::mbpp_556_mut_06720"
+  },
+  {
+   "gate_group": "function:semantic:554d28f74a77ec92cf72ccda09da25231d908fa0136238b6b80cb43ae7c768fa",
+   "gate_record": "mutation::mbpp_166_mut_03173",
+   "reason": "reference_similar",
+   "score": 0.8421,
+   "train_group": "function:semantic:df4f1c31e3d3ee7e2428522d9d170293c447997e16cac862f34ea0a6cf539c10",
+   "train_record": "mutation::mbpp_556_mut_06721"
+  },
+  {
+   "gate_group": "function:semantic:554d28f74a77ec92cf72ccda09da25231d908fa0136238b6b80cb43ae7c768fa",
+   "gate_record": "mutation::mbpp_166_mut_03173",
+   "reason": "reference_similar",
+   "score": 0.8421,
+   "train_group": "function:semantic:df4f1c31e3d3ee7e2428522d9d170293c447997e16cac862f34ea0a6cf539c10",
+   "train_record": "mutation::mbpp_556_mut_06722"
+  },
+  {
+   "gate_group": "function:semantic:554d28f74a77ec92cf72ccda09da25231d908fa0136238b6b80cb43ae7c768fa",
+   "gate_record": "mutation::mbpp_166_mut_03173",
+   "reason": "reference_similar",
+   "score": 0.8421,
+   "train_group": "function:semantic:df4f1c31e3d3ee7e2428522d9d170293c447997e16cac862f34ea0a6cf539c10",
+   "train_record": "mutation::mbpp_556_mut_06723"
+  },
+  {
+   "gate_group": "function:semantic:554d28f74a77ec92cf72ccda09da25231d908fa0136238b6b80cb43ae7c768fa",
+   "gate_record": "mutation::mbpp_166_mut_03173",
+   "reason": "reference_similar",
+   "score": 0.8421,
+   "train_group": "function:semantic:df4f1c31e3d3ee7e2428522d9d170293c447997e16cac862f34ea0a6cf539c10",
+   "train_record": "mutation::mbpp_556_mut_06724"
+  },
+  {
+   "gate_group": "function:semantic:554d28f74a77ec92cf72ccda09da25231d908fa0136238b6b80cb43ae7c768fa",
+   "gate_record": "mutation::mbpp_166_mut_03173",
+   "reason": "reference_similar",
+   "score": 0.8421,
+   "train_group": "function:semantic:df4f1c31e3d3ee7e2428522d9d170293c447997e16cac862f34ea0a6cf539c10",
+   "train_record": "mutation::mbpp_556_mut_06725"
+  },
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06807"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06807"
+  },
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06808"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06808"
+  },
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06809"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06809"
+  },
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06810"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06810"
+  },
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06811"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06811"
+  },
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06812"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06812"
+  },
+  {
+   "gate_group": "function:semantic:ddff1b3d9fa72573cd37be132ce049289988e75a45bef4dcc78af42b84823a2a",
+   "gate_record": "mutation::mbpp_379_mut_05023",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06813"
+  },
+  {
+   "gate_group": "function:semantic:0f7a12c5a05a4d56c55879472fd87723aad67d682428652beb38c91fa313cdb6",
+   "gate_record": "mutation::mbpp_441_mut_05584",
+   "reason": "specification_similar",
+   "score": 0.8,
+   "train_group": "function:semantic:06209ceb205708d5ceb5c76ff41644dc3622a7b50640eb8f6e3cf13b9ca8c843",
+   "train_record": "mutation::mbpp_574_mut_06813"
+  },
+  {
+   "gate_group": "function:semantic:569ce6e6f8e2306aca48fc9396011ab3243446e8530c4e3a24c7e5ae3da84cbb",
+   "gate_record": "mutation::mbpp_29_mut_01884",
+   "reason": "reference_clone",
+   "score": 1.0,
+   "train_group": "function:semantic:90ac39a48a891b8b13db17e622df1dd463ab3165f5802a36d647b71821058cfd",
+   "train_record": "mutation::mbpp_842_mut_08989"
+  },
+  {
+   "gate_group": "function:semantic:569ce6e6f8e2306aca48fc9396011ab3243446e8530c4e3a24c7e5ae3da84cbb",
+   "gate_record": "mutation::mbpp_29_mut_01884",
+   "reason": "reference_clone",
+   "score": 1.0,
+   "train_group": "function:semantic:90ac39a48a891b8b13db17e622df1dd463ab3165f5802a36d647b71821058cfd",
+   "train_record": "mutation::mbpp_842_mut_08990"
+  },
+  {
+   "gate_group": "function:semantic:569ce6e6f8e2306aca48fc9396011ab3243446e8530c4e3a24c7e5ae3da84cbb",
+   "gate_record": "mutation::mbpp_29_mut_01884",
+   "reason": "reference_clone",
+   "score": 1.0,
+   "train_group": "function:semantic:90ac39a48a891b8b13db17e622df1dd463ab3165f5802a36d647b71821058cfd",
+   "train_record": "mutation::mbpp_842_mut_08992"
+  },
+  {
+   "gate_group": "function:semantic:569ce6e6f8e2306aca48fc9396011ab3243446e8530c4e3a24c7e5ae3da84cbb",
+   "gate_record": "mutation::mbpp_29_mut_01884",
+   "reason": "reference_clone",
+   "score": 1.0,
+   "train_group": "function:semantic:90ac39a48a891b8b13db17e622df1dd463ab3165f5802a36d647b71821058cfd",
+   "train_record": "mutation::mbpp_842_mut_08995"
+  },
+  {
+   "gate_group": "function:semantic:569ce6e6f8e2306aca48fc9396011ab3243446e8530c4e3a24c7e5ae3da84cbb",
+   "gate_record": "mutation::mbpp_29_mut_01884",
+   "reason": "reference_clone",
+   "score": 1.0,
+   "train_group": "function:semantic:90ac39a48a891b8b13db17e622df1dd463ab3165f5802a36d647b71821058cfd",
+   "train_record": "mutation::mbpp_842_mut_08996"
+  },
+  {
+   "gate_group": "function:semantic:569ce6e6f8e2306aca48fc9396011ab3243446e8530c4e3a24c7e5ae3da84cbb",
+   "gate_record": "mutation::mbpp_29_mut_01884",
+   "reason": "reference_clone",
+   "score": 1.0,
+   "train_group": "function:semantic:90ac39a48a891b8b13db17e622df1dd463ab3165f5802a36d647b71821058cfd",
+   "train_record": "mutation::mbpp_842_mut_08997"
+  },
+  {
+   "gate_group": "function:semantic:569ce6e6f8e2306aca48fc9396011ab3243446e8530c4e3a24c7e5ae3da84cbb",
+   "gate_record": "mutation::mbpp_29_mut_01884",
+   "reason": "reference_clone",
+   "score": 1.0,
+   "train_group": "function:semantic:90ac39a48a891b8b13db17e622df1dd463ab3165f5802a36d647b71821058cfd",
+   "train_record": "mutation::mbpp_842_mut_08998"
+  },
+  {
+   "gate_group": "function:semantic:569ce6e6f8e2306aca48fc9396011ab3243446e8530c4e3a24c7e5ae3da84cbb",
+   "gate_record": "mutation::mbpp_29_mut_01884",
+   "reason": "reference_clone",
+   "score": 1.0,
+   "train_group": "function:semantic:90ac39a48a891b8b13db17e622df1dd463ab3165f5802a36d647b71821058cfd",
+   "train_record": "mutation::mbpp_842_mut_08999"
+  },
+  {
+   "gate_group": "function:semantic:569ce6e6f8e2306aca48fc9396011ab3243446e8530c4e3a24c7e5ae3da84cbb",
+   "gate_record": "mutation::mbpp_29_mut_01884",
+   "reason": "reference_clone",
+   "score": 1.0,
+   "train_group": "function:semantic:90ac39a48a891b8b13db17e622df1dd463ab3165f5802a36d647b71821058cfd",
+   "train_record": "mutation::mbpp_842_mut_09001"
+  }
+ ],
+ "gate_records": 2149,
+ "group_disjoint": true,
+ "inputs": {
+  "data/corpus/v4_1_research_hardened_candidate/development_view/train.records.json": "d3507cba9dbd78b36b1e704275cb245811dc62e4669ed582a0c34fab157d3908",
+  "results/sft_root_cause_phase4_choice_b_split_v2.json": "6543b57dbef1da7fb1e9d754bdb3a320d1cb97a9836b8cd6d99889b28c8845df"
+ },
+ "outcome_blind": true,
+ "record_disjoint": true,
+ "rule": "remove from TRAINING every group containing a record whose reference is an anonymised-AST clone of, or whose anonymised token 4-grams or specification word 3-grams have Jaccard >= 0.8 with, any record of any gate group; the gate is fixed",
+ "schema_version": "oneiros_choice_b_neardup_audit_v1",
+ "threshold": 0.8,
+ "train_records": 2108,
+ "training_rows_removed": 91
+}

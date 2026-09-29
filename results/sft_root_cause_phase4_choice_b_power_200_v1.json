@@ -1,0 +1,1594 @@
+{
+ "cells": [
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "shared",
+   "delta_points": 3,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.0054,
+      0.0289
+     ],
+     "probability": 0.0125
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.0055,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.0054,
+      0.0289
+     ],
+     "probability": 0.0125
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "item",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.007,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "shared",
+   "delta_points": 5,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.496,
+      0.5931
+     ],
+     "probability": 0.545
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": -0.025,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.5311,
+      0.6274
+     ],
+     "probability": 0.58
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "item",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.57,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "shared",
+   "delta_points": 7,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0014,
+      0.018
+     ],
+     "probability": 0.005
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9391,
+      0.9771
+     ],
+     "probability": 0.9625
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.003,
+    "positive_both": -0.0045,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0014,
+      0.018
+     ],
+     "probability": 0.005
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9514,
+      0.9846
+     ],
+     "probability": 0.9725
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "item",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.002,
+    "positive_both": 0.967,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "shared",
+   "delta_points": 10,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.3338,
+      0.4285
+     ],
+     "probability": 0.38
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9905,
+      1.0
+     ],
+     "probability": 1.0
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": -0.036,
+    "positive_both": 0.0,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.3677,
+      0.4639
+     ],
+     "probability": 0.415
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9905,
+      1.0
+     ],
+     "probability": 1.0
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "item",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.416,
+    "positive_both": 1.0,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "partial",
+   "delta_points": 3,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.0004,
+      0.014
+     ],
+     "probability": 0.0025
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": -0.0015,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.0004,
+      0.014
+     ],
+     "probability": 0.0025
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "item",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.004,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "partial",
+   "delta_points": 5,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.486,
+      0.5833
+     ],
+     "probability": 0.535
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.013,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.5185,
+      0.6152
+     ],
+     "probability": 0.5675
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "item",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.522,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "partial",
+   "delta_points": 7,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9514,
+      0.9846
+     ],
+     "probability": 0.9725
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": -0.001,
+    "positive_both": 0.0005,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.961,
+      0.9898
+     ],
+     "probability": 0.98
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "item",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.001,
+    "positive_both": 0.972,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "partial",
+   "delta_points": 10,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.3025,
+      0.3954
+     ],
+     "probability": 0.3475
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9905,
+      1.0
+     ],
+     "probability": 1.0
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": -0.0275,
+    "positive_both": 0.0,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.329,
+      0.4234
+     ],
+     "probability": 0.375
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9905,
+      1.0
+     ],
+     "probability": 1.0
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "item",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.375,
+    "positive_both": 1.0,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "independent",
+   "delta_points": 3,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": -0.003,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "item",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.003,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "independent",
+   "delta_points": 5,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.4389,
+      0.5364
+     ],
+     "probability": 0.4875
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": -0.0615,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.486,
+      0.5833
+     ],
+     "probability": 0.535
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "item",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.549,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "independent",
+   "delta_points": 7,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9036,
+      0.9532
+     ],
+     "probability": 0.9325
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": -0.0435,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.927,
+      0.9694
+     ],
+     "probability": 0.9525
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "item",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.976,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "independent",
+   "delta_points": 10,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.2477,
+      0.3363
+     ],
+     "probability": 0.29
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9905,
+      1.0
+     ],
+     "probability": 1.0
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": -0.036,
+    "positive_both": 0.0,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.2619,
+      0.3518
+     ],
+     "probability": 0.305
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9905,
+      1.0
+     ],
+     "probability": 1.0
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "item",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.326,
+    "positive_both": 1.0,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "shared",
+   "delta_points": 3,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.0026,
+      0.0218
+     ],
+     "probability": 0.0075
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0014,
+      0.018
+     ],
+     "probability": 0.005
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.0025,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.0026,
+      0.0218
+     ],
+     "probability": 0.0075
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0014,
+      0.018
+     ],
+     "probability": 0.005
+    }
+   },
+   "groups": 200,
+   "level": "group",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.005,
+    "sign_flip": 0.005
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "shared",
+   "delta_points": 5,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.3677,
+      0.4639
+     ],
+     "probability": 0.415
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": -0.004,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.3897,
+      0.4865
+     ],
+     "probability": 0.4375
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "group",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.419,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "shared",
+   "delta_points": 7,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0004,
+      0.014
+     ],
+     "probability": 0.0025
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.8417,
+      0.9061
+     ],
+     "probability": 0.8775
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": -0.0045,
+    "positive_both": 0.0045,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0004,
+      0.014
+     ],
+     "probability": 0.0025
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.85,
+      0.9127
+     ],
+     "probability": 0.885
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "group",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.007,
+    "positive_both": 0.873,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "shared",
+   "delta_points": 10,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.2148,
+      0.2999
+     ],
+     "probability": 0.255
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.986,
+      0.9996
+     ],
+     "probability": 0.9975
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": -0.035,
+    "positive_both": -0.0005,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.2406,
+      0.3285
+     ],
+     "probability": 0.2825
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.986,
+      0.9996
+     ],
+     "probability": 0.9975
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "group",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.29,
+    "positive_both": 0.998,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "partial",
+   "delta_points": 3,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.0004,
+      0.014
+     ],
+     "probability": 0.0025
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": -0.0025,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.0004,
+      0.014
+     ],
+     "probability": 0.0025
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "group",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.005,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "partial",
+   "delta_points": 5,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.3169,
+      0.4107
+     ],
+     "probability": 0.3625
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": -0.0345,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.3556,
+      0.4513
+     ],
+     "probability": 0.4025
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "group",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.397,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "partial",
+   "delta_points": 7,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0026,
+      0.0218
+     ],
+     "probability": 0.0075
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.8144,
+      0.8839
+     ],
+     "probability": 0.8525
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0075,
+    "positive_both": -0.0235,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0026,
+      0.0218
+     ],
+     "probability": 0.0075
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.8198,
+      0.8884
+     ],
+     "probability": 0.8575
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "group",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.876,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "partial",
+   "delta_points": 10,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.1938,
+      0.2763
+     ],
+     "probability": 0.2325
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9746,
+      0.9961
+     ],
+     "probability": 0.99
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0365,
+    "positive_both": -0.006,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.1868,
+      0.2684
+     ],
+     "probability": 0.225
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9782,
+      0.9974
+     ],
+     "probability": 0.9925
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "group",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.196,
+    "positive_both": 0.996,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "independent",
+   "delta_points": 3,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0004,
+      0.014
+     ],
+     "probability": 0.0025
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": -0.001,
+    "sign_flip": -0.0035
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.0004,
+      0.014
+     ],
+     "probability": 0.0025
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0004,
+      0.014
+     ],
+     "probability": 0.0025
+    }
+   },
+   "groups": 200,
+   "level": "group",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.001,
+    "sign_flip": 0.006
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "independent",
+   "delta_points": 5,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.2833,
+      0.3749
+     ],
+     "probability": 0.3275
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": -0.0565,
+    "sign_flip": -0.001
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.3241,
+      0.4183
+     ],
+     "probability": 0.37
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "group",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.384,
+    "sign_flip": 0.001
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "independent",
+   "delta_points": 7,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.8226,
+      0.8906
+     ],
+     "probability": 0.86
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0,
+    "positive_both": -0.007,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.8417,
+      0.9061
+     ],
+     "probability": 0.8775
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "group",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.0,
+    "positive_both": 0.867,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  },
+  {
+   "bootstrap_resamples": 2000,
+   "coupling": "independent",
+   "delta_points": 10,
+   "exact_bootstrap_gate": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.1432,
+      0.218
+     ],
+     "probability": 0.1775
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9746,
+      0.9961
+     ],
+     "probability": 0.99
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "exact_minus_power_v2_fast": {
+    "confirmatory_5": 0.0225,
+    "positive_both": -0.004,
+    "sign_flip": 0.0
+   },
+   "fast_on_same_datasets": {
+    "confirmatory_5": {
+     "monte_carlo_wilson_95": [
+      0.1409,
+      0.2153
+     ],
+     "probability": 0.175
+    },
+    "positive_both": {
+     "monte_carlo_wilson_95": [
+      0.9782,
+      0.9974
+     ],
+     "probability": 0.9925
+    },
+    "sign_flip": {
+     "monte_carlo_wilson_95": [
+      0.0,
+      0.0095
+     ],
+     "probability": 0.0
+    }
+   },
+   "groups": 200,
+   "level": "group",
+   "power_v2_fast_grid_probability": {
+    "confirmatory_5": 0.155,
+    "positive_both": 0.994,
+    "sign_flip": 0.0
+   },
+   "sims": 400
+  }
+ ],
+ "exact_exceeds_five_probability_by_effect": {
+  "10": [
+   0.1775,
+   0.38
+  ],
+  "3": [
+   0.0,
+   0.0
+  ],
+  "5": [
+   0.0,
+   0.0
+  ],
+  "7": [
+   0.0,
+   0.0075
+  ]
+ },
+ "exact_positive_effect_probability_by_effect": {
+  "10": [
+   0.99,
+   1.0
+  ],
+  "3": [
+   0.0,
+   0.0125
+  ],
+  "5": [
+   0.3275,
+   0.545
+  ],
+  "7": [
+   0.8525,
+   0.9725
+  ]
+ },
+ "frozen_before_any_choice_b_outcome": true,
+ "inputs": {
+  "harness/power_sensitivity_v2.py": "f0d48dff01d51f1253447ef8150244b69c757fa96c294d2af56bf62557a45b7d",
+  "results/sft_root_cause_phase3a_result_receipt_v3.json": "09885cfbfca3d8291e40459217746fbc8cebf3a8cf719f7753c3828266f1b713",
+  "results/sft_root_cause_phase4_power_sensitivity_v2.json": "9c61decd85d9545c6637dad91e26674a1041227413c11d8459831ae60aa1fe4c",
+  "scripts/phase4_choice_b_power_200.py": "ea3edd1408ec29857ed8e56df4796c9171dd6242a7c4db78ec82feec6b447813"
+ },
+ "max_abs_difference_from_power_v2_fast_200": 0.0615,
+ "method": "exact paired semantic-group cluster-bootstrap percentile 95% gate on simulated datasets (400 per cell, 2000 resamples; the frozen gate uses 10,000), corrected v2 coupling",
+ "not_modelled": [
+  "training-seed variance",
+  "repository-native variance",
+  "answer-rate, validity and diversity guardrails",
+  "schema-dependent (unequal or opposite-signed) true effects"
+ ],
+ "reading": "a five-point true effect has LOW useful detection power at 200 groups (see the positive-effect band for 5 points); detection is not impossible. The exceeds-five gate is not a gate of this screen.",
+ "schema_version": "oneiros_phase4_choice_b_power_200_v1",
+ "status": "PLANNING EVIDENCE, NOT A POWER GUARANTEE"
+}

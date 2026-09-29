@@ -1,0 +1,120 @@
+{
+ "arms_evaluated": [
+  "control",
+  "treatment"
+ ],
+ "checkpoint": "final adapter of the fixed schedule only; no intermediate checkpoint is ever evaluated on the gate",
+ "claims_forbidden": [
+  "root cause",
+  "generalisation",
+  "value-location causality",
+  "efficacy from training loss",
+  "confirmation of a >5-point effect"
+ ],
+ "descriptive_slices": {
+  "bug_family": "mutation operator family",
+  "complexity_tier": "complexity manifest tier",
+  "dataset": "record source upstream (mbpp, humaneval, manual_curated_examples)",
+  "input_kind": "upstream test call versus novel perturbation",
+  "status": "DESCRIPTIVE, likely underpowered; never cross-dataset generalisation"
+ },
+ "estimand": "COMPOSITE objective intervention: value_only versus full_completion changes WHICH completion tokens are supervised, HOW MANY target tokens are supervised, their POSITIONS, and the RELATIVE per-example and per-token weighting of the loss (the loss averages over supervised tokens, so each value token's share changes); it is not a scalar gradient-dose reduction and does not isolate value-token location",
+ "frozen_before_any_choice_b_outcome": true,
+ "guardrails": {
+  "answer_rate": "T - C answer rate >= -2.0 points, per schema",
+  "exact_unique_ratio": "T / C - 1 >= -0.1",
+  "reference_validity": "T - C mean per-requested-candidate reference validity >= -3.0 points",
+  "status": "POINT-ESTIMATE OPERATIONAL SAFETY THRESHOLDS; paired cluster-bootstrap intervals reported alongside"
+ },
+ "labels": [
+  "internal",
+  "exploratory",
+  "Arm-A-exposed",
+  "not untouched",
+  "not Phase 6",
+  "not cross-dataset or repository generalisation",
+  "single seed cannot establish efficacy"
+ ],
+ "looks": "exactly one gate look per arm; the analysis refuses to run twice",
+ "old_arm_A_evaluated": false,
+ "outcomes": {
+  "inconclusive_power": "anything else; never 'no effect', never rejects",
+  "operational_guardrail_stop": "otherwise, any guardrail point estimate beyond its threshold (not a statistical claim of harm)",
+  "precedence": [
+   "promising",
+   "statistically_supported_adverse",
+   "operational_guardrail_stop",
+   "inconclusive_power"
+  ],
+  "promising": "otherwise, primary lower bound > 0 under both schemas with no sign flip",
+  "statistically_supported_adverse": "a primary upper bound < 0 under either schema, or a guardrail's upper bound below its threshold"
+ },
+ "power_at_gate": {
+  "path": "results/sft_root_cause_phase4_choice_b_power_200_v1.json",
+  "positive_effect_probability_by_true_effect_points": {
+   "10": [
+    0.99,
+    1.0
+   ],
+   "3": [
+    0.0,
+    0.0125
+   ],
+   "5": [
+    0.3275,
+    0.545
+   ],
+   "7": [
+    0.8525,
+    0.9725
+   ]
+  },
+  "reading": "a five-point true effect has low useful detection power at 200 groups; detection is not impossible",
+  "sha256": "93a6b1e5b246ae5b1fca3327cd7f474e72d2bd401efd2c482584e45e1077c2e3"
+ },
+ "primary": {
+  "decoding": {
+   "batch": 8,
+   "greedy": true,
+   "max_new_tokens": {
+    "answer_schema": 96,
+    "prefill_assertion": 48
+   }
+  },
+  "inference": {
+   "interval": "percentile_95",
+   "method": "paired semantic-group cluster bootstrap",
+   "resamples": 10000,
+   "seed": 20260928
+  },
+  "keys": "every gate group x {upstream, novel} x both schemas, exactly once",
+  "metric": "fixed-input exact-output accuracy (assert CALL == ANSWER passes on the reference)",
+  "schemas": {
+   "answer_schema": "A0_answer_schema",
+   "prefill_assertion": "A0"
+  }
+ },
+ "reported_metrics": [
+  "fixed-input answer rate",
+  "fixed-input nonanswer rate",
+  "fixed-input exact-output accuracy",
+  "Kill@1",
+  "Kill@4",
+  "Kill@8",
+  "candidate parse success",
+  "candidate execution success",
+  "reference validity per requested candidate",
+  "exact-equality validity per requested candidate",
+  "function-level P(at least one valid killing candidate)",
+  "exact-unique diversity ratio"
+ ],
+ "schema_version": "oneiros_choice_b_evaluation_spec_v2",
+ "supersedes": {
+  "evaluation_spec_v1_sha256": "56b81cf5892bf03d64ba73cd5aaf43f7405c5a1e576d892e06acc99242cf9f0e",
+  "why": [
+   "v1 called point-estimate guardrail failures 'harm'",
+   "v1 estimand wording was incomplete",
+   "v1 did not require exact key sets or list every metric"
+  ]
+ }
+}
