@@ -1,0 +1,77 @@
+{
+ "atheris": {
+  "atheris": "2.3.0",
+  "available": true,
+  "python": "3.11.15"
+ },
+ "branch_receipt": {
+  "path": "results/sft_root_cause_phase4_receiver_capture_receipt_v2.json",
+  "sha256": "b531e1983e08a283bca65dd44d4a10fc1350dbec142d2216f7703003dba66248"
+ },
+ "components": {
+  "durable_generation_runner": false,
+  "frozen_analysis": false,
+  "leakage_scanner": false,
+  "native_injection_executor": false,
+  "permitted_view_prompt_builder": false,
+  "repository_atheris_adapter": false
+ },
+ "created_utc": "2026-09-29T16:45:06Z",
+ "dress_rehearsal_cohort": {
+  "manifest": {
+   "path": "results/sft_root_cause_phase4_receiver_capture_manifest_v2.json",
+   "sha256": "97ed6acb6783467f7bc34948fa314fd454acc91b0865a6e4d8b49e589811c171"
+  },
+  "meets_parent_rehearsal_pool": true,
+  "repositories": 8,
+  "status": "development targets; pipeline shake-out only; never confirmation",
+  "targets": 24
+ },
+ "generalization_established": false,
+ "git_commit": "652ab839e10b8ebcf30ff56137283a62c5e8c192",
+ "gpu_generation_launched": false,
+ "models": {
+  "base": {
+   "local": true,
+   "name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+   "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+  },
+  "sft": {
+   "adapter": "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter",
+   "sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+   "verified": true
+  }
+ },
+ "next_permitted_action": "implement the named components (CPU) and re-run this preflight; dress-rehearsal GPU generation then needs explicit approval; confirmation needs an approved repository-disjoint cohort",
+ "parent_protocol": {
+  "path": "docs/REPOSITORY_NATIVE_EVALUATION_PROTOCOL.md",
+  "sha256": "043e22f912fd0e6bea613fac2cb1e015ffd2264683db7c56d8de271904bd5ba2"
+ },
+ "protected_access_audit": {
+  "installed": true,
+  "method": "python audit hook",
+  "protected_paths_opened": []
+ },
+ "protocol": {
+  "path": "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V1.md",
+  "sha256": "5f74125ea5da004ca913c26e51625ec232891260110aac154ca37495384b48f4"
+ },
+ "readiness": {
+  "blockers": [
+   "component not implemented: permitted_view_prompt_builder (harness/native_generated_test_prompt.py)",
+   "component not implemented: leakage_scanner (harness/native_generated_test_leakage.py)",
+   "component not implemented: durable_generation_runner (scripts/native_generated_tests_generate.py)",
+   "component not implemented: native_injection_executor (scripts/native_generated_tests_execute_wsl.py)",
+   "component not implemented: repository_atheris_adapter (scripts/native_generated_tests_atheris_wsl.py)",
+   "component not implemented: frozen_analysis (scripts/native_generated_tests_analyse.py)"
+  ],
+  "confirmation_blockers": [
+   "no repository-disjoint isolation-v6-admitted confirmation cohort exists",
+   "acquiring one needs separate approval (mass acquisition is refused; the fresh A-prime pilot admitted 5/120 candidates)"
+  ],
+  "confirmation_ready": false,
+  "dress_rehearsal_ready": false
+ },
+ "root_cause_established": false,
+ "schema_version": "oneiros_native_generated_tests_preflight_v1"
+}
