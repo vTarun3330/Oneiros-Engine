@@ -1,0 +1,121 @@
+{
+ "acquisition_arithmetic": {
+  "observed": {
+   "admission_yield_point": 0.04167,
+   "admission_yield_wilson_95": [
+    0.0179,
+    0.0938
+   ],
+   "admitted": 5,
+   "api_calls": 77,
+   "api_calls_per_candidate": 0.6417,
+   "elapsed_seconds_for_pilot": 1969.2,
+   "inspected": 120,
+   "note": "admission precedes native qualification; admitted yield is an UPPER bound on the mined-to-qualified yield",
+   "rate_limit_wait_seconds": 862.3,
+   "source": "results/v4_3_repository_native_aprime_fresh_confirmation_pilot.json"
+  },
+  "projection": {
+   "assumptions": [
+    "the pilot admission yield applies to newly mined repositories",
+    "API calls scale linearly with candidates at the pilot ratio",
+    "unauthenticated REST limit of 60 calls/hour",
+    "no native-qualification losses (all totals are before them)"
+   ],
+   "candidates_gate_plus_phase6_total": {
+    "point": 16800,
+    "range_at_wilson_bounds": [
+     7464,
+     39108
+    ]
+   },
+   "candidates_per_cohort": {
+    "point": 8400,
+    "range_at_wilson_bounds": [
+     3732,
+     19554
+    ]
+   },
+   "repository_minimum": {
+    "cap_only_minimum_both": 60,
+    "cap_only_minimum_per_cohort": 30,
+    "formula": "ceil(N_gate / 12) + ceil(N_confirmation / 12)",
+    "policy_minimum_per_cohort": 34,
+    "policy_source": "docs/REPOSITORY_NATIVE_EVALUATION_PROTOCOL.md (D3: at least 34 repositories, at most 12 targets per repository)",
+    "required_distinct_repositories_both_disjoint_cohorts": 68,
+    "required_per_cohort": 34
+   },
+   "statement": "About 8,400 mined candidates per 350 admitted functions at the point estimate (range 3,732-19,554); about 16,800 for a 350-function gate plus a similar Phase 6 cohort. About 89.8 unauthenticated API hours per cohort and 179.7 for both, before native-qualification losses. Two repository-disjoint cohorts need at least 68 distinct repositories.",
+   "target_functions_per_cohort": 350,
+   "unauthenticated_api_hours_both_cohorts": {
+    "point": 179.7,
+    "range": [
+     79.8,
+     418.2
+    ]
+   },
+   "unauthenticated_api_hours_per_cohort": {
+    "point": 89.8,
+    "range": [
+     39.9,
+     209.1
+    ]
+   }
+  }
+ },
+ "date": "2026-09-29",
+ "gpu_used": false,
+ "historical_receipts_modified": false,
+ "inputs": {
+  "docs/REPOSITORY_NATIVE_EVALUATION_PROTOCOL.md": "043e22f912fd0e6bea613fac2cb1e015ffd2264683db7c56d8de271904bd5ba2",
+  "docs/SFT_ROOT_CAUSE_PHASE4_CHOICES.md": "f09b836f926ab118431a8eeecadddaca465371a3b8e399dd0594c32d4ff93e8a",
+  "results/sft_root_cause_phase3a_design_receipt.json": "d85249b264c00bb330ec2f1313b09ce292433de2386b4674c479af1ee5181d46",
+  "results/sft_root_cause_phase3a_result_receipt_v3.json": "09885cfbfca3d8291e40459217746fbc8cebf3a8cf719f7753c3828266f1b713",
+  "results/sft_root_cause_phase4_power_analysis_v1.json": "5addf520a32a0d5182e1a4944bb6c7bad4fc3a548f0722c14979298751be7a20",
+  "results/v4_3_repository_native_aprime_fresh_confirmation_pilot.json": "267923bddda5f1345c3d4c605d5c28982d9a455cb5f9769bf25c9af7440102c5"
+ },
+ "model_calls": 0,
+ "multiplicity_3a": {
+  "correction": "the design names the family only as 'the primary H4 and H1 contrasts' and does not enumerate them; the six contrasts were chosen when v3 was written, after the results were known. The Holm calculation is preserved numerically, but it is not a fully predeclared family and supports NO familywise confirmatory claim",
+  "decisions_unchanged": "H1 (open) and H4 (open, schema-dependent) are decided by the frozen interval and route rules, not by these p-values; both decisions are unchanged",
+  "observed": {
+   "design_enumerates_contrasts": false,
+   "design_text_verbatim": "Holm across the primary H4 and H1 contrasts",
+   "holm_adjusted_monte_carlo_p": {
+    "H1_arm_a_A3_minus_A0": 1.0,
+    "H1_arm_a_A4_minus_A0": 0.007,
+    "H1_base_A3_minus_A0": 1.0,
+    "H1_base_A4_minus_A0": 0.0012,
+    "H4_exposed_A0_sft_minus_base": 1.0,
+    "H4_unexposed_A0_sft_minus_base": 0.58554
+   },
+   "six_test_family_used_in_v3": [
+    "H1_arm_a_A3_minus_A0",
+    "H1_arm_a_A4_minus_A0",
+    "H1_base_A3_minus_A0",
+    "H1_base_A4_minus_A0",
+    "H4_exposed_A0_sft_minus_base",
+    "H4_unexposed_A0_sft_minus_base"
+   ]
+  },
+  "status": "POST-HOC OPERATIONALISATION / SENSITIVITY ANALYSIS",
+  "supersedes_wording_in": "results/sft_root_cause_phase3a_result_receipt_v3.json"
+ },
+ "power_evidence_status": {
+  "consequence": "group counts in the power receipt are planning ranges for the synthetic distribution; they are not guaranteed repository sample sizes, and real power is expected to be lower",
+  "simulation_assumptions": [
+   "decisions use cluster-sandwich normal intervals, not the exact paired cluster-bootstrap gate",
+   "injected effects are shared across the two answer schemas by construction and do not span every possible cross-schema treatment-effect dependence",
+   "outcomes are synthetic train-side MBPP/HumanEval Phase 3A outcomes, not repository-native outcomes",
+   "training-seed variance is not modelled",
+   "the answer-rate, validity and diversity guardrails are not modelled"
+  ],
+  "status": "PLANNING EVIDENCE, NOT A POWER GUARANTEE",
+  "supersedes_wording_in": [
+   "results/sft_root_cause_phase4_power_analysis_v1.json",
+   "docs/SFT_ROOT_CAUSE_PHASE4_CHOICES.md"
+  ]
+ },
+ "schema_version": "oneiros_sft_root_cause_reporting_addendum_v1",
+ "training": false
+}
