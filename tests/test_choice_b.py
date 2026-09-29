@@ -10,7 +10,9 @@ import pytest
 from harness import choice_b as cb
 
 ROOT = Path(__file__).resolve().parent.parent
-SPLIT = ROOT / "results" / "sft_root_cause_phase4_choice_b_split_v1.json"
+SPLIT = ROOT / "results" / "sft_root_cause_phase4_choice_b_split_v2.json"
+SPLIT_V1 = ROOT / "results" / "sft_root_cause_phase4_choice_b_split_v1.json"
+REFUSED = ROOT / "results" / "sft_root_cause_phase4_choice_b_preflight_split_v1_REFUSED.json"
 RECEIPT = ROOT / "results" / "sft_root_cause_phase4_choice_b_preflight_receipt.json"
 
 
@@ -109,3 +111,16 @@ def test_preflight_receipt_is_green_and_launches_nothing():
     assert receipt["split"]["sha256"] == hashlib.sha256(SPLIT.read_bytes()).hexdigest()
     assert receipt["protected_access_audit"]["protected_paths_opened"] == []
     assert "COMPOSITE" in receipt["estimand"]
+
+
+def test_v1_split_is_preserved_superseded_and_its_refusal_recorded():
+    split = json.loads(SPLIT.read_text(encoding="utf-8"))
+    assert split["supersedes"]["sha256"] == hashlib.sha256(SPLIT_V1.read_bytes()).hexdigest()
+    refused = json.loads(REFUSED.read_text(encoding="utf-8"))
+    assert refused["ready"] is False
+    assert any("token fit" in problem for problem in refused["problems"])
+    v1 = json.loads(SPLIT_V1.read_text(encoding="utf-8"))
+    # Only the token-fit rule changed: same pool, same gate.
+    assert v1["gate"]["group_ids"] == split["gate"]["group_ids"]
+    assert v1["pool"] == split["pool"]
+    assert split["training"]["rows_excluded_by_token_fit"] > 0

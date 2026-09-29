@@ -43,7 +43,8 @@ COMPLEXITY = f"{VIEW}/complexity_manifest.json"
 ARM_A_PREFLIGHT = "results/v4_2_armA_successor_preflight.json"
 PHASE3_COHORT = "results/sft_root_cause_phase3a_cohort.json"
 CENSUS = "results/sft_root_cause_phase4_cohort_census.json"
-SPLIT = "results/sft_root_cause_phase4_choice_b_split_v1.json"
+SPLIT_V1 = "results/sft_root_cause_phase4_choice_b_split_v1.json"   # superseded: token fit
+SPLIT = "results/sft_root_cause_phase4_choice_b_split_v2.json"
 RECEIPT = "results/sft_root_cause_phase4_choice_b_preflight_receipt.json"
 RUN_DIR = "results/sft_root_cause/phase4_choice_b"          # ignored; raw outputs
 TRACKED_RESULT = "results/sft_root_cause_phase4_choice_b_{what}_{arm}.json"
@@ -123,8 +124,9 @@ def build_split() -> dict:
     by_id = {r["id"]: r for g in training_groups for r in pool[g]}
     records = [r for g in training_groups for r in pool[g] if cb.is_function(r)]
     raw = [row for chunk in map_jobs(cb.training_rows_for_record, records) for row in chunk]
+    fitting, overlong = token_fit(raw, by_id)
     rows = []
-    for row in cb.cap_and_order(raw):
+    for row in cb.cap_and_order(fitting):
         record = by_id[row["record_id"]]
         rows.append({**row, "dataset": record["source"]["upstream"],
                      "complexity_tier": tiers.get(row["record_id"], "none"),
@@ -133,7 +135,13 @@ def build_split() -> dict:
     gate_functions = [feasible[g] for g in gate]
     spec = cb.frozen_evaluation_spec()
     return {
-        "schema_version": "oneiros_phase4_choice_b_split_v1",
+        "schema_version": "oneiros_phase4_choice_b_split_v2",
+        "supersedes": {"path": SPLIT_V1, "sha256": rel_sha(SPLIT_V1), "modified": False,
+                       "reason": ("the v1 preflight refused v1 because 37 of 3,944 training "
+                                  "prompts would be compacted at the 1,024-token prompt limit; "
+                                  "v2 adds a token-fit admission rule before the group cap; "
+                                  "the gate, pool and every other rule are unchanged; no "
+                                  "Choice B outcome existed")},
         "design_version": cb.DESIGN_VERSION, "labels": list(cb.LABELS),
         "frozen_before_any_choice_b_outcome": True,
         "inputs": {rel: rel_sha(rel) for rel in (TRAIN, COMPLEXITY, ARM_A_PREFLIGHT,
@@ -151,7 +159,14 @@ def build_split() -> dict:
         "training": {"groups_in_split": len(training_groups),
                      "group_ids_sha256": cb.ids_sha256(training_groups),
                      "function_records_considered": len(records),
-                     "rows_before_cap": len(raw), "rows": len(rows),
+                     "rows_verified": len(raw),
+                     "rows_excluded_by_token_fit": len(overlong),
+                     "token_fit_rule": ("a row is admitted only if its A0 prompt passes the "
+                                        "production prepare_dataset at max_prompt_tokens="
+                                        f"{TRAINER_KWARGS['max_prompt_tokens']} with no "
+                                        "compaction and no drop; applied before the group "
+                                        "cap"),
+                     "rows_before_cap": len(fitting), "rows": len(rows),
                      "groups_with_rows": len({r["group_id"] for r in rows}),
                      "max_calls_per_record": cb.MAX_CALLS_PER_RECORD,
                      "group_cap": cb.GROUP_CAP,
@@ -161,6 +176,26 @@ def build_split() -> dict:
         "rows": rows,
         "evaluation_spec": spec, "evaluation_spec_sha256": cb.spec_sha256(spec),
     }
+
+
+def token_fit(rows, records_by_id):
+    """Split rows into (fits, overlong) through the production dataset preparation."""
+    import transformers
+    from harness.objective_masking import dataset_trainer, make_datapoint
+    tokenizer = transformers.AutoTokenizer.from_pretrained(MODEL, revision=REVISION,
+                                                           local_files_only=True)
+    trainer = dataset_trainer(tokenizer, "full_completion")
+    for key in ("max_prompt_tokens", "max_repository_prompt_tokens",
+                "max_completion_tokens", "max_repository_completion_tokens"):
+        setattr(trainer, key, TRAINER_KWARGS[key])
+    fits, overlong = [], []
+    for row in rows:
+        trainer.prepare_dataset([make_datapoint(records_by_id[row["record_id"]], row["call"],
+                                                row["value"])])
+        stats = trainer.dataset_stats
+        ok = stats["retained_examples"] == 1 and not stats["prompt_truncated_examples"]
+        (fits if ok else overlong).append(row)
+    return fits, overlong
 
 
 def freeze() -> int:
