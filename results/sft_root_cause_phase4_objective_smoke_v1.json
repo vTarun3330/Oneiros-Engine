@@ -1,0 +1,120 @@
+{
+ "batch_problems": [],
+ "checks": {
+  "both_runs_exited_zero": true,
+  "control_supervises_more_tokens": true,
+  "no_evaluation_no_promotion": true,
+  "only_labels_and_derived_quantities_differ": true,
+  "optimizer_update_completed_both": true,
+  "trainer_batches_identical_except_labels": true
+ },
+ "data": "32 fixed-input train-split examples from the Phase 3 exposed cohort (already-used development evidence); no validation, test, sealed or reserved data; no evaluation",
+ "differing_fields": [
+  "arm",
+  "checkpoint_dir",
+  "dataset.labels_sha256",
+  "dataset.objective_mode",
+  "dataset.supervised_tokens",
+  "lora_b_norm.after",
+  "loss",
+  "objective_mode",
+  "timing.tokens_per_second",
+  "timing.train_seconds",
+  "trainer_batch_sequence.labels_sha256",
+  "trainer_batch_sequence.supervised_tokens"
+ ],
+ "disposable_checkpoints": {
+  "control": "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\checkpoints\\phase4_objective_smoke_DISPOSABLE\\control",
+  "treatment": "C:\\Users\\Student2\\Desktop\\Capstone\\oneiros\\checkpoints\\phase4_objective_smoke_DISPOSABLE\\treatment"
+ },
+ "efficacy_inferred": false,
+ "identical": {
+  "dataset_attention_mask_sha256": "31d8019e2c6cf4bd286ab54a5192412f875183e8bff9dd9ac3e435167d64a23b",
+  "dataset_input_ids_sha256": "94dac29e05fc8c0d0f3e72a0f4666a059fa6c6443065e2e9296582339bc8a1f5",
+  "example_keys_sha256": "a8af6a1302632cc50d57e9df2fbed2aa1bc0271a446addd184b854dceb358714",
+  "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "optimizer": {
+   "completed_steps": 2,
+   "effective_batch": 16,
+   "lr": 1e-05,
+   "planned_steps": 2,
+   "scheduler": "constant_with_warmup",
+   "warmup_steps": 1
+  },
+  "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+  "runtime_profile": {
+   "attention_implementation": "sdpa",
+   "compute_dtype": "bf16",
+   "double_quant": false,
+   "load_in_4bit": true,
+   "model_name": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+   "model_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+   "profile_version": "oneiros_phi3_4bit_nf4_aligned_v1",
+   "quant_type": "nf4"
+  },
+  "seed": 42,
+  "tokens_seen_by_trainer": 15054,
+  "trainer_batch_input_ids_sequence_sha256": "53a4a86fd85206e29123bbbf39d4474604dec8019c3dcbfec90e90425b71a269"
+ },
+ "local_receipts_sha256": {
+  "control": "a7e70a3bf87bddb0015cfc9e8764aba5060597e186ebd074d92a0c72f69351ba",
+  "treatment": "c4a6b4e0dc62e8f00e048979679bb4fe8c12b278d5c4fd4817c7b3bafe449263"
+ },
+ "model_calls": "training forward/backward passes only (no generation)",
+ "per_arm": {
+  "control": {
+   "dataset_labels_sha256": "a6d96976c26a18baf7129abb1e57eed4d5d528fd67fc763b3f0e8bf0a1d8afa0",
+   "gpu": {
+    "device": "NVIDIA RTX 4500 Ada Generation",
+    "peak_allocated_mib": 3184.4,
+    "peak_reserved_mib": 4556.0
+   },
+   "lora_b_norm": {
+    "after": 0.09372609108686447,
+    "before": 0.0,
+    "update_applied": true
+   },
+   "loss_not_interpreted": 0.1876642405986786,
+   "objective_mode": "full_completion",
+   "optimizer_steps_completed": 2,
+   "run_duration_seconds": 16.1,
+   "run_id": "20260929-114416-phase4_smoke_control",
+   "supervised_tokens": 952,
+   "timing": {
+    "tokens_per_second": 1730.5,
+    "tokens_seen_by_trainer": 15054,
+    "train_seconds": 8.7
+   },
+   "trainer_labels_sequence_sha256": "218a2761df40e75ad2e566e3e328a6b0f18c81b65fea9b8143e9da7e884278c4"
+  },
+  "treatment": {
+   "dataset_labels_sha256": "265d72fc9fae4256a580ee93015ec660361c527e5404cb606c00db044c949815",
+   "gpu": {
+    "device": "NVIDIA RTX 4500 Ada Generation",
+    "peak_allocated_mib": 3184.4,
+    "peak_reserved_mib": 4556.0
+   },
+   "lora_b_norm": {
+    "after": 0.09223420172929764,
+    "before": 0.0,
+    "update_applied": true
+   },
+   "loss_not_interpreted": 0.8106319904327393,
+   "objective_mode": "value_only",
+   "optimizer_steps_completed": 2,
+   "run_duration_seconds": 16.1,
+   "run_id": "20260929-114445-phase4_smoke_treatment",
+   "supervised_tokens": 220,
+   "timing": {
+    "tokens_per_second": 1717.6,
+    "tokens_seen_by_trainer": 15054,
+    "train_seconds": 8.8
+   },
+   "trainer_labels_sequence_sha256": "e58c2dfdbd7aee6cd57d9fe83c5b06c07ffc223d3a4d212da4c79ac17df33d00"
+  }
+ },
+ "purpose": "integration and timing smoke; NOT efficacy training",
+ "schema_version": "oneiros_sft_root_cause_phase4_objective_smoke_v1",
+ "status": "ACCEPTED",
+ "unexpected_differences": []
+}
