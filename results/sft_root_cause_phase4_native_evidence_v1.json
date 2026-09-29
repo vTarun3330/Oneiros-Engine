@@ -1,0 +1,1213 @@
+{
+ "bundle": "phase4_native_rehearsal_v1",
+ "dependency_resolution": {
+  "limitation": "The v1 native rehearsal did NOT record per-repository dependency resolution (no uv pip freeze, no lock or requirements hashes). It is not reconstructed retroactively: re-resolving today could pick different versions. What is known is the uv version, the Python used per target, and the install-command KIND (extras, groups, requirement files). scripts/native_rehearsal_wsl.py now records Python and uv versions, the sanitized install command, dependency-file hashes and a sanitized freeze with its SHA-256 for every future run.",
+  "recorded_in_v1": false
+ },
+ "facts": {
+  "categories": {
+   "natively_qualified": 24,
+   "official_tests_do_not_distinguish": 1,
+   "test_infrastructure_error": 1
+  },
+  "per_target": [
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 3,
+    "environment_failure": false,
+    "environment_seconds": 0.7,
+    "install_command_kind": [
+     {
+      "extras": [
+       "tests",
+       "dev"
+      ],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:marshmallow-code/marshmallow@024b5d09e9f026f0f96d220e243be69346687ce0",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "marshmallow-code/marshmallow",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 3,
+       "passed": 382,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.8
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 385,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.4
+     }
+    },
+    "wall_seconds": 3.6
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 1,
+    "environment_failure": false,
+    "environment_seconds": 0.2,
+    "install_command_kind": [
+     {
+      "extras": [
+       "tests",
+       "dev"
+      ],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "marshmallow-code/marshmallow",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 1,
+       "passed": 381,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.6
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 382,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.4
+     }
+    },
+    "wall_seconds": 2.3
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 4,
+    "environment_failure": false,
+    "environment_seconds": 0.2,
+    "install_command_kind": [
+     {
+      "extras": [
+       "tests",
+       "dev"
+      ],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:marshmallow-code/marshmallow@72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "marshmallow-code/marshmallow",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 4,
+       "passed": 405,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.6
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 409,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.4
+     }
+    },
+    "wall_seconds": 2.5
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 4,
+    "environment_failure": false,
+    "environment_seconds": 1.9,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [
+       "mypy>=1.14.1",
+       "pre-commit>=3.5,<5.0",
+       "pytest",
+       "simplejson",
+       "tox",
+       "tox-uv",
+       "types-simplejson"
+      ],
+      "groups": [
+       "tests",
+       "dev"
+      ],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:marshmallow-code/marshmallow@902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "marshmallow-code/marshmallow",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 4,
+       "passed": 217,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.5
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 221,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.3
+     }
+    },
+    "wall_seconds": 4.5
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 6,
+    "environment_failure": false,
+    "environment_seconds": 0.3,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:pyparsing/pyparsing@0a2d906a3e6b9a30b6a0701588caec3937ff271f",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "pyparsing/pyparsing",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 6,
+       "passed": 1826,
+       "skipped": 6
+      },
+      "exit": 1,
+      "seconds": 24.4
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 1832,
+       "skipped": 6
+      },
+      "exit": 0,
+      "seconds": 22.0
+     }
+    },
+    "wall_seconds": 49.5
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 6,
+    "environment_failure": false,
+    "environment_seconds": 0.3,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "pyparsing/pyparsing",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 6,
+       "passed": 1946,
+       "skipped": 6
+      },
+      "exit": 1,
+      "seconds": 22.1
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 1952,
+       "skipped": 6
+      },
+      "exit": 0,
+      "seconds": 20.2
+     }
+    },
+    "wall_seconds": 44.7
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 1,
+    "environment_failure": false,
+    "environment_seconds": 1.0,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [
+       "cloudpickle; platform_python_implementation == \"CPython\"",
+       "hypothesis",
+       "interrogate>=1.7.0",
+       "prek",
+       "pympler",
+       "pytest",
+       "pytest-xdist[psutil]",
+       "ruff"
+      ],
+      "groups": [
+       "tests",
+       "dev"
+      ],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-attrs/attrs@97f8d175656bc03c373a1c9038048a4d312c307c",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-attrs/attrs",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 1,
+       "passed": 47,
+       "skipped": 2
+      },
+      "exit": 1,
+      "seconds": 0.7
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 48,
+       "skipped": 2
+      },
+      "exit": 0,
+      "seconds": 0.3
+     }
+    },
+    "wall_seconds": 5.4
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 1,
+    "environment_failure": false,
+    "environment_seconds": 0.4,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [
+       "cloudpickle; platform_python_implementation == \"CPython\"",
+       "hypothesis",
+       "pympler",
+       "pytest",
+       "pytest-xdist[psutil]",
+       "ruff"
+      ],
+      "groups": [
+       "tests",
+       "dev"
+      ],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-attrs/attrs@af9c510912ce604a94896cc35c27368d5baf6ae6",
+    "literal_calls_found": 1,
+    "python": "3.13",
+    "repository": "python-attrs/attrs",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 1,
+       "passed": 162,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.7
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 163,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.3
+     }
+    },
+    "wall_seconds": 3.8
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 1,
+    "environment_failure": false,
+    "environment_seconds": 0.9,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [
+       "coverage>=7.9.2",
+       "hypothesis>=6.135.26",
+       "immutables>=0.21",
+       "pytest-benchmark>=5.1.0",
+       "pytest-xdist>=3.8.0",
+       "pytest>=8.4.1"
+      ],
+      "groups": [
+       "test"
+      ],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-attrs/cattrs@304e3700198311c78a5c6993c0ac6f3307a2e28a",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-attrs/cattrs",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 1,
+       "passed": 11,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.7
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 12,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.3
+     }
+    },
+    "wall_seconds": 5.0
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 2,
+    "environment_failure": false,
+    "environment_seconds": 0.3,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [
+       "coverage>=7.9.2",
+       "hypothesis>=6.135.26",
+       "immutables>=0.21",
+       "pytest-benchmark>=5.1.0",
+       "pytest-xdist>=3.8.0",
+       "pytest>=8.4.1"
+      ],
+      "groups": [
+       "test"
+      ],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-attrs/cattrs@31c19cee405100b084e139e2d955c568dcd1010a",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-attrs/cattrs",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 2,
+       "passed": 87,
+       "skipped": 15
+      },
+      "exit": 1,
+      "seconds": 1.9
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 89,
+       "skipped": 15
+      },
+      "exit": 0,
+      "seconds": 1.2
+     }
+    },
+    "wall_seconds": 5.6
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 1,
+    "environment_failure": false,
+    "environment_seconds": 0.4,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [
+       "coverage>=7.9.2",
+       "hypothesis>=6.135.26",
+       "immutables>=0.21",
+       "pytest-benchmark>=5.1.0",
+       "pytest-xdist>=3.8.0",
+       "pytest>=8.4.1"
+      ],
+      "groups": [
+       "test"
+      ],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-attrs/cattrs@573915b6b450c23eaf818370ac2e339dd9aee262",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-attrs/cattrs",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 1,
+       "passed": 89,
+       "skipped": 15
+      },
+      "exit": 1,
+      "seconds": 1.9
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 90,
+       "skipped": 15
+      },
+      "exit": 0,
+      "seconds": 1.3
+     }
+    },
+    "wall_seconds": 5.0
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 1,
+    "environment_failure": false,
+    "environment_seconds": 0.3,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [
+       "coverage>=7.9.2",
+       "hypothesis>=6.135.26",
+       "immutables>=0.21",
+       "mypy; python_version == '3.14' and implementation_name == 'cpython'",
+       "pytest-benchmark>=5.1.0",
+       "pytest-typing; python_version == '3.14' and implementation_name == 'cpython'",
+       "pytest-xdist>=3.8.0",
+       "pytest>=8.4.1"
+      ],
+      "groups": [
+       "test"
+      ],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-attrs/cattrs@a6c0900533af780155510343c1472a46fcb984f5",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-attrs/cattrs",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 1,
+       "passed": 23,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 13.6
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 24,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 14.8
+     }
+    },
+    "wall_seconds": 31.0
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 1,
+    "environment_failure": false,
+    "environment_seconds": 0.4,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [
+       "coverage>=7.9.2",
+       "hypothesis>=6.135.26",
+       "immutables>=0.21",
+       "mypy; python_version == '3.14' and implementation_name == 'cpython'",
+       "pytest-benchmark>=5.1.0",
+       "pytest-typing; python_version == '3.14' and implementation_name == 'cpython'",
+       "pytest-xdist>=3.8.0",
+       "pytest>=8.4.1"
+      ],
+      "groups": [
+       "test"
+      ],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-attrs/cattrs@bc34a466a878d3259d01d0169b3fb95420d7d50d",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-attrs/cattrs",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 1,
+       "passed": 9,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.7
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 10,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.3
+     }
+    },
+    "wall_seconds": 3.5
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 5,
+    "environment_failure": false,
+    "environment_seconds": 0.8,
+    "install_command_kind": [
+     {
+      "extras": [
+       "tests"
+      ],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-humanize/humanize",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 5,
+       "passed": 227,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.5
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 232,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.2
+     }
+    },
+    "wall_seconds": 3.7
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 2,
+    "environment_failure": false,
+    "environment_seconds": 0.4,
+    "install_command_kind": [
+     {
+      "extras": [
+       "tests"
+      ],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-humanize/humanize@392aef707c0e74341ab4a51420984e9ea6b566c5",
+    "literal_calls_found": 2,
+    "python": "3.13",
+    "repository": "python-humanize/humanize",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 2,
+       "passed": 390,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 1.0
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 392,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.7
+     }
+    },
+    "wall_seconds": 4.3
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 2,
+    "environment_failure": false,
+    "environment_seconds": 0.4,
+    "install_command_kind": [
+     {
+      "extras": [
+       "tests"
+      ],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-humanize/humanize@984526c02448110a8392dde3f5e26096dfd7c729",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-humanize/humanize",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 2,
+       "passed": 232,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.5
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 234,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.2
+     }
+    },
+    "wall_seconds": 2.6
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 1,
+    "environment_failure": false,
+    "environment_seconds": 0.4,
+    "install_command_kind": [
+     {
+      "extras": [
+       "tests"
+      ],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-humanize/humanize",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 1,
+       "passed": 240,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.5
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 241,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.3
+     }
+    },
+    "wall_seconds": 2.7
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 5,
+    "environment_failure": false,
+    "environment_seconds": 0.4,
+    "install_command_kind": [
+     {
+      "extras": [
+       "tests"
+      ],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-humanize/humanize@e46732ed235019682b7bfc6c44443e247b332e95",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-humanize/humanize",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 5,
+       "passed": 235,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.5
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 240,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.3
+     }
+    },
+    "wall_seconds": 2.7
+   },
+   {
+    "category": "official_tests_do_not_distinguish",
+    "difference_exposing_count": 0,
+    "environment_failure": false,
+    "environment_seconds": 21.3,
+    "install_command_kind": [
+     {
+      "extras": [
+       "test"
+      ],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-pendulum/pendulum@bd8908581471fa7b77b7aeb3dfb502b929c632d6",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-pendulum/pendulum",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 0,
+       "passed": 45,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.4
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 45,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.2
+     }
+    },
+    "wall_seconds": 40.0
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 1,
+    "environment_failure": false,
+    "environment_seconds": 0.0,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-poetry/tomlkit",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 1,
+       "passed": 64,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.3
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 65,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.2
+     }
+    },
+    "wall_seconds": 2.6
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 6,
+    "environment_failure": false,
+    "environment_seconds": 0.4,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-poetry/tomlkit@4b38becd75405e0f38ef3e47e9839eb407591c8a",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-poetry/tomlkit",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 6,
+       "passed": 86,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.4
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 92,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.2
+     }
+    },
+    "wall_seconds": 3.2
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 6,
+    "environment_failure": false,
+    "environment_seconds": 0.4,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-poetry/tomlkit@8cd44f58b499da3c80a29bc877a512665a15e0bb",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-poetry/tomlkit",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 6,
+       "passed": 151,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.5
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 157,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.3
+     }
+    },
+    "wall_seconds": 3.2
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 1,
+    "environment_failure": false,
+    "environment_seconds": 0.4,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:python-poetry/tomlkit@e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "python-poetry/tomlkit",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 1,
+       "passed": 68,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.5
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 69,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.2
+     }
+    },
+    "wall_seconds": 3.5
+   },
+   {
+    "category": "test_infrastructure_error",
+    "difference_exposing_count": null,
+    "environment_failure": true,
+    "environment_seconds": 0.7,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:tkem/cachetools@39b31bc9b63abe98497409945e9d382d8918c8fb",
+    "literal_calls_found": null,
+    "python": "3.13",
+    "repository": "tkem/cachetools",
+    "safe_fixed_call_constructed": null,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 0,
+       "passed": 0,
+       "skipped": 0
+      },
+      "exit": 5,
+      "seconds": 0.2
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 0,
+       "skipped": 0
+      },
+      "exit": 5,
+      "seconds": 0.1
+     }
+    },
+    "wall_seconds": 3.7
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 1,
+    "environment_failure": false,
+    "environment_seconds": 0.7,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:tkem/cachetools@57d2e4813d9801f97034559e22428bac6f7c6c9b",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "tkem/cachetools",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 1,
+       "passed": 45,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 0.3
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 46,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.2
+     }
+    },
+    "wall_seconds": 3.6
+   },
+   {
+    "category": "natively_qualified",
+    "difference_exposing_count": 1,
+    "environment_failure": false,
+    "environment_seconds": 0.8,
+    "install_command_kind": [
+     {
+      "extras": [],
+      "group_requirements": [],
+      "groups": [],
+      "requirement_files": []
+     }
+    ],
+    "key": "cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e",
+    "literal_calls_found": 0,
+    "python": "3.13",
+    "repository": "tobymao/sqlglot",
+    "safe_fixed_call_constructed": false,
+    "tests": {
+     "buggy": {
+      "counts": {
+       "failed": 1,
+       "passed": 33,
+       "skipped": 0
+      },
+      "exit": 1,
+      "seconds": 1.3
+     },
+     "fixed": {
+      "counts": {
+       "failed": 0,
+       "passed": 34,
+       "skipped": 0
+      },
+      "exit": 0,
+      "seconds": 0.6
+     }
+    },
+    "wall_seconds": 6.4
+   }
+  ],
+  "run_summary": {
+   "cpus": 32,
+   "host": "Linux <host> 5.15.167.4-microsoft-standard-WSL2 #1 SMP Tue Nov 5 00:21:55 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux",
+   "uv": "uv 0.12.7 (x86_64-unknown-linux-gnu)",
+   "wall_seconds": 95.5
+  },
+  "targets": 26
+ },
+ "files": {
+  "console.log": {
+   "normalizations": [],
+   "original_bytes": 3185,
+   "original_path": "results/sft_root_cause/phase4_native_rehearsal/console.log",
+   "original_sha256": "6f02757e811285582ca0525ae14b5d94bd072e2d1a8b467b90470991e1917655",
+   "text": "rehearsing 26 targets in 9 repositories (0 already done)\n[    3.6s] natively_qualified                       cand:marshmallow-code/marshmallow@024b5d09e9f026f0f96d220e243be69346687ce0\n[    5.0s] natively_qualified                       cand:python-attrs/cattrs@304e3700198311c78a5c6993c0ac6f3307a2e28a\n[    5.4s] natively_qualified                       cand:python-attrs/attrs@97f8d175656bc03c373a1c9038048a4d312c307c\n[    2.3s] natively_qualified                       cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7\n[    2.5s] natively_qualified                       cand:marshmallow-code/marshmallow@72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a\n[    3.8s] natively_qualified                       cand:python-attrs/attrs@af9c510912ce604a94896cc35c27368d5baf6ae6\n[    5.6s] natively_qualified                       cand:python-attrs/cattrs@31c19cee405100b084e139e2d955c568dcd1010a\n[    4.5s] natively_qualified                       cand:marshmallow-code/marshmallow@902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6\n[    3.7s] natively_qualified                       cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978\n[    5.0s] natively_qualified                       cand:python-attrs/cattrs@573915b6b450c23eaf818370ac2e339dd9aee262\n[    4.3s] natively_qualified                       cand:python-humanize/humanize@392aef707c0e74341ab4a51420984e9ea6b566c5\n[    2.6s] natively_qualified                       cand:python-humanize/humanize@984526c02448110a8392dde3f5e26096dfd7c729\n[    2.7s] natively_qualified                       cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652\n[    2.7s] natively_qualified                       cand:python-humanize/humanize@e46732ed235019682b7bfc6c44443e247b332e95\n[    2.6s] natively_qualified                       cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897\n[    3.2s] natively_qualified                       cand:python-poetry/tomlkit@4b38becd75405e0f38ef3e47e9839eb407591c8a\n[    3.2s] natively_qualified                       cand:python-poetry/tomlkit@8cd44f58b499da3c80a29bc877a512665a15e0bb\n[    3.5s] natively_qualified                       cand:python-poetry/tomlkit@e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3\n[    3.7s] test_infrastructure_error                cand:tkem/cachetools@39b31bc9b63abe98497409945e9d382d8918c8fb\n[   31.0s] natively_qualified                       cand:python-attrs/cattrs@a6c0900533af780155510343c1472a46fcb984f5\n[   49.5s] natively_qualified                       cand:pyparsing/pyparsing@0a2d906a3e6b9a30b6a0701588caec3937ff271f\n[    3.6s] natively_qualified                       cand:tkem/cachetools@57d2e4813d9801f97034559e22428bac6f7c6c9b\n[    3.5s] natively_qualified                       cand:python-attrs/cattrs@bc34a466a878d3259d01d0169b3fb95420d7d50d\n[   40.0s] official_tests_do_not_distinguish        cand:python-pendulum/pendulum@bd8908581471fa7b77b7aeb3dfb502b929c632d6\n[    6.4s] natively_qualified                       cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e\n[   44.7s] natively_qualified                       cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957\n",
+   "text_sha256": "6f02757e811285582ca0525ae14b5d94bd072e2d1a8b467b90470991e1917655"
+  },
+  "records.jsonl": {
+   "normalizations": [],
+   "original_bytes": 41977,
+   "original_path": "results/sft_root_cause/phase4_native_rehearsal/records.jsonl",
+   "original_sha256": "2b139d2db295416a1c4da148407d3cd85b63a1809f41503cb141cde25451bc6b",
+   "text": "{\"bug_family\": \"exception_handling\", \"buggy_commit\": \"252090c7c707166cf4fcfcdc73eb4376b7bbc4b7\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 3, \"difference_exposing_tests\": [\"tests.test_deserialization.TestFieldDeserialization::test_enum_field_by_symbol_rejects_non_member_attributes[__class__]\", \"tests.test_deserialization.TestFieldDeserialization::test_enum_field_by_symbol_rejects_non_member_attributes[__members__]\", \"tests.test_deserialization.TestFieldDeserialization::test_enum_field_by_symbol_rejects_non_member_attributes[mro]\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"marshmallow.fields\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"024b5d09e9f026f0f96d220e243be69346687ce0\", \"key\": \"cand:marshmallow-code/marshmallow@024b5d09e9f026f0f96d220e243be69346687ce0\", \"regression_test_files\": [\"tests/test_deserialization.py\"], \"repository\": \"marshmallow-code/marshmallow\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [\"tests\", \"dev\"], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.7, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.7}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.1}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.2}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"Enum._deserialize\", \"target_file\": \"src/marshmallow/fields.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 3, \"passed\": 382, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.8}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 385, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.4}}, \"tier\": \"complex\", \"wall_seconds\": 3.6}\n{\"bug_family\": \"other_logic\", \"buggy_commit\": \"573915b6b450c23eaf818370ac2e339dd9aee262\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 1, \"difference_exposing_tests\": [\"tests.test_tuples::test_dict_namedtuples_detailed_validation\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"cattrs.cols\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"304e3700198311c78a5c6993c0ac6f3307a2e28a\", \"key\": \"cand:python-attrs/cattrs@304e3700198311c78a5c6993c0ac6f3307a2e28a\", \"regression_test_files\": [\"tests/test_tuples.py\"], \"repository\": \"python-attrs/cattrs\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [\"coverage>=7.9.2\", \"hypothesis>=6.135.26\", \"immutables>=0.21\", \"pytest-benchmark>=5.1.0\", \"pytest-xdist>=3.8.0\", \"pytest>=8.4.1\"], \"groups\": [\"test\"], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.9, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.9}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.3}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 1.5}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.9}}, \"target\": \"namedtuple_dict_structure_factory\", \"target_file\": \"src/cattrs/cols.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 1, \"passed\": 11, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.7}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 12, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.3}}, \"tier\": \"complex\", \"wall_seconds\": 5.0}\n{\"bug_family\": \"other_logic\", \"buggy_commit\": \"6851ab593cd25f3c14393e9355d57d22bec2a074\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 1, \"difference_exposing_tests\": [\"tests.test_annotations::test_is_class_var[annot4]\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"attr._make\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"97f8d175656bc03c373a1c9038048a4d312c307c\", \"key\": \"cand:python-attrs/attrs@97f8d175656bc03c373a1c9038048a4d312c307c\", \"regression_test_files\": [\"tests/test_annotations.py\"], \"repository\": \"python-attrs/attrs\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [\"cloudpickle; platform_python_implementation == \\\"CPython\\\"\", \"hypothesis\", \"interrogate>=1.7.0\", \"prek\", \"pympler\", \"pytest\", \"pytest-xdist[psutil]\", \"ruff\"], \"groups\": [\"tests\", \"dev\"], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 1.0, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 1.0}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.4}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 1.9}}, \"target\": \"_is_class_var\", \"target_file\": \"src/attr/_make.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 1, \"passed\": 47, \"skipped\": 2}, \"exit\": 1, \"seconds\": 0.7}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 48, \"skipped\": 2}, \"exit\": 0, \"seconds\": 0.3}}, \"tier\": \"moderate\", \"wall_seconds\": 5.4}\n{\"bug_family\": \"other_logic\", \"buggy_commit\": \"65374df0c31cdc45acc4435741779298201306a2\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 1, \"difference_exposing_tests\": [\"tests.test_deserialization.TestValidation::test_nested_partial_tuple_with_data_key\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"marshmallow.schema\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"252090c7c707166cf4fcfcdc73eb4376b7bbc4b7\", \"key\": \"cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7\", \"regression_test_files\": [\"tests/test_deserialization.py\"], \"repository\": \"marshmallow-code/marshmallow\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [\"tests\", \"dev\"], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.2, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.2}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.1}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.2}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.8}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.0}}, \"target\": \"Schema._deserialize\", \"target_file\": \"src/marshmallow/schema.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 1, \"passed\": 381, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.6}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 382, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.4}}, \"tier\": \"complex\", \"wall_seconds\": 2.3}\n{\"bug_family\": \"exception_handling\", \"buggy_commit\": \"024b5d09e9f026f0f96d220e243be69346687ce0\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 4, \"difference_exposing_tests\": [\"tests.test_deserialization.TestFieldDeserialization::test_boolean_timestamp_field_deserialization[False-timestamp_ms]\", \"tests.test_deserialization.TestFieldDeserialization::test_boolean_timestamp_field_deserialization[True-timestamp_ms]\", \"tests.test_utils::test_from_timestamp_ms_rejects_booleans[False]\", \"tests.test_utils::test_from_timestamp_ms_rejects_booleans[True]\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"marshmallow.utils\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a\", \"key\": \"cand:marshmallow-code/marshmallow@72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a\", \"regression_test_files\": [\"tests/test_deserialization.py\", \"tests/test_utils.py\"], \"repository\": \"marshmallow-code/marshmallow\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [\"tests\", \"dev\"], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.2, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.2}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.1}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.1}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.0}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.9}}, \"target\": \"from_timestamp_ms\", \"target_file\": \"src/marshmallow/utils.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 4, \"passed\": 405, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.6}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 409, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.4}}, \"tier\": \"simple\", \"wall_seconds\": 2.5}\n{\"bug_family\": \"other_logic\", \"buggy_commit\": \"ab7f8b2f4c0f747d5b1575247ce35e5adaad182e\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 1, \"difference_exposing_tests\": [\"tests.test_validators.TestDisableValidators::test_disabled_ctx_nested\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [{\"buggy\": [\"ok\", \"<contextlib._GeneratorContextManager object at 0x7f102ca682f0>\"], \"call\": \"validator_module.disabled()\", \"fixed\": [\"ok\", \"<contextlib._GeneratorContextManager object at 0x7f26757ac2f0>\"], \"safe_fixed_call\": false}], \"import_error\": null, \"literal_calls_found\": 1, \"module\": \"attr.validators\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"af9c510912ce604a94896cc35c27368d5baf6ae6\", \"key\": \"cand:python-attrs/attrs@af9c510912ce604a94896cc35c27368d5baf6ae6\", \"regression_test_files\": [\"tests/test_validators.py\"], \"repository\": \"python-attrs/attrs\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [\"cloudpickle; platform_python_implementation == \\\"CPython\\\"\", \"hypothesis\", \"pympler\", \"pytest\", \"pytest-xdist[psutil]\", \"ruff\"], \"groups\": [\"tests\", \"dev\"], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.4, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.4}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.4}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.8}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.9}}, \"target\": \"disabled\", \"target_file\": \"src/attr/validators.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 1, \"passed\": 162, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.7}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 163, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.3}}, \"tier\": \"simple\", \"wall_seconds\": 3.8}\n{\"bug_family\": \"type_or_conversion\", \"buggy_commit\": \"32d0be5251224cad813f5cdac26d29abebd86493\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 2, \"difference_exposing_tests\": [\"tests.strategies.test_include_subclasses::test_diamond_inheritance[False]\", \"tests.strategies.test_include_subclasses::test_diamond_inheritance[True]\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"cattrs.strategies._subclasses\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"31c19cee405100b084e139e2d955c568dcd1010a\", \"key\": \"cand:python-attrs/cattrs@31c19cee405100b084e139e2d955c568dcd1010a\", \"regression_test_files\": [\"tests/strategies/test_include_subclasses.py\"], \"repository\": \"python-attrs/cattrs\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [\"coverage>=7.9.2\", \"hypothesis>=6.135.26\", \"immutables>=0.21\", \"pytest-benchmark>=5.1.0\", \"pytest-xdist>=3.8.0\", \"pytest>=8.4.1\"], \"groups\": [\"test\"], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.3, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.3}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.4}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.3}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"_make_subclasses_tree\", \"target_file\": \"src/cattrs/strategies/_subclasses.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 2, \"passed\": 87, \"skipped\": 15}, \"exit\": 1, \"seconds\": 1.9}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 89, \"skipped\": 15}, \"exit\": 0, \"seconds\": 1.2}}, \"tier\": \"moderate\", \"wall_seconds\": 5.6}\n{\"bug_family\": \"other_logic\", \"buggy_commit\": \"3207be31474530f7c0685dfbd7b4faca5b35fbf5\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 4, \"difference_exposing_tests\": [\"tests.test_validate::test_url_absolute_valid[http://example.org#fragment]\", \"tests.test_validate::test_url_absolute_valid[http://user@example.com#fragment]\", \"tests.test_validate::test_url_relative_only_valid[#frag]\", \"tests.test_validate::test_url_relative_valid[#frag]\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"marshmallow.validate\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6\", \"key\": \"cand:marshmallow-code/marshmallow@902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6\", \"regression_test_files\": [\"tests/test_validate.py\"], \"repository\": \"marshmallow-code/marshmallow\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [\"mypy>=1.14.1\", \"pre-commit>=3.5,<5.0\", \"pytest\", \"simplejson\", \"tox\", \"tox-uv\", \"types-simplejson\"], \"groups\": [\"tests\", \"dev\"], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 1.9, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 1.9}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.1}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.1}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"URL.RegexMemoizer._regex_generator\", \"target_file\": \"src/marshmallow/validate.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 4, \"passed\": 217, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.5}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 221, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.3}}, \"tier\": \"complex\", \"wall_seconds\": 4.5}\n{\"bug_family\": \"other_logic\", \"buggy_commit\": \"e1a5c7c9efe9f82edc89a2df8c2b599516a87dcb\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 5, \"difference_exposing_tests\": [\"tests.test_number::test_fractional[-2.9999999--3]\", \"tests.test_number::test_fractional[0-0]\", \"tests.test_number::test_fractional[0.0-0]\", \"tests.test_number::test_fractional[0.9999999-1]\", \"tests.test_number::test_fractional[2.9999999-3]\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"humanize.number\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"08cf2c3026cfd7c553e397e1d91ea069eb2a4978\", \"key\": \"cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978\", \"regression_test_files\": [\"tests/test_number.py\"], \"repository\": \"python-humanize/humanize\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [\"tests\"], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.8, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.8}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.4}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"fractional\", \"target_file\": \"src/humanize/number.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 5, \"passed\": 227, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.5}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 232, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.2}}, \"tier\": \"complex\", \"wall_seconds\": 3.7}\n{\"bug_family\": \"none_or_empty_handling\", \"buggy_commit\": \"a4230d150242a7d21f465c0f029624de71c716c4\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 1, \"difference_exposing_tests\": [\"tests.strategies.test_include_subclasses::test_subclasses_in_struct_factory\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"cattrs.strategies._subclasses\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"573915b6b450c23eaf818370ac2e339dd9aee262\", \"key\": \"cand:python-attrs/cattrs@573915b6b450c23eaf818370ac2e339dd9aee262\", \"regression_test_files\": [\"tests/strategies/test_include_subclasses.py\"], \"repository\": \"python-attrs/cattrs\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [\"coverage>=7.9.2\", \"hypothesis>=6.135.26\", \"immutables>=0.21\", \"pytest-benchmark>=5.1.0\", \"pytest-xdist>=3.8.0\", \"pytest>=8.4.1\"], \"groups\": [\"test\"], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.4, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.4}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.3}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.0}}, \"target\": \"_include_subclasses_with_union_strategy\", \"target_file\": \"src/cattrs/strategies/_subclasses.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 1, \"passed\": 89, \"skipped\": 15}, \"exit\": 1, \"seconds\": 1.9}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 90, \"skipped\": 15}, \"exit\": 0, \"seconds\": 1.3}}, \"tier\": \"complex\", \"wall_seconds\": 5.0}\n{\"bug_family\": \"other_logic\", \"buggy_commit\": \"ca892b368a535a79cc5e2181d052245b94fd6652\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 2, \"difference_exposing_tests\": [\"tests.test_time::test_naturaldelta[test_input34-3 years]\", \"tests.test_time::test_naturaldelta[test_input35-3 years]\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [{\"buggy\": [\"error\", \"OverflowError\"], \"call\": \"humanize.naturaldelta(1e+30)\", \"fixed\": [\"error\", \"OverflowError\"], \"safe_fixed_call\": false}, {\"buggy\": [\"error\", \"ValueError\"], \"call\": \"humanize.naturaldelta(1, minimum_unit='years')\", \"fixed\": [\"error\", \"ValueError\"], \"safe_fixed_call\": false}], \"import_error\": null, \"literal_calls_found\": 2, \"module\": \"humanize.time\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"392aef707c0e74341ab4a51420984e9ea6b566c5\", \"key\": \"cand:python-humanize/humanize@392aef707c0e74341ab4a51420984e9ea6b566c5\", \"regression_test_files\": [\"tests/test_time.py\"], \"repository\": \"python-humanize/humanize\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [\"tests\"], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.4, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.4}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.3}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"naturaldelta\", \"target_file\": \"src/humanize/time.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 2, \"passed\": 390, \"skipped\": 0}, \"exit\": 1, \"seconds\": 1.0}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 392, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.7}}, \"tier\": \"complex\", \"wall_seconds\": 4.3}\n{\"bug_family\": \"type_or_conversion\", \"buggy_commit\": \"14965a74953eb5119859975e7c452a04b481cdae\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 2, \"difference_exposing_tests\": [\"tests.test_number::test_intcomma_large_integer[-1]\", \"tests.test_number::test_intcomma_large_integer[1]\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"humanize.number\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"984526c02448110a8392dde3f5e26096dfd7c729\", \"key\": \"cand:python-humanize/humanize@984526c02448110a8392dde3f5e26096dfd7c729\", \"regression_test_files\": [\"tests/test_number.py\"], \"repository\": \"python-humanize/humanize\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [\"tests\"], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.4, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.4}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.4}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.0}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"intcomma\", \"target_file\": \"src/humanize/number.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 2, \"passed\": 232, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.5}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 234, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.2}}, \"tier\": \"complex\", \"wall_seconds\": 2.6}\n{\"bug_family\": \"none_or_empty_handling\", \"buggy_commit\": \"f971127ce7e7770d3ff5be05cfc484bdf9302e04\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 1, \"difference_exposing_tests\": [\"tests.test_number::test_intword_rounding_rollover\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"humanize.number\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"ca892b368a535a79cc5e2181d052245b94fd6652\", \"key\": \"cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652\", \"regression_test_files\": [\"tests/test_number.py\"], \"repository\": \"python-humanize/humanize\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [\"tests\"], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.4, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.4}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.4}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.0}}, \"target\": \"intword\", \"target_file\": \"src/humanize/number.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 1, \"passed\": 240, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.5}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 241, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.3}}, \"tier\": \"complex\", \"wall_seconds\": 2.7}\n{\"bug_family\": \"boundary_or_comparison\", \"buggy_commit\": \"984526c02448110a8392dde3f5e26096dfd7c729\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 5, \"difference_exposing_tests\": [\"tests.test_number::test_metric[[-9999]--10.0 k]\", \"tests.test_number::test_metric[[9.999, '', 2]-10]\", \"tests.test_number::test_metric[[9.99999]-10.0]\", \"tests.test_number::test_metric[[99999]-100 k]\", \"tests.test_number::test_metric[[9999]-10.0 k]\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"humanize.number\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"e46732ed235019682b7bfc6c44443e247b332e95\", \"key\": \"cand:python-humanize/humanize@e46732ed235019682b7bfc6c44443e247b332e95\", \"regression_test_files\": [\"tests/test_number.py\"], \"repository\": \"python-humanize/humanize\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [\"tests\"], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.4, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.4}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.4}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.0}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"metric\", \"target_file\": \"src/humanize/number.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 5, \"passed\": 235, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.5}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 240, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.3}}, \"tier\": \"complex\", \"wall_seconds\": 2.7}\n{\"bug_family\": \"none_or_empty_handling\", \"buggy_commit\": \"d3c76f0bbe90af4b12a3b83bd8e59bc9061dfe85\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 1, \"difference_exposing_tests\": [\"tests.test_toml_document::test_add_key_after_dotted_inline_table_without_ending_newline\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"tomlkit.container\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"43668ddebc3f082bf385d328aceed18d26976897\", \"key\": \"cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897\", \"regression_test_files\": [\"tests/test_toml_document.py\"], \"repository\": \"python-poetry/tomlkit\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": -0.0, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.0}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.3}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.3}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.8}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"Container.append\", \"target_file\": \"tomlkit/container.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 1, \"passed\": 64, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.3}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 65, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.2}}, \"tier\": \"complex\", \"wall_seconds\": 2.6}\n{\"bug_family\": \"exception_handling\", \"buggy_commit\": \"7ab7469addd60e03ca3bfbb1287642e8d771e1c0\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 6, \"difference_exposing_tests\": [\"tests.test_items::test_array_slice_assignment_does_not_mutate[index0-replacement0]\", \"tests.test_items::test_array_slice_assignment_does_not_mutate[index1-replacement1]\", \"tests.test_items::test_array_slice_assignment_does_not_mutate[index2-replacement2]\", \"tests.test_items::test_array_slice_assignment_does_not_mutate[index3-replacement3]\", \"tests.test_items::test_array_slice_assignment_does_not_mutate[index4-replacement4]\", \"tests.test_items::test_array_slice_assignment_does_not_mutate[index5-replacement5]\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"tomlkit.items\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"4b38becd75405e0f38ef3e47e9839eb407591c8a\", \"key\": \"cand:python-poetry/tomlkit@4b38becd75405e0f38ef3e47e9839eb407591c8a\", \"regression_test_files\": [\"tests/test_items.py\"], \"repository\": \"python-poetry/tomlkit\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.4, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.4}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.4}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"Array.__setitem__\", \"target_file\": \"tomlkit/items.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 6, \"passed\": 86, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.4}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 92, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.2}}, \"tier\": \"complex\", \"wall_seconds\": 3.2}\n{\"bug_family\": \"other_logic\", \"buggy_commit\": \"67d3e86502706df2a9ed67114ab67e25bcdcbbb7\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 6, \"difference_exposing_tests\": [\"tests.test_api::test_create_multiline_string_with_leading_newline_round_trips[kwargs0-\\\\n]\", \"tests.test_api::test_create_multiline_string_with_leading_newline_round_trips[kwargs1-\\\\nMy\\\\nString\\\\n]\", \"tests.test_api::test_create_multiline_string_with_leading_newline_round_trips[kwargs2-\\\\r\\\\nMy\\\\nString]\", \"tests.test_api::test_create_multiline_string_with_leading_newline_round_trips[kwargs3-\\\\nMy\\\\nString]\", \"tests.test_api::test_create_multiline_string_with_leading_newline_round_trips[kwargs4-\\\\r\\\\nMy\\\\nString]\", \"tests.test_api::test_create_string[kwargs13-\\\\nMy\\\\nString\\\\n-\\\"\\\"\\\"\\\\n\\\\nMy\\\\nString\\\\n\\\"\\\"\\\"]\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"tomlkit.items\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"8cd44f58b499da3c80a29bc877a512665a15e0bb\", \"key\": \"cand:python-poetry/tomlkit@8cd44f58b499da3c80a29bc877a512665a15e0bb\", \"regression_test_files\": [\"tests/test_api.py\"], \"repository\": \"python-poetry/tomlkit\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.4, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.4}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.3}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.3}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.6}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"String.from_raw\", \"target_file\": \"tomlkit/items.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 6, \"passed\": 151, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.5}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 157, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.3}}, \"tier\": \"complex\", \"wall_seconds\": 3.2}\n{\"bug_family\": \"none_or_empty_handling\", \"buggy_commit\": \"34e51e2d6d09af86970f266a4217cea839fdc347\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 1, \"difference_exposing_tests\": [\"tests.test_toml_document::test_set_value_on_out_of_order_table_with_empty_concrete_part\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"tomlkit.container\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3\", \"key\": \"cand:python-poetry/tomlkit@e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3\", \"regression_test_files\": [\"tests/test_toml_document.py\"], \"repository\": \"python-poetry/tomlkit\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.4, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.4}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.4}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.8}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.8}}, \"target\": \"OutOfOrderTableProxy.__setitem__\", \"target_file\": \"tomlkit/container.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 1, \"passed\": 68, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.5}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 69, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.2}}, \"tier\": \"complex\", \"wall_seconds\": 3.5}\n{\"bug_family\": \"boundary_or_comparison\", \"buggy_commit\": \"16e88894ef7d79b25a68f5a3b5411ed881342725\", \"category\": \"test_infrastructure_error\", \"detail\": {\"buggy\": \"\\nno tests ran in 0.01s\\n\", \"fixed\": \"\\nno tests ran in 0.01s\\n\"}, \"environment_failure\": true, \"fixed_commit\": \"39b31bc9b63abe98497409945e9d382d8918c8fb\", \"key\": \"cand:tkem/cachetools@39b31bc9b63abe98497409945e9d382d8918c8fb\", \"regression_test_files\": [\"tests/__init__.py\"], \"repository\": \"tkem/cachetools\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.7, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.7}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.6}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.6}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"Cache.__setitem__\", \"target_file\": \"src/cachetools/__init__.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 0, \"passed\": 0, \"skipped\": 0}, \"exit\": 5, \"seconds\": 0.2}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 0, \"skipped\": 0}, \"exit\": 5, \"seconds\": 0.1}}, \"tier\": \"complex\", \"wall_seconds\": 3.7}\n{\"bug_family\": \"exception_handling\", \"buggy_commit\": \"eddffc415ce8429a02fc8e1d701f085d7b832ac0\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 1, \"difference_exposing_tests\": [\"tests.test_disambiguators::test_disambiguation_is_order_independent\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"cattrs.disambiguators\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"a6c0900533af780155510343c1472a46fcb984f5\", \"key\": \"cand:python-attrs/cattrs@a6c0900533af780155510343c1472a46fcb984f5\", \"regression_test_files\": [\"tests/test_disambiguators.py\"], \"repository\": \"python-attrs/cattrs\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [\"coverage>=7.9.2\", \"hypothesis>=6.135.26\", \"immutables>=0.21\", \"mypy; python_version == '3.14' and implementation_name == 'cpython'\", \"pytest-benchmark>=5.1.0\", \"pytest-typing; python_version == '3.14' and implementation_name == 'cpython'\", \"pytest-xdist>=3.8.0\", \"pytest>=8.4.1\"], \"groups\": [\"test\"], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.3, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.3}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.3}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"create_default_dis_func\", \"target_file\": \"src/cattrs/disambiguators.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 1, \"passed\": 23, \"skipped\": 0}, \"exit\": 1, \"seconds\": 13.6}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 24, \"skipped\": 0}, \"exit\": 0, \"seconds\": 14.8}}, \"tier\": \"complex\", \"wall_seconds\": 31.0}\n{\"bug_family\": \"other_logic\", \"buggy_commit\": \"057a2e6d1b8391dc85abe725d4d12c0987a9ec10\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 6, \"difference_exposing_tests\": [\"tests.test_unit.Test02_WithoutPackrat::testLocatedExprLeadingWhitespace\", \"tests.test_unit.Test04_WithPackrat::testLocatedExprLeadingWhitespace\", \"tests.test_unit.Test06_WithBoundedPackrat::testLocatedExprLeadingWhitespace\", \"tests.test_unit.Test08_WithUnboundedPackrat::testLocatedExprLeadingWhitespace\", \"tests.test_unit.Test09_WithLeftRecursionParsing::testLocatedExprLeadingWhitespace\", \"tests.test_unit.Test10_WithLeftRecursionParsingBoundedMemo::testLocatedExprLeadingWhitespace\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"pyparsing.core\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"0a2d906a3e6b9a30b6a0701588caec3937ff271f\", \"key\": \"cand:pyparsing/pyparsing@0a2d906a3e6b9a30b6a0701588caec3937ff271f\", \"regression_test_files\": [\"tests/test_unit.py\"], \"repository\": \"pyparsing/pyparsing\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.3, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.3}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.2}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.2}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 1.0}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 1.4}}, \"target\": \"Located.parseImpl\", \"target_file\": \"pyparsing/core.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 6, \"passed\": 1826, \"skipped\": 6}, \"exit\": 1, \"seconds\": 24.4}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 1832, \"skipped\": 6}, \"exit\": 0, \"seconds\": 22.0}}, \"tier\": \"complex\", \"wall_seconds\": 49.5}\n{\"bug_family\": \"other_logic\", \"buggy_commit\": \"8011b71949e8d8d81a71359cca9477d67a2c9c0b\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 1, \"difference_exposing_tests\": [\"tests.test_cachedmethod.AutospecTest::test_autospec_no_warnings\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"cachetools._cachedmethod\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"57d2e4813d9801f97034559e22428bac6f7c6c9b\", \"key\": \"cand:tkem/cachetools@57d2e4813d9801f97034559e22428bac6f7c6c9b\", \"regression_test_files\": [\"tests/test_cachedmethod.py\"], \"repository\": \"tkem/cachetools\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.7, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.7}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.5}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.5}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"_DescriptorBase.__get__\", \"target_file\": \"src/cachetools/_cachedmethod.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 1, \"passed\": 45, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.3}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 46, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.2}}, \"tier\": \"complex\", \"wall_seconds\": 3.6}\n{\"bug_family\": \"other_logic\", \"buggy_commit\": \"df4e4bb363381fc0d5a5301049c74c1f86522dc1\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 1, \"difference_exposing_tests\": [\"tests.test_v::test_extra_keys_are_sorted\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"cattrs.v\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"bc34a466a878d3259d01d0169b3fb95420d7d50d\", \"key\": \"cand:python-attrs/cattrs@bc34a466a878d3259d01d0169b3fb95420d7d50d\", \"regression_test_files\": [\"tests/test_v.py\"], \"repository\": \"python-attrs/cattrs\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [\"coverage>=7.9.2\", \"hypothesis>=6.135.26\", \"immutables>=0.21\", \"mypy; python_version == '3.14' and implementation_name == 'cpython'\", \"pytest-benchmark>=5.1.0\", \"pytest-typing; python_version == '3.14' and implementation_name == 'cpython'\", \"pytest-xdist>=3.8.0\", \"pytest>=8.4.1\"], \"groups\": [\"test\"], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.4, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.4}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.4}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.4}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.7}}, \"target\": \"format_exception\", \"target_file\": \"src/cattrs/v.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 1, \"passed\": 9, \"skipped\": 0}, \"exit\": 1, \"seconds\": 0.7}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 10, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.3}}, \"tier\": \"complex\", \"wall_seconds\": 3.5}\n{\"bug_family\": \"other_logic\", \"buggy_commit\": \"6247ff961989fc089028b4a3e59ad754a486b9c0\", \"category\": \"official_tests_do_not_distinguish\", \"difference_exposing_count\": 0, \"difference_exposing_tests\": [], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"pendulum.datetime\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"bd8908581471fa7b77b7aeb3dfb502b929c632d6\", \"key\": \"cand:python-pendulum/pendulum@bd8908581471fa7b77b7aeb3dfb502b929c632d6\", \"regression_test_files\": [\"tests/datetime/test_behavior.py\", \"tests/datetime/test_construct.py\"], \"repository\": \"python-pendulum/pendulum\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [\"test\"], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 21.3, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 21.3}, \"switch_buggy\": {\"code\": 0, \"seconds\": 9.0}, \"switch_fixed\": {\"code\": 0, \"seconds\": 7.3}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 1.1}}, \"target\": \"DateTime.utcfromtimestamp\", \"target_file\": \"src/pendulum/datetime.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 0, \"passed\": 45, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.4}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 45, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.2}}, \"tier\": \"simple\", \"wall_seconds\": 40.0}\n{\"bug_family\": \"none_or_empty_handling\", \"buggy_commit\": \"a313c8bee143b4b92c9a068fef72a5fd512bba61\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 1, \"difference_exposing_tests\": [\"tests.dialects.test_clickhouse.TestClickhouse::test_global_join\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"sqlglot.parsers.clickhouse\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"981e492413740f7740d2b0288e3da5b4028c767e\", \"key\": \"cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e\", \"regression_test_files\": [\"tests/dialects/test_clickhouse.py\"], \"repository\": \"tobymao/sqlglot\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.8, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.8}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.8}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.8}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.7}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 1.3}}, \"target\": \"ClickHouseParser._parse_global_in\", \"target_file\": \"sqlglot/parsers/clickhouse.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 1, \"passed\": 33, \"skipped\": 0}, \"exit\": 1, \"seconds\": 1.3}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 34, \"skipped\": 0}, \"exit\": 0, \"seconds\": 0.6}}, \"tier\": \"complex\", \"wall_seconds\": 6.4}\n{\"bug_family\": \"boundary_or_comparison\", \"buggy_commit\": \"efd56db4e59f36b1673ce0eb0823e3afaa9d1201\", \"category\": \"natively_qualified\", \"difference_exposing_count\": 6, \"difference_exposing_tests\": [\"tests.test_unit.Test02_WithoutPackrat::testParseActionReturningNonListType\", \"tests.test_unit.Test04_WithPackrat::testParseActionReturningNonListType\", \"tests.test_unit.Test06_WithBoundedPackrat::testParseActionReturningNonListType\", \"tests.test_unit.Test08_WithUnboundedPackrat::testParseActionReturningNonListType\", \"tests.test_unit.Test09_WithLeftRecursionParsing::testParseActionReturningNonListType\", \"tests.test_unit.Test10_WithLeftRecursionParsingBoundedMemo::testParseActionReturningNonListType\"], \"environment_failure\": false, \"fixed_call_probe\": {\"calls\": [], \"import_error\": null, \"literal_calls_found\": 0, \"module\": \"pyparsing.core\", \"safe_fixed_call_constructed\": false}, \"fixed_commit\": \"65d503517d146f83ce3f2ef804ee9448e6a16957\", \"key\": \"cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957\", \"regression_test_files\": [\"tests/test_unit.py\"], \"repository\": \"pyparsing/pyparsing\", \"steps\": {\"environment\": {\"attempts\": [{\"code\": 0, \"command_kind\": {\"extras\": [], \"group_requirements\": [], \"groups\": [], \"requirement_files\": []}, \"python\": \"3.13\", \"seconds\": 0.3, \"step\": \"install\"}], \"ok\": true, \"python\": \"3.13\", \"seconds\": 0.3}, \"switch_buggy\": {\"code\": 0, \"seconds\": 0.2}, \"switch_fixed\": {\"code\": 0, \"seconds\": 0.2}, \"worktree_buggy\": {\"code\": 0, \"seconds\": 0.8}, \"worktree_fixed\": {\"code\": 0, \"seconds\": 0.8}}, \"target\": \"ParserElement._parseNoCache\", \"target_file\": \"pyparsing/core.py\", \"tests\": {\"buggy\": {\"counts\": {\"failed\": 6, \"passed\": 1946, \"skipped\": 6}, \"exit\": 1, \"seconds\": 22.1}, \"fixed\": {\"counts\": {\"failed\": 0, \"passed\": 1952, \"skipped\": 6}, \"exit\": 0, \"seconds\": 20.2}}, \"tier\": \"complex\", \"wall_seconds\": 44.7}\n",
+   "text_sha256": "2b139d2db295416a1c4da148407d3cd85b63a1809f41503cb141cde25451bc6b"
+  },
+  "run_summary.json": {
+   "normalizations": [
+    {
+     "label": "wsl_host",
+     "replacements": 1
+    }
+   ],
+   "original_bytes": 1018,
+   "original_path": "results/sft_root_cause/phase4_native_rehearsal/run_summary.json",
+   "original_sha256": "4de7ccc86b661781d88914f1def8b3d05385680c0055ca013b28af0dca278f3a",
+   "text": "{\n \"wall_seconds\": 95.5,\n \"clone_log\": {\n  \"marshmallow-code/marshmallow\": {\n   \"code\": 0,\n   \"seconds\": 1.2\n  },\n  \"python-attrs/cattrs\": {\n   \"code\": 0,\n   \"seconds\": 1.2\n  },\n  \"pyparsing/pyparsing\": {\n   \"code\": 0,\n   \"seconds\": 1.2\n  },\n  \"python-attrs/attrs\": {\n   \"code\": 0,\n   \"seconds\": 1.7\n  },\n  \"python-humanize/humanize\": {\n   \"code\": 0,\n   \"seconds\": 1.1\n  },\n  \"python-pendulum/pendulum\": {\n   \"code\": 0,\n   \"seconds\": 3.4\n  },\n  \"python-poetry/tomlkit\": {\n   \"code\": 0,\n   \"seconds\": 1.9\n  },\n  \"tkem/cachetools\": {\n   \"code\": 0,\n   \"seconds\": 1.5\n  },\n  \"tobymao/sqlglot\": {\n   \"code\": 0,\n   \"seconds\": 1.4\n  }\n },\n \"uv\": \"uv 0.12.7 (x86_64-unknown-linux-gnu)\",\n \"pythons\": {\n  \"3.13\": \"/root/.local/share/uv/python/cpython-3.13-linux-x86_64-gnu/bin/python3.13\",\n  \"3.10\": \"/root/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/bin/python3.10\"\n },\n \"host\": \"Linux <host> 5.15.167.4-microsoft-standard-WSL2 #1 SMP Tue Nov 5 00:21:55 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux\",\n \"cpus\": 32\n}",
+   "text_sha256": "53a611c7fa250131888eac5182bf3de4310f83bbe2ce7da364345a5ab261e370"
+  }
+ },
+ "links": {
+  "results/sft_root_cause_phase4_native_rehearsal_manifest_v1.json": "387a516382e18ed728bf621428531a1b57dc2864897659039b40323b88c0240e",
+  "results/sft_root_cause_phase4_native_rehearsal_receipt_v1.json": "3c9722ca7e1abac68691769f0b76c40f525665e1904c14d8c3c7b5957051f95a"
+ },
+ "purpose": "portable copy of the ignored v1 native-rehearsal evidence; the ignored originals stay on the GPU machine",
+ "schema_version": "oneiros_portable_evidence_bundle_v1",
+ "sources_canonical_sha256_at_publish_commit": {
+  "commit": "94a96be8413a67defef23f4836bd3b8c46347b04",
+  "files": {
+   "scripts/native_rehearsal_wsl.py": "9cd89ee02385927f6fa497d29a15ff190b42ac2d76199192de2fcbf0e8efe7d2",
+   "scripts/phase4_native_rehearsal_manifest.py": "fb3d1928d533bdc8c7b992df53b54204b49fda200ab795a621d3c6f907f3db94",
+   "scripts/phase4_native_rehearsal_summary.py": "9b254aa79c7606348265727c4dc7afcea9c966ad0efe4041f234e5ea28ff989b",
+   "scripts/wsl_install_uv.sh": "bc48521557d062f89aa0e5300e04d2931b2c7600410e4cd43296addd702994c9"
+  },
+  "note": "the runner ran from the working tree and was committed, unchanged in role, at this commit; the runner was later extended (dependency recording), which does not affect v1"
+ }
+}

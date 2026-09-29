@@ -15,7 +15,11 @@ For each target of the frozen manifest:
    the regression test are executed on both revisions; a "safe fixed call" is one whose
    fixed result is a short round-trippable literal and differs from the buggy result;
 5. record timings and exactly one category.  ENVIRONMENT failures (clone, install,
-   pytest could not run) are never counted as semantic negatives.
+   pytest could not run) are never counted as semantic negatives;
+6. record the dependency resolution actually used (added after the v1 rehearsal, which
+   did NOT record it): Python and uv versions, the sanitized install command, hashes of
+   the fixed checkout's pyproject / lock / requirements files, and a sanitized
+   ``uv pip freeze`` with its SHA-256.  Local paths become ``<checkout>`` / ``<work>``.
 
 The verifier alone sees fixed code, patches and gold tests; nothing here involves a
 model, and nothing is written into any prompt or training input.
@@ -23,6 +27,7 @@ model, and nothing is written into any prompt or training input.
 from __future__ import annotations
 
 import ast
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -89,6 +94,35 @@ def install_plan(checkout: Path) -> dict:
     return plan
 
 
+DEPENDENCY_FILES = ("pyproject.toml", "setup.py", "setup.cfg", "uv.lock", "poetry.lock",
+                    "pdm.lock", "Pipfile.lock", "requirements.txt") + REQUIREMENT_FILES
+
+
+def sanitize(text: str, checkout: Path) -> str:
+    return text.replace(str(checkout), "<checkout>").replace(str(WORK), "<work>")
+
+
+def dependency_record(python: str, fixed: Path, cmd: list[str]) -> dict:
+    """What was resolved, so a later reader need not assume it."""
+    try:   # run() keeps only a tail; the freeze must be complete
+        done = subprocess.run(["uv", "pip", "freeze", "--python", python],
+                              capture_output=True, text=True, timeout=300)
+        ok, text = done.returncode == 0, sanitize(done.stdout, fixed)
+    except subprocess.TimeoutExpired:
+        ok, text = False, ""
+    return {
+        "python_version": run([python, "-c", "import sys; print(sys.version.split()[0])"])[
+            "tail"].strip(),
+        "uv_version": run(["uv", "--version"])["tail"].strip(),
+        "install_command": [sanitize(part, fixed) for part in cmd],
+        "dependency_file_sha256": {
+            name: hashlib.sha256((fixed / name).read_bytes()).hexdigest()
+            for name in DEPENDENCY_FILES if (fixed / name).is_file()},
+        "freeze_ok": ok,
+        "freeze": text if ok else None,
+        "freeze_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest() if ok else None}
+
+
 def build_env(env_dir: Path, fixed: Path) -> dict:
     plan = install_plan(fixed)
     attempts = []
@@ -108,7 +142,8 @@ def build_env(env_dir: Path, fixed: Path) -> dict:
         result = run(cmd, timeout=INSTALL_TIMEOUT)
         attempts.append({"python": py, "step": "install", "command_kind": plan, **result})
         if result["code"] == 0:
-            return {"ok": True, "python": py, "python_path": python, "attempts": attempts}
+            return {"ok": True, "python": py, "python_path": python, "attempts": attempts,
+                    "dependencies": dependency_record(python, fixed, cmd)}
     return {"ok": False, "attempts": attempts}
 
 
@@ -237,7 +272,8 @@ def rehearse(target: dict, repo_dir: Path, out_path: Path) -> None:
                                                          "command_kind")}
                                                        for a in env["attempts"]],
                                           "seconds": round(sum(a.get("seconds", 0)
-                                                               for a in env["attempts"]), 1)}
+                                                               for a in env["attempts"]), 1),
+                                          "dependencies": env.get("dependencies")}
         if not env["ok"]:
             record.update(category="environment_install_failed", environment_failure=True,
                           detail=env["attempts"][-1].get("tail", "")[-400:])

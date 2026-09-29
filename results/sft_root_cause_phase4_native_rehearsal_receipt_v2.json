@@ -1,0 +1,92 @@
+{
+ "caveats": [
+  "the rehearsed targets are the A-prime DEVELOPMENT retrospective (candidates used to design A-prime): mostly popular pure-Python libraries; the qualified/admitted rate is likely optimistic for independently mined repositories",
+  "environments were fast because uv reused its package cache and no target needed a compiled extension; the native-qualification CPU projection is likely optimistic",
+  "retrospective admissions were made under a pre-v6 isolation bundle and were not revalidated under isolation v6",
+  "the admitted-yield point estimate (4.17%) projects above 2%, but its lower Wilson bound (1.79%) is below 2%"
+ ],
+ "denominators": {
+  "environment_success": {
+   "k": 25,
+   "meaning": "the native environment built and the official tests ran on both revisions",
+   "n": 26,
+   "point": 0.9615,
+   "wilson_95": [
+    0.8111,
+    0.9932
+   ]
+  },
+  "operational_end_to_end_qualified_throughput": {
+   "k": 24,
+   "meaning": "qualified targets per admitted target attempted, counting infrastructure failures as attrition; used ONLY to project acquisition cost",
+   "n": 26,
+   "point": 0.9231,
+   "wilson_95": [
+    0.7586,
+    0.9786
+   ]
+  },
+  "semantic_qualification_among_evaluable": {
+   "k": 24,
+   "meaning": "among targets whose tests actually ran, the fraction whose official regression tests distinguish buggy from fixed; infrastructure failures are excluded from BOTH numerator and denominator",
+   "n": 25,
+   "point": 0.96,
+   "wilson_95": [
+    0.8046,
+    0.9929
+   ]
+  }
+ },
+ "dependency_resolution": {
+  "limitation": "The v1 native rehearsal did NOT record per-repository dependency resolution (no uv pip freeze, no lock or requirements hashes). It is not reconstructed retroactively: re-resolving today could pick different versions. What is known is the uv version, the Python used per target, and the install-command KIND (extras, groups, requirement files). scripts/native_rehearsal_wsl.py now records Python and uv versions, the sanitized install command, dependency-file hashes and a sanitized freeze with its SHA-256 for every future run.",
+  "recorded_in_v1": false
+ },
+ "evidence_bundle": {
+  "path": "results/sft_root_cause_phase4_native_evidence_v1.json",
+  "sha256": "ae0463c75daef3454892aea2f50236b3a48a51d9522360c2134ebe1d25213ab7"
+ },
+ "gpu_used": false,
+ "infrastructure_failures": {
+  "projection_role": "counted only as operational attrition when projecting total acquisition cost (operational_end_to_end_qualified_throughput)",
+  "semantic_role": "excluded: never a semantic negative and never a semantic positive",
+  "targets": [
+   {
+    "category": "test_infrastructure_error",
+    "key": "cand:tkem/cachetools@39b31bc9b63abe98497409945e9d382d8918c8fb"
+   }
+  ],
+  "training_role": "never a positive (or any) training example"
+ },
+ "model_calls": 0,
+ "projection_rate_used": "v1 projected acquisition cost with qualified/admitted = 24/26, which IS the operational throughput; the projection is unchanged",
+ "readiness": {
+  "choice_A_ready": false,
+  "fixed_input_ready": false,
+  "native_environment_feasible": true,
+  "reason": "24 targets qualified natively, but 0/24 produced a safe fixed call, so repository-native targets cannot yet feed the fixed-input mediator",
+  "safe_fixed_call_over_qualified": {
+   "k": 0,
+   "n": 24,
+   "point": 0.0,
+   "wilson_95": [
+    0.0,
+    0.138
+   ]
+  }
+ },
+ "reproduces_v1_figures": {
+  "v1_all_admitted_equals_operational": true,
+  "v1_environment_success_equals_v2": true,
+  "v1_evaluable_equals_semantic": true
+ },
+ "schema_version": "oneiros_sft_root_cause_phase4_native_rehearsal_v2",
+ "supersedes": {
+  "modified": false,
+  "nature": "addendum: v1 numbers unchanged; semantics, readiness and portable evidence clarified",
+  "path": "results/sft_root_cause_phase4_native_rehearsal_receipt_v1.json",
+  "sha256": "3c9722ca7e1abac68691769f0b76c40f525665e1904c14d8c3c7b5957051f95a"
+ },
+ "targets": 26,
+ "targets_rerun": 0,
+ "training": false
+}
