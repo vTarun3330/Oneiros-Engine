@@ -254,6 +254,8 @@ def preflight() -> int:
     try:
         composition = validate_manifest(manifest_rows, gate_groups=gate, confirmation_groups=(),
                                         group_cap=cb.GROUP_CAP)
+        for key in ("dataset", "bug_family", "complexity_tier"):
+            composition[key] = {str(k): v for k, v in composition[key].items()}
     except ValueError as error:
         problems.append(str(error)[:500])
         composition = None
