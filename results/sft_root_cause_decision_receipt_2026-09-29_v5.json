@@ -1,0 +1,121 @@
+{
+ "choice_b_v2": {
+  "frozen_outcome": "inconclusive_power",
+  "frozen_outcome_unchanged": true,
+  "kill_at_8": {
+   "high": 7.5,
+   "low": -2.5,
+   "point": 2.5,
+   "reading": "interval crosses zero; not an improvement"
+  },
+  "mechanistic_hypothesis": {
+   "statement": "value-only masking may remove useful structural/syntactic supervision while offering at most a small oracle-accuracy benefit",
+   "status": "PLAUSIBLE, UNPROVEN; not causal, not established"
+  },
+  "parse_success_regression": {
+   "difference_points": {
+    "high": -0.125,
+    "low": -1.562,
+    "point": -0.812
+   },
+   "label": "statistically distinguishable ADVERSE EXPLORATORY SECONDARY signal under the nominal paired 95% interval",
+   "qualifications": [
+    "not a predeclared stopping guardrail",
+    "one of several reported secondary metrics",
+    "not adjusted for multiple comparisons",
+    "insufficient to change the frozen outcome"
+   ]
+  },
+  "predeclared_stopping_criterion_met": false,
+  "related_descriptive_downward_trends": {
+   "exact_equality_validity_per_requested": {
+    "high": 0.0,
+    "low": -4.938,
+    "point": -2.438
+   },
+   "execution_success": {
+    "high": 0.125,
+    "low": -2.25,
+    "point": -1.062
+   },
+   "reference_validity_per_requested": {
+    "high": 0.812,
+    "low": -3.875,
+    "point": -1.5
+   }
+  }
+ },
+ "date": "2026-09-29",
+ "launches_nothing": true,
+ "memory_terminology": {
+  "device_telemetry_peak_used_mib": {
+   "control": 14440.0,
+   "treatment": 14440.0
+  },
+  "pytorch_peak_allocated_mib": {
+   "control": 4128.2,
+   "treatment": 4128.2
+  },
+  "rule": "PyTorch peak allocated memory and device-level used memory are different quantities; neither is reported as the other"
+ },
+ "next": {
+  "gpu_training_justified": false,
+  "recommended": "bounded CPU receiver-aware Choice A replay pilot"
+ },
+ "not_claimed": [
+  "no effect",
+  "root cause",
+  "generalisation",
+  "causal parse-regression mechanism",
+  "seed stability"
+ ],
+ "path_policy": "future receipts store repository-relative paths; the historical absolute checkpoint path already committed in the Choice B training result is not rewritten",
+ "power_monte_carlo_note": {
+  "final_analysis_resamples": 10000,
+  "monte_carlo_wilson_intervals": "preserved in the power receipt",
+  "planning_bootstrap_resamples": 2000,
+  "planning_simulations_per_cell": 400
+ },
+ "schema_version": "oneiros_sft_root_cause_decision_v5",
+ "seed_variance_correction": {
+  "corrects": "decision receipt v4 next.options.fresh_cohort wording",
+  "statement": "the reported intervals describe within-seed paired gate uncertainty only; training-seed variance was not measured, so narrow within-seed intervals cannot establish that a multi-seed experiment would add little information",
+  "training_seed_variance": "UNMEASURED",
+  "why_choice_a_next": "cheaper, CPU-only, and addresses real-repository feasibility; NOT because seed variance is known to be negligible"
+ },
+ "sources": {
+  "choice_b_evaluation_spec_v2": {
+   "path": "results/sft_root_cause_phase4_choice_b_evaluation_spec_v2.json",
+   "sha256": "0ed3b716b764249ae4edbceb174d0a1cda02c17d13689761d1f7dc206d09052e"
+  },
+  "choice_b_power_200": {
+   "path": "results/sft_root_cause_phase4_choice_b_power_200_v1.json",
+   "sha256": "93a6b1e5b246ae5b1fca3327cd7f474e72d2bd401efd2c482584e45e1077c2e3"
+  },
+  "choice_b_v2_analysis": {
+   "path": "results/sft_root_cause_phase4_choice_b_v2_analysis.json",
+   "sha256": "78606127c6183558c52c19ec3cbb9a229d99944d9a73568e166bdaaa6a87de47"
+  },
+  "choice_b_v2_training_control": {
+   "path": "results/sft_root_cause_phase4_choice_b_v2_training_control.json",
+   "sha256": "e9d91e6f5b878b5a52d2335152d9a8fd9de0224ba115140c0198c06ff7e0ce36"
+  },
+  "choice_b_v2_training_treatment": {
+   "path": "results/sft_root_cause_phase4_choice_b_v2_training_treatment.json",
+   "sha256": "e31efd65dadac53b22fc9866a82b8827f1764f1699e8a0261dad34abff0845e5"
+  },
+  "decision_v4": {
+   "path": "results/sft_root_cause_decision_receipt_2026-09-29_v4.json",
+   "sha256": "d38aba1bf388552fed726c15792da4d2a309158cb32cb1237c6aeee00a148e14"
+  }
+ },
+ "state_of_evidence": {
+  "generalization_established": false,
+  "root_cause_established": false
+ },
+ "supersedes": {
+  "modified": false,
+  "nature": "additive reporting corrections; no outcome changed",
+  "path": "results/sft_root_cause_decision_receipt_2026-09-29_v4.json"
+ }
+}

@@ -497,3 +497,26 @@ Amendment 3 is superseded where it conflicts with this amendment:
   `docs/SFT_ROOT_CAUSE_CHOICE_A_RECEIVER_REPLAY_PROTOCOL.md`, whose thresholds were
   declared before running.
 - **Claims:** no root-cause or generalisation claim is made.
+
+**2026-09-29, amendment 11: Choice B reporting corrections (additive; decision receipt v5).**
+
+- **Outcome:** the frozen outcome stays `inconclusive_power`, and no predeclared stopping
+  criterion was met.
+- **Parse success:** −0.812 points, nominal paired 95% interval [−1.562, −0.125].
+  - This is a statistically distinguishable **adverse exploratory secondary** signal.
+  - It was not a stopping guardrail, is one of several secondary metrics, and is not
+    adjusted for multiplicity.
+- **Related downward trends (descriptive):**
+  - execution success: −1.06 [−2.25, +0.13];
+  - exact-equality validity: −2.44 [−4.94, 0.00];
+  - reference validity: −1.50 [−3.88, +0.81].
+- **Hypothesis (plausible, unproven, not causal):** value-only masking may remove useful
+  structural supervision.
+- **Seed variance:** unmeasured. Within-seed intervals do not show that more seeds would
+  add little information. Choice A is next because it is cheaper and addresses feasibility.
+- **Memory:** 4,128 MiB is PyTorch peak *allocated* memory; about 14,440 MiB is device
+  *used* telemetry. They are different quantities.
+- **Power:** the planning study used 400 simulations and 2,000 resamples per cell; the
+  final analysis used 10,000 resamples.
+- **Paths:** future receipts store repository-relative paths. The historical absolute path
+  is not rewritten.

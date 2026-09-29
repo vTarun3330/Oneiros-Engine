@@ -75,3 +75,22 @@ def test_decision_receipt_v4_records_interpretation_c_without_overclaiming():
     assert r["next"]["requires_approval"] is True
     for source in r["sources"].values():
         assert hashlib.sha256((ROOT / source["path"]).read_bytes()).hexdigest() == source["sha256"]
+
+
+def test_decision_receipt_v5_corrects_reporting_without_changing_the_outcome():
+    r = json.loads((ROOT / "results" / "sft_root_cause_decision_receipt_2026-09-29_v5.json")
+                   .read_text(encoding="utf-8"))
+    for name in ("decision_v4", "choice_b_v2_analysis"):
+        source = r["sources"][name]
+        assert hashlib.sha256((ROOT / source["path"]).read_bytes()).hexdigest() == source["sha256"]
+    b = r["choice_b_v2"]
+    assert b["frozen_outcome"] == "inconclusive_power" and b["frozen_outcome_unchanged"]
+    assert b["predeclared_stopping_criterion_met"] is False
+    parse = b["parse_success_regression"]
+    assert parse["difference_points"] == {"point": -0.812, "low": -1.562, "high": -0.125}
+    assert "not adjusted for multiple comparisons" in parse["qualifications"]
+    assert "UNPROVEN" in b["mechanistic_hypothesis"]["status"]
+    assert r["seed_variance_correction"]["training_seed_variance"] == "UNMEASURED"
+    assert {"no effect", "root cause", "generalisation"} <= set(r["not_claimed"])
+    assert r["state_of_evidence"] == {"root_cause_established": False,
+                                      "generalization_established": False}
