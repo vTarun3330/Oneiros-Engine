@@ -21,3 +21,25 @@ def test_decision_receipt_roles_and_limits():
     for source in r["sources"].values():
         assert hashlib.sha256((ROOT / source["path"]).read_bytes()).hexdigest() == \
             source["sha256"]
+
+
+RECEIPT_V2 = ROOT / "results" / "sft_root_cause_decision_receipt_2026-09-29_v2.json"
+
+
+def test_decision_receipt_v2_freezes_the_composite_estimand_and_corrections():
+    r = json.loads(RECEIPT_V2.read_text(encoding="utf-8"))
+    assert r["launches_nothing"] is True
+    assert r["state_of_evidence"]["root_cause_established"] is False
+    smoke = r["objective_smoke_interpretation"]
+    assert smoke["frozen_interpretation"] == "A"
+    assert smoke["supervised_tokens"] == {"control_full_completion": 952,
+                                          "treatment_value_only": 220}
+    assert "COMPOSITE" in r["recommendation"]["next_authorized_gpu_experiment"]["estimand"]
+    assert r["choice_A"]["readiness"]["choice_A_ready"] is False
+    assert "single seed cannot establish efficacy" in r["choice_B"]["labels"]
+    assert r["choice_B"]["old_arm_A_compared_on_panel"] is False
+    assert "token-count-matched third arm" in r["not_launched"]
+    assert r["recommendation"]["next_authorized_gpu_experiment"]["requires_user_authorisation"]
+    for source in r["sources"].values():
+        assert hashlib.sha256((ROOT / source["path"]).read_bytes()).hexdigest() == \
+            source["sha256"]

@@ -383,3 +383,36 @@ Amendment 3 is superseded where it conflicts with this amendment:
   screening comes first, only as inexpensive screening, and it needs user
   authorisation. Choice A remains required for any generalisation claim.
 - **No root cause is established.**
+
+**2026-09-29, amendment 7: corrections after the Phase 4 preparation (additive).**
+
+- **Execution-dose provenance:** `results/v4_3_execution_dose_source_provenance_v1.json`.
+  - Historical source bindings are verified at their frozen commit (`41e821a`), not
+    against the working tree; all 27 bindings reproduce there.
+  - The Phase 4 trainer change (`efa8d9a`) is recorded as explicit drift.
+  - The artifacts are historical, valid for their original run, and **not
+    current-run-ready**. Their launch guard still refuses them, and a new execution-dose
+    run needs a new source-bound preflight.
+- **Power:** `results/sft_root_cause_phase4_power_sensitivity_v2.json` supersedes v1 for
+  planning (supersession addendum `..._power_sensitivity_v1_supersession.json`; v1
+  unchanged).
+  - Partial coupling now uses one common selector.
+  - Required-group ranges are unchanged.
+  - One exact-vs-fast cell differs by more than 5 points.
+  - Lower bound > 0 is a positive-effect screen; lower bound > +5 is exceeds-five. At
+    about 200–350 groups the design is an exploratory positive-effect screen, **not**
+    confirmation of a five-point effect.
+- **Native rehearsal v2:** `results/sft_root_cause_phase4_native_rehearsal_receipt_v2.json`.
+  - Environment success 25/26; semantic qualification 24/25; operational throughput
+    24/26.
+  - `choice_A_ready=false` (0/24 safe fixed calls).
+  - Portable evidence bundles are `..._phase4_native_evidence_v1.json` and
+    `..._phase4_smoke_evidence_v1.json`.
+- **Objective contrast:** full-completion versus value-only changes both the positions
+  and the mass of supervised tokens (952 versus 220 in the smoke).
+  - Interpretation **A is frozen**: the Choice B screen estimates the composite
+    "value-only masking plus reduced supervised-token mass".
+  - A token-count-matched arm (interpretation B) was not added.
+- **Decision:** `results/sft_root_cause_decision_receipt_2026-09-29_v2.json`
+  (v1 unchanged).
+- **No root cause is established.**

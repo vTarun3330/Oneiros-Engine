@@ -1,0 +1,377 @@
+{
+ "choice_A": {
+  "readiness": {
+   "choice_A_ready": false,
+   "fixed_input_ready": false,
+   "native_environment_feasible": true
+  },
+  "recomputed_size_and_cost": {
+   "admitted_targets_to_rehearse_per_cohort": {
+    "optimistic": 358,
+    "pessimistic": 462,
+    "point": 380
+   },
+   "api_calls_gate_plus_phase6": {
+    "optimistic": 4894,
+    "pessimistic": 33081,
+    "point": 11670
+   },
+   "distinct_repositories_gate_plus_phase6": 68,
+   "environment_failures_counted_as_losses": true,
+   "mined_candidates_gate_plus_phase6": {
+    "optimistic": 7626,
+    "pessimistic": 51552,
+    "point": 18186
+   },
+   "mined_candidates_per_cohort": {
+    "optimistic": 3813,
+    "pessimistic": 25776,
+    "point": 9093
+   },
+   "native_qualification_cpu_hours_gate_plus_phase6": {
+    "optimistic": 0.7,
+    "pessimistic": 0.9,
+    "point": 0.8
+   },
+   "native_qualification_cpu_note": "median per-target wall time x admitted targets to rehearse; the runner used 4 parallel repositories",
+   "qualified_functions_per_cohort": 350,
+   "repositories_per_cohort": 34,
+   "status": "PROJECTION from a 26-target rehearsal; ranges combine the Wilson bounds of the independent admission rate and the qualified/admitted rate",
+   "unauthenticated_api_hours_gate_plus_phase6": {
+    "optimistic": 81.6,
+    "pessimistic": 551.3,
+    "point": 194.5
+   }
+  },
+  "requires": [
+   "repository-disjoint Phase 5 gate cohort",
+   "repository-disjoint Phase 6 confirmation cohort",
+   "fixed-input argument capture for repository-native targets (current literal extraction: 0/24 safe fixed calls)",
+   "revalidation of any development-pool target under isolation v6",
+   "an independent (non-retrospective) native rehearsal to replace the optimistic development qualification rate"
+  ],
+  "role": "the ONLY path capable of independent repository-generalisation evidence",
+  "rule": "no full training until both the data plan and the trainer path are frozen"
+ },
+ "choice_B": {
+  "cannot": [
+   "support repository or cross-dataset generalisation",
+   "be called untouched",
+   "compare the old arm A fairly",
+   "replace Choice A",
+   "serve as Phase 6"
+  ],
+  "feasible_groups": 352,
+  "labels": [
+   "internal",
+   "exploratory",
+   "Arm-A-exposed",
+   "not untouched",
+   "not Phase 6",
+   "not cross-dataset or repository generalisation",
+   "single seed cannot establish efficacy"
+  ],
+  "material": "arm-A-exposed remainder (401 groups, 352 feasible): used by arm A, NOT untouched, NOT repository-disjoint",
+  "old_arm_A_compared_on_panel": false,
+  "outcomes": [
+   "promising",
+   "harm",
+   "inconclusive_power"
+  ],
+  "role": "optional internal exploratory screening only"
+ },
+ "date": "2026-09-29",
+ "launches_nothing": true,
+ "native_rehearsal": {
+  "denominators": {
+   "environment_success": {
+    "k": 25,
+    "n": 26,
+    "point": 0.9615,
+    "wilson_95": [
+     0.8111,
+     0.9932
+    ]
+   },
+   "operational_end_to_end_qualified_throughput": {
+    "k": 24,
+    "n": 26,
+    "point": 0.9231,
+    "wilson_95": [
+     0.7586,
+     0.9786
+    ]
+   },
+   "semantic_qualification_among_evaluable": {
+    "k": 24,
+    "n": 25,
+    "point": 0.96,
+    "wilson_95": [
+     0.8046,
+     0.9929
+    ]
+   }
+  },
+  "infrastructure_failures": {
+   "projection_role": "counted only as operational attrition when projecting total acquisition cost (operational_end_to_end_qualified_throughput)",
+   "semantic_role": "excluded: never a semantic negative and never a semantic positive",
+   "targets": [
+    {
+     "category": "test_infrastructure_error",
+     "key": "cand:tkem/cachetools@39b31bc9b63abe98497409945e9d382d8918c8fb"
+    }
+   ],
+   "training_role": "never a positive (or any) training example"
+  },
+  "readiness": {
+   "choice_A_ready": false,
+   "fixed_input_ready": false,
+   "native_environment_feasible": true,
+   "reason": "24 targets qualified natively, but 0/24 produced a safe fixed call, so repository-native targets cannot yet feed the fixed-input mediator",
+   "safe_fixed_call_over_qualified": {
+    "k": 0,
+    "n": 24,
+    "point": 0.0,
+    "wilson_95": [
+     0.0,
+     0.138
+    ]
+   }
+  }
+ },
+ "not_launched": [
+  "full Choice A acquisition",
+  "Choice A training",
+  "Choice B training",
+  "token-count-matched third arm"
+ ],
+ "objective_smoke_interpretation": {
+  "consequence": "the arms differ in BOTH the positions and the quantity of supervised tokens; the two-arm contrast estimates the composite intervention 'value-only masking plus reduced supervised-token mass' and cannot by itself attribute an effect to value-token specificity rather than to reduced token mass",
+  "forbidden_claim": "pure value-token specificity",
+  "frozen_interpretation": "A",
+  "options": {
+   "A": "keep the two-arm screen and call it a composite intervention (FROZEN)",
+   "B": "add a token-count-matched masking arm supervising the same number of tokens per example at deterministic non-value positions, so value-only vs matched isolates value specificity; NOT added; needs separate authorisation and its own preflight"
+  },
+  "plumbing_evidence": [
+   "identical input sequences and attention masks per batch",
+   "labels differ",
+   "both arms completed 2 optimiser steps",
+   "both applied LoRA updates",
+   "about 3.2 GiB peak GPU allocation",
+   "no evaluation and no promotion"
+  ],
+  "supervised_tokens": {
+   "control_full_completion": 952,
+   "treatment_value_only": 220
+  }
+ },
+ "power": {
+  "exact_vs_fast": {
+   "cells": 36,
+   "cells_with_discrepancy_over_5_points": 1,
+   "max_abs_probability_discrepancy": 0.075,
+   "per_dataset_agreement_range": [
+    0.925,
+    1.0
+   ]
+  },
+  "not_modelled": [
+   "training-seed variance (no permitted evidence; NOT estimated)",
+   "repository-native outcome variance (no repository-native outcome data exists yet; unavailable)",
+   "answer-rate gate",
+   "validity guardrail",
+   "diversity guardrail",
+   "schema-dependent (unequal or opposite-signed) true effects",
+   "more than two fixed inputs per function"
+  ],
+  "required_groups_80pct": {
+   "confirmatory_5": {
+    "10": [
+     352,
+     500
+    ],
+    "3": null,
+    "5": null,
+    "7": [
+     2000,
+     3000
+    ]
+   },
+   "positive_both": {
+    "10": [
+     100,
+     150
+    ],
+    "3": [
+     700,
+     700
+    ],
+    "5": [
+     250,
+     300
+    ],
+    "7": [
+     150,
+     200
+    ]
+   }
+  },
+  "scientific_gates": {
+   "exceeds_five_points": "lower 95% bound > +5 under both schemas with no sign flip: evidence that the effect EXCEEDS five points",
+   "positive_effect": "lower 95% bound > 0 under both schemas with no sign flip: evidence that the effect is POSITIVE; says nothing about its size",
+   "reconciliation": "the two gates answer different questions and have very different power. A true 5-point effect can never be shown to exceed 5 points (its lower bound sits below 5 by construction); a true 10-point effect needs several hundred groups for that gate. Around 200-350 groups the design is an EXPLORATORY POSITIVE-EFFECT SCREEN: it does NOT confirm a five-point effect unless the true effect is substantially larger (about 10 points or more)"
+  },
+  "status": "PLANNING EVIDENCE, NOT A POWER GUARANTEE"
+ },
+ "recommendation": {
+  "decision": "RUN CHOICE B FIRST ONLY AS AN INEXPENSIVE COMPOSITE-INTERVENTION SCREEN, after a green source-bound preflight and explicit user authorisation, while Choice A's CPU blocker (fixed-input argument capture) is worked separately; Choice A stays required for any generalisation claim",
+  "next_authorized_gpu_experiment": {
+   "arms": {
+    "control": "full_completion",
+    "treatment": "value_only"
+   },
+   "data": "matched manifest from arm-A-exposed train groups (validated by harness.objective_masking.validate_manifest), gate groups frozen before training and withheld from both arms",
+   "estimand": "COMPOSITE: value-only masking plus reduced supervised-token mass (interpretation A, frozen)",
+   "estimated_gpu": {
+    "note": "smoke examples were short fixed-call prompts; evaluation adds minutes for the fixed-input probe and tens of minutes for production Kill@8 generation; ~1.5-2 GPU-hours for both arms",
+    "training_minutes_per_arm_at_431_steps": 31.2,
+    "training_seconds_per_optimizer_step_from_smoke": 4.35
+   },
+   "gate": "~200 Arm-A-exposed remainder groups frozen before training; fixed-input exact-output accuracy under both answer schemas; paired semantic-group bootstrap; answer-rate non-inferiority; original validity guardrail; Kill@8 and diversity reported; final checkpoint only; exactly one look; outcomes promising/harm/inconclusive_power",
+   "name": "Choice B single-seed screening: value-only vs full-completion masking",
+   "power_at_gate_size_planning_only": {
+    "exceeds_five_gate_probability_range_by_true_effect_points": {
+     "10": [
+      0.155,
+      0.416
+     ],
+     "3": [
+      0.0,
+      0.0
+     ],
+     "5": [
+      0.0,
+      0.0
+     ],
+     "7": [
+      0.0,
+      0.007
+     ]
+    },
+    "positive_effect_gate_probability_range_by_true_effect_points": {
+     "10": [
+      0.994,
+      1.0
+     ],
+     "3": [
+      0.001,
+      0.007
+     ],
+     "5": [
+      0.384,
+      0.57
+     ],
+     "7": [
+      0.867,
+      0.976
+     ]
+    },
+    "reading": "at ~200 groups the screen reliably detects a positive effect only if the true effect is about 7 points or more (87-98%); a 5-point effect is detected in 38-57% of simulated datasets, so inconclusive_power is a likely outcome for small effects; the gate cannot confirm that any effect exceeds 5 points unless it is about 10 points or more, and even then only 16-42% of the time"
+   },
+   "preflight": "scripts/phase4_choice_b.py preflight (must be green before any launch)",
+   "requires_user_authorisation": true,
+   "start": "immutable base Qwen2.5-Coder-1.5B @ 2e1fd397 (not arm A)"
+  },
+  "why": [
+   "the production objective path is integrated and smoke-proven, so a screening run now tests the intervention itself rather than plumbing",
+   "Choice A is blocked on fixed-input argument capture and faces an 18,186 (7,626-51,552) candidate acquisition; a cheap screen tells us whether value-only masking moves the mediator at all before that spend",
+   "a harm or null screen would redirect effort to redesign before acquisition",
+   "the screen is cheap enough to run even though it is underpowered for effects near 5 points; an inconclusive_power result is informative about the scale needed and does not justify a larger claim"
+  ]
+ },
+ "schema_version": "oneiros_sft_root_cause_decision_v2",
+ "sources": {
+  "decision_v1": {
+   "path": "results/sft_root_cause_decision_receipt_2026-09-29_v1.json",
+   "sha256": "70152ef324975d9c8b091a4eecc23f9b4714a1a841a8a6b0a0c0a13b69443dbb"
+  },
+  "execution_dose_provenance": {
+   "path": "results/v4_3_execution_dose_source_provenance_v1.json",
+   "sha256": "8054ae744b55c5cd1babe29c42684de0528b7013dbbd17be49ca1c29bd5b7d1f"
+  },
+  "native_evidence": {
+   "path": "results/sft_root_cause_phase4_native_evidence_v1.json",
+   "sha256": "ae0463c75daef3454892aea2f50236b3a48a51d9522360c2134ebe1d25213ab7"
+  },
+  "native_rehearsal_v2": {
+   "path": "results/sft_root_cause_phase4_native_rehearsal_receipt_v2.json",
+   "sha256": "bf41c298f9da980dade2b66a1a0b4383d63e477d88541eceff99196d765108ee"
+  },
+  "objective_smoke": {
+   "path": "results/sft_root_cause_phase4_objective_smoke_v1.json",
+   "sha256": "b2ab060afaf18e85cd1a3e054f04321feeaf712050f42f5738c95bd4aa169dcd"
+  },
+  "phase4_census": {
+   "path": "results/sft_root_cause_phase4_cohort_census.json",
+   "sha256": "391bcba2b3c383fb488688b82242a3e8a430e81d4e7dfb54eca93b2f873d8464"
+  },
+  "power_sensitivity_v2": {
+   "path": "results/sft_root_cause_phase4_power_sensitivity_v2.json",
+   "sha256": "9c61decd85d9545c6637dad91e26674a1041227413c11d8459831ae60aa1fe4c"
+  },
+  "power_supersession": {
+   "path": "results/sft_root_cause_phase4_power_sensitivity_v1_supersession.json",
+   "sha256": "c05edd951be7c9808dff94b2a992efc86a30002518626772a31ef585e110792e"
+  },
+  "smoke_evidence": {
+   "path": "results/sft_root_cause_phase4_smoke_evidence_v1.json",
+   "sha256": "009a25ed085192206721c9a7bf429cf28c84e46bc2a066a611d1dcf7e85ba5ac"
+  }
+ },
+ "state_of_evidence": {
+  "hypotheses": {
+   "H1": {
+    "qualifier": null,
+    "status": "open"
+   },
+   "H2": {
+    "qualifier": "not_supported",
+    "status": "strengthened"
+   },
+   "H3": {
+    "qualifier": "model_scale_association_only",
+    "status": "strengthened"
+   },
+   "H4": {
+    "qualifier": "schema_dependent_exposure_result",
+    "status": "open"
+   },
+   "H5": {
+    "qualifier": "narrowed_syntactic_structural_scope",
+    "status": "weakened"
+   },
+   "H6": {
+    "qualifier": "narrowed_progressive_degradation_scope",
+    "status": "weakened"
+   },
+   "H7": {
+    "qualifier": "uncertainty_power_diagnosis",
+    "status": "strengthened"
+   }
+  },
+  "root_cause_established": false,
+  "summary": "SFT changed input choice and assertion form; whether it changes fixed-input value prediction is schema-dependent and unresolved; 7B beats 1.5B as a model-scale association only; no hypothesis is terminally supported"
+ },
+ "supersedes": {
+  "modified": false,
+  "path": "results/sft_root_cause_decision_receipt_2026-09-29_v1.json"
+ },
+ "what_changed_from_v1": [
+  "power v2 replaces power v1 for planning (partial coupling corrected; required-group ranges unchanged; one exact-vs-fast cell over 5 points)",
+  "the two scientific gates are reconciled: lower bound > 0 is a positive-effect screen; lower bound > +5 is exceeds-five; ~200-350 groups is an exploratory positive-effect screen",
+  "native denominators are separated (25/26 environment, 24/25 semantic, 24/26 operational) and readiness is explicit (choice_A_ready=false)",
+  "the two-arm objective contrast is frozen as a composite intervention",
+  "the historical execution-dose artifacts are recorded as not current-run-ready"
+ ]
+}
