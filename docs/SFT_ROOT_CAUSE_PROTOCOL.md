@@ -450,3 +450,33 @@ Amendment 3 is superseded where it conflicts with this amendment:
     captured, literal-only constructor call, or the official test's own asserted
     expression value as the oracle.
 - **No root cause is established.**
+
+**2026-09-29, amendment 9: Choice B v2 (stage-aware lifecycle; evaluation integrity; re-freeze).**
+
+- **Supersessions:** the v1 Choice B preflight is historical and superseded, and is
+  preserved byte-for-byte. Decision receipt v3 corrects Choice A to 3/24 targets, 1/8
+  repositories, a descriptive interval, not ready.
+- **Runner:** `scripts/phase4_choice_b_v2.py` with `harness/choice_b_lifecycle.py`.
+  - Stage order: preflighted → control_trained → treatment_trained → control_evaluated →
+    treatment_evaluated → analysed.
+  - A bound source identity excludes results, so result-only commits are accepted and
+    source changes are refused.
+  - Both arms train before either gate look.
+- **Data:** split v3 removes 4 training groups (91 rows) found by an outcome-blind
+  near-duplicate audit. 3,816 training rows remain; the gate is unchanged.
+- **Evaluation spec v2**, frozen before any outcome:
+  - Guardrails are **point-estimate operational safety thresholds**, with bootstrap
+    intervals reported alongside.
+  - Outcomes: statistically supported adverse evidence, operational guardrail stop,
+    promising, or inconclusive power, in that order of precedence.
+  - The estimand is the composite described in the spec, not a scalar gradient-dose
+    reduction.
+  - At 200 groups, a 5-point effect has low useful detection power (33–55% by the exact
+    bootstrap), but detection is not impossible.
+- **Integrity:**
+  - exact key sets;
+  - contract-bound, strictly resumable raw outputs with quarantine;
+  - Kill@8 rows must exactly equal the gate records;
+  - tracked compact evidence sufficient to recompute the analysis on another clone.
+- **GPU integration smoke:** passed. It is operational evidence only.
+- **Claims:** no root-cause or generalisation claim is made.
