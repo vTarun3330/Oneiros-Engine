@@ -43,3 +43,22 @@ def test_decision_receipt_v2_freezes_the_composite_estimand_and_corrections():
     for source in r["sources"].values():
         assert hashlib.sha256((ROOT / source["path"]).read_bytes()).hexdigest() == \
             source["sha256"]
+
+
+RECEIPT_V3 = ROOT / "results" / "sft_root_cause_decision_receipt_2026-09-29_v3.json"
+
+
+def test_decision_receipt_v3_corrects_choice_a_and_supersedes_preflight_v1():
+    r = json.loads(RECEIPT_V3.read_text(encoding="utf-8"))
+    pilot = r["choice_A"]["fixed_call_yield"]["runtime_argument_capture_pilot"]
+    assert pilot["targets_with_usable_fixed_call"] == "3/24"
+    assert pilot["repositories_with_usable_fixed_call"] == "1/8"
+    assert pilot["all_successes_in_one_repository"] is True
+    assert "DESCRIPTIVE" in pilot["interval_status"]
+    assert r["choice_A"]["readiness"]["choice_A_ready"] is False
+    assert r["choice_A"]["mass_acquisition"] == "REFUSED"
+    assert "SUPERSEDED" in r["choice_B"]["preflight_v1"]["status"]
+    assert r["state_of_evidence"]["root_cause_established"] is False
+    assert r["state_of_evidence"]["generalization_established"] is False
+    for source in r["sources"].values():
+        assert hashlib.sha256((ROOT / source["path"]).read_bytes()).hexdigest() == source["sha256"]

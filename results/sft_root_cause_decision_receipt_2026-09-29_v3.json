@@ -1,0 +1,205 @@
+{
+ "choice_A": {
+  "fixed_call_yield": {
+   "runtime_argument_capture_pilot": {
+    "all_successes_in_one_repository": true,
+    "dominant_failures": {
+     "duplicate": 15,
+     "instance_method_receiver": 131,
+     "type": 31
+    },
+    "interval_status": "DESCRIPTIVE ONLY: targets are clustered by repository and purposively selected development targets, not an iid sample of any population; no population-confidence claim",
+    "repositories_with_usable_fixed_call": "1/8",
+    "targets_with_usable_fixed_call": "3/24",
+    "totals": {
+     "fixed_short_literal": 32,
+     "observed": 214,
+     "replayable_both": 37,
+     "replayed": 37,
+     "serializable": 37,
+     "short_verified_oracle": 18
+    },
+    "usable_repositories": [
+     "python-humanize/humanize"
+    ],
+    "wilson_95_targets": [
+     0.0434,
+     0.31
+    ]
+   },
+   "source_literal_extraction_v1": "0/24 qualified targets (native rehearsal v1)"
+  },
+  "isolation_v6_revalidation": "required before any target is used; not performed",
+  "mass_acquisition": "REFUSED",
+  "readiness": {
+   "choice_A_ready": false,
+   "fixed_input_ready": false,
+   "native_environment_feasible": true
+  },
+  "recomputed_size_and_cost": {
+   "admitted_targets_to_rehearse_per_cohort": {
+    "optimistic": 358,
+    "pessimistic": 462,
+    "point": 380
+   },
+   "api_calls_gate_plus_phase6": {
+    "optimistic": 4894,
+    "pessimistic": 33081,
+    "point": 11670
+   },
+   "distinct_repositories_gate_plus_phase6": 68,
+   "environment_failures_counted_as_losses": true,
+   "mined_candidates_gate_plus_phase6": {
+    "optimistic": 7626,
+    "pessimistic": 51552,
+    "point": 18186
+   },
+   "mined_candidates_per_cohort": {
+    "optimistic": 3813,
+    "pessimistic": 25776,
+    "point": 9093
+   },
+   "native_qualification_cpu_hours_gate_plus_phase6": {
+    "optimistic": 0.7,
+    "pessimistic": 0.9,
+    "point": 0.8
+   },
+   "native_qualification_cpu_note": "median per-target wall time x admitted targets to rehearse; the runner used 4 parallel repositories",
+   "qualified_functions_per_cohort": 350,
+   "repositories_per_cohort": 34,
+   "status": "PROJECTION from a 26-target rehearsal; ranges combine the Wilson bounds of the independent admission rate and the qualified/admitted rate",
+   "unauthenticated_api_hours_gate_plus_phase6": {
+    "optimistic": 81.6,
+    "pessimistic": 551.3,
+    "point": 194.5
+   }
+  },
+  "requires": [
+   "repository-disjoint Phase 5 gate cohort",
+   "repository-disjoint Phase 6 confirmation cohort",
+   "fixed-input argument capture for repository-native targets (current literal extraction: 0/24 safe fixed calls)",
+   "revalidation of any development-pool target under isolation v6",
+   "an independent (non-retrospective) native rehearsal to replace the optimistic development qualification rate"
+  ],
+  "role": "the ONLY path capable of independent repository-generalisation evidence",
+  "rule": "no full training until both the data plan and the trainer path are frozen"
+ },
+ "choice_B": {
+  "cannot": [
+   "support repository or cross-dataset generalisation",
+   "be called untouched",
+   "compare the old arm A fairly",
+   "replace Choice A",
+   "serve as Phase 6"
+  ],
+  "feasible_groups": 352,
+  "labels": [
+   "internal",
+   "exploratory",
+   "Arm-A-exposed",
+   "not untouched",
+   "not Phase 6",
+   "not cross-dataset or repository generalisation",
+   "single seed cannot establish efficacy"
+  ],
+  "material": "arm-A-exposed remainder (401 groups, 352 feasible): used by arm A, NOT untouched, NOT repository-disjoint",
+  "old_arm_A_compared_on_panel": false,
+  "outcomes": [
+   "promising",
+   "harm",
+   "inconclusive_power"
+  ],
+  "preflight_v1": {
+   "bound_commit": "0bf1f396596c46919f305a26d984fe1e1f178f9d",
+   "path": "results/sft_root_cause_phase4_choice_b_preflight_receipt.json",
+   "reasons": [
+    "lifecycle-stale: HEAD moved past the bound commit, so its guard refuses even though every bound source hash still matches",
+    "lifecycle deadlock: the guard requires a clean tree AND no change since the preflight other than the receipt, so an unignored stage result blocks every later stage whether uncommitted or committed",
+    "evaluation integrity gaps: duplicate generation keys overwritten by dict construction; Kill@8 analysed on an intersection of function rows; no immutable contract for resumable ignored generation files; promised metrics incomplete"
+   ],
+   "sha256": "0f337c11e8452aa131502f07257909425819359877d369e580e35f73cc1ed704",
+   "status": "HISTORICAL / SUPERSEDED; preserved byte-for-byte; never launched"
+  },
+  "role": "optional internal exploratory screening only",
+  "status": "not launched; to be re-frozen under a stage-aware lifecycle (preflight v2)"
+ },
+ "date": "2026-09-29",
+ "launches_nothing": true,
+ "recommendation": {
+  "decision": "fix the Choice B lifecycle and evaluation integrity, re-freeze a v2 preflight, pass a bounded GPU integration smoke, then run the single predeclared screen; keep Choice A at CPU-only mechanistic piloting",
+  "not_launched": [
+   "Choice B training",
+   "Choice A acquisition"
+  ]
+ },
+ "schema_version": "oneiros_sft_root_cause_decision_v3",
+ "sources": {
+  "argument_capture_manifest": {
+   "path": "results/sft_root_cause_phase4_argument_capture_manifest_v1.json",
+   "sha256": "943c240a6efbd9fdf0f4b74fe561cc9ca371bcc5c7884be16871c5b405947a6f"
+  },
+  "argument_capture_receipt": {
+   "path": "results/sft_root_cause_phase4_argument_capture_receipt_v1.json",
+   "sha256": "eb66bf35ea7d114f60cb63144b0bcdc1bcc823536382eb3376d0e4987f78ec76"
+  },
+  "choice_b_preflight_v1": {
+   "path": "results/sft_root_cause_phase4_choice_b_preflight_receipt.json",
+   "sha256": "0f337c11e8452aa131502f07257909425819359877d369e580e35f73cc1ed704"
+  },
+  "choice_b_split_v2": {
+   "path": "results/sft_root_cause_phase4_choice_b_split_v2.json",
+   "sha256": "6543b57dbef1da7fb1e9d754bdb3a320d1cb97a9836b8cd6d99889b28c8845df"
+  },
+  "decision_v1": {
+   "path": "results/sft_root_cause_decision_receipt_2026-09-29_v1.json",
+   "sha256": "70152ef324975d9c8b091a4eecc23f9b4714a1a841a8a6b0a0c0a13b69443dbb"
+  },
+  "decision_v2": {
+   "path": "results/sft_root_cause_decision_receipt_2026-09-29_v2.json",
+   "sha256": "fcf25a91b29494766479a6e2dc227b727be3ef01dca09619cafd19fadf6ae703"
+  },
+  "native_rehearsal_v2": {
+   "path": "results/sft_root_cause_phase4_native_rehearsal_receipt_v2.json",
+   "sha256": "bf41c298f9da980dade2b66a1a0b4383d63e477d88541eceff99196d765108ee"
+  }
+ },
+ "state_of_evidence": {
+  "generalization_established": false,
+  "hypotheses": {
+   "H1": {
+    "qualifier": null,
+    "status": "open"
+   },
+   "H2": {
+    "qualifier": "not_supported",
+    "status": "strengthened"
+   },
+   "H3": {
+    "qualifier": "model_scale_association_only",
+    "status": "strengthened"
+   },
+   "H4": {
+    "qualifier": "schema_dependent_exposure_result",
+    "status": "open"
+   },
+   "H5": {
+    "qualifier": "narrowed_syntactic_structural_scope",
+    "status": "weakened"
+   },
+   "H6": {
+    "qualifier": "narrowed_progressive_degradation_scope",
+    "status": "weakened"
+   },
+   "H7": {
+    "qualifier": "uncertainty_power_diagnosis",
+    "status": "strengthened"
+   }
+  },
+  "root_cause_established": false,
+  "summary": "SFT changed input choice and assertion form; whether it changes fixed-input value prediction is schema-dependent and unresolved; 7B beats 1.5B as a model-scale association only; no hypothesis is terminally supported"
+ },
+ "supersedes": {
+  "modified": false,
+  "path": "results/sft_root_cause_decision_receipt_2026-09-29_v2.json"
+ }
+}
