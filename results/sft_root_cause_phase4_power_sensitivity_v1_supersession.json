@@ -1,0 +1,52 @@
+{
+ "changed": {
+  "exact_gate_checks_now_include_partial_coupling": true,
+  "exact_vs_fast_v1": {
+   "cells": 24,
+   "cells_over_5_points": 0,
+   "max_abs_probability_discrepancy": 0.045
+  },
+  "exact_vs_fast_v2": {
+   "cells": 36,
+   "cells_with_discrepancy_over_5_points": 1,
+   "max_abs_probability_discrepancy": 0.075,
+   "per_dataset_agreement_range": [
+    0.925,
+    1.0
+   ]
+  },
+  "partial_coupling_cells_max_abs_probability_change": {
+   "confirmatory_5": 0.07,
+   "positive_both": 0.053,
+   "sign_flip": 0.004
+  }
+ },
+ "conclusion_changes": [
+  "no required-group range changes",
+  "the exact-versus-fast statement weakens: v2 finds 1 cell(s) where the exact bootstrap gate is more than 5 points below the fast method (max 0.075); v1's 'none above 5 points' no longer holds, so fast-method probabilities near the gate size should be read as slightly optimistic",
+  "the scientific-gate wording is corrected: around 200-350 groups the design is an exploratory positive-effect screen, not confirmation of a five-point effect"
+ ],
+ "defect": "v1 harness/power_sensitivity._draws drew an independent shared/not-shared selector for EACH schema, so the probability that both schemas used the common draw was coupling**2 (0.25 at the declared partial 0.5), contrary to the receipt's description of coupling as the shared-draw probability",
+ "fix": "v1 drew an independent shared/not-shared selector per schema, so its declared partial coupling c=0.5 was an effective shared-draw probability of c**2=0.25; v2 uses one common selector per item or semantic group",
+ "schema_version": "oneiros_power_sensitivity_supersession_v1",
+ "still_true": [
+  "power is planning evidence only",
+  "training-seed variance is unmodelled",
+  "repository-native variance is unavailable",
+  "answer-rate, validity and diversity gates are outside the power calculation"
+ ],
+ "successor": {
+  "path": "results/sft_root_cause_phase4_power_sensitivity_v2.json",
+  "sha256": "9c61decd85d9545c6637dad91e26674a1041227413c11d8459831ae60aa1fe4c"
+ },
+ "superseded": {
+  "modified": false,
+  "path": "results/sft_root_cause_phase4_power_sensitivity_v1.json",
+  "sha256": "e97c7e60f572e9e464201b48570d4640f77cc356a98751ee1415640a7aea8a84",
+  "status": "HISTORICAL; superseded for planning by v2"
+ },
+ "unchanged": {
+  "required_groups_for_80pct_power_ranges": true,
+  "shared_and_independent_cells": "identical to v1 cell-for-cell (same seeds, same draw order; the selector is constant at 0 and 1)"
+ }
+}
