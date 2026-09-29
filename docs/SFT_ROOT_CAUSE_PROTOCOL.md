@@ -520,3 +520,29 @@ Amendment 3 is superseded where it conflicts with this amendment:
   final analysis used 10,000 resamples.
 - **Paths:** future receipts store repository-relative paths. The historical absolute path
   is not rewritten.
+
+**2026-09-29, amendment 12: Choice A receiver-aware pilot fails its gate (Branch B).**
+
+- **Pilot:** receiver-aware replay (protocol v2) on the frozen 24 development targets.
+- **Result:** usable targets 3/24; repositories 1/8 (python-humanize); largest repository
+  share 100%. **All three thresholds fail.**
+  - Receivers were rejected mainly for: no allowlisted construction (50), a custom
+    metaclass (47), and non-literal constructor arguments (31 + 34 across calls and
+    constructors).
+  - Thresholds were not changed after the result.
+- **v1 limitation found:** a stale-bytecode hazard meant v1 "no difference" outcomes may
+  include false negatives. v2 guards against it (no bytecode writes, finder bytecode
+  cleared after each switch, and a revision check on every replay).
+- **Decision:**
+  - Receiver-aware fixed-input mining is infeasible for this cohort.
+  - Fixed-input mining and mass acquisition stop.
+  - Nothing is admitted to training.
+- **Next path:** the frozen protocol
+  `docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V1.md` (native buggy/fixed
+  execution of complete model-generated tests; base versus frozen arm A SFT; an equal
+  wall-clock Atheris comparison). Its preflight is **not ready**:
+  - its components are not yet implemented;
+  - no repository-disjoint confirmation cohort exists.
+
+  No GPU generation was launched.
+- **Claims:** no root-cause or generalisation claim is made.

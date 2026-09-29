@@ -317,3 +317,26 @@ def test_replay_refuses_a_module_imported_from_the_wrong_revision(toy, tmp_path)
                           capture_output=True, text=True, timeout=60)
     out = json.loads(done.stdout.strip().splitlines()[-1])
     assert "revision_mismatch" in out and "results" not in out
+
+
+def test_pilot_receipt_applies_the_unchanged_gate_and_admits_nothing():
+    receipt_path = ROOT / "results" / "sft_root_cause_phase4_receiver_capture_receipt_v2.json"
+    if not receipt_path.exists():
+        pytest.skip("pilot receipt not yet written")
+    import hashlib
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    gate = receipt["feasibility_gate"]
+    assert gate["thresholds"] == {"min_usable_targets": 8, "targets": 24, "min_repositories": 4,
+                                  "repositories": 8, "max_repository_share": 0.4}
+    usable = receipt["usable_targets"]["k"]
+    repos = receipt["usable_repositories"]["k"]
+    share = receipt["largest_repository_share"]
+    assert gate["checks"] == {"usable_targets": usable >= 8, "repositories": repos >= 4,
+                              "max_repository_share": share is not None and share <= 0.4}
+    assert receipt["branch"] == ("A" if all(gate["checks"].values()) else "B")
+    assert receipt["admitted_to_training"] is False and receipt["mass_acquisition"] is False
+    embedded = receipt["portable_evidence"]["records.jsonl"]
+    assert hashlib.sha256(embedded["text"].encode()).hexdigest() == embedded["original_sha256"]
+    manifest = json.loads((ROOT / receipt["manifest"]["path"]).read_text(encoding="utf-8"))
+    v1 = json.loads((ROOT / manifest["identical_to"]["path"]).read_text(encoding="utf-8"))
+    assert manifest["targets"] == v1["targets"]
