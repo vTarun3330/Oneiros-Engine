@@ -1,0 +1,9314 @@
+{
+ "arm": null,
+ "decision": {
+  "legacy_outcome": "inconclusive_power",
+  "outcome": "inconclusive_power",
+  "reason_codes": [
+   "primary_interval_includes_zero"
+  ],
+  "schema_sign_flip": false
+ },
+ "descriptive_slices": {
+  "bug_family": {
+   "answer_schema": {
+    "None": {
+     "control": 0.0,
+     "items": 2,
+     "treatment": 50.0
+    },
+    "arithmetic": {
+     "control": 29.41,
+     "items": 136,
+     "treatment": 31.62
+    },
+    "boolean": {
+     "control": 71.43,
+     "items": 14,
+     "treatment": 78.57
+    },
+    "boundary": {
+     "control": 34.72,
+     "items": 144,
+     "treatment": 34.72
+    },
+    "comparison": {
+     "control": 37.93,
+     "items": 58,
+     "treatment": 37.93
+    },
+    "index": {
+     "control": 25.0,
+     "items": 4,
+     "treatment": 25.0
+    },
+    "logical": {
+     "control": 16.67,
+     "items": 6,
+     "treatment": 16.67
+    },
+    "membership": {
+     "control": 100.0,
+     "items": 4,
+     "treatment": 100.0
+    },
+    "negate_removal": {
+     "control": 83.33,
+     "items": 6,
+     "treatment": 83.33
+    },
+    "off_by_one": {
+     "control": 40.0,
+     "items": 20,
+     "treatment": 40.0
+    },
+    "return": {
+     "control": 66.67,
+     "items": 6,
+     "treatment": 66.67
+    }
+   },
+   "prefill_assertion": {
+    "None": {
+     "control": 0.0,
+     "items": 2,
+     "treatment": 0.0
+    },
+    "arithmetic": {
+     "control": 28.68,
+     "items": 136,
+     "treatment": 29.41
+    },
+    "boolean": {
+     "control": 57.14,
+     "items": 14,
+     "treatment": 57.14
+    },
+    "boundary": {
+     "control": 40.28,
+     "items": 144,
+     "treatment": 41.67
+    },
+    "comparison": {
+     "control": 48.28,
+     "items": 58,
+     "treatment": 43.1
+    },
+    "index": {
+     "control": 25.0,
+     "items": 4,
+     "treatment": 25.0
+    },
+    "logical": {
+     "control": 16.67,
+     "items": 6,
+     "treatment": 16.67
+    },
+    "membership": {
+     "control": 50.0,
+     "items": 4,
+     "treatment": 50.0
+    },
+    "negate_removal": {
+     "control": 83.33,
+     "items": 6,
+     "treatment": 83.33
+    },
+    "off_by_one": {
+     "control": 20.0,
+     "items": 20,
+     "treatment": 20.0
+    },
+    "return": {
+     "control": 33.33,
+     "items": 6,
+     "treatment": 33.33
+    }
+   }
+  },
+  "complexity_tier": {
+   "answer_schema": {
+    "complex": {
+     "control": 42.41,
+     "items": 158,
+     "treatment": 41.77
+    },
+    "moderate": {
+     "control": 31.71,
+     "items": 164,
+     "treatment": 32.93
+    },
+    "simple": {
+     "control": 33.33,
+     "items": 78,
+     "treatment": 38.46
+    }
+   },
+   "prefill_assertion": {
+    "complex": {
+     "control": 41.77,
+     "items": 158,
+     "treatment": 42.41
+    },
+    "moderate": {
+     "control": 32.93,
+     "items": 164,
+     "treatment": 32.93
+    },
+    "simple": {
+     "control": 35.9,
+     "items": 78,
+     "treatment": 34.62
+    }
+   }
+  },
+  "dataset": {
+   "answer_schema": {
+    "humaneval": {
+     "control": 37.93,
+     "items": 58,
+     "treatment": 37.93
+    },
+    "manual_curated_examples": {
+     "control": 0.0,
+     "items": 2,
+     "treatment": 50.0
+    },
+    "mbpp": {
+     "control": 36.18,
+     "items": 340,
+     "treatment": 37.35
+    }
+   },
+   "prefill_assertion": {
+    "humaneval": {
+     "control": 29.31,
+     "items": 58,
+     "treatment": 31.03
+    },
+    "manual_curated_examples": {
+     "control": 0.0,
+     "items": 2,
+     "treatment": 0.0
+    },
+    "mbpp": {
+     "control": 38.53,
+     "items": 340,
+     "treatment": 38.24
+    }
+   }
+  },
+  "input_kind": {
+   "answer_schema": {
+    "novel": {
+     "control": 30.5,
+     "items": 200,
+     "treatment": 32.0
+    },
+    "upstream": {
+     "control": 42.0,
+     "items": 200,
+     "treatment": 43.0
+    }
+   },
+   "prefill_assertion": {
+    "novel": {
+     "control": 32.5,
+     "items": 200,
+     "treatment": 32.0
+    },
+    "upstream": {
+     "control": 41.5,
+     "items": 200,
+     "treatment": 42.0
+    }
+   }
+  },
+  "status": "DESCRIPTIVE ONLY; likely underpowered; never cross-dataset generalisation"
+ },
+ "downstream_kill_at_8": {
+  "exact_equality_validity_per_requested": {
+   "control": 52.25,
+   "difference": {
+    "groups": 200,
+    "high": 0.0,
+    "items": 200,
+    "low": -4.938,
+    "point": -2.438,
+    "resamples": 10000,
+    "seed": 20260928
+   },
+   "functions": 200,
+   "treatment": 49.8125
+  },
+  "exact_unique_ratio": {
+   "control": 0.6485,
+   "difference": null,
+   "functions": 200,
+   "treatment": 0.6934
+  },
+  "execution_success": {
+   "control": 96.0625,
+   "difference": {
+    "groups": 200,
+    "high": 0.125,
+    "items": 200,
+    "low": -2.25,
+    "point": -1.062,
+    "resamples": 10000,
+    "seed": 20260928
+   },
+   "functions": 200,
+   "treatment": 95.0
+  },
+  "has_valid_killing_candidate": {
+   "control": 66.0,
+   "difference": {
+    "groups": 200,
+    "high": 7.5,
+    "items": 200,
+    "low": -2.5,
+    "point": 2.5,
+    "resamples": 10000,
+    "seed": 20260928
+   },
+   "functions": 200,
+   "treatment": 68.5
+  },
+  "kill_at_1": {
+   "control": 36.5,
+   "difference": {
+    "groups": 200,
+    "high": 9.5,
+    "items": 200,
+    "low": -5.0,
+    "point": 2.5,
+    "resamples": 10000,
+    "seed": 20260928
+   },
+   "functions": 200,
+   "treatment": 39.0
+  },
+  "kill_at_4": {
+   "control": 57.5,
+   "difference": {
+    "groups": 200,
+    "high": 5.0,
+    "items": 200,
+    "low": -7.0,
+    "point": -1.0,
+    "resamples": 10000,
+    "seed": 20260928
+   },
+   "functions": 200,
+   "treatment": 56.5
+  },
+  "kill_at_8": {
+   "control": 66.0,
+   "difference": {
+    "groups": 200,
+    "high": 7.5,
+    "items": 200,
+    "low": -2.5,
+    "point": 2.5,
+    "resamples": 10000,
+    "seed": 20260928
+   },
+   "functions": 200,
+   "treatment": 68.5
+  },
+  "parse_success": {
+   "control": 98.625,
+   "difference": {
+    "groups": 200,
+    "high": -0.125,
+    "items": 200,
+    "low": -1.562,
+    "point": -0.812,
+    "resamples": 10000,
+    "seed": 20260928
+   },
+   "functions": 200,
+   "treatment": 97.8125
+  },
+  "reference_validity_per_requested": {
+   "control": 52.25,
+   "difference": {
+    "groups": 200,
+    "high": 0.812,
+    "items": 200,
+    "low": -3.875,
+    "point": -1.5,
+    "resamples": 10000,
+    "seed": 20260928
+   },
+   "functions": 200,
+   "treatment": 50.75
+  }
+ },
+ "efficacy_established": false,
+ "estimand": "COMPOSITE objective intervention: value_only versus full_completion changes WHICH completion tokens are supervised, HOW MANY target tokens are supervised, their POSITIONS, and the RELATIVE per-example and per-token weighting of the loss (the loss averages over supervised tokens, so each value token's share changes); it is not a scalar gradient-dose reduction and does not isolate value-token location",
+ "evaluation_spec_sha256": "0ed3b716b764249ae4edbceb174d0a1cda02c17d13689761d1f7dc206d09052e",
+ "exact_unique_ratio_relative_change": {
+  "groups": 200,
+  "high": 0.10943,
+  "low": 0.03102,
+  "point": 0.06918
+ },
+ "gate_looks": {
+  "control_evaluated": "6b6aff4ad267ac36deb7798d90c7f357538804b8aca62ecc885be33627af6518",
+  "treatment_evaluated": "b3c75767480feda32f06aab846ce4067d50a2e943248befa23e72a306fe02278"
+ },
+ "generalization_established": false,
+ "guardrails": {
+  "answer_rate_answer_schema": {
+   "adverse_supported": false,
+   "interval": {
+    "groups": 200,
+    "high": 0.0,
+    "items": 400,
+    "low": 0.0,
+    "point": 0.0,
+    "resamples": 10000,
+    "seed": 20260928
+   },
+   "non_inferiority_shown": true,
+   "operational_pass": true,
+   "threshold": -2.0
+  },
+  "answer_rate_prefill_assertion": {
+   "adverse_supported": false,
+   "interval": {
+    "groups": 200,
+    "high": 0.25,
+    "items": 400,
+    "low": -2.75,
+    "point": -1.0,
+    "resamples": 10000,
+    "seed": 20260928
+   },
+   "non_inferiority_shown": false,
+   "operational_pass": true,
+   "threshold": -2.0
+  },
+  "exact_unique_ratio": {
+   "adverse_supported": false,
+   "interval": {
+    "groups": 200,
+    "high": 0.10943,
+    "low": 0.03102,
+    "point": 0.06918
+   },
+   "non_inferiority_shown": true,
+   "operational_pass": true,
+   "threshold": -0.1
+  },
+  "reference_validity": {
+   "adverse_supported": false,
+   "interval": {
+    "groups": 200,
+    "high": 0.812,
+    "items": 200,
+    "low": -3.875,
+    "point": -1.5,
+    "resamples": 10000,
+    "seed": 20260928
+   },
+   "non_inferiority_shown": false,
+   "operational_pass": true,
+   "threshold": -3.0
+  }
+ },
+ "labels": [
+  "internal",
+  "exploratory",
+  "Arm-A-exposed",
+  "not untouched",
+  "not Phase 6",
+  "not cross-dataset or repository generalisation",
+  "single seed cannot establish efficacy"
+ ],
+ "launched_at_head": "41afbc2b7eb3e1e8ae87b8f9df52dad74930c1a0",
+ "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+ "objective_mode": null,
+ "per_item_evidence": [
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_576_mut_06834::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_576_mut_06834::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_576_mut_06834::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_576_mut_06834::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_59_mut_02171::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_59_mut_02171::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_59_mut_02171::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_59_mut_02171::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_266_mut_04099::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_266_mut_04099::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_266_mut_04099::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_266_mut_04099::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_233_mut_03841::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_233_mut_03841::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_233_mut_03841::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_233_mut_03841::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_338_mut_04706::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_338_mut_04706::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_338_mut_04706::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_338_mut_04706::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_520_mut_06335::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_520_mut_06335::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_520_mut_06335::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_520_mut_06335::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_709_mut_07848::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_709_mut_07848::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_709_mut_07848::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_709_mut_07848::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_606_mut_07106::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_606_mut_07106::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_606_mut_07106::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_606_mut_07106::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_822_mut_08740::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_822_mut_08740::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_822_mut_08740::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_822_mut_08740::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_664_mut_07535::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_664_mut_07535::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_664_mut_07535::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_664_mut_07535::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_441_mut_05584::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_441_mut_05584::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_441_mut_05584::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_441_mut_05584::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_577_mut_06847::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_577_mut_06847::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_577_mut_06847::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_577_mut_06847::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_283_mut_04205::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_283_mut_04205::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_283_mut_04205::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_283_mut_04205::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_648_mut_07398::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_648_mut_07398::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_648_mut_07398::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_648_mut_07398::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_849_mut_09092::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_849_mut_09092::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_849_mut_09092::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_849_mut_09092::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_207_mut_03576::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_207_mut_03576::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_207_mut_03576::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_207_mut_03576::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_160_mut_03127::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_160_mut_03127::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_160_mut_03127::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_160_mut_03127::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_244_mut_03939::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_244_mut_03939::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_244_mut_03939::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_244_mut_03939::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_517_mut_06326::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_517_mut_06326::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_517_mut_06326::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_517_mut_06326::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_549_mut_06644::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_549_mut_06644::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_549_mut_06644::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_549_mut_06644::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_222_mut_03643::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_222_mut_03643::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_222_mut_03643::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_222_mut_03643::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_650_mut_07414::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_650_mut_07414::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_650_mut_07414::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_650_mut_07414::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_94_mut_00738::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_94_mut_00738::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_94_mut_00738::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_94_mut_00738::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_83_mut_02440::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_83_mut_02440::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_83_mut_02440::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_83_mut_02440::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_135_mut_02843::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_135_mut_02843::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_135_mut_02843::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_135_mut_02843::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_573_mut_06805::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_573_mut_06805::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_573_mut_06805::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_573_mut_06805::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_295_mut_04286::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_295_mut_04286::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_295_mut_04286::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_295_mut_04286::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_24_mut_01840::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_24_mut_01840::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_24_mut_01840::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_24_mut_01840::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_82_mut_00649::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_82_mut_00649::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_82_mut_00649::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_82_mut_00649::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_610_mut_07162::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_610_mut_07162::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_610_mut_07162::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_610_mut_07162::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_734_mut_08046::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_734_mut_08046::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_734_mut_08046::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_734_mut_08046::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_689_mut_07696::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_689_mut_07696::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_689_mut_07696::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_689_mut_07696::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_511_mut_06282::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_511_mut_06282::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_511_mut_06282::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_511_mut_06282::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_548_mut_06625::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_548_mut_06625::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_548_mut_06625::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_548_mut_06625::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_219_mut_03632::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_219_mut_03632::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_219_mut_03632::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_219_mut_03632::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_6_mut_01732::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_6_mut_01732::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_6_mut_01732::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_6_mut_01732::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "curated::bugsinpy_fastapi_1::upstream::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "curated::bugsinpy_fastapi_1::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "curated::bugsinpy_fastapi_1::novel::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "curated::bugsinpy_fastapi_1::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_714_mut_07905::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_714_mut_07905::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_714_mut_07905::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_714_mut_07905::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_288_mut_04240::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_288_mut_04240::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_288_mut_04240::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_288_mut_04240::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_627_mut_07273::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_627_mut_07273::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_627_mut_07273::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_627_mut_07273::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_885_mut_09386::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_885_mut_09386::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_885_mut_09386::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_885_mut_09386::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_107_mut_00884::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_107_mut_00884::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_107_mut_00884::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_107_mut_00884::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_512_mut_06284::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_512_mut_06284::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_512_mut_06284::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_512_mut_06284::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_113_mut_02639::upstream::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_113_mut_02639::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_113_mut_02639::novel::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_113_mut_02639::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_169_mut_03212::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_169_mut_03212::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_169_mut_03212::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_169_mut_03212::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_463_mut_05711::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_463_mut_05711::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_463_mut_05711::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_463_mut_05711::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_455_mut_05686::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_455_mut_05686::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_455_mut_05686::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_455_mut_05686::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_109_mut_00918::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_109_mut_00918::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_109_mut_00918::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_109_mut_00918::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_176_mut_03248::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_176_mut_03248::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_176_mut_03248::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_176_mut_03248::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_277_mut_04179::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_277_mut_04179::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_277_mut_04179::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_277_mut_04179::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_743_mut_08101::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_743_mut_08101::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_743_mut_08101::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_743_mut_08101::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_510_mut_06249::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_510_mut_06249::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_510_mut_06249::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_510_mut_06249::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_523_mut_06404::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_523_mut_06404::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_523_mut_06404::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_523_mut_06404::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_386_mut_05117::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_386_mut_05117::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_386_mut_05117::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_386_mut_05117::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_846_mut_09069::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_846_mut_09069::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_846_mut_09069::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_846_mut_09069::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_895_mut_09442::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_895_mut_09442::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_895_mut_09442::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_895_mut_09442::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_385_mut_05104::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_385_mut_05104::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_385_mut_05104::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_385_mut_05104::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_102_mut_00805::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_102_mut_00805::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_102_mut_00805::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_102_mut_00805::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_371_mut_04976::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_371_mut_04976::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_371_mut_04976::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_371_mut_04976::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_468_mut_05812::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_468_mut_05812::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_468_mut_05812::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_468_mut_05812::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_346_mut_04791::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_346_mut_04791::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_346_mut_04791::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_346_mut_04791::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_685_mut_07672::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_685_mut_07672::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_685_mut_07672::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_685_mut_07672::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_593_mut_06952::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_593_mut_06952::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_593_mut_06952::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_593_mut_06952::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_92_mut_00724::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_92_mut_00724::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_92_mut_00724::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_92_mut_00724::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_783_mut_08519::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_783_mut_08519::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_783_mut_08519::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_783_mut_08519::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_145_mut_02933::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_145_mut_02933::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_145_mut_02933::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_145_mut_02933::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_706_mut_07829::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_706_mut_07829::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_706_mut_07829::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_706_mut_07829::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_128_mut_01171::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_128_mut_01171::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_128_mut_01171::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_128_mut_01171::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_451_mut_05627::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_451_mut_05627::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_451_mut_05627::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_451_mut_05627::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_166_mut_03182::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_166_mut_03182::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_166_mut_03182::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_166_mut_03182::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_322_mut_04571::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_322_mut_04571::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_322_mut_04571::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_322_mut_04571::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_623_mut_07245::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_623_mut_07245::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_623_mut_07245::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_623_mut_07245::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_29_mut_01892::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_29_mut_01892::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_29_mut_01892::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_29_mut_01892::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_110_mut_00928::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_110_mut_00928::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_110_mut_00928::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_110_mut_00928::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_202_mut_03513::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_202_mut_03513::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "mutation::mbpp_202_mut_03513::novel::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_202_mut_03513::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_815_mut_08678::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_815_mut_08678::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_815_mut_08678::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_815_mut_08678::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_345_mut_04774::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_345_mut_04774::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_345_mut_04774::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_345_mut_04774::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_56_mut_02153::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_56_mut_02153::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_56_mut_02153::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_56_mut_02153::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_32_mut_01939::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_32_mut_01939::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_32_mut_01939::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_32_mut_01939::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_239_mut_03915::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_239_mut_03915::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_239_mut_03915::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_239_mut_03915::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_645_mut_07387::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_645_mut_07387::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_645_mut_07387::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_645_mut_07387::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_125_mut_01113::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_125_mut_01113::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_125_mut_01113::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_125_mut_01113::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_408_mut_05317::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_408_mut_05317::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_408_mut_05317::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_408_mut_05317::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_480_mut_05872::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_480_mut_05872::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_480_mut_05872::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_480_mut_05872::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_149_mut_01486::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_149_mut_01486::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_149_mut_01486::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_149_mut_01486::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_352_mut_04879::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_352_mut_04879::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_352_mut_04879::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_352_mut_04879::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_731_mut_08014::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_731_mut_08014::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_731_mut_08014::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_731_mut_08014::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_120_mut_02666::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_120_mut_02666::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_120_mut_02666::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_120_mut_02666::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_728_mut_08010::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_728_mut_08010::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_728_mut_08010::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_728_mut_08010::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_666_mut_07555::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_666_mut_07555::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_666_mut_07555::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_666_mut_07555::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_66_mut_00478::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_66_mut_00478::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_66_mut_00478::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_66_mut_00478::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_4_mut_00027::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_4_mut_00027::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_4_mut_00027::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_4_mut_00027::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_762_mut_08290::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_762_mut_08290::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_762_mut_08290::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_762_mut_08290::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_91_mut_00706::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_91_mut_00706::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_91_mut_00706::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_91_mut_00706::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_340_mut_04721::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_340_mut_04721::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_340_mut_04721::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_340_mut_04721::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_580_mut_06857::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_580_mut_06857::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_580_mut_06857::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_580_mut_06857::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_125_mut_02754::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_125_mut_02754::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_125_mut_02754::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_125_mut_02754::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_93_mut_02497::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_93_mut_02497::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_93_mut_02497::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_93_mut_02497::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_761_mut_08280::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_761_mut_08280::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_761_mut_08280::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_761_mut_08280::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_306_mut_04393::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_306_mut_04393::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_306_mut_04393::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_306_mut_04393::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_55_mut_02145::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_55_mut_02145::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_55_mut_02145::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_55_mut_02145::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_540_mut_06541::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_540_mut_06541::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_540_mut_06541::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_540_mut_06541::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_18_mut_00086::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_18_mut_00086::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_18_mut_00086::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_18_mut_00086::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_155_mut_01547::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_155_mut_01547::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_155_mut_01547::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_155_mut_01547::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_81_mut_00643::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_81_mut_00643::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_81_mut_00643::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_81_mut_00643::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_505_mut_06161::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_505_mut_06161::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_505_mut_06161::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_505_mut_06161::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_422_mut_05421::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_422_mut_05421::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_422_mut_05421::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_422_mut_05421::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_187_mut_03339::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_187_mut_03339::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_187_mut_03339::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_187_mut_03339::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_18_mut_01791::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_18_mut_01791::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_18_mut_01791::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_18_mut_01791::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_834_mut_08853::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_834_mut_08853::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_834_mut_08853::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_834_mut_08853::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_464_mut_05744::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_464_mut_05744::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_464_mut_05744::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_464_mut_05744::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_691_mut_07722::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_691_mut_07722::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_691_mut_07722::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_691_mut_07722::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_522_mut_06371::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_522_mut_06371::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_522_mut_06371::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_522_mut_06371::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_34_mut_01975::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_34_mut_01975::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_34_mut_01975::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_34_mut_01975::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_276_mut_04178::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_276_mut_04178::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_276_mut_04178::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_276_mut_04178::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_332_mut_04666::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_332_mut_04666::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_332_mut_04666::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_332_mut_04666::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_206_mut_03536::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_206_mut_03536::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_206_mut_03536::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_206_mut_03536::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_622_mut_07243::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_622_mut_07243::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_622_mut_07243::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_622_mut_07243::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_595_mut_06972::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_595_mut_06972::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_595_mut_06972::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_595_mut_06972::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_524_mut_06429::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_524_mut_06429::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_524_mut_06429::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_524_mut_06429::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_526_mut_06446::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_526_mut_06446::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_526_mut_06446::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_526_mut_06446::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_564_mut_06744::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_564_mut_06744::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_564_mut_06744::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_564_mut_06744::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_289_mut_04248::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_289_mut_04248::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_289_mut_04248::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_289_mut_04248::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_333_mut_04672::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_333_mut_04672::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_333_mut_04672::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_333_mut_04672::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_374_mut_04998::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_374_mut_04998::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_374_mut_04998::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_374_mut_04998::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_203_mut_03526::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_203_mut_03526::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_203_mut_03526::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_203_mut_03526::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_112_mut_00945::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_112_mut_00945::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_112_mut_00945::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_112_mut_00945::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_150_mut_01494::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_150_mut_01494::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_150_mut_01494::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_150_mut_01494::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_69_mut_02304::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_69_mut_02304::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_69_mut_02304::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_69_mut_02304::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_168_mut_03202::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_168_mut_03202::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_168_mut_03202::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_168_mut_03202::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_135_mut_01296::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_135_mut_01296::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_135_mut_01296::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_135_mut_01296::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_235_mut_03847::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_235_mut_03847::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_235_mut_03847::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_235_mut_03847::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_671_mut_07583::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_671_mut_07583::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_671_mut_07583::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_671_mut_07583::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_71_mut_02325::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_71_mut_02325::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_71_mut_02325::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_71_mut_02325::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_918_mut_09751::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_918_mut_09751::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_918_mut_09751::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_918_mut_09751::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_416_mut_05385::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_416_mut_05385::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_416_mut_05385::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_416_mut_05385::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_129_mut_01219::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_129_mut_01219::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_129_mut_01219::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_129_mut_01219::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_415_mut_05366::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_415_mut_05366::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_415_mut_05366::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_415_mut_05366::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_53_mut_02116::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_53_mut_02116::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_53_mut_02116::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_53_mut_02116::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_657_mut_07449::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_657_mut_07449::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_657_mut_07449::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_657_mut_07449::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_10_mut_00061::upstream::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_10_mut_00061::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_10_mut_00061::novel::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_10_mut_00061::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_746_mut_08121::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_746_mut_08121::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_746_mut_08121::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_746_mut_08121::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_198_mut_03488::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_198_mut_03488::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_198_mut_03488::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_198_mut_03488::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_487_mut_05975::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_487_mut_05975::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_487_mut_05975::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_487_mut_05975::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_793_mut_08583::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_793_mut_08583::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_793_mut_08583::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_793_mut_08583::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_215_mut_03610::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_215_mut_03610::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_215_mut_03610::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_215_mut_03610::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_231_mut_03818::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_231_mut_03818::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_231_mut_03818::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_231_mut_03818::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_137_mut_01307::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_137_mut_01307::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_137_mut_01307::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_137_mut_01307::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_148_mut_01476::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_148_mut_01476::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_148_mut_01476::novel::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_148_mut_01476::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_405_mut_05289::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_405_mut_05289::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_405_mut_05289::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_405_mut_05289::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_326_mut_04636::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_326_mut_04636::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_326_mut_04636::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_326_mut_04636::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_467_mut_05794::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_467_mut_05794::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_467_mut_05794::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_467_mut_05794::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_383_mut_05082::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_383_mut_05082::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_383_mut_05082::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_383_mut_05082::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "mutation::mbpp_482_mut_05906::upstream::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_482_mut_05906::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "mutation::mbpp_482_mut_05906::novel::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_482_mut_05906::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_707_mut_07833::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_707_mut_07833::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_707_mut_07833::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_707_mut_07833::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_236_mut_03871::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_236_mut_03871::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_236_mut_03871::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_236_mut_03871::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "mutation::mbpp_226_mut_03718::upstream::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_226_mut_03718::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "mutation::mbpp_226_mut_03718::novel::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_226_mut_03718::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_108_mut_00905::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_108_mut_00905::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_108_mut_00905::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_108_mut_00905::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_161_mut_01595::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_161_mut_01595::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_161_mut_01595::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_161_mut_01595::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_223_mut_03662::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_223_mut_03662::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_223_mut_03662::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_223_mut_03662::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_213_mut_03607::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_213_mut_03607::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_213_mut_03607::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_213_mut_03607::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_118_mut_01001::upstream::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_118_mut_01001::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_118_mut_01001::novel::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_118_mut_01001::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_229_mut_03749::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_229_mut_03749::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_229_mut_03749::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_229_mut_03749::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_74_mut_02354::upstream::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_74_mut_02354::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_74_mut_02354::novel::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_74_mut_02354::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "mutation::mbpp_437_mut_05553::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_437_mut_05553::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": false,
+    "correct": false
+   },
+   "key": "mutation::mbpp_437_mut_05553::novel::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_437_mut_05553::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_592_mut_06919::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_592_mut_06919::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_592_mut_06919::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_592_mut_06919::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_334_mut_04675::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_334_mut_04675::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_334_mut_04675::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_334_mut_04675::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_317_mut_04523::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_317_mut_04523::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_317_mut_04523::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_317_mut_04523::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_234_mut_03842::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_234_mut_03842::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_234_mut_03842::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_234_mut_03842::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_672_mut_07592::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_672_mut_07592::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_672_mut_07592::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_672_mut_07592::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_379_mut_05024::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_379_mut_05024::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_379_mut_05024::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_379_mut_05024::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_282_mut_04200::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_282_mut_04200::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_282_mut_04200::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_282_mut_04200::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_122_mut_02716::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_122_mut_02716::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_122_mut_02716::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_122_mut_02716::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_588_mut_06887::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_588_mut_06887::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_588_mut_06887::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_588_mut_06887::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_66_mut_02222::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_66_mut_02222::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_66_mut_02222::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_66_mut_02222::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_449_mut_05625::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_449_mut_05625::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_449_mut_05625::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_449_mut_05625::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_8_mut_00050::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_8_mut_00050::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_8_mut_00050::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_8_mut_00050::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_179_mut_03263::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_179_mut_03263::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_179_mut_03263::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_179_mut_03263::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_575_mut_06815::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_575_mut_06815::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_575_mut_06815::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_575_mut_06815::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_485_mut_05928::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_485_mut_05928::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_485_mut_05928::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_485_mut_05928::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_448_mut_05605::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_448_mut_05605::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_448_mut_05605::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_448_mut_05605::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_188_mut_03379::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_188_mut_03379::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_188_mut_03379::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_188_mut_03379::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_33_mut_01945::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_33_mut_01945::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_33_mut_01945::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_33_mut_01945::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_22_mut_01830::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_22_mut_01830::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_22_mut_01830::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_22_mut_01830::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_427_mut_05511::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_427_mut_05511::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_427_mut_05511::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_427_mut_05511::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_488_mut_06005::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_488_mut_06005::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_488_mut_06005::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_488_mut_06005::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_286_mut_04213::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_286_mut_04213::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_286_mut_04213::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_286_mut_04213::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_191_mut_03434::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_191_mut_03434::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_191_mut_03434::novel::prefill_assertion",
+   "treatment": {
+    "answered": false,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_191_mut_03434::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_250_mut_04048::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_250_mut_04048::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_250_mut_04048::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_250_mut_04048::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_280_mut_04191::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_280_mut_04191::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_280_mut_04191::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_280_mut_04191::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_605_mut_07097::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_605_mut_07097::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_605_mut_07097::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_605_mut_07097::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_841_mut_08986::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_841_mut_08986::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_841_mut_08986::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_841_mut_08986::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_901_mut_09499::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_901_mut_09499::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_901_mut_09499::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_901_mut_09499::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_123_mut_01064::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_123_mut_01064::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_123_mut_01064::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_123_mut_01064::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_115_mut_00972::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::humaneval_HumanEval_115_mut_00972::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_115_mut_00972::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::humaneval_HumanEval_115_mut_00972::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_110_mut_02634::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_110_mut_02634::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_110_mut_02634::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_110_mut_02634::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_828_mut_08787::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_828_mut_08787::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_828_mut_08787::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_828_mut_08787::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_360_mut_04911::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_360_mut_04911::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_360_mut_04911::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_360_mut_04911::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_420_mut_05410::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_420_mut_05410::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_420_mut_05410::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_420_mut_05410::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_195_mut_03475::upstream::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_195_mut_03475::upstream::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": false
+   },
+   "key": "mutation::mbpp_195_mut_03475::novel::prefill_assertion",
+   "treatment": {
+    "answered": true,
+    "correct": false
+   }
+  },
+  {
+   "control": {
+    "answered": true,
+    "correct": true
+   },
+   "key": "mutation::mbpp_195_mut_03475::novel::answer_schema",
+   "treatment": {
+    "answered": true,
+    "correct": true
+   }
+  }
+ ],
+ "preflight_sha256": "274766200368c86ccabc110ea401140189577ce98c005d1a8497a5b53c19e42c",
+ "primary_fixed_input": {
+  "answer_schema": {
+   "accuracy": {
+    "control": 36.25,
+    "difference_points": {
+     "groups": 200,
+     "high": 3.0,
+     "items": 400,
+     "low": -0.25,
+     "point": 1.25,
+     "resamples": 10000,
+     "seed": 20260928
+    },
+    "items": 400,
+    "treatment": 37.5
+   },
+   "answer_rate": {
+    "control": 100.0,
+    "difference_points": {
+     "groups": 200,
+     "high": 0.0,
+     "items": 400,
+     "low": 0.0,
+     "point": 0.0,
+     "resamples": 10000,
+     "seed": 20260928
+    },
+    "items": 400,
+    "treatment": 100.0
+   },
+   "nonanswer_rate": {
+    "control": 0.0,
+    "treatment": 0.0
+   }
+  },
+  "prefill_assertion": {
+   "accuracy": {
+    "control": 37.0,
+    "difference_points": {
+     "groups": 200,
+     "high": 1.25,
+     "items": 400,
+     "low": -1.25,
+     "point": 0.0,
+     "resamples": 10000,
+     "seed": 20260928
+    },
+    "items": 400,
+    "treatment": 37.0
+   },
+   "answer_rate": {
+    "control": 96.5,
+    "difference_points": {
+     "groups": 200,
+     "high": 0.25,
+     "items": 400,
+     "low": -2.75,
+     "point": -1.0,
+     "resamples": 10000,
+     "seed": 20260928
+    },
+    "items": 400,
+    "treatment": 95.5
+   },
+   "nonanswer_rate": {
+    "control": 3.5,
+    "treatment": 4.5
+   }
+  }
+ },
+ "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+ "root_cause_established": false,
+ "schema_version": "oneiros_choice_b_v2_analysis",
+ "seed": 42,
+ "source_identity": "bb5e42bb3f28bef9c5ba94bd6ee5eee0dc62f7afe2e60b17bd848d3f8e227e2d",
+ "split_sha256": "a55a4fe04fd26cdf7f65d312750e26026bf3a3e1d6b8a52606d3138ec84cb674",
+ "stage": "analysed",
+ "status": "complete"
+}
