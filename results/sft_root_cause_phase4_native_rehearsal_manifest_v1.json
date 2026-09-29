@@ -1,0 +1,594 @@
+{
+ "boundary_checks": {
+  "duplicate_patches_in_pool": 0,
+  "max_targets_per_repository": 5,
+  "per_repository_cap_respected": true,
+  "pool_owners_shared_with_corpus": [],
+  "pool_owners_shared_with_training_projects": [],
+  "pool_repositories_in_corpus_lineages": [],
+  "pool_repositories_shared_with_excluded_confirmation_stores": {
+   "fresh_confirmation_pilot": [],
+   "revalidation_v6_of_refused_confirmation_sample": []
+  },
+  "targets_with_regression_test_file": 26
+ },
+ "boundary_checks_passed": true,
+ "bundle": {
+  "generation": "aa95ab604888d405b59fa1e8",
+  "manifest_sha256": "aa95ab604888d405b59fa1e85d48a8f7ec9d6307323f750bcf3e58e505abb5c7"
+ },
+ "gpu_used": false,
+ "inputs": {
+  "data/corpus/v4_1_research_hardened_candidate/development_view/train.records.json": "d3507cba9dbd78b36b1e704275cb245811dc62e4669ed582a0c34fab157d3908",
+  "results/v4_2_armA_successor_preflight.json": "d7e5965bb505ac8a3cfe33f1ca0249fa096bd0202d547f966f4fe7a2b97bb3d3",
+  "results/v4_3_repository_native_a_prime_retrospective.json": "9a7623f2b3f0075885c039f9c285fc243d1145188aa47a380cbf53d15fa0e172",
+  "results/v4_3_repository_native_aprime_fresh_confirmation_pilot.json": "267923bddda5f1345c3d4c605d5c28982d9a455cb5f9769bf25c9af7440102c5",
+  "results/v4_3_repository_native_aprime_sample_revalidation_v6.json": "775ae22da7f12858e4f0db38452fc5153936d0115183595e8dfc4e3d856646aa"
+ },
+ "inventory": {
+  "arm_a_selected_repository_projects": [
+   "ansible",
+   "astropy/astropy",
+   "django/django",
+   "fastapi",
+   "httpie",
+   "matplotlib",
+   "matplotlib/matplotlib",
+   "pallets/flask",
+   "pylint-dev/pylint",
+   "sanic",
+   "sympy/sympy",
+   "thefuck",
+   "tornado",
+   "youtube-dl"
+  ],
+  "corpus_repository_lineages_all_splits": {
+   "count": 28,
+   "names": [
+    "ansible/ansible",
+    "astropy/astropy",
+    "cookiecutter/cookiecutter",
+    "cool-rr/pysnooper",
+    "django/django",
+    "explosion/spacy",
+    "huge-success/sanic",
+    "jakubroztocil/httpie",
+    "keras-team/keras",
+    "matplotlib/matplotlib",
+    "mwaskom/seaborn",
+    "nvbn/thefuck",
+    "pallets/flask",
+    "pandas-dev/pandas",
+    "psf/black",
+    "psf/requests",
+    "pydata/xarray",
+    "pylint-dev/pylint",
+    "pytest-dev/pytest",
+    "scikit-learn/scikit-learn",
+    "scrapy/scrapy",
+    "sphinx-doc/sphinx",
+    "spotify/luigi",
+    "sympy/sympy",
+    "tiangolo/fastapi",
+    "tornadoweb/tornado",
+    "tqdm/tqdm",
+    "ytdl-org/youtube-dl"
+   ],
+   "source": "results/next_direction_bundle reference_universe_receipt.json (names only; no protected record opened)"
+  },
+  "harvested_stores": {
+   "a_prime_retrospective (REHEARSAL POOL)": {
+    "admitted": 26,
+    "repositories": {
+     "marshmallow-code/marshmallow": 4,
+     "pyparsing/pyparsing": 2,
+     "python-attrs/attrs": 2,
+     "python-attrs/cattrs": 5,
+     "python-humanize/humanize": 5,
+     "python-pendulum/pendulum": 1,
+     "python-poetry/tomlkit": 4,
+     "tkem/cachetools": 2,
+     "tobymao/sqlglot": 1
+    }
+   },
+   "fresh_confirmation_pilot (EXCLUDED: confirmation-derived)": {
+    "repositories": [
+     "joke2k/faker",
+     "mitmproxy/mitmproxy",
+     "python-websockets/websockets",
+     "urllib3/urllib3",
+     "wireservice/csvkit"
+    ]
+   },
+   "revalidation_v6_of_refused_confirmation_sample (EXCLUDED: confirmation-derived)": {
+    "repositories": [
+     "agronholm/anyio",
+     "agronholm/apscheduler",
+     "delgan/loguru",
+     "kludex/starlette",
+     "pydantic/pydantic",
+     "pygments/pygments",
+     "python-markdown/markdown",
+     "simonw/sqlite-utils",
+     "suor/funcy",
+     "tox-dev/tox"
+    ]
+   }
+  },
+  "phase3_panels": "MBPP function records only (no repositories)",
+  "policy_a_acquisition_pilot": "1 admitted under policy A; superseded by the retrospective rescore of the same candidates",
+  "training_split_repository_projects": [
+   "ansible",
+   "astropy/astropy",
+   "django/django",
+   "fastapi",
+   "httpie",
+   "matplotlib",
+   "matplotlib/matplotlib",
+   "pallets/flask",
+   "pylint-dev/pylint",
+   "sanic",
+   "sympy/sympy",
+   "thefuck",
+   "tornado",
+   "youtube-dl"
+  ]
+ },
+ "isolation_caveat": "retrospective admissions were made under isolation bundle c6e31961ca90028f6ef59a07 (pre-v6); they have not been revalidated under isolation v6",
+ "model_calls": 0,
+ "protected_access_audit": {
+  "method": "sys.addaudithook: every Python-process file open ('open' events) and every subprocess launch ('subprocess.Popen' events: executable, arguments, working directory) is checked against the resolved protected locations; opens performed inside external subprocesses are NOT observed, so subprocess commands and their path arguments are recorded and git's local paths are confined to the store",
+  "opens_checked": 36,
+  "protected_accesses": []
+ },
+ "schema_version": "oneiros_sft_root_cause_phase4_native_rehearsal_manifest_v1",
+ "selection": "all 26 admitted targets of the A-prime retrospective (development); selected by admission metadata only, never by model output",
+ "targets": [
+  {
+   "bug_family_heuristic": "exception_handling",
+   "buggy_commit": "252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+   "fixed_commit": "024b5d09e9f026f0f96d220e243be69346687ce0",
+   "key": "cand:marshmallow-code/marshmallow@024b5d09e9f026f0f96d220e243be69346687ce0",
+   "licence_spdx": "MIT",
+   "patch_sha256": "4325e7f09b409a6490975e9bf9070bceabc1cc7d7293af74dc16de6c0031f7d5",
+   "record_sha256": "f77714906fa4b71f974e444021a6fe19808fc18aa55241f90dc48d3751201829",
+   "regression_test_files": [
+    "tests/test_deserialization.py"
+   ],
+   "repository": "marshmallow-code/marshmallow",
+   "repository_url": "https://github.com/marshmallow-code/marshmallow",
+   "target": "Enum._deserialize",
+   "target_file": "src/marshmallow/fields.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "other_logic",
+   "buggy_commit": "65374df0c31cdc45acc4435741779298201306a2",
+   "fixed_commit": "252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+   "key": "cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+   "licence_spdx": "MIT",
+   "patch_sha256": "b5f27ae0a128e25433dc6cfa0bfdcdbcb73e6acc454f3993864c33544b31f8c6",
+   "record_sha256": "b20db09d96cbdb0220631c97f1d5014036a1cfdd969cbbb054286703bab55112",
+   "regression_test_files": [
+    "tests/test_deserialization.py"
+   ],
+   "repository": "marshmallow-code/marshmallow",
+   "repository_url": "https://github.com/marshmallow-code/marshmallow",
+   "target": "Schema._deserialize",
+   "target_file": "src/marshmallow/schema.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "exception_handling",
+   "buggy_commit": "024b5d09e9f026f0f96d220e243be69346687ce0",
+   "fixed_commit": "72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+   "key": "cand:marshmallow-code/marshmallow@72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+   "licence_spdx": "MIT",
+   "patch_sha256": "060b3bd2bfe8043c08f9a578a06ec2b49d2da473ef9eabe6e5ae54cb47092def",
+   "record_sha256": "1ac8254ad56aabbca0da4ac5606ff963f47ac90b1a77b7a58655e9984941a19a",
+   "regression_test_files": [
+    "tests/test_deserialization.py",
+    "tests/test_utils.py"
+   ],
+   "repository": "marshmallow-code/marshmallow",
+   "repository_url": "https://github.com/marshmallow-code/marshmallow",
+   "target": "from_timestamp_ms",
+   "target_file": "src/marshmallow/utils.py",
+   "tier": "simple"
+  },
+  {
+   "bug_family_heuristic": "other_logic",
+   "buggy_commit": "3207be31474530f7c0685dfbd7b4faca5b35fbf5",
+   "fixed_commit": "902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+   "key": "cand:marshmallow-code/marshmallow@902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+   "licence_spdx": "MIT",
+   "patch_sha256": "f76a3a469a5b2ea0018d251044b85600bf87f6003239a2120c48e0caa007892e",
+   "record_sha256": "153311318c0cd1f500faaba99f2b0b210632b0a502a31dfb02e91ecf51b6e266",
+   "regression_test_files": [
+    "tests/test_validate.py"
+   ],
+   "repository": "marshmallow-code/marshmallow",
+   "repository_url": "https://github.com/marshmallow-code/marshmallow",
+   "target": "URL.RegexMemoizer._regex_generator",
+   "target_file": "src/marshmallow/validate.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "other_logic",
+   "buggy_commit": "057a2e6d1b8391dc85abe725d4d12c0987a9ec10",
+   "fixed_commit": "0a2d906a3e6b9a30b6a0701588caec3937ff271f",
+   "key": "cand:pyparsing/pyparsing@0a2d906a3e6b9a30b6a0701588caec3937ff271f",
+   "licence_spdx": "MIT",
+   "patch_sha256": "de5b6e9e1948c47b456f1930185d0d1a37db0f34c967857726fa270e1a5bba60",
+   "record_sha256": "9bed045cfb76b95a92749b6ab74d8ea9f596e116020514ea051106cf6b066b40",
+   "regression_test_files": [
+    "tests/test_unit.py"
+   ],
+   "repository": "pyparsing/pyparsing",
+   "repository_url": "https://github.com/pyparsing/pyparsing",
+   "target": "Located.parseImpl",
+   "target_file": "pyparsing/core.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "boundary_or_comparison",
+   "buggy_commit": "efd56db4e59f36b1673ce0eb0823e3afaa9d1201",
+   "fixed_commit": "65d503517d146f83ce3f2ef804ee9448e6a16957",
+   "key": "cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957",
+   "licence_spdx": "MIT",
+   "patch_sha256": "9556fd7eb15bc17fbd921e71db71ed76b2c61033a605682337f97d6fd5812d7f",
+   "record_sha256": "0f17a29c7c950ce2d3dc0512ae4da18b61bd0274f3af3007624be960ba0f09b8",
+   "regression_test_files": [
+    "tests/test_unit.py"
+   ],
+   "repository": "pyparsing/pyparsing",
+   "repository_url": "https://github.com/pyparsing/pyparsing",
+   "target": "ParserElement._parseNoCache",
+   "target_file": "pyparsing/core.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "other_logic",
+   "buggy_commit": "6851ab593cd25f3c14393e9355d57d22bec2a074",
+   "fixed_commit": "97f8d175656bc03c373a1c9038048a4d312c307c",
+   "key": "cand:python-attrs/attrs@97f8d175656bc03c373a1c9038048a4d312c307c",
+   "licence_spdx": "MIT",
+   "patch_sha256": "b36306a628bf8a97a5e99bfc2197f2e45359a2c4d92b2b33f8fb9bce48e2ca46",
+   "record_sha256": "5b2ae5505654aef521ceb0d4c129592985730904c22da6279fc0fc79cc1f3055",
+   "regression_test_files": [
+    "tests/test_annotations.py"
+   ],
+   "repository": "python-attrs/attrs",
+   "repository_url": "https://github.com/python-attrs/attrs",
+   "target": "_is_class_var",
+   "target_file": "src/attr/_make.py",
+   "tier": "moderate"
+  },
+  {
+   "bug_family_heuristic": "other_logic",
+   "buggy_commit": "ab7f8b2f4c0f747d5b1575247ce35e5adaad182e",
+   "fixed_commit": "af9c510912ce604a94896cc35c27368d5baf6ae6",
+   "key": "cand:python-attrs/attrs@af9c510912ce604a94896cc35c27368d5baf6ae6",
+   "licence_spdx": "MIT",
+   "patch_sha256": "4456a7f4879d6dff4dfdcb5a99da5a4b865f55ac146fdc05ffb0371a564ddbdd",
+   "record_sha256": "6b14ef8b762c2d4c7e30dba0bef5fb3c0d6b6e053fe10f0dc4de84c123623e27",
+   "regression_test_files": [
+    "tests/test_validators.py"
+   ],
+   "repository": "python-attrs/attrs",
+   "repository_url": "https://github.com/python-attrs/attrs",
+   "target": "disabled",
+   "target_file": "src/attr/validators.py",
+   "tier": "simple"
+  },
+  {
+   "bug_family_heuristic": "other_logic",
+   "buggy_commit": "573915b6b450c23eaf818370ac2e339dd9aee262",
+   "fixed_commit": "304e3700198311c78a5c6993c0ac6f3307a2e28a",
+   "key": "cand:python-attrs/cattrs@304e3700198311c78a5c6993c0ac6f3307a2e28a",
+   "licence_spdx": "MIT",
+   "patch_sha256": "9904d66314e0c2fed5a3f58d4e801cc4c40f6d4e17aa8a833f5e1e9d5113dd95",
+   "record_sha256": "cbb090543bfe805b6668a69c95ec1d954b39edad47c11c46c87d37a5022276ff",
+   "regression_test_files": [
+    "tests/test_tuples.py"
+   ],
+   "repository": "python-attrs/cattrs",
+   "repository_url": "https://github.com/python-attrs/cattrs",
+   "target": "namedtuple_dict_structure_factory",
+   "target_file": "src/cattrs/cols.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "type_or_conversion",
+   "buggy_commit": "32d0be5251224cad813f5cdac26d29abebd86493",
+   "fixed_commit": "31c19cee405100b084e139e2d955c568dcd1010a",
+   "key": "cand:python-attrs/cattrs@31c19cee405100b084e139e2d955c568dcd1010a",
+   "licence_spdx": "MIT",
+   "patch_sha256": "fa2690d7b9fd4c362e827b875c6f62107f12ed924ee05a9654728a3d6d4c52e9",
+   "record_sha256": "f3de9ed970cfc9fd946c3f2a2bbe77a40ccc931990a0d0c0c9ce9e7aa2b1d814",
+   "regression_test_files": [
+    "tests/strategies/test_include_subclasses.py"
+   ],
+   "repository": "python-attrs/cattrs",
+   "repository_url": "https://github.com/python-attrs/cattrs",
+   "target": "_make_subclasses_tree",
+   "target_file": "src/cattrs/strategies/_subclasses.py",
+   "tier": "moderate"
+  },
+  {
+   "bug_family_heuristic": "none_or_empty_handling",
+   "buggy_commit": "a4230d150242a7d21f465c0f029624de71c716c4",
+   "fixed_commit": "573915b6b450c23eaf818370ac2e339dd9aee262",
+   "key": "cand:python-attrs/cattrs@573915b6b450c23eaf818370ac2e339dd9aee262",
+   "licence_spdx": "MIT",
+   "patch_sha256": "2256e88b7f72a5c109ad8145d9e39709fb4752416748ba271dd88b1ed5452d55",
+   "record_sha256": "75dda5f07d357f0ba539d0b25160ad3f57941b53b2683970eb1e268d50178e29",
+   "regression_test_files": [
+    "tests/strategies/test_include_subclasses.py"
+   ],
+   "repository": "python-attrs/cattrs",
+   "repository_url": "https://github.com/python-attrs/cattrs",
+   "target": "_include_subclasses_with_union_strategy",
+   "target_file": "src/cattrs/strategies/_subclasses.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "exception_handling",
+   "buggy_commit": "eddffc415ce8429a02fc8e1d701f085d7b832ac0",
+   "fixed_commit": "a6c0900533af780155510343c1472a46fcb984f5",
+   "key": "cand:python-attrs/cattrs@a6c0900533af780155510343c1472a46fcb984f5",
+   "licence_spdx": "MIT",
+   "patch_sha256": "1c0f2bdca8cc9f677a19d26f2f7fa18f600fec3f042cb605e428ba919e1ec501",
+   "record_sha256": "b32ff2aab3b602cbb7d54a77a8f3fd6be5b5a15973f970c11de61633de327fbc",
+   "regression_test_files": [
+    "tests/test_disambiguators.py"
+   ],
+   "repository": "python-attrs/cattrs",
+   "repository_url": "https://github.com/python-attrs/cattrs",
+   "target": "create_default_dis_func",
+   "target_file": "src/cattrs/disambiguators.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "other_logic",
+   "buggy_commit": "df4e4bb363381fc0d5a5301049c74c1f86522dc1",
+   "fixed_commit": "bc34a466a878d3259d01d0169b3fb95420d7d50d",
+   "key": "cand:python-attrs/cattrs@bc34a466a878d3259d01d0169b3fb95420d7d50d",
+   "licence_spdx": "MIT",
+   "patch_sha256": "fc8b545be76f1dde953a73ed04ab49356678284baa296483b51488a55c695e0e",
+   "record_sha256": "c851b47138e31460df624ff589eb837c1eaff0d8656aa10914e7e1e31bf3d5ff",
+   "regression_test_files": [
+    "tests/test_v.py"
+   ],
+   "repository": "python-attrs/cattrs",
+   "repository_url": "https://github.com/python-attrs/cattrs",
+   "target": "format_exception",
+   "target_file": "src/cattrs/v.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "other_logic",
+   "buggy_commit": "e1a5c7c9efe9f82edc89a2df8c2b599516a87dcb",
+   "fixed_commit": "08cf2c3026cfd7c553e397e1d91ea069eb2a4978",
+   "key": "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978",
+   "licence_spdx": "MIT",
+   "patch_sha256": "bb9e1a3223103d84c2621bba334657f6220807260e96a068f12aa9e6f497ca9a",
+   "record_sha256": "7fddfe762304878a2417f823f03562d9d87fdc0b181fd4eb3c9822ba30df85a1",
+   "regression_test_files": [
+    "tests/test_number.py"
+   ],
+   "repository": "python-humanize/humanize",
+   "repository_url": "https://github.com/python-humanize/humanize",
+   "target": "fractional",
+   "target_file": "src/humanize/number.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "other_logic",
+   "buggy_commit": "ca892b368a535a79cc5e2181d052245b94fd6652",
+   "fixed_commit": "392aef707c0e74341ab4a51420984e9ea6b566c5",
+   "key": "cand:python-humanize/humanize@392aef707c0e74341ab4a51420984e9ea6b566c5",
+   "licence_spdx": "MIT",
+   "patch_sha256": "8fd52e4f0763287e38a7abdfb677543daebbfb7781dc3984dfd5a00a1ee18d2e",
+   "record_sha256": "78e0d0d39bb5cfd8683c5fd37a5845432c5e8276064dd19489e9947328f8fb03",
+   "regression_test_files": [
+    "tests/test_time.py"
+   ],
+   "repository": "python-humanize/humanize",
+   "repository_url": "https://github.com/python-humanize/humanize",
+   "target": "naturaldelta",
+   "target_file": "src/humanize/time.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "type_or_conversion",
+   "buggy_commit": "14965a74953eb5119859975e7c452a04b481cdae",
+   "fixed_commit": "984526c02448110a8392dde3f5e26096dfd7c729",
+   "key": "cand:python-humanize/humanize@984526c02448110a8392dde3f5e26096dfd7c729",
+   "licence_spdx": "MIT",
+   "patch_sha256": "ea55c6ed673cf8addb83ae17d2694c2257c1b9533a81e3ddd93577e5165cbc34",
+   "record_sha256": "1e98840575a87714a5931fafe1183868e9099d74c36bbe2a3d726390756c941b",
+   "regression_test_files": [
+    "tests/test_number.py"
+   ],
+   "repository": "python-humanize/humanize",
+   "repository_url": "https://github.com/python-humanize/humanize",
+   "target": "intcomma",
+   "target_file": "src/humanize/number.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "none_or_empty_handling",
+   "buggy_commit": "f971127ce7e7770d3ff5be05cfc484bdf9302e04",
+   "fixed_commit": "ca892b368a535a79cc5e2181d052245b94fd6652",
+   "key": "cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652",
+   "licence_spdx": "MIT",
+   "patch_sha256": "0212de7b55b31b40863ac494b9993a7d6e4e67ae3aef3015dd9ea903ef60e346",
+   "record_sha256": "3cc7de2e14bbbd7a9cd448fe7de8ac18dc1084508316af87d7c8a2c416883883",
+   "regression_test_files": [
+    "tests/test_number.py"
+   ],
+   "repository": "python-humanize/humanize",
+   "repository_url": "https://github.com/python-humanize/humanize",
+   "target": "intword",
+   "target_file": "src/humanize/number.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "boundary_or_comparison",
+   "buggy_commit": "984526c02448110a8392dde3f5e26096dfd7c729",
+   "fixed_commit": "e46732ed235019682b7bfc6c44443e247b332e95",
+   "key": "cand:python-humanize/humanize@e46732ed235019682b7bfc6c44443e247b332e95",
+   "licence_spdx": "MIT",
+   "patch_sha256": "e2dded0bf4bce1b17abbd12720dbc110f203720ca52a0636c85a90737cd33b3d",
+   "record_sha256": "57455719c5f447b320b9247a6b23c7d75be87fdde811fe019bd51f830702a8ff",
+   "regression_test_files": [
+    "tests/test_number.py"
+   ],
+   "repository": "python-humanize/humanize",
+   "repository_url": "https://github.com/python-humanize/humanize",
+   "target": "metric",
+   "target_file": "src/humanize/number.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "other_logic",
+   "buggy_commit": "6247ff961989fc089028b4a3e59ad754a486b9c0",
+   "fixed_commit": "bd8908581471fa7b77b7aeb3dfb502b929c632d6",
+   "key": "cand:python-pendulum/pendulum@bd8908581471fa7b77b7aeb3dfb502b929c632d6",
+   "licence_spdx": "MIT",
+   "patch_sha256": "4f62871b9d668de918e15314b05db825030eec2edb82aa00019fefc1ef602176",
+   "record_sha256": "1c99de812f97f210edae14d75b812c5598df82082135d5e21dbe134fbb665bdf",
+   "regression_test_files": [
+    "tests/datetime/test_behavior.py",
+    "tests/datetime/test_construct.py"
+   ],
+   "repository": "python-pendulum/pendulum",
+   "repository_url": "https://github.com/python-pendulum/pendulum",
+   "target": "DateTime.utcfromtimestamp",
+   "target_file": "src/pendulum/datetime.py",
+   "tier": "simple"
+  },
+  {
+   "bug_family_heuristic": "none_or_empty_handling",
+   "buggy_commit": "d3c76f0bbe90af4b12a3b83bd8e59bc9061dfe85",
+   "fixed_commit": "43668ddebc3f082bf385d328aceed18d26976897",
+   "key": "cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897",
+   "licence_spdx": "MIT",
+   "patch_sha256": "b01f3fa7b9cd0e67fdf50386d98de08482f29f437a0b97309f0f15b6e3308cf7",
+   "record_sha256": "ca6ddd85f5b09f09ac48aafe70df3d044f4720578d6eb369beec7791f4c52b77",
+   "regression_test_files": [
+    "tests/test_toml_document.py"
+   ],
+   "repository": "python-poetry/tomlkit",
+   "repository_url": "https://github.com/python-poetry/tomlkit",
+   "target": "Container.append",
+   "target_file": "tomlkit/container.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "exception_handling",
+   "buggy_commit": "7ab7469addd60e03ca3bfbb1287642e8d771e1c0",
+   "fixed_commit": "4b38becd75405e0f38ef3e47e9839eb407591c8a",
+   "key": "cand:python-poetry/tomlkit@4b38becd75405e0f38ef3e47e9839eb407591c8a",
+   "licence_spdx": "MIT",
+   "patch_sha256": "59848bae65b261bf537cd655574fb59e101ed21fb8c0abd79329bdeefe7e4786",
+   "record_sha256": "bcf3f6bbabddbb971acffb45496d8adb452e5241e14e8e93c607f86d660ccd3f",
+   "regression_test_files": [
+    "tests/test_items.py"
+   ],
+   "repository": "python-poetry/tomlkit",
+   "repository_url": "https://github.com/python-poetry/tomlkit",
+   "target": "Array.__setitem__",
+   "target_file": "tomlkit/items.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "other_logic",
+   "buggy_commit": "67d3e86502706df2a9ed67114ab67e25bcdcbbb7",
+   "fixed_commit": "8cd44f58b499da3c80a29bc877a512665a15e0bb",
+   "key": "cand:python-poetry/tomlkit@8cd44f58b499da3c80a29bc877a512665a15e0bb",
+   "licence_spdx": "MIT",
+   "patch_sha256": "120566a7d830a9011e56541abe9d807136d97e3fbcb149a1f0f18a12d95e86e6",
+   "record_sha256": "7ddc9655c80bccb35f642f6d1e296c22d2add6cf1df62fb95d926231939c82df",
+   "regression_test_files": [
+    "tests/test_api.py"
+   ],
+   "repository": "python-poetry/tomlkit",
+   "repository_url": "https://github.com/python-poetry/tomlkit",
+   "target": "String.from_raw",
+   "target_file": "tomlkit/items.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "none_or_empty_handling",
+   "buggy_commit": "34e51e2d6d09af86970f266a4217cea839fdc347",
+   "fixed_commit": "e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3",
+   "key": "cand:python-poetry/tomlkit@e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3",
+   "licence_spdx": "MIT",
+   "patch_sha256": "349a454d8d602a518059cae6343e33417feddf19bdc431ca2d2b81a252ed79a8",
+   "record_sha256": "3e5df06ddef4334f5335050c60b898ae07429e9c459e590a55bec75667391005",
+   "regression_test_files": [
+    "tests/test_toml_document.py"
+   ],
+   "repository": "python-poetry/tomlkit",
+   "repository_url": "https://github.com/python-poetry/tomlkit",
+   "target": "OutOfOrderTableProxy.__setitem__",
+   "target_file": "tomlkit/container.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "boundary_or_comparison",
+   "buggy_commit": "16e88894ef7d79b25a68f5a3b5411ed881342725",
+   "fixed_commit": "39b31bc9b63abe98497409945e9d382d8918c8fb",
+   "key": "cand:tkem/cachetools@39b31bc9b63abe98497409945e9d382d8918c8fb",
+   "licence_spdx": "MIT",
+   "patch_sha256": "2eaec2bb2ab598dfe505e000efbd256987998724f9869ab0251719b55f622414",
+   "record_sha256": "5e709a0844db5e4fadc68545f916cf5d0447daac714ae769afe98899c7503d73",
+   "regression_test_files": [
+    "tests/__init__.py"
+   ],
+   "repository": "tkem/cachetools",
+   "repository_url": "https://github.com/tkem/cachetools",
+   "target": "Cache.__setitem__",
+   "target_file": "src/cachetools/__init__.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "other_logic",
+   "buggy_commit": "8011b71949e8d8d81a71359cca9477d67a2c9c0b",
+   "fixed_commit": "57d2e4813d9801f97034559e22428bac6f7c6c9b",
+   "key": "cand:tkem/cachetools@57d2e4813d9801f97034559e22428bac6f7c6c9b",
+   "licence_spdx": "MIT",
+   "patch_sha256": "9134c42e01a08a8fb8300b0a6cd157e7f96a0f73301acb0ea124f286689b2aba",
+   "record_sha256": "ace9572b7033601617f099e1a2d019bd7dbcfb0290cc8ba7239fe1c6a042d064",
+   "regression_test_files": [
+    "tests/test_cachedmethod.py"
+   ],
+   "repository": "tkem/cachetools",
+   "repository_url": "https://github.com/tkem/cachetools",
+   "target": "_DescriptorBase.__get__",
+   "target_file": "src/cachetools/_cachedmethod.py",
+   "tier": "complex"
+  },
+  {
+   "bug_family_heuristic": "none_or_empty_handling",
+   "buggy_commit": "a313c8bee143b4b92c9a068fef72a5fd512bba61",
+   "fixed_commit": "981e492413740f7740d2b0288e3da5b4028c767e",
+   "key": "cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e",
+   "licence_spdx": "MIT",
+   "patch_sha256": "98e60dc2e5888840d2cdea10e999d164922d4c3eaf18bb84b6477c38e34ac2cc",
+   "record_sha256": "0c21b3027b8ace7c9c1d87379a1249aec4f4133764c8f4f6b6d07057014432f6",
+   "regression_test_files": [
+    "tests/dialects/test_clickhouse.py"
+   ],
+   "repository": "tobymao/sqlglot",
+   "repository_url": "https://github.com/tobymao/sqlglot",
+   "target": "ClickHouseParser._parse_global_in",
+   "target_file": "sqlglot/parsers/clickhouse.py",
+   "tier": "complex"
+  }
+ ],
+ "targets_sha256": "339e90ac74d49c8f455c1977c50694adb3e3b3c13020064ed766dae740e293f7",
+ "training": false
+}

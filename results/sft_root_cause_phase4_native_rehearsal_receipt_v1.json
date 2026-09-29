@@ -1,0 +1,1232 @@
+{
+ "admitted_over_mined": {
+  "development_retrospective_optimistic": {
+   "k": 26,
+   "n": 124,
+   "point": 0.2097,
+   "wilson_95": [
+    0.1473,
+    0.2895
+   ]
+  },
+  "independent_fresh_pilot": {
+   "k": 5,
+   "n": 120,
+   "point": 0.0417,
+   "wilson_95": [
+    0.0179,
+    0.0938
+   ]
+  },
+  "note": "the retrospective rescored the candidates used to DESIGN A-prime, so its yield is optimistic; the independent fresh pilot rate is primary"
+ },
+ "blockers": [
+  {
+   "blocker": "fixed_call_construction",
+   "consequence": "repository-native targets cannot yet supply fixed discriminating inputs for the Phase 4 fixed-input mediator; regression tests reach the target through parametrisation, objects and wrappers",
+   "next_step": "capture the target's actual arguments by tracing it during the difference-exposing official test on both revisions, and keep only short round-trippable literal inputs whose results differ",
+   "observed": "0/24 qualified targets yielded a safe fixed call from literal-argument calls in their regression tests"
+  }
+ ],
+ "by_repository": {
+  "marshmallow-code/marshmallow": {
+   "natively_qualified": 4
+  },
+  "pyparsing/pyparsing": {
+   "natively_qualified": 2
+  },
+  "python-attrs/attrs": {
+   "natively_qualified": 2
+  },
+  "python-attrs/cattrs": {
+   "natively_qualified": 5
+  },
+  "python-humanize/humanize": {
+   "natively_qualified": 5
+  },
+  "python-pendulum/pendulum": {
+   "official_tests_do_not_distinguish": 1
+  },
+  "python-poetry/tomlkit": {
+   "natively_qualified": 4
+  },
+  "tkem/cachetools": {
+   "natively_qualified": 1,
+   "test_infrastructure_error": 1
+  },
+  "tobymao/sqlglot": {
+   "natively_qualified": 1
+  }
+ },
+ "categories": {
+  "natively_qualified": 24,
+  "official_tests_do_not_distinguish": 1,
+  "test_infrastructure_error": 1
+ },
+ "caveats": [
+  "the rehearsed targets are the A-prime DEVELOPMENT retrospective (candidates used to design A-prime): mostly popular pure-Python libraries; the qualified/admitted rate is likely optimistic for independently mined repositories",
+  "environments were fast because uv reused its package cache and no target needed a compiled extension; the native-qualification CPU projection is likely optimistic",
+  "retrospective admissions were made under a pre-v6 isolation bundle and were not revalidated under isolation v6",
+  "the admitted-yield point estimate (4.17%) projects above 2%, but its lower Wilson bound (1.79%) is below 2%"
+ ],
+ "complete": true,
+ "environment_failures": {
+  "by_category": {
+   "test_infrastructure_error": 1
+  },
+  "count": 1,
+  "note": "never counted as semantic negatives or positives"
+ },
+ "gate_passed": true,
+ "gpu_used": false,
+ "inputs": {
+  "results/sft_root_cause/phase4_native_rehearsal/records.jsonl": "2b139d2db295416a1c4da148407d3cd85b63a1809f41503cb141cde25451bc6b",
+  "results/sft_root_cause_phase4_native_rehearsal_manifest_v1.json": "387a516382e18ed728bf621428531a1b57dc2864897659039b40323b88c0240e",
+  "results/sft_root_cause_reporting_addendum_2026-09-29_v1.json": "3c66c81346231cfb66f030ff802b9ffa4a7a5ac8284fece883b23e13037610c2",
+  "results/v4_3_repository_native_a_prime_retrospective.json": "9a7623f2b3f0075885c039f9c285fc243d1145188aa47a380cbf53d15fa0e172",
+  "results/v4_3_repository_native_aprime_fresh_confirmation_pilot.json": "267923bddda5f1345c3d4c605d5c28982d9a455cb5f9769bf25c9af7440102c5"
+ },
+ "model_calls": 0,
+ "per_target": [
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 3,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "marshmallow.fields",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:marshmallow-code/marshmallow@024b5d09e9f026f0f96d220e243be69346687ce0",
+   "repository": "marshmallow-code/marshmallow",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 3,
+      "passed": 382,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.8
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 385,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.4
+    }
+   },
+   "wall_seconds": 3.6
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 1,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "marshmallow.schema",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+   "repository": "marshmallow-code/marshmallow",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 1,
+      "passed": 381,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.6
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 382,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.4
+    }
+   },
+   "wall_seconds": 2.3
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 4,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "marshmallow.utils",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:marshmallow-code/marshmallow@72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+   "repository": "marshmallow-code/marshmallow",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 4,
+      "passed": 405,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.6
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 409,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.4
+    }
+   },
+   "wall_seconds": 2.5
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 4,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "marshmallow.validate",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:marshmallow-code/marshmallow@902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+   "repository": "marshmallow-code/marshmallow",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 4,
+      "passed": 217,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.5
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 221,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.3
+    }
+   },
+   "wall_seconds": 4.5
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 6,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "pyparsing.core",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:pyparsing/pyparsing@0a2d906a3e6b9a30b6a0701588caec3937ff271f",
+   "repository": "pyparsing/pyparsing",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 6,
+      "passed": 1826,
+      "skipped": 6
+     },
+     "exit": 1,
+     "seconds": 24.4
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 1832,
+      "skipped": 6
+     },
+     "exit": 0,
+     "seconds": 22.0
+    }
+   },
+   "wall_seconds": 49.5
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 6,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "pyparsing.core",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957",
+   "repository": "pyparsing/pyparsing",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 6,
+      "passed": 1946,
+      "skipped": 6
+     },
+     "exit": 1,
+     "seconds": 22.1
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 1952,
+      "skipped": 6
+     },
+     "exit": 0,
+     "seconds": 20.2
+    }
+   },
+   "wall_seconds": 44.7
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 1,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "attr._make",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-attrs/attrs@97f8d175656bc03c373a1c9038048a4d312c307c",
+   "repository": "python-attrs/attrs",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 1,
+      "passed": 47,
+      "skipped": 2
+     },
+     "exit": 1,
+     "seconds": 0.7
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 48,
+      "skipped": 2
+     },
+     "exit": 0,
+     "seconds": 0.3
+    }
+   },
+   "wall_seconds": 5.4
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 1,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [
+     {
+      "buggy": [
+       "ok",
+       "<contextlib._GeneratorContextManager object at 0x7f102ca682f0>"
+      ],
+      "call": "validator_module.disabled()",
+      "fixed": [
+       "ok",
+       "<contextlib._GeneratorContextManager object at 0x7f26757ac2f0>"
+      ],
+      "safe_fixed_call": false
+     }
+    ],
+    "import_error": null,
+    "literal_calls_found": 1,
+    "module": "attr.validators",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-attrs/attrs@af9c510912ce604a94896cc35c27368d5baf6ae6",
+   "repository": "python-attrs/attrs",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 1,
+      "passed": 162,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.7
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 163,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.3
+    }
+   },
+   "wall_seconds": 3.8
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 1,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "cattrs.cols",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-attrs/cattrs@304e3700198311c78a5c6993c0ac6f3307a2e28a",
+   "repository": "python-attrs/cattrs",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 1,
+      "passed": 11,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.7
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 12,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.3
+    }
+   },
+   "wall_seconds": 5.0
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 2,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "cattrs.strategies._subclasses",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-attrs/cattrs@31c19cee405100b084e139e2d955c568dcd1010a",
+   "repository": "python-attrs/cattrs",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 2,
+      "passed": 87,
+      "skipped": 15
+     },
+     "exit": 1,
+     "seconds": 1.9
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 89,
+      "skipped": 15
+     },
+     "exit": 0,
+     "seconds": 1.2
+    }
+   },
+   "wall_seconds": 5.6
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 1,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "cattrs.strategies._subclasses",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-attrs/cattrs@573915b6b450c23eaf818370ac2e339dd9aee262",
+   "repository": "python-attrs/cattrs",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 1,
+      "passed": 89,
+      "skipped": 15
+     },
+     "exit": 1,
+     "seconds": 1.9
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 90,
+      "skipped": 15
+     },
+     "exit": 0,
+     "seconds": 1.3
+    }
+   },
+   "wall_seconds": 5.0
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 1,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "cattrs.disambiguators",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-attrs/cattrs@a6c0900533af780155510343c1472a46fcb984f5",
+   "repository": "python-attrs/cattrs",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 1,
+      "passed": 23,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 13.6
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 24,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 14.8
+    }
+   },
+   "wall_seconds": 31.0
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 1,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "cattrs.v",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-attrs/cattrs@bc34a466a878d3259d01d0169b3fb95420d7d50d",
+   "repository": "python-attrs/cattrs",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 1,
+      "passed": 9,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.7
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 10,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.3
+    }
+   },
+   "wall_seconds": 3.5
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 5,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "humanize.number",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978",
+   "repository": "python-humanize/humanize",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 5,
+      "passed": 227,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.5
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 232,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.2
+    }
+   },
+   "wall_seconds": 3.7
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 2,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [
+     {
+      "buggy": [
+       "error",
+       "OverflowError"
+      ],
+      "call": "humanize.naturaldelta(1e+30)",
+      "fixed": [
+       "error",
+       "OverflowError"
+      ],
+      "safe_fixed_call": false
+     },
+     {
+      "buggy": [
+       "error",
+       "ValueError"
+      ],
+      "call": "humanize.naturaldelta(1, minimum_unit='years')",
+      "fixed": [
+       "error",
+       "ValueError"
+      ],
+      "safe_fixed_call": false
+     }
+    ],
+    "import_error": null,
+    "literal_calls_found": 2,
+    "module": "humanize.time",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-humanize/humanize@392aef707c0e74341ab4a51420984e9ea6b566c5",
+   "repository": "python-humanize/humanize",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 2,
+      "passed": 390,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 1.0
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 392,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.7
+    }
+   },
+   "wall_seconds": 4.3
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 2,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "humanize.number",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-humanize/humanize@984526c02448110a8392dde3f5e26096dfd7c729",
+   "repository": "python-humanize/humanize",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 2,
+      "passed": 232,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.5
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 234,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.2
+    }
+   },
+   "wall_seconds": 2.6
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 1,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "humanize.number",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652",
+   "repository": "python-humanize/humanize",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 1,
+      "passed": 240,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.5
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 241,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.3
+    }
+   },
+   "wall_seconds": 2.7
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 5,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "humanize.number",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-humanize/humanize@e46732ed235019682b7bfc6c44443e247b332e95",
+   "repository": "python-humanize/humanize",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 5,
+      "passed": 235,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.5
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 240,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.3
+    }
+   },
+   "wall_seconds": 2.7
+  },
+  {
+   "category": "official_tests_do_not_distinguish",
+   "detail": null,
+   "difference_exposing_count": 0,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "pendulum.datetime",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-pendulum/pendulum@bd8908581471fa7b77b7aeb3dfb502b929c632d6",
+   "repository": "python-pendulum/pendulum",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 0,
+      "passed": 45,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.4
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 45,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.2
+    }
+   },
+   "wall_seconds": 40.0
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 1,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "tomlkit.container",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897",
+   "repository": "python-poetry/tomlkit",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 1,
+      "passed": 64,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.3
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 65,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.2
+    }
+   },
+   "wall_seconds": 2.6
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 6,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "tomlkit.items",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-poetry/tomlkit@4b38becd75405e0f38ef3e47e9839eb407591c8a",
+   "repository": "python-poetry/tomlkit",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 6,
+      "passed": 86,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.4
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 92,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.2
+    }
+   },
+   "wall_seconds": 3.2
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 6,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "tomlkit.items",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-poetry/tomlkit@8cd44f58b499da3c80a29bc877a512665a15e0bb",
+   "repository": "python-poetry/tomlkit",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 6,
+      "passed": 151,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.5
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 157,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.3
+    }
+   },
+   "wall_seconds": 3.2
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 1,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "tomlkit.container",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:python-poetry/tomlkit@e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3",
+   "repository": "python-poetry/tomlkit",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 1,
+      "passed": 68,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.5
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 69,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.2
+    }
+   },
+   "wall_seconds": 3.5
+  },
+  {
+   "category": "test_infrastructure_error",
+   "detail": {
+    "buggy": "\nno tests ran in 0.01s\n",
+    "fixed": "\nno tests ran in 0.01s\n"
+   },
+   "difference_exposing_count": null,
+   "environment_failure": true,
+   "fixed_call_probe": null,
+   "key": "cand:tkem/cachetools@39b31bc9b63abe98497409945e9d382d8918c8fb",
+   "repository": "tkem/cachetools",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 0,
+      "passed": 0,
+      "skipped": 0
+     },
+     "exit": 5,
+     "seconds": 0.2
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 0,
+      "skipped": 0
+     },
+     "exit": 5,
+     "seconds": 0.1
+    }
+   },
+   "wall_seconds": 3.7
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 1,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "cachetools._cachedmethod",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:tkem/cachetools@57d2e4813d9801f97034559e22428bac6f7c6c9b",
+   "repository": "tkem/cachetools",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 1,
+      "passed": 45,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 0.3
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 46,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.2
+    }
+   },
+   "wall_seconds": 3.6
+  },
+  {
+   "category": "natively_qualified",
+   "detail": null,
+   "difference_exposing_count": 1,
+   "environment_failure": false,
+   "fixed_call_probe": {
+    "calls": [],
+    "import_error": null,
+    "literal_calls_found": 0,
+    "module": "sqlglot.parsers.clickhouse",
+    "safe_fixed_call_constructed": false
+   },
+   "key": "cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e",
+   "repository": "tobymao/sqlglot",
+   "tests": {
+    "buggy": {
+     "counts": {
+      "failed": 1,
+      "passed": 33,
+      "skipped": 0
+     },
+     "exit": 1,
+     "seconds": 1.3
+    },
+    "fixed": {
+     "counts": {
+      "failed": 0,
+      "passed": 34,
+      "skipped": 0
+     },
+     "exit": 0,
+     "seconds": 0.6
+    }
+   },
+   "wall_seconds": 6.4
+  }
+ ],
+ "projection": {
+  "admitted_targets_to_rehearse_per_cohort": {
+   "optimistic": 358,
+   "pessimistic": 462,
+   "point": 380
+  },
+  "api_calls_gate_plus_phase6": {
+   "optimistic": 4894,
+   "pessimistic": 33081,
+   "point": 11670
+  },
+  "distinct_repositories_gate_plus_phase6": 68,
+  "environment_failures_counted_as_losses": true,
+  "mined_candidates_gate_plus_phase6": {
+   "optimistic": 7626,
+   "pessimistic": 51552,
+   "point": 18186
+  },
+  "mined_candidates_per_cohort": {
+   "optimistic": 3813,
+   "pessimistic": 25776,
+   "point": 9093
+  },
+  "native_qualification_cpu_hours_gate_plus_phase6": {
+   "optimistic": 0.7,
+   "pessimistic": 0.9,
+   "point": 0.8
+  },
+  "native_qualification_cpu_note": "median per-target wall time x admitted targets to rehearse; the runner used 4 parallel repositories",
+  "qualified_functions_per_cohort": 350,
+  "repositories_per_cohort": 34,
+  "status": "PROJECTION from a 26-target rehearsal; ranges combine the Wilson bounds of the independent admission rate and the qualified/admitted rate",
+  "unauthenticated_api_hours_gate_plus_phase6": {
+   "optimistic": 81.6,
+   "pessimistic": 551.3,
+   "point": 194.5
+  }
+ },
+ "python_used": {
+  "3.13": 26
+ },
+ "qualified_bug_family": {
+  "boundary_or_comparison": 2,
+  "exception_handling": 4,
+  "none_or_empty_handling": 5,
+  "other_logic": 11,
+  "type_or_conversion": 2
+ },
+ "qualified_repositories": 8,
+ "rates": {
+  "environment_success": {
+   "k": 25,
+   "n": 26,
+   "point": 0.9615,
+   "wilson_95": [
+    0.8111,
+    0.9932
+   ]
+  },
+  "qualified_over_all_admitted": {
+   "k": 24,
+   "n": 26,
+   "point": 0.9231,
+   "wilson_95": [
+    0.7586,
+    0.9786
+   ]
+  },
+  "qualified_over_evaluable_admitted": {
+   "k": 24,
+   "n": 25,
+   "point": 0.96,
+   "wilson_95": [
+    0.8046,
+    0.9929
+   ]
+  },
+  "safe_fixed_call_over_qualified": {
+   "k": 0,
+   "n": 24,
+   "point": 0.0,
+   "wilson_95": [
+    0.0,
+    0.138
+   ]
+  }
+ },
+ "run_environment": {
+  "clone_log": {
+   "marshmallow-code/marshmallow": {
+    "code": 0,
+    "seconds": 1.2
+   },
+   "pyparsing/pyparsing": {
+    "code": 0,
+    "seconds": 1.2
+   },
+   "python-attrs/attrs": {
+    "code": 0,
+    "seconds": 1.7
+   },
+   "python-attrs/cattrs": {
+    "code": 0,
+    "seconds": 1.2
+   },
+   "python-humanize/humanize": {
+    "code": 0,
+    "seconds": 1.1
+   },
+   "python-pendulum/pendulum": {
+    "code": 0,
+    "seconds": 3.4
+   },
+   "python-poetry/tomlkit": {
+    "code": 0,
+    "seconds": 1.9
+   },
+   "tkem/cachetools": {
+    "code": 0,
+    "seconds": 1.5
+   },
+   "tobymao/sqlglot": {
+    "code": 0,
+    "seconds": 1.4
+   }
+  },
+  "cpus": 32,
+  "host": "Linux DESKTOP-A1EGVDN 5.15.167.4-microsoft-standard-WSL2 #1 SMP Tue Nov 5 00:21:55 UTC 2024 x86_64 x86_64 x86_64 GNU/Linux",
+  "pythons": {
+   "3.10": "/root/.local/share/uv/python/cpython-3.10-linux-x86_64-gnu/bin/python3.10",
+   "3.13": "/root/.local/share/uv/python/cpython-3.13-linux-x86_64-gnu/bin/python3.13"
+  },
+  "uv": "uv 0.12.7 (x86_64-unknown-linux-gnu)",
+  "wall_seconds": 95.5
+ },
+ "schema_version": "oneiros_sft_root_cause_phase4_native_rehearsal_v1",
+ "stop_rules": {
+  "admitted_yield_lower_wilson_below_2pct_note": true,
+  "admitted_yield_projects_below_2pct": false,
+  "native_execution_not_reliable": false,
+  "protected_data_touched": false,
+  "qualified_over_admitted_below_50pct": false,
+  "rehearsal_incomplete": false,
+  "repository_diversity_or_lineage_gate_failed": false
+ },
+ "stop_triggered": [],
+ "targets": 26,
+ "timing_seconds": {
+  "environment_setup": {
+   "max": 21.3,
+   "median": 0.4,
+   "n": 26,
+   "p90": 1.0
+  },
+  "rehearsal_total_wall": 95.5,
+  "tests_buggy_plus_fixed": {
+   "max": 46.4,
+   "median": 1.0,
+   "n": 26,
+   "p90": 28.4
+  },
+  "wall_per_target": {
+   "max": 49.5,
+   "median": 3.7,
+   "n": 26,
+   "p90": 40.0
+  }
+ },
+ "training": false
+}
