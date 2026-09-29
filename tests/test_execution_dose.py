@@ -238,10 +238,81 @@ def test_tracked_dose_design_artifacts_are_consistent():
     assert ids_digest == panel_data["record_ids_sha256"]
     assert not set(manifest_data["execution_record_ids"]) & set(panel_data["record_ids"])
     # Bound sources use the LF-canonical hash, so the recorded values hold on
-    # any checkout whatever its line-ending settings.
-    from harness.source_identity import canonical_sha256
-    for relative, expected in manifest_data["source_files_sha256"].items():
-        assert canonical_sha256(ROOT / relative) == expected, f"{relative} drifted"
+    # any checkout whatever its line-ending settings. They are a claim about the
+    # frozen commit, so they are verified there; any drift in the current tree
+    # must be named, with its exact current hash, by a versioned drift receipt.
+    assert _dose_provenance_problems() == []
+
+
+DOSE_PREFLIGHT = RESULTS / "v4_3_execution_dose_preflight_receipt.json"
+DOSE_MANIFEST = RESULTS / "v4_3_execution_dose_dataset_manifest.json"
+
+
+def _dose_artifacts():
+    return [{"path": path.relative_to(ROOT).as_posix(),
+             "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+             "bindings": json.loads(path.read_text(encoding="utf-8"))["source_files_sha256"]}
+            for path in (DOSE_MANIFEST, DOSE_PREFLIGHT)]
+
+
+def _dose_drift_receipt():
+    from harness.historical_source_provenance import latest_drift_receipt, load_json
+    path = latest_drift_receipt(RESULTS, "v4_3_execution_dose_source_provenance")
+    assert path is not None, "no execution-dose source-drift receipt"
+    return load_json(path)
+
+
+def _dose_provenance_problems(receipt=None):
+    from harness.historical_source_provenance import drift_problems
+    receipt = _dose_drift_receipt() if receipt is None else receipt
+    preflight = json.loads(DOSE_PREFLIGHT.read_text(encoding="utf-8"))
+    assert receipt["frozen_source_commit"] == preflight["git"]["commit"]
+    return drift_problems(ROOT, receipt, _dose_artifacts())
+
+
+def test_dose_bindings_reproduce_at_the_frozen_commit_not_the_working_tree():
+    from harness.historical_source_provenance import verify_at_commit
+    commit = json.loads(DOSE_PREFLIGHT.read_text(encoding="utf-8"))["git"]["commit"]
+    for artifact in _dose_artifacts():
+        report = verify_at_commit(ROOT, commit, artifact["bindings"])
+        assert report and all(entry["matches"] for entry in report.values()), artifact["path"]
+    receipt = _dose_drift_receipt()
+    assert receipt["status"] == {**receipt["status"], "historical": True,
+                                 "valid_for_original_run": True, "current_run_ready": False}
+    assert receipt["historical_artifacts_modified"] is False
+
+
+def test_unrecorded_or_further_drift_and_fake_commits_are_rejected():
+    receipt = _dose_drift_receipt()
+    assert receipt["current_source_drift"], "the fixture needs real recorded drift"
+    unrecorded = {**receipt, "current_source_drift": []}
+    assert any(p.startswith("unrecorded source drift") for p in _dose_provenance_problems(unrecorded))
+    beyond = {**receipt, "current_source_drift": [
+        {**entry, "current_canonical_sha256": "0" * 64}
+        for entry in receipt["current_source_drift"]]}
+    assert any(p.startswith("source drifted beyond") for p in _dose_provenance_problems(beyond))
+    wrong_bytes = {**receipt, "historical_artifacts": [
+        {**entry, "sha256": "0" * 64} for entry in receipt["historical_artifacts"]]}
+    assert any("bytes differ" in p for p in _dose_provenance_problems(wrong_bytes))
+    from harness.historical_source_provenance import drift_problems
+    fake = {**receipt, "frozen_source_commit": "0" * 40}
+    assert drift_problems(ROOT, fake, _dose_artifacts()) == [
+        f"commit {'0' * 40} does not exist in this repository"]
+
+
+def test_current_launch_guard_refuses_the_stale_dose_artifact(monkeypatch):
+    """The historical receipt stays unusable for a new run; nothing is relaxed."""
+    import scripts.preflight_execution_dose_ab as dose
+    real_git = dose.git
+    # Isolate the guard from whether this test tree happens to be clean.
+    monkeypatch.setattr(dose, "git", lambda *a: "" if a[0] == "status" else real_git(*a))
+    with pytest.raises(SystemExit, match="files changed since preflight"):
+        dose.verify_receipt_for_launch()
+    # Even if only the receipt had changed, the bound-source check still refuses.
+    monkeypatch.setattr(dose, "git", lambda *a: "" if a[0] in ("status", "diff")
+                        else real_git(*a))
+    with pytest.raises(SystemExit, match="bound source drift: engine/sft_trainer.py"):
+        dose.verify_receipt_for_launch()
 
 
 def _swap_candidate(identifier, cell, tokens, lineage="L"):
