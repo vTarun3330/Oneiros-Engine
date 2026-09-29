@@ -1,23 +1,21 @@
 """Phase 4 (V2 design, NOT launched): matched control/treatment examples that differ
-ONLY in their label mask.
+ONLY in their label mask -- built through the PRODUCTION SFT data path.
 
-Both arms see the identical token sequence:
-
-    prompt_ids      = tokenize(chat_template(system, user))          (masked in both)
-    completion_ids  = tokenize("assert <call> == <value>" + eos_token)
-
-mirroring engine/sft_trainer.py (prompt and ``completion + eos_token`` tokenized
-separately, labels masked before the completion start).
+There is one tokenization path.  ``make_datapoint`` builds an ``SFTDataPoint`` whose
+prompt is the exact fixed-call probe prompt (``harness.fixed_input_probe.build_prompt``,
+level A0) and whose completion is ``assert <call> == <value>`` with the value's
+character span.  ``prepare_arm`` runs ``engine.sft_trainer.OneirosSFTTrainer.
+prepare_dataset`` itself (task-kind-aware prompt renderer and compaction,
+``completion.strip() + eos_token`` tokenization, sequence limits) with
+``objective_mode`` set to ``full_completion`` (control) or ``value_only``
+(treatment).  Both arms therefore share prompts, input_ids, attention masks and
+EOS handling by construction; only the label rows differ:
 
 * control labels: every completion token (assertion, call, ``==``, value, EOS);
 * treatment labels: only the complete value span and EOS.
 
-The value span is located POSITIONALLY from character offsets of the completion
-(``len("assert ") + len(call) + len(" == ")``), never by substring search, so a value
-that also appears in the call or prompt cannot be mis-selected.  Token boundaries must
-align with the span: a supervised token may absorb only the single separator space
-before the value, the last value token must end exactly at the value's end, and any
-token straddling ``==`` and the value refuses the example.
+The value span is located POSITIONALLY from character offsets, never by substring
+search (``engine.sft_trainer.value_token_labels``); unalignable examples are refused.
 
 Also provides a matched-manifest validator (C4).  It is exercised only on toy fixtures
 in this task; no real training manifest is frozen or emitted.
@@ -29,15 +27,17 @@ import json
 from collections import Counter
 from typing import Any, Iterable, Mapping, Sequence
 
-from engine.test_generation_prompt import format_chat_prompt
+from config import training_config
+from engine.sft_trainer import (
+    IGNORE_INDEX, ObjectiveAlignmentError, OneirosSFTTrainer, SFTDataPoint,
+)
+from harness.fixed_input_probe import build_prompt
 from harness.safe_execution import classify_assertions
 
-IGNORE = -100
-DESIGN_VERSION = "oneiros_phase4_objective_masking_v2"
-
-
-class AlignmentError(ValueError):
-    """The value span does not align with token boundaries."""
+IGNORE = IGNORE_INDEX
+AlignmentError = ObjectiveAlignmentError
+DESIGN_VERSION = "oneiros_phase4_objective_masking_v3_production_path"
+ARMS = {"control": "full_completion", "treatment": "value_only"}
 
 
 def completion_text(call: str, value: str) -> tuple[str, int, int]:
@@ -45,41 +45,57 @@ def completion_text(call: str, value: str) -> tuple[str, int, int]:
     return prefix + value, len(prefix), len(prefix) + len(value)
 
 
-def build_example(tokenizer, user_prompt: str, call: str, value: str) -> dict[str, Any]:
+def make_datapoint(record: Mapping[str, Any], call: str, value: str,
+                   expected_repr: str | None = None) -> SFTDataPoint:
+    """One fixed-call training example (identical for both arms)."""
     if value != value.strip() or not value:
         raise AlignmentError("the value must be non-empty canonical text without outer spaces")
-    prompt_ids = tokenizer(format_chat_prompt(tokenizer, user_prompt),
-                           add_special_tokens=False)["input_ids"]
+    user = build_prompt(record, call, expected_repr or value, "A0")["user"]
     body, start, end = completion_text(call, value)
-    encoded = tokenizer(body, add_special_tokens=False, return_offsets_mapping=True)
-    body_ids, offsets = encoded["input_ids"], encoded["offset_mapping"]
-    eos_ids = tokenizer(tokenizer.eos_token, add_special_tokens=False)["input_ids"]
-    if len(eos_ids) != 1 or eos_ids[0] != tokenizer.eos_token_id:
-        raise AlignmentError("eos_token does not tokenize to the single eos id")
-    value_tokens = [i for i, (s, e) in enumerate(offsets) if e > start and s < end]
-    if not value_tokens:
-        raise AlignmentError("no token covers the value")
-    first_start = offsets[value_tokens[0]][0]
-    if first_start < start - 1 or body[first_start:start].strip():
-        raise AlignmentError(f"a token straddles '==' and the value: {body[first_start:end]!r}")
-    if offsets[value_tokens[-1]][1] != end:
-        raise AlignmentError("the last value token does not end at the value's end")
-    if value_tokens != list(range(value_tokens[0], value_tokens[-1] + 1)) or \
-            value_tokens[-1] != len(body_ids) - 1:
-        raise AlignmentError("the value tokens are not the contiguous end of the completion")
+    return SFTDataPoint(prompt=user, completion=body, function_id=str(record.get("id", "")),
+                        semantic_group=str(record.get("group_id", "unknown")),
+                        execution_mode="function_assertion", task_kind="test_generation",
+                        supervised_char_span=(start, end))
 
-    input_ids = prompt_ids + body_ids + eos_ids
-    completion_start = len(prompt_ids)
-    control = [IGNORE] * completion_start + body_ids + eos_ids
-    treatment = [IGNORE] * len(input_ids)
-    for index in value_tokens:
-        treatment[completion_start + index] = body_ids[index]
-    treatment[-1] = eos_ids[0]
-    return {"input_ids": input_ids, "attention_mask": [1] * len(input_ids),
-            "labels": {"control": control, "treatment": treatment},
-            "completion_text": body, "completion_start": completion_start,
-            "value_token_positions": [completion_start + i for i in value_tokens],
-            "supervised_value_text": body[first_start:end]}
+
+def dataset_trainer(tokenizer, objective_mode: str | None) -> OneirosSFTTrainer:
+    """A trainer object with the production data path and limits but no model (CPU)."""
+    trainer = object.__new__(OneirosSFTTrainer)
+    trainer.tokenizer = tokenizer
+    trainer.objective_mode = objective_mode
+    trainer.max_prompt_tokens = training_config.sft_prompt_token_limit
+    trainer.max_repository_prompt_tokens = training_config.sft_repository_prompt_token_limit
+    trainer.max_completion_tokens = training_config.sft_completion_token_limit
+    trainer.max_repository_completion_tokens =         training_config.sft_repository_completion_token_limit
+    trainer.dataset_stats = {}
+    return trainer
+
+
+def prepare_arm(tokenizer, datapoints: Sequence[SFTDataPoint], arm: str):
+    """The production dataset for one arm, plus the trainer's recorded stats."""
+    trainer = dataset_trainer(tokenizer, ARMS[arm])
+    dataset = trainer.prepare_dataset(list(datapoints))
+    return dataset, dict(trainer.dataset_stats)
+
+
+def build_example(tokenizer, record: Mapping[str, Any], call: str, value: str
+                  ) -> dict[str, Any]:
+    """Both arms for one example via the production path (used by tests/receipts)."""
+    dp = make_datapoint(record, call, value)
+    control, _ = prepare_arm(tokenizer, [dp], "control")
+    treatment, _ = prepare_arm(tokenizer, [dp], "treatment")
+    c, t = control[0], treatment[0]
+    start = c["completion_start"]
+    body, v_start, v_end = completion_text(call, value)
+    supervised = [i for i, x in enumerate(t["labels"]) if x != IGNORE]
+    return {"input_ids": list(c["input_ids"]), "treatment_input_ids": list(t["input_ids"]),
+            "attention_mask": list(c["attention_mask"]),
+            "treatment_attention_mask": list(t["attention_mask"]),
+            "labels": {"control": list(c["labels"]), "treatment": list(t["labels"])},
+            "completion_text": body, "completion_start": start,
+            "treatment_completion_start": t["completion_start"],
+            "value_token_positions": supervised[:-1],
+            "value_char_span": (v_start, v_end)}
 
 
 def decode_supervised(tokenizer, example: Mapping[str, Any], arm: str) -> str:

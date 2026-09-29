@@ -16,10 +16,11 @@ logging.getLogger("transformers").setLevel(logging.ERROR)
 
 import torch
 import gc
+import hashlib
 import math
 import json
 from pathlib import Path
-from typing import Callable, List, Dict, Tuple, Any
+from typing import Callable, List, Dict, Optional, Tuple, Any
 from dataclasses import dataclass
 
 try:
@@ -135,12 +136,84 @@ class SFTDataPoint:
     # execution pilot opts into a separate user-only prompt contract; mixing
     # task renderers implicitly is forbidden in prepare_dataset.
     task_kind: str = "test_generation"
+    # Character span [start, end) of the expected VALUE inside ``completion``.
+    # Required only by the ``value_only`` objective; ignored otherwise.
+    supervised_char_span: Optional[Tuple[int, int]] = None
 
+
+#: Objective modes.  ``None`` is the legacy path (labels derived in the collator,
+#: byte-for-byte unchanged).  Both explicit modes carry labels in the dataset and
+#: share one code path; they differ ONLY in which completion tokens are supervised.
+OBJECTIVE_MODES = (None, "full_completion", "value_only")
+IGNORE_INDEX = -100
+
+
+class ObjectiveAlignmentError(ValueError):
+    """The value span of a value_only example does not align with token boundaries."""
+
+
+def value_token_labels(tokenizer, completion_text: str, completion_ids: List[int],
+                       span: Tuple[int, int]) -> List[int]:
+    """Completion labels supervising only the value span and the final EOS token.
+
+    ``completion_text`` is exactly the text the trainer tokenized (stripped
+    completion + eos_token) and ``completion_ids`` its token ids.  The value is
+    located positionally by ``span``, never by substring search.  A supervised
+    token may absorb only whitespace before the value; the last value token must
+    end exactly at the value's end and be followed only by the EOS token.
+    """
+    start, end = span
+    if not (0 <= start < end <= len(completion_text)):
+        raise ObjectiveAlignmentError(f"value span {span} is outside the completion")
+    if not completion_text[:start].endswith(" == "):
+        # value_only is defined for ``assert <call> == <value>``: a span that does
+        # not begin exactly after the comparison would supervise part of a value.
+        raise ObjectiveAlignmentError("span does not start at the value after ' == '")
+    encoded = tokenizer(completion_text, add_special_tokens=False,
+                        return_offsets_mapping=True)
+    if list(encoded["input_ids"]) != list(completion_ids):
+        raise ObjectiveAlignmentError("offset tokenization differs from the trainer's")
+    offsets = [tuple(pair) for pair in encoded["offset_mapping"]]
+    eos_id = tokenizer.eos_token_id
+    if not completion_ids or completion_ids[-1] != eos_id:
+        raise ObjectiveAlignmentError("the completion does not end with the EOS token")
+    body = len(completion_ids) - 1
+    value_tokens = [i for i in range(body) if offsets[i][1] > start and offsets[i][0] < end]
+    if not value_tokens:
+        raise ObjectiveAlignmentError("no token covers the value span")
+    first_start = offsets[value_tokens[0]][0]
+    if first_start < start and completion_text[first_start:start].strip():
+        raise ObjectiveAlignmentError(
+            f"a token straddles the value boundary: {completion_text[first_start:end]!r}")
+    if offsets[value_tokens[-1]][1] != end:
+        raise ObjectiveAlignmentError("the last value token does not end at the value's end")
+    if value_tokens != list(range(value_tokens[0], body)):
+        raise ObjectiveAlignmentError("the value is not the contiguous end of the completion")
+    labels = [IGNORE_INDEX] * len(completion_ids)
+    for index in value_tokens:
+        labels[index] = completion_ids[index]
+    labels[-1] = eos_id
+    return labels
+
+
+def _sequence_sha256(rows) -> str:
+    digest = hashlib.sha256()
+    for row in rows:
+        digest.update(json.dumps(list(row)).encode("utf-8"))
+        digest.update(b"\n")
+    return digest.hexdigest()
 
 
 
 class CompletionOnlyDataCollator:
-    """Pad pre-tokenized SFT records and mask all prompt tokens from loss."""
+    """Pad pre-tokenized SFT records and mask all prompt tokens from loss.
+
+    Records that carry explicit ``labels`` (the explicit objective modes) keep
+    them exactly: each label is placed on its own token and padding is -100.
+    The collator never re-derives labels from ``input_ids`` for such records,
+    so a value-only mask cannot be overwritten.  Records without ``labels``
+    follow the legacy derivation unchanged.
+    """
 
     def __init__(self, tokenizer):
         self.tokenizer = tokenizer
@@ -154,6 +227,21 @@ class CompletionOnlyDataCollator:
             for feature in features
         ]
         batch = self.tokenizer.pad(batch_features, padding=True, return_tensors="pt")
+        explicit = ["labels" in feature for feature in features]
+        if any(explicit):
+            if not all(explicit):
+                raise ValueError("a batch mixes explicit-label and legacy records")
+            labels = torch.full_like(batch["input_ids"], IGNORE_INDEX)
+            for row, feature in enumerate(features):
+                supplied = list(feature["labels"])
+                if len(supplied) != len(feature["input_ids"]):
+                    raise ValueError("labels and input_ids differ in length")
+                positions = (batch["attention_mask"][row] == 1).nonzero(as_tuple=True)[0]
+                if len(positions) != len(supplied):
+                    raise ValueError("attention mask does not cover the record's tokens")
+                labels[row, positions] = torch.tensor(supplied, dtype=labels.dtype)
+            batch["labels"] = labels
+            return batch
         labels = batch["input_ids"].clone()
         labels[batch["attention_mask"] == 0] = -100
         for row, feature in enumerate(features):
@@ -283,7 +371,11 @@ class OneirosSFTTrainer:
         attention_implementation: str = None,
         lora_dropout: float = None,
         weight_decay: float = None,
+        objective_mode: Optional[str] = None,
     ):
+        if objective_mode not in OBJECTIVE_MODES:
+            raise ValueError(f"objective_mode must be one of {OBJECTIVE_MODES}")
+        self.objective_mode = objective_mode
         if not SFT_AVAILABLE:
             raise ImportError("trl SFTTrainer required. Install with: pip install trl")
         if not PEFT_AVAILABLE:
@@ -463,6 +555,11 @@ class OneirosSFTTrainer:
         completion, not the prompt that was supplied to the model.
         """
         input_ids, attention_masks, completion_starts = [], [], []
+        objective_mode = getattr(self, "objective_mode", None)
+        if objective_mode not in OBJECTIVE_MODES:
+            raise ValueError(f"objective_mode must be one of {OBJECTIVE_MODES}")
+        label_rows: List[List[int]] = []
+        objective_refusals: List[Dict[str, str]] = []
         prompt_truncated = 0
         incompatible = []
         malformed_prompts = []
@@ -556,6 +653,27 @@ class OneirosSFTTrainer:
                 prompt_truncated += int(compaction.compacted)
                 support_units_dropped += compaction.support_units_dropped
                 code_units_dropped += compaction.code_units_dropped
+            if objective_mode is not None:
+                completion_labels = list(completion_ids)
+                if objective_mode == "value_only":
+                    try:
+                        if dp.task_kind != "test_generation" or \
+                                str(dp.execution_mode).startswith("repository_"):
+                            raise ObjectiveAlignmentError(
+                                "value_only supports function-assertion test generation only")
+                        if dp.supervised_char_span is None:
+                            raise ObjectiveAlignmentError("no supervised_char_span")
+                        if dp.completion != dp.completion.strip():
+                            raise ObjectiveAlignmentError(
+                                "completion has outer whitespace; the span would shift")
+                        completion_labels = value_token_labels(
+                            self.tokenizer, completion_text, list(completion_ids),
+                            tuple(dp.supervised_char_span))
+                    except ObjectiveAlignmentError as exc:
+                        objective_refusals.append({"function_id": dp.function_id,
+                                                   "reason": str(exc)})
+                        continue
+                label_rows.append([IGNORE_INDEX] * len(prompt_ids) + completion_labels)
             token_ids = prompt_ids + completion_ids
             input_ids.append(token_ids)
             attention_masks.append([1] * len(token_ids))
@@ -599,14 +717,30 @@ class OneirosSFTTrainer:
                 "SFT section-aware prompt preflight rejected "
                 f"{len(malformed_prompts)} malformed/over-budget prompt(s): {sample}"
             )
+        if objective_refusals:
+            sample = ", ".join(f"{item['function_id']}: {item['reason']}"
+                               for item in objective_refusals[:3])
+            raise ObjectiveAlignmentError(
+                f"value_only objective refused {len(objective_refusals)} example(s): {sample}")
         if not input_ids:
             raise ValueError("SFT dataset contains no completions that fit the sequence limit")
 
-        return Dataset.from_dict({
+        columns = {
             "input_ids": input_ids,
             "attention_mask": attention_masks,
             "completion_start": completion_starts,
-        })
+        }
+        if objective_mode is not None:
+            columns["labels"] = label_rows
+            self.dataset_stats.update({
+                "objective_mode": objective_mode,
+                "supervised_tokens": sum(
+                    sum(1 for t in row if t != IGNORE_INDEX) for row in label_rows),
+                "input_ids_sha256": _sequence_sha256(input_ids),
+                "attention_mask_sha256": _sequence_sha256(attention_masks),
+                "labels_sha256": _sequence_sha256(label_rows),
+            })
+        return Dataset.from_dict(columns)
 
     def train(
         self,
