@@ -1,0 +1,273 @@
+{
+ "choice_A": {
+  "recomputed_size_and_cost": {
+   "admitted_targets_to_rehearse_per_cohort": {
+    "optimistic": 358,
+    "pessimistic": 462,
+    "point": 380
+   },
+   "api_calls_gate_plus_phase6": {
+    "optimistic": 4894,
+    "pessimistic": 33081,
+    "point": 11670
+   },
+   "distinct_repositories_gate_plus_phase6": 68,
+   "environment_failures_counted_as_losses": true,
+   "mined_candidates_gate_plus_phase6": {
+    "optimistic": 7626,
+    "pessimistic": 51552,
+    "point": 18186
+   },
+   "mined_candidates_per_cohort": {
+    "optimistic": 3813,
+    "pessimistic": 25776,
+    "point": 9093
+   },
+   "native_qualification_cpu_hours_gate_plus_phase6": {
+    "optimistic": 0.7,
+    "pessimistic": 0.9,
+    "point": 0.8
+   },
+   "native_qualification_cpu_note": "median per-target wall time x admitted targets to rehearse; the runner used 4 parallel repositories",
+   "qualified_functions_per_cohort": 350,
+   "repositories_per_cohort": 34,
+   "status": "PROJECTION from a 26-target rehearsal; ranges combine the Wilson bounds of the independent admission rate and the qualified/admitted rate",
+   "unauthenticated_api_hours_gate_plus_phase6": {
+    "optimistic": 81.6,
+    "pessimistic": 551.3,
+    "point": 194.5
+   }
+  },
+  "requires": [
+   "repository-disjoint Phase 5 gate cohort",
+   "repository-disjoint Phase 6 confirmation cohort",
+   "fixed-input argument capture for repository-native targets (current literal extraction: 0/24 safe fixed calls)",
+   "revalidation of any development-pool target under isolation v6",
+   "an independent (non-retrospective) native rehearsal to replace the optimistic development qualification rate"
+  ],
+  "role": "the ONLY path capable of independent repository-generalisation evidence",
+  "rule": "no full training until both the data plan and the trainer path are frozen"
+ },
+ "choice_B": {
+  "cannot": [
+   "support repository or cross-dataset generalisation",
+   "be called untouched",
+   "compare the old arm A fairly",
+   "replace Choice A",
+   "serve as Phase 6"
+  ],
+  "feasible_groups": 352,
+  "material": "arm-A-exposed remainder (401 groups, 352 feasible): used by arm A, NOT untouched, NOT repository-disjoint",
+  "outcomes": [
+   "promising",
+   "harm",
+   "inconclusive_power"
+  ],
+  "role": "optional internal exploratory screening only"
+ },
+ "date": "2026-09-29",
+ "launches_nothing": true,
+ "not_launched": [
+  "full Choice A acquisition",
+  "Choice A training",
+  "Choice B training"
+ ],
+ "preparation_results": {
+  "native_rehearsal": {
+   "blockers": [
+    {
+     "blocker": "fixed_call_construction",
+     "consequence": "repository-native targets cannot yet supply fixed discriminating inputs for the Phase 4 fixed-input mediator; regression tests reach the target through parametrisation, objects and wrappers",
+     "next_step": "capture the target's actual arguments by tracing it during the difference-exposing official test on both revisions, and keep only short round-trippable literal inputs whose results differ",
+     "observed": "0/24 qualified targets yielded a safe fixed call from literal-argument calls in their regression tests"
+    }
+   ],
+   "caveats": [
+    "the rehearsed targets are the A-prime DEVELOPMENT retrospective (candidates used to design A-prime): mostly popular pure-Python libraries; the qualified/admitted rate is likely optimistic for independently mined repositories",
+    "environments were fast because uv reused its package cache and no target needed a compiled extension; the native-qualification CPU projection is likely optimistic",
+    "retrospective admissions were made under a pre-v6 isolation bundle and were not revalidated under isolation v6",
+    "the admitted-yield point estimate (4.17%) projects above 2%, but its lower Wilson bound (1.79%) is below 2%"
+   ],
+   "environment_success": {
+    "k": 25,
+    "n": 26,
+    "point": 0.9615,
+    "wilson_95": [
+     0.8111,
+     0.9932
+    ]
+   },
+   "gate_passed": true,
+   "qualified_over_admitted": {
+    "k": 24,
+    "n": 26,
+    "point": 0.9231,
+    "wilson_95": [
+     0.7586,
+     0.9786
+    ]
+   },
+   "safe_fixed_call_over_qualified": {
+    "k": 0,
+    "n": 24,
+    "point": 0.0,
+    "wilson_95": [
+     0.0,
+     0.138
+    ]
+   }
+  },
+  "power": {
+   "required_groups_80pct": {
+    "confirmatory_5": {
+     "10": {
+      "range_across_scenarios": [
+       352,
+       500
+      ],
+      "scenarios_not_reaching_80pct_within_3000_groups": 0
+     },
+     "3": {
+      "range_across_scenarios": null,
+      "scenarios_not_reaching_80pct_within_3000_groups": 6
+     },
+     "5": {
+      "range_across_scenarios": null,
+      "scenarios_not_reaching_80pct_within_3000_groups": 6
+     },
+     "7": {
+      "range_across_scenarios": [
+       2000,
+       3000
+      ],
+      "scenarios_not_reaching_80pct_within_3000_groups": 0
+     }
+    },
+    "positive_both": {
+     "10": {
+      "range_across_scenarios": [
+       100,
+       150
+      ],
+      "scenarios_not_reaching_80pct_within_3000_groups": 0
+     },
+     "3": {
+      "range_across_scenarios": [
+       700,
+       700
+      ],
+      "scenarios_not_reaching_80pct_within_3000_groups": 0
+     },
+     "5": {
+      "range_across_scenarios": [
+       250,
+       300
+      ],
+      "scenarios_not_reaching_80pct_within_3000_groups": 0
+     },
+     "7": {
+      "range_across_scenarios": [
+       150,
+       200
+      ],
+      "scenarios_not_reaching_80pct_within_3000_groups": 0
+     }
+    }
+   },
+   "status": "PLANNING EVIDENCE, NOT A POWER GUARANTEE"
+  },
+  "trainer_path": {
+   "evidence": "only labels differ in the real Trainer batches; legacy full-completion path unchanged",
+   "status": "ACCEPTED"
+  }
+ },
+ "recommendation": {
+  "decision": "RUN CHOICE B FIRST ONLY AS AN INEXPENSIVE SCREENING EXPERIMENT, while Choice A's CPU-side prerequisites proceed; Choice A stays required for any generalisation claim",
+  "next_authorized_gpu_experiment": {
+   "arms": {
+    "control": "full_completion",
+    "treatment": "value_only"
+   },
+   "data": "matched manifest from arm-A-exposed train groups (validated by harness.objective_masking.validate_manifest), gate groups frozen before training and withheld from both arms",
+   "estimated_gpu": {
+    "note": "smoke examples were short fixed-call prompts; evaluation adds minutes for the fixed-input probe and tens of minutes for production Kill@8 generation; ~1.5-2 GPU-hours for both arms",
+    "training_minutes_per_arm_at_431_steps": 31.2,
+    "training_seconds_per_optimizer_step_from_smoke": 4.35
+   },
+   "gate": "~200 remainder groups, fixed-input exact-output accuracy under both schemas, final checkpoint only, one look, answer-rate gate, original validity guardrail; outcomes promising/harm/inconclusive_power",
+   "name": "Choice B single-seed screening: value-only vs full-completion masking",
+   "requires_user_authorisation": true,
+   "start": "immutable base Qwen2.5-Coder-1.5B @ 2e1fd397 (not arm A)"
+  },
+  "why": [
+   "the production objective path is integrated and smoke-proven, so a screening run now tests the intervention itself rather than plumbing",
+   "Choice A is blocked on fixed-input argument capture and faces an 18,186 (7,626-51,552) candidate acquisition; a cheap screen tells us whether value-only masking moves the mediator at all before that spend",
+   "a harm or null screen would redirect effort to redesign before acquisition"
+  ]
+ },
+ "schema_version": "oneiros_sft_root_cause_decision_v1",
+ "sources": {
+  "hypotheses": {
+   "path": "results/sft_root_cause_hypotheses.json",
+   "sha256": "677dd92b0400ab9d7527d97c31b285174d7bbf42b7d451a58d4efa7c3861485e"
+  },
+  "native_rehearsal": {
+   "path": "results/sft_root_cause_phase4_native_rehearsal_receipt_v1.json",
+   "sha256": "3c9722ca7e1abac68691769f0b76c40f525665e1904c14d8c3c7b5957051f95a"
+  },
+  "objective_smoke": {
+   "path": "results/sft_root_cause_phase4_objective_smoke_v1.json",
+   "sha256": "b2ab060afaf18e85cd1a3e054f04321feeaf712050f42f5738c95bd4aa169dcd"
+  },
+  "phase4_census": {
+   "path": "results/sft_root_cause_phase4_cohort_census.json",
+   "sha256": "391bcba2b3c383fb488688b82242a3e8a430e81d4e7dfb54eca93b2f873d8464"
+  },
+  "power_sensitivity": {
+   "path": "results/sft_root_cause_phase4_power_sensitivity_v1.json",
+   "sha256": "e97c7e60f572e9e464201b48570d4640f77cc356a98751ee1415640a7aea8a84"
+  },
+  "rehearsal_manifest": {
+   "path": "results/sft_root_cause_phase4_native_rehearsal_manifest_v1.json",
+   "sha256": "387a516382e18ed728bf621428531a1b57dc2864897659039b40323b88c0240e"
+  },
+  "reporting_addendum": {
+   "path": "results/sft_root_cause_reporting_addendum_2026-09-29_v1.json",
+   "sha256": "3c66c81346231cfb66f030ff802b9ffa4a7a5ac8284fece883b23e13037610c2"
+  }
+ },
+ "state_of_evidence": {
+  "hypotheses": {
+   "H1": {
+    "qualifier": null,
+    "status": "open"
+   },
+   "H2": {
+    "qualifier": "not_supported",
+    "status": "strengthened"
+   },
+   "H3": {
+    "qualifier": "model_scale_association_only",
+    "status": "strengthened"
+   },
+   "H4": {
+    "qualifier": "schema_dependent_exposure_result",
+    "status": "open"
+   },
+   "H5": {
+    "qualifier": "narrowed_syntactic_structural_scope",
+    "status": "weakened"
+   },
+   "H6": {
+    "qualifier": "narrowed_progressive_degradation_scope",
+    "status": "weakened"
+   },
+   "H7": {
+    "qualifier": "uncertainty_power_diagnosis",
+    "status": "strengthened"
+   }
+  },
+  "root_cause_established": false,
+  "summary": "SFT changed input choice and assertion form; whether it changes fixed-input value prediction is schema-dependent and unresolved; 7B beats 1.5B as a model-scale association only; no hypothesis is terminally supported"
+ }
+}

@@ -353,3 +353,33 @@ Amendment 3 is superseded where it conflicts with this amendment:
 - **Next step:** Choice A or Choice B (`docs/SFT_ROOT_CAUSE_PHASE4_CHOICES.md`) is the
   user's decision. No GPU step (including a timing run) happens without separate
   authorisation.
+
+**2026-09-29, amendment 6: bounded Phase 4 preparation (additive).**
+
+- **Reporting:** `results/sft_root_cause_reporting_addendum_2026-09-29_v1.json`.
+  - The Phase 3A six-test Holm family is a post-hoc operationalisation with no
+    familywise claim; the H1 and H4 decisions are unchanged.
+  - The Phase 4 power analysis is planning evidence, not a guarantee.
+  - Acquisition totals are explicit: about 16,800 candidates for the gate plus Phase 6,
+    and at least 68 repositories.
+- **Trainer:** `engine/sft_trainer.py` has `objective_mode` (`None` legacy,
+  `full_completion`, `value_only`).
+  - Explicit modes carry labels built from the trainer's own tokenisation, and the
+    collator preserves them.
+  - Value-only spans are positional, and they are refused unless they start after
+    `' == '`, end on a token boundary and end the completion.
+  - Tests pass real prepared examples through the production dataset, collator and a
+    TRL `SFTTrainer` dataloader.
+- **Power sensitivity:** `results/sft_root_cause_phase4_power_sensitivity_v1.json`,
+  covering cross-schema coupling and effect level. The exact bootstrap gate agrees with
+  the fast method on 93.5–100% of datasets.
+- **Native rehearsal:** `results/sft_root_cause_phase4_native_rehearsal_receipt_v1.json`.
+  - 26 development-retrospective targets were run in WSL with uv 0.12.7 and CPython
+    3.13; 24 of 26 natively qualified.
+  - Blocker: fixed-call construction succeeded for 0 of 24.
+- **Objective smoke:** `results/sft_root_cause_phase4_objective_smoke_v1.json`,
+  ACCEPTED. The Trainer batches differ only in labels. This is not efficacy training.
+- **Decision:** `results/sft_root_cause_decision_receipt_2026-09-29_v1.json`. Choice B
+  screening comes first, only as inexpensive screening, and it needs user
+  authorisation. Choice A remains required for any generalisation claim.
+- **No root cause is established.**
