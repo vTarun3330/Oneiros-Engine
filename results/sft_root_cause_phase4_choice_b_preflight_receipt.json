@@ -1,0 +1,222 @@
+{
+ "arm_equality": {
+  "attention_mask_sha256": true,
+  "input_ids_sha256": true,
+  "labels_differ": true
+ },
+ "arms": {
+  "control": {
+   "dataset_stats": {
+    "attention_mask_sha256": "bf10f376d0475b98d73bc9a9dc216e94568be2f12cecf69f1a7df8ed96de6323",
+    "input_ids_sha256": "ea9aeedce3ddd7942a521f97216fa8f93e555a48b5a48f5b683a9ba61d195af6",
+    "labels_sha256": "524e889d540d79b1f42dfcd79fd7f137185084e37523363f2e3ee68d02d8067f",
+    "objective_mode": "full_completion",
+    "retained_examples": 3907,
+    "supervised_tokens": 98187
+   },
+   "launch_command": [
+    ".venv-gpu/Scripts/python.exe",
+    "scripts/gpu_run.py",
+    "start",
+    "--name",
+    "phase4_choice_b_control",
+    "--",
+    ".venv-gpu/Scripts/python.exe",
+    "scripts/phase4_choice_b.py",
+    "train",
+    "--arm",
+    "control"
+   ],
+   "objective_mode": "full_completion",
+   "output_dir": "checkpoints/phase4_choice_b_control_qwen15b_s42"
+  },
+  "treatment": {
+   "dataset_stats": {
+    "attention_mask_sha256": "bf10f376d0475b98d73bc9a9dc216e94568be2f12cecf69f1a7df8ed96de6323",
+    "input_ids_sha256": "ea9aeedce3ddd7942a521f97216fa8f93e555a48b5a48f5b683a9ba61d195af6",
+    "labels_sha256": "db89912193d66ab5d6b5497d9d6b9e8ed27f5c6a3e23d74124948d60ccee8b8d",
+    "objective_mode": "value_only",
+    "retained_examples": 3907,
+    "supervised_tokens": 27571
+   },
+   "launch_command": [
+    ".venv-gpu/Scripts/python.exe",
+    "scripts/gpu_run.py",
+    "start",
+    "--name",
+    "phase4_choice_b_treatment",
+    "--",
+    ".venv-gpu/Scripts/python.exe",
+    "scripts/phase4_choice_b.py",
+    "train",
+    "--arm",
+    "treatment"
+   ],
+   "objective_mode": "value_only",
+   "output_dir": "checkpoints/phase4_choice_b_treatment_qwen15b_s42"
+  }
+ },
+ "command_difference": [
+  [
+   4,
+   "phase4_choice_b_control",
+   "phase4_choice_b_treatment"
+  ],
+  [
+   10,
+   "control",
+   "treatment"
+  ]
+ ],
+ "created_utc": "2026-09-29T07:55:29Z",
+ "estimand": "COMPOSITE: value-only masking plus reduced supervised-token mass",
+ "evaluation_launched": false,
+ "evaluation_spec_sha256": "56b81cf5892bf03d64ba73cd5aaf43f7405c5a1e576d892e06acc99242cf9f0e",
+ "git": {
+  "branch": "experiment/research-eval-ablations",
+  "clean": true,
+  "commit": "0bf1f396596c46919f305a26d984fe1e1f178f9d"
+ },
+ "held_constant": {
+  "attention_implementation": "sdpa",
+  "batch_size": 1,
+  "checkpoint_cadence": 50,
+  "epochs": 2,
+  "evaluation_inputs_and_decoding": "frozen evaluation spec",
+  "gradient_accumulation_steps": 16,
+  "learning_rate": 1e-05,
+  "lora": "config.settings model_config defaults (r=16, alpha=32, dropout=0.05), weight_decay 0",
+  "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "order": "identical dataset order; Trainer shuffles with the same seed",
+  "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+  "seed": 42,
+  "trainer_kwargs": {
+   "checkpoint_steps": 50,
+   "lr_scheduler_type": "constant_with_warmup",
+   "max_completion_tokens": 1024,
+   "max_prompt_tokens": 1024,
+   "max_repository_completion_tokens": 1024,
+   "max_repository_prompt_tokens": 2048,
+   "warmup_steps": 25
+  }
+ },
+ "isolation": {
+  "no_gate_group_in_training": true,
+  "no_gate_record_in_training": true,
+  "no_phase3_group_anywhere": true,
+  "old_arm_a_not_evaluated": true,
+  "train_split_only": true
+ },
+ "labels": [
+  "internal",
+  "exploratory",
+  "Arm-A-exposed",
+  "not untouched",
+  "not Phase 6",
+  "not cross-dataset or repository generalisation",
+  "single seed cannot establish efficacy",
+  "composite intervention: value-only masking plus reduced supervised-token mass"
+ ],
+ "matched_manifest": {
+  "bug_family": {
+   "None": 6,
+   "arithmetic": 1132,
+   "boolean": 53,
+   "boundary": 1489,
+   "comparison": 631,
+   "identity": 5,
+   "index": 82,
+   "logical": 104,
+   "membership": 42,
+   "negate_removal": 31,
+   "off_by_one": 261,
+   "return": 60,
+   "string": 11
+  },
+  "complexity_tier": {
+   "complex": 2364,
+   "moderate": 1163,
+   "simple": 380
+  },
+  "dataset": {
+   "humaneval": 1266,
+   "manual_curated_examples": 6,
+   "mbpp": 2635
+  },
+  "examples_matched": true,
+  "groups": 187,
+  "order_matched": true,
+  "rows": 3907,
+  "tokens": {
+   "control_supervised": 98187,
+   "input": 2280422,
+   "treatment_supervised": 27571
+  }
+ },
+ "next_permitted_step": "stop for explicit user authorisation before any GPU step",
+ "optimizer_schedule": {
+  "effective_checkpoint_steps": 50,
+  "effective_warmup_steps": 25,
+  "gradient_accumulation_steps": 16,
+  "optimizer_examples": 3920,
+  "optimizer_padding_examples": 13,
+  "planned_optimizer_steps": 490,
+  "samples_per_optimizer_step": 16,
+  "unique_examples": 3907
+ },
+ "problems": [],
+ "protected_access_audit": {
+  "installed": true,
+  "method": "python audit hook",
+  "protected_paths_opened": []
+ },
+ "ready": true,
+ "run_contract_differences": [
+  "arm",
+  "objective_mode",
+  "output_dir"
+ ],
+ "runtime_and_storage_estimate": {
+  "evaluation_minutes_per_arm": "~5 fixed-input probe (800 greedy generations) + ~20-30 canonical Kill@8 (200 functions x 8)",
+  "gpu_hours_total_estimate": 2.35,
+  "planned_optimizer_steps_per_arm": 490,
+  "storage_gb_estimate": "~0.2 per arm (LoRA checkpoints, save_total_limit=2) + <0.1 raw outputs",
+  "training_basis": "4.35 s/step measured in the objective smoke on the same prompt family (RTX 4500 Ada)",
+  "training_minutes_per_arm": 35.5
+ },
+ "schema_version": "oneiros_phase4_choice_b_preflight_v1",
+ "source_files_sha256": {
+  "config/settings.py": "5fa95a33073318dcc31f21c081cadcf2b60d38b34170061cfd010b6553aaa259",
+  "engine/generator.py": "c4c16c7de07e82f226bd77d2e980339b13844a4418ad428e6c41158eb1938330",
+  "engine/sft_trainer.py": "3cb3fde57b50e0fd80d3b3e90151c2514f6ecb56c2945f838824ad4409a69551",
+  "engine/test_generation_prompt.py": "b522d35222f3599ec8a5fe86e60e47a844506468392b63854c603575589d036d",
+  "harness/choice_b.py": "96f8127b9b4f7291a0b8105264fae7006c936c44189ba4de3f5011d07f1c03f2",
+  "harness/evaluation_admission.py": "9c8d1c835d95d1d188ccaeb2b73f8359aae1c97b619270b711d6835553e6f575",
+  "harness/fixed_input_probe.py": "0d26313e620bdb8bada676387e4f5b3f982ba1ce164ac200ccd42f0f67e53cc5",
+  "harness/generation_adapter.py": "39583f39acdfb885286a406d65f5d90e7547ea9069760870f610eafd09c6a8f7",
+  "harness/objective_masking.py": "e5af4f5e2304db5d595fb0ab70ccf5adbd0e8214f39d316810a3b43d43c22c4a",
+  "harness/prompt_factory.py": "29c05789161522ea5581995f7e66ccb79f7e524ead5edc4745f4795822fbe565",
+  "harness/rehearsal_evaluator.py": "ed16b84dec441f5e9d4474f3d300d02ff6af7671cbfa6afab0f2f26fa248eeda",
+  "harness/safe_execution.py": "1eb3927a4c138fdde19171836bc9dad13abb6080233305c6e0acfa994c2b6e35",
+  "harness/sealed_final_evaluator.py": "56869a08e9e4ae618d883e2caae86868630dfcb88736d57f127aca9068e7becf",
+  "scripts/analyse_tool_assisted_pilot.py": "e4bc59561c6a2cf60dd761c741b315b4535b8d427b5aa42408c3fe803ac521fa",
+  "scripts/gpu_run.py": "a8e98fce960020a7fa47ce55e20f83fb2fb5b43c84464785fcaeeaf35b26a5e7",
+  "scripts/phase4_choice_b.py": "4ceca1d7539c220c636cf153b56e9d0f0138250c883338e98b3ce0268d6839d6"
+ },
+ "split": {
+  "gate_groups": 200,
+  "gate_items": 400,
+  "path": "results/sft_root_cause_phase4_choice_b_split_v2.json",
+  "rows": 3907,
+  "sha256": "6543b57dbef1da7fb1e9d754bdb3a320d1cb97a9836b8cd6d99889b28c8845df",
+  "training_groups_with_rows": 187
+ },
+ "token_fit": {
+  "prompt_truncated_control": 0,
+  "prompt_truncated_treatment": 0,
+  "retained_control": 3907,
+  "retained_treatment": 3907,
+  "rows": 3907
+ },
+ "training_launched": false
+}
