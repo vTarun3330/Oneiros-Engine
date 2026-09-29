@@ -1,0 +1,64 @@
+{
+ "bundle": "choice_b_v2_gpu_smoke",
+ "checks": {
+  "adapter_unchanged_by_exact_resume": true,
+  "changed_contract_refused": true,
+  "checkpoints_saved": true,
+  "exact_contract_resume": true,
+  "fixed_generation_complete_and_resumable": true,
+  "input_ids_identical": true,
+  "kill_at_8_rows_exact": true,
+  "labels_differ": true,
+  "optimizer_updates": true
+ },
+ "duration_seconds": 54.2,
+ "exit_code": 0,
+ "files": {
+  "run_manifest.json": {
+   "normalizations": [
+    {
+     "label": "repository_root",
+     "replacements": 3
+    }
+   ],
+   "original_bytes": 1758,
+   "original_path": "runs/20260929-161023-choice_b_v2_smoke/manifest.json",
+   "original_sha256": "373f4b38697d83f8e04a036be84abea72bb7c13e99d101929101c1399bd014e6",
+   "text": "{\r\n  \"schema_version\": \"oneiros_gpu_run_v1\",\r\n  \"run_id\": \"20260929-161023-choice_b_v2_smoke\",\r\n  \"name\": \"choice_b_v2_smoke\",\r\n  \"created_utc\": \"2026-09-29T10:40:23+00:00\",\r\n  \"command\": [\r\n    \"<repo>\\\\.venv-gpu\\\\Scripts\\\\python.exe\",\r\n    \"scripts/phase4_choice_b_v2.py\",\r\n    \"smoke\"\r\n  ],\r\n  \"command_string\": \"<repo>\\\\.venv-gpu\\\\Scripts\\\\python.exe scripts/phase4_choice_b_v2.py smoke\",\r\n  \"cwd\": \"<repo>\",\r\n  \"git\": {\r\n    \"branch\": \"experiment/research-eval-ablations\",\r\n    \"commit\": \"9c137e557bc5bd5b9430221a356e69d390dde31d\",\r\n    \"dirty\": false,\r\n    \"dirty_files\": []\r\n  },\r\n  \"versions\": {\r\n    \"python\": \"3.12.14\",\r\n    \"torch\": \"2.5.1+cu124\",\r\n    \"transformers\": \"4.48.3\",\r\n    \"peft\": \"0.14.0\",\r\n    \"trl\": \"0.15.2\",\r\n    \"datasets\": \"3.2.0\",\r\n    \"bitsandbytes\": \"0.45.0\",\r\n    \"accelerate\": \"1.2.1\",\r\n    \"cuda_runtime\": \"12.4\",\r\n    \"cudnn\": \"90100\",\r\n    \"gpu_name\": \"NVIDIA RTX 4500 Ada Generation\",\r\n    \"driver\": \"596.71\"\r\n  },\r\n  \"dataset\": {\r\n    \"corpus_version\": null\r\n  },\r\n  \"config_snapshot\": {\r\n    \"seed\": null,\r\n    \"base_model_name\": null,\r\n    \"base_model_revision\": null,\r\n    \"attention_implementation\": null,\r\n    \"selection_tokenizer\": null,\r\n    \"prompt_token_limit\": null,\r\n    \"selection_prompt_token_limit\": null,\r\n    \"learning_rate\": null,\r\n    \"max_pairs\": null,\r\n    \"checkpoint_steps\": null,\r\n    \"monitor_validation_functions\": null,\r\n    \"complex_target_fraction\": null,\r\n    \"evaluation_split\": null,\r\n    \"run_name\": null\r\n  },\r\n  \"resume\": {\r\n    \"resumed\": false,\r\n    \"resumed_from_checkpoint\": null,\r\n    \"lineage\": [\r\n      \"20260929-161023-choice_b_v2_smoke\"\r\n    ]\r\n  }\r\n}\r\n",
+   "text_sha256": "8c0a17d43ae3f5b822b2a67aa404c2e6f553d4b4d427810ff44e20706aabb782"
+  },
+  "run_status.json": {
+   "normalizations": [
+    {
+     "label": "repository_root",
+     "replacements": 0
+    }
+   ],
+   "original_bytes": 702,
+   "original_path": "runs/20260929-161023-choice_b_v2_smoke/status.json",
+   "original_sha256": "80cdfa636c002f2110ba4b67315dfee9c86d103b3312ba7c640e3bba0d14b2cb",
+   "text": "{\r\n  \"schema_version\": \"oneiros_gpu_run_v1\",\r\n  \"run_id\": \"20260929-161023-choice_b_v2_smoke\",\r\n  \"name\": \"choice_b_v2_smoke\",\r\n  \"state\": \"completed\",\r\n  \"exit_code\": 0,\r\n  \"start_utc\": \"2026-09-29T10:40:23+00:00\",\r\n  \"end_utc\": \"2026-09-29T10:41:19+00:00\",\r\n  \"duration_seconds\": 54.2,\r\n  \"termination\": {\r\n    \"reason\": \"completed\",\r\n    \"confidence\": \"certain\",\r\n    \"detail\": \"child exited 0\"\r\n  },\r\n  \"artifact_validation\": {\r\n    \"validated\": true,\r\n    \"artifact_contract\": \"none_declared\",\r\n    \"reason\": \"no --run-name; validated on exit code alone\"\r\n  },\r\n  \"progress\": {\r\n    \"last_monitored_step\": null,\r\n    \"last_log_line\": \"}\"\r\n  },\r\n  \"last_checkpoint\": null,\r\n  \"traceback\": null\r\n}\r\n",
+   "text_sha256": "80cdfa636c002f2110ba4b67315dfee9c86d103b3312ba7c640e3bba0d14b2cb"
+  },
+  "smoke_report.json": {
+   "normalizations": [
+    {
+     "label": "repository_root",
+     "replacements": 0
+    }
+   ],
+   "original_bytes": 2747,
+   "original_path": "results/sft_root_cause/phase4_choice_b_v2_SMOKE/smoke_report.json",
+   "original_sha256": "86396ffa64c830bf29814dd8090f94b51d386bb6aac3560fbaaa14695c92ad8d",
+   "text": "{\r\n \"arms\": {\r\n  \"control\": {\r\n   \"adapter_sha256_after_resume\": \"7e7b390def6ba47c4e293f911155bf74bbefd57e8bbae772786149c0d97cbcd2\",\r\n   \"adapter_sha256_first\": \"7e7b390def6ba47c4e293f911155bf74bbefd57e8bbae772786149c0d97cbcd2\",\r\n   \"changed_contract_refused\": true,\r\n   \"checkpoints\": {\r\n    \"checkpoint-1\": \"f56a519f5c6dad3956dea16e847c81a7c207bdc1ca52fb79def984947b352143\",\r\n    \"checkpoint-2\": \"7e7b390def6ba47c4e293f911155bf74bbefd57e8bbae772786149c0d97cbcd2\"\r\n   },\r\n   \"fixed_keys\": 8,\r\n   \"fixed_resume_identical\": true,\r\n   \"input_ids_sha256\": \"9003913f3386eaf438a0fcaa05aa661ccb8c49a8f5467da0b95aa30873b224c5\",\r\n   \"kill_rows\": 2,\r\n   \"kill_seconds\": 2.091,\r\n   \"labels_sha256\": \"8d7b40b0505993f7bd0791f0efb844f6939278f4b72f37d0d39a854824631e19\",\r\n   \"lora_b_norm\": 0.009833,\r\n   \"peak_allocated_mib\": 3598.1,\r\n   \"resume_mode_second_run\": \"resume\",\r\n   \"resumed_from_checkpoint\": true,\r\n   \"steps_after_resume\": 2,\r\n   \"steps_first\": 2,\r\n   \"supervised_tokens\": 878,\r\n   \"train_seconds\": 13.2\r\n  },\r\n  \"treatment\": {\r\n   \"adapter_sha256_after_resume\": \"2482b0240a5540e0ef3e38e6b3cde2000774a8646fa8566fbfa56789fd9e6668\",\r\n   \"adapter_sha256_first\": \"2482b0240a5540e0ef3e38e6b3cde2000774a8646fa8566fbfa56789fd9e6668\",\r\n   \"changed_contract_refused\": true,\r\n   \"checkpoints\": {\r\n    \"checkpoint-1\": \"f56a519f5c6dad3956dea16e847c81a7c207bdc1ca52fb79def984947b352143\",\r\n    \"checkpoint-2\": \"2482b0240a5540e0ef3e38e6b3cde2000774a8646fa8566fbfa56789fd9e6668\"\r\n   },\r\n   \"fixed_keys\": 8,\r\n   \"fixed_resume_identical\": true,\r\n   \"input_ids_sha256\": \"9003913f3386eaf438a0fcaa05aa661ccb8c49a8f5467da0b95aa30873b224c5\",\r\n   \"kill_rows\": 2,\r\n   \"kill_seconds\": 2.147,\r\n   \"labels_sha256\": \"e6686bd0e9c5d435160f4f9a7a831aceacf62504a0d6e2b3ac2f57982d798b27\",\r\n   \"lora_b_norm\": 0.00903,\r\n   \"peak_allocated_mib\": 3600.2,\r\n   \"resume_mode_second_run\": \"resume\",\r\n   \"resumed_from_checkpoint\": true,\r\n   \"steps_after_resume\": 2,\r\n   \"steps_first\": 2,\r\n   \"supervised_tokens\": 226,\r\n   \"train_seconds\": 12.9\r\n  }\r\n },\r\n \"checks\": {\r\n  \"adapter_unchanged_by_exact_resume\": true,\r\n  \"changed_contract_refused\": true,\r\n  \"checkpoints_saved\": true,\r\n  \"exact_contract_resume\": true,\r\n  \"fixed_generation_complete_and_resumable\": true,\r\n  \"input_ids_identical\": true,\r\n  \"kill_at_8_rows_exact\": true,\r\n  \"labels_differ\": true,\r\n  \"optimizer_updates\": true\r\n },\r\n \"cleanup\": \"kept in ignored disposable directories; quarantined on the next smoke\",\r\n \"disposable_dirs\": [\r\n  \"checkpoints/phase4_choice_b_v2_SMOKE_DISPOSABLE\",\r\n  \"results/sft_root_cause/phase4_choice_b_v2_SMOKE\"\r\n ],\r\n \"gate_touched\": false,\r\n \"passed\": true,\r\n \"purpose\": \"operational integration evidence only; not efficacy\",\r\n \"rows\": 32,\r\n \"schema_version\": \"oneiros_choice_b_v2_smoke\"\r\n}\r\n",
+   "text_sha256": "86396ffa64c830bf29814dd8090f94b51d386bb6aac3560fbaaa14695c92ad8d"
+  }
+ },
+ "passed": true,
+ "purpose": "operational integration evidence only; NOT efficacy; no gate data",
+ "run_git_commit": "9c137e557bc5bd5b9430221a356e69d390dde31d",
+ "run_git_dirty": false,
+ "run_id": "20260929-161023-choice_b_v2_smoke",
+ "schema_version": "oneiros_portable_evidence_bundle_v1",
+ "state": "completed"
+}
