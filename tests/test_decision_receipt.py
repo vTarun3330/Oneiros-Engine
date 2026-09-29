@@ -62,3 +62,16 @@ def test_decision_receipt_v3_corrects_choice_a_and_supersedes_preflight_v1():
     assert r["state_of_evidence"]["generalization_established"] is False
     for source in r["sources"].values():
         assert hashlib.sha256((ROOT / source["path"]).read_bytes()).hexdigest() == source["sha256"]
+
+
+def test_decision_receipt_v4_records_interpretation_c_without_overclaiming():
+    r = json.loads((ROOT / "results" / "sft_root_cause_decision_receipt_2026-09-29_v4.json")
+                   .read_text(encoding="utf-8"))
+    b = r["choice_b_v2"]
+    assert b["frozen_outcome"] == "inconclusive_power" and "NOT evidence of no effect" in b["statement"]
+    assert {"no effect", "root cause", "generalisation"} <= set(b["not_claimed"])
+    assert r["state_of_evidence"] == {"root_cause_established": False,
+                                      "generalization_established": False}
+    assert r["next"]["requires_approval"] is True
+    for source in r["sources"].values():
+        assert hashlib.sha256((ROOT / source["path"]).read_bytes()).hexdigest() == source["sha256"]

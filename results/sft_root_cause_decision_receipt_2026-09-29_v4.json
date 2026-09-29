@@ -1,0 +1,98 @@
+{
+ "choice_b_v2": {
+  "frozen_outcome": "inconclusive_power",
+  "guardrails": {
+   "answer_rate_answer_schema": {
+    "adverse_supported": false,
+    "operational_pass": true
+   },
+   "answer_rate_prefill_assertion": {
+    "adverse_supported": false,
+    "operational_pass": true
+   },
+   "exact_unique_ratio": {
+    "adverse_supported": false,
+    "operational_pass": true
+   },
+   "reference_validity": {
+    "adverse_supported": false,
+    "operational_pass": true
+   }
+  },
+  "interpretation": "C: inconclusive power",
+  "not_claimed": [
+   "no effect",
+   "value-location causality",
+   "generalisation",
+   "root cause",
+   "efficacy"
+  ],
+  "not_done": [
+   "additional seeds",
+   "reuse of the exposed gate",
+   "prompt changes",
+   "checkpoint selection"
+  ],
+  "primary_difference_points": {
+   "answer_schema": {
+    "high": 3.0,
+    "low": -0.25,
+    "point": 1.25
+   },
+   "prefill_assertion": {
+    "high": 1.25,
+    "low": -1.25,
+    "point": 0.0
+   }
+  },
+  "reason_codes": [
+   "primary_interval_includes_zero"
+  ],
+  "statement": "The screen did not resolve the hypothesis. It is NOT evidence of no effect. Descriptively, both 95% intervals are narrow and their upper bounds are +3.0 (answer schema) and +1.25 (prefilled assertion) points, so on this internal Arm-A-exposed gate, for this single seed, the data do not support a composite improvement of 5 points or more. The paired intervals were narrower than the planning simulation assumed, because control and treatment answer the same items far more alike than base and arm A did."
+ },
+ "date": "2026-09-29",
+ "launches_nothing": true,
+ "next": {
+  "options": {
+   "choice_a_pilot": "the bounded CPU receiver-aware replay pilot on the existing 24 development targets, with predeclared feasibility and diversity thresholds (docs/SFT_ROOT_CAUSE_CHOICE_A_RECEIVER_REPLAY_PROTOCOL.md); if infeasible, pivot to native execution of complete model-generated tests",
+   "fresh_cohort": "a fresh preregistered cohort on untouched groups with several seeds; the narrow single-seed intervals suggest only small composite effects remain plausible, so this is costly for little expected information"
+  },
+  "recommended": "choice_a_pilot",
+  "requires_approval": true
+ },
+ "schema_version": "oneiros_sft_root_cause_decision_v4",
+ "sources": {
+  "choice_a_receiver_protocol": {
+   "path": "docs/SFT_ROOT_CAUSE_CHOICE_A_RECEIVER_REPLAY_PROTOCOL.md",
+   "sha256": "818ffd8a0a1a6f26e9754d487071389dcf73cc15761cef703a23317216f2ec1c"
+  },
+  "choice_b_evaluation_spec_v2": {
+   "path": "results/sft_root_cause_phase4_choice_b_evaluation_spec_v2.json",
+   "sha256": "0ed3b716b764249ae4edbceb174d0a1cda02c17d13689761d1f7dc206d09052e"
+  },
+  "choice_b_power_200": {
+   "path": "results/sft_root_cause_phase4_choice_b_power_200_v1.json",
+   "sha256": "93a6b1e5b246ae5b1fca3327cd7f474e72d2bd401efd2c482584e45e1077c2e3"
+  },
+  "choice_b_v2_analysis": {
+   "path": "results/sft_root_cause_phase4_choice_b_v2_analysis.json",
+   "sha256": "78606127c6183558c52c19ec3cbb9a229d99944d9a73568e166bdaaa6a87de47"
+  },
+  "choice_b_v2_preflight": {
+   "path": "results/sft_root_cause_phase4_choice_b_v2_preflight.json",
+   "sha256": "274766200368c86ccabc110ea401140189577ce98c005d1a8497a5b53c19e42c"
+  },
+  "decision_v3": {
+   "path": "results/sft_root_cause_decision_receipt_2026-09-29_v3.json",
+   "sha256": "dcf0771783186430cade2f76bc416133e1d4fc177d3ee8037e53338f2a696f38"
+  }
+ },
+ "state_of_evidence": {
+  "generalization_established": false,
+  "root_cause_established": false
+ },
+ "supersedes": {
+  "modified": false,
+  "path": "results/sft_root_cause_decision_receipt_2026-09-29_v3.json"
+ }
+}

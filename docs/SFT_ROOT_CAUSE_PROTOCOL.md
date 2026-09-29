@@ -480,3 +480,20 @@ Amendment 3 is superseded where it conflicts with this amendment:
   - tracked compact evidence sufficient to recompute the analysis on another clone.
 - **GPU integration smoke:** passed. It is operational evidence only.
 - **Claims:** no root-cause or generalisation claim is made.
+
+**2026-09-29, amendment 10: Choice B v2 result (one look) and next step.**
+
+- **Run:** the single predeclared screen ran through the stage-aware lifecycle.
+  - control trained, then treatment trained (478 steps each);
+  - control gate look, then treatment gate look;
+  - one frozen analysis, which reproduces from tracked evidence.
+- **Outcome: `inconclusive_power`.**
+  - Answer schema: +1.25 points [−0.25, +3.00].
+  - Prefilled assertion: 0.00 [−1.25, +1.25].
+  - No sign flip; every operational guardrail passes.
+  - This is not "no effect". No seeds were added and the gate was not reused.
+- **Record:** decision receipt v4.
+- **Next (needs approval):** the Choice A receiver-aware replay pilot in
+  `docs/SFT_ROOT_CAUSE_CHOICE_A_RECEIVER_REPLAY_PROTOCOL.md`, whose thresholds were
+  declared before running.
+- **Claims:** no root-cause or generalisation claim is made.
