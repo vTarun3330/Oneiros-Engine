@@ -416,3 +416,37 @@ Amendment 3 is superseded where it conflicts with this amendment:
 - **Decision:** `results/sft_root_cause_decision_receipt_2026-09-29_v2.json`
   (v1 unchanged).
 - **No root cause is established.**
+
+**2026-09-29, amendment 8: Choice B made launchable (not launched) and Choice A capture pilot.**
+
+- **Choice B runner:** `scripts/phase4_choice_b.py` (freeze / preflight / train / evaluate
+  / analyse).
+  - Split v2 is `results/sft_root_cause_phase4_choice_b_split_v2.json`.
+    - Gate: 200 Arm-A-exposed-remainder groups (400 fixed-input items), fixed before any
+      outcome.
+    - Training: 3,907 verified rows from 187 other groups.
+    - v1 was refused by its own preflight because 37 prompts would be compacted; the
+      refusal is preserved.
+  - Preflight `results/sft_root_cause_phase4_choice_b_preflight_receipt.json` is
+    **ready**.
+    - The arms differ only in label mask, objective mode and output directory.
+    - Supervised tokens: 98,187 (control) versus 27,571 (treatment) — the composite
+      estimand.
+    - 490 steps per arm; about 2.35 GPU-hours estimated.
+  - **Training and evaluation require explicit user authorisation.** The train, evaluate
+    and analyse paths have not been executed.
+- **Choice A argument capture:** `results/sft_root_cause_phase4_argument_capture_receipt_v1.json`.
+  - Method: profile-hook capture of real arguments during the difference-exposing
+    official tests, then independent literal replay on both revisions.
+  - Yield: 214 calls observed; 37 serialisable; 37 replayable on both revisions; 18 short
+    verified oracles.
+  - 3/24 qualified targets have a usable fixed call, all in **one** repository (humanize).
+  - Most calls fail on instance-method receivers (131) or non-literal types (31).
+  - **Decision:** usable yield is negligible for a repository-diverse cohort. Mass
+    acquisition stays stopped, and no target is admitted: any use needs isolation-v6
+    revalidation first.
+  - Next: a mediator representation that does not require a literal-only free-function
+    call. The candidate is receiver-aware replay, where the receiver is rebuilt from a
+    captured, literal-only constructor call, or the official test's own asserted
+    expression value as the oracle.
+- **No root cause is established.**
