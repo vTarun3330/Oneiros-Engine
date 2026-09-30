@@ -34,6 +34,12 @@ QUARANTINED = (
      "coverage/repository gate correctly suppresses for the 2-target, 1-repository toy",
      "the synthetic check asserts the gate failure and the suppression (commit a26b72f); "
      "later strengthened to assert every engineering subgate"),
+    ("results/sft_root_cause/quarantine/v24_pipeline_attempt3/pipeline_receipt.json",
+     "the strengthened synthetic check expected coverage_gate_passed=false, but the 2-target "
+     "toy has 2 of 2 qualified targets eligible, so coverage correctly passes; only the "
+     "repository and synthetic stage-receipt subgates fail (the analysis was correct)",
+     "the synthetic check expects coverage=true, repositories=false (conformance follow-up "
+     "commit after 4452d13)"),
 )
 SUPERSEDED = (
     ("results/sft_root_cause/native_v24_canaries/pipeline_receipt.json",

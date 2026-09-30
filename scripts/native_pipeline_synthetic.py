@@ -231,13 +231,13 @@ def main() -> int:
                        "--study-mode", "engineering_dress_rehearsal", "--out", str(artifact)])
         result = json.loads(artifact.read_text(encoding="utf-8"))
         gate = result["engineering_gate"]
-        # the 2-target, 1-repository toy must FAIL coverage/repositories (v2.4 G), and the
+        # the 2-target, 1-repository toy passes coverage (2 of 2) but FAILS repositories, and the
         # synthetic evidence must fail the stage-receipt subgate, while every other subgate is
         # really evaluated and passes; every arm comparison is suppressed
         checks["analysis_engineering_mode"] = (
             "SUPPRESSED" in result["decisions"]
             and result["engineering_gate_passed"] is False
-            and gate["subgates"] == {"coverage_gate_passed": False,
+            and gate["subgates"] == {"coverage_gate_passed": True,         # 2 of 2 eligible
                                      "repository_gate_passed": False,
                                      "stage_receipts_gate_passed": False,
                                      "canaries_gate_passed": True,
