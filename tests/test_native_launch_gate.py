@@ -276,3 +276,15 @@ def test_gate_module_never_writes():
     source = (ROOT / "harness/native_launch_gate.py").read_text(encoding="utf-8")
     for forbidden in ("write_text", "write_bytes", "open(", "publish", "unlink", "rename"):
         assert forbidden not in source, forbidden
+
+
+def test_every_preflight_cli_prints_usage_without_side_effects():
+    """Regression: the v2.2 rebuild script once had no --help and ran the rebuild instead."""
+    import sys
+    from scripts import native_generated_tests_preflight_v2_2 as preflight
+    before = _git(ROOT, "status", "--porcelain", "--untracked-files=all")
+    for script in preflight.CLIS:
+        done = subprocess.run([sys.executable, str(ROOT / script), "--help"], cwd=ROOT,
+                              capture_output=True, text=True, timeout=180)
+        assert done.returncode == 0 and "usage" in done.stdout.lower(), script
+    assert _git(ROOT, "status", "--porcelain", "--untracked-files=all") == before

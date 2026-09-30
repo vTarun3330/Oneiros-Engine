@@ -14,7 +14,7 @@ Exit status is non-zero if the rehearsal rule or the coverage gate fails.
 """
 from __future__ import annotations
 
-import hashlib
+import argparse
 import json
 from pathlib import Path
 import sys
@@ -52,7 +52,9 @@ def publish_once(rel: str, payload: dict) -> str:
     return "written"
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    argparse.ArgumentParser(description=__doc__,
+                            formatter_class=argparse.RawDescriptionHelpFormatter).parse_args(argv)
     from harness.acquisition_receipt import ProtectedAccessMonitor
     from harness.native_generated_test_leakage import SCANNER_VERSION, scan
     from harness.native_generated_test_prompt import BUILDER_VERSION, PromptRefused, build_prompt

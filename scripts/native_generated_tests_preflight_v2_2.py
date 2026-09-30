@@ -10,7 +10,7 @@ The receipt is written once: an existing receipt is never overwritten or re-time
 authorisation that names its hash stays valid. v2.1 and its red receipt are unchanged.
 Launches nothing.
 
-    python scripts/native_generated_tests_preflight_v2_2.py [--out PATH]
+    python scripts/native_generated_tests_preflight_v2_2.py [--out PATH] [--suite PATH]
 """
 from __future__ import annotations
 
@@ -77,7 +77,9 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--out", default=OUTPUT)
-    out_rel = parser.parse_args(argv).out
+    parser.add_argument("--suite", default=SUITE, help="full-suite receipt for this source")
+    args = parser.parse_args(argv)
+    out_rel, suite_rel = args.out, args.suite
     if (ROOT / out_rel).exists():
         raise SystemExit(f"REFUSED: {out_rel} exists; a preflight receipt is immutable - "
                          "write a successor path")
@@ -102,7 +104,7 @@ def main(argv=None) -> int:
     require("clean_tree", not git("status", "--porcelain", "--untracked-files=all"))
     identity = gate.source_identity(ROOT)
     # 2. full suite alone at this executable source
-    suite = load(SUITE) if (ROOT / SUITE).exists() else {}
+    suite = load(suite_rel) if (ROOT / suite_rel).exists() else {}
     relation = gate.receipt_only_descendant(ROOT, suite.get("source_commit", ""), head) \
         if suite.get("source_commit") else {"ok": False}
     require("full_suite_green_alone_at_this_source",
@@ -226,7 +228,7 @@ def main(argv=None) -> int:
         "prompt_records": {"path": PROMPTS, "sha256": sha(PROMPTS) if prompts else None},
         "model": model, "adapter_manifest_sha256": adapter_sha256(),
         "generation_contract": FROZEN_CONTRACT,
-        "inputs": {rel: sha(rel) for rel in (MANIFEST, JOB, PROMPTS, ISOLATION, SUITE,
+        "inputs": {rel: sha(rel) for rel in (MANIFEST, JOB, PROMPTS, ISOLATION, suite_rel,
                                              *(f"{CANARY_DIR}/{n}" for n in (
                                                  "pipeline_receipt.json", "canary_receipt_v2.json",
                                                  "atheris_canary_receipt_v3.json")))
