@@ -66,13 +66,15 @@ SUPERSEDED = (
      "6a949b02a3558bebfdbbaf1b07c7b8a1feca65492f20c1f11cc2aa05ae238d38", "eeeaced", RESUME),
     ("results/sft_root_cause/native_v24_canaries/atheris_canary_receipt_v3.json",
      "cf58b29016039f4f22fed950af8bb8eda096c8edfc96ee4cbdea0dd7ced2dd4f", "eeeaced", RESUME),
-    ("results/sft_root_cause/native_v24_full_suite.json",
-     "32ffd4545f33f36e2685db9a1f4e2797b92bd48b12f917ae00654f72a282a597", "c6077bc", RESUME),
 )
 # immutable predecessors kept at their own paths (never overwritten, never used for launch)
 RETIRED = (
     (LEDGER_V1, "2fb360e67ced6e12e057074ce73e5d3be65fc03e3498da92e6ae65ec92370cdf", "c6077bc",
      "ledger v1: its superseded_by hashes name the pre-fix pipeline receipt; succeeded by v2"),
+    ("results/sft_root_cause/native_v24_full_suite.json",
+     "32ffd4545f33f36e2685db9a1f4e2797b92bd48b12f917ae00654f72a282a597", "c6077bc",
+     "full-suite receipt for pre-fix source caa0012 (immutable); succeeded by "
+     "native_v24_full_suite_r2.json"),
     (PREFLIGHT_V1, "c5479bb371f6c8ecbfaaa06491c3bde0f14db46e4908b1d654b3d257963104cd", "78bf3ef",
      "preflight bound to pre-fix source caa0012; stale after the Atheris resume fix; no "
      "authorisation was ever bound to it; succeeded by preflight_v2_4_r2"),

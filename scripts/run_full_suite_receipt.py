@@ -19,7 +19,7 @@ import time
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-OUT = "results/sft_root_cause/native_v24_full_suite.json"
+OUT = "results/sft_root_cause/native_v24_full_suite_r2.json"
 
 
 def receipt_bytes(receipt: dict) -> bytes:
