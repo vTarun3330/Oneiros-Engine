@@ -65,18 +65,17 @@ def _signature_stub(source: str, node: ast.FunctionDef) -> str:
 
 
 def _find(tree: ast.Module, qualname: str):
+    """(innermost enclosing class or None, target function); classes may be nested."""
     parts = qualname.split(".")
-    if len(parts) == 1:
-        for node in tree.body:
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == parts[0]:
-                return None, node
-    elif len(parts) == 2:
-        for node in tree.body:
-            if isinstance(node, ast.ClassDef) and node.name == parts[0]:
-                for child in node.body:
-                    if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)) and \
-                            child.name == parts[1]:
-                        return node, child
+    scope, klass = tree.body, None
+    for name in parts[:-1]:
+        klass = next((n for n in scope if isinstance(n, ast.ClassDef) and n.name == name), None)
+        if klass is None:
+            raise PromptRefused(f"target {qualname!r}: class {name!r} not found")
+        scope = klass.body
+    for node in scope:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == parts[-1]:
+            return klass, node
     raise PromptRefused(f"target {qualname!r} not found at module or class level")
 
 
@@ -125,6 +124,7 @@ def permitted_view(dto: Mapping[str, Any], buggy_source: str) -> Dict[str, Any]:
 
 def _context(view: Mapping[str, Any]) -> str:
     blocks = [f"Module: `{view['module']}`",
+              f"Target: `{view['dto']['qualname']}`",
               f"Import the target with: `from {view['module']} import {view['import_name']}`"]
     if view["imports"]:
         blocks.append("Module-level imports in the code under test:\n" + "\n".join(view["imports"]))
@@ -135,15 +135,14 @@ def _context(view: Mapping[str, Any]) -> str:
     return "\n\n".join(blocks)
 
 
-def seal(prompt: str, view: Mapping[str, Any], buggy_source: str, condition: str,
-         scaffold: Optional[str] = None) -> Dict[str, Any]:
+def seal(prompt: str, view: Mapping[str, Any], buggy_source: str, condition: str
+         ) -> Dict[str, Any]:
     return {"builder_version": BUILDER_VERSION, "prompt_schema": PROMPT_SCHEMA_VERSION,
             "condition": condition, "target_key": view["dto"]["target_key"],
             "dto": view["dto"],
             "dto_sha256": hashlib.sha256(repr(sorted(view["dto"].items())).encode()).hexdigest(),
             "buggy_source_sha256": hashlib.sha256(buggy_source.encode("utf-8")).hexdigest(),
-            "prompt": prompt, "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest(),
-            "scaffold": scaffold}
+            "prompt": prompt, "prompt_sha256": hashlib.sha256(prompt.encode("utf-8")).hexdigest()}
 
 
 def build_prompt(dto: Mapping[str, Any], buggy_source: str) -> Dict[str, Any]:
@@ -158,25 +157,5 @@ def build_prompt(dto: Mapping[str, Any], buggy_source: str) -> Dict[str, Any]:
     return seal(prompt, view, buggy_source, "whole_module")
 
 
-def build_scaffold_prompt(dto: Mapping[str, Any], buggy_source: str) -> Dict[str, Any]:
-    """Secondary diagnostic: a fixed safe scaffold; the model writes only the test body."""
-    view = permitted_view(dto, buggy_source)
-    scaffold = (f"import pytest\nfrom {view['module']} import {view['import_name']}\n\n\n"
-                "def test_generated():\n")
-    context = (_context(view) + "\n\nThe test module is already written up to this line:\n"
-               + scaffold + "Write ONLY the indented body of `test_generated` (four-space "
-               "indentation), with no imports and no other functions.")
-    prompt = build_unified_user_prompt(
-        code_under_test=view["target_source"], execution_mode="repository_pytest_fragment",
-        specification=view["docstring"], support_context=context,
-        target_symbols=[view["dto"]["qualname"]],
-        entry_point=view["dto"]["qualname"].split(".")[-1],
-        information_variant="full", output_instruction_variant="self_contained")
-    return seal(prompt, view, buggy_source, "scaffolded_diagnostic", scaffold)
-
-
-def compose_scaffolded(scaffold: str, body: str) -> str:
-    lines = body.rstrip("\n").splitlines() or ["pass"]
-    indented = [line if line.startswith("    ") or not line.strip() else "    " + line
-                for line in lines]
-    return scaffold + "\n".join(indented) + "\n"
+# The scaffolded diagnostic condition was removed by amendment v2.1 section C: its
+# body-only instruction conflicted with the production output instruction.

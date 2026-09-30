@@ -72,12 +72,23 @@ def test_function_prompt_and_deterministic_seal():
         prompt.build_prompt({**DTO, "qualname": "missing"}, BUGGY)
 
 
-def test_scaffolded_diagnostic_composes_a_runnable_module():
-    sealed = prompt.build_scaffold_prompt(DTO, BUGGY)
-    assert sealed["condition"] == "scaffolded_diagnostic"
-    module = prompt.compose_scaffolded(sealed["scaffold"], "b = Box([1, 2])\nassert b.total(2) == 6")
-    compile(module, "m", "exec")
-    assert module.startswith("import pytest\nfrom pkg.util import Box")
+def test_nested_class_targets_are_supported():
+    source = BUGGY + textwrap.dedent('''
+        class URL:
+            class Memo:
+                def _gen(self, relative: bool):
+                    return relative
+    ''')
+    sealed = prompt.build_prompt({**DTO, "qualname": "URL.Memo._gen"}, source)
+    assert "from pkg.util import URL" in sealed["prompt"]
+    assert "return relative" in sealed["prompt"]
+    with pytest.raises(prompt.PromptRefused, match="class 'Nope'"):
+        prompt.build_prompt({**DTO, "qualname": "Nope.x"}, source)
+
+
+def test_scaffolded_diagnostic_was_removed_by_the_amendment():
+    assert not hasattr(prompt, "build_scaffold_prompt")
+    assert not hasattr(prompt, "compose_scaffolded")
 
 
 def _verifier(**extra):
