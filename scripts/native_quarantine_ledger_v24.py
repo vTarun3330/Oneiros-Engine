@@ -38,8 +38,12 @@ QUARANTINED = (
      "the strengthened synthetic check expected coverage_gate_passed=false, but the 2-target "
      "toy has 2 of 2 qualified targets eligible, so coverage correctly passes; only the "
      "repository and synthetic stage-receipt subgates fail (the analysis was correct)",
-     "the synthetic check expects coverage=true, repositories=false (conformance follow-up "
-     "commit after 4452d13)"),
+     "the synthetic check expects coverage=true, repositories=false (commit 397d2c1)"),
+    ("results/sft_root_cause/quarantine/v24_pipeline_attempt4/pipeline_receipt.json",
+     "passed every check but was written with platform (CRLF) line endings, so its bytes "
+     "would not reproduce on checkout",
+     "native_pipeline_synthetic.finish() writes UTF-8 LF bytes (follow-up commit after "
+     "397d2c1)"),
 )
 SUPERSEDED = (
     ("results/sft_root_cause/native_v24_canaries/pipeline_receipt.json",

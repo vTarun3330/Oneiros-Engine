@@ -275,7 +275,8 @@ def finish(checks: dict, detail: dict) -> int:
     from scripts.receipt_sanitize import scrub_json     # tracked receipt: no user paths
     receipt = scrub_json(receipt)
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
-    RECEIPT.write_text(json.dumps(receipt, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    # LF bytes on every platform: the preflight hashes exactly what a checkout reproduces
+    RECEIPT.write_bytes((json.dumps(receipt, indent=1, sort_keys=True) + "\n").encode("utf-8"))
     print(json.dumps({"passed": receipt["passed"], "checks": checks,
                       "mismatches": detail.get("mismatches")}, indent=1))
     return 0 if receipt["passed"] else 1
