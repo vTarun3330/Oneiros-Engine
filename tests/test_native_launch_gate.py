@@ -23,7 +23,11 @@ MODEL = {"snapshot_manifest_sha256": "snap", "tokenizer_manifest_sha256": "tok",
          "chat_template_sha256": "tmpl"}
 ADAPTER = "adapter-manifest-sha"
 COND = "primary_whole_module"
-OUT_BASE = "results/native_generations/base"
+OUT_BASE = "results/sft_root_cause/native_generations/base"
+OUT_SFT = "results/sft_root_cause/native_generations/sft"
+# tracked receipts plus ignored local receipts (suite, canaries), like the real preflight
+INPUTS = ("results/manifest_v6.json", "results/prompt_records.json", "results/isolation_v6.json",
+          "results/sft_root_cause/full_suite.json", "results/sft_root_cause/canaries/canary.json")
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -71,6 +75,10 @@ def project(tmp_path):
     shutil.copy(ROOT / "harness/native_generated_test_prompt.py", repo / "harness")
     (repo / "results").mkdir()
     _job_file(repo / "results/job.json")
+    (repo / ".gitignore").write_text("results/sft_root_cause/\n")
+    for rel in INPUTS:
+        (repo / rel).parent.mkdir(parents=True, exist_ok=True)
+        (repo / rel).write_text(json.dumps({"input": rel}))
     source_commit = _commit_push(repo, "source")
     identity = gate.source_identity(repo)
     preflight = {"schema_version": gate.PREFLIGHT_SCHEMA, "pipeline_ready": True,
@@ -78,6 +86,7 @@ def project(tmp_path):
                      "executable_tree_sha256", "protocol_sha256")}},
                  "job": {"path": "results/job.json",
                          "file_sha256": _sha(repo / "results/job.json")},
+                 "inputs": {rel: _sha(repo / rel) for rel in ("results/job.json", *INPUTS)},
                  "model": MODEL, "adapter_manifest_sha256": ADAPTER}
     (repo / "results/preflight.json").write_text(json.dumps(preflight, sort_keys=True))
     receipt_commit = _commit_push(repo, "preflight receipt only")
@@ -259,11 +268,11 @@ def test_failed_fetch_and_unpushed_head_are_rejected(project):
 def test_red_preflight_model_change_and_adapter_change_are_rejected(project):
     repo = project["repo"]
     auth = _authorise(project, allowed_arms=["base", "sft"],
-                      output_dirs={"base": OUT_BASE, "sft": "results/native_generations/sft"})
+                      output_dirs={"base": OUT_BASE, "sft": OUT_SFT})
     _commit_push(repo, "authorisation receipt only")
     moved = _evaluate(project, auth=auth, model=lambda: {**MODEL, "snapshot_manifest_sha256": "x"})
     assert any("model snapshot" in p for p in moved["pipeline_problems"])
-    sft = _evaluate(project, auth=auth, arm="sft", out="results/native_generations/sft",
+    sft = _evaluate(project, auth=auth, arm="sft", out=OUT_SFT,
                     adapter=lambda: "changed")
     assert "adapter differs from the preflight" in sft["pipeline_problems"]
     pre = json.loads((repo / "results/preflight.json").read_text())
@@ -281,10 +290,109 @@ def test_gate_module_never_writes():
 def test_every_preflight_cli_prints_usage_without_side_effects():
     """Regression: the v2.2 rebuild script once had no --help and ran the rebuild instead."""
     import sys
-    from scripts import native_generated_tests_preflight_v2_2 as preflight
+    from scripts import native_generated_tests_preflight_v2_3 as preflight
     before = _git(ROOT, "status", "--porcelain", "--untracked-files=all")
     for script in preflight.CLIS:
         done = subprocess.run([sys.executable, str(ROOT / script), "--help"], cwd=ROOT,
                               capture_output=True, text=True, timeout=180)
         assert done.returncode == 0 and "usage" in done.stdout.lower(), script
     assert _git(ROOT, "status", "--porcelain", "--untracked-files=all") == before
+
+
+# --- amendment v2.3 section E: every preflight input is revalidated at launch ------------------
+
+def _ready_with_auth(project):
+    auth = _authorise(project, allowed_arms=["base", "sft"],
+                      output_dirs={"base": OUT_BASE, "sft": OUT_SFT})
+    _commit_push(project["repo"], "authorisation receipt only")
+    assert _evaluate(project, auth=auth)["launch_ready"] is True
+    return auth
+
+
+@pytest.mark.parametrize("rel", ["results/manifest_v6.json", "results/prompt_records.json",
+                                 "results/isolation_v6.json"])
+def test_changed_tracked_input_is_rejected_even_when_committed(project, rel):
+    auth = _ready_with_auth(project)
+    (project["repo"] / rel).write_text('{"tampered": true}')
+    _commit_push(project["repo"], "results-only change")
+    result = _evaluate(project, auth=auth)
+    assert f"input hash changed: {rel}" in result["pipeline_problems"]
+    assert "HEAD is not the preflight commit or a receipt-only descendant" in \
+        result["pipeline_problems"]
+    assert result["launch_ready"] is False
+
+
+@pytest.mark.parametrize("rel", ["results/sft_root_cause/full_suite.json",
+                                 "results/sft_root_cause/canaries/canary.json"])
+def test_changed_ignored_suite_or_canary_receipt_is_rejected(project, rel):
+    auth = _ready_with_auth(project)
+    (project["repo"] / rel).write_text('{"passed": true, "forged": 1}')
+    result = _evaluate(project, auth=auth)
+    assert result["pipeline_problems"] == [f"input hash changed: {rel}"]
+    assert result["launch_ready"] is False
+
+
+def test_changed_job_is_rejected_by_the_input_revalidation_too(project):
+    auth = _ready_with_auth(project)
+    _job_file(project["repo"] / "results/job.json", 4)
+    _commit_push(project["repo"], "job changed")
+    problems = _evaluate(project, auth=auth)["pipeline_problems"]
+    assert "input hash changed: results/job.json" in problems
+    assert "job file differs from the preflight" in problems
+
+
+def test_missing_input_is_rejected(project):
+    auth = _ready_with_auth(project)
+    (project["repo"] / "results/sft_root_cause/full_suite.json").unlink()
+    assert _evaluate(project, auth=auth)["pipeline_problems"] == [
+        "input missing: results/sft_root_cause/full_suite.json"]
+
+
+@pytest.mark.parametrize("rel", ["../outside.json", "results/../../outside.json",
+                                 "/etc/passwd", "C:/Windows/win.ini", r"results\..\..\x.json",
+                                 ""])
+def test_unsafe_input_paths_are_rejected(project, rel):
+    assert gate.input_problems(project["repo"], {"inputs": {rel: "0" * 64}}) == [
+        f"unsafe input path {rel!r}"]
+    assert gate.input_problems(project["repo"], {"inputs": {}}) == ["preflight records no inputs"]
+
+
+def test_preflight_listing_a_traversal_input_is_not_pipeline_ready(project):
+    repo = project["repo"]
+    (repo.parent / "outside.json").write_text("{}")
+    pre = json.loads((repo / "results/preflight.json").read_text())
+    pre["inputs"]["../outside.json"] = _sha(repo.parent / "outside.json")
+    (repo / "results/preflight.json").write_text(json.dumps(pre, sort_keys=True))
+    _commit_push(repo, "preflight with a traversal input")
+    result = _evaluate(project)
+    assert "unsafe input path '../outside.json'" in result["pipeline_problems"]
+
+
+def test_unrelated_results_change_is_not_a_receipt_only_descendant(project):
+    auth = _ready_with_auth(project)
+    (project["repo"] / "results/other_experiment.json").write_text("{}")
+    _commit_push(project["repo"], "unrelated results file")
+    assert "HEAD is not the preflight commit or a receipt-only descendant" in \
+        _evaluate(project, auth=auth)["pipeline_problems"]
+
+
+def test_generation_output_of_the_first_arm_does_not_block_the_second(project):
+    auth = _ready_with_auth(project)
+    base = project["repo"] / OUT_BASE
+    base.mkdir(parents=True)
+    (base / f"generations_{COND}_base.jsonl").write_text('{"key": "t0::42"}\n')
+    (base / f"contract_{COND}_base.json").write_text("{}")
+    result = _evaluate(project, auth=auth, arm="sft", out=OUT_SFT)
+    assert result["launch_ready"] is True, result
+
+
+@pytest.mark.parametrize("rel", ["config/c.json", "tests/test_x.py",
+                                 "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md"])
+def test_config_test_and_protocol_changes_remain_rejected(project, rel):
+    auth = _ready_with_auth(project)
+    (project["repo"] / rel).write_text("changed\n")
+    _commit_push(project["repo"], f"change {rel}")
+    result = _evaluate(project, auth=auth)
+    assert "HEAD is not the preflight commit or a receipt-only descendant" in \
+        result["pipeline_problems"]
+    assert result["launch_ready"] is False

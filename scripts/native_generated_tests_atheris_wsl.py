@@ -864,7 +864,11 @@ def run(prep_path: Path, manifest_path: Path, out: Path, budget: int, seeds) -> 
                 raise SystemExit("REFUSED: stale Atheris rows; use a new output directory")
             done.add(row["key"])
     with results.open("a", encoding="utf-8") as handle:
-        for key in manifest["kept_targets"]:
+        # v2.3 D.3: Atheris may cover every QUALIFIED target (explicit in the successor
+        # manifest); joining with Oneiros happens in the analysis on the valid intersection.
+        if "qualified_targets" not in manifest:
+            raise SystemExit("REFUSED: manifest lacks an explicit qualified_targets cohort")
+        for key in manifest["qualified_targets"]:
             row = prep[key]
             target = {"module": row["module"], "qualname": row["qualname"]}
             sources = {k: Path(v) for k, v in row["views"].items()}

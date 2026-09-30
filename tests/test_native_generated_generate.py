@@ -191,4 +191,125 @@ def test_generator_uses_the_launch_gate_and_no_file_existence_shortcut():
     assert "from harness.native_launch_gate import evaluate" in source
     assert "verify_authorization" not in source and ".exists()" not in source.split(
         "def launch_gate", 1)[1].split("def ", 1)[0]
-    assert gen.PROTOCOL_FILES[-1].endswith("PROTOCOL_V2_2.md")
+    assert gen.PROTOCOL_FILES[-1].endswith("PROTOCOL_V2_3.md")
+
+
+# --- generation telemetry (amendment v2.3 section B) ------------------------------------------
+
+EOS_SET = {151643, 151645}          # Qwen: <|endoftext|> (also the pad id) and <|im_end|>
+
+
+def test_finish_counts_through_the_first_eos_and_ignores_batch_padding():
+    # pad_token_id == 151643 is also an EOS id: padding after the first EOS never counts
+    assert gen.finish([11, 12, 151645, 151643, 151643], EOS_SET) == \
+        {"generated_tokens": 3, "eos_reached": True, "keep": 3}
+    assert gen.finish([11, 151643, 151643, 151643], EOS_SET)["generated_tokens"] == 2
+    assert gen.finish([151645], EOS_SET)["generated_tokens"] == 1
+    full = gen.finish(list(range(1024)), EOS_SET)
+    assert full == {"generated_tokens": 1024, "eos_reached": False, "keep": 1024}
+
+
+def test_telemetry_version_and_contract_fields():
+    assert gen.GENERATOR_VERSION == "oneiros_native_generated_tests_generate_v3"
+    assert gen.arm_contract(IDENTITY)["telemetry_schema"] == "oneiros_native_generation_telemetry_v1"
+    sampling = {k: gen.CONTRACT[k] for k in ("temperature", "top_p", "do_sample",
+                                             "max_new_tokens", "candidates", "seeds")}
+    assert sampling == {"temperature": 0.7, "top_p": 0.9, "do_sample": True,
+                        "max_new_tokens": 1024, "candidates": 8, "seeds": [42, 43, 44]}
+
+
+def _row(tmp_path, backend=gen.mock_backend, identity=IDENTITY):
+    gen.run(_job(1), "base", "primary_whole_module", tmp_path, identity, backend)
+    path = tmp_path / "generations_primary_whole_module_base.jsonl"
+    return path, [json.loads(l) for l in path.read_text().splitlines()]
+
+
+def test_every_row_and_candidate_carries_complete_telemetry(tmp_path):
+    from scripts import native_generation_io as gio
+    _, rows = _row(tmp_path)
+    row = rows[0]
+    for field in ("prompt_tokens", "target_seed", "wall_seconds", "batch_wall_seconds",
+                  "candidates_requested", "candidates_produced", "model_load_seconds",
+                  "peak_allocated_bytes", "peak_reserved_bytes", "identity_sha256",
+                  "telemetry_schema"):
+        assert field in row, field
+    assert len(row["batch_wall_seconds"]) == 4 and row["candidates_produced"] == 8
+    limit = [c for c in row["candidates"] if c["hit_completion_limit"]]
+    assert len(limit) == 2 and all(c["finish_reason"] == "length" and not c["eos_reached"]
+                                   and c["generated_tokens"] == 1024 for c in limit)
+    assert all(c["finish_reason"] == "eos" for c in row["candidates"] if c["eos_reached"])
+    assert gio.row_problems(row, identity_sha256=row["identity_sha256"], arm="base",
+                            condition="primary_whole_module", prompt_sha256=row["prompt_sha256"],
+                            require_gpu_evidence=False) == []
+
+
+@pytest.mark.parametrize("mutate, fragment", [
+    (lambda c: c.update(generated_tokens=500, eos_reached=False, finish_reason="length",
+                        hit_completion_limit=True), "length finish at max_new_tokens"),
+    (lambda c: c.update(hit_completion_limit=True), "eos candidate with length finish"),
+    (lambda c: c.update(raw=c["raw"] + "#"), "raw hash"),
+    (lambda c: c.update(generated_tokens=0), "out of range"),
+    (lambda c: c.update(fence_stripped=not c["fence_stripped"]), "fence flag"),
+    (lambda c: c.pop("eos_reached"), "missing eos_reached"),
+])
+def test_inconsistent_candidate_telemetry_is_refused(tmp_path, mutate, fragment):
+    from scripts import native_generation_io as gio
+    _, rows = _row(tmp_path)
+    row = rows[0]
+    mutate(row["candidates"][0])
+    problems = gio.row_problems(row, identity_sha256=row["identity_sha256"], arm="base",
+                                condition="primary_whole_module", prompt_sha256=None,
+                                require_gpu_evidence=False)
+    assert any(fragment in p for p in problems), problems
+
+
+def test_gpu_runs_require_memory_and_load_evidence(tmp_path):
+    from scripts import native_generation_io as gio
+    _, rows = _row(tmp_path)
+    problems = gio.row_problems(rows[0], identity_sha256=rows[0]["identity_sha256"], arm="base",
+                                condition="primary_whole_module", prompt_sha256=None,
+                                require_gpu_evidence=True)
+    assert any("peak_allocated_bytes" in p for p in problems)
+    with pytest.raises(RuntimeError, match="refused"):          # never written
+        gen.run(_job(1), "base", "primary_whole_module", tmp_path / "hf",
+                {**IDENTITY, "backend": "hf"}, gen.mock_backend)
+    assert (tmp_path / "hf" / "generations_primary_whole_module_base.jsonl").read_text() == ""
+
+
+def test_backend_below_limit_without_eos_is_never_accepted(tmp_path):
+    def bad(prompt, n, seed):
+        result = gen.mock_backend(prompt, n, seed)
+        result["batches"][0]["candidates"][0].update(eos_reached=False, generated_tokens=10)
+        return result
+    with pytest.raises(RuntimeError, match="refused"):
+        gen.run(_job(1), "base", "primary_whole_module", tmp_path, IDENTITY, bad)
+
+
+def test_resumed_rows_keep_their_original_telemetry(tmp_path):
+    clock = {"calls": 0}
+
+    def timed(prompt, n, seed):
+        clock["calls"] += 1
+        result = gen.mock_backend(prompt, n, seed)
+        for b in result["batches"]:
+            b["wall_seconds"] = float(clock["calls"])
+        return result
+    job = _job()
+    with pytest.raises(RuntimeError, match="deliberate crash"):
+        gen.run(job, "base", "primary_whole_module", tmp_path, IDENTITY, timed, crash_after=4)
+    path = tmp_path / "generations_primary_whole_module_base.jsonl"
+    first = {json.loads(l)["key"]: json.loads(l) for l in path.read_text().splitlines()}
+    gen.run(job, "base", "primary_whole_module", tmp_path, IDENTITY, timed)
+    after = {json.loads(l)["key"]: json.loads(l) for l in path.read_text().splitlines()}
+    assert len(first) == 4 and len(after) == 9
+    assert all(after[k] == row for k, row in first.items())       # timing and finish retained
+    assert {r["wall_seconds"] for k, r in after.items() if k not in first} == {4 * c for c in
+                                                                                range(5, 10)}
+
+
+def test_malformed_telemetry_quarantines_the_file(tmp_path):
+    path, rows = _row(tmp_path)
+    rows[0]["candidates"][0]["finish_reason"] = "stop"
+    path.write_text("".join(json.dumps(r) + "\n" for r in rows))
+    again = gen.run(_job(1), "base", "primary_whole_module", tmp_path, IDENTITY, gen.mock_backend)
+    assert again["lines"] == 3 and list((tmp_path / "quarantine").iterdir())

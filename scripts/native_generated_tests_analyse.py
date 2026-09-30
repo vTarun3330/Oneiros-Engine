@@ -1,7 +1,17 @@
-"""Frozen analysis for native generated tests (protocol v2 s2/s8 + amendment v2.1 section E).
+"""Frozen analysis for native generated tests (protocol v2 s2/s8, amendment v2.1 section E,
+amendment v2.3 section D).
 
-    analyse --manifest M --results R --condition primary_whole_module
+    analyse --manifest M --job J --results R --condition primary_whole_module
             --study-mode {engineering_dress_rehearsal,confirmation} --out FILE [--atheris A]
+
+Cohorts (v2.3): the analysed grid is exactly the generation cohort resolved from the job
+artifact (scripts/native_generation_io.py) - never all kept/qualified targets. The report
+states separately the qualified cohort, the generated/requested cohort, pre-generation
+exclusions (never model failures) and post-generation infrastructure exclusions. Every row
+must carry its generation telemetry; completion-limit and EOS rates, generated-token and
+latency percentiles and duplicates are reported per arm next to every validity figure.
+Atheris may cover all qualified targets; joint comparisons use only generation targets that
+are infrastructure-eligible and Atheris-eligible; excluded targets appear Atheris-only.
 
 Unit: the TARGET. kill(t, s, m) = 1 if any of the first k slots is a kill; K(t, m) is the mean
 over the three seeds; the primary estimand is mean over targets of K(t, SFT) - K(t, base).
@@ -35,7 +45,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-ANALYSIS_VERSION = "oneiros_native_generated_tests_analyse_v2"
+ANALYSIS_VERSION = "oneiros_native_generated_tests_analyse_v3"
 ARMS = ("base", "sft")
 SEEDS = (42, 43, 44)
 SLOTS = 8
@@ -48,6 +58,8 @@ REACH_FAIL = EXEC_FAIL | {"target_not_reached"}
 BOOTSTRAP = {"resamples": 10_000, "seed": 20260930, "level": 0.95}
 VALIDITY_MARGIN = 3.0
 STUDY_MODES = ("engineering_dress_rehearsal", "confirmation")
+TELEMETRY_FIELDS = ("generated_tokens", "eos_reached", "finish_reason", "hit_completion_limit",
+                    "prompt_tokens", "row_wall_seconds")
 
 
 class AnalysisRefused(ValueError):
@@ -94,6 +106,48 @@ def fixed_valid(row) -> bool:
     return row.get("fixed_valid") is True and row["class"] != "nondeterminism"
 
 
+def _pct(part: int, whole: int) -> float:
+    return round(part / whole * 100, 3) if whole else 0.0
+
+
+def _quantiles(values: Sequence[float], qs: Sequence[int]) -> Dict[str, float]:
+    arr = np.asarray(values, dtype=float)
+    return {f"p{q}": round(float(np.percentile(arr, q)), 3) for q in qs} if len(arr) else {}
+
+
+def generation_telemetry(grid, targets) -> Dict[str, Any]:
+    """Completion and latency evidence per arm over every generated candidate (v2.3 B/D)."""
+    out = {}
+    for arm in ARMS:
+        cells = [grid[(arm, s, t, i)] for s in SEEDS for t in targets for i in range(SLOTS)]
+        for c in cells:
+            g = c.get("generation")
+            if not isinstance(g, Mapping) or any(f not in g for f in TELEMETRY_FIELDS):
+                raise AnalysisRefused(f"row without generation telemetry: {c.get('key')}")
+        gen = [c["generation"] for c in cells]
+        hits = sum(g["hit_completion_limit"] is True for g in gen)
+        eos = sum(g["eos_reached"] is True for g in gen)
+        tokens = [g["generated_tokens"] for g in gen]
+        latency = [grid[(arm, s, t, 0)]["generation"]["row_wall_seconds"]
+                   for s in SEEDS for t in targets]
+        duplicates = 0
+        for s in SEEDS:
+            for t in targets:
+                hashes = [grid[(arm, s, t, i)]["module_sha256"] for i in range(SLOTS)]
+                duplicates += len(hashes) - len(set(hashes))
+        out[arm] = {"candidates": len(gen), "completion_limit_hits": hits,
+                    "completion_limit_hit_rate": _pct(hits, len(gen)),
+                    "eos_completions": eos, "eos_rate": _pct(eos, len(gen)),
+                    "generated_tokens": {**_quantiles(tokens, (50, 90, 99)),
+                                         "max": int(max(tokens)) if tokens else 0},
+                    "target_seed_latency_seconds": {**_quantiles(latency, (50, 90)),
+                                                    "total": round(float(sum(latency)), 3),
+                                                    "rows": len(latency)},
+                    "duplicate_candidates": duplicates,
+                    "duplicate_rate": _pct(duplicates, len(gen))}
+    return out
+
+
 def denominators(grid, requested, eligible) -> Dict[str, Dict[str, int]]:
     out = {}
     for arm in ARMS:
@@ -107,6 +161,12 @@ def denominators(grid, requested, eligible) -> Dict[str, Dict[str, int]]:
                     "executed": sum(c not in EXEC_FAIL for c in classes),
                     "reached": sum(c not in REACH_FAIL for c in classes),
                     "fixed_valid": sum(fixed_valid(c) for c in cells),
+                    "rates_percent_of_eligible": {
+                        name: _pct(sum(c not in fail for c in classes), len(classes))
+                        for name, fail in (("parsed", PARSED_FAIL), ("collected", COLLECT_FAIL),
+                                           ("executed", EXEC_FAIL), ("reached", REACH_FAIL))},
+                    "fixed_valid_percent_of_eligible": _pct(sum(fixed_valid(c) for c in cells),
+                                                            len(cells)),
                     "semantic_kills": classes.count("semantic_kill"),
                     "crash_kills": classes.count("crash_kill"),
                     "classes": dict(Counter(classes))}
@@ -132,19 +192,39 @@ def clustered(diffs: Mapping[str, float], repo_of: Mapping[str, str]) -> Dict[st
 
 def analyse(records: Iterable[Mapping[str, Any]], targets: Sequence[str],
             repo_of: Mapping[str, str], study_mode: str,
-            atheris: Sequence[Mapping[str, Any]] = ()) -> Dict[str, Any]:
+            atheris: Sequence[Mapping[str, Any]] = (),
+            cohort: Mapping[str, Any] | None = None) -> Dict[str, Any]:
+    """``targets`` is the generation cohort. With ``cohort`` (from resolve_cohort) it must be
+    exactly the job's generation targets and the report carries the 24/23/1 breakdown."""
     if study_mode not in STUDY_MODES:
         raise AnalysisRefused(f"unknown study mode {study_mode!r}")
     targets = sorted(targets)
+    if cohort is not None and targets != sorted(cohort["generation"]):
+        raise AnalysisRefused("analysed targets differ from the job's generation cohort")
+    unmapped = [t for t in targets if t not in repo_of]
+    if unmapped:
+        raise AnalysisRefused(f"repository mapping missing for generated targets {unmapped[:3]}")
     grid = index(records, targets)
     infra = infrastructure_exclusions(grid, targets)
     eligible = [t for t in targets if t not in infra["excluded_targets"]]
     if not eligible:
         raise AnalysisRefused("no eligible targets")
+    exclusions = list(cohort["pre_generation_exclusions"]) if cohort else []
     result: Dict[str, Any] = {"analysis_version": ANALYSIS_VERSION, "study_mode": study_mode,
                               "unit": "target (seeds averaged; never pooled)",
+                              "cohort": {
+                                  "qualified_targets": len(cohort["qualified"]) if cohort else None,
+                                  "generation_targets": len(targets),
+                                  "pre_generation_excluded": len(exclusions),
+                                  "pre_generation_exclusions": exclusions,
+                                  "post_generation_infrastructure_excluded":
+                                      len(infra["excluded_targets"]),
+                                  "note": "pre-generation exclusions are not model failures and "
+                                          "are not in any model denominator"},
                               "requested_targets": len(targets), "eligible_targets": len(eligible),
+                              "grid_cells": len(grid),
                               "infrastructure": infra,
+                              "generation_telemetry": generation_telemetry(grid, targets),
                               "denominators": denominators(grid, targets, eligible)}
     for k in (1, 4, 8):
         scores = {arm: {t: float(np.mean([kill_at(grid, arm, s, t, k) for s in SEEDS]))
@@ -163,6 +243,9 @@ def analyse(records: Iterable[Mapping[str, Any]], targets: Sequence[str],
                                   for i in range(SLOTS)]) for t in eligible} for arm in ARMS}
     result["fixed_valid_rate"] = {arm: round(float(np.mean(list(validity[arm].values()))) * 100, 3)
                                   for arm in ARMS}
+    # a validity figure is never reported without the completion-limit rates beside it
+    result["fixed_valid_rate"]["completion_limit_hit_rate"] = {
+        arm: result["generation_telemetry"][arm]["completion_limit_hit_rate"] for arm in ARMS}
     if study_mode == "confirmation":
         result["primary"] = result["kill_at_8"]["sft_minus_base_points"]
         vi = clustered({t: validity["sft"][t] - validity["base"][t] for t in eligible}, repo_of)
@@ -174,8 +257,26 @@ def analyse(records: Iterable[Mapping[str, Any]], targets: Sequence[str],
         result["decisions"] = ("SUPPRESSED: engineering dress rehearsal - descriptive pipeline "
                                "metrics only; no significance, non-inferiority or promotion")
     if atheris:
+        qualified = set(cohort["qualified"]) if cohort else set(targets)
+        stray = sorted({a["target_key"] for a in atheris} - qualified)
+        if stray:
+            raise AnalysisRefused(f"Atheris rows for targets outside the qualified cohort {stray[:3]}")
         rows = [a for a in atheris if a["target_key"] in eligible]
         joint = sorted({a["target_key"] for a in rows if a["eligible"]})
+        only = [a for a in atheris if a["target_key"] not in targets]
+        result["atheris_only_not_generated"] = {
+            "targets": sorted({a["target_key"] for a in only}),
+            "rule": "pre-generation exclusions: Atheris-only; never a joint comparison",
+            "kills_by_mode": {m: sum(any(a["kill"] for a in only if a["eligible"]
+                                         and a["mode"] == m and a["target_key"] == t)
+                                     for t in {a["target_key"] for a in only})
+                              for m in sorted({a["mode"] for a in only})}}
+        result["atheris_denominators"] = {
+            "atheris_targets": len({a["target_key"] for a in atheris}),
+            "atheris_eligible_targets": len({a["target_key"] for a in atheris if a["eligible"]}),
+            "generation_targets": len(targets), "infrastructure_eligible": len(eligible),
+            "joint": len(joint),
+            "rule": "joint = generation targets AND infrastructure-eligible AND Atheris-eligible"}
         result["atheris_jointly_eligible"] = {
             "targets": len(joint),
             "ineligible_reasons": dict(Counter(a.get("reason") for a in rows if not a["eligible"])),
@@ -188,6 +289,8 @@ def analyse(records: Iterable[Mapping[str, Any]], targets: Sequence[str],
             "replay_errors": sum(int(a.get("replay_errors") or 0) for a in rows)}
     result["root_cause_established"] = False
     result["generalization_established"] = False
+    result["sft_benefit_established"] = False
+    result["atheris_superiority_established"] = False
     return result
 
 
@@ -197,6 +300,7 @@ def main(argv=None) -> int:
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("command", choices=("analyse",))
     parser.add_argument("--manifest", required=True)
+    parser.add_argument("--job", required=True)
     parser.add_argument("--results", required=True)
     parser.add_argument("--condition", required=True, choices=("primary_whole_module",))
     parser.add_argument("--study-mode", required=True, choices=STUDY_MODES)
@@ -209,21 +313,26 @@ def main(argv=None) -> int:
     contracts = {r.get("contract_sha256") for r in rows}
     if len(contracts) != 1:
         raise AnalysisRefused("results mix execution contracts (stale rows)")
-    targets = manifest["kept_targets"]
-    repo_of = {t["key"]: t["repository"] for t in manifest["targets"]}
+    from scripts.native_generation_io import resolve_cohort
+    cohort = resolve_cohort(Path(args.job), Path(args.manifest), args.condition)
+    targets = cohort["generation"]
+    repo_of = cohort["repo_of"]
     atheris = []
     if args.atheris:
         atheris = [json.loads(l) for l in Path(args.atheris).read_text(encoding="utf-8")
                    .splitlines() if l.strip()]
-    result = analyse(rows, targets, repo_of, args.study_mode, atheris)
+    result = analyse(rows, targets, repo_of, args.study_mode, atheris, cohort)
     result["inputs"] = {name: hashlib.sha256(Path(p).read_bytes()).hexdigest()
-                        for name, p in (("manifest", args.manifest), ("results", args.results),
-                                        ("atheris", args.atheris)) if p}
+                        for name, p in (("manifest", args.manifest), ("job", args.job),
+                                        ("results", args.results), ("atheris", args.atheris)) if p}
+    result["job_sha256"] = cohort["job_sha256"]
     result["execution_contract_sha256"] = contracts.pop()
     result["condition"] = args.condition
     publish_file_atomically(Path(args.out), (json.dumps(result, indent=1, sort_keys=True)
                                              + "\n").encode("utf-8"))
     print(json.dumps({"out": args.out, "eligible_targets": result["eligible_targets"],
+                      "cohort": {k: v for k, v in result["cohort"].items()
+                                 if k != "pre_generation_exclusions"},
                       "study_mode": args.study_mode}))
     return 0
 

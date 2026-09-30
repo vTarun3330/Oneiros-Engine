@@ -1,16 +1,18 @@
-"""Immutable, fail-closed pipeline preflight (protocol v2 + amendments v2.1 and v2.2).
+"""Immutable, fail-closed pipeline preflight (protocol v2 + amendments v2.1, v2.2 and v2.3).
 
 Every check verifies behaviour or a hash, never mere presence. It reports ONLY
 ``pipeline_ready``: the whole CPU/WSL pipeline is proven for the current canonical executable
-source and cohort. Authorisation is never evaluated here (a file at the authorisation path
-means nothing); the separate read-only launch gate (scripts/native_generated_tests_launch_gate.py)
-reports pipeline_ready, gpu_authorized and launch_ready as distinct states.
+source and the explicit v2.3 cohort (24 qualified, 23 generated, one pre-generation exclusion,
+1,104 expected candidates). Authorisation is never evaluated here (a file at the authorisation
+path means nothing); the separate read-only launch gate
+(scripts/native_generated_tests_launch_gate.py) reports pipeline_ready, gpu_authorized and
+launch_ready as distinct states and recomputes every hash in this receipt's ``inputs``.
 
 The receipt is written once: an existing receipt is never overwritten or re-timestamped, so an
-authorisation that names its hash stays valid. v2.1 and its red receipt are unchanged.
+authorisation that names its hash stays valid. Earlier preflights are unchanged.
 Launches nothing.
 
-    python scripts/native_generated_tests_preflight_v2_2.py [--out PATH] [--suite PATH]
+    python scripts/native_generated_tests_preflight_v2_3.py [--out PATH] [--suite PATH]
 """
 from __future__ import annotations
 
@@ -29,24 +31,31 @@ if str(ROOT) not in sys.path:
 from harness.atomic_publish import publish_file_atomically
 from harness.source_identity import canonical_sha256
 
-OUTPUT = "results/sft_root_cause_native_generated_tests_preflight_v2_2.json"
+OUTPUT = "results/sft_root_cause_native_generated_tests_preflight_v2_3.json"
 AUTHORIZATION = "results/sft_root_cause_native_gpu_authorization_v2.json"
 SOURCE_MANIFEST = "results/sft_root_cause_phase4_receiver_capture_manifest_v2.json"
-MANIFEST = "results/sft_root_cause_native_v22_rehearsal_manifest_v5.json"
-JOB = "results/sft_root_cause_native_v22_rehearsal_job_v3.json"
+MANIFEST = "results/sft_root_cause_native_v23_rehearsal_manifest_v6.json"
+JOB = "results/sft_root_cause_native_v23_rehearsal_job_v4.json"
+V22_MANIFEST = "results/sft_root_cause_native_v22_rehearsal_manifest_v5.json"
+V22_JOB = "results/sft_root_cause_native_v22_rehearsal_job_v3.json"
 PROMPTS = "results/sft_root_cause_native_v22_prompt_records.json"
 ISOLATION = "results/sft_root_cause_native_v21_isolation_v6.json"
-SUITE = "results/sft_root_cause/native_v22_full_suite.json"
-CANARY_DIR = "results/sft_root_cause/native_v22_canaries"
-GENERATIONS = "results/sft_root_cause/native_v22_generations"
+SUITE = "results/sft_root_cause/native_v23_full_suite.json"
+CANARY_DIR = "results/sft_root_cause/native_v23_canaries"
+GENERATIONS = "results/sft_root_cause/native_v23_generations"
+CONDITION = "primary_whole_module"
+EXPECTED_COUNTS = {"qualified": 24, "generation": 23, "pre_generation_excluded": 1}
+EXPECTED_CANDIDATES = 1104
 CLIS = ("scripts/native_generated_tests_generate.py", "scripts/native_generated_tests_execute_wsl.py",
         "scripts/native_generated_tests_atheris_wsl.py", "scripts/native_generated_tests_analyse.py",
-        "scripts/native_generated_tests_launch_gate.py", "scripts/native_rehearsal_rebuild_v22.py")
+        "scripts/native_generated_tests_launch_gate.py", "scripts/native_rehearsal_rebuild_v22.py",
+        "scripts/native_rehearsal_rebuild_v23.py")
 FOCUSED_TESTS = ("tests/test_native_generated_generate.py", "tests/test_native_generated_execute.py",
                  "tests/test_native_generated_analyse.py", "tests/test_native_generated_prompt.py",
                  "tests/test_native_generated_prompt_v2.py",
                  "tests/test_native_generated_leakage_v2.py",
-                 "tests/test_native_generated_atheris.py", "tests/test_native_launch_gate.py")
+                 "tests/test_native_generated_atheris.py", "tests/test_native_launch_gate.py",
+                 "tests/test_native_v23_cohort_pipeline.py")
 FROZEN_CONTRACT = {
     "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
     "base_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
@@ -69,6 +78,16 @@ def load(rel: str):
 
 def git(*args: str) -> str:
     return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True).stdout.strip()
+
+
+def _rebuild(script: str) -> dict:
+    done = subprocess.run([sys.executable, str(ROOT / script)], cwd=ROOT, capture_output=True,
+                          text=True, timeout=1800)
+    try:
+        payload = json.loads(done.stdout[done.stdout.index("{"):])
+    except ValueError:
+        payload = {}
+    return {"rc": done.returncode, "status": payload.get("status") or done.stderr[-300:]}
 
 
 def main(argv=None) -> int:
@@ -113,7 +132,7 @@ def main(argv=None) -> int:
             and suite.get("executable_tree_sha256") == identity["executable_tree_sha256"],
             {k: suite.get(k) for k in ("source_commit", "passed", "failed", "skipped",
                                        "tree_clean_at_start")})
-    # 3. CLIs and focused tests
+    # 3. CLIs and focused tests (unit, scanner, lifecycle, 24/23 cohort pipeline)
     helps = {}
     for script in CLIS:
         done = subprocess.run([sys.executable, str(ROOT / script), "--help"], cwd=ROOT,
@@ -123,14 +142,19 @@ def main(argv=None) -> int:
     tests = subprocess.run([sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
                             *FOCUSED_TESTS], cwd=ROOT, capture_output=True, text=True,
                            timeout=1800)
-    require("focused_unit_scanner_and_lifecycle_tests", tests.returncode == 0,
+    require("focused_unit_scanner_lifecycle_and_cohort_tests", tests.returncode == 0,
             tests.stdout.strip().splitlines()[-1:] or None)
-    # 4. contract and protocols
-    from scripts.native_generated_tests_generate import (CONTRACT, adapter_manifest,
-                                                         adapter_sha256, model_identity)
+    # 4. contract, telemetry and protocols
+    from scripts.native_generated_tests_generate import (CONTRACT, GENERATOR_VERSION,
+                                                         adapter_manifest, adapter_sha256,
+                                                         model_identity)
+    from scripts.native_generation_io import TELEMETRY_SCHEMA, resolve_cohort
     require("generation_contract_complete_equality", CONTRACT == FROZEN_CONTRACT)
+    require("generator_and_telemetry_versions",
+            GENERATOR_VERSION == "oneiros_native_generated_tests_generate_v3"
+            and TELEMETRY_SCHEMA == "oneiros_native_generation_telemetry_v1")
     require("protocol_and_amendments_present",
-            len(identity["protocol_sha256"]) == len(gate.PROTOCOL_FILES))
+            len(identity["protocol_sha256"]) == len(gate.PROTOCOL_FILES) == 4)
     # 5. canaries bound to the current source
     receipts = {
         "synthetic_pipeline": f"{CANARY_DIR}/pipeline_receipt.json",
@@ -140,7 +164,8 @@ def main(argv=None) -> int:
         receipt = load(rel) if (ROOT / rel).exists() else {}
         if name == "synthetic_pipeline":
             bound = bool(receipt.get("components_sha256")) and all(
-                sha(c) == h for c, h in receipt["components_sha256"].items())
+                sha(c) == h for c, h in receipt["components_sha256"].items()) \
+                and "scripts/native_generation_io.py" in receipt["components_sha256"]
         elif name == "sandbox_canaries":
             bound = receipt.get("executor_sha256") == sha("scripts/native_generated_tests_execute_wsl.py") \
                 and receipt.get("inner_sha256") == sha("scripts/native_sandbox_inner.sh") \
@@ -151,49 +176,61 @@ def main(argv=None) -> int:
         require(f"{name}_passed_for_current_source", receipt.get("passed") is True and bound,
                 None if receipt.get("passed") else
                 [k for k, v in (receipt.get("checks") or {}).items() if not v])
-    # 6. cohort, prompts and job: an independent rebuild must reproduce them byte for byte
-    rebuild = subprocess.run([sys.executable, str(ROOT / "scripts/native_rehearsal_rebuild_v22.py")],
-                             cwd=ROOT, capture_output=True, text=True, timeout=1800)
-    try:
-        rebuilt = json.loads(rebuild.stdout[rebuild.stdout.index("{"):])
-    except ValueError:
-        rebuilt = {}
-    require("job_manifest_and_prompts_reproduce_exactly", rebuild.returncode == 0 and set(
-        (rebuilt.get("status") or {}).values()) == {"verified_reproduction"},
-        rebuilt.get("status") or rebuild.stderr[-300:])
-    manifest = load(MANIFEST) if (ROOT / MANIFEST).exists() else {}
-    prompts = load(PROMPTS) if (ROOT / PROMPTS).exists() else {}
-    job_file = load(JOB) if (ROOT / JOB).exists() else {}
-    require("manifest_present", bool(manifest and prompts and job_file))
-    job = (job_file.get("primary_whole_module") or {})
-    if manifest and prompts and job_file:
+    # 6. prompts, v2.2 job and v2.3 successors reproduce byte for byte
+    for script in ("scripts/native_rehearsal_rebuild_v22.py", "scripts/native_rehearsal_rebuild_v23.py"):
+        rebuilt = _rebuild(script)
+        require(f"reproduces_exactly:{Path(script).stem}", rebuilt["rc"] == 0 and isinstance(
+            rebuilt["status"], dict) and set(rebuilt["status"].values()) == {"verified_reproduction"},
+            rebuilt["status"])
+    present = all((ROOT / p).is_file() for p in (MANIFEST, JOB, V22_MANIFEST, V22_JOB, PROMPTS))
+    require("artifacts_present", present)
+    cohort, manifest, job = {}, {}, {}
+    if present:
         from harness.native_generated_test_leakage import SCANNER_VERSION
         from harness.native_generated_test_prompt import BUILDER_VERSION
+        manifest, v5, prompts = load(MANIFEST), load(V22_MANIFEST), load(PROMPTS)
+        job = load(JOB)[CONDITION]
+        try:
+            cohort = resolve_cohort(ROOT / JOB, ROOT / MANIFEST, CONDITION)
+        except SystemExit as exc:
+            require("generation_cohort_resolves", False, str(exc))
+        if cohort:
+            require("generation_cohort_resolves", True)
+            require("cohort_24_qualified_23_generated_1_excluded",
+                    manifest["counts"] == EXPECTED_COUNTS
+                    and len(cohort["qualified"]) == 24 and len(cohort["generation"]) == 23
+                    and [e["reasons"] for e in cohort["pre_generation_exclusions"]]
+                    == [["sequence_overflow"]]
+                    and cohort["expected"]["candidates_total"] == EXPECTED_CANDIDATES,
+                    manifest["counts"])
+            require("coverage_rule", len(cohort["generation"]) >= 20
+                    and len(cohort["generation"]) >= 0.9 * len(cohort["qualified"]))
+        require("successor_bound_to_frozen_v22",
+                manifest["supersedes"]["manifest_sha256"] == sha(V22_MANIFEST)
+                and load(JOB)["reused_from"]["file_sha256"] == sha(V22_JOB)
+                and load(V22_JOB)[CONDITION]["job_sha256"] == job.get("job_sha256")
+                and v5["job"]["sha256"] == sha(V22_JOB))
+        require("generation_output_layout", manifest["generation_outputs"] == {
+            "base": f"{GENERATIONS}/base", "sft": f"{GENERATIONS}/sft"})
         require("source_manifest_and_target_set",
                 manifest["source_manifest"]["sha256"] == sha(SOURCE_MANIFEST)
-                and set(manifest["kept_targets"]) <= {t["key"] for t in load(SOURCE_MANIFEST)["targets"]})
+                and set(manifest["qualified_targets"]) <= {t["key"] for t in load(SOURCE_MANIFEST)["targets"]})
         require("protocol_hashes_exact", manifest["protocols"] == {p: sha(p) for p in gate.PROTOCOL_FILES})
         iso = load(ISOLATION)
         require("isolation_bound_to_current_implementation",
                 iso["isolation_source_sha256"] == canonical_sha256(ROOT / "harness/repository_isolation.py")
                 and manifest["isolation"]["receipt_sha256"] == sha(ISOLATION)
                 and manifest["isolation"]["isolation_version"] == "oneiros_repository_isolation_v6")
-        require("every_kept_target_v6_and_formally_requalified", all(
+        require("every_qualified_target_v6_and_formally_requalified", all(
             p["isolation_v6_admissible"] and p["requalification"] == "requalified"
-            for p in manifest["per_target"] if p["kept"]))
+            for p in manifest["per_target"] if p["kept"]) and sorted(
+            p["key"] for p in manifest["per_target"] if p["kept"]) == sorted(manifest["qualified_targets"]))
         require("rehearsal_rule", manifest["rehearsal_rule"]["passed"])
-        acc = manifest["job"]["accounting"]
-        require("job_coverage_unique_admitted_targets",
-                manifest["job"]["coverage_passed"] and manifest["job"]["sha256"] == sha(JOB)
-                and acc["admitted"] >= 20 and acc["admitted"] >= 0.9 * acc["denominator_kept"]
-                and not acc["unaccounted"] and not acc["unexpected"],
-                {k: acc[k] for k in ("admitted", "denominator_kept", "per_reason",
-                                     "combinations")})
         admitted = [r for r in prompts["rows"] if r.get("admitted")]
         require("admitted_prompts_fit_clean_untruncated",
-                len(admitted) == len(job.get("items", [])) and all(
-                    r["v22_prompt_tokens"] <= FROZEN_CONTRACT["prompt_token_limit"]
-                    and r["leakage_ok"] and r["truncated"] is False for r in admitted),
+                sorted(r["target_key"] for r in admitted) == sorted(i["target_key"] for i in job["items"])
+                and all(r["v22_prompt_tokens"] <= FROZEN_CONTRACT["prompt_token_limit"]
+                        and r["leakage_ok"] and r["truncated"] is False for r in admitted),
                 {"max_prompt_tokens": max((r["v22_prompt_tokens"] for r in admitted), default=None)})
         require("builder_and_scanner_versions_current",
                 prompts["builder_version"] == BUILDER_VERSION
@@ -213,46 +250,60 @@ def main(argv=None) -> int:
     pipeline_ready = not blockers
     items = len(job.get("items", []))
     candidates = 2 * items * len(FROZEN_CONTRACT["seeds"]) * FROZEN_CONTRACT["candidates"]
+    inputs = (MANIFEST, JOB, V22_MANIFEST, V22_JOB, PROMPTS, ISOLATION, suite_rel,
+              *(f"{CANARY_DIR}/{n}" for n in ("pipeline_receipt.json", "canary_receipt_v2.json",
+                                              "atheris_canary_receipt_v3.json")))
     receipt = {
         "schema_version": gate.PREFLIGHT_SCHEMA,
         "created_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "pipeline_ready": pipeline_ready, "blockers": blockers, "checks": checks,
         "authorization": "NOT EVALUATED HERE: the separate read-only launch gate reports "
-                         "pipeline_ready, gpu_authorized and launch_ready",
+                         "pipeline_ready, gpu_authorized and launch_ready and revalidates "
+                         "every input below",
         "source": {"commit": head, **identity},
         "fetch": {"rc": fetch["rc"], "remote_sha": fetch["remote_sha"]},
         "job": {"path": JOB, "file_sha256": sha(JOB) if (ROOT / JOB).exists() else None,
                 "job_sha256": job.get("job_sha256"), "items": items,
-                "targets": [i["target_key"] for i in job.get("items", [])]},
+                "targets": sorted(i["target_key"] for i in job.get("items", []))},
+        "cohort": {"qualified": cohort.get("qualified", []),
+                   "generation": cohort.get("generation", []),
+                   "pre_generation_exclusions": cohort.get("pre_generation_exclusions", []),
+                   "expected": cohort.get("expected", {})},
+        "expected_candidates": candidates,
+        "telemetry_schema": TELEMETRY_SCHEMA, "generator_version": GENERATOR_VERSION,
+        "generation_outputs": {"base": f"{GENERATIONS}/base", "sft": f"{GENERATIONS}/sft"},
         "manifest": {"path": MANIFEST, "sha256": sha(MANIFEST) if manifest else None},
-        "prompt_records": {"path": PROMPTS, "sha256": sha(PROMPTS) if prompts else None},
+        "prompt_records": {"path": PROMPTS, "sha256": sha(PROMPTS) if present else None},
         "model": model, "adapter_manifest_sha256": adapter_sha256(),
         "generation_contract": FROZEN_CONTRACT,
-        "inputs": {rel: sha(rel) for rel in (MANIFEST, JOB, PROMPTS, ISOLATION, suite_rel,
-                                             *(f"{CANARY_DIR}/{n}" for n in (
-                                                 "pipeline_receipt.json", "canary_receipt_v2.json",
-                                                 "atheris_canary_receipt_v3.json")))
-                   if (ROOT / rel).exists()},
+        "inputs": {rel: sha(rel) for rel in inputs if (ROOT / rel).exists()},
         "proposed_gpu_commands_NOT_EXECUTED": [
-            f".venv-gpu/Scripts/python.exe scripts/gpu_run.py start --name native_v22_generate_{arm} "
+            f".venv-gpu/Scripts/python.exe scripts/gpu_run.py start --name native_v23_generate_{arm} "
             f"-- .venv-gpu/Scripts/python.exe scripts/native_generated_tests_generate.py run "
-            f"--job {JOB} --condition primary_whole_module --arm {arm} "
+            f"--job {JOB} --condition {CONDITION} --arm {arm} "
             f"--out {GENERATIONS}/{arm} --backend hf --preflight {out_rel} "
             f"--authorization {AUTHORIZATION}" for arm in ("base", "sft")],
         "proposed_launch_gate_check_NOT_EXECUTED": [
             f".venv-gpu/Scripts/python.exe scripts/native_generated_tests_launch_gate.py "
             f"--preflight {out_rel} --authorization {AUTHORIZATION} --job {JOB} --arm {arm} "
             f"--out {GENERATIONS}/{arm}" for arm in ("base", "sft")],
+        "proposed_execution_NOT_EXECUTED": (
+            "wsl -u root -- bash scripts/wsl_native_python.sh scripts/native_generated_tests_execute_wsl.py "
+            f"run --prep <records.jsonl> --manifest {MANIFEST} --job {JOB} --generations "
+            f"{GENERATIONS} --condition {CONDITION} --out results/sft_root_cause/native_v23_execution"),
         "estimates_not_executed": {
             "candidates": candidates,
             "gpu_hours_range": [round(candidates * 200 / (2 * 60) / 3600, 2),
                                 round(candidates * 1024 / (2 * 60) / 3600, 2)],
-            "basis": "sequential arms; batch 2 at ~60 generated tokens/s per sequence; 200 "
-                     "(typical) to 1024 (maximum) new tokens per candidate; model load ~1 min "
-                     "per arm",
+            "basis": "sequential arms, 552 candidates each; batch 2 at ~60 generated tokens/s "
+                     "per sequence; 200 (typical) to 1024 (maximum) new tokens per candidate; "
+                     "model load ~1 min per arm; telemetry adds only CUDA synchronisation",
             "gpu_memory_gib": "~4-6 PyTorch allocated (1.5B bf16 weights ~3.1 GB + LoRA + KV "
-                              "cache ~0.2 GB for 2 x 3072 tokens) on the 24 GB RTX 4500",
-            "storage_mb": "<50 raw generations; sandbox execution ~1-3 CPU-hours in WSL"},
+                              "cache ~0.2 GB for 2 x 3072 tokens) on the 24 GB RTX 4500; peak "
+                              "allocated/reserved is now recorded per row",
+            "storage_mb": "<20 for both arms (raw output + extracted module + telemetry per "
+                          "candidate, at most ~1024 tokens each); sandbox execution of 1,104 "
+                          "candidates ~1-3 CPU-hours in WSL"},
         "confirmation_acquisition": "NOT AUTHORISED",
         "root_cause_established": False, "generalization_established": False,
         "sft_benefit_established": False, "atheris_superiority_established": False,
@@ -262,7 +313,8 @@ def main(argv=None) -> int:
     publish_file_atomically(ROOT / out_rel, (json.dumps(receipt, indent=1, sort_keys=True)
                                              + "\n").encode("utf-8"))
     print(json.dumps({"pipeline_ready": pipeline_ready, "blockers": blockers,
-                      "source_commit": head, "items": items}, indent=1))
+                      "source_commit": head, "items": items,
+                      "expected_candidates": candidates}, indent=1))
     return 0 if pipeline_ready else 2
 
 

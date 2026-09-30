@@ -5,10 +5,12 @@ Three distinct states, evaluated WITHOUT writing anything:
 ``pipeline_ready``
     The immutable pipeline preflight says ``pipeline_ready`` and still describes the current
     checkout: the same canonical executable-source identity, HEAD equal to the preflight's
-    commit or a receipt-only descendant of it (only ``results/`` changed), no tracked
+    commit or a receipt-only descendant of it (amendment v2.3 E: the ONLY files such a
+    descendant may change are the preflight receipt and the authorisation receipt), no tracked
     modification, no untracked file in an executable directory, a successful fresh fetch with
-    HEAD equal to the fetched remote SHA, and the same protocol, job, model and adapter
-    identities.
+    HEAD equal to the fetched remote SHA, the same protocol, job, model and adapter
+    identities, and EVERY path in the preflight's ``inputs`` - resolved safely beneath the
+    repository root - still exists with the recorded SHA-256.
 ``gpu_authorized``
     A receipt of schema ``oneiros_native_gpu_authorization_v2`` whose CONTENT binds the exact
     preflight bytes, the source identity, the job/protocol/model/adapter hashes, the condition,
@@ -30,9 +32,10 @@ from typing import Any, Callable, Dict, List, Mapping, Optional
 EXECUTABLE_DIRS = ("engine", "harness", "scripts", "config", "tests")
 PROTOCOL_FILES = ("docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md",
                   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md",
-                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md")
+                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md",
+                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md")
 RECEIPT_ONLY_PREFIX = "results/"
-PREFLIGHT_SCHEMA = "oneiros_native_generated_tests_preflight_v2_2"
+PREFLIGHT_SCHEMA = "oneiros_native_generated_tests_preflight_v2_3"
 AUTH_SCHEMA = "oneiros_native_gpu_authorization_v2"
 BRANCH = "experiment/research-eval-ablations"
 
@@ -72,14 +75,21 @@ def fresh_fetch(root: Path, remote: str = "origin", branch: str = BRANCH) -> Dic
             "stderr_tail": done.stderr.strip()[-200:] if done.returncode else ""}
 
 
-def receipt_only_descendant(root: Path, base: str, head: str) -> Dict[str, Any]:
-    """HEAD equals ``base``, or descends from it with only ``results/`` changed."""
+def receipt_only_descendant(root: Path, base: str, head: str,
+                            allowed: Optional[List[str]] = None) -> Dict[str, Any]:
+    """HEAD equals ``base``, or descends from it changing only receipts: with ``allowed``,
+    exactly those repository-relative paths (launch gate); otherwise anything under
+    ``results/`` (used only for the full-suite receipt, whose source identity is also bound)."""
     if head == base:
         return {"ok": True, "relation": "same_commit", "changed": []}
     if git(root, "merge-base", "--is-ancestor", base, head).returncode != 0:
         return {"ok": False, "relation": "not_a_descendant", "changed": []}
     changed = [f for f in git(root, "diff", "--name-only", base, head).stdout.splitlines() if f]
-    bad = [f for f in changed if not PurePosixPath(f).as_posix().startswith(RECEIPT_ONLY_PREFIX)]
+    if allowed is not None:
+        bad = [f for f in changed if PurePosixPath(f).as_posix() not in set(allowed)]
+    else:
+        bad = [f for f in changed
+               if not PurePosixPath(f).as_posix().startswith(RECEIPT_ONLY_PREFIX)]
     return {"ok": not bad, "relation": "receipt_only_descendant" if not bad else
             "descendant_with_source_changes", "changed": changed, "non_receipt": bad}
 
@@ -108,6 +118,45 @@ def checkout_problems(state: Mapping[str, Any]) -> List[str]:
     return problems
 
 
+def relative_to_root(root: Path, path: Optional[Path]) -> Optional[str]:
+    try:
+        return Path(path).resolve().relative_to(Path(root).resolve()).as_posix()
+    except (ValueError, TypeError):
+        return None
+
+
+def safe_input(root: Path, rel: Any) -> Optional[Path]:
+    """A recorded input path, only if it is relative and stays beneath the repository root."""
+    if not isinstance(rel, str) or not rel or "\\" in rel or ":" in rel:
+        return None
+    pure = PurePosixPath(rel)
+    if pure.is_absolute() or ".." in pure.parts:
+        return None
+    resolved = (Path(root) / rel).resolve()
+    try:
+        resolved.relative_to(Path(root).resolve())
+    except ValueError:
+        return None
+    return resolved
+
+
+def input_problems(root: Path, pre: Mapping[str, Any]) -> List[str]:
+    """Recompute EVERY immutable preflight input hash at launch time."""
+    inputs = pre.get("inputs")
+    if not isinstance(inputs, dict) or not inputs:
+        return ["preflight records no inputs"]
+    problems = []
+    for rel, recorded in sorted(inputs.items()):
+        path = safe_input(root, rel)
+        if path is None:
+            problems.append(f"unsafe input path {rel!r}")
+        elif not path.is_file():
+            problems.append(f"input missing: {rel}")
+        elif _sha_bytes(path.read_bytes()) != recorded:
+            problems.append(f"input hash changed: {rel}")
+    return problems
+
+
 def _load(path: Optional[Path]) -> Optional[Dict[str, Any]]:
     try:
         data = json.loads(Path(path).read_text(encoding="utf-8"))
@@ -119,7 +168,8 @@ def _load(path: Optional[Path]) -> Optional[Dict[str, Any]]:
 def pipeline_problems(root: Path, preflight_path: Path, *, job_path: Path,
                       identity: Mapping[str, Any], state: Mapping[str, Any],
                       model_identity: Callable[[], Mapping[str, Any]],
-                      adapter_sha256: Callable[[], Optional[str]], arm: str) -> List[str]:
+                      adapter_sha256: Callable[[], Optional[str]], arm: str,
+                      auth_path: Optional[Path] = None) -> List[str]:
     pre = _load(preflight_path)
     if pre is None:
         return ["preflight missing or malformed"]
@@ -134,8 +184,11 @@ def pipeline_problems(root: Path, preflight_path: Path, *, job_path: Path,
     if source.get("protocol_sha256") != identity["protocol_sha256"]:
         problems.append("protocol differs from the preflight")
     commit = source.get("commit")
-    if not commit or not receipt_only_descendant(root, commit, state["head"])["ok"]:
+    allowed = [r for r in (relative_to_root(root, preflight_path),
+                           relative_to_root(root, auth_path) if auth_path else None) if r]
+    if not commit or not receipt_only_descendant(root, commit, state["head"], allowed)["ok"]:
         problems.append("HEAD is not the preflight commit or a receipt-only descendant")
+    problems += input_problems(root, pre)
     problems += checkout_problems(state)
     job = pre.get("job") or {}
     if not Path(job_path).is_file() or \
@@ -205,7 +258,7 @@ def evaluate(root: Path, preflight_path: Path, auth_path: Optional[Path], *, job
     state = checkout_state(root, fetch)
     pipe = pipeline_problems(root, Path(preflight_path), job_path=Path(job_path),
                              identity=identity, state=state, model_identity=model_identity,
-                             adapter_sha256=adapter_sha256, arm=arm)
+                             adapter_sha256=adapter_sha256, arm=arm, auth_path=auth_path)
     auth = authorization_problems(root, auth_path, Path(preflight_path), identity=identity,
                                   job_path=Path(job_path), condition=condition, arm=arm,
                                   out_dir=Path(out_dir))

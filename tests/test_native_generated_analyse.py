@@ -19,8 +19,15 @@ def records(kill_sft=(), fail="pass_both"):
                 for slot in range(an.SLOTS):
                     cls = "semantic_kill" if arm == "sft" and (t, seed, slot) in kill_sft else fail
                     out.append({"arm": arm, "seed": seed, "target_key": t, "slot": slot,
+                                "key": f"{arm}::{t}::{seed}::{slot}",
+                                "module_sha256": f"{arm}{t}{seed}{slot}",
                                 "class": cls, "fixed_valid": cls in ("pass_both", "semantic_kill"),
-                                "canary_failed": False, "contract_sha256": "c"})
+                                "canary_failed": False, "contract_sha256": "c",
+                                "generation": {"generated_tokens": 40 + slot,
+                                               "eos_reached": slot != 7,
+                                               "finish_reason": "eos" if slot != 7 else "length",
+                                               "hit_completion_limit": slot == 7,
+                                               "prompt_tokens": 900, "row_wall_seconds": 12.0}})
     return out
 
 
@@ -95,21 +102,44 @@ def test_fixed_validity_needs_evidence_and_nondeterminism_is_never_valid():
     assert result["validity_non_inferiority"]["non_inferiority_shown"] is False
 
 
-def test_cli_writes_a_hash_bound_artifact_and_refuses_mixed_contracts(tmp_path):
-    manifest = {"kept_targets": TARGETS, "targets": [{"key": t, "repository": REPO[t]}
-                                                     for t in TARGETS]}
+def _cohort_files(tmp_path):
+    import hashlib
+    from scripts import native_generated_tests_generate as gen
+    from scripts import native_generation_io as gio
+    sealed = [{"target_key": t, "prompt": f"p {t}", "condition": "whole_module",
+               "prompt_sha256": hashlib.sha256(f"p {t}".encode()).hexdigest()} for t in TARGETS]
+    job = gen.build_job(sealed, {t: {"ok": True} for t in TARGETS}, gen.sequence_fit(sealed, len))
+    data = json.dumps({"primary_whole_module": job}).encode()
+    (tmp_path / "job.json").write_bytes(data)
+    targets = [{"key": t, "repository": REPO[t]} for t in TARGETS]
+    manifest = {"kept_targets": TARGETS, "targets": targets,
+                **gio.cohort_fields(targets, "job.json", data, "primary_whole_module", {})}
     (tmp_path / "m.json").write_text(json.dumps(manifest))
+
+
+def test_cli_writes_a_hash_bound_artifact_and_refuses_mixed_contracts(tmp_path):
+    _cohort_files(tmp_path)
     rows = records()
-    (tmp_path / "r.jsonl").write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    (tmp_path / "r.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
     out = tmp_path / "a.json"
-    assert an.main(["analyse", "--manifest", str(tmp_path / "m.json"), "--results",
-                    str(tmp_path / "r.jsonl"), "--condition", "primary_whole_module",
-                    "--study-mode", "engineering_dress_rehearsal", "--out", str(out)]) == 0
+    args = ["analyse", "--manifest", str(tmp_path / "m.json"), "--job", str(tmp_path / "job.json"),
+            "--results", str(tmp_path / "r.jsonl"), "--condition", "primary_whole_module",
+            "--study-mode", "engineering_dress_rehearsal", "--out", str(out)]
+    assert an.main(args) == 0
     artifact = json.loads(out.read_text())
-    assert set(artifact["inputs"]) == {"manifest", "results"}
+    assert set(artifact["inputs"]) == {"manifest", "job", "results"}
+    assert artifact["cohort"]["qualified_targets"] == 6 and artifact["job_sha256"]
     rows[0]["contract_sha256"] = "other"
-    (tmp_path / "r.jsonl").write_text("\n".join(json.dumps(r) for r in rows) + "\n")
+    (tmp_path / "r.jsonl").write_text("".join(json.dumps(r) + "\n" for r in rows))
     with pytest.raises(an.AnalysisRefused, match="mix execution contracts"):
-        an.main(["analyse", "--manifest", str(tmp_path / "m.json"), "--results",
-                 str(tmp_path / "r.jsonl"), "--condition", "primary_whole_module",
-                 "--study-mode", "engineering_dress_rehearsal", "--out", str(out)])
+        an.main(args)
+
+
+def test_rows_without_generation_telemetry_refuse_and_validity_carries_limit_rates():
+    rows = records()
+    result = an.analyse(rows, TARGETS, REPO, "engineering_dress_rehearsal")
+    assert result["generation_telemetry"]["base"]["completion_limit_hit_rate"] == 12.5
+    assert result["fixed_valid_rate"]["completion_limit_hit_rate"] == {"base": 12.5, "sft": 12.5}
+    del rows[5]["generation"]
+    with pytest.raises(an.AnalysisRefused, match="without generation telemetry"):
+        an.analyse(rows, TARGETS, REPO, "engineering_dress_rehearsal")

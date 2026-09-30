@@ -41,7 +41,9 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-GENERATOR_VERSION = "oneiros_native_generated_tests_generate_v2"
+from scripts.native_generation_io import TELEMETRY_SCHEMA, extract, row_problems  # noqa: E402
+
+GENERATOR_VERSION = "oneiros_native_generated_tests_generate_v3"
 CONTRACT = {
     "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
     "base_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
@@ -57,7 +59,8 @@ CONDITIONS = ("primary_whole_module",)
 REMOVED_CONDITIONS = {"secondary_scaffolded_diagnostic": "removed by amendment v2.1 section C"}
 PROTOCOL_FILES = ("docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md",
                   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md",
-                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md")
+                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md",
+                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md")
 SOURCE_DIRS = ("engine", "harness", "scripts", "config")
 
 
@@ -82,16 +85,6 @@ def adapter_manifest(directory: Path) -> Dict[str, str]:
     """Every file in the adapter directory with its SHA-256 (adapter_config.json included)."""
     return {p.relative_to(directory).as_posix(): sha256_file(p)
             for p in sorted(Path(directory).rglob("*")) if p.is_file()}
-
-
-def extract(raw: str) -> Dict[str, Any]:
-    """Whole output; strip only a fence that wraps the ENTIRE output."""
-    text = raw.strip("\n")
-    lines = text.splitlines()
-    if len(lines) >= 2 and lines[0].startswith("```") and lines[-1].strip() == "```" and \
-            sum(l.startswith("```") for l in lines) == 2:
-        return {"module": "\n".join(lines[1:-1]) + "\n", "fence_stripped": True}
-    return {"module": raw if raw.endswith("\n") else raw + "\n", "fence_stripped": False}
 
 
 def target_seed(seed: int, target_key: str) -> int:
@@ -270,7 +263,8 @@ def launch_gate(preflight: Optional[Path], authorization: Optional[Path], *, job
 
 # --- durable run ------------------------------------------------------------------------------
 
-def read_lines(path: Path, identity_hash: str, expected: set) -> tuple:
+def read_lines(path: Path, identity_hash: str, expected: set,
+               validate: Optional[Callable[[Mapping[str, Any]], List[str]]] = None) -> tuple:
     rows, problems = {}, []
     if not path.exists():
         return rows, problems
@@ -290,6 +284,8 @@ def read_lines(path: Path, identity_hash: str, expected: set) -> tuple:
             problems.append(f"line {number}: unexpected key")
         elif key in rows:
             problems.append(f"line {number}: duplicate key")
+        elif validate is not None and validate(row):
+            problems.append(f"line {number}: telemetry {validate(row)[:2]}")
         else:
             rows[key] = row
     return rows, problems
@@ -308,7 +304,7 @@ def quarantine(path: Path, problems: Sequence[str]) -> Path:
 
 def arm_contract(identity: Mapping[str, Any]) -> Dict[str, Any]:
     return {"generator_version": GENERATOR_VERSION, "contract": dict(CONTRACT),
-            "identity": dict(identity)}
+            "telemetry_schema": TELEMETRY_SCHEMA, "identity": dict(identity)}
 
 
 def check_identity(out_dir: Path, contract: Mapping[str, Any], arm: str, condition: str) -> str:
@@ -337,29 +333,92 @@ def _diff_keys(a: Mapping, b: Mapping, prefix: str = "") -> List[str]:
     return out
 
 
-def mock_backend(prompt: str, n: int, seed: int) -> List[str]:
-    """Deterministic stand-in for tests and dry runs; never a model."""
+def _batches(candidates: List[Dict[str, Any]], walls: Sequence[float]) -> List[Dict[str, Any]]:
+    size = CONTRACT["batch_size"]
+    return [{"wall_seconds": walls[i // size], "candidates": candidates[i:i + size]}
+            for i in range(0, len(candidates), size)]
+
+
+def mock_backend(prompt: str, n: int, seed: int) -> Dict[str, Any]:
+    """Deterministic stand-in for tests and dry runs; never a model. Same telemetry schema:
+    token counts are whitespace words (mock convention), every fourth candidate is a
+    completion-limit hit, timings are deterministic and GPU fields are null."""
     rng = random.Random(seed)
-    out = []
+    candidates = []
     for i in range(n):
         value = rng.randint(0, 9)
         body = f"def test_mock_{i}():\n    assert {value} == {value}\n"
-        out.append(f"```python\n{body}```" if i % 3 == 0 else body)
-    return out
+        raw = f"```python\n{body}```" if i % 3 == 0 else body
+        limit = i % 4 == 3
+        candidates.append({"raw": raw, "eos_reached": not limit,
+                           "generated_tokens": CONTRACT["max_new_tokens"] if limit
+                           else len(raw.split()) + 1})
+    walls = [round(0.01 * (b + 1), 6) for b in range(-(-n // CONTRACT["batch_size"]))]
+    return {"prompt_tokens": len(prompt.split()), "batches": _batches(candidates, walls),
+            "model_load_seconds": 0.0, "peak_allocated_bytes": None, "peak_reserved_bytes": None}
+
+
+def texts_backend(texts: Callable[[str, int, int], List[str]]):
+    """Wrap a backend that returns raw strings (synthetic pipeline): every candidate is an
+    EOS finish of whitespace-word length; deterministic timings."""
+    def backend(prompt: str, n: int, seed: int) -> Dict[str, Any]:
+        raws = texts(prompt, n, seed)
+        candidates = [{"raw": r, "eos_reached": True, "generated_tokens": len(r.split()) + 1}
+                      for r in raws]
+        walls = [0.01] * (-(-len(raws) // CONTRACT["batch_size"]))
+        return {"prompt_tokens": len(prompt.split()), "batches": _batches(candidates, walls),
+                "model_load_seconds": 0.0, "peak_allocated_bytes": None,
+                "peak_reserved_bytes": None}
+    return backend
+
+
+def build_row(*, key: str, arm: str, condition: str, seed: int, tseed: int,
+              item: Mapping[str, Any], ihash: str, result: Mapping[str, Any]) -> Dict[str, Any]:
+    """One target x seed row in telemetry schema v1 (amendment v2.3 section B)."""
+    produced = [c for b in result["batches"] for c in b["candidates"]]
+    walls = [round(float(b["wall_seconds"]), 6) for b in result["batches"]]
+    candidates = []
+    for c in produced:
+        e = extract(c["raw"])
+        candidates.append({
+            "raw": c["raw"], "raw_sha256": sha256_text(c["raw"]),
+            "module": e["module"], "module_sha256": sha256_text(e["module"]),
+            "generated_tokens": c["generated_tokens"], "eos_reached": c["eos_reached"],
+            "finish_reason": "eos" if c["eos_reached"] else "length",
+            "hit_completion_limit": not c["eos_reached"],
+            "fence_stripped": e["fence_stripped"]})
+    return {"key": key, "arm": arm, "condition": condition, "seed": seed, "target_seed": tseed,
+            "target_key": item["target_key"], "identity_sha256": ihash,
+            "prompt_sha256": item["prompt_sha256"], "telemetry_schema": TELEMETRY_SCHEMA,
+            "prompt_tokens": result["prompt_tokens"], "batch_wall_seconds": walls,
+            "wall_seconds": round(sum(walls), 6),
+            "candidates_requested": CONTRACT["candidates"], "candidates_produced": len(produced),
+            "model_load_seconds": result["model_load_seconds"],
+            "peak_allocated_bytes": result["peak_allocated_bytes"],
+            "peak_reserved_bytes": result["peak_reserved_bytes"], "candidates": candidates}
 
 
 def run(job: Mapping[str, Any], arm: str, condition: str, out_dir: Path,
-        identity: Mapping[str, Any], backend: Callable[[str, int, int], List[str]],
+        identity: Mapping[str, Any], backend: Callable[[str, int, int], Mapping[str, Any]],
         crash_after: Optional[int] = None) -> Dict[str, Any]:
     if arm not in ARMS or condition not in CONDITIONS:
         raise Refused(f"REFUSED: unknown arm/condition {arm}/{condition}")
     contract = arm_contract(identity)
     ihash = contract_sha(contract)
+    gpu = identity.get("backend") == "hf"
+    prompts = {item["target_key"]: item["prompt_sha256"] for item in job["items"]}
+
+    def validate(row: Mapping[str, Any]) -> List[str]:
+        return row_problems(row, identity_sha256=ihash, arm=arm, condition=condition,
+                            prompt_sha256=prompts.get(row.get("target_key")),
+                            require_gpu_evidence=gpu, candidates=CONTRACT["candidates"],
+                            batch_size=CONTRACT["batch_size"],
+                            max_new_tokens=CONTRACT["max_new_tokens"])
     mode = check_identity(out_dir, contract, arm, condition)
     path = out_dir / f"generations_{condition}_{arm}.jsonl"
     expected = {f"{item['target_key']}::{seed}" for item in job["items"]
                 for seed in CONTRACT["seeds"]}
-    rows, problems = read_lines(path, ihash, expected)
+    rows, problems = read_lines(path, ihash, expected, validate)
     if problems:
         quarantine(path, problems)
         rows = {}
@@ -369,31 +428,44 @@ def run(job: Mapping[str, Any], arm: str, condition: str, out_dir: Path,
             for item in job["items"]:
                 key = f"{item['target_key']}::{seed}"
                 if key in rows:
-                    continue
+                    continue                      # a resumed row keeps its original telemetry
                 if crash_after is not None and written >= crash_after:
                     raise RuntimeError("deliberate crash for the resume test")
                 tseed = target_seed(seed, item["target_key"])
-                raws = backend(item["prompt"], CONTRACT["candidates"], tseed)
-                if len(raws) != CONTRACT["candidates"]:
-                    raise RuntimeError("backend returned the wrong number of candidates")
-                extracted = [extract(r) for r in raws]
-                handle.write(json.dumps({
-                    "key": key, "arm": arm, "condition": condition, "seed": seed,
-                    "target_seed": tseed, "target_key": item["target_key"],
-                    "identity_sha256": ihash, "prompt_sha256": item["prompt_sha256"],
-                    "raw_outputs": raws, "raw_sha256": [sha256_text(r) for r in raws],
-                    "modules": [e["module"] for e in extracted],
-                    "module_sha256": [sha256_text(e["module"]) for e in extracted],
-                    "fence_stripped": [e["fence_stripped"] for e in extracted]},
-                    sort_keys=True) + "\n")
+                row = build_row(key=key, arm=arm, condition=condition, seed=seed, tseed=tseed,
+                                item=item, ihash=ihash,
+                                result=backend(item["prompt"], CONTRACT["candidates"], tseed))
+                bad = validate(row)
+                if bad:                           # never written, never accepted
+                    raise RuntimeError(f"generation row {key} refused: {bad[:3]}")
+                handle.write(json.dumps(row, sort_keys=True) + "\n")
                 handle.flush()
                 os.fsync(handle.fileno())
                 written += 1
-    rows, problems = read_lines(path, ihash, expected)
+    rows, problems = read_lines(path, ihash, expected, validate)
     if problems or set(rows) != expected:
         raise RuntimeError(f"generation file incomplete: {problems[:3]}")
     return {"mode": mode, "identity_sha256": ihash, "lines": len(rows),
             "file_sha256": sha256_file(path)}
+
+
+def eos_ids(model, tokenizer) -> set:  # pragma: no cover - GPU path
+    """Every EOS id of the model's generation config plus the tokenizer's EOS."""
+    configured = getattr(model.generation_config, "eos_token_id", None)
+    ids = set(configured if isinstance(configured, (list, tuple)) else
+              ([configured] if configured is not None else []))
+    if tokenizer.eos_token_id is not None:
+        ids.add(tokenizer.eos_token_id)
+    return ids
+
+
+def finish(ids: Sequence[int], stop: set) -> Dict[str, Any]:
+    """Exact generated token IDs -> count (through the first EOS, excluding later batch
+    padding, even when pad_token_id is an EOS id) and EOS status. Never re-tokenises text."""
+    for index, token in enumerate(ids):
+        if token in stop:
+            return {"generated_tokens": index + 1, "eos_reached": True, "keep": index + 1}
+    return {"generated_tokens": len(ids), "eos_reached": False, "keep": len(ids)}
 
 
 def hf_backend(arm: str):  # pragma: no cover - GPU path; only reachable with authorisation
@@ -401,6 +473,8 @@ def hf_backend(arm: str):  # pragma: no cover - GPU path; only reachable with au
     import torch
     import transformers
     from engine.test_generation_prompt import format_chat_prompt
+    torch.cuda.synchronize()
+    started = time.perf_counter()
     tokenizer = transformers.AutoTokenizer.from_pretrained(
         CONTRACT["base_model"], revision=CONTRACT["base_revision"], local_files_only=True)
     model = transformers.AutoModelForCausalLM.from_pretrained(
@@ -412,27 +486,46 @@ def hf_backend(arm: str):  # pragma: no cover - GPU path; only reachable with au
         model = PeftModel.from_pretrained(model, str(ROOT / CONTRACT["sft_adapter"]))
     model.eval()
     tokenizer.padding_side = "left"
+    torch.cuda.synchronize()
+    load_seconds = round(time.perf_counter() - started, 3)
+    stop = eos_ids(model, tokenizer)
 
-    def generate(prompt: str, n: int, seed: int) -> List[str]:
+    def generate(prompt: str, n: int, seed: int) -> Dict[str, Any]:
         text = format_chat_prompt(tokenizer, prompt)
-        outputs = []
+        prompt_tokens = len(tokenizer(text, add_special_tokens=False)["input_ids"])
+        if prompt_tokens > CONTRACT["prompt_token_limit"]:
+            raise RuntimeError("prompt exceeds the frozen limit (never truncated)")
         torch.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
+        batches = []
         for start in range(0, n, CONTRACT["batch_size"]):
             batch = [text] * min(CONTRACT["batch_size"], n - start)
+            torch.cuda.synchronize()
+            t0 = time.perf_counter()
             encoded = tokenizer(batch, return_tensors="pt", padding=True,
                                 add_special_tokens=False).to("cuda")
-            if encoded["input_ids"].shape[1] > CONTRACT["prompt_token_limit"]:
-                raise RuntimeError("prompt exceeds the frozen limit (never truncated)")
             with torch.no_grad():
                 out = model.generate(**encoded, do_sample=CONTRACT["do_sample"],
                                      temperature=CONTRACT["temperature"],
                                      top_p=CONTRACT["top_p"],
                                      max_new_tokens=CONTRACT["max_new_tokens"],
                                      pad_token_id=tokenizer.pad_token_id)
+            torch.cuda.synchronize()
+            wall = time.perf_counter() - t0
             width = encoded["input_ids"].shape[1]
-            outputs += [tokenizer.decode(row[width:], skip_special_tokens=True) for row in out]
-        return outputs
+            candidates = []
+            for row in out:
+                ids = row[width:].tolist()
+                f = finish(ids, stop)
+                candidates.append({"raw": tokenizer.decode(ids[:f["keep"]],
+                                                           skip_special_tokens=True),
+                                   "generated_tokens": f["generated_tokens"],
+                                   "eos_reached": f["eos_reached"]})
+            batches.append({"wall_seconds": wall, "candidates": candidates})
+        return {"prompt_tokens": prompt_tokens, "batches": batches,
+                "model_load_seconds": load_seconds,
+                "peak_allocated_bytes": int(torch.cuda.max_memory_allocated()),
+                "peak_reserved_bytes": int(torch.cuda.max_memory_reserved())}
     return generate
 
 

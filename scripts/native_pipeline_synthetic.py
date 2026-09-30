@@ -22,13 +22,14 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-OUT = ROOT / "results" / "sft_root_cause" / "native_v22_synthetic"
-RECEIPT = ROOT / "results" / "sft_root_cause" / "native_v22_canaries" / "pipeline_receipt.json"
+OUT = ROOT / "results" / "sft_root_cause" / "native_v23_synthetic"
+RECEIPT = ROOT / "results" / "sft_root_cause" / "native_v23_canaries" / "pipeline_receipt.json"
 COMPONENTS = ("harness/native_generated_test_prompt.py", "harness/native_generated_test_leakage.py",
               "scripts/native_generated_tests_generate.py",
               "scripts/native_generated_tests_execute_wsl.py", "scripts/native_sandbox_inner.sh",
               "scripts/native_rehearsal_prepare_wsl.py", "scripts/native_generated_tests_analyse.py",
-              "scripts/native_pipeline_synthetic.py", "harness/native_launch_gate.py")
+              "scripts/native_pipeline_synthetic.py", "harness/native_launch_gate.py",
+              "scripts/native_generation_io.py")
 
 # slot -> (designed candidate for "add", expected class; for "crash" the kill slot differs)
 DESIGN = {
@@ -106,28 +107,38 @@ def main() -> int:
     checks["prompts_leakage_clean"] = all(v["ok"] for v in scans.values())
     job = gen.build_job(sealed, scans, gen.sequence_fit(sealed, lambda text: len(text.split())))
     job_file = OUT / "job.json"
-    job_file.write_text(json.dumps({"primary_whole_module": job}, indent=1), encoding="utf-8")
+    job_bytes = (json.dumps({"primary_whole_module": job}, indent=1) + "\n").encode("utf-8")
+    job_file.write_bytes(job_bytes)
     checks["job_complete"] = len(job["items"]) == len(manifest["kept_targets"])
+    # amendment v2.3: an explicit cohort manifest (qualified / generation / exclusions)
+    from scripts.native_generation_io import cohort_fields
+    cohort_manifest = OUT / "manifest_cohort.json"
+    cohort_manifest.write_text(json.dumps({**manifest, **cohort_fields(
+        manifest["targets"], "job.json", job_bytes, "primary_whole_module", {})}, indent=1),
+        encoding="utf-8")
     gen_dir = OUT / "generations"
     if gen_dir.exists():
         import shutil
         shutil.rmtree(gen_dir)
     qual = {t["key"]: t["target"] for t in manifest["targets"]}
-    for arm in gen.ARMS:
+    for arm in gen.ARMS:                           # separate arm directories (v2.3 C)
         per_target = {item["target_key"]: synthetic_backend_for(qual[item["target_key"]], arm)
                       for item in job["items"]}
         by_prompt = {item["prompt"]: per_target[item["target_key"]] for item in job["items"]}
-        gen.run(job, arm, "primary_whole_module", gen_dir,
+        gen.run(job, arm, "primary_whole_module", gen_dir / arm,
                 {"backend": "synthetic", "arm": arm, "condition": "primary_whole_module",
-                 "job_sha256": job["job_sha256"]},
-                lambda prompt, n, seed: by_prompt[prompt](prompt, n, seed))
+                 "job_sha256": job["job_sha256"],
+                 "job_file_sha256": hashlib.sha256(job_bytes).hexdigest(),
+                 "adapter_manifest_sha256": None if arm == "base" else "synthetic-adapter"},
+                gen.texts_backend(lambda prompt, n, seed: by_prompt[prompt](prompt, n, seed)))
     results_dir = OUT / "results"
     if results_dir.exists():
         import shutil
         shutil.rmtree(results_dir)
     run = wsl("scripts/native_generated_tests_execute_wsl.py", "run",
-              "--prep", wsl_path(OUT / "records.jsonl"), "--manifest", wsl_path(OUT / "manifest.json"),
-              "--generations", wsl_path(gen_dir), "--condition", "primary_whole_module",
+              "--prep", wsl_path(OUT / "records.jsonl"), "--manifest", wsl_path(cohort_manifest),
+              "--job", wsl_path(job_file), "--generations", wsl_path(gen_dir),
+              "--condition", "primary_whole_module",
               "--out", wsl_path(results_dir), timeout=3600)
     checks["execution_complete"] = run.returncode == 0
     rows = [json.loads(l) for l in (results_dir / "results_primary_whole_module.jsonl")
@@ -136,19 +147,23 @@ def main() -> int:
                   for r in rows if r["class"] != expected_class(qual[r["target_key"]], r["arm"],
                                                                 r["slot"])]
     checks["every_row_classified_as_designed"] = bool(rows) and not mismatches
-    checks["grid_complete"] = len(rows) == 2 * 3 * 8 * len(manifest["kept_targets"])
+    checks["grid_complete"] = len(rows) == 2 * 3 * 8 * len(job["items"]) and all(
+        r.get("generation", {}).get("finish_reason") == "eos" for r in rows)
     checks["kills_rerun_and_fixed_valid"] = all(
         r["classification"].get("rerun_agrees") is True and r["fixed_valid"]
         for r in rows if r["class"] in ("semantic_kill", "crash_kill"))
     artifact = OUT / "analysis.json"
     try:
-        analysis.main(["analyse", "--manifest", str(OUT / "manifest.json"), "--results",
+        analysis.main(["analyse", "--manifest", str(cohort_manifest), "--job", str(job_file),
+                       "--results",
                        str(results_dir / "results_primary_whole_module.jsonl"),
                        "--condition", "primary_whole_module",
                        "--study-mode", "engineering_dress_rehearsal", "--out", str(artifact)])
         result = json.loads(artifact.read_text(encoding="utf-8"))
         checks["analysis_engineering_mode"] = ("SUPPRESSED" in result["decisions"]
-                                               and result["unique_bugs_killed"] == {"base": 0, "sft": 2})
+                                               and result["unique_bugs_killed"] == {"base": 0, "sft": 2}
+                                               and result["cohort"]["generation_targets"] == 2
+                                               and "generation_telemetry" in result)
     except Exception as exc:
         checks["analysis_engineering_mode"] = False
         print("analysis failed:", exc)

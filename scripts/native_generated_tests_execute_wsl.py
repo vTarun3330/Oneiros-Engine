@@ -14,7 +14,15 @@ by the harness OUTSIDE the sandbox.
 
     python native_generated_tests_execute_wsl.py canaries <out_dir>
     python native_generated_tests_execute_wsl.py run --prep <records.jsonl> --manifest <m.json>
-        --generations <dir> --condition primary_whole_module --out <dir>
+        --job <job.json> (--generations <root with base/ and sft/> |
+        --base-generations <dir> --sft-generations <dir>)
+        --condition primary_whole_module --out <dir>
+
+Amendment v2.3: only the generation cohort resolved from the exact job artifact is executed
+(never all kept/qualified targets); both arm directories and their generation contracts are
+hashed and validated (scripts/native_generation_io.py); exactly 23 x 3 x 8 x 2 = 1,104 rows
+are required for the rehearsal job; every execution row carries its candidate's generation
+telemetry. Pre-generation exclusions are reported, never counted as model failures.
 """
 from __future__ import annotations
 
@@ -30,9 +38,12 @@ import sys
 import tempfile
 import time
 
-DESIGN_VERSION = "oneiros_native_generated_tests_execute_v3"
+DESIGN_VERSION = "oneiros_native_generated_tests_execute_v4"
 HERE = Path(__file__).resolve().parent
 INNER = HERE / "native_sandbox_inner.sh"
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+import native_generation_io as gio  # noqa: E402  (stdlib only)
 APPROVED_PYTHON = "/usr/bin/python3.11"
 LIMITS = {"cpu_seconds": 60, "address_space_bytes": 4 * 2 ** 30, "nproc": 64, "nofile": 256,
           "fsize_bytes": 50 * 2 ** 20, "wall_seconds": 90, "per_test_seconds": 10}
@@ -484,40 +495,6 @@ def execute_candidate(target: dict, source: str, scratch: Path, enforce_policy: 
 
 # --- durable run over real generations ------------------------------------------------------
 
-def _extract(raw: str) -> str:
-    text = raw.strip("\n")
-    lines = text.splitlines()
-    if len(lines) >= 2 and lines[0].startswith("```") and lines[-1].strip() == "```" and \
-            sum(l.startswith("```") for l in lines) == 2:
-        return "\n".join(lines[1:-1]) + "\n"
-    return raw if raw.endswith("\n") else raw + "\n"
-
-
-def load_generations(directory: Path, condition: str, targets: list) -> dict:
-    """Validate every generation row; refuse anything inconsistent."""
-    out = {}
-    for arm in ARMS:
-        path = directory / f"generations_{condition}_{arm}.jsonl"
-        rows = [json.loads(l) for l in path.read_text(encoding="utf-8").splitlines() if l.strip()]
-        identities = {r["identity_sha256"] for r in rows}
-        keys = [(r["target_key"], r["seed"]) for r in rows]
-        expected = {(t["target_key"], s) for t in targets for s in SEEDS}
-        if len(identities) != 1 or len(keys) != len(set(keys)) or set(keys) != expected:
-            raise SystemExit(f"REFUSED: {arm} generations are inconsistent or incomplete")
-        for r in rows:
-            if len(r["modules"]) != SLOTS:
-                raise SystemExit("REFUSED: wrong slot count")
-            for raw, raw_sha, module, module_sha in zip(r["raw_outputs"], r["raw_sha256"],
-                                                        r["modules"], r["module_sha256"]):
-                if hashlib.sha256(raw.encode()).hexdigest() != raw_sha or \
-                        hashlib.sha256(module.encode()).hexdigest() != module_sha or \
-                        _extract(raw) != module:
-                    raise SystemExit(f"REFUSED: generation hash/extraction mismatch {r['key']}")
-            out[(arm, r["target_key"], r["seed"])] = r["modules"]
-        out[("__file__", arm)] = sha256_file(path)
-    return out
-
-
 def canary_ok(target: dict, scratch: Path) -> bool:
     """Known-good module in the same environment: proves the environment, not the model."""
     top = target["qualname"].split(".")[0]
@@ -533,16 +510,23 @@ def canary_ok(target: dict, scratch: Path) -> bool:
     return True
 
 
-def run(prep_path: Path, manifest_path: Path, generations: Path, condition: str,
+GENERATION_FIELDS = ("raw_sha256", "generated_tokens", "eos_reached", "finish_reason",
+                     "hit_completion_limit", "fence_stripped")
+
+
+def run(prep_path: Path, manifest_path: Path, job_path: Path, arms: dict, condition: str,
         out: Path) -> int:
+    cohort = gio.resolve_cohort(job_path, manifest_path, condition)
     prep = {}
     for line in prep_path.read_text(encoding="utf-8").splitlines():
         if line.strip():
             row = json.loads(line)
             prep[row["key"]] = row
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    missing = [k for k in cohort["generation"] if k not in prep]
+    if missing:
+        raise SystemExit(f"REFUSED: generation targets without preparation records: {missing[:3]}")
     targets = []
-    for key in manifest["kept_targets"]:
+    for key in cohort["generation"]:                  # the generation cohort only
         row = prep[key]
         for label in ("buggy", "fixed"):
             view = build_view_hash(Path(row["views"][label]))
@@ -551,12 +535,20 @@ def run(prep_path: Path, manifest_path: Path, generations: Path, condition: str,
         targets.append({"target_key": key, "module": row["module"], "qualname": row["qualname"],
                         "python": row["python_path"], "env_dir": row["env_dir"],
                         "views": row["views"], "module_sha256": row["module_sha256"]})
-    job_targets = [t for t in targets]
-    gens = load_generations(generations, condition, job_targets)
+    gens = gio.load_arm_generations(arms, cohort)
     contract = {"design_version": DESIGN_VERSION,
                 "executor_sha256": sha256_file(Path(__file__)), "inner_sha256": sha256_file(INNER),
-                "prep_sha256": sha256_file(prep_path), "manifest_sha256": sha256_file(manifest_path),
-                "generations_sha256": {arm: gens[("__file__", arm)] for arm in ARMS},
+                "io_sha256": sha256_file(HERE / "native_generation_io.py"),
+                "prep_sha256": sha256_file(prep_path), "manifest_sha256": cohort["manifest_sha256"],
+                "job_file_sha256": cohort["job_file_sha256"], "job_sha256": cohort["job_sha256"],
+                "cohort": {"qualified": len(cohort["qualified"]),
+                           "generation_targets": cohort["generation"],
+                           "pre_generation_exclusions": cohort["pre_generation_exclusions"],
+                           "expected": cohort["expected"]},
+                "generations_sha256": gens["files_sha256"],
+                "generation_contracts_sha256": gens["contracts_sha256"],
+                "generation_identity_sha256": gens["identity_sha256"],
+                "telemetry_schema": gio.TELEMETRY_SCHEMA,
                 "condition": condition, "limits": LIMITS, "module_limits": MODULE_LIMITS}
     chash = hashlib.sha256(json.dumps(contract, sort_keys=True).encode()).hexdigest()
     out.mkdir(parents=True, exist_ok=True)
@@ -571,6 +563,8 @@ def run(prep_path: Path, manifest_path: Path, generations: Path, condition: str,
     results = out / f"results_{condition}.jsonl"
     expected = {f"{arm}::{t['target_key']}::{s}::{slot}" for arm in ARMS for t in targets
                 for s in SEEDS for slot in range(SLOTS)}
+    if len(expected) != cohort["expected"]["candidates_total"]:
+        raise SystemExit("REFUSED: execution grid differs from the frozen cohort size")
     done, problems = {}, []
     if results.exists():
         data = results.read_bytes()
@@ -599,10 +593,12 @@ def run(prep_path: Path, manifest_path: Path, generations: Path, condition: str,
                 env_ok = canary_ok(t, scratch_root / t["target_key"].replace("/", "_"))
                 for arm in ARMS:
                     for seed in SEEDS:
-                        for slot, module in enumerate(gens[(arm, t["target_key"], seed)]):
+                        grow = gens["rows"][(arm, t["target_key"], seed)]
+                        for slot, cand in enumerate(grow["candidates"]):
                             key = f"{arm}::{t['target_key']}::{seed}::{slot}"
                             if key in done:
                                 continue
+                            module = cand["module"]
                             if env_ok:
                                 outcome = execute_candidate(t, module, scratch_root / "c")
                             else:
@@ -613,6 +609,10 @@ def run(prep_path: Path, manifest_path: Path, generations: Path, condition: str,
                                 "key": key, "contract_sha256": chash, "arm": arm, "seed": seed,
                                 "target_key": t["target_key"], "slot": slot,
                                 "module_sha256": hashlib.sha256(module.encode()).hexdigest(),
+                                "generation": {**{f: cand[f] for f in GENERATION_FIELDS},
+                                               "prompt_tokens": grow["prompt_tokens"],
+                                               "target_seed": grow["target_seed"],
+                                               "row_wall_seconds": grow["wall_seconds"]},
                                 "class": cls["class"], "classification": cls,
                                 "static": outcome.get("static"), "runs": outcome.get("runs"),
                                 "canary_failed": not env_ok,
@@ -626,9 +626,14 @@ def run(prep_path: Path, manifest_path: Path, generations: Path, condition: str,
         shutil.rmtree(scratch_root, ignore_errors=True)
     rows = [json.loads(l) for l in results.read_text(encoding="utf-8").splitlines() if l.strip()]
     keys = {r["key"] for r in rows}
-    print(json.dumps({"rows": len(rows), "complete": keys == expected,
+    complete = keys == expected and len(rows) == len(expected)
+    print(json.dumps({"rows": len(rows), "expected": len(expected), "complete": complete,
+                      "qualified": len(cohort["qualified"]),
+                      "generation_targets": len(cohort["generation"]),
+                      "pre_generation_excluded": [e["target_key"] for e in
+                                                  cohort["pre_generation_exclusions"]],
                       "results_sha256": sha256_file(results)}))
-    return 0 if keys == expected else 1
+    return 0 if complete else 1
 
 
 def build_view_hash(view: Path) -> str:
@@ -856,7 +861,10 @@ def main(argv=None) -> int:
     r = sub.add_parser("run")
     r.add_argument("--prep", required=True)
     r.add_argument("--manifest", required=True)
-    r.add_argument("--generations", required=True)
+    r.add_argument("--job", required=True)
+    r.add_argument("--generations", default=None, help="root containing base/ and sft/")
+    r.add_argument("--base-generations", default=None)
+    r.add_argument("--sft-generations", default=None)
     r.add_argument("--condition", required=True, choices=("primary_whole_module",))
     r.add_argument("--out", required=True)
     args = parser.parse_args(argv)
@@ -864,7 +872,10 @@ def main(argv=None) -> int:
         return canaries(Path(args.out_dir))
     if args.command == "synthetic-prepare":
         return synthetic_prepare(Path(args.out_dir))
-    return run(Path(args.prep), Path(args.manifest), Path(args.generations), args.condition,
+    opt = lambda value: Path(value) if value else None  # noqa: E731
+    arms = gio.arm_paths(opt(args.generations), opt(args.base_generations),
+                         opt(args.sft_generations), args.condition)
+    return run(Path(args.prep), Path(args.manifest), Path(args.job), arms, args.condition,
                Path(args.out))
 
 
