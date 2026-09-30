@@ -1,0 +1,1826 @@
+{
+ "builder_sha256": "b9a95eee7deec9c3888f54ff5c44efaa3d8b551cc616a8d3a4ad811de9c762b9",
+ "builder_version": "oneiros_native_generated_test_prompt_v2",
+ "prompt_token_limit": 2048,
+ "rows": [
+  {
+   "admitted": true,
+   "buggy_source_sha256": "ff2b29060877f73b3af1054dc3f0e934d81cf39f2e1c3d0e293339e9def043ae",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 2,
+    "helper_bodies_elided": 1,
+    "imports_not_referenced": 24,
+    "module_classes_not_referenced": 32,
+    "module_constants_not_referenced": 9,
+    "module_functions_not_referenced": 1,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "508fb15cb8900d93df7e0bd23e88984b8d27367bfac6a52c8b591e320caacc34",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "typing"
+    },
+    {
+     "kind": "import",
+     "name": "EnumType"
+    },
+    {
+     "kind": "import",
+     "name": "Unpack"
+    },
+    {
+     "kind": "import",
+     "name": "Unpack"
+    },
+    {
+     "kind": "module_constant",
+     "name": "_InternalT"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "_BaseFieldKwargs"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Field"
+    },
+    {
+     "kind": "module_constant",
+     "name": "_EnumT"
+    },
+    {
+     "kind": "constructor_signature",
+     "name": "Enum.__init__"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:marshmallow-code/marshmallow@024b5d09e9f026f0f96d220e243be69346687ce0",
+   "target_source_tokens": 116,
+   "truncated": false,
+   "v21_prompt_tokens": 899,
+   "v22_prompt_tokens": 743,
+   "view_sha256": "fcae2bceaecf620fda0aab0f1f649db6491ec04a16f2d07a27d5e0a606917c65"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "1a8292f321044e09e7e3e19850bb6e9620a6bbd792396d344acf87b5391a10e7",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 29,
+    "helper_bodies_elided": 2,
+    "imports_not_referenced": 24,
+    "module_classes_not_referenced": 1,
+    "module_constants_not_referenced": 1,
+    "module_functions_not_referenced": 2,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "5ca9c3cbcdd8c7d27068fbe87491def899fa3d4545d106fc5b10ce49bdd965e9",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "typing"
+    },
+    {
+     "kind": "import",
+     "name": "ABCMeta"
+    },
+    {
+     "kind": "import",
+     "name": "Mapping"
+    },
+    {
+     "kind": "import",
+     "name": "Sequence"
+    },
+    {
+     "kind": "import",
+     "name": "types"
+    },
+    {
+     "kind": "import",
+     "name": "RAISE"
+    },
+    {
+     "kind": "import",
+     "name": "EXCLUDE"
+    },
+    {
+     "kind": "import",
+     "name": "missing"
+    },
+    {
+     "kind": "import",
+     "name": "INCLUDE"
+    },
+    {
+     "kind": "import",
+     "name": "ErrorStore"
+    },
+    {
+     "kind": "import",
+     "name": "is_collection"
+    },
+    {
+     "kind": "import",
+     "name": "is_sequence_but_not_string"
+    },
+    {
+     "kind": "import",
+     "name": "set_value"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "SchemaMeta"
+    },
+    {
+     "kind": "class_attribute",
+     "name": "Schema.error_messages"
+    },
+    {
+     "kind": "class_attribute",
+     "name": "Schema.dict_class"
+    },
+    {
+     "kind": "class_attribute",
+     "name": "Schema.opts"
+    },
+    {
+     "kind": "constructor_signature",
+     "name": "Schema.__init__"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "Schema._call_and_store"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+   "target_source_tokens": 843,
+   "truncated": false,
+   "v21_prompt_tokens": 3079,
+   "v22_prompt_tokens": 1748,
+   "view_sha256": "c9e0919cb283a79386d813b2d98d3310553b448f412b417aee5e11d58ae10afc"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "608dfcbd56c8c1af53d643eb9d6f2c17a1e64db8b430565837320d2b0b5bc5ec",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 1,
+    "imports_not_referenced": 4,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 0,
+    "module_functions_not_referenced": 15,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "e5657438db7bb37f802881c9355937da80d65369b0eea6373bed3fc3eb3e10e9",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "dt"
+    },
+    {
+     "kind": "import",
+     "name": "typing"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "from_timestamp"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:marshmallow-code/marshmallow@72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+   "target_source_tokens": 31,
+   "truncated": false,
+   "v21_prompt_tokens": 471,
+   "v22_prompt_tokens": 481,
+   "view_sha256": "b33b01fd1c17244f09c9d19a55a087a8f0d4f1636168b9bc3267107aa5831042"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "07b5c1cb1ff46f236318cdd5be14c40c2e4f449d9bae0b228b94d44b7f9f4a02",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 8,
+    "helper_bodies_elided": 1,
+    "imports_not_referenced": 5,
+    "module_classes_not_referenced": 11,
+    "module_constants_not_referenced": 2,
+    "module_functions_not_referenced": 0,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "0a9d52ae8d38c288c9184db03104ee587f077ecce78778f10f88b2ce893aa0d2",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "re"
+    },
+    {
+     "kind": "import",
+     "name": "ABC"
+    },
+    {
+     "kind": "module_constant",
+     "name": "_UNICODE_LETTERS"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Validator"
+    },
+    {
+     "kind": "constructor_signature",
+     "name": "RegexMemoizer.__init__"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:marshmallow-code/marshmallow@902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+   "target_source_tokens": 670,
+   "truncated": false,
+   "v21_prompt_tokens": 1234,
+   "v22_prompt_tokens": 1206,
+   "view_sha256": "cd628484133678b7bcd296452e668d55a1719447e0538f078eec11daf2ad487b"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "5b41162d8c5ca624e404cb09cb9354ce47c2f6309b5c5a266cdf56f7c2c73b19",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 0,
+    "helper_bodies_elided": 1,
+    "imports_not_referenced": 42,
+    "module_classes_not_referenced": 51,
+    "module_constants_not_referenced": 51,
+    "module_functions_not_referenced": 14,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "cb40ad20af75c0c92fbfe6a0469ed8f9144e4e75baeecc068a7dd3dff39640b9",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "Union"
+    },
+    {
+     "kind": "import",
+     "name": "Any"
+    },
+    {
+     "kind": "import",
+     "name": "ABC"
+    },
+    {
+     "kind": "import",
+     "name": "ParseResults"
+    },
+    {
+     "kind": "module_constant",
+     "name": "ParseImplReturnType"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "ParserElement"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Token"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Literal"
+    },
+    {
+     "kind": "module_constant",
+     "name": "ParserElement"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "ParseElementEnhance"
+    },
+    {
+     "kind": "constructor_signature",
+     "name": "ParseElementEnhance.__init__"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:pyparsing/pyparsing@0a2d906a3e6b9a30b6a0701588caec3937ff271f",
+   "target_source_tokens": 133,
+   "truncated": false,
+   "v21_prompt_tokens": 1223,
+   "v22_prompt_tokens": 762,
+   "view_sha256": "bd82f4d81bc471ec74efa5c51fd73a2b96fcea6602e50c5a3506eed7ac3e0e8c"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "74c9a1dfaf63168d91ce97c37a5779f10bfe87bf7d7274aacf5cabfc2f4dd9ea",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 111,
+    "helper_bodies_elided": 4,
+    "imports_not_referenced": 43,
+    "module_classes_not_referenced": 55,
+    "module_constants_not_referenced": 53,
+    "module_functions_not_referenced": 14,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "8ac109292b66bda7491a28c3ee22d59100798db93640333cab3f8964b462729a",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "Any"
+    },
+    {
+     "kind": "import",
+     "name": "ABC"
+    },
+    {
+     "kind": "import",
+     "name": "ParseResults"
+    },
+    {
+     "kind": "module_constant",
+     "name": "ParseImplReturnType"
+    },
+    {
+     "kind": "constructor_signature",
+     "name": "ParserElement.__init__"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "ParserElement.preParse"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "ParserElement.parseImpl"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "ParserElement.postParse"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957",
+   "target_source_tokens": 829,
+   "truncated": false,
+   "v21_prompt_tokens": 5254,
+   "v22_prompt_tokens": 1406,
+   "view_sha256": "d5a8ad41679a4b39050c0aff060e92700cc19303d2bde086a1c7b63c9c7ffd85"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "bf4e2a0a596816b80218eb436c84330047f45a0f52c8330c1a05ec9e64b0af61",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 0,
+    "imports_not_referenced": 28,
+    "module_classes_not_referenced": 10,
+    "module_constants_not_referenced": 16,
+    "module_functions_not_referenced": 41,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "fefc4f75c77d16910f0ceb13c146ec94e035806fa8d2081a9f161aa1fd7bf21c",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "module_constant",
+     "name": "_CLASSVAR_PREFIXES"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-attrs/attrs@97f8d175656bc03c373a1c9038048a4d312c307c",
+   "target_source_tokens": 105,
+   "truncated": false,
+   "v21_prompt_tokens": 885,
+   "v22_prompt_tokens": 581,
+   "view_sha256": "870aa840aa89a6bc8b2f3b948fbe5b1a147cb858d9d7ff6486fb4750746212f2"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "d419d8193b98bd2b9c1842388eef913cd26d795cc6d1995f5a92625a84851d0f",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 0,
+    "imports_not_referenced": 10,
+    "module_classes_not_referenced": 13,
+    "module_constants_not_referenced": 1,
+    "module_functions_not_referenced": 18,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "cf3ffb98d683f0938624bd3102244fb1366fc11332b181049415036899c1d21d",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "contextmanager"
+    },
+    {
+     "kind": "import",
+     "name": "set_run_validators"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-attrs/attrs@af9c510912ce604a94896cc35c27368d5baf6ae6",
+   "target_source_tokens": 71,
+   "truncated": false,
+   "v21_prompt_tokens": 545,
+   "v22_prompt_tokens": 498,
+   "view_sha256": "f2e73d5da31f35e10c46f8dd438d5ba3ecf4fe9944d1fe3240560fd243bb058c"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "f8a9858a4bd9bbb70bfe0ebccadc7401de9d6a77e3558e51cb7c355d1b536969",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 1,
+    "imports_not_referenced": 32,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 2,
+    "module_functions_not_referenced": 11,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "7894e20257ab2ccafdc0d5d0855ddcf3409bb3e003df890d61c25c56fecb112f",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "Literal"
+    },
+    {
+     "kind": "import",
+     "name": "Attribute"
+    },
+    {
+     "kind": "import",
+     "name": "StructureHook"
+    },
+    {
+     "kind": "import",
+     "name": "AttributeOverride"
+    },
+    {
+     "kind": "import",
+     "name": "already_generating"
+    },
+    {
+     "kind": "import",
+     "name": "make_dict_structure_fn_from_attrs"
+    },
+    {
+     "kind": "import",
+     "name": "BaseConverter"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "_namedtuple_to_attrs"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-attrs/cattrs@304e3700198311c78a5c6993c0ac6f3307a2e28a",
+   "target_source_tokens": 293,
+   "truncated": false,
+   "v21_prompt_tokens": 988,
+   "v22_prompt_tokens": 843,
+   "view_sha256": "9df99519a4ce3d9a01b72c50d491b4352ded5bc86d5fe51c45dee316cea63e00"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "cb9b7fd8d9291022a128f845cce617e48b220b2e59e03465903598e98908f741",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 0,
+    "imports_not_referenced": 10,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 1,
+    "module_functions_not_referenced": 5,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "ba23d714e3aca2058876a17f3cf221108d40231ab59b138d899d715e1e0efed0",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "typing"
+    },
+    {
+     "kind": "import",
+     "name": "subclasses"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-attrs/cattrs@31c19cee405100b084e139e2d955c568dcd1010a",
+   "target_source_tokens": 75,
+   "truncated": false,
+   "v21_prompt_tokens": 579,
+   "v22_prompt_tokens": 510,
+   "view_sha256": "b526874de7aec0401b6920d79925f739f3f065e975fd9f468e24e0df08e16c79"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "f1f4ebec22db3655763686e2d325e443d38aa46c9410d984cf2600b32e120c9c",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 1,
+    "imports_not_referenced": 1,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 0,
+    "module_functions_not_referenced": 4,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "4e5f78e28bd6c34a06e4ee4f90dc330d662a080b0781e2b4fc458416464c6661",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "typing"
+    },
+    {
+     "kind": "import",
+     "name": "Union"
+    },
+    {
+     "kind": "import",
+     "name": "Callable"
+    },
+    {
+     "kind": "import",
+     "name": "Any"
+    },
+    {
+     "kind": "import",
+     "name": "TypeVar"
+    },
+    {
+     "kind": "import",
+     "name": "BaseConverter"
+    },
+    {
+     "kind": "import",
+     "name": "AttributeOverride"
+    },
+    {
+     "kind": "import",
+     "name": "make_dict_unstructure_fn"
+    },
+    {
+     "kind": "import",
+     "name": "make_dict_structure_fn"
+    },
+    {
+     "kind": "import",
+     "name": "already_generating"
+    },
+    {
+     "kind": "import",
+     "name": "subclasses"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "_has_subclasses"
+    },
+    {
+     "kind": "module_constant",
+     "name": "C"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-attrs/cattrs@573915b6b450c23eaf818370ac2e339dd9aee262",
+   "target_source_tokens": 696,
+   "truncated": false,
+   "v21_prompt_tokens": 1247,
+   "v22_prompt_tokens": 1300,
+   "view_sha256": "3aa0cd6810bb42c55bab3f32b013a35dbdf9036b2a51995288442502b8c655e6"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "bb2743e905cfbded7ed1d63fde6fc5a323aaa30bd3bc4297ceb75bfb9c6444f1",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 1,
+    "imports_not_referenced": 5,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 2,
+    "module_functions_not_referenced": 2,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "5c23b69c7b3fa70a1234b5a1bc7fd3d2646f75bd8b699de15c6a6c94fbaaf01f",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "defaultdict"
+    },
+    {
+     "kind": "import",
+     "name": "Mapping"
+    },
+    {
+     "kind": "import",
+     "name": "MISSING"
+    },
+    {
+     "kind": "import",
+     "name": "reduce"
+    },
+    {
+     "kind": "import",
+     "name": "or_"
+    },
+    {
+     "kind": "import",
+     "name": "Callable"
+    },
+    {
+     "kind": "import",
+     "name": "Literal"
+    },
+    {
+     "kind": "import",
+     "name": "Any"
+    },
+    {
+     "kind": "import",
+     "name": "get_origin"
+    },
+    {
+     "kind": "import",
+     "name": "Union"
+    },
+    {
+     "kind": "import",
+     "name": "AttrsInstance"
+    },
+    {
+     "kind": "import",
+     "name": "NOTHING"
+    },
+    {
+     "kind": "import",
+     "name": "fields_dict"
+    },
+    {
+     "kind": "import",
+     "name": "get_args"
+    },
+    {
+     "kind": "import",
+     "name": "adapted_fields"
+    },
+    {
+     "kind": "import",
+     "name": "is_literal"
+    },
+    {
+     "kind": "import",
+     "name": "AttributeOverride"
+    },
+    {
+     "kind": "import",
+     "name": "BaseConverter"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "_usable_attribute_names"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-attrs/cattrs@a6c0900533af780155510343c1472a46fcb984f5",
+   "target_source_tokens": 1129,
+   "truncated": false,
+   "v21_prompt_tokens": 1735,
+   "v22_prompt_tokens": 1750,
+   "view_sha256": "dc3dc7fc371cec634f8db673eae9524b760894f2b519567ff2944139ad4694b6"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "22a51a8e024508a2587fee12f5308a46d25c9a62b8737127ebd4c6b9fd8528eb",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 0,
+    "imports_not_referenced": 3,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 1,
+    "module_functions_not_referenced": 1,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "c0288dac43a3541a0579e1e1e73903ca30e9b5d2e26fe8bbb722bc4a5fcd50b1",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "Union"
+    },
+    {
+     "kind": "import",
+     "name": "ForbiddenExtraKeysError"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-attrs/cattrs@bc34a466a878d3259d01d0169b3fb95420d7d50d",
+   "target_source_tokens": 389,
+   "truncated": false,
+   "v21_prompt_tokens": 915,
+   "v22_prompt_tokens": 886,
+   "view_sha256": "d68d44512def218570d9e79b73eed4dda176de658c4933a47220c6703bdeeda9"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "4b168dca2d32f0957fe5507dd8f674ebab5eefa146f2999806728f237f88c2c8",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 1,
+    "imports_not_referenced": 7,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 8,
+    "module_functions_not_referenced": 7,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "cd94043a81d47e0f791ca4a208ef8fffe67ba2c2033352cef60f023065419017",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "TypeAlias"
+    },
+    {
+     "kind": "module_constant",
+     "name": "NumberOrString"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "_format_not_finite"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978",
+   "target_source_tokens": 493,
+   "truncated": false,
+   "v21_prompt_tokens": 1410,
+   "v22_prompt_tokens": 1159,
+   "view_sha256": "79545a80af4c7f9da4a3b70803c5bacb23dd1a1a93c2a015f7c57ab84d1ad21f"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "b36713b8f25d310cbaf081ba9b7530e91de27ebab0569c977eccd33b31cab1eb",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 0,
+    "imports_not_referenced": 2,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 3,
+    "module_functions_not_referenced": 12,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "3992de96ab8f6d96cd15da09b68dca5b193285efa32a2001c9e98430d9ff1040",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "Enum"
+    },
+    {
+     "kind": "import",
+     "name": "total_ordering"
+    },
+    {
+     "kind": "import",
+     "name": "_"
+    },
+    {
+     "kind": "import",
+     "name": "_ngettext"
+    },
+    {
+     "kind": "import",
+     "name": "intcomma"
+    },
+    {
+     "kind": "import",
+     "name": "dt"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Unit"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-humanize/humanize@392aef707c0e74341ab4a51420984e9ea6b566c5",
+   "target_source_tokens": 1253,
+   "truncated": false,
+   "v21_prompt_tokens": 2028,
+   "v22_prompt_tokens": 1999,
+   "view_sha256": "b15fc7fa3fdedfa3cf630b70f33b1f0497bdf1b5e8d3c64df819e03f98c01f4f"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "fd740651f8963aec2d7fa94de8fb5b631cbb90d9706e253696bf6ed072214411",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 1,
+    "imports_not_referenced": 5,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 8,
+    "module_functions_not_referenced": 7,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "b28303d074772ab6788724479937eb474748ea52a8398676dc1429eb15ee0ee3",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "thousands_separator"
+    },
+    {
+     "kind": "import",
+     "name": "decimal_separator"
+    },
+    {
+     "kind": "import",
+     "name": "TypeAlias"
+    },
+    {
+     "kind": "module_constant",
+     "name": "NumberOrString"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "_format_not_finite"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-humanize/humanize@984526c02448110a8392dde3f5e26096dfd7c729",
+   "target_source_tokens": 530,
+   "truncated": false,
+   "v21_prompt_tokens": 1552,
+   "v22_prompt_tokens": 1314,
+   "view_sha256": "c9a9b0ec93ebab3769ad5d75b7ccafffb0fa63d0fec872c62b99b3c53e4895fe"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "5bc88d5715b02e45ae41d4d2d91f01d3db62e9c544d01f2f8dc7910dc4b8faac",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 2,
+    "imports_not_referenced": 5,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 6,
+    "module_functions_not_referenced": 6,
+    "oversized_value_elided": [
+     "human_powers"
+    ]
+   },
+   "prompt_sha256": "bfa534d87f1c986785b6a017dce8f98552ed5eac308dc891e928f81e6bd1cadb",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "bisect"
+    },
+    {
+     "kind": "import",
+     "name": "_ngettext"
+    },
+    {
+     "kind": "import",
+     "name": "decimal_separator"
+    },
+    {
+     "kind": "import",
+     "name": "NS_"
+    },
+    {
+     "kind": "import",
+     "name": "TypeAlias"
+    },
+    {
+     "kind": "module_constant",
+     "name": "NumberOrString"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "_format_not_finite"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "ordinal"
+    },
+    {
+     "kind": "module_constant",
+     "name": "powers"
+    },
+    {
+     "kind": "module_constant",
+     "name": "human_powers"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652",
+   "target_source_tokens": 636,
+   "truncated": false,
+   "v21_prompt_tokens": 1687,
+   "v22_prompt_tokens": 1559,
+   "view_sha256": "587389bea134bc30788dd2d10d275b8fdd17f6809a2c7697b037db1ab80b471f"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "c130dd54f4847f92e83123f8c8374eac6ff17401d4a212e0faeba45276ea2c2f",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 2,
+    "imports_not_referenced": 7,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 8,
+    "module_functions_not_referenced": 6,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "54df4e0455cbd7a27ee66cb5877a62008ae9a4bc2aabf7df117420d0b42b9539",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "TypeAlias"
+    },
+    {
+     "kind": "module_constant",
+     "name": "NumberOrString"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "_format_not_finite"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "scientific"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-humanize/humanize@e46732ed235019682b7bfc6c44443e247b332e95",
+   "target_source_tokens": 632,
+   "truncated": false,
+   "v21_prompt_tokens": 1619,
+   "v22_prompt_tokens": 1405,
+   "view_sha256": "b4b9780a3fe3069a5e4819e9918eacbabec776c21836c00fa32fc1177b226411"
+  },
+  {
+   "admitted": false,
+   "buggy_source_sha256": "68390fd5eff854e17cb0d896c9da244214a59b9891ed7028143e73be4c0f5845",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": false,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 33,
+    "helper_bodies_elided": 10,
+    "imports_not_referenced": 10,
+    "module_classes_not_referenced": 1,
+    "module_constants_not_referenced": 1,
+    "module_functions_not_referenced": 1,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "61e8996114f84701f8bd65f50655d24af718c85007a3e309c577a2f124ea565e",
+   "refusal_reasons": [
+    "sequence_overflow"
+   ],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "Any"
+    },
+    {
+     "kind": "import",
+     "name": "_CustomDict"
+    },
+    {
+     "kind": "import",
+     "name": "KeyAlreadyPresent"
+    },
+    {
+     "kind": "import",
+     "name": "TOMLKitError"
+    },
+    {
+     "kind": "import",
+     "name": "AoT"
+    },
+    {
+     "kind": "import",
+     "name": "Item"
+    },
+    {
+     "kind": "import",
+     "name": "Key"
+    },
+    {
+     "kind": "import",
+     "name": "Null"
+    },
+    {
+     "kind": "import",
+     "name": "SingleKey"
+    },
+    {
+     "kind": "import",
+     "name": "Table"
+    },
+    {
+     "kind": "import",
+     "name": "Whitespace"
+    },
+    {
+     "kind": "import",
+     "name": "_item"
+    },
+    {
+     "kind": "constructor_signature",
+     "name": "Container.__init__"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "Container._handle_dotted_key"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "Container._get_last_index_before_table"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "Container._validate_out_of_order_table"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "Container._validate_table_candidate"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "Container._raw_append"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "Container._insert_at"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "Container._replace"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "Container._previous_item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "ends_with_whitespace"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897",
+   "target_source_tokens": 1540,
+   "truncated": false,
+   "v21_prompt_tokens": 3292,
+   "v22_prompt_tokens": 2385,
+   "view_sha256": "ccf9cf75e231b1bdbc8062378088fb2e5ff768644819eef0cc52677077d08733"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "3a36f219651beb6d580fc181e24ef337ee9ae16cccfd7433c8aa4a71a48ed3a5",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 16,
+    "helper_bodies_elided": 15,
+    "imports_not_referenced": 21,
+    "module_classes_not_referenced": 11,
+    "module_constants_not_referenced": 2,
+    "module_functions_not_referenced": 0,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "5bb3a77ae42486541e8e0552f568a27d9e1e136c381c00c37fde6fe88a11f99e",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "dataclasses"
+    },
+    {
+     "kind": "import",
+     "name": "Sequence"
+    },
+    {
+     "kind": "import",
+     "name": "date"
+    },
+    {
+     "kind": "import",
+     "name": "datetime"
+    },
+    {
+     "kind": "import",
+     "name": "time"
+    },
+    {
+     "kind": "import",
+     "name": "Any"
+    },
+    {
+     "kind": "import",
+     "name": "TypeVar"
+    },
+    {
+     "kind": "import",
+     "name": "overload"
+    },
+    {
+     "kind": "import",
+     "name": "_CustomDict"
+    },
+    {
+     "kind": "import",
+     "name": "_CustomFloat"
+    },
+    {
+     "kind": "import",
+     "name": "_CustomInt"
+    },
+    {
+     "kind": "import",
+     "name": "_CustomList"
+    },
+    {
+     "kind": "module_constant",
+     "name": "ItemT"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_function_signature",
+     "name": "item"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Trivia"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Item"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Integer"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Float"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Bool"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "DateTime"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Date"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Time"
+    },
+    {
+     "kind": "constructor_signature",
+     "name": "Array.__init__"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "AbstractTable"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Table"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "InlineTable"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "String"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "AoT"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-poetry/tomlkit@4b38becd75405e0f38ef3e47e9839eb407591c8a",
+   "target_source_tokens": 93,
+   "truncated": false,
+   "v21_prompt_tokens": 1194,
+   "v22_prompt_tokens": 1397,
+   "view_sha256": "fdc643d99e0e5a54d7f842bff099c8af8bda7bf7094584a1b33cbf1f1f2a34d9"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "5ea2ea4d59c8ca60f5eb1d498c6d945dabb3e61d44e2a1808a8217eda4f882c5",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 8,
+    "helper_bodies_elided": 2,
+    "imports_not_referenced": 28,
+    "module_classes_not_referenced": 21,
+    "module_constants_not_referenced": 3,
+    "module_functions_not_referenced": 1,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "75a0ff5da03ee04a9a8576bb0ac95c7befb856ad95500f6b7865f9ccf139e6fd",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "dataclasses"
+    },
+    {
+     "kind": "import",
+     "name": "Enum"
+    },
+    {
+     "kind": "import",
+     "name": "decode"
+    },
+    {
+     "kind": "import",
+     "name": "escape_string"
+    },
+    {
+     "kind": "import",
+     "name": "InvalidStringError"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "StringType"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Trivia"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Item"
+    },
+    {
+     "kind": "constructor_signature",
+     "name": "String.__new__"
+    },
+    {
+     "kind": "constructor_signature",
+     "name": "String.__init__"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-poetry/tomlkit@8cd44f58b499da3c80a29bc877a512665a15e0bb",
+   "target_source_tokens": 109,
+   "truncated": false,
+   "v21_prompt_tokens": 997,
+   "v22_prompt_tokens": 724,
+   "view_sha256": "555e84a5bfbe4da8f02378a882c1e60fa5bc9fd3e0067d9ef8a1802f3986cfc4"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "6d5a20dbdd83391e8b770c735a18b84a51270632bae4a45db945d1603e79f974",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 12,
+    "helper_bodies_elided": 2,
+    "imports_not_referenced": 16,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 1,
+    "module_functions_not_referenced": 2,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "b0de9694f6fbc41bc17e356057c8b69d20811427199cb8e340053a2631f870e0",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "Any"
+    },
+    {
+     "kind": "import",
+     "name": "_CustomDict"
+    },
+    {
+     "kind": "import",
+     "name": "AoT"
+    },
+    {
+     "kind": "import",
+     "name": "Key"
+    },
+    {
+     "kind": "import",
+     "name": "SingleKey"
+    },
+    {
+     "kind": "import",
+     "name": "Table"
+    },
+    {
+     "kind": "module_class_header",
+     "name": "Container"
+    },
+    {
+     "kind": "constructor_signature",
+     "name": "OutOfOrderTableProxy.__init__"
+    },
+    {
+     "kind": "helper_signature",
+     "name": "OutOfOrderTableProxy._remove_table"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:python-poetry/tomlkit@e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3",
+   "target_source_tokens": 380,
+   "truncated": false,
+   "v21_prompt_tokens": 1440,
+   "v22_prompt_tokens": 1001,
+   "view_sha256": "fbd5ac7911fa98c5b597d02cd219cc22edfb853a12c6ae4950f6a61f21cd3fcc"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "b4ad96a40f30890a228a26d84cf0ad88c129a26241ef6a0c51ecf2a230e000e2",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 1,
+    "helper_bodies_elided": 2,
+    "imports_not_referenced": 3,
+    "module_classes_not_referenced": 2,
+    "module_constants_not_referenced": 1,
+    "module_functions_not_referenced": 8,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "c6646613cba948d1db529f113b410e199d35d33242535628b2826a9278fafcab",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "module_function_signature",
+     "name": "_warn_instance_dict"
+    },
+    {
+     "kind": "constructor_signature",
+     "name": "_DescriptorBase.__init__"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:tkem/cachetools@57d2e4813d9801f97034559e22428bac6f7c6c9b",
+   "target_source_tokens": 306,
+   "truncated": false,
+   "v21_prompt_tokens": 809,
+   "v22_prompt_tokens": 798,
+   "view_sha256": "73ef25b2cd79b0222bdde363fbbd020babe3343e06a01aa184746ed72191945e"
+  },
+  {
+   "admitted": true,
+   "buggy_source_sha256": "790112694a4dc990fc09e4268de7f75b500d5a8748b719edc3afdb23b08f7dc6",
+   "builder_version": "oneiros_native_generated_test_prompt_v2",
+   "fits": true,
+   "leakage_ok": true,
+   "leakage_reasons": [],
+   "never_included": [
+    "issue_or_pr_text",
+    "fixed_code",
+    "patches",
+    "official_tests",
+    "expected_outputs",
+    "execution_outcomes",
+    "leakage_verdicts",
+    "helper_bodies",
+    "target_specific_exceptions"
+   ],
+   "omitted": {
+    "enclosing_class_members_not_referenced": 65,
+    "helper_bodies_elided": 0,
+    "imports_not_referenced": 12,
+    "module_classes_not_referenced": 0,
+    "module_constants_not_referenced": 4,
+    "module_functions_not_referenced": 7,
+    "oversized_value_elided": []
+   },
+   "prompt_sha256": "4e2dec0b4b557e8493da561412f44b638caba2fd154e96a080152a47dc9f013a",
+   "refusal_reasons": [],
+   "retained_components": [
+    {
+     "kind": "import",
+     "name": "t"
+    },
+    {
+     "kind": "import",
+     "name": "parser"
+    },
+    {
+     "kind": "import",
+     "name": "exp"
+    },
+    {
+     "kind": "import",
+     "name": "TokenType"
+    }
+   ],
+   "scanner_version": "oneiros_native_generated_test_leakage_v2",
+   "target_key": "cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e",
+   "target_source_tokens": 94,
+   "truncated": false,
+   "v21_prompt_tokens": 2615,
+   "v22_prompt_tokens": 578,
+   "view_sha256": "2256065cfcd116025c417a92091a4f11ecdc072e931d158924c40ddd279827d5"
+  }
+ ],
+ "scanner_sha256": "6e505343e66857e015d216537ade753941ef02b286d374856460347fa5c1cd1a",
+ "scanner_version": "oneiros_native_generated_test_leakage_v2",
+ "schema_version": "oneiros_native_v22_prompt_records"
+}
