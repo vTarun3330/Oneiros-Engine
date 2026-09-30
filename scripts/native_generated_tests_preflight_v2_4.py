@@ -33,7 +33,8 @@ if str(ROOT) not in sys.path:
 from harness.atomic_publish import publish_file_atomically
 from harness.source_identity import canonical_sha256
 
-OUTPUT = "results/sft_root_cause_native_generated_tests_preflight_v2_4.json"
+# successor path: the first v2.4 preflight (..._v2_4.json, c5479bb3) is immutable and stale
+OUTPUT = "results/sft_root_cause_native_generated_tests_preflight_v2_4_r2.json"
 AUTHORIZATION = "results/sft_root_cause_native_gpu_authorization_v2.json"
 SOURCE_MANIFEST = "results/sft_root_cause_phase4_receiver_capture_manifest_v2.json"
 MANIFEST = "results/sft_root_cause_native_v24_rehearsal_manifest_v7.json"
@@ -49,7 +50,7 @@ ISOLATION = "results/sft_root_cause_native_v21_isolation_v6.json"
 SUITE = "results/sft_root_cause/native_v24_full_suite.json"
 CANARY_DIR = "results/sft_root_cause/native_v24_canaries"
 GENERATIONS = "results/sft_root_cause/native_v24_generations"
-LEDGER = "results/sft_root_cause_native_v24_quarantine_ledger.json"
+LEDGER = "results/sft_root_cause_native_v24_quarantine_ledger_v2.json"
 TRACKED_RECEIPTS = (SUITE, f"{CANARY_DIR}/pipeline_receipt.json",
                     f"{CANARY_DIR}/canary_receipt_v2.json",
                     f"{CANARY_DIR}/atheris_canary_receipt_v3.json", LEDGER)
@@ -66,6 +67,7 @@ FOCUSED_TESTS = ("tests/test_native_generated_generate.py", "tests/test_native_g
                  "tests/test_native_generated_prompt_v2.py",
                  "tests/test_native_generated_leakage_v2.py",
                  "tests/test_native_generated_atheris.py", "tests/test_native_launch_gate.py",
+                 "tests/test_native_v24_atheris_resume.py",
                  "tests/test_native_v23_cohort_pipeline.py", "tests/test_gpu_run_exclusive.py",
                  "tests/test_gpu_run.py", "tests/test_native_historical_scripts.py",
                  "tests/test_native_v24_conformance.py", "tests/test_gpu_run_atomic_lock.py",

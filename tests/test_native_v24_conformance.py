@@ -178,11 +178,11 @@ def _grid(contract, eligibility, mutate=None):
                 if e["status"] != "eligible":
                     out.append({**base, "eligible": False, "kill": False})
                     continue
-                out.append({**base, "eligible": True, "reached": True, "views_unchanged": True,
-                            "within_budget": True, "cleanup_ok": True, "replay_cleanup_ok": True,
-                            "end_reason": "completed", "aggregate_cpu_seconds": 500.0,
-                            "replay_errors": 0, "confirmations": [], "witnesses": 0,
-                            "confirmed": 0, "kill": False})
+                from tests.native_analysis_helpers import fuzz_evidence
+                out.append({**base, "eligible": True,
+                            **fuzz_evidence(m, seed, end_reason="completed",
+                                            supervisor_reason=None, exit=0,
+                                            aggregate_cpu_seconds=500.0)})
     return mutate(out) if mutate else out
 
 

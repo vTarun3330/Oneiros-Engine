@@ -84,7 +84,8 @@ ATHERIS_REQUIRED_CHECKS = (
     "ordinary_different_exceptions_not_a_kill", "ordinary_raise_versus_ok_is_a_kill",
     "ordinary_same_exception_not_a_kill", "every_kill_recomputes_from_confirmations",
     "aggregate_budget_two_busy_children", "worker_and_group_cleanup",
-    "live_view_drift_refused", "applicability_versus_infrastructure")
+    "live_view_drift_refused", "applicability_versus_infrastructure",
+    "real_rows_structurally_valid")
 STAGE_RECEIPTS = ("full_suite", "synthetic_pipeline")
 CANARY_RECEIPTS = ("sandbox_canaries", "atheris_canaries")
 TELEMETRY_FIELDS = ("generated_tokens", "eos_reached", "finish_reason", "hit_completion_limit",

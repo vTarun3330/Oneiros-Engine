@@ -115,3 +115,23 @@ def load_atheris(world, rpath, cpath, prepared):
         script_sha256=sha(REPO / "scripts/native_generated_tests_atheris_wsl.py"),
         inner_sha256=sha(REPO / "scripts/native_sandbox_inner.sh"),
         verdicts_sha256=sha(REPO / "scripts/native_atheris_results.py"))
+
+
+def fuzz_evidence(mode: str, seed: int, budget: int = 600, **over) -> dict:
+    """Exactly the field set the real ``fuzz`` returns for one completed search."""
+    row = {"mode": mode, "seed": seed, "budget_cpu_seconds": budget,
+           "tolerance_cpu_seconds": ar.tolerance(budget), "supervisor_reason": "cpu_budget_exhausted",
+           "wall_seconds": budget + 1.5, "aggregate_cpu_seconds": budget + 0.4,
+           "main_cpu_seconds": budget + 0.4, "worker_cpu_seconds": 0.0,
+           "end_reason": "cpu_budget_exhausted", "exit": -9, "reached": True,
+           "within_budget": True, "cleanup_ok": True, "views_unchanged": True,
+           "witnesses": 0, "confirmations": [], "confirmed": 0, "replay_errors": 0,
+           "kill": False, "replay_cpu_seconds": 0.5, "replay_cleanup_ok": True}
+    if mode == "posthoc":
+        row.update(corpus=12, corpus_truncated=False, dropped_partial_inputs=0, opaque_results=0)
+    else:
+        row["dropped_partial_witnesses"] = 0
+    if mode == "differential":
+        row["label"] = "oracle-assisted upper bound"
+    row.update(over)
+    return row

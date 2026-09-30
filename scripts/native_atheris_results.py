@@ -13,6 +13,15 @@ signature (no_signature, instance_method_receiver, variadic_signature, unsupport
 is ``atheris_ineligible``; import, runtime, probe, environment, interpreter or view failures -
 anything else - are ``infrastructure_failure``.
 
+``validate_rows`` is the ONE row validator, shared by the live resume path (``complete=False``)
+and the final loader (``complete=True``): UTF-8 bytes ending in a newline; every line a JSON
+object with the exact identity fields; current contract hash; an expected, unique cell whose key
+agrees with target/mode/seed; status/reason/eligible equal to the frozen eligibility map; and
+structurally valid retained evidence (a not-run row carries none; a searched row carries exactly
+the fields ``fuzz`` records, correctly typed, with the contract's budget and tolerance). Corrupt
+or stale provenance is refused; a well-formed infrastructure outcome (not reached, crashed,
+wall timeout, replay error...) is valid evidence and is classified, never refused.
+
 ``load_results`` validates an Atheris contract and its results TOGETHER: exact design version,
 script/inner/preparation/manifest hashes, budget, tolerance and corpus cap; exactly
 qualified x modes x seeds unique cells with no missing, duplicate, extra, malformed or stale
@@ -38,6 +47,29 @@ USABLE_END = ("completed", "cpu_budget_exhausted")
 APPLICABILITY_REASONS = ("no_signature", "instance_method_receiver", "variadic_signature")
 APPLICABILITY_PREFIXES = ("unsupported_parameter:",)
 STATUSES = ("eligible", "atheris_ineligible", "infrastructure_failure")
+END_REASONS = ("completed", "cpu_budget_exhausted", "wall_timeout", "crashed",
+               "infrastructure_failure")
+SUPERVISOR_REASONS = (None, "cpu_budget_exhausted", "wall_timeout")
+DIFFERENTIAL_LABEL = "oracle-assisted upper bound"
+IDENTITY_FIELDS = ("key", "contract_sha256", "target_key", "mode", "seed", "eligible", "status",
+                   "reason")
+NOT_RUN_FIELDS = frozenset(IDENTITY_FIELDS + ("kill",))
+# every field ``fuzz`` records for a searched cell, by type ("num": int/float >= 0, never bool)
+SEARCH_REQUIRED = {"budget_cpu_seconds": "num", "tolerance_cpu_seconds": "num",
+                   "supervisor_reason": "supervisor", "wall_seconds": "num",
+                   "aggregate_cpu_seconds": "num", "main_cpu_seconds": "num",
+                   "worker_cpu_seconds": "num", "end_reason": "end", "exit": "exit",
+                   "reached": "bool", "within_budget": "bool", "cleanup_ok": "bool",
+                   "views_unchanged": "bool", "witnesses": "count", "confirmations": "checks",
+                   "confirmed": "count", "replay_errors": "count", "kill": "bool",
+                   "replay_cpu_seconds": "num", "replay_cleanup_ok": "bool"}
+SEARCH_OPTIONAL = {"corpus": ("count", ("posthoc",)),
+                   "corpus_truncated": ("bool", ("posthoc",)),
+                   "dropped_partial_inputs": ("count", ("posthoc",)),
+                   "opaque_results": ("count", ("posthoc",)),
+                   "replay_error_detail": ("list", ("posthoc",)),
+                   "dropped_partial_witnesses": ("count", ("ordinary", "differential")),
+                   "label": ("label", ("differential",))}
 
 
 class AtherisRefused(SystemExit):
@@ -112,6 +144,106 @@ def _row_problems(row: Mapping[str, Any], budget: float) -> List[str]:
     return problems
 
 
+def _type_ok(kind: str, value: Any) -> bool:
+    if kind == "num":
+        return isinstance(value, (int, float)) and not isinstance(value, bool) and value >= 0
+    if kind == "count":
+        return isinstance(value, int) and not isinstance(value, bool) and value >= 0
+    if kind == "bool":
+        return isinstance(value, bool)
+    if kind == "list":
+        return isinstance(value, list)
+    if kind == "end":
+        return value in END_REASONS
+    if kind == "supervisor":
+        return value in SUPERVISOR_REASONS
+    if kind == "exit":
+        return value is None or (isinstance(value, int) and not isinstance(value, bool))
+    if kind == "label":
+        return value == DIFFERENTIAL_LABEL
+    if kind == "checks":
+        return isinstance(value, list) and all(
+            isinstance(c, dict) and isinstance(c.get("witness"), str)
+            and isinstance(c.get("kill"), bool)
+            and all(isinstance(c.get(k, []), list) for k in ("buggy_all", "fixed_all"))
+            for c in value)
+    raise ValueError(kind)
+
+
+def evidence_problems(row: Mapping[str, Any], status: str, budget: float) -> List[str]:
+    """Structural validity of the retained evidence of one identity-checked row."""
+    if status != "eligible":
+        if set(row) != NOT_RUN_FIELDS or row.get("kill") is not False:
+            return ["a not-run (non-eligible) row carries search evidence or a kill"]
+        return []
+    problems = [f"missing {f}" for f in SEARCH_REQUIRED if f not in row]
+    problems += [f"{f} has an invalid value" for f, kind in SEARCH_REQUIRED.items()
+                 if f in row and not _type_ok(kind, row[f])]
+    for field in sorted(set(row) - set(IDENTITY_FIELDS) - set(SEARCH_REQUIRED) - {"mode", "seed"}):
+        spec = SEARCH_OPTIONAL.get(field)
+        if spec is None:
+            problems.append(f"unknown field {field}")
+        elif row["mode"] not in spec[1]:
+            problems.append(f"{field} is not recorded in {row['mode']} mode")
+        elif not _type_ok(spec[0], row[field]):
+            problems.append(f"{field} has an invalid value")
+    if row.get("budget_cpu_seconds") != budget or \
+            row.get("tolerance_cpu_seconds") != tolerance(budget):
+        problems.append("budget/tolerance differ from the contract")
+    return problems
+
+
+def validate_rows(data: bytes, contract: Mapping[str, Any], *, qualified: Sequence[str],
+                  seeds: Sequence[int], budget: int, complete: bool) -> Dict[str, Dict[str, Any]]:
+    """The one authoritative row validator (resume: complete=False; final: complete=True).
+    Returns {key: row}; raises AtherisRefused on any corrupt, stale or unexpected row."""
+    chash = contract_hash(contract)
+    eligibility = contract["eligibility"]
+    cells = {f"{t}::{m}::{s}" for t in qualified for m in MODES for s in seeds}
+    if data and not data.endswith(b"\n"):
+        raise AtherisRefused("REFUSED: Atheris results end with a partial line")
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError:
+        raise AtherisRefused("REFUSED: Atheris results are not UTF-8") from None
+    rows: Dict[str, Dict[str, Any]] = {}
+    for number, line in enumerate(text.split("\n")[:-1], 1):
+        try:
+            row = json.loads(line)
+        except ValueError:
+            raise AtherisRefused(f"REFUSED: Atheris line {number} malformed") from None
+        if not isinstance(row, dict):
+            raise AtherisRefused(f"REFUSED: Atheris line {number} is not an object")
+        missing = [f for f in IDENTITY_FIELDS + ("kill",) if f not in row]
+        if missing:
+            raise AtherisRefused(f"REFUSED: Atheris line {number} lacks {missing}")
+        key = row["key"]
+        if row["contract_sha256"] != chash:
+            raise AtherisRefused(f"REFUSED: Atheris line {number} is stale (other contract)")
+        if not isinstance(key, str) or key not in cells:
+            raise AtherisRefused(f"REFUSED: Atheris line {number}: unexpected cell {key!r}")
+        if key in rows:
+            raise AtherisRefused(f"REFUSED: Atheris line {number}: duplicate cell {key}")
+        seed = row["seed"]
+        if not isinstance(seed, int) or isinstance(seed, bool) or \
+                key != f"{row['target_key']}::{row['mode']}::{seed}":
+            raise AtherisRefused(f"REFUSED: Atheris line {number}: key/fields disagree")
+        e = eligibility[row["target_key"]]
+        if row["eligible"] is not (e["status"] == "eligible") or \
+                row["status"] != e["status"] or row["reason"] != e["reason"]:
+            raise AtherisRefused(f"REFUSED: Atheris line {number} disagrees with the frozen "
+                                 f"eligibility map for {row['target_key']}")
+        found = evidence_problems(row, e["status"], budget)
+        if found:
+            raise AtherisRefused(f"REFUSED: Atheris line {number} ({key}) retained evidence "
+                                 f"is not structurally valid: {found[:4]}")
+        rows[key] = row
+    if complete and set(rows) != cells:
+        raise AtherisRefused(f"REFUSED: Atheris grid incomplete: {len(cells - set(rows))} of "
+                             f"{len(cells)} cells missing")
+    return rows
+
+
 def _eligibility_problems(contract: Mapping[str, Any], qualified: Sequence[str],
                           prep_rows: Mapping[str, Mapping[str, Any]]) -> List[str]:
     problems = []
@@ -161,34 +293,8 @@ def load_results(results_path: Path, contract_path: Path, *, qualified: Sequence
         raise AtherisRefused(f"REFUSED: Atheris contract live views / eligibility: {problems[:3]}")
     eligibility = contract["eligibility"]
     chash = contract_hash(contract)
-    cells = {f"{t}::{m}::{s}" for t in qualified for m in MODES for s in seeds}
-    rows: Dict[str, Dict[str, Any]] = {}
-    data = Path(results_path).read_bytes()
-    if data and not data.endswith(b"\n"):
-        raise AtherisRefused("REFUSED: Atheris results end with a partial line")
-    for number, line in enumerate(data.decode("utf-8").splitlines(), 1):
-        try:
-            row = json.loads(line)
-        except ValueError:
-            raise AtherisRefused(f"REFUSED: Atheris line {number} malformed") from None
-        key = row.get("key")
-        if row.get("contract_sha256") != chash:
-            raise AtherisRefused(f"REFUSED: Atheris line {number} is stale (other contract)")
-        if key not in cells:
-            raise AtherisRefused(f"REFUSED: Atheris line {number}: unexpected cell {key!r}")
-        if key in rows:
-            raise AtherisRefused(f"REFUSED: Atheris line {number}: duplicate cell {key}")
-        if key != f"{row.get('target_key')}::{row.get('mode')}::{row.get('seed')}":
-            raise AtherisRefused(f"REFUSED: Atheris line {number}: key/fields disagree")
-        e = eligibility[row["target_key"]]
-        if row.get("eligible") is not (e["status"] == "eligible") or \
-                row.get("status") != e["status"] or row.get("reason") != e["reason"]:
-            raise AtherisRefused(f"REFUSED: Atheris line {number} disagrees with the frozen "
-                                 f"eligibility map for {row['target_key']}")
-        rows[key] = row
-    if set(rows) != cells:
-        raise AtherisRefused(f"REFUSED: Atheris grid incomplete: {len(cells - set(rows))} of "
-                             f"{len(cells)} cells missing")
+    rows = validate_rows(Path(results_path).read_bytes(), contract, qualified=qualified,
+                         seeds=seeds, budget=budget, complete=True)
     targets = {}
     for t in qualified:
         trow = [rows[f"{t}::{m}::{s}"] for m in MODES for s in seeds]

@@ -869,6 +869,12 @@ def canaries(out_dir: Path) -> int:
                                             c.get("replay_error"))["kill"]
                              for c in r["confirmations"]) for r in results.values()),
         "live_view_drift_refused": all(live.values()),
+        # the shared resume/final validator accepts the rows REAL searches record, all modes
+        "real_rows_structurally_valid": not any(
+            verdicts.evidence_problems({k: v for k, v in r.items() if k != "expected_kill"},
+                                       "eligible", budget)
+            for rows, budget in ((results.values(), CANARY_BUDGET_SECONDS), (repeat, 5))
+            for r in rows),
         "applicability_versus_infrastructure": (
             classified["crash"] == "eligible" and classified["keyword"] == "eligible"
             and classified["variadic"] == "atheris_ineligible"
@@ -966,26 +972,40 @@ def run(prep_path: Path, manifest_path: Path, out: Path, budget: int, seeds,
                                                        root)
     prep = prepared["rows"]
     manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
-    chash = hashlib.sha256(json.dumps(contract, sort_keys=True).encode()).hexdigest()
-    out.mkdir(parents=True, exist_ok=True)
+    # v2.3 D.3: Atheris may cover every QUALIFIED target (explicit in the successor manifest);
+    # joining with Oneiros happens in the analysis on the valid intersection.
+    if "qualified_targets" not in manifest:
+        raise SystemExit("REFUSED: manifest lacks an explicit qualified_targets cohort")
+    qualified = list(manifest["qualified_targets"])
+    chash = verdicts.contract_hash(contract)
     cfile = out / "atheris_contract.json"
-    if cfile.exists() and json.loads(cfile.read_text()) != contract:
-        raise SystemExit("REFUSED: Atheris contract differs; prior results preserved")
-    cfile.write_text(json.dumps(contract, indent=1, sort_keys=True) + "\n")
     results = out / "atheris_results.jsonl"
+    rejected = out / "atheris_rejected_rows.jsonl"
+    # Resume (v2.4 E): EVERY retained row is validated by the authoritative shared validator
+    # before any is skipped; any corrupt, stale, unexpected, duplicate or partial row refuses
+    # the run and leaves the contract and results byte-for-byte unchanged.
+    if cfile.exists() and json.loads(cfile.read_text(encoding="utf-8")) != contract:
+        raise SystemExit("REFUSED: Atheris contract differs; prior results preserved")
+    if results.exists() and not cfile.exists():
+        raise SystemExit("REFUSED: Atheris results exist without their contract; preserved "
+                         "unchanged; use a new output directory")
+    if rejected.exists():
+        raise SystemExit("REFUSED: a previously rejected Atheris row is preserved in "
+                         f"{rejected.name}; resolve it before resuming")
     done = set()
     if results.exists():
-        for line in results.read_text(encoding="utf-8").splitlines():
-            row = json.loads(line)
-            if row.get("contract_sha256") != chash:
-                raise SystemExit("REFUSED: stale Atheris rows; use a new output directory")
-            done.add(row["key"])
-    with results.open("a", encoding="utf-8") as handle:
-        # v2.3 D.3: Atheris may cover every QUALIFIED target (explicit in the successor
-        # manifest); joining with Oneiros happens in the analysis on the valid intersection.
-        if "qualified_targets" not in manifest:
-            raise SystemExit("REFUSED: manifest lacks an explicit qualified_targets cohort")
-        for key in manifest["qualified_targets"]:
+        try:
+            done = set(verdicts.validate_rows(results.read_bytes(), contract,
+                                              qualified=qualified, seeds=seeds,
+                                              budget=budget, complete=False))
+        except SystemExit as exc:
+            raise SystemExit(f"{exc} -- resume refused; {results} preserved unchanged; "
+                             "quarantine it and use a new output directory") from None
+    out.mkdir(parents=True, exist_ok=True)
+    if not cfile.exists():
+        cfile.write_bytes((json.dumps(contract, indent=1, sort_keys=True) + "\n").encode())
+    with results.open("a", encoding="utf-8", newline="\n") as handle:
+        for key in qualified:
             row = prep[key]
             entry = eligibility[key]                   # frozen in the contract (v2.4 E)
             target = {"module": row["module"], "qualname": row["qualname"]}
@@ -1000,12 +1020,23 @@ def run(prep_path: Path, manifest_path: Path, out: Path, budget: int, seeds,
                             continue
                         r = (fuzz(mode, sources, target, info, seed, budget, work)
                              if entry["status"] == "eligible" else {"kill": False})
-                        handle.write(json.dumps({"key": rkey, "contract_sha256": chash,
-                                                 "target_key": key, "mode": mode, "seed": seed,
-                                                 "eligible": entry["status"] == "eligible",
-                                                 "status": entry["status"],
-                                                 "reason": entry["reason"], **r},
-                                                sort_keys=True, default=str) + "\n")
+                        line = json.dumps({"key": rkey, "contract_sha256": chash,
+                                           "target_key": key, "mode": mode, "seed": seed,
+                                           "eligible": entry["status"] == "eligible",
+                                           "status": entry["status"],
+                                           "reason": entry["reason"], **r},
+                                          sort_keys=True, default=str) + "\n"
+                        try:                           # the same validator, before any append
+                            verdicts.validate_rows(line.encode("utf-8"), contract,
+                                                   qualified=qualified, seeds=seeds,
+                                                   budget=budget, complete=False)
+                        except SystemExit as exc:
+                            rejected.write_bytes((json.dumps(
+                                {"reason": str(exc), "row": json.loads(line)},
+                                sort_keys=True, default=str) + "\n").encode("utf-8"))
+                            raise SystemExit(f"{exc} -- new row NOT appended; preserved in "
+                                             f"{rejected}") from None
+                        handle.write(line)
                         handle.flush()
                         os.fsync(handle.fileno())
             finally:

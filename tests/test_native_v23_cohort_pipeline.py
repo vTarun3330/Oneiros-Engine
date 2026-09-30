@@ -540,13 +540,12 @@ def _atheris_rows(chash, contract):
                     continue
                 checks = [{"witness": "w0", **ar.judge(m, [RAISE, RAISE], [OK, OK])}] \
                     if (t in KILLED and m == "ordinary") else []
-                rows.append({**base, "eligible": True, "reached": True,
-                             "views_unchanged": True, "within_budget": True, "cleanup_ok": True,
-                             "replay_cleanup_ok": True, "end_reason": "cpu_budget_exhausted",
-                             "aggregate_cpu_seconds": 600.4, "replay_errors": 0,
-                             "confirmations": checks, "witnesses": len(checks),
-                             "confirmed": sum(c["kill"] for c in checks),
-                             "kill": any(c["kill"] for c in checks)})
+                from tests.native_analysis_helpers import fuzz_evidence
+                rows.append({**base, "eligible": True,
+                             **fuzz_evidence(m, seed, confirmations=checks,
+                                             witnesses=len(checks),
+                                             confirmed=sum(c["kill"] for c in checks),
+                                             kill=any(c["kill"] for c in checks))})
     return rows
 
 
@@ -646,7 +645,6 @@ VICTIM = QUALIFIED[4]
     ("reached", False, "reached is not true"),
     ("views_unchanged", False, "views_unchanged is not true"),
     ("kill", True, "kill/confirmed/witnesses disagree with the confirmations"),
-    ("confirmations", None, "no confirmation evidence"),
 ])
 def test_unusable_rows_become_explicit_target_infrastructure_exclusions(world, field, value,
                                                                        problem):
@@ -660,6 +658,18 @@ def test_unusable_rows_become_explicit_target_infrastructure_exclusions(world, f
     assert status["status"] == "infrastructure_excluded"
     assert problem in status["problems"]["posthoc::43"]
     assert loaded["counts"]["infrastructure_excluded"] == 1
+
+
+def test_missing_confirmation_evidence_is_corrupt_not_an_infrastructure_outcome(world):
+    # fuzz() always records a list (empty on infrastructure failure / replay error), so a
+    # missing list is corrupt provenance: refused by the shared validator (v2.4 E)
+    def mutate(rows):
+        for r in rows:
+            if r["key"] == f"{VICTIM}::posthoc::43":
+                r["confirmations"] = None
+        return rows
+    with pytest.raises(SystemExit, match="not structurally valid"):
+        _load_atheris(world, *_atheris_fixture(world, mutate=mutate))
 
 
 def test_different_exceptions_claimed_as_an_ordinary_kill_are_rejected(world):

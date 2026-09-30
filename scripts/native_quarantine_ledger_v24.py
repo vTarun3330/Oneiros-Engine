@@ -2,8 +2,9 @@
 
 Every artifact quarantined during the v2.4 cycle is recorded with its hash, the reason, the
 corrective change and the receipt that supersedes it; superseded (not failed) receipts are
-recorded for the audit trail. Written once to a tracked path; an identical rebuild is a
-verified reproduction. Explained development failures never count as unexplained failures.
+recorded for the audit trail. Written once to a tracked, versioned path (ledger v2 succeeds
+v1 after the Atheris resume-validation fix; v1 is preserved unchanged); an identical rebuild is
+a verified reproduction. Explained development failures never count as unexplained failures.
 
     python scripts/native_quarantine_ledger_v24.py
 """
@@ -21,7 +22,9 @@ if str(ROOT) not in sys.path:
 
 from scripts.native_rehearsal_rebuild_v22 import publish_once
 
-LEDGER = "results/sft_root_cause_native_v24_quarantine_ledger.json"
+LEDGER_V1 = "results/sft_root_cause_native_v24_quarantine_ledger.json"
+LEDGER = "results/sft_root_cause_native_v24_quarantine_ledger_v2.json"
+PREFLIGHT_V1 = "results/sft_root_cause_native_generated_tests_preflight_v2_4.json"
 FINAL_PIPELINE = "results/sft_root_cause/native_v24_canaries/pipeline_receipt.json"
 QUARANTINED = (
     ("results/sft_root_cause/quarantine/v24_pipeline_attempt1/pipeline_receipt.json",
@@ -45,13 +48,34 @@ QUARANTINED = (
      "native_pipeline_synthetic.finish() writes UTF-8 LF bytes (follow-up commit after "
      "397d2c1)"),
 )
+CONFORMANCE = ("superseded by the v2.4 implementation-conformance fix (live views, Atheris "
+               "eligibility, analysis binding, complete gate, atomic launch); preserved in Git "
+               "history")
+RESUME = ("superseded by the Atheris resume-validation fix (one shared row validator for resume "
+          "and the final loader; source change after this receipt); preserved in Git history")
 SUPERSEDED = (
     ("results/sft_root_cause/native_v24_canaries/pipeline_receipt.json",
-     "92a02d0b70141cf09a339e48a17d9cb678754aac333a02d394dae8a767fc39c3"),
+     "92a02d0b70141cf09a339e48a17d9cb678754aac333a02d394dae8a767fc39c3", "13b60da", CONFORMANCE),
     ("results/sft_root_cause/native_v24_canaries/canary_receipt_v2.json",
-     "d5d41625ceb6ad42ab0bbf298514d963220db8ce2374b6d7adf5d890e63e48c9"),
+     "d5d41625ceb6ad42ab0bbf298514d963220db8ce2374b6d7adf5d890e63e48c9", "13b60da", CONFORMANCE),
     ("results/sft_root_cause/native_v24_canaries/atheris_canary_receipt_v3.json",
-     "3f8fa959404fcc193ce20c6823fb4bfced46bc601a659fb48a8686b7acf99950"),
+     "3f8fa959404fcc193ce20c6823fb4bfced46bc601a659fb48a8686b7acf99950", "13b60da", CONFORMANCE),
+    ("results/sft_root_cause/native_v24_canaries/pipeline_receipt.json",
+     "9c9dd2799b7eff6b4ccbf3e044fd3baecdfd02b21049b7a73bd0a2cf3beeb017", "eeeaced", RESUME),
+    ("results/sft_root_cause/native_v24_canaries/canary_receipt_v2.json",
+     "6a949b02a3558bebfdbbaf1b07c7b8a1feca65492f20c1f11cc2aa05ae238d38", "eeeaced", RESUME),
+    ("results/sft_root_cause/native_v24_canaries/atheris_canary_receipt_v3.json",
+     "cf58b29016039f4f22fed950af8bb8eda096c8edfc96ee4cbdea0dd7ced2dd4f", "eeeaced", RESUME),
+    ("results/sft_root_cause/native_v24_full_suite.json",
+     "32ffd4545f33f36e2685db9a1f4e2797b92bd48b12f917ae00654f72a282a597", "c6077bc", RESUME),
+)
+# immutable predecessors kept at their own paths (never overwritten, never used for launch)
+RETIRED = (
+    (LEDGER_V1, "2fb360e67ced6e12e057074ce73e5d3be65fc03e3498da92e6ae65ec92370cdf", "c6077bc",
+     "ledger v1: its superseded_by hashes name the pre-fix pipeline receipt; succeeded by v2"),
+    (PREFLIGHT_V1, "c5479bb371f6c8ecbfaaa06491c3bde0f14db46e4908b1d654b3d257963104cd", "78bf3ef",
+     "preflight bound to pre-fix source caa0012; stale after the Atheris resume fix; no "
+     "authorisation was ever bound to it; succeeded by preflight_v2_4_r2"),
 )
 
 
@@ -70,13 +94,15 @@ def main(argv=None) -> int:
         "schema_version": "oneiros_native_quarantine_ledger_v1",
         "cycle": "amendment v2.4",
         "entries": entries,
+        "supersedes_ledger": {"path": LEDGER_V1, "sha256": sha(LEDGER_V1)},
         "superseded_receipts": [
-            {"artifact": rel, "sha256": digest, "committed_in": "13b60da",
-             "reason": "superseded by the v2.4 implementation-conformance fix (live views, "
-                       "Atheris eligibility, analysis binding, complete gate, atomic launch); "
-                       "preserved in Git history",
+            {"artifact": rel, "sha256": digest, "committed_in": commit, "reason": reason,
              "superseded_by": {"path": rel, "sha256": sha(rel)}}
-            for rel, digest in SUPERSEDED],
+            for rel, digest, commit, reason in SUPERSEDED],
+        "retired_immutable_artifacts": [
+            {"artifact": rel, "sha256": digest, "committed_in": commit, "reason": reason,
+             "still_present_and_unchanged": sha(rel) == digest}
+            for rel, digest, commit, reason in RETIRED],
         "control_plane_failures": [
             "server-side command classifier returned no verdict for repeated git add/status "
             "requests; the commands never executed (not repository failures)"],
