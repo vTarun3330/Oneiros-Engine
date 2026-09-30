@@ -1,0 +1,739 @@
+{
+ "admitted_to_training": false,
+ "builder_sha256": "b9a95eee7deec9c3888f54ff5c44efaa3d8b551cc616a8d3a4ad811de9c762b9",
+ "builder_version": "oneiros_native_generated_test_prompt_v2",
+ "cohort_version": "oneiros_native_generation_cohort_v1",
+ "counts": {
+  "generation": 23,
+  "pre_generation_excluded": 1,
+  "qualified": 24
+ },
+ "expected": {
+  "candidates_per_arm": 552,
+  "candidates_per_row": 8,
+  "candidates_total": 1104,
+  "generation_targets": 23,
+  "rows_per_arm": 69
+ },
+ "generation_outputs": {
+  "base": "results/sft_root_cause/native_v23_generations/base",
+  "sft": "results/sft_root_cause/native_v23_generations/sft"
+ },
+ "generation_targets": [
+  "cand:marshmallow-code/marshmallow@024b5d09e9f026f0f96d220e243be69346687ce0",
+  "cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+  "cand:marshmallow-code/marshmallow@72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+  "cand:marshmallow-code/marshmallow@902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+  "cand:pyparsing/pyparsing@0a2d906a3e6b9a30b6a0701588caec3937ff271f",
+  "cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957",
+  "cand:python-attrs/attrs@97f8d175656bc03c373a1c9038048a4d312c307c",
+  "cand:python-attrs/attrs@af9c510912ce604a94896cc35c27368d5baf6ae6",
+  "cand:python-attrs/cattrs@304e3700198311c78a5c6993c0ac6f3307a2e28a",
+  "cand:python-attrs/cattrs@31c19cee405100b084e139e2d955c568dcd1010a",
+  "cand:python-attrs/cattrs@573915b6b450c23eaf818370ac2e339dd9aee262",
+  "cand:python-attrs/cattrs@a6c0900533af780155510343c1472a46fcb984f5",
+  "cand:python-attrs/cattrs@bc34a466a878d3259d01d0169b3fb95420d7d50d",
+  "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978",
+  "cand:python-humanize/humanize@392aef707c0e74341ab4a51420984e9ea6b566c5",
+  "cand:python-humanize/humanize@984526c02448110a8392dde3f5e26096dfd7c729",
+  "cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652",
+  "cand:python-humanize/humanize@e46732ed235019682b7bfc6c44443e247b332e95",
+  "cand:python-poetry/tomlkit@4b38becd75405e0f38ef3e47e9839eb407591c8a",
+  "cand:python-poetry/tomlkit@8cd44f58b499da3c80a29bc877a512665a15e0bb",
+  "cand:python-poetry/tomlkit@e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3",
+  "cand:tkem/cachetools@57d2e4813d9801f97034559e22428bac6f7c6c9b",
+  "cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e"
+ ],
+ "gpu_used": false,
+ "isolation": {
+  "isolation_version": "oneiros_repository_isolation_v6",
+  "receipt": "results/sft_root_cause_native_v21_isolation_v6.json",
+  "receipt_sha256": "ae6728a12105897b1493ac9617dcf7f9d08ef2e8d0642471b42fd041afd6d5d5",
+  "reference_universe_sha256": "53080a7a7d73d62e628ecfcaf615b0a825b050101e2a3efbdb7e7ff83afcd2bd"
+ },
+ "job": {
+  "condition": "primary_whole_module",
+  "file_sha256": "bf0e2437ddca9f8eb52a66417af3acea3182b1f2206473c0a119630dbabd3ea3",
+  "job_sha256": "d428f952efc37c84e9ead9fab1569853836613b2dcf67f08fb8805b8264c3a53",
+  "path": "results/sft_root_cause_native_v23_rehearsal_job_v4.json"
+ },
+ "kept_targets": [
+  "cand:marshmallow-code/marshmallow@024b5d09e9f026f0f96d220e243be69346687ce0",
+  "cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+  "cand:marshmallow-code/marshmallow@72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+  "cand:marshmallow-code/marshmallow@902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+  "cand:pyparsing/pyparsing@0a2d906a3e6b9a30b6a0701588caec3937ff271f",
+  "cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957",
+  "cand:python-attrs/attrs@97f8d175656bc03c373a1c9038048a4d312c307c",
+  "cand:python-attrs/attrs@af9c510912ce604a94896cc35c27368d5baf6ae6",
+  "cand:python-attrs/cattrs@304e3700198311c78a5c6993c0ac6f3307a2e28a",
+  "cand:python-attrs/cattrs@31c19cee405100b084e139e2d955c568dcd1010a",
+  "cand:python-attrs/cattrs@573915b6b450c23eaf818370ac2e339dd9aee262",
+  "cand:python-attrs/cattrs@a6c0900533af780155510343c1472a46fcb984f5",
+  "cand:python-attrs/cattrs@bc34a466a878d3259d01d0169b3fb95420d7d50d",
+  "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978",
+  "cand:python-humanize/humanize@392aef707c0e74341ab4a51420984e9ea6b566c5",
+  "cand:python-humanize/humanize@984526c02448110a8392dde3f5e26096dfd7c729",
+  "cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652",
+  "cand:python-humanize/humanize@e46732ed235019682b7bfc6c44443e247b332e95",
+  "cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897",
+  "cand:python-poetry/tomlkit@4b38becd75405e0f38ef3e47e9839eb407591c8a",
+  "cand:python-poetry/tomlkit@8cd44f58b499da3c80a29bc877a512665a15e0bb",
+  "cand:python-poetry/tomlkit@e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3",
+  "cand:tkem/cachetools@57d2e4813d9801f97034559e22428bac6f7c6c9b",
+  "cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e"
+ ],
+ "nature": "ENGINEERING DRESS REHEARSAL ONLY; not confirmation, generalisation or model-selection evidence",
+ "per_target": [
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:marshmallow-code/marshmallow@024b5d09e9f026f0f96d220e243be69346687ce0",
+   "repository": "marshmallow-code/marshmallow",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+   "repository": "marshmallow-code/marshmallow",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:marshmallow-code/marshmallow@72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+   "repository": "marshmallow-code/marshmallow",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:marshmallow-code/marshmallow@902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+   "repository": "marshmallow-code/marshmallow",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:pyparsing/pyparsing@0a2d906a3e6b9a30b6a0701588caec3937ff271f",
+   "repository": "pyparsing/pyparsing",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957",
+   "repository": "pyparsing/pyparsing",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-attrs/attrs@97f8d175656bc03c373a1c9038048a4d312c307c",
+   "repository": "python-attrs/attrs",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-attrs/attrs@af9c510912ce604a94896cc35c27368d5baf6ae6",
+   "repository": "python-attrs/attrs",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-attrs/cattrs@304e3700198311c78a5c6993c0ac6f3307a2e28a",
+   "repository": "python-attrs/cattrs",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-attrs/cattrs@31c19cee405100b084e139e2d955c568dcd1010a",
+   "repository": "python-attrs/cattrs",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-attrs/cattrs@573915b6b450c23eaf818370ac2e339dd9aee262",
+   "repository": "python-attrs/cattrs",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-attrs/cattrs@a6c0900533af780155510343c1472a46fcb984f5",
+   "repository": "python-attrs/cattrs",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-attrs/cattrs@bc34a466a878d3259d01d0169b3fb95420d7d50d",
+   "repository": "python-attrs/cattrs",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978",
+   "repository": "python-humanize/humanize",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-humanize/humanize@392aef707c0e74341ab4a51420984e9ea6b566c5",
+   "repository": "python-humanize/humanize",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-humanize/humanize@984526c02448110a8392dde3f5e26096dfd7c729",
+   "repository": "python-humanize/humanize",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652",
+   "repository": "python-humanize/humanize",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-humanize/humanize@e46732ed235019682b7bfc6c44443e247b332e95",
+   "repository": "python-humanize/humanize",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897",
+   "repository": "python-poetry/tomlkit",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-poetry/tomlkit@4b38becd75405e0f38ef3e47e9839eb407591c8a",
+   "repository": "python-poetry/tomlkit",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-poetry/tomlkit@8cd44f58b499da3c80a29bc877a512665a15e0bb",
+   "repository": "python-poetry/tomlkit",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:python-poetry/tomlkit@e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3",
+   "repository": "python-poetry/tomlkit",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:tkem/cachetools@57d2e4813d9801f97034559e22428bac6f7c6c9b",
+   "repository": "tkem/cachetools",
+   "requalification": "requalified"
+  },
+  {
+   "isolation_v6_admissible": true,
+   "kept": true,
+   "key": "cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e",
+   "repository": "tobymao/sqlglot",
+   "requalification": "requalified"
+  }
+ ],
+ "pre_generation_exclusions": [
+  {
+   "note": "pre-generation sequence-overflow exclusion; not a model failure",
+   "prompt_token_limit": 2048,
+   "prompt_tokens": 2385,
+   "reasons": [
+    "sequence_overflow"
+   ],
+   "recovered": false,
+   "stage": "pre_generation",
+   "target_key": "cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897",
+   "target_source_tokens": 1540,
+   "truncated": false
+  }
+ ],
+ "prompt_records": {
+  "path": "results/sft_root_cause_native_v22_prompt_records.json",
+  "sha256": "d76d5c1e99e0ca9043d58c6874bab03136cdcb04a51f85d19f981873ae284d45"
+ },
+ "protected_access_audit": {
+  "installed": true,
+  "method": "python audit hook",
+  "protected_paths_opened": []
+ },
+ "protocols": {
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md": "75131551082876d65be0609db619673417a6728e3c612cc2ebc69e808a1cc5a1",
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md": "8d48aa36def2e67d3ce5b876af0317fc4eb7199b5422eadca823980ec27d2901",
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md": "b5ebe83b37d184dd785b740267e7efd01a7022fa30df92ecba9f061985228998",
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md": "1ffda40c14c48788f21fb569f2888ad8c86988e6177b5de61d56714db3d172f4"
+ },
+ "qualified_targets": [
+  "cand:marshmallow-code/marshmallow@024b5d09e9f026f0f96d220e243be69346687ce0",
+  "cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+  "cand:marshmallow-code/marshmallow@72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+  "cand:marshmallow-code/marshmallow@902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+  "cand:pyparsing/pyparsing@0a2d906a3e6b9a30b6a0701588caec3937ff271f",
+  "cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957",
+  "cand:python-attrs/attrs@97f8d175656bc03c373a1c9038048a4d312c307c",
+  "cand:python-attrs/attrs@af9c510912ce604a94896cc35c27368d5baf6ae6",
+  "cand:python-attrs/cattrs@304e3700198311c78a5c6993c0ac6f3307a2e28a",
+  "cand:python-attrs/cattrs@31c19cee405100b084e139e2d955c568dcd1010a",
+  "cand:python-attrs/cattrs@573915b6b450c23eaf818370ac2e339dd9aee262",
+  "cand:python-attrs/cattrs@a6c0900533af780155510343c1472a46fcb984f5",
+  "cand:python-attrs/cattrs@bc34a466a878d3259d01d0169b3fb95420d7d50d",
+  "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978",
+  "cand:python-humanize/humanize@392aef707c0e74341ab4a51420984e9ea6b566c5",
+  "cand:python-humanize/humanize@984526c02448110a8392dde3f5e26096dfd7c729",
+  "cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652",
+  "cand:python-humanize/humanize@e46732ed235019682b7bfc6c44443e247b332e95",
+  "cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897",
+  "cand:python-poetry/tomlkit@4b38becd75405e0f38ef3e47e9839eb407591c8a",
+  "cand:python-poetry/tomlkit@8cd44f58b499da3c80a29bc877a512665a15e0bb",
+  "cand:python-poetry/tomlkit@e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3",
+  "cand:tkem/cachetools@57d2e4813d9801f97034559e22428bac6f7c6c9b",
+  "cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e"
+ ],
+ "rehearsal_rule": {
+  "max_targets": 30,
+  "min_repositories": 5,
+  "min_targets": 20,
+  "passed": true
+ },
+ "repositories": 8,
+ "requalification_records": {
+  "path": "results/sft_root_cause/native_v21_rehearsal/records.jsonl",
+  "sha256": "13dcde396d90775ecc3c9cbbc8207aaae844628f24943465b7128480a86262e5"
+ },
+ "scanner_sha256": "6e505343e66857e015d216537ade753941ef02b286d374856460347fa5c1cd1a",
+ "scanner_version": "oneiros_native_generated_test_leakage_v2",
+ "schema_version": "oneiros_native_v23_rehearsal_manifest_v6",
+ "source_manifest": {
+  "path": "results/sft_root_cause_phase4_receiver_capture_manifest_v2.json",
+  "sha256": "97ed6acb6783467f7bc34948fa314fd454acc91b0865a6e4d8b49e589811c171"
+ },
+ "supersedes": {
+  "manifest": "results/sft_root_cause_native_v22_rehearsal_manifest_v5.json",
+  "manifest_sha256": "d69bceb0a087d3cef4257c01e19c6ae0fdf465ad523a7dd05d15b776517ce64f",
+  "preflight": "results/sft_root_cause_native_generated_tests_preflight_v2_2b.json",
+  "preflight_sha256": "bc6596dffeef7f5dec3531e86ab6960c5552ff33e5bbceb71e073d99098f4a0f"
+ },
+ "targets": [
+  {
+   "buggy_commit": "252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+   "difference_exposing_tests": [
+    "tests.test_deserialization.TestFieldDeserialization::test_enum_field_by_symbol_rejects_non_member_attributes[__class__]",
+    "tests.test_deserialization.TestFieldDeserialization::test_enum_field_by_symbol_rejects_non_member_attributes[__members__]",
+    "tests.test_deserialization.TestFieldDeserialization::test_enum_field_by_symbol_rejects_non_member_attributes[mro]"
+   ],
+   "fixed_commit": "024b5d09e9f026f0f96d220e243be69346687ce0",
+   "key": "cand:marshmallow-code/marshmallow@024b5d09e9f026f0f96d220e243be69346687ce0",
+   "regression_test_files": [
+    "tests/test_deserialization.py"
+   ],
+   "repository": "marshmallow-code/marshmallow",
+   "repository_url": "https://github.com/marshmallow-code/marshmallow",
+   "target": "Enum._deserialize",
+   "target_file": "src/marshmallow/fields.py"
+  },
+  {
+   "buggy_commit": "65374df0c31cdc45acc4435741779298201306a2",
+   "difference_exposing_tests": [
+    "tests.test_deserialization.TestValidation::test_nested_partial_tuple_with_data_key"
+   ],
+   "fixed_commit": "252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+   "key": "cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7",
+   "regression_test_files": [
+    "tests/test_deserialization.py"
+   ],
+   "repository": "marshmallow-code/marshmallow",
+   "repository_url": "https://github.com/marshmallow-code/marshmallow",
+   "target": "Schema._deserialize",
+   "target_file": "src/marshmallow/schema.py"
+  },
+  {
+   "buggy_commit": "024b5d09e9f026f0f96d220e243be69346687ce0",
+   "difference_exposing_tests": [
+    "tests.test_deserialization.TestFieldDeserialization::test_boolean_timestamp_field_deserialization[False-timestamp_ms]",
+    "tests.test_deserialization.TestFieldDeserialization::test_boolean_timestamp_field_deserialization[True-timestamp_ms]",
+    "tests.test_utils::test_from_timestamp_ms_rejects_booleans[False]",
+    "tests.test_utils::test_from_timestamp_ms_rejects_booleans[True]"
+   ],
+   "fixed_commit": "72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+   "key": "cand:marshmallow-code/marshmallow@72ac4a04208ff24df0a9694d9b03b78b1c5a2e6a",
+   "regression_test_files": [
+    "tests/test_deserialization.py",
+    "tests/test_utils.py"
+   ],
+   "repository": "marshmallow-code/marshmallow",
+   "repository_url": "https://github.com/marshmallow-code/marshmallow",
+   "target": "from_timestamp_ms",
+   "target_file": "src/marshmallow/utils.py"
+  },
+  {
+   "buggy_commit": "3207be31474530f7c0685dfbd7b4faca5b35fbf5",
+   "difference_exposing_tests": [
+    "tests.test_validate::test_url_absolute_valid[http://example.org#fragment]",
+    "tests.test_validate::test_url_absolute_valid[http://user@example.com#fragment]",
+    "tests.test_validate::test_url_relative_only_valid[#frag]",
+    "tests.test_validate::test_url_relative_valid[#frag]"
+   ],
+   "fixed_commit": "902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+   "key": "cand:marshmallow-code/marshmallow@902f99c4151d1f0c4c3b8e8dfbafc7b6a76aeaa6",
+   "regression_test_files": [
+    "tests/test_validate.py"
+   ],
+   "repository": "marshmallow-code/marshmallow",
+   "repository_url": "https://github.com/marshmallow-code/marshmallow",
+   "target": "URL.RegexMemoizer._regex_generator",
+   "target_file": "src/marshmallow/validate.py"
+  },
+  {
+   "buggy_commit": "057a2e6d1b8391dc85abe725d4d12c0987a9ec10",
+   "difference_exposing_tests": [
+    "tests.test_unit.Test02_WithoutPackrat::testLocatedExprLeadingWhitespace",
+    "tests.test_unit.Test04_WithPackrat::testLocatedExprLeadingWhitespace",
+    "tests.test_unit.Test06_WithBoundedPackrat::testLocatedExprLeadingWhitespace",
+    "tests.test_unit.Test08_WithUnboundedPackrat::testLocatedExprLeadingWhitespace",
+    "tests.test_unit.Test09_WithLeftRecursionParsing::testLocatedExprLeadingWhitespace",
+    "tests.test_unit.Test10_WithLeftRecursionParsingBoundedMemo::testLocatedExprLeadingWhitespace"
+   ],
+   "fixed_commit": "0a2d906a3e6b9a30b6a0701588caec3937ff271f",
+   "key": "cand:pyparsing/pyparsing@0a2d906a3e6b9a30b6a0701588caec3937ff271f",
+   "regression_test_files": [
+    "tests/test_unit.py"
+   ],
+   "repository": "pyparsing/pyparsing",
+   "repository_url": "https://github.com/pyparsing/pyparsing",
+   "target": "Located.parseImpl",
+   "target_file": "pyparsing/core.py"
+  },
+  {
+   "buggy_commit": "efd56db4e59f36b1673ce0eb0823e3afaa9d1201",
+   "difference_exposing_tests": [
+    "tests.test_unit.Test02_WithoutPackrat::testParseActionReturningNonListType",
+    "tests.test_unit.Test04_WithPackrat::testParseActionReturningNonListType",
+    "tests.test_unit.Test06_WithBoundedPackrat::testParseActionReturningNonListType",
+    "tests.test_unit.Test08_WithUnboundedPackrat::testParseActionReturningNonListType",
+    "tests.test_unit.Test09_WithLeftRecursionParsing::testParseActionReturningNonListType",
+    "tests.test_unit.Test10_WithLeftRecursionParsingBoundedMemo::testParseActionReturningNonListType"
+   ],
+   "fixed_commit": "65d503517d146f83ce3f2ef804ee9448e6a16957",
+   "key": "cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957",
+   "regression_test_files": [
+    "tests/test_unit.py"
+   ],
+   "repository": "pyparsing/pyparsing",
+   "repository_url": "https://github.com/pyparsing/pyparsing",
+   "target": "ParserElement._parseNoCache",
+   "target_file": "pyparsing/core.py"
+  },
+  {
+   "buggy_commit": "6851ab593cd25f3c14393e9355d57d22bec2a074",
+   "difference_exposing_tests": [
+    "tests.test_annotations::test_is_class_var[annot4]"
+   ],
+   "fixed_commit": "97f8d175656bc03c373a1c9038048a4d312c307c",
+   "key": "cand:python-attrs/attrs@97f8d175656bc03c373a1c9038048a4d312c307c",
+   "regression_test_files": [
+    "tests/test_annotations.py"
+   ],
+   "repository": "python-attrs/attrs",
+   "repository_url": "https://github.com/python-attrs/attrs",
+   "target": "_is_class_var",
+   "target_file": "src/attr/_make.py"
+  },
+  {
+   "buggy_commit": "ab7f8b2f4c0f747d5b1575247ce35e5adaad182e",
+   "difference_exposing_tests": [
+    "tests.test_validators.TestDisableValidators::test_disabled_ctx_nested"
+   ],
+   "fixed_commit": "af9c510912ce604a94896cc35c27368d5baf6ae6",
+   "key": "cand:python-attrs/attrs@af9c510912ce604a94896cc35c27368d5baf6ae6",
+   "regression_test_files": [
+    "tests/test_validators.py"
+   ],
+   "repository": "python-attrs/attrs",
+   "repository_url": "https://github.com/python-attrs/attrs",
+   "target": "disabled",
+   "target_file": "src/attr/validators.py"
+  },
+  {
+   "buggy_commit": "573915b6b450c23eaf818370ac2e339dd9aee262",
+   "difference_exposing_tests": [
+    "tests.test_tuples::test_dict_namedtuples_detailed_validation"
+   ],
+   "fixed_commit": "304e3700198311c78a5c6993c0ac6f3307a2e28a",
+   "key": "cand:python-attrs/cattrs@304e3700198311c78a5c6993c0ac6f3307a2e28a",
+   "regression_test_files": [
+    "tests/test_tuples.py"
+   ],
+   "repository": "python-attrs/cattrs",
+   "repository_url": "https://github.com/python-attrs/cattrs",
+   "target": "namedtuple_dict_structure_factory",
+   "target_file": "src/cattrs/cols.py"
+  },
+  {
+   "buggy_commit": "32d0be5251224cad813f5cdac26d29abebd86493",
+   "difference_exposing_tests": [
+    "tests.strategies.test_include_subclasses::test_diamond_inheritance[False]",
+    "tests.strategies.test_include_subclasses::test_diamond_inheritance[True]"
+   ],
+   "fixed_commit": "31c19cee405100b084e139e2d955c568dcd1010a",
+   "key": "cand:python-attrs/cattrs@31c19cee405100b084e139e2d955c568dcd1010a",
+   "regression_test_files": [
+    "tests/strategies/test_include_subclasses.py"
+   ],
+   "repository": "python-attrs/cattrs",
+   "repository_url": "https://github.com/python-attrs/cattrs",
+   "target": "_make_subclasses_tree",
+   "target_file": "src/cattrs/strategies/_subclasses.py"
+  },
+  {
+   "buggy_commit": "a4230d150242a7d21f465c0f029624de71c716c4",
+   "difference_exposing_tests": [
+    "tests.strategies.test_include_subclasses::test_subclasses_in_struct_factory"
+   ],
+   "fixed_commit": "573915b6b450c23eaf818370ac2e339dd9aee262",
+   "key": "cand:python-attrs/cattrs@573915b6b450c23eaf818370ac2e339dd9aee262",
+   "regression_test_files": [
+    "tests/strategies/test_include_subclasses.py"
+   ],
+   "repository": "python-attrs/cattrs",
+   "repository_url": "https://github.com/python-attrs/cattrs",
+   "target": "_include_subclasses_with_union_strategy",
+   "target_file": "src/cattrs/strategies/_subclasses.py"
+  },
+  {
+   "buggy_commit": "eddffc415ce8429a02fc8e1d701f085d7b832ac0",
+   "difference_exposing_tests": [
+    "tests.test_disambiguators::test_disambiguation_is_order_independent"
+   ],
+   "fixed_commit": "a6c0900533af780155510343c1472a46fcb984f5",
+   "key": "cand:python-attrs/cattrs@a6c0900533af780155510343c1472a46fcb984f5",
+   "regression_test_files": [
+    "tests/test_disambiguators.py"
+   ],
+   "repository": "python-attrs/cattrs",
+   "repository_url": "https://github.com/python-attrs/cattrs",
+   "target": "create_default_dis_func",
+   "target_file": "src/cattrs/disambiguators.py"
+  },
+  {
+   "buggy_commit": "df4e4bb363381fc0d5a5301049c74c1f86522dc1",
+   "difference_exposing_tests": [
+    "tests.test_v::test_extra_keys_are_sorted"
+   ],
+   "fixed_commit": "bc34a466a878d3259d01d0169b3fb95420d7d50d",
+   "key": "cand:python-attrs/cattrs@bc34a466a878d3259d01d0169b3fb95420d7d50d",
+   "regression_test_files": [
+    "tests/test_v.py"
+   ],
+   "repository": "python-attrs/cattrs",
+   "repository_url": "https://github.com/python-attrs/cattrs",
+   "target": "format_exception",
+   "target_file": "src/cattrs/v.py"
+  },
+  {
+   "buggy_commit": "e1a5c7c9efe9f82edc89a2df8c2b599516a87dcb",
+   "difference_exposing_tests": [
+    "tests.test_number::test_fractional[-2.9999999--3]",
+    "tests.test_number::test_fractional[0-0]",
+    "tests.test_number::test_fractional[0.0-0]",
+    "tests.test_number::test_fractional[0.9999999-1]",
+    "tests.test_number::test_fractional[2.9999999-3]"
+   ],
+   "fixed_commit": "08cf2c3026cfd7c553e397e1d91ea069eb2a4978",
+   "key": "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978",
+   "regression_test_files": [
+    "tests/test_number.py"
+   ],
+   "repository": "python-humanize/humanize",
+   "repository_url": "https://github.com/python-humanize/humanize",
+   "target": "fractional",
+   "target_file": "src/humanize/number.py"
+  },
+  {
+   "buggy_commit": "ca892b368a535a79cc5e2181d052245b94fd6652",
+   "difference_exposing_tests": [
+    "tests.test_time::test_naturaldelta[test_input34-3 years]",
+    "tests.test_time::test_naturaldelta[test_input35-3 years]"
+   ],
+   "fixed_commit": "392aef707c0e74341ab4a51420984e9ea6b566c5",
+   "key": "cand:python-humanize/humanize@392aef707c0e74341ab4a51420984e9ea6b566c5",
+   "regression_test_files": [
+    "tests/test_time.py"
+   ],
+   "repository": "python-humanize/humanize",
+   "repository_url": "https://github.com/python-humanize/humanize",
+   "target": "naturaldelta",
+   "target_file": "src/humanize/time.py"
+  },
+  {
+   "buggy_commit": "14965a74953eb5119859975e7c452a04b481cdae",
+   "difference_exposing_tests": [
+    "tests.test_number::test_intcomma_large_integer[-1]",
+    "tests.test_number::test_intcomma_large_integer[1]"
+   ],
+   "fixed_commit": "984526c02448110a8392dde3f5e26096dfd7c729",
+   "key": "cand:python-humanize/humanize@984526c02448110a8392dde3f5e26096dfd7c729",
+   "regression_test_files": [
+    "tests/test_number.py"
+   ],
+   "repository": "python-humanize/humanize",
+   "repository_url": "https://github.com/python-humanize/humanize",
+   "target": "intcomma",
+   "target_file": "src/humanize/number.py"
+  },
+  {
+   "buggy_commit": "f971127ce7e7770d3ff5be05cfc484bdf9302e04",
+   "difference_exposing_tests": [
+    "tests.test_number::test_intword_rounding_rollover"
+   ],
+   "fixed_commit": "ca892b368a535a79cc5e2181d052245b94fd6652",
+   "key": "cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652",
+   "regression_test_files": [
+    "tests/test_number.py"
+   ],
+   "repository": "python-humanize/humanize",
+   "repository_url": "https://github.com/python-humanize/humanize",
+   "target": "intword",
+   "target_file": "src/humanize/number.py"
+  },
+  {
+   "buggy_commit": "984526c02448110a8392dde3f5e26096dfd7c729",
+   "difference_exposing_tests": [
+    "tests.test_number::test_metric[[-9999]--10.0 k]",
+    "tests.test_number::test_metric[[9.999, '', 2]-10]",
+    "tests.test_number::test_metric[[9.99999]-10.0]",
+    "tests.test_number::test_metric[[99999]-100 k]",
+    "tests.test_number::test_metric[[9999]-10.0 k]"
+   ],
+   "fixed_commit": "e46732ed235019682b7bfc6c44443e247b332e95",
+   "key": "cand:python-humanize/humanize@e46732ed235019682b7bfc6c44443e247b332e95",
+   "regression_test_files": [
+    "tests/test_number.py"
+   ],
+   "repository": "python-humanize/humanize",
+   "repository_url": "https://github.com/python-humanize/humanize",
+   "target": "metric",
+   "target_file": "src/humanize/number.py"
+  },
+  {
+   "buggy_commit": "d3c76f0bbe90af4b12a3b83bd8e59bc9061dfe85",
+   "difference_exposing_tests": [
+    "tests.test_toml_document::test_add_key_after_dotted_inline_table_without_ending_newline"
+   ],
+   "fixed_commit": "43668ddebc3f082bf385d328aceed18d26976897",
+   "key": "cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897",
+   "regression_test_files": [
+    "tests/test_toml_document.py"
+   ],
+   "repository": "python-poetry/tomlkit",
+   "repository_url": "https://github.com/python-poetry/tomlkit",
+   "target": "Container.append",
+   "target_file": "tomlkit/container.py"
+  },
+  {
+   "buggy_commit": "7ab7469addd60e03ca3bfbb1287642e8d771e1c0",
+   "difference_exposing_tests": [
+    "tests.test_items::test_array_slice_assignment_does_not_mutate[index0-replacement0]",
+    "tests.test_items::test_array_slice_assignment_does_not_mutate[index1-replacement1]",
+    "tests.test_items::test_array_slice_assignment_does_not_mutate[index2-replacement2]",
+    "tests.test_items::test_array_slice_assignment_does_not_mutate[index3-replacement3]",
+    "tests.test_items::test_array_slice_assignment_does_not_mutate[index4-replacement4]",
+    "tests.test_items::test_array_slice_assignment_does_not_mutate[index5-replacement5]"
+   ],
+   "fixed_commit": "4b38becd75405e0f38ef3e47e9839eb407591c8a",
+   "key": "cand:python-poetry/tomlkit@4b38becd75405e0f38ef3e47e9839eb407591c8a",
+   "regression_test_files": [
+    "tests/test_items.py"
+   ],
+   "repository": "python-poetry/tomlkit",
+   "repository_url": "https://github.com/python-poetry/tomlkit",
+   "target": "Array.__setitem__",
+   "target_file": "tomlkit/items.py"
+  },
+  {
+   "buggy_commit": "67d3e86502706df2a9ed67114ab67e25bcdcbbb7",
+   "difference_exposing_tests": [
+    "tests.test_api::test_create_multiline_string_with_leading_newline_round_trips[kwargs0-\\n]",
+    "tests.test_api::test_create_multiline_string_with_leading_newline_round_trips[kwargs1-\\nMy\\nString\\n]",
+    "tests.test_api::test_create_multiline_string_with_leading_newline_round_trips[kwargs2-\\r\\nMy\\nString]",
+    "tests.test_api::test_create_multiline_string_with_leading_newline_round_trips[kwargs3-\\nMy\\nString]",
+    "tests.test_api::test_create_multiline_string_with_leading_newline_round_trips[kwargs4-\\r\\nMy\\nString]",
+    "tests.test_api::test_create_string[kwargs13-\\nMy\\nString\\n-\"\"\"\\n\\nMy\\nString\\n\"\"\"]"
+   ],
+   "fixed_commit": "8cd44f58b499da3c80a29bc877a512665a15e0bb",
+   "key": "cand:python-poetry/tomlkit@8cd44f58b499da3c80a29bc877a512665a15e0bb",
+   "regression_test_files": [
+    "tests/test_api.py"
+   ],
+   "repository": "python-poetry/tomlkit",
+   "repository_url": "https://github.com/python-poetry/tomlkit",
+   "target": "String.from_raw",
+   "target_file": "tomlkit/items.py"
+  },
+  {
+   "buggy_commit": "34e51e2d6d09af86970f266a4217cea839fdc347",
+   "difference_exposing_tests": [
+    "tests.test_toml_document::test_set_value_on_out_of_order_table_with_empty_concrete_part"
+   ],
+   "fixed_commit": "e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3",
+   "key": "cand:python-poetry/tomlkit@e23a25438c6cc9b8cc28b6dcf76dc52f9c7a33e3",
+   "regression_test_files": [
+    "tests/test_toml_document.py"
+   ],
+   "repository": "python-poetry/tomlkit",
+   "repository_url": "https://github.com/python-poetry/tomlkit",
+   "target": "OutOfOrderTableProxy.__setitem__",
+   "target_file": "tomlkit/container.py"
+  },
+  {
+   "buggy_commit": "8011b71949e8d8d81a71359cca9477d67a2c9c0b",
+   "difference_exposing_tests": [
+    "tests.test_cachedmethod.AutospecTest::test_autospec_no_warnings"
+   ],
+   "fixed_commit": "57d2e4813d9801f97034559e22428bac6f7c6c9b",
+   "key": "cand:tkem/cachetools@57d2e4813d9801f97034559e22428bac6f7c6c9b",
+   "regression_test_files": [
+    "tests/test_cachedmethod.py"
+   ],
+   "repository": "tkem/cachetools",
+   "repository_url": "https://github.com/tkem/cachetools",
+   "target": "_DescriptorBase.__get__",
+   "target_file": "src/cachetools/_cachedmethod.py"
+  },
+  {
+   "buggy_commit": "a313c8bee143b4b92c9a068fef72a5fd512bba61",
+   "difference_exposing_tests": [
+    "tests.dialects.test_clickhouse.TestClickhouse::test_global_join"
+   ],
+   "fixed_commit": "981e492413740f7740d2b0288e3da5b4028c767e",
+   "key": "cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e",
+   "regression_test_files": [
+    "tests/dialects/test_clickhouse.py"
+   ],
+   "repository": "tobymao/sqlglot",
+   "repository_url": "https://github.com/tobymao/sqlglot",
+   "target": "ClickHouseParser._parse_global_in",
+   "target_file": "sqlglot/parsers/clickhouse.py"
+  }
+ ]
+}
