@@ -106,6 +106,11 @@ def run_official(python: str, checkout: Path, root_rel: str, tests: list, label:
 def prepare_target(target: dict, repo: Path, prep_root: Path, exports: Path,
                    keep: bool = True) -> dict:
     started = time.time()
+    result = _prepare(target, repo, prep_root, exports, keep)
+    return {**result, "wall_seconds": round(time.time() - started, 1)}
+
+
+def _prepare(target: dict, repo: Path, prep_root: Path, exports: Path, keep: bool) -> dict:
     tag = tag_of(target["key"])
     base = prep_root / tag
     co = base / "checkouts"
@@ -153,6 +158,14 @@ def prepare_target(target: dict, repo: Path, prep_root: Path, exports: Path,
         for t in tests:
             (qual / t).parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(fixed / t, qual / t)
+        # Build-generated files (e.g. a hatch-vcs _version.py) exist only in the built fixed
+        # tree; the qualification copy of the buggy revision gets them exactly as the views do.
+        qual_root = qual / root_rel if root_rel else qual
+        for rel, data in extra.items():
+            destination = qual_root / rel
+            if not destination.exists():
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(data)
         outdir = base / "junit"
         outdir.mkdir(parents=True, exist_ok=True)
         runs = {"buggy": [], "fixed": []}
@@ -193,7 +206,6 @@ def prepare_target(target: dict, repo: Path, prep_root: Path, exports: Path,
     except Exception as exc:          # recorded, never silently dropped
         return {**row, "category": "runner_error", "failure": f"{type(exc).__name__}: {exc}"[:300]}
     finally:
-        row["wall_seconds"] = round(time.time() - started, 1)
         shutil.rmtree(co, ignore_errors=True)
         git(repo, "worktree", "prune")
         if not keep:
