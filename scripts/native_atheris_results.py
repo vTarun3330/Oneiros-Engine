@@ -8,6 +8,11 @@ Standard library only: imported by the Atheris runner (WSL, CPython 3.11) and th
   differential  stable, both comparable (``ok``/``raise``) and different (unchanged; the
                 differential mode stays an oracle-assisted upper bound).
 
+``classify_probe`` separates applicability from infrastructure: a legitimately unsupported
+signature (no_signature, instance_method_receiver, variadic_signature, unsupported_parameter)
+is ``atheris_ineligible``; import, runtime, probe, environment, interpreter or view failures -
+anything else - are ``infrastructure_failure``.
+
 ``load_results`` validates an Atheris contract and its results TOGETHER: exact design version,
 script/inner/preparation/manifest hashes, budget, tolerance and corpus cap; exactly
 qualified x modes x seeds unique cells with no missing, duplicate, extra, malformed or stale
@@ -30,10 +35,29 @@ CONFIRMATIONS = 2
 BUDGET = 600
 CORPUS_CAP = 2000
 USABLE_END = ("completed", "cpu_budget_exhausted")
+APPLICABILITY_REASONS = ("no_signature", "instance_method_receiver", "variadic_signature")
+APPLICABILITY_PREFIXES = ("unsupported_parameter:",)
+STATUSES = ("eligible", "atheris_ineligible", "infrastructure_failure")
 
 
 class AtherisRefused(SystemExit):
     """The Atheris contract or results cannot be used."""
+
+
+def canonical_sha(value: Any) -> str:
+    """Identical to native_generation_io.contract_sha (kept local: stdlib, import-free)."""
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":"))
+                          .encode("utf-8")).hexdigest()
+
+
+def classify_probe(info: Mapping[str, Any]) -> str:
+    if info.get("eligible") is True:
+        return "eligible"
+    reason = info.get("reason")
+    if isinstance(reason, str) and (reason in APPLICABILITY_REASONS
+                                    or reason.startswith(APPLICABILITY_PREFIXES)):
+        return "atheris_ineligible"
+    return "infrastructure_failure"
 
 
 def tolerance(budget: float) -> float:
@@ -88,8 +112,38 @@ def _row_problems(row: Mapping[str, Any], budget: float) -> List[str]:
     return problems
 
 
+def _eligibility_problems(contract: Mapping[str, Any], qualified: Sequence[str],
+                          prep_rows: Mapping[str, Mapping[str, Any]]) -> List[str]:
+    problems = []
+    live = contract.get("live_views")
+    expected_live = {k: dict(prep_rows[k]["view_manifest_sha256"]) for k in qualified}
+    if live != expected_live or contract.get("live_views_sha256") != canonical_sha(expected_live):
+        problems.append("contract live views differ from the preparation manifests")
+    eligibility = contract.get("eligibility")
+    if not isinstance(eligibility, dict) or set(eligibility) != set(qualified) or \
+            contract.get("eligibility_sha256") != canonical_sha(eligibility):
+        return problems + ["contract eligibility map is incomplete or unbound"]
+    for key, e in eligibility.items():
+        row = prep_rows[key]
+        if e.get("target_key") != key or e.get("module") != row["module"] or \
+                e.get("qualname") != row["qualname"]:
+            problems.append(f"eligibility identity differs for {key}")
+        if e.get("views") != expected_live[key] or \
+                e.get("prep_record_sha256") != canonical_sha(row):
+            problems.append(f"eligibility views/preparation record differ for {key}")
+        status = e.get("status")
+        if status not in STATUSES or classify_probe(
+                {"eligible": status == "eligible", "reason": e.get("reason")}) != status:
+            problems.append(f"eligibility status {status!r} inconsistent with reason "
+                            f"{e.get('reason')!r} for {key}")
+        if status == "eligible" and not isinstance(e.get("plan"), list):
+            problems.append(f"eligible target without an argument plan: {key}")
+    return problems
+
+
 def load_results(results_path: Path, contract_path: Path, *, qualified: Sequence[str],
-                 manifest_sha256: str, prep: Mapping[str, str], script_sha256: str,
+                 manifest_sha256: str, prep: Mapping[str, str],
+                 prep_rows: Mapping[str, Mapping[str, Any]], script_sha256: str,
                  inner_sha256: str, verdicts_sha256: str, seeds: Sequence[int] = SEEDS, budget: int = BUDGET
                  ) -> Dict[str, Any]:
     contract = json.loads(Path(contract_path).read_text(encoding="utf-8"))
@@ -102,6 +156,10 @@ def load_results(results_path: Path, contract_path: Path, *, qualified: Sequence
     wrong = sorted(k for k, v in expected.items() if contract.get(k) != v)
     if wrong:
         raise AtherisRefused(f"REFUSED: Atheris contract differs in {wrong}")
+    problems = _eligibility_problems(contract, qualified, prep_rows)
+    if problems:
+        raise AtherisRefused(f"REFUSED: Atheris contract live views / eligibility: {problems[:3]}")
+    eligibility = contract["eligibility"]
     chash = contract_hash(contract)
     cells = {f"{t}::{m}::{s}" for t in qualified for m in MODES for s in seeds}
     rows: Dict[str, Dict[str, Any]] = {}
@@ -122,6 +180,11 @@ def load_results(results_path: Path, contract_path: Path, *, qualified: Sequence
             raise AtherisRefused(f"REFUSED: Atheris line {number}: duplicate cell {key}")
         if key != f"{row.get('target_key')}::{row.get('mode')}::{row.get('seed')}":
             raise AtherisRefused(f"REFUSED: Atheris line {number}: key/fields disagree")
+        e = eligibility[row["target_key"]]
+        if row.get("eligible") is not (e["status"] == "eligible") or \
+                row.get("status") != e["status"] or row.get("reason") != e["reason"]:
+            raise AtherisRefused(f"REFUSED: Atheris line {number} disagrees with the frozen "
+                                 f"eligibility map for {row['target_key']}")
         rows[key] = row
     if set(rows) != cells:
         raise AtherisRefused(f"REFUSED: Atheris grid incomplete: {len(cells - set(rows))} of "
@@ -129,14 +192,13 @@ def load_results(results_path: Path, contract_path: Path, *, qualified: Sequence
     targets = {}
     for t in qualified:
         trow = [rows[f"{t}::{m}::{s}"] for m in MODES for s in seeds]
-        eligible = {r.get("eligible") for r in trow}
-        if eligible == {False}:
-            targets[t] = {"status": "atheris_ineligible",
-                          "reasons": sorted({str(r.get("reason")) for r in trow})}
+        status = eligibility[t]["status"]
+        if status == "atheris_ineligible":
+            targets[t] = {"status": "atheris_ineligible", "reason": eligibility[t]["reason"]}
             continue
-        if eligible != {True}:
+        if status == "infrastructure_failure":
             targets[t] = {"status": "infrastructure_excluded",
-                          "problems": ["eligibility differs between cells"]}
+                          "problems": {"probe": [eligibility[t]["reason"]]}}
             continue
         problems = {f"{r['mode']}::{r['seed']}": p for r in trow if (p := _row_problems(r, budget))}
         if problems:
@@ -146,5 +208,7 @@ def load_results(results_path: Path, contract_path: Path, *, qualified: Sequence
                       "kill_by_mode": {m: any(rows[f"{t}::{m}::{s}"]["kill"] for s in seeds)
                                        for m in MODES}}
     return {"contract_sha256": chash, "cells": len(rows), "targets": targets,
+            "live_views_sha256": contract["live_views_sha256"],
+            "eligibility_sha256": contract["eligibility_sha256"],
             "counts": {s: sum(v["status"] == s for v in targets.values())
                        for s in ("usable", "atheris_ineligible", "infrastructure_excluded")}}

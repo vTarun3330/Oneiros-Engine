@@ -34,6 +34,29 @@ JOB = "results/sft_root_cause_native_v24_rehearsal_job_v5.json"
 MANIFEST = "results/sft_root_cause_native_v24_rehearsal_manifest_v7.json"
 GENERATIONS = "results/sft_root_cause/native_v24_generations"
 EXCLUSIVE_KEY = "native_v24_generation"
+LAUNCH_CONTRACT = {
+    "order": ["base", "sft"], "exclusive_key": EXCLUSIVE_KEY,
+    "reservation": "atomic os.mkdir of runs/.exclusive/<sha256(key)> taken before any "
+                   "inspection or run-directory creation; token-owned; renewed by the "
+                   "supervisor; released by its owner only after the final status; stale "
+                   "recovery only after every recorded process is proven dead",
+    "sft_requires_verified_base": True, "allow_concurrent": False}
+LIVE_VIEW_POLICY = {
+    "algorithm": "sha256(json.dumps({relative_posix_path: sha256(file)}, sort_keys=True))",
+    "symlinks": "refused", "missing_or_unreadable": "refused",
+    "executor": "both revisions of all generation targets, before any write",
+    "atheris": "both revisions of all qualified targets, before the contract is written"}
+ENGINEERING_GATE_REQUIREMENTS = [
+    "coverage_gate_passed", "repository_gate_passed", "stage_receipts_gate_passed",
+    "canaries_gate_passed", "artifact_integrity_gate_passed",
+    "unexplained_failures_gate_passed"]
+ANALYSIS_CONTRACT = {
+    "study_mode": "engineering_dress_rehearsal",
+    "required_inputs": ["manifest", "job", "prep", "preflight_v2_4", "execution_contract",
+                        "execution_results", "base_and_sft_generations",
+                        "atheris_contract_and_results_together_when_compared"],
+    "engineering_gate": "all of engineering_gate_requirements; otherwise every arm "
+                        "comparison is suppressed"}
 
 
 def main(argv=None) -> int:
@@ -100,9 +123,11 @@ def main(argv=None) -> int:
                           "required_eligible": -(-9 * qualified // 10),
                           "rule": "generated AND infrastructure-eligible in both arms"},
         "generation_outputs": {"base": f"{GENERATIONS}/base", "sft": f"{GENERATIONS}/sft"},
-        "launch_contract": {"order": ["base", "sft"], "exclusive_key": EXCLUSIVE_KEY,
-                            "sft_requires_verified_base": True,
-                            "allow_concurrent": False},
+        "launch_contract": LAUNCH_CONTRACT, "live_view_policy": LIVE_VIEW_POLICY,
+        "engineering_gate_requirements": ENGINEERING_GATE_REQUIREMENTS,
+        "analysis_contract": ANALYSIS_CONTRACT,
+        "telemetry": {"schema": "oneiros_native_generation_telemetry_v2",
+                      "generator_version": "oneiros_native_generated_tests_generate_v4"},
         "counts": {"qualified": qualified, "generation": len(fields["generation_targets"]),
                    "pre_generation_excluded": len(fields["pre_generation_exclusions"])},
         "admitted_to_training": False, "gpu_used": False,

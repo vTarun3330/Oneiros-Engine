@@ -22,6 +22,20 @@ if str(ROOT) not in sys.path:
 OUT = "results/sft_root_cause/native_v24_full_suite.json"
 
 
+def receipt_bytes(receipt: dict) -> bytes:
+    """UTF-8 JSON with LF line endings and exactly one final LF, on every platform: the
+    preflight hashes exactly the bytes a checkout (``*.json text eol=lf``) reproduces."""
+    return (json.dumps(receipt, indent=1) + "\n").encode("utf-8")
+
+
+def write_receipt(out: Path, receipt: dict) -> dict:
+    from scripts.receipt_sanitize import scrub_json     # tracked receipt: no user paths
+    receipt = scrub_json(receipt)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_bytes(receipt_bytes(receipt))
+    return receipt
+
+
 def main(argv=None) -> int:
     from harness.native_launch_gate import source_identity
     parser = argparse.ArgumentParser(description=__doc__)
@@ -49,10 +63,7 @@ def main(argv=None) -> int:
                "tail": tail[-1500:]}
     if dirty:
         receipt["exit"] = receipt["exit"] or 99
-    from scripts.receipt_sanitize import scrub_json     # tracked receipt: no user paths
-    receipt = scrub_json(receipt)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(receipt, indent=1) + "\n", encoding="utf-8")
+    receipt = write_receipt(out, receipt)
     print(json.dumps({k: receipt[k] for k in ("source_commit", "exit", "passed", "failed",
                                               "skipped", "seconds")}))
     return 0 if receipt["exit"] == 0 else 1

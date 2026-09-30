@@ -168,8 +168,13 @@ def pytest_runtest_makereport(item, call):
         "exception": _excinfo(call)}
 
 def pytest_sessionfinish(session, exitstatus):
+    try:
+        candidate = hashlib.sha256(open("/tmp/work/test_candidate.py", "rb").read()).hexdigest()
+    except OSError:
+        candidate = None
     with open(OUT, "w", encoding="utf-8") as handle:
         json.dump({"attestation": STATE["attestation"], "target_error": STATE["target_error"],
+                   "candidate_sha256": candidate,
                    "collected": STATE["collected"], "collection_errors": STATE["collection_errors"],
                    "nodes": STATE["nodes"], "exitstatus": int(exitstatus), "uid": os.getuid()},
                   handle)
@@ -472,7 +477,7 @@ def run_sandboxed(python: str, env_dir: Path, view: Path, spec: dict, candidate:
 # Evidence kept per report (v2.4 D): everything classify() reads, nothing host-derived.
 EVIDENCE_FIELDS = ("attestation", "target_error", "collected", "collection_errors", "nodes",
                    "exitstatus", "uid", "process_exit", "seconds", "wall_timeout",
-                   "harness_error", "raw_report_sha256")
+                   "harness_error", "raw_report_sha256", "candidate_sha256")
 
 
 def sanitise(report: dict | None) -> dict | None:
@@ -488,9 +493,11 @@ def execute_candidate(target: dict, source: str, scratch: Path, enforce_policy: 
     name = target["qualname"].split(".")[-1]
     static = static_check(source, name, enforce_policy)
     expected = {label: target["module_sha256"][label] for label in ("buggy", "fixed")}
+    candidate = hashlib.sha256(source.encode()).hexdigest()
     if static["status"] != "ok":
         return {"classification": classify(static, None, None), "static": static,
-                "evidence": {"static": static, "expected": expected, "reports": {}}}
+                "evidence": {"static": static, "expected": expected, "reports": {},
+                             "candidate_sha256": candidate}}
     spec = spec_for(target["module"], target["qualname"])
     runs = {label: run_sandboxed(target["python"], Path(target["env_dir"]),
                                  Path(target["views"][label]), spec, source, scratch / label)
@@ -511,7 +518,8 @@ def execute_candidate(target: dict, source: str, scratch: Path, enforce_policy: 
         reports.update(rerun_buggy=sanitise(rerun[0]), rerun_fixed=sanitise(rerun[1]))
     return {"classification": final, "static": static, "runs": summary,
             "rerun": rerun is not None,
-            "evidence": {"static": static, "expected": expected, "reports": reports}}
+            "evidence": {"static": static, "expected": expected, "reports": reports,
+                         "candidate_sha256": candidate}}
 
 
 def fixed_valid_of(cls: dict) -> bool:
@@ -549,9 +557,19 @@ def verify_row(row: dict, module_source: str | None = None, target_name: str | N
         if row.get("class") != "environment_failure":
             problems.append("failed canary but class is not environment_failure")
         return problems
+    for rep in (canary.get("reports") or {}).values():
+        if isinstance(rep, dict) and rep.get("candidate_sha256") not in (None, canary.get("module_sha256")):
+            problems.append("canary evidence ran a different module")
     static, reports = evidence.get("static"), evidence.get("reports") or {}
     if not isinstance(static, dict) or "status" not in static:
         return problems + ["no static evidence"]
+    if module_source is not None:
+        actual = hashlib.sha256(module_source.encode()).hexdigest()
+        if evidence.get("candidate_sha256") != actual or row.get("module_sha256") != actual:
+            problems.append("evidence belongs to a different candidate")
+        if any(isinstance(rep, dict) and rep.get("candidate_sha256") != actual
+               for rep in reports.values()):
+            problems.append("sandbox reports ran a different candidate")
     if module_source is not None and target_name is not None and \
             static != static_check(module_source, target_name, True):
         problems.append("static evidence disagrees with the module")
@@ -595,18 +613,32 @@ GENERATION_FIELDS = ("raw_sha256", "generated_tokens", "eos_reached", "finish_re
                      "hit_completion_limit", "fence_stripped")
 
 
+def generation_record(cand: dict, grow: dict) -> dict:
+    return {**{f: cand[f] for f in GENERATION_FIELDS}, "prompt_tokens": grow["prompt_tokens"],
+            "target_seed": grow["target_seed"], "row_wall_seconds": grow["wall_seconds"]}
+
+
+def cell_problems(row: dict, cand: dict, grow: dict, target_name: str) -> list:
+    """An execution row is bound to exactly one generated candidate (v2.4 D): module hash,
+    generation telemetry field by field, and evidence recomputed from the actual module."""
+    problems = []
+    actual = hashlib.sha256(cand["module"].encode()).hexdigest()
+    if row.get("module_sha256") != actual or cand.get("module_sha256") != actual:
+        problems.append("module hash differs from the generated candidate")
+    if row.get("generation") != generation_record(cand, grow):
+        problems.append("generation telemetry differs from the generated candidate")
+    return problems + verify_row(row, cand["module"], target_name)
+
+
 def run(prep_path: Path, manifest_path: Path, job_path: Path, arms: dict, condition: str,
         out: Path, root: Path | None = None) -> int:
     cohort = gio.resolve_cohort(job_path, manifest_path, condition)
     prepared = gio.resolve_prep(prep_path, manifest_path, root or REPO_ROOT)  # v2.4 C
     prep = prepared["rows"]
+    gio.verify_live_views(prep, cohort["generation"])  # both revisions, before any write
     targets = []
     for key in cohort["generation"]:                  # the generation cohort only
         row = prep[key]
-        for label in ("buggy", "fixed"):
-            view = build_view_hash(Path(row["views"][label]))
-            if view != row["view_manifest_sha256"][label]:
-                raise SystemExit(f"REFUSED: view for {key}/{label} changed since preparation")
         targets.append({"target_key": key, "module": row["module"], "qualname": row["qualname"],
                         "python": row["python_path"], "env_dir": row["env_dir"],
                         "views": row["views"], "module_sha256": row["module_sha256"]})
@@ -655,6 +687,13 @@ def run(prep_path: Path, manifest_path: Path, job_path: Path, arms: dict, condit
             if row.get("contract_sha256") != chash or row.get("key") not in expected or \
                     row["key"] in done:
                 problems.append(f"line {number} stale/unexpected/duplicate")
+                continue
+            arm, tkey, seed, slot = row["key"].split("::")
+            grow = gens["rows"][(arm, tkey, int(seed))]
+            bad = cell_problems(row, grow["candidates"][int(slot)], grow,
+                                prep[tkey]["qualname"].split(".")[-1])
+            if bad:
+                problems.append(f"line {number} does not match its candidate: {bad[:2]}")
             else:
                 done[row["key"]] = row
         if problems:
@@ -686,10 +725,7 @@ def run(prep_path: Path, manifest_path: Path, job_path: Path, arms: dict, condit
                                 "key": key, "contract_sha256": chash, "arm": arm, "seed": seed,
                                 "target_key": t["target_key"], "slot": slot,
                                 "module_sha256": hashlib.sha256(module.encode()).hexdigest(),
-                                "generation": {**{f: cand[f] for f in GENERATION_FIELDS},
-                                               "prompt_tokens": grow["prompt_tokens"],
-                                               "target_seed": grow["target_seed"],
-                                               "row_wall_seconds": grow["wall_seconds"]},
+                                "generation": generation_record(cand, grow),
                                 "class": cls["class"], "classification": cls,
                                 "static": outcome.get("static"), "runs": outcome.get("runs"),
                                 "canary_failed": not env_ok,
@@ -713,9 +749,8 @@ def run(prep_path: Path, manifest_path: Path, job_path: Path, arms: dict, condit
 
 
 def build_view_hash(view: Path) -> str:
-    files = {p.relative_to(view).as_posix(): sha256_file(p) for p in sorted(view.rglob("*"))
-             if p.is_file()}
-    return hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest()
+    """The authoritative preparation view-manifest hash (native_generation_io)."""
+    return gio.view_manifest_sha256(view)
 
 
 # --- synthetic toy target (canaries and the pipeline test) ----------------------------------

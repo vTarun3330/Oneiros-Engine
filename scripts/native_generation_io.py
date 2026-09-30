@@ -159,6 +159,40 @@ def resolve_cohort(job_path: Path, manifest_path: Path,
 
 # --- preparation binding (amendment v2.4 section C) ----------------------------------------------
 
+def view_manifest_sha256(view: Path) -> str:
+    """THE preparation view-manifest hash (native_generated_tests_execute_wsl.build_view):
+    every file's relative POSIX path -> its SHA-256, JSON-serialised with sorted keys, then
+    SHA-256. Strict: a missing view, any symlink, or an unreadable file refuses."""
+    view = Path(view)
+    if not view.is_dir() or view.is_symlink():
+        raise CohortRefused(f"REFUSED: view missing or not a directory: {view}")
+    files: Dict[str, str] = {}
+    for path in sorted(view.rglob("*")):
+        if path.is_symlink():
+            raise CohortRefused(f"REFUSED: symlink inside a view: {path}")
+        if path.is_file():
+            try:
+                files[path.relative_to(view).as_posix()] = sha256_file(path)
+            except OSError as exc:
+                raise CohortRefused(f"REFUSED: unreadable view file {path}: {exc}") from None
+    return sha256_bytes(json.dumps(files, sort_keys=True).encode())
+
+
+def verify_live_views(prep_rows: Mapping[str, Mapping[str, Any]], keys) -> Dict[str, Dict[str, str]]:
+    """Re-hash BOTH live revision views of every key against its preparation manifest,
+    before anything is written. Returns the verified key -> {buggy, fixed} mapping."""
+    verified: Dict[str, Dict[str, str]] = {}
+    for key in keys:
+        row = prep_rows[key]
+        verified[key] = {}
+        for label in ("buggy", "fixed"):
+            live = view_manifest_sha256(Path(row["views"][label]))
+            if live != row["view_manifest_sha256"][label]:
+                raise CohortRefused(f"REFUSED: view for {key}/{label} changed since preparation")
+            verified[key][label] = live
+    return verified
+
+
 PREP_REQUIRED = ("key", "category", "module", "qualname", "python_path", "env_dir", "interpreter",
                  "views", "view_manifest_sha256", "module_sha256", "attestation",
                  "environment_lock")

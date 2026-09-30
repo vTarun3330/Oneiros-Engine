@@ -156,13 +156,10 @@ def test_24_qualified_23_generated_pipeline_end_to_end(world, monkeypatch):
     assert contract["generation_identity_sha256"] == loaded["identity_sha256"]
     assert contract["telemetry_schema"] == gio.TELEMETRY_SCHEMA
     atheris_path, atheris_contract = _atheris_fixture(world)
-    out = world["tmp"] / "analysis.json"
-    assert an.main(["analyse", "--manifest", str(world["manifest"]), "--job", str(world["job"]),
-                    "--results", str(results), "--condition", COND, "--study-mode",
-                    "engineering_dress_rehearsal", "--out", str(out),
-                    "--atheris", str(atheris_path),
-                    "--atheris-contract", str(atheris_contract)]) == 0
-    result = json.loads(out.read_text())
+    from tests import native_analysis_helpers as helpers
+    result = helpers.analyse(world, results, results.parent / f"execute_contract_{COND}.json",
+                             root, extra=["--atheris", str(atheris_path),
+                                          "--atheris-contract", str(atheris_contract)])
     cohort = result["cohort"]
     assert (cohort["qualified_targets"], cohort["generation_targets"],
             cohort["pre_generation_excluded"]) == (24, 23, 1)
@@ -502,10 +499,12 @@ def test_analysis_refuses_a_tampered_execution_row(world, monkeypatch):
     rows[5]["fixed_valid"] = not rows[5]["fixed_valid"]
     results = world["tmp"] / "tampered.jsonl"
     results.write_text("".join(json.dumps(r) + "\n" for r in rows))
-    with pytest.raises(an.AnalysisRefused, match="fails evidence verification"):
-        an.main(["analyse", "--manifest", str(world["manifest"]), "--job", str(world["job"]),
-                 "--results", str(results), "--condition", COND, "--study-mode",
-                 "engineering_dress_rehearsal", "--out", str(world["tmp"] / "a.json")])
+    from tests import native_analysis_helpers as helpers
+    shutil.copy(world["tmp"] / "exec" / f"execute_contract_{COND}.json",
+                world["tmp"] / f"execute_contract_{COND}.json")
+    with pytest.raises(an.AnalysisRefused, match="fails verification"):
+        helpers.analyse(world, results, world["tmp"] / f"execute_contract_{COND}.json",
+                        world["tmp"] / "generations", out="a.json")
 
 
 
@@ -522,32 +521,26 @@ def _file_sha(rel):
 
 
 def _atheris_contract(world):
-    manifest = json.loads(world["manifest"].read_text())
-    return {"design_version": ar.DESIGN_VERSION,
-            "script_sha256": _file_sha("scripts/native_generated_tests_atheris_wsl.py"),
-            "inner_sha256": _file_sha("scripts/native_sandbox_inner.sh"),
-            "verdicts_sha256": _file_sha("scripts/native_atheris_results.py"),
-            "prep": manifest["requalification_records"],
-            "manifest_sha256": hashlib.sha256(world["manifest"].read_bytes()).hexdigest(),
-            "budget_cpu_seconds": 600, "tolerance": 13.0, "seeds": [42, 43, 44],
-            "modes": ["ordinary", "posthoc", "differential"], "corpus_cap": 2000,
-            "python": "/usr/bin/python3.11"}
+    """A real v2.4 contract (live views + frozen eligibility; QUALIFIED[0] is legitimately
+    Atheris-ineligible) built by prepare_contract with a fake probe."""
+    from tests import native_analysis_helpers as helpers
+    return helpers.atheris_contract(world, ineligible=(QUALIFIED[0],))[0]
 
 
-def _atheris_rows(chash):
+def _atheris_rows(chash, contract):
     rows = []
     for t in QUALIFIED:
+        e = contract["eligibility"][t]
         for m in ar.MODES:
             for seed in ar.SEEDS:
                 base = {"key": f"{t}::{m}::{seed}", "contract_sha256": chash, "target_key": t,
-                        "mode": m, "seed": seed}
-                if t == QUALIFIED[0]:
-                    rows.append({**base, "eligible": False, "reason": "variadic_signature",
-                                 "kill": False})
+                        "mode": m, "seed": seed, "status": e["status"], "reason": e["reason"]}
+                if e["status"] != "eligible":
+                    rows.append({**base, "eligible": False, "kill": False})
                     continue
                 checks = [{"witness": "w0", **ar.judge(m, [RAISE, RAISE], [OK, OK])}] \
                     if (t in KILLED and m == "ordinary") else []
-                rows.append({**base, "eligible": True, "reason": None, "reached": True,
+                rows.append({**base, "eligible": True, "reached": True,
                              "views_unchanged": True, "within_budget": True, "cleanup_ok": True,
                              "replay_cleanup_ok": True, "end_reason": "cpu_budget_exhausted",
                              "aggregate_cpu_seconds": 600.4, "replay_errors": 0,
@@ -558,12 +551,13 @@ def _atheris_rows(chash):
 
 
 def _atheris_fixture(world, mutate=None, contract_mutate=None):
-    contract = _atheris_contract(world)
+    original = _atheris_contract(world)
+    contract = json.loads(json.dumps(original))
     if contract_mutate:
         contract_mutate(contract)
     cpath = world["tmp"] / "atheris_contract.json"
     cpath.write_text(json.dumps(contract, indent=1, sort_keys=True))
-    rows = _atheris_rows(ar.contract_hash(_atheris_contract(world)))
+    rows = _atheris_rows(ar.contract_hash(original), original)
     if mutate:
         rows = mutate(rows)
     rpath = world["tmp"] / "atheris_results.jsonl"
@@ -572,10 +566,9 @@ def _atheris_fixture(world, mutate=None, contract_mutate=None):
 
 
 def _load_atheris(world, rpath, cpath):
-    c = _atheris_contract(world)
-    return ar.load_results(rpath, cpath, qualified=QUALIFIED, manifest_sha256=c["manifest_sha256"],
-                           prep=c["prep"], script_sha256=c["script_sha256"],
-                           inner_sha256=c["inner_sha256"], verdicts_sha256=c["verdicts_sha256"])
+    from tests import native_analysis_helpers as helpers
+    prepared = gio.resolve_prep(world["prep"], world["manifest"], world["tmp"])
+    return helpers.load_atheris(world, rpath, cpath, prepared)
 
 
 @pytest.mark.parametrize("buggy, fixed, error, kill", [
@@ -692,12 +685,10 @@ def test_atheris_infrastructure_exclusion_is_symmetric_in_the_joint_analysis(wor
                 r["cleanup_ok"] = False
         return rows
     rpath, cpath = _atheris_fixture(world, mutate=mutate)
-    out = world["tmp"] / "a2.json"
-    an.main(["analyse", "--manifest", str(world["manifest"]), "--job", str(world["job"]),
-             "--results", str(results), "--condition", COND, "--study-mode",
-             "engineering_dress_rehearsal", "--out", str(out), "--atheris", str(rpath),
-             "--atheris-contract", str(cpath)])
-    result = json.loads(out.read_text())
+    from tests import native_analysis_helpers as helpers
+    result = helpers.analyse(world, results, results.parent / f"execute_contract_{COND}.json",
+                             root, out="a2.json",
+                             extra=["--atheris", str(rpath), "--atheris-contract", str(cpath)])
     assert result["atheris_denominators"]["joint"] == 21
     assert list(result["atheris_infrastructure_exclusions"]) == [QUALIFIED[1]]
     # the excluded target's Atheris kill is not silently a non-kill in the joint count
@@ -710,14 +701,14 @@ def test_atheris_infrastructure_exclusion_is_symmetric_in_the_joint_analysis(wor
 def test_rehearsal_manifest_refuses_confirmation_mode(world, monkeypatch):
     root = _generate(world)
     code, results = _execute(world, root, monkeypatch)
-    args = ["analyse", "--manifest", str(world["manifest"]), "--job", str(world["job"]),
-            "--results", str(results), "--condition", COND, "--out", str(world["tmp"] / "c.json")]
+    from tests import native_analysis_helpers as helpers
+    contract = results.parent / f"execute_contract_{COND}.json"
     with pytest.raises(an.AnalysisRefused, match="refused: the manifest declares "
                                                  "'engineering_dress_rehearsal'"):
-        an.main([*args, "--study-mode", "confirmation"])
+        helpers.analyse(world, results, contract, root, out="c.json", study_mode="confirmation")
     manifest = json.loads(world["manifest"].read_text())         # flipping the manifest alone
     manifest["study_mode"] = "confirmation"                      # still needs a frozen,
     world["manifest"].write_text(json.dumps(manifest))           # hash-bound authorisation
     with pytest.raises(an.AnalysisRefused, match="separately frozen confirmation manifest"):
-        an.main([*args, "--study-mode", "confirmation"])
+        helpers.analyse(world, results, contract, root, out="c.json", study_mode="confirmation")
     assert not (world["tmp"] / "c.json").exists()

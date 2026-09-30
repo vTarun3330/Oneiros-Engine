@@ -754,6 +754,37 @@ def isolation_canaries(views: dict, work: Path) -> dict:
     return out
 
 
+def live_view_canaries(sources: dict, work: Path) -> dict:
+    """v2.4 C: the authoritative view-manifest hash refuses drift, symlinks and missing views
+    (checked here inside WSL, where symlinks are available)."""
+    copies = {label: fresh_view(sources[label], work / "live" / label) for label in sources}
+    row = {"views": {k: str(v) for k, v in copies.items()},
+           "view_manifest_sha256": {k: gio.view_manifest_sha256(v) for k, v in copies.items()}}
+    out = {}
+    try:
+        gio.verify_live_views({"t": row}, ["t"])
+        out["unchanged_views_verify"] = True
+    except SystemExit:
+        out["unchanged_views_verify"] = False
+
+    def refused(fn) -> bool:
+        try:
+            fn()
+        except SystemExit:
+            return True
+        return False
+    for label in ("buggy", "fixed"):
+        drifted = fresh_view(sources[label], work / "live" / f"drift_{label}")
+        (drifted / "canarypkg" / "core.py").write_text("# drifted after preparation\n")
+        out[f"{label}_drift_refused"] = refused(lambda d=drifted, l=label: gio.verify_live_views(
+            {"t": {**row, "views": {**row["views"], l: str(d)}}}, ["t"]))
+    linked = fresh_view(sources["buggy"], work / "live" / "symlinked")
+    os.symlink(linked / "canarypkg" / "core.py", linked / "canarypkg" / "alias.py")
+    out["symlink_refused"] = refused(lambda: gio.view_manifest_sha256(linked))
+    out["missing_view_refused"] = refused(lambda: gio.view_manifest_sha256(work / "live" / "gone"))
+    return out
+
+
 def canaries(out_dir: Path) -> int:
     out_dir.mkdir(parents=True, exist_ok=True)
     work = Path(tempfile.mkdtemp(prefix="oneiros_atheris_canary_"))
@@ -778,6 +809,11 @@ def canaries(out_dir: Path) -> int:
                  "keyword", "variadic", "Box.total", "untyped", "swap_exception")
         elig = {n: probe(sources["buggy"], "canarypkg.core", n) for n in names}
         elig["runtime_mismatch"] = probe(work / "views" / "py312", "canarypkg.core", "f")
+        elig["import_failure"] = probe(sources["buggy"], "canarypkg.no_such_module", "f")
+        classified = {n: verdicts.classify_probe(info) for n, info in elig.items()}
+        live = live_view_canaries(sources, work)
+        print(f"live views: {json.dumps(live)}", flush=True)
+        print(f"probe classes: {json.dumps(classified)}", flush=True)
         busy = aggregate_budget_canary(work, sources["buggy"])
         print(f"aggregate budget: {json.dumps(busy)}", flush=True)
         isolation = isolation_canaries(sources, work)
@@ -832,6 +868,15 @@ def canaries(out_dir: Path) -> int:
                                             c.get("fixed_all") or [],
                                             c.get("replay_error"))["kill"]
                              for c in r["confirmations"]) for r in results.values()),
+        "live_view_drift_refused": all(live.values()),
+        "applicability_versus_infrastructure": (
+            classified["crash"] == "eligible" and classified["keyword"] == "eligible"
+            and classified["variadic"] == "atheris_ineligible"
+            and classified["Box.total"] == "atheris_ineligible"
+            and classified["untyped"] == "atheris_ineligible"
+            and classified["runtime_mismatch"] == "infrastructure_failure"
+            and classified["import_failure"] == "infrastructure_failure"
+            and elig["import_failure"]["reason"].startswith("import_failure")),
         "fresh_views_unmutated_by_any_search": all(
             r["views_unchanged"] for r in [*results.values(), *repeat]),
         "repeat_same_seed_mode_independent": all(
@@ -849,7 +894,8 @@ def canaries(out_dir: Path) -> int:
                "canary_budget_cpu_seconds": CANARY_BUDGET_SECONDS,
                "full_budget_cpu_seconds": FULL_BUDGET_CPU_SECONDS, "corpus_cap": CORPUS_CAP,
                "tolerance_rule": "1.0 CPU-second + 2% of the budget",
-               "eligibility": elig, "aggregate_budget": busy, "isolation": isolation,
+               "eligibility": elig, "probe_classes": classified, "live_views": live,
+               "aggregate_budget": busy, "isolation": isolation,
                "results": results, "repeat": repeat, "cgroup_leftovers": leftovers,
                "nobody_processes_after": nobody, "checks": checks,
                "passed": all(checks.values()),
@@ -865,11 +911,40 @@ def canaries(out_dir: Path) -> int:
 
 # --- durable real-panel run (NOT executed: no real-target Atheris is authorised) -------------
 
-def run(prep_path: Path, manifest_path: Path, out: Path, budget: int, seeds,
-        root: Path | None = None) -> int:
-    prepared = gio.resolve_prep(prep_path, manifest_path, root or REPO_ROOT)  # v2.4 C
-    prep = prepared["rows"]
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+def eligibility_entry(key: str, row: dict, info: dict, views: dict) -> dict:
+    status = verdicts.classify_probe(info)
+    return {"target_key": key, "module": row["module"], "qualname": row["qualname"],
+            "status": status,
+            "reason": None if status == "eligible" else (info.get("reason") or "probe_failure"),
+            "plan": info.get("plan") if status == "eligible" else None,
+            "returns": info.get("returns") if status == "eligible" else None,
+            "views": views, "prep_record_sha256": gio.contract_sha(row)}
+
+
+def prepare_contract(prep_path: Path, manifest_path: Path, budget: int, seeds,
+                     root: Path | None = None, probe_fn=None) -> tuple:
+    """Everything the contract binds, established BEFORE any write (amendment v2.4 C/E):
+    the exact preparation file, BOTH live views of all qualified targets re-hashed against
+    their preparation manifests, and a frozen per-target eligibility map from probes on fresh
+    copies of the buggy views."""
+    probe_fn = probe_fn or probe
+    prepared = gio.resolve_prep(prep_path, manifest_path, root or REPO_ROOT)
+    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    qualified = list(manifest["qualified_targets"])
+    live = gio.verify_live_views(prepared["rows"], qualified)
+    eligibility = {}
+    scratch = Path(tempfile.mkdtemp(prefix="oneiros_atheris_probe_"))
+    try:
+        for i, key in enumerate(qualified):
+            row = prepared["rows"][key]
+            view = fresh_view(Path(row["views"]["buggy"]), scratch / f"t{i:02d}")
+            try:
+                info = probe_fn(view, row["module"], row["qualname"])
+            except Exception as exc:                      # noqa: BLE001 - infrastructure
+                info = {"eligible": False, "reason": f"probe_failure:{type(exc).__name__}"}
+            eligibility[key] = eligibility_entry(key, row, info, live[key])
+    finally:
+        shutil.rmtree(scratch, ignore_errors=True)
     contract = {"design_version": DESIGN_VERSION,
                 "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                 "inner_sha256": hashlib.sha256(INNER.read_bytes()).hexdigest(),
@@ -879,7 +954,18 @@ def run(prep_path: Path, manifest_path: Path, out: Path, budget: int, seeds,
                 "manifest_sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
                 "budget_cpu_seconds": budget, "tolerance": tolerance(budget),
                 "seeds": list(seeds), "modes": list(MODES), "corpus_cap": CORPUS_CAP,
-                "python": PYTHON}
+                "python": PYTHON, "live_views": live,
+                "live_views_sha256": gio.contract_sha(live), "eligibility": eligibility,
+                "eligibility_sha256": gio.contract_sha(eligibility)}
+    return contract, prepared, eligibility
+
+
+def run(prep_path: Path, manifest_path: Path, out: Path, budget: int, seeds,
+        root: Path | None = None) -> int:
+    contract, prepared, eligibility = prepare_contract(prep_path, manifest_path, budget, seeds,
+                                                       root)
+    prep = prepared["rows"]
+    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
     chash = hashlib.sha256(json.dumps(contract, sort_keys=True).encode()).hexdigest()
     out.mkdir(parents=True, exist_ok=True)
     cfile = out / "atheris_contract.json"
@@ -901,23 +987,24 @@ def run(prep_path: Path, manifest_path: Path, out: Path, budget: int, seeds,
             raise SystemExit("REFUSED: manifest lacks an explicit qualified_targets cohort")
         for key in manifest["qualified_targets"]:
             row = prep[key]
+            entry = eligibility[key]                   # frozen in the contract (v2.4 E)
             target = {"module": row["module"], "qualname": row["qualname"]}
+            info = {"eligible": True, "plan": entry["plan"], "returns": entry["returns"]}
             sources = {k: Path(v) for k, v in row["views"].items()}
             work = Path(tempfile.mkdtemp(prefix="oneiros_atheris_"))
             try:
-                info = probe(fresh_view(sources["buggy"], work / "probe_view"), row["module"],
-                             row["qualname"])
                 for mode in MODES:
                     for seed in seeds:
                         rkey = f"{key}::{mode}::{seed}"
                         if rkey in done:
                             continue
                         r = (fuzz(mode, sources, target, info, seed, budget, work)
-                             if info.get("eligible") else {"kill": False})
+                             if entry["status"] == "eligible" else {"kill": False})
                         handle.write(json.dumps({"key": rkey, "contract_sha256": chash,
                                                  "target_key": key, "mode": mode, "seed": seed,
-                                                 "eligible": bool(info.get("eligible")),
-                                                 "reason": info.get("reason"), **r},
+                                                 "eligible": entry["status"] == "eligible",
+                                                 "status": entry["status"],
+                                                 "reason": entry["reason"], **r},
                                                 sort_keys=True, default=str) + "\n")
                         handle.flush()
                         os.fsync(handle.fileno())

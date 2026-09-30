@@ -29,7 +29,49 @@ COMPONENTS = ("harness/native_generated_test_prompt.py", "harness/native_generat
               "scripts/native_generated_tests_execute_wsl.py", "scripts/native_sandbox_inner.sh",
               "scripts/native_rehearsal_prepare_wsl.py", "scripts/native_generated_tests_analyse.py",
               "scripts/native_pipeline_synthetic.py", "harness/native_launch_gate.py",
-              "scripts/native_generation_io.py", "scripts/receipt_sanitize.py")
+              "scripts/native_generation_io.py", "scripts/receipt_sanitize.py",
+              "scripts/native_execution_results.py", "scripts/gpu_run.py")
+CANARY_DIR = ROOT / "results" / "sft_root_cause" / "native_v24_canaries"
+LOCK_RACER = r'''
+import json, sys, time, uuid
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from scripts import gpu_run
+runs, go = Path(sys.argv[2]), Path(sys.argv[3])
+while not go.exists():
+    pass
+held = gpu_run.acquire_exclusive("native_v24_generation", runs, sys.argv[4], uuid.uuid4().hex)
+print(json.dumps({"won": held is not None}))
+sys.stdout.flush()
+time.sleep(3)
+'''
+
+
+def exclusive_lock_canary(rounds: int = 4, racers: int = 5) -> dict:
+    """v2.4 I.1: genuinely concurrent starters race for one exclusive key; exactly one wins."""
+    import shutil
+    import sys
+    import tempfile
+    import time
+    work = Path(tempfile.mkdtemp(prefix="oneiros_lock_canary_"))
+    winners = []
+    try:
+        script = work / "racer.py"
+        script.write_text(LOCK_RACER, encoding="utf-8")
+        for r in range(rounds):
+            runs, go = work / f"runs{r}", work / f"go{r}"
+            runs.mkdir()
+            procs = [subprocess.Popen([sys.executable, str(script), str(ROOT), str(runs), str(go),
+                                       f"racer{i}"], stdout=subprocess.PIPE, text=True)
+                     for i in range(racers)]
+            time.sleep(1.5)
+            go.write_text("go")
+            winners.append(sum(json.loads(p.communicate(timeout=120)[0].strip().splitlines()[-1])
+                               ["won"] for p in procs))
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
+    return {"rounds": rounds, "racers": racers, "winners": winners,
+            "ok": winners == [1] * rounds}
 
 # slot -> (designed candidate for "add", expected class; for "crash" the kill slot differs)
 DESIGN = {
@@ -158,33 +200,71 @@ def main() -> int:
     checks["kills_rerun_and_fixed_valid"] = all(
         r["classification"].get("rerun_agrees") is True and r["fixed_valid"]
         for r in rows if r["class"] in ("semantic_kill", "crash_kill"))
+    # synthetic gate evidence: the real, current sandbox and Atheris canary receipts and an
+    # empty synthetic ledger; no full-suite or pipeline receipt can exist yet, and synthetic
+    # evidence is never a v2.4 preflight - so the stage-receipt subgate must fail
+    ledger = OUT / "quarantine_ledger.json"
+    ledger.write_bytes((json.dumps({"schema_version": analysis.LEDGER_SCHEMA, "entries": []},
+                                   indent=1) + "\n").encode("utf-8"))
+    receipts = {}
+    for kind, name in (("sandbox_canaries", "canary_receipt_v2.json"),
+                       ("atheris_canaries", "atheris_canary_receipt_v3.json")):
+        path = CANARY_DIR / name
+        if path.is_file():
+            receipts[kind] = {"path": path.relative_to(ROOT).as_posix(),
+                              "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+    evidence = OUT / "synthetic_gate_evidence.json"
+    evidence.write_bytes((json.dumps({
+        "schema_version": analysis.SYNTHETIC_EVIDENCE_SCHEMA,
+        "gate_evidence": {"receipts": receipts, "quarantine_ledger": {
+            "path": ledger.relative_to(ROOT).as_posix(),
+            "sha256": hashlib.sha256(ledger.read_bytes()).hexdigest()}}}, indent=1)
+        + "\n").encode("utf-8"))
     artifact = OUT / "analysis.json"
     try:
         analysis.main(["analyse", "--manifest", str(cohort_manifest), "--job", str(job_file),
-                       "--results",
-                       str(results_dir / "results_primary_whole_module.jsonl"),
-                       "--condition", "primary_whole_module",
+                       "--prep", str(records), "--preflight", str(evidence),
+                       "--execution-contract",
+                       str(results_dir / "execute_contract_primary_whole_module.json"),
+                       "--results", str(results_dir / "results_primary_whole_module.jsonl"),
+                       "--generations", str(gen_dir), "--condition", "primary_whole_module",
                        "--study-mode", "engineering_dress_rehearsal", "--out", str(artifact)])
         result = json.loads(artifact.read_text(encoding="utf-8"))
-        # the 2-target, 1-repository toy must FAIL the inherited coverage gate (v2.4 G), so
-        # every arm comparison is suppressed; kill correctness is checked on the rows above
+        gate = result["engineering_gate"]
+        # the 2-target, 1-repository toy must FAIL coverage/repositories (v2.4 G), and the
+        # synthetic evidence must fail the stage-receipt subgate, while every other subgate is
+        # really evaluated and passes; every arm comparison is suppressed
         checks["analysis_engineering_mode"] = (
             "SUPPRESSED" in result["decisions"]
             and result["engineering_gate_passed"] is False
-            and result["engineering_gate"]["failures"] == ["1 repositories (< 5)"]
+            and gate["subgates"] == {"coverage_gate_passed": False,
+                                     "repository_gate_passed": False,
+                                     "stage_receipts_gate_passed": False,
+                                     "canaries_gate_passed": True,
+                                     "artifact_integrity_gate_passed": True,
+                                     "unexplained_failures_gate_passed": True}
+            and sorted(gate["evidence_problems"]["stage_receipts"]) == [
+                "full_suite: missing", "synthetic_pipeline: missing"]
+            and gate["evidence_problems"]["preflight"] == [
+                "synthetic evidence is not a v2.4 preflight"]
             and result["arm_comparison"].startswith("SUPPRESSED")
             and "unique_bugs_killed" not in result and "kill_at_8" not in result
             and result["cohort"]["generation_targets"] == 2
             and "generation_telemetry" in result)
-        checks["sft_kills_both_toy_targets"] = sorted(
-            {r["target_key"] for r in rows if r["arm"] == "sft" and r["class"] in
-             ("semantic_kill", "crash_kill")}) == sorted(i["target_key"] for i in job["items"])             and not any(r["class"] in ("semantic_kill", "crash_kill")
-                        for r in rows if r["arm"] == "base")
+        if not checks["analysis_engineering_mode"]:
+            print("gate:", json.dumps(gate, default=str)[:1500])
+        killed = sorted({r["target_key"] for r in rows if r["arm"] == "sft"
+                         and r["class"] in ("semantic_kill", "crash_kill")})
+        checks["sft_kills_both_toy_targets"] = killed == sorted(
+            i["target_key"] for i in job["items"]) and not any(
+            r["class"] in ("semantic_kill", "crash_kill") for r in rows if r["arm"] == "base")
     except Exception as exc:
         checks["analysis_engineering_mode"] = False
         print("analysis failed:", exc)
+    lock = exclusive_lock_canary()
+    checks["exclusive_lock_single_winner"] = lock["ok"]
     return finish(checks, {"mismatches": mismatches[:10], "rows": len(rows),
-                           "execution_tail": run.stdout[-500:]})
+                           "execution_tail": run.stdout[-500:], "exclusive_lock": lock})
 
 
 def finish(checks: dict, detail: dict) -> int:

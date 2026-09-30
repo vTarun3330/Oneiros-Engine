@@ -1,8 +1,17 @@
 """Frozen analysis for native generated tests (protocol v2 s2/s8, amendment v2.1 section E,
 amendment v2.3 section D).
 
-    analyse --manifest M --job J --results R --condition primary_whole_module
-            --study-mode {engineering_dress_rehearsal,confirmation} --out FILE [--atheris A]
+    analyse --manifest M --job J --prep P --preflight F --execution-contract C --results R
+            (--generations ROOT | --base-generations B --sft-generations S)
+            --condition primary_whole_module --study-mode engineering_dress_rehearsal
+            --out FILE [--atheris A --atheris-contract AC]
+
+Every input is loaded through its authoritative loader: the exact preparation records, both
+generation arms, the execution contract + results (each row re-bound to its generated
+candidate and re-verified from the actual module), and Atheris contract + results.
+engineering_gate_passed = coverage AND repositories AND stage receipts AND canaries AND
+artifact integrity AND no unexplained failure (amendment v2.4 G); any missing evidence fails
+the gate and suppresses every arm comparison.
 
 Cohorts (v2.3): the analysed grid is exactly the generation cohort resolved from the job
 artifact (scripts/native_generation_io.py) - never all kept/qualified targets. The report
@@ -67,6 +76,17 @@ BOOTSTRAP = {"resamples": 10_000, "seed": 20260930, "level": 0.95}
 VALIDITY_MARGIN = 3.0
 STUDY_MODES = ("engineering_dress_rehearsal", "confirmation")
 GATE = {"min_fraction_of_qualified": 0.90, "min_repositories": 5}
+LEDGER_SCHEMA = "oneiros_native_quarantine_ledger_v1"
+SYNTHETIC_EVIDENCE_SCHEMA = "oneiros_native_synthetic_gate_evidence_v1"
+EVIDENCE_SUBGATES = ("stage_receipts_gate_passed", "canaries_gate_passed",
+                     "artifact_integrity_gate_passed", "unexplained_failures_gate_passed")
+ATHERIS_REQUIRED_CHECKS = (
+    "ordinary_different_exceptions_not_a_kill", "ordinary_raise_versus_ok_is_a_kill",
+    "ordinary_same_exception_not_a_kill", "every_kill_recomputes_from_confirmations",
+    "aggregate_budget_two_busy_children", "worker_and_group_cleanup",
+    "live_view_drift_refused", "applicability_versus_infrastructure")
+STAGE_RECEIPTS = ("full_suite", "synthetic_pipeline")
+CANARY_RECEIPTS = ("sandbox_canaries", "atheris_canaries")
 TELEMETRY_FIELDS = ("generated_tokens", "eos_reached", "finish_reason", "hit_completion_limit",
                     "prompt_tokens", "row_wall_seconds")
 
@@ -258,10 +278,183 @@ def join_atheris(validated: Mapping[str, Any], grid, targets, eligible, qualifie
             "labels": {"differential": "oracle-assisted upper bound"}}}
 
 
+# --- evidence subgates (amendment v2.4 G) --------------------------------------------------
+
+def _file_sha(path: Path) -> str:
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def receipt_problems(kind: str, entry: Mapping[str, Any] | None, artifact_root: Path) -> List[str]:
+    """A receipt counts only if it exists at a safe path, its bytes hash to the recorded value,
+    its schema is right, it passed, and it is bound to the CURRENT source."""
+    from harness.native_launch_gate import safe_input, source_identity
+    if not entry or not entry.get("path") or not entry.get("sha256"):
+        return [f"{kind}: missing"]
+    path = safe_input(artifact_root, entry["path"])
+    if path is None:
+        return [f"{kind}: unsafe path"]
+    if not path.is_file():
+        return [f"{kind}: file missing"]
+    if _file_sha(path) != entry["sha256"]:
+        return [f"{kind}: bytes differ from the preflight hash"]
+    try:
+        r = json.loads(path.read_text(encoding="utf-8"))
+    except ValueError:
+        return [f"{kind}: malformed"]
+    scripts = ROOT / "scripts"
+    bad = []
+    if kind == "full_suite":
+        if r.get("schema_version") != "oneiros_native_full_suite_receipt_v2":
+            bad.append("schema")
+        if not (r.get("exit") == 0 and r.get("failed") == 0 and (r.get("passed") or 0) > 0
+                and r.get("tree_clean_at_start") is True):
+            bad.append("not passed")
+        if r.get("executable_tree_sha256") != source_identity(ROOT)["executable_tree_sha256"]:
+            bad.append("not bound to the current source")
+    elif kind == "synthetic_pipeline":
+        from scripts.native_pipeline_synthetic import COMPONENTS
+        if r.get("schema_version") != "oneiros_native_pipeline_synthetic_v1":
+            bad.append("schema")
+        if r.get("passed") is not True:
+            bad.append("not passed")
+        comps = r.get("components_sha256") or {}
+        if set(comps) != set(COMPONENTS) or any(_file_sha(ROOT / c) != h for c, h in comps.items()):
+            bad.append("not bound to the current source")
+    elif kind == "sandbox_canaries":
+        if r.get("schema_version") != "oneiros_native_sandbox_canaries_v2":
+            bad.append("schema")
+        if r.get("passed") is not True:
+            bad.append("not passed")
+        if (r.get("executor_sha256"), r.get("inner_sha256"), r.get("prepare_sha256")) != (
+                _file_sha(scripts / "native_generated_tests_execute_wsl.py"),
+                _file_sha(scripts / "native_sandbox_inner.sh"),
+                _file_sha(scripts / "native_rehearsal_prepare_wsl.py")):
+            bad.append("not bound to the current source")
+    elif kind == "atheris_canaries":
+        from scripts.native_atheris_results import DESIGN_VERSION
+        if r.get("schema_version") != "oneiros_native_atheris_canaries_v3" or \
+                r.get("design_version") != DESIGN_VERSION:
+            bad.append("schema")
+        checks = r.get("checks") or {}
+        if r.get("passed") is not True or not all(checks.get(k) is True
+                                                  for k in ATHERIS_REQUIRED_CHECKS):
+            bad.append("not passed")
+        if (r.get("script_sha256"), r.get("inner_sha256"), r.get("verdicts_sha256")) != (
+                _file_sha(scripts / "native_generated_tests_atheris_wsl.py"),
+                _file_sha(scripts / "native_sandbox_inner.sh"),
+                _file_sha(scripts / "native_atheris_results.py")):
+            bad.append("not bound to the current source")
+    else:
+        bad.append("unknown receipt kind")
+    return [f"{kind}: {b}" for b in bad]
+
+
+def ledger_problems(entry: Mapping[str, Any] | None, artifact_root: Path,
+                    quarantined: Mapping[str, str]) -> List[str]:
+    """Every quarantined artifact must be explained by a complete ledger entry."""
+    from harness.native_launch_gate import safe_input
+    if not entry or not entry.get("path") or not entry.get("sha256"):
+        return ["quarantine ledger: missing"]
+    path = safe_input(artifact_root, entry["path"])
+    if path is None or not path.is_file() or _file_sha(path) != entry["sha256"]:
+        return ["quarantine ledger: missing or differs from the preflight hash"]
+    try:
+        ledger = json.loads(path.read_text(encoding="utf-8"))
+    except ValueError:
+        return ["quarantine ledger: malformed"]
+    if ledger.get("schema_version") != LEDGER_SCHEMA or not isinstance(ledger.get("entries"), list):
+        return ["quarantine ledger: schema"]
+    problems, explained = [], set()
+    for i, e in enumerate(ledger["entries"]):
+        sup = e.get("superseded_by") or {}
+        if not all(isinstance(e.get(f), str) and e.get(f) for f in
+                   ("artifact", "sha256", "reason", "corrective_change")) or \
+                not sup.get("path") or not sup.get("sha256"):
+            problems.append(f"quarantine ledger entry {i}: incomplete")
+            continue
+        artifact = safe_input(artifact_root, e["artifact"])
+        if artifact is not None and artifact.is_file() and _file_sha(artifact) != e["sha256"]:
+            problems.append(f"quarantine ledger entry {i}: artifact hash differs")
+        superseding = safe_input(artifact_root, sup["path"])
+        if superseding is None or not superseding.is_file() or \
+                _file_sha(superseding) != sup["sha256"]:
+            problems.append(f"quarantine ledger entry {i}: superseding artifact missing or differs")
+        explained.add(e["sha256"])
+    for rel, sha in sorted(quarantined.items()):
+        if sha not in explained:
+            problems.append(f"unexplained quarantined artifact: {rel}")
+    return problems
+
+
+def evaluate_evidence(preflight_path: Path, artifact_root: Path, *, job_path: Path,
+                      manifest_path: Path, synthetic_allowed: bool,
+                      quarantined: Mapping[str, str]) -> Dict[str, Any]:
+    """Stage-receipt, canary and unexplained-failure subgates from the exact v2.4 preflight
+    (or, for the synthetic pipeline only, explicitly synthetic evidence that can never pass
+    the stage-receipt subgate)."""
+    from harness import native_launch_gate as gate
+    problems: Dict[str, List[str]] = {"preflight": [], "stage_receipts": [], "canaries": [],
+                                      "unexplained_failures": []}
+    try:
+        pre = json.loads(Path(preflight_path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        pre = {}
+        problems["preflight"].append("preflight missing or malformed")
+    real = pre.get("schema_version") == gate.PREFLIGHT_SCHEMA
+    if real:
+        if pre.get("pipeline_ready") is not True:
+            problems["preflight"].append("preflight not pipeline_ready")
+        problems["preflight"] += gate.input_problems(artifact_root, pre)
+        for field, given in (("job", job_path), ("manifest", manifest_path)):
+            named = gate.safe_input(artifact_root, (pre.get(field) or {}).get("path"))
+            if named is None or named.resolve() != Path(given).resolve():
+                problems["preflight"].append(f"preflight names a different {field}")
+    elif pre.get("schema_version") == SYNTHETIC_EVIDENCE_SCHEMA and synthetic_allowed:
+        problems["preflight"].append("synthetic evidence is not a v2.4 preflight")
+    elif pre:
+        problems["preflight"].append(f"preflight schema {pre.get('schema_version')!r}")
+    evidence = pre.get("gate_evidence") or {}
+    receipts = evidence.get("receipts") or {}
+    inputs = pre.get("inputs") or {}
+
+    def bound(entry):
+        return not real or (entry and inputs.get(entry.get("path")) == entry.get("sha256"))
+    for kind in STAGE_RECEIPTS + CANARY_RECEIPTS:
+        entry = receipts.get(kind)
+        found = receipt_problems(kind, entry, artifact_root)
+        if not found and not bound(entry):
+            found = [f"{kind}: not bound by the preflight inputs"]
+        problems["stage_receipts" if kind in STAGE_RECEIPTS else "canaries"] += found
+    ledger = evidence.get("quarantine_ledger")
+    problems["unexplained_failures"] += ledger_problems(ledger, artifact_root, quarantined)
+    if not problems["unexplained_failures"] and not bound(ledger):
+        problems["unexplained_failures"].append("quarantine ledger not bound by the preflight")
+    return {"stage_receipts_gate_passed": not problems["preflight"] and not problems["stage_receipts"],
+            "canaries_gate_passed": not problems["canaries"],
+            "unexplained_failures_gate_passed": not problems["unexplained_failures"],
+            "problems": {k: v for k, v in problems.items() if v}}
+
+
+def quarantined_artifacts(artifact_root: Path, dirs: Sequence[Path]) -> Dict[str, str]:
+    out = {}
+    for d in dirs:
+        q = Path(d) / "quarantine"
+        if q.is_dir():
+            for f in sorted(q.rglob("*")):
+                if f.is_file():
+                    try:
+                        rel = f.resolve().relative_to(Path(artifact_root).resolve()).as_posix()
+                    except ValueError:
+                        rel = f.as_posix()
+                    out[rel] = _file_sha(f)
+    return out
+
+
 def analyse(records: Iterable[Mapping[str, Any]], targets: Sequence[str],
             repo_of: Mapping[str, str], study_mode: str,
             atheris: Mapping[str, Any] | None = None,
-            cohort: Mapping[str, Any] | None = None) -> Dict[str, Any]:
+            cohort: Mapping[str, Any] | None = None,
+            evidence_gates: Mapping[str, Any] | None = None) -> Dict[str, Any]:
     """``targets`` is the generation cohort. With ``cohort`` (from resolve_cohort) it must be
     exactly the job's generation targets and the report carries the 24/23/1 breakdown."""
     if study_mode not in STUDY_MODES:
@@ -287,10 +480,21 @@ def analyse(records: Iterable[Mapping[str, Any]], targets: Sequence[str],
                              f"(< {need})")
     if len(repositories) < GATE["min_repositories"]:
         gate_failures.append(f"{len(repositories)} repositories (< {GATE['min_repositories']})")
+    evidence_gates = dict(evidence_gates or {})          # absent evidence fails closed
+    subgates = {"coverage_gate_passed": len(eligible) >= need,
+                "repository_gate_passed": len(repositories) >= GATE["min_repositories"],
+                **{k: evidence_gates.get(k) is True for k in EVIDENCE_SUBGATES}}
+    for k in EVIDENCE_SUBGATES:
+        if not subgates[k]:
+            gate_failures.append(f"{k[:-7]} not established" +
+                                 (": " + "; ".join(sum((evidence_gates.get("problems") or {})
+                                                       .values(), []))[:300]
+                                  if evidence_gates.get("problems") else ""))
     gate = {**GATE, "qualified": qualified_n, "required_eligible": need,
             "eligible": len(eligible), "repositories": len(repositories),
-            "represented_repositories": repositories, "failures": gate_failures,
-            "passed": not gate_failures}
+            "represented_repositories": repositories, "subgates": subgates,
+            "evidence_problems": evidence_gates.get("problems") or {},
+            "failures": gate_failures, "passed": all(subgates.values())}
     result: Dict[str, Any] = {"analysis_version": ANALYSIS_VERSION, "study_mode": study_mode,
                               "unit": "target (seeds averaged; never pooled)",
                               "cohort": {
@@ -357,34 +561,31 @@ def analyse(records: Iterable[Mapping[str, Any]], targets: Sequence[str],
     return result
 
 
-def main(argv=None) -> int:
+def main(argv=None, root: Path | None = None) -> int:
     from harness.atomic_publish import publish_file_atomically
+    from scripts import native_generation_io as gio
+    from scripts.native_execution_results import load_execution
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("command", choices=("analyse",))
     parser.add_argument("--manifest", required=True)
     parser.add_argument("--job", required=True)
+    parser.add_argument("--prep", required=True, help="the manifest-declared records.jsonl")
+    parser.add_argument("--preflight", required=True, help="the v2.4 preflight receipt")
+    parser.add_argument("--execution-contract", required=True)
     parser.add_argument("--results", required=True)
+    parser.add_argument("--generations", default=None, help="root containing base/ and sft/")
+    parser.add_argument("--base-generations", default=None)
+    parser.add_argument("--sft-generations", default=None)
     parser.add_argument("--condition", required=True, choices=("primary_whole_module",))
     parser.add_argument("--study-mode", required=True, choices=STUDY_MODES)
     parser.add_argument("--out", required=True)
     parser.add_argument("--atheris", default=None, help="Atheris results JSONL")
     parser.add_argument("--atheris-contract", default=None, help="its atheris_contract.json")
     args = parser.parse_args(argv)
+    artifact_root = Path(root or ROOT)
     manifest = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
-    rows = [json.loads(l) for l in Path(args.results).read_text(encoding="utf-8").splitlines()
-            if l.strip()]
-    contracts = {r.get("contract_sha256") for r in rows}
-    if len(contracts) != 1:
-        raise AnalysisRefused("results mix execution contracts (stale rows)")
-    from scripts.native_generated_tests_execute_wsl import verify_row
-    for r in rows:                      # v2.4 D: every class recomputed from its evidence
-        problems = verify_row(r)
-        if problems:
-            raise AnalysisRefused(f"row {r.get('key')} fails evidence verification: "
-                                  f"{problems[:3]}")
-    from scripts.native_generation_io import resolve_cohort
-    cohort = resolve_cohort(Path(args.job), Path(args.manifest), args.condition)
+    cohort = gio.resolve_cohort(Path(args.job), Path(args.manifest), args.condition)
     targets = cohort["generation"]
     repo_of = cohort["repo_of"]
     declared = cohort.get("study_mode")                 # v2.4 F: the manifest decides
@@ -398,34 +599,60 @@ def main(argv=None) -> int:
                 hashlib.sha256(path.read_bytes()).hexdigest() != freeze["sha256"]:
             raise AnalysisRefused("confirmation needs a separately frozen confirmation manifest "
                                   "and authorisation; none is bound")
+    opt = lambda value: Path(value) if value else None  # noqa: E731
+    try:                                  # every artifact through its authoritative loader
+        prepared = gio.resolve_prep(Path(args.prep), Path(args.manifest), artifact_root)
+        arm_paths = gio.arm_paths(opt(args.generations), opt(args.base_generations),
+                                  opt(args.sft_generations), args.condition)
+        generations = gio.load_arm_generations(arm_paths, cohort)
+        execution = load_execution(Path(args.results), Path(args.execution_contract),
+                                   cohort=cohort, prepared=prepared, generations=generations)
+    except SystemExit as exc:
+        raise AnalysisRefused(str(exc)) from None
     atheris = None
     if args.atheris or args.atheris_contract:
         if not (args.atheris and args.atheris_contract):
             raise AnalysisRefused("Atheris results and contract must be given together")
         from scripts.native_atheris_results import load_results
         scripts = ROOT / "scripts"
-        atheris = load_results(
-            Path(args.atheris), Path(args.atheris_contract), qualified=cohort["qualified"],
-            manifest_sha256=cohort["manifest_sha256"],
-            prep=cohort["requalification_records"] or {},
-            script_sha256=hashlib.sha256((scripts / "native_generated_tests_atheris_wsl.py")
-                                         .read_bytes()).hexdigest(),
-            inner_sha256=hashlib.sha256((scripts / "native_sandbox_inner.sh").read_bytes()).hexdigest(),
-            verdicts_sha256=hashlib.sha256((scripts / "native_atheris_results.py")
-                                           .read_bytes()).hexdigest())
-    result = analyse(rows, targets, repo_of, args.study_mode, atheris, cohort)
-    result["inputs"] = {name: hashlib.sha256(Path(p).read_bytes()).hexdigest()
+        try:
+            atheris = load_results(
+                Path(args.atheris), Path(args.atheris_contract), qualified=cohort["qualified"],
+                manifest_sha256=cohort["manifest_sha256"],
+                prep={"path": prepared["path"], "sha256": prepared["sha256"]},
+                prep_rows=prepared["rows"],
+                script_sha256=_file_sha(scripts / "native_generated_tests_atheris_wsl.py"),
+                inner_sha256=_file_sha(scripts / "native_sandbox_inner.sh"),
+                verdicts_sha256=_file_sha(scripts / "native_atheris_results.py"))
+        except SystemExit as exc:
+            raise AnalysisRefused(str(exc)) from None
+    quarantined = quarantined_artifacts(
+        artifact_root, [arm_paths["base"]["dir"], arm_paths["sft"]["dir"],
+                        Path(args.results).parent])
+    evidence = evaluate_evidence(Path(args.preflight), artifact_root, job_path=Path(args.job),
+                                 manifest_path=Path(args.manifest),
+                                 synthetic_allowed="SYNTHETIC" in str(cohort.get("nature")),
+                                 quarantined=quarantined)
+    evidence["artifact_integrity_gate_passed"] = True   # every loader above succeeded
+    result = analyse(execution["rows"], targets, repo_of, args.study_mode, atheris, cohort,
+                     evidence)
+    result["inputs"] = {name: _file_sha(Path(p))
                         for name, p in (("manifest", args.manifest), ("job", args.job),
+                                        ("prep", args.prep), ("preflight", args.preflight),
+                                        ("execution_contract", args.execution_contract),
                                         ("results", args.results), ("atheris", args.atheris),
                                         ("atheris_contract", args.atheris_contract)) if p}
+    result["generations"] = {"files_sha256": generations["files_sha256"],
+                             "contracts_sha256": generations["contracts_sha256"]}
     result["job_sha256"] = cohort["job_sha256"]
-    result["execution_contract_sha256"] = contracts.pop()
+    result["execution_contract_sha256"] = execution["contract_sha256"]
+    result["quarantined_artifacts"] = quarantined
     result["condition"] = args.condition
     publish_file_atomically(Path(args.out), (json.dumps(result, indent=1, sort_keys=True)
                                              + "\n").encode("utf-8"))
     print(json.dumps({"out": args.out, "eligible_targets": result["eligible_targets"],
-                      "cohort": {k: v for k, v in result["cohort"].items()
-                                 if k != "pre_generation_exclusions"},
+                      "engineering_gate_passed": result["engineering_gate_passed"],
+                      "subgates": result["engineering_gate"]["subgates"],
                       "study_mode": args.study_mode}))
     return 0
 

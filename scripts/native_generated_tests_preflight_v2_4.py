@@ -49,9 +49,10 @@ ISOLATION = "results/sft_root_cause_native_v21_isolation_v6.json"
 SUITE = "results/sft_root_cause/native_v24_full_suite.json"
 CANARY_DIR = "results/sft_root_cause/native_v24_canaries"
 GENERATIONS = "results/sft_root_cause/native_v24_generations"
+LEDGER = "results/sft_root_cause_native_v24_quarantine_ledger.json"
 TRACKED_RECEIPTS = (SUITE, f"{CANARY_DIR}/pipeline_receipt.json",
                     f"{CANARY_DIR}/canary_receipt_v2.json",
-                    f"{CANARY_DIR}/atheris_canary_receipt_v3.json")
+                    f"{CANARY_DIR}/atheris_canary_receipt_v3.json", LEDGER)
 CONDITION = "primary_whole_module"
 EXPECTED_COUNTS = {"qualified": 24, "generation": 23, "pre_generation_excluded": 1}
 EXPECTED_CANDIDATES = 1104
@@ -59,14 +60,16 @@ CLIS = ("scripts/native_generated_tests_generate.py", "scripts/native_generated_
         "scripts/native_generated_tests_atheris_wsl.py", "scripts/native_generated_tests_analyse.py",
         "scripts/native_generated_tests_launch_gate.py", "scripts/native_rehearsal_rebuild_v22.py",
         "scripts/native_rehearsal_rebuild_v23.py", "scripts/native_rehearsal_rebuild_v24.py",
-        "scripts/gpu_run.py")
+        "scripts/gpu_run.py", "scripts/native_quarantine_ledger_v24.py")
 FOCUSED_TESTS = ("tests/test_native_generated_generate.py", "tests/test_native_generated_execute.py",
                  "tests/test_native_generated_analyse.py", "tests/test_native_generated_prompt.py",
                  "tests/test_native_generated_prompt_v2.py",
                  "tests/test_native_generated_leakage_v2.py",
                  "tests/test_native_generated_atheris.py", "tests/test_native_launch_gate.py",
                  "tests/test_native_v23_cohort_pipeline.py", "tests/test_gpu_run_exclusive.py",
-                 "tests/test_gpu_run.py", "tests/test_native_historical_scripts.py")
+                 "tests/test_gpu_run.py", "tests/test_native_historical_scripts.py",
+                 "tests/test_native_v24_conformance.py", "tests/test_gpu_run_atomic_lock.py",
+                 "tests/test_full_suite_receipt_lf.py")
 FROZEN_CONTRACT = {
     "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
     "base_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
@@ -170,42 +173,30 @@ def main(argv=None) -> int:
             and ATHERIS_DESIGN == "oneiros_native_generated_tests_atheris_v4")
     require("protocol_and_amendments_present",
             len(identity["protocol_sha256"]) == len(gate.PROTOCOL_FILES) == 5)
-    tracked = {rel: bool(git("ls-files", "--error-unmatch", rel)) for rel in TRACKED_RECEIPTS}
+    tracked = {rel: bool(git("ls-files", rel)) for rel in TRACKED_RECEIPTS}
     require("reproducibility_receipts_tracked_and_pushed", all(tracked.values())
             and not git("status", "--porcelain", "--", *TRACKED_RECEIPTS), tracked)
     exposed = {rel: check_file(ROOT / rel) for rel in TRACKED_RECEIPTS if (ROOT / rel).is_file()}
     require("tracked_receipts_contain_no_paths_secrets_or_protected_data",
-            len(exposed) == 4 and not any(exposed.values()),
+            len(exposed) == len(TRACKED_RECEIPTS) and not any(exposed.values()),
             {k: v for k, v in exposed.items() if v} or None)
-    # 5. canaries bound to the current source
-    receipts = {
-        "synthetic_pipeline": f"{CANARY_DIR}/pipeline_receipt.json",
-        "sandbox_canaries": f"{CANARY_DIR}/canary_receipt_v2.json",
-        "atheris_canaries": f"{CANARY_DIR}/atheris_canary_receipt_v3.json"}
-    for name, rel in receipts.items():
-        receipt = load(rel) if (ROOT / rel).exists() else {}
-        if name == "synthetic_pipeline":
-            bound = bool(receipt.get("components_sha256")) and all(
-                sha(c) == h for c, h in receipt["components_sha256"].items()) \
-                and "scripts/native_generation_io.py" in receipt["components_sha256"] \
-                and "scripts/receipt_sanitize.py" in receipt["components_sha256"]
-        elif name == "sandbox_canaries":
-            bound = receipt.get("executor_sha256") == sha("scripts/native_generated_tests_execute_wsl.py") \
-                and receipt.get("inner_sha256") == sha("scripts/native_sandbox_inner.sh") \
-                and receipt.get("prepare_sha256") == sha("scripts/native_rehearsal_prepare_wsl.py")
-        else:
-            bound = receipt.get("script_sha256") == sha("scripts/native_generated_tests_atheris_wsl.py") \
-                and receipt.get("inner_sha256") == sha("scripts/native_sandbox_inner.sh") \
-                and receipt.get("verdicts_sha256") == sha("scripts/native_atheris_results.py") \
-                and receipt.get("design_version") == ATHERIS_DESIGN
-            checks_ok = receipt.get("checks") or {}
-            bound = bound and all(checks_ok.get(k) is True for k in (
-                "ordinary_different_exceptions_not_a_kill", "ordinary_raise_versus_ok_is_a_kill",
-                "ordinary_same_exception_not_a_kill", "every_kill_recomputes_from_confirmations",
-                "aggregate_budget_two_busy_children", "worker_and_group_cleanup"))
-        require(f"{name}_passed_for_current_source", receipt.get("passed") is True and bound,
-                None if receipt.get("passed") else
-                [k for k, v in (receipt.get("checks") or {}).items() if not v])
+    # 5. every gate receipt and the quarantine ledger, validated by the SAME validators the
+    #    analysis applies (amendment v2.4 G); the preflight binds them as gate_evidence
+    from scripts import native_generated_tests_analyse as an
+    gate_receipts = {"full_suite": suite_rel,
+                     "synthetic_pipeline": f"{CANARY_DIR}/pipeline_receipt.json",
+                     "sandbox_canaries": f"{CANARY_DIR}/canary_receipt_v2.json",
+                     "atheris_canaries": f"{CANARY_DIR}/atheris_canary_receipt_v3.json"}
+    gate_evidence = {
+        "receipts": {k: {"path": rel, "sha256": sha(rel)} for k, rel in gate_receipts.items()
+                     if (ROOT / rel).is_file()},
+        "quarantine_ledger": ({"path": LEDGER, "sha256": sha(LEDGER)}
+                              if (ROOT / LEDGER).is_file() else None)}
+    for kind in gate_receipts:
+        found = an.receipt_problems(kind, gate_evidence["receipts"].get(kind), ROOT)
+        require(f"{kind}_receipt_valid_for_current_source", not found, found or None)
+    found = an.ledger_problems(gate_evidence["quarantine_ledger"], ROOT, {})
+    require("quarantine_ledger_complete_and_bound", not found, found or None)
     # 6. prompts, v2.2 job and v2.3 successors reproduce byte for byte
     for script in ("scripts/native_rehearsal_rebuild_v22.py", "scripts/native_rehearsal_rebuild_v23.py",
                    "scripts/native_rehearsal_rebuild_v24.py"):
@@ -255,9 +246,17 @@ def main(argv=None) -> int:
                 and "confirmation_authorization" not in manifest)
         require("coverage_gate_declared", manifest.get("coverage_gate", {}) .get("required_eligible") == 22
                 and manifest["coverage_gate"].get("min_repositories") == 5)
-        require("sequential_exclusive_launch_contract", manifest.get("launch_contract") == {
-            "order": ["base", "sft"], "exclusive_key": EXCLUSIVE_KEY,
-            "sft_requires_verified_base": True, "allow_concurrent": False})
+        from scripts import native_rehearsal_rebuild_v24 as v24
+        require("atomic_sequential_launch_contract",
+                manifest.get("launch_contract") == v24.LAUNCH_CONTRACT
+                and v24.LAUNCH_CONTRACT["exclusive_key"] == EXCLUSIVE_KEY)
+        require("live_view_policy_and_analysis_contract",
+                manifest.get("live_view_policy") == v24.LIVE_VIEW_POLICY
+                and manifest.get("engineering_gate_requirements")
+                == v24.ENGINEERING_GATE_REQUIREMENTS
+                and manifest.get("analysis_contract") == v24.ANALYSIS_CONTRACT
+                and manifest.get("telemetry") == {"schema": TELEMETRY_SCHEMA,
+                                                  "generator_version": GENERATOR_VERSION})
         require("generation_output_layout", manifest["generation_outputs"] == {
             "base": f"{GENERATIONS}/base", "sft": f"{GENERATIONS}/sft"})
         require("source_manifest_and_target_set",
@@ -299,7 +298,7 @@ def main(argv=None) -> int:
     items = len(job.get("items", []))
     candidates = 2 * items * len(FROZEN_CONTRACT["seeds"]) * FROZEN_CONTRACT["candidates"]
     inputs = (MANIFEST, JOB, V23_MANIFEST, V23_JOB, V22_MANIFEST, V22_JOB, PROMPTS, ISOLATION,
-              PREP, suite_rel,
+              PREP, suite_rel, LEDGER,
               *(f"{CANARY_DIR}/{n}" for n in ("pipeline_receipt.json", "canary_receipt_v2.json",
                                               "atheris_canary_receipt_v3.json")))
     receipt = {
@@ -331,6 +330,18 @@ def main(argv=None) -> int:
         "model": model, "adapter_manifest_sha256": adapter_sha256(),
         "generation_contract": FROZEN_CONTRACT,
         "inputs": {rel: sha(rel) for rel in inputs if (ROOT / rel).exists()},
+        "gate_evidence": gate_evidence,
+        "live_view_policy": manifest.get("live_view_policy"),
+        "engineering_gate_requirements": manifest.get("engineering_gate_requirements"),
+        "analysis_contract": manifest.get("analysis_contract"),
+        "proposed_analysis_NOT_EXECUTED": (
+            f".venv-gpu/Scripts/python.exe scripts/native_generated_tests_analyse.py analyse "
+            f"--manifest {MANIFEST} --job {JOB} --prep {PREP} --preflight {out_rel} "
+            f"--execution-contract results/sft_root_cause/native_v24_execution/"
+            f"execute_contract_{CONDITION}.json --results results/sft_root_cause/native_v24_execution/"
+            f"results_{CONDITION}.jsonl --generations {GENERATIONS} --condition {CONDITION} "
+            f"--study-mode engineering_dress_rehearsal --out results/sft_root_cause/"
+            f"native_v24_analysis.json"),
         "proposed_gpu_commands_NOT_EXECUTED": [
             f".venv-gpu/Scripts/python.exe scripts/gpu_run.py start --name native_v24_generate_{arm} "
             f"--exclusive-key {EXCLUSIVE_KEY} "

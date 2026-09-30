@@ -50,7 +50,7 @@ def test_a_live_run_with_the_same_key_blocks(runs, monkeypatch):
     _existing(runs, "base", KEY, {"state": "running", "supervisor_pid": 11, "child_pid": 12})
     monkeypatch.setattr(gpu_run, "_pid_alive", lambda pid: pid == 12)
     assert _start() == 4
-    assert [p.name for p in runs.iterdir()] == ["base"]
+    assert [p.name for p in runs.iterdir() if not p.name.startswith(".")] == ["base"]
 
 
 def test_allow_concurrent_does_not_override_the_exclusive_key(runs, monkeypatch):
@@ -68,7 +68,7 @@ def test_unknown_state_blocks_fail_closed(runs):
 def test_finished_runs_do_not_block(runs, state):
     _existing(runs, "base", KEY, {"state": state, "supervisor_pid": 11, "child_pid": 12})
     assert _start() == 0
-    new = [p for p in runs.iterdir() if p.name != "base"]
+    new = [p for p in runs.iterdir() if p.name != "base" and not p.name.startswith(".")]
     assert json.loads((new[0] / "manifest.json").read_text())["exclusive_key"] == KEY
 
 
@@ -89,7 +89,8 @@ def test_the_key_never_invokes_the_training_artifact_validator(runs, monkeypatch
     called = []
     monkeypatch.setattr(gpu_run, "validate_artifacts", lambda *a, **k: called.append(a))
     assert _start() == 0
-    manifest = json.loads(next(runs.iterdir()).joinpath("manifest.json").read_text())
+    manifest = json.loads(next(p for p in runs.iterdir() if not p.name.startswith("."))
+                          .joinpath("manifest.json").read_text())
     assert manifest["config_snapshot"]["run_name"] is None and not called
     assert gpu_run.validate_artifacts.__name__ == "<lambda>"
 

@@ -38,6 +38,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -46,6 +47,7 @@ import signal
 import subprocess
 import sys
 import time
+import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -389,7 +391,12 @@ def validate_artifacts(run_name: str | None, phase: str | None = None) -> dict:
 # --------------------------------------------------------------------------
 
 def supervise(run_dir: Path) -> int:
-    """Entry point for the detached supervisor; never fails silently."""
+    """Entry point for the detached supervisor; never fails silently. An exclusive-key
+    reservation owned by this run is released only AFTER the final status is written."""
+    try:
+        owner = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001 - the inner supervisor records the failure
+        owner = {}
     try:
         return _supervise_inner(run_dir)
     except BaseException as exc:  # noqa: BLE001 - must record every failure
@@ -408,6 +415,9 @@ def supervise(run_dir: Path) -> int:
             "traceback": tb.format_exc()[:4000],
         }, indent=2) + "\n", encoding="utf-8")
         raise
+    finally:
+        if owner.get("exclusive_key") and owner.get("exclusive_token"):
+            release_exclusive(owner["exclusive_key"], run_dir.parent, owner["exclusive_token"])
 
 
 def _supervise_inner(run_dir: Path) -> int:
@@ -437,6 +447,11 @@ def _supervise_inner(run_dir: Path) -> int:
             "child_pid": child.pid,
             "start_utc": _utc(),
         }, indent=2) + "\n", encoding="utf-8")
+        if manifest.get("exclusive_key") and manifest.get("exclusive_token"):
+            # the supervisor now owns the reservation for the whole child lifetime
+            renew_exclusive(manifest["exclusive_key"], run_dir.parent,
+                            manifest["exclusive_token"], supervisor_pid=os.getpid(),
+                            child_pid=child.pid)
 
         exit_code = None
         next_sample = 0.0
@@ -531,6 +546,116 @@ def _pid_alive(pid) -> bool:
     return Path(f"/proc/{pid}").exists()
 
 
+EXCLUSIVE_DIR = ".exclusive"
+
+
+def exclusive_lock_path(key: str, runs_dir: Path) -> Path:
+    """The reservation directory for ``key`` (a SHA-256 name: any key is path-safe)."""
+    return Path(runs_dir) / EXCLUSIVE_DIR / hashlib.sha256(key.encode("utf-8")).hexdigest()
+
+
+def _read_owner(lock: Path):
+    try:
+        record = json.loads((lock / "owner.json").read_text(encoding="utf-8"))
+    except Exception:  # noqa: BLE001 - missing or unreadable -> unknown -> fail closed
+        return None
+    return record if isinstance(record, dict) and record.get("token") else None
+
+
+def _write_owner(lock: Path, record: dict) -> None:
+    tmp = lock / f".owner.{os.getpid()}.{time.time_ns()}.tmp"
+    with open(tmp, "w", encoding="utf-8") as handle:
+        handle.write(json.dumps(record, indent=2) + "\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(tmp, lock / "owner.json")
+
+
+def _owner_dead(owner: dict, runs_dir: Path) -> bool:
+    """True only when EVERY recorded process of the reservation is provably dead."""
+    pids = [owner.get(k) for k in ("starter_pid", "supervisor_pid", "child_pid")]
+    status_file = Path(runs_dir) / str(owner.get("run_id")) / "status.json"
+    if status_file.exists():
+        try:
+            status = json.loads(status_file.read_text(encoding="utf-8"))
+        except Exception:  # noqa: BLE001 - unreadable state is unknown -> not provably dead
+            return False
+        pids += [status.get("supervisor_pid"), status.get("child_pid")]
+    pids = [p for p in pids if isinstance(p, int) and p > 0]
+    return bool(pids) and not any(_pid_alive(p) for p in pids)
+
+
+def _recover_stale(key: str, runs_dir: Path, lock: Path) -> bool:
+    """Explicit stale recovery under a separate guard: only after proving every recorded
+    process dead; the old reservation is kept as a tombstone under .exclusive/recovered/."""
+    guard = lock.with_name(lock.name + ".recovering")
+    try:
+        os.mkdir(guard)
+    except FileExistsError:
+        return False
+    try:
+        owner = _read_owner(lock)
+        if owner is None or owner.get("key") != key or not _owner_dead(owner, runs_dir):
+            return False
+        tomb = lock.parent / "recovered"
+        tomb.mkdir(exist_ok=True)
+        try:
+            os.rename(lock, tomb / f"{lock.name}-{time.time_ns()}")
+        except OSError:
+            return False
+        return True
+    finally:
+        try:
+            os.rmdir(guard)
+        except OSError:
+            pass
+
+
+def acquire_exclusive(key: str, runs_dir: Path, run_id: str, token: str):
+    """Atomically reserve ``key`` (os.mkdir). Returns the owner record, or None when another
+    live, unknown or unreadable reservation holds it."""
+    lock = exclusive_lock_path(key, runs_dir)
+    lock.parent.mkdir(parents=True, exist_ok=True)
+    for attempt in range(2):
+        try:
+            os.mkdir(lock)
+        except FileExistsError:
+            if attempt == 0 and _recover_stale(key, runs_dir, lock):
+                continue
+            return None
+        record = {"token": token, "key": key, "run_id": run_id, "starter_pid": os.getpid(),
+                  "created_utc": _utc()}
+        _write_owner(lock, record)
+        return record
+    return None
+
+
+def renew_exclusive(key: str, runs_dir: Path, token: str, **fields) -> bool:
+    lock = exclusive_lock_path(key, runs_dir)
+    owner = _read_owner(lock)
+    if owner is None or owner.get("token") != token:
+        return False
+    _write_owner(lock, {**owner, **fields, "renewed_utc": _utc()})
+    return True
+
+
+def release_exclusive(key: str, runs_dir: Path, token: str) -> bool:
+    """Only the owning token releases; the directory disappears atomically (rename first)."""
+    lock = exclusive_lock_path(key, runs_dir)
+    owner = _read_owner(lock)
+    if owner is None or owner.get("token") != token:
+        return False
+    released = lock.parent / "released"
+    released.mkdir(exist_ok=True)
+    tomb = released / f"{lock.name}-{time.time_ns()}"
+    try:
+        os.rename(lock, tomb)
+    except OSError:
+        return False
+    shutil.rmtree(tomb, ignore_errors=True)
+    return True
+
+
 def exclusive_conflicts(key: str, runs_dir: Path) -> list[dict]:
     """Runs holding the exclusive key ``key`` (amendment v2.4 I.1). A run blocks while it is
     running with a live recorded process, or while its state is unknown (fail-closed).
@@ -541,15 +666,15 @@ def exclusive_conflicts(key: str, runs_dir: Path) -> list[dict]:
         return blocking
     for existing in sorted(runs_dir.iterdir()):
         manifest_file = existing / "manifest.json"
-        if not manifest_file.exists():
+        if existing.name.startswith(".") or not manifest_file.exists():
             continue
         try:
             other = json.loads(manifest_file.read_text(encoding="utf-8"))
         except Exception:
             blocking.append({"run_id": existing.name, "reason": "unreadable manifest"})
             continue
-        if other.get("exclusive_key") != key:
-            continue
+        if other.get("exclusive_key") != key or other.get("exclusive_token"):
+            continue           # reservation-governed runs are covered by the atomic lock
         status_file = existing / "status.json"
         try:
             status = json.loads(status_file.read_text(encoding="utf-8"))
@@ -592,6 +717,8 @@ def cmd_start(args: argparse.Namespace) -> int:
     target_seed = _extract_arg(command, "--seed")
     if target and RUNS_DIR.exists() and not args.allow_concurrent:
         for existing in sorted(RUNS_DIR.iterdir()):
+            if existing.name.startswith("."):
+                continue
             status_file = existing / "status.json"
             manifest_file = existing / "manifest.json"
             if not status_file.exists() or not manifest_file.exists():
@@ -618,25 +745,46 @@ def cmd_start(args: argparse.Namespace) -> int:
                 }, indent=2), file=sys.stderr)
                 return 3
 
+    run_id = f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{args.name}"
     # An exclusive key serialises launches that must never overlap (e.g. the base and SFT
-    # generation arms). --allow-concurrent does NOT override it.
+    # generation arms): an ATOMIC reservation is taken before any inspection or run-directory
+    # creation. --allow-concurrent does NOT override it.
     exclusive_key = getattr(args, "exclusive_key", None)
+    token = None
     if exclusive_key:
-        conflicts = exclusive_conflicts(exclusive_key, RUNS_DIR)
-        if conflicts:
+        token = uuid.uuid4().hex
+        RUNS_DIR.mkdir(parents=True, exist_ok=True)
+        if acquire_exclusive(exclusive_key, RUNS_DIR, run_id, token) is None:
             print(json.dumps({
-                "error": "refusing to start: exclusive key held",
-                "exclusive_key": exclusive_key, "conflicts": conflicts,
-                "reason": "runs sharing an exclusive key must run strictly one at a time",
+                "error": "refusing to start: exclusive key reserved",
+                "exclusive_key": exclusive_key,
+                "reservation": str(exclusive_lock_path(exclusive_key, RUNS_DIR)),
+                "reason": "runs sharing an exclusive key must run strictly one at a time; a "
+                          "live, handing-off, unknown or unreadable reservation fails closed",
             }, indent=2), file=sys.stderr)
             return 4
+        conflicts = exclusive_conflicts(exclusive_key, RUNS_DIR)
+        if conflicts:
+            release_exclusive(exclusive_key, RUNS_DIR, token)
+            print(json.dumps({"error": "refusing to start: exclusive key held",
+                              "exclusive_key": exclusive_key, "conflicts": conflicts},
+                             indent=2), file=sys.stderr)
+            return 4
+    try:
+        return _start_run(args, command, run_id, exclusive_key, token)
+    except BaseException:
+        if exclusive_key:
+            release_exclusive(exclusive_key, RUNS_DIR, token)
+        raise
 
-    run_id = f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{args.name}"
+
+def _start_run(args, command, run_id, exclusive_key, token) -> int:
     run_dir = RUNS_DIR / run_id
     run_dir.mkdir(parents=True, exist_ok=False)
 
     manifest = build_manifest(run_id, args.name, command)
     manifest["exclusive_key"] = exclusive_key
+    manifest["exclusive_token"] = token
     if args.resumed_from:
         manifest["resume"] = {
             "resumed": True,
@@ -659,6 +807,8 @@ def cmd_start(args: argparse.Namespace) -> int:
         stdin=subprocess.DEVNULL,
         **_detach_flags(),
     )
+    if exclusive_key:
+        renew_exclusive(exclusive_key, RUNS_DIR, token, supervisor_pid=supervisor.pid)
     print(json.dumps({
         "run_id": run_id,
         "run_dir": str(run_dir),
@@ -676,7 +826,8 @@ def _resolve_run(run_id: str | None) -> Path | None:
     if run_id:
         candidate = RUNS_DIR / run_id
         return candidate if candidate.exists() else None
-    runs = sorted(RUNS_DIR.iterdir(), key=lambda p: p.name)
+    runs = sorted((p for p in RUNS_DIR.iterdir() if not p.name.startswith(".")),
+                  key=lambda p: p.name)
     return runs[-1] if runs else None
 
 
@@ -716,6 +867,8 @@ def cmd_list(args: argparse.Namespace) -> int:
         return 0
     rows = []
     for run_dir in sorted(RUNS_DIR.iterdir(), key=lambda p: p.name):
+        if run_dir.name.startswith("."):          # .exclusive reservations are not runs
+            continue
         status_path = run_dir / "status.json"
         state = "unknown"
         if status_path.exists():

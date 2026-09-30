@@ -8,6 +8,7 @@ revision is the view directory's name (``buggy``/``fixed``).
 """
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 
 NODE = "test_candidate.py::test_generated"
@@ -34,6 +35,7 @@ def report_for(source: str, label: str) -> dict:
                 "teardown": _phase("passed")}}},
             "exitstatus": 1 if fails else 0, "uid": 65534, "process_exit": 1 if fails else 0,
             "seconds": 0.25, "wall_timeout": False,
+            "candidate_sha256": hashlib.sha256(source.encode()).hexdigest(),
             "tail": "/mnt/c/Users/someone/host-only text that must never be retained",
             "raw_report_sha256": "0" * 64}
 
