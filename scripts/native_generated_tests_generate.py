@@ -1,7 +1,7 @@
 """Durable candidate generation for native generated tests (protocol v2 + amendment v2.1).
 
     run --job FILE --condition primary_whole_module --arm {base,sft} --out DIR
-        --backend {mock,hf} [--authorization FILE]
+        --backend {mock,hf} [--preflight FILE --authorization FILE]
 
 * ``--condition`` selects the nested job inside the job file. Only
   ``primary_whole_module`` exists (v2.1 section C removed the scaffolded diagnostic).
@@ -12,10 +12,13 @@
   the condition, the arm, the preflight hash and (for GPU runs) the authorisation hash.
   A change to any field refuses to resume and leaves the prior output untouched; a new
   output directory is required.
-* The Hugging Face backend is committed source but runs only with a GPU authorisation
-  receipt that binds the green preflight, the source commit, the protocol hashes, the job
-  hash, the allowed conditions and arms, and the output directory (v2.1 section F). No
-  source edit is ever needed to authorise a run.
+* The Hugging Face backend is committed source but runs only when the read-only launch
+  gate (harness/native_launch_gate.py, amendment v2.2 section D) reports launch_ready: an
+  immutable green preflight that still describes the checkout, plus an authorisation
+  receipt whose content binds that preflight, the source identity, the job, protocol, model
+  and adapter hashes, the condition, the arm and the output directory. Passing
+  --authorization with the mock backend runs the same gate. No source edit is ever needed
+  to authorise a run.
 * One JSONL line per (target, seed) with the identity hash, fsync after each line, strict
   reading on resume (partial, malformed, stale, duplicate or unexpected lines are
   quarantined, never merged). No reranking; duplicates kept; raw outputs retained.
@@ -53,9 +56,9 @@ ARMS = ("base", "sft")
 CONDITIONS = ("primary_whole_module",)
 REMOVED_CONDITIONS = {"secondary_scaffolded_diagnostic": "removed by amendment v2.1 section C"}
 PROTOCOL_FILES = ("docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md",
-                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md")
+                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md",
+                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md")
 SOURCE_DIRS = ("engine", "harness", "scripts", "config")
-AUTH_SCHEMA = "oneiros_native_gpu_authorization_v1"
 
 
 class Refused(SystemExit):
@@ -107,27 +110,64 @@ def sequence_fit(prompts: Sequence[Mapping[str, Any]], count_tokens: Callable[[s
     return {"admitted": admitted, "refused": refused, "limit": limit}
 
 
+REFUSAL_REASONS = ("prompt_refused", "seal_mismatch", "leakage", "sequence_overflow")
+
+
 def build_job(prompts: Sequence[Mapping[str, Any]], scans: Mapping[str, Mapping[str, Any]],
-              fit: Mapping[str, Any]) -> Dict[str, Any]:
-    """Only prompts that are sealed, leakage-clean and fit enter the job."""
+              fit: Mapping[str, Any],
+              builder_refused: Sequence[Mapping[str, Any]] = ()) -> Dict[str, Any]:
+    """Only prompts that are sealed, leakage-clean and fit enter the job. Every check is
+    evaluated for every target and EVERY applicable reason is recorded (v2.2 section B)."""
     fits = {e["target_key"] for e in fit["admitted"]}
+    measured = {e["target_key"] for e in fit["admitted"]} | {e["target_key"] for e in fit["refused"]}
     items, refused = [], []
+    for b in builder_refused:
+        refused.append({"target_key": b["target_key"], "reasons": ["prompt_refused"],
+                        "details": {"prompt_refused": b.get("reason")}})
     for sealed in prompts:
         key = sealed["target_key"]
+        reasons, details = [], {}
         if sha256_text(sealed["prompt"]) != sealed["prompt_sha256"]:
-            refused.append({"target_key": key, "reason": "seal_mismatch"})
-        elif not scans.get(key, {}).get("ok"):
-            refused.append({"target_key": key, "reason": "leakage",
-                            "details": scans.get(key, {}).get("reasons")})
-        elif key not in fits:
-            refused.append({"target_key": key, "reason": "sequence_overflow"})
+            reasons.append("seal_mismatch")
+        scan = scans.get(key)
+        if not scan or not scan.get("ok"):
+            reasons.append("leakage")
+            details["leakage"] = (scan or {}).get("reasons") or ["not scanned"]
+        if key not in fits:
+            reasons.append("sequence_overflow")
+            if key not in measured:
+                details["sequence_overflow"] = ["not measured"]
+        if reasons:
+            refused.append({"target_key": key, "reasons": reasons, "details": details})
         else:
             items.append({"target_key": key, "prompt": sealed["prompt"],
                           "prompt_sha256": sealed["prompt_sha256"],
                           "condition": sealed["condition"]})
     items.sort(key=lambda i: i["target_key"])
+    refused.sort(key=lambda r: r["target_key"])
     body = {"items": items, "refused": refused, "sequence_fit": fit}
     return {**body, "job_sha256": contract_sha({"items": items})}
+
+
+def refusal_accounting(kept_keys: Sequence[str], job: Mapping[str, Any]) -> Dict[str, Any]:
+    """Coverage counts UNIQUE admitted targets, never sums of reason counts."""
+    admitted = sorted({i["target_key"] for i in job["items"]})
+    refused = {r["target_key"]: tuple(r["reasons"]) for r in job["refused"]}
+    per_reason = {reason: sum(reason in rs for rs in refused.values())
+                  for reason in REFUSAL_REASONS}
+    combos: Dict[str, int] = {}
+    for rs in refused.values():
+        label = "+".join(sorted(rs))
+        combos[label] = combos.get(label, 0) + 1
+    kept = set(kept_keys)
+    accounted = set(admitted) | set(refused)
+    return {"denominator_kept": len(kept), "admitted": len(admitted),
+            "admitted_fraction": round(len(admitted) / len(kept), 4) if kept else 0.0,
+            "unique_refused": len(refused), "per_reason": per_reason,
+            "combinations": dict(sorted(combos.items())),
+            "overlapping_targets": sorted(k for k, rs in refused.items() if len(rs) > 1),
+            "unaccounted": sorted(kept - accounted), "unexpected": sorted(accounted - kept),
+            "admitted_and_refused": sorted(set(admitted) & set(refused))}
 
 
 def select_condition(job_file: Mapping[str, Any], condition: str) -> Dict[str, Any]:
@@ -206,44 +246,26 @@ def collect_identity(condition: str, arm: str, job_path: Path, job: Mapping[str,
     }
 
 
-# --- GPU authorisation (source-stable) --------------------------------------------------------
+# --- GPU authorisation (amendment v2.2 section D) ---------------------------------------------
 
-def verify_authorization(path: Optional[Path], *, job: Mapping[str, Any], condition: str,
-                         arm: str, out_dir: Path) -> Dict[str, Any]:
-    """Refuse unless a receipt binds this exact preflight, source, protocol, job, arm,
-    condition and output directory."""
-    if path is None or not Path(path).is_file():
-        raise Refused("REFUSED: GPU generation needs a GPU authorisation receipt")
-    auth = json.loads(Path(path).read_text(encoding="utf-8"))
-    problems = []
-    if auth.get("schema_version") != AUTH_SCHEMA:
-        problems.append("schema")
-    preflight = ROOT / str(auth.get("preflight_path", ""))
-    if not preflight.is_file() or sha256_file(preflight) != auth.get("preflight_sha256"):
-        problems.append("preflight hash")
-    else:
-        receipt = json.loads(preflight.read_text(encoding="utf-8"))
-        if receipt.get("pipeline_ready") is not True:
-            problems.append("preflight not pipeline_ready")
-        if receipt.get("source_commit") != auth.get("source_commit"):
-            problems.append("preflight source differs")
-    if _git("rev-parse", "HEAD") != auth.get("source_commit"):
-        problems.append("source commit")
-    if _git("status", "--porcelain", "--untracked-files=no"):
-        problems.append("tracked source is dirty")
-    if auth.get("protocol_sha256") != {p: sha256_file(ROOT / p) for p in PROTOCOL_FILES}:
-        problems.append("protocol hash")
-    if auth.get("job_sha256") != job["job_sha256"]:
-        problems.append("job")
-    if condition not in auth.get("allowed_conditions", []):
-        problems.append("condition")
-    if arm not in auth.get("allowed_arms", []):
-        problems.append("arm")
-    if Path(auth.get("output_dir", "")).resolve() != Path(out_dir).resolve():
-        problems.append("output directory")
-    if problems:
-        raise Refused(f"REFUSED: authorisation does not match: {problems}")
-    return auth
+def adapter_sha256() -> str:
+    return contract_sha(adapter_manifest(ROOT / CONTRACT["sft_adapter"]))
+
+
+def launch_gate(preflight: Optional[Path], authorization: Optional[Path], *, job_path: Path,
+                condition: str, arm: str, out_dir: Path) -> Dict[str, Any]:
+    """Refuse unless the read-only launch gate reports launch_ready. Writes nothing."""
+    from harness.native_launch_gate import evaluate
+    if preflight is None or authorization is None:
+        raise Refused("REFUSED: GPU generation needs --preflight and a GPU authorisation receipt")
+    result = evaluate(ROOT, Path(preflight), Path(authorization), job_path=Path(job_path),
+                      condition=condition, arm=arm, out_dir=Path(out_dir),
+                      model_identity=model_identity, adapter_sha256=adapter_sha256)
+    if not result["launch_ready"]:
+        raise Refused("REFUSED: launch gate not ready: " + json.dumps(
+            {k: result[k] for k in ("pipeline_ready", "gpu_authorized", "pipeline_problems",
+                                    "authorization_problems")}))
+    return result
 
 
 # --- durable run ------------------------------------------------------------------------------
@@ -430,11 +452,12 @@ def main(argv=None) -> int:
     job = select_condition(json.loads(job_path.read_text(encoding="utf-8")), args.condition)
     out = Path(args.out)
     auth = Path(args.authorization) if args.authorization else None
-    if args.backend == "hf":
-        verify_authorization(auth, job=job, condition=args.condition, arm=args.arm, out_dir=out)
-        backend = hf_backend(args.arm)
-    else:
-        backend = mock_backend
+    preflight = Path(args.preflight) if args.preflight else None
+    if args.backend == "hf" or auth is not None:
+        # the same read-only gate for the GPU path and for its mock rehearsal
+        launch_gate(preflight, auth, job_path=job_path, condition=args.condition,
+                    arm=args.arm, out_dir=out)
+    backend = hf_backend(args.arm) if args.backend == "hf" else mock_backend
     identity = collect_identity(args.condition, args.arm, job_path, job, args.backend,
                                 Path(args.preflight) if args.preflight else None, auth)
     print(json.dumps(run(job, args.arm, args.condition, out, identity, backend)))

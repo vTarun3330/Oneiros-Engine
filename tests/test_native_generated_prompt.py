@@ -55,8 +55,12 @@ def test_method_prompt_contains_only_the_permitted_buggy_view():
     text = sealed["prompt"]
     assert "return sum(self.items) + scale" in text          # buggy target body
     assert "from pkg.util import Box" in text                 # src/ stripped import path
-    assert "def helper(self):" in text and "return 1" not in text   # other bodies elided
-    assert "LIMIT = 10" in text and "import math" in text
+    # builder v2 (amendment v2.2 C): only what the target uses
+    assert "def __init__(self, items: List[int]):" in text    # constructor signature
+    assert "from typing import List" in text                  # used by the constructor
+    assert "self.items = items" not in text                   # helper bodies elided
+    assert "def helper(self):" not in text                    # unreferenced sibling omitted
+    assert "LIMIT = 10" not in text and "import math" not in text
     assert "return x if x < LIMIT" not in text                # other functions not included
     assert "Expected test format: pytest_fragment" in text
     assert sealed["prompt_sha256"] == hashlib.sha256(text.encode()).hexdigest()

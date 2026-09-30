@@ -13,7 +13,12 @@ that must not appear:
 * ``issue_text`` and ``commit_message``: sentences or lines of the issue/PR text or the fix
   commit message.
 
-Any hit refuses the prompt (fail closed), with its reasons recorded.
+v2 (amendment v2.2 section A): an issue-text LINE is exempt only when the whole normalised
+line exactly equals a whole normalised line of the permitted buggy source (exact-line
+provenance; never a substring). Every other check is unchanged.
+
+Any hit refuses the prompt (fail closed), with its reasons recorded. Malformed or
+seal-mismatched input refuses.
 """
 from __future__ import annotations
 
@@ -22,7 +27,7 @@ import hashlib
 import re
 from typing import Any, Dict, Iterable, List, Mapping
 
-SCANNER_VERSION = "oneiros_native_generated_test_leakage_v1"
+SCANNER_VERSION = "oneiros_native_generated_test_leakage_v2"
 MIN_LINE = 12
 MIN_TEST_LINE = 20
 MIN_SENTENCE = 40
@@ -60,8 +65,12 @@ def _assert_literals(test_source: str) -> List[str]:
 def scan(sealed: Mapping[str, Any], verifier: Mapping[str, Any]) -> Dict[str, Any]:
     """``verifier`` keys: buggy_source, fixed_source, patch, official_tests (list),
     issue_text, commit_message (any may be empty)."""
-    prompt = str(sealed["prompt"])
-    if hashlib.sha256(prompt.encode("utf-8")).hexdigest() != sealed["prompt_sha256"]:
+    prompt = sealed.get("prompt") if isinstance(sealed, Mapping) else None
+    seal = sealed.get("prompt_sha256") if isinstance(sealed, Mapping) else None
+    if not isinstance(prompt, str) or not isinstance(seal, str) or             not isinstance(verifier, Mapping):
+        return {"ok": False, "reasons": ["malformed scanner input"],
+                "scanner_version": SCANNER_VERSION}
+    if hashlib.sha256(prompt.encode("utf-8")).hexdigest() != seal:
         return {"ok": False, "reasons": ["prompt does not match its seal"],
                 "scanner_version": SCANNER_VERSION}
     prompt_norm = _norm(prompt)
@@ -87,7 +96,9 @@ def scan(sealed: Mapping[str, Any], verifier: Mapping[str, Any]) -> Dict[str, An
         hit("official_test_line", [l for l in test_lines if l in prompt_lines])
         hit("expected_literal", [lit for lit in _assert_literals(test)
                                  if lit not in buggy_text and lit in prompt])
-    sentences = [_norm(s) for s in re.split(r"(?<=[.!?])\s+|\n+", verifier.get("issue_text") or "")]
+    issue_lines = [l for l in (verifier.get("issue_text") or "").splitlines()
+                   if _norm(l) not in buggy]
+    sentences = [_norm(s) for l in issue_lines for s in re.split(r"(?<=[.!?])\s+", l)]
     hit("issue_text", [s for s in sentences if len(s) >= MIN_SENTENCE and s in prompt_norm])
     commit = [l for l in _lines(verifier.get("commit_message", "")) if len(l) >= MIN_COMMIT_LINE]
     hit("commit_message", [l for l in commit if l in prompt_lines or l in prompt_norm])

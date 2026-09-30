@@ -51,6 +51,10 @@ FROZEN_CONTRACT = {
 ADAPTER_SHA256 = "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7"
 
 
+# Amendment v2.2: re-running would overwrite immutable v2.1 evidence.
+ALLOW_HISTORICAL_RERUN = False
+
+
 def sha(rel: str) -> str:
     return hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()
 
@@ -64,6 +68,9 @@ def git(*args: str) -> str:
 
 
 def main() -> int:
+    if not ALLOW_HISTORICAL_RERUN:
+        raise SystemExit("REFUSED: superseded by scripts/native_generated_tests_preflight_v2_2.py (amendment v2.2); the v2.1 artifacts "
+                         "this script writes are immutable historical evidence")
     from harness.acquisition_receipt import ProtectedAccessMonitor
     ProtectedAccessMonitor.install(ROOT)
     mark = ProtectedAccessMonitor.mark()

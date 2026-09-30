@@ -52,5 +52,43 @@ def test_budgets_and_parity_constants():
     assert ath.FULL_BUDGET_CPU_SECONDS == 600 and ath.CORPUS_CAP == 2000
     assert ath.PYTHON == "/usr/bin/python3.11"
     assert ath.MODES == ("ordinary", "posthoc", "differential")
+    assert ath.DESIGN_VERSION == "oneiros_native_generated_tests_atheris_v3"
+    assert ath.tolerance(600) == pytest.approx(13.0) and ath.tolerance(20) == pytest.approx(1.4)
+
+
+def test_v3_isolation_and_aggregate_accounting_are_wired():
+    """v2.2 E: one cgroup-v2 group per search, the shared sandbox, /target only."""
     source = (ROOT / "scripts" / "native_generated_tests_atheris_wsl.py").read_text(encoding="utf-8")
-    assert '"prlimit", f"--cpu={cpu}"' in source and '"unshare", "-n"' in source
+    assert '"unshare", "--mount", "--pid", "--net", "--fork", "--mount-proc"' in source
+    assert '"SB_PYTHONPATH": f"/target:{ATHERIS_SITE}"' in source
+    assert "cgroup.kill" in source and "usage_usec" in source
+    assert "worker_launcher" not in source and "PYTHONPATH\": f\"{view}" not in source
+    assert ath.INNER.name == "native_sandbox_inner.sh"
+
+
+def test_end_reasons_are_distinct(tmp_path):
+    started = tmp_path / "started"
+    sup = {"supervisor_reason": None, "wall_seconds": 10.0}
+    assert ath._end_reason(sup, 0, tmp_path, 20) == "infrastructure_failure"   # never started
+    started.write_text("")
+    assert ath._end_reason(sup, 0, tmp_path, 20) == "completed"
+    assert ath._end_reason({**sup, "supervisor_reason": "cpu_budget_exhausted"}, -9, tmp_path,
+                           20) == "cpu_budget_exhausted"
+    assert ath._end_reason({**sup, "supervisor_reason": "wall_timeout"}, -9, tmp_path,
+                           20) == "wall_timeout"
+    assert ath._end_reason(sup, 152, tmp_path, 20) == "cpu_budget_exhausted"
+    assert ath._end_reason(sup, 1, tmp_path, 20) == "crashed"
+    (tmp_path / "worker_lost").write_text("")
+    assert ath._end_reason(sup, 3, tmp_path, 20) == "infrastructure_failure"
+    assert set(ath.END_REASONS) == {"completed", "cpu_budget_exhausted", "wall_timeout",
+                                    "crashed", "infrastructure_failure"}
+
+
+def test_witnesses_cut_off_by_a_kill_are_dropped(tmp_path):
+    import hashlib
+    good = b"complete input"
+    (tmp_path / hashlib.sha256(good).hexdigest()).write_bytes(good)
+    (tmp_path / hashlib.sha256(b"longer original").hexdigest()).write_bytes(b"longer")
+    kept, dropped = ath._intact(tmp_path)
+    assert [p.read_bytes() for p in kept] == [good] and dropped == 1
+    assert ath._intact(tmp_path / "missing") == ([], 0)

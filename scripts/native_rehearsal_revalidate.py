@@ -42,6 +42,10 @@ RULE = {"min_targets": 20, "max_targets": 30, "min_repositories": 5}
 COVERAGE = {"min_job_targets": 20, "min_fraction_of_kept": 0.90}
 
 
+# Amendment v2.2: re-running would overwrite immutable v2.1 evidence.
+ALLOW_HISTORICAL_RERUN = False
+
+
 def sha(rel: str) -> str:
     return hashlib.sha256((ROOT / rel).read_bytes()).hexdigest()
 
@@ -99,6 +103,9 @@ def cached_isolation(targets) -> tuple:
 
 
 def main() -> int:
+    if not ALLOW_HISTORICAL_RERUN:
+        raise SystemExit("REFUSED: superseded by scripts/native_rehearsal_rebuild_v22.py (amendment v2.2); the v2.1 artifacts "
+                         "this script writes are immutable historical evidence")
     from harness.acquisition_receipt import ProtectedAccessMonitor
     from harness.native_generated_test_leakage import scan
     from harness.native_generated_test_prompt import PromptRefused, build_prompt

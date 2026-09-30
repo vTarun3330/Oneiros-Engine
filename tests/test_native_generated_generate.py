@@ -50,8 +50,42 @@ def test_job_refuses_leaky_unsealed_and_overflowing_prompts():
     job = gen.build_job(prompts, {"ok": {"ok": True}, "leak": {"ok": False, "reasons": ["x"]},
                                   "long": {"ok": True}, "tamper": {"ok": True}}, fit)
     assert [i["target_key"] for i in job["items"]] == ["ok"]
-    assert {r["target_key"]: r["reason"] for r in job["refused"]} == {
-        "leak": "leakage", "long": "sequence_overflow", "tamper": "seal_mismatch"}
+    assert {r["target_key"]: r["reasons"] for r in job["refused"]} == {
+        "leak": ["leakage"], "long": ["sequence_overflow"], "tamper": ["seal_mismatch"]}
+
+
+def test_overlapping_leakage_and_overflow_are_both_recorded():
+    """Regression (v2.2 B): marshmallow@252090c was leakage-refused AND over the limit,
+    but v2.1 recorded only its first failure."""
+    prompts = [{"target_key": k, "prompt": p, "condition": "whole_module",
+                "prompt_sha256": hashlib.sha256(p.encode()).hexdigest()}
+               for k, p in (("ok", "a"), ("both", "b" * 3000), ("leak", "c"),
+                            ("long", "d" * 3000))]
+    prompts.append({"target_key": "all3", "prompt": "e" * 3000, "condition": "whole_module",
+                    "prompt_sha256": "0" * 64})
+    fit = gen.sequence_fit(prompts, lambda text: len(text))
+    scans = {"ok": {"ok": True}, "both": {"ok": False, "reasons": ["issue_text: x"]},
+             "leak": {"ok": False, "reasons": ["issue_text: y"]}, "long": {"ok": True}}
+    job = gen.build_job(prompts, scans, fit,
+                        builder_refused=[{"target_key": "nobuild", "reason": "not found"}])
+    reasons = {r["target_key"]: r["reasons"] for r in job["refused"]}
+    assert reasons == {"both": ["leakage", "sequence_overflow"], "leak": ["leakage"],
+                       "long": ["sequence_overflow"],
+                       "all3": ["seal_mismatch", "leakage", "sequence_overflow"],
+                       "nobuild": ["prompt_refused"]}
+    acc = gen.refusal_accounting(["ok", "both", "leak", "long", "all3", "nobuild"], job)
+    assert acc["admitted"] == 1 and acc["unique_refused"] == 5 and acc["denominator_kept"] == 6
+    assert acc["per_reason"] == {"prompt_refused": 1, "seal_mismatch": 1, "leakage": 3,
+                                 "sequence_overflow": 3}
+    assert sum(acc["per_reason"].values()) == 8 != acc["unique_refused"]
+    assert acc["combinations"] == {"leakage": 1, "leakage+seal_mismatch+sequence_overflow": 1,
+                                   "leakage+sequence_overflow": 1, "prompt_refused": 1,
+                                   "sequence_overflow": 1}
+    assert acc["overlapping_targets"] == ["all3", "both"]
+    assert acc["unaccounted"] == [] and acc["unexpected"] == [] and \
+        acc["admitted_and_refused"] == []
+    missing = gen.refusal_accounting(["ok", "both", "leak", "long", "all3", "nobuild", "lost"], job)
+    assert missing["unaccounted"] == ["lost"]
 
 
 def test_condition_selection_and_removed_scaffold():
@@ -140,82 +174,21 @@ def test_the_exact_cli_command_works_with_the_mock_backend(tmp_path):
     assert contract["contract"] == gen.CONTRACT
 
 
-# --- source-stable GPU authorisation ---------------------------------------------------------
+# --- GPU authorisation: the v2.1 in-generator check was superseded by the read-only launch
+# gate of amendment v2.2 section D; its lifecycle is tested in tests/test_native_launch_gate.py.
 
-@pytest.fixture
-def authorised(tmp_path, monkeypatch):
-    monkeypatch.setattr(gen, "_git", lambda *a: "" if a[0] == "status" else "HEADSHA")
-    preflight = tmp_path / "preflight.json"
-    preflight.write_text(json.dumps({"pipeline_ready": True, "source_commit": "HEADSHA"}))
-    job = _job()
-    out = tmp_path / "gpu_out"
-    auth = {"schema_version": gen.AUTH_SCHEMA, "preflight_path": str(preflight),
-            "preflight_sha256": gen.sha256_file(preflight), "source_commit": "HEADSHA",
-            "protocol_sha256": {p: gen.sha256_file(ROOT / p) for p in gen.PROTOCOL_FILES},
-            "job_sha256": job["job_sha256"], "allowed_conditions": ["primary_whole_module"],
-            "allowed_arms": ["base"], "output_dir": str(out)}
-    path = tmp_path / "auth.json"
-    path.write_text(json.dumps(auth))
-    return {"path": path, "auth": auth, "job": job, "out": out, "tmp": tmp_path}
-
-
-def test_matching_authorisation_is_accepted(authorised):
-    got = gen.verify_authorization(authorised["path"], job=authorised["job"],
-                                   condition="primary_whole_module", arm="base",
-                                   out_dir=authorised["out"])
-    assert got["source_commit"] == "HEADSHA"
-
-
-def test_hf_without_authorisation_refuses(tmp_path):
-    with pytest.raises(gen.Refused, match="needs a GPU authorisation receipt"):
-        gen.verify_authorization(None, job=_job(), condition="primary_whole_module",
-                                 arm="base", out_dir=tmp_path)
-
-
-@pytest.mark.parametrize("kwargs, fragment", [
-    ({"arm": "sft"}, "arm"), ({"condition": "other"}, "condition"),
-    ({"out_dir": "elsewhere"}, "output directory"), ({"job": "other"}, "job"),
-])
-def test_authorisation_does_not_extend_to_other_runs(authorised, kwargs, fragment):
-    args = {"job": authorised["job"], "condition": "primary_whole_module", "arm": "base",
-            "out_dir": authorised["out"]}
-    if kwargs.get("job") == "other":
-        kwargs = {"job": _job(4)}
-    if kwargs.get("out_dir") == "elsewhere":
-        kwargs = {"out_dir": authorised["tmp"] / "elsewhere"}
-    args.update(kwargs)
-    with pytest.raises(gen.Refused, match=fragment):
-        gen.verify_authorization(authorised["path"], **args)
-
-
-@pytest.mark.parametrize("mutation, fragment", [
-    ({"source_commit": "OTHER"}, "source commit"),
-    ({"preflight_sha256": "0" * 64}, "preflight hash"),
-    ({"protocol_sha256": {}}, "protocol hash"),
-    ({"schema_version": "x"}, "schema"),
-])
-def test_stale_or_wrong_authorisation_refuses(authorised, mutation, fragment):
-    authorised["path"].write_text(json.dumps({**authorised["auth"], **mutation}))
-    with pytest.raises(gen.Refused, match=fragment):
-        gen.verify_authorization(authorised["path"], job=authorised["job"],
-                                 condition="primary_whole_module", arm="base",
-                                 out_dir=authorised["out"])
-
-
-def test_preflight_that_is_not_pipeline_ready_refuses(authorised):
-    preflight = Path(authorised["auth"]["preflight_path"])
-    preflight.write_text(json.dumps({"pipeline_ready": False, "source_commit": "HEADSHA"}))
-    authorised["path"].write_text(json.dumps({**authorised["auth"],
-                                              "preflight_sha256": gen.sha256_file(preflight)}))
-    with pytest.raises(gen.Refused, match="not pipeline_ready"):
-        gen.verify_authorization(authorised["path"], job=authorised["job"],
-                                 condition="primary_whole_module", arm="base",
-                                 out_dir=authorised["out"])
-
-
-def test_cli_hf_refuses_without_authorisation(tmp_path):
+def test_cli_hf_refuses_without_preflight_and_authorisation(tmp_path):
     job_file = tmp_path / "job.json"
     job_file.write_text(json.dumps({"primary_whole_module": _job(1)}))
     with pytest.raises(gen.Refused, match="authorisation"):
         gen.main(["run", "--job", str(job_file), "--condition", "primary_whole_module",
                   "--arm", "sft", "--out", str(tmp_path / "o"), "--backend", "hf"])
+    assert not (tmp_path / "o").exists()
+
+
+def test_generator_uses_the_launch_gate_and_no_file_existence_shortcut():
+    source = (ROOT / "scripts" / "native_generated_tests_generate.py").read_text(encoding="utf-8")
+    assert "from harness.native_launch_gate import evaluate" in source
+    assert "verify_authorization" not in source and ".exists()" not in source.split(
+        "def launch_gate", 1)[1].split("def ", 1)[0]
+    assert gen.PROTOCOL_FILES[-1].endswith("PROTOCOL_V2_2.md")

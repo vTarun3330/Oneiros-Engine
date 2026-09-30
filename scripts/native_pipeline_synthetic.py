@@ -22,13 +22,13 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-OUT = ROOT / "results" / "sft_root_cause" / "native_v21_synthetic"
-RECEIPT = ROOT / "results" / "sft_root_cause" / "native_v21_canaries" / "pipeline_receipt.json"
+OUT = ROOT / "results" / "sft_root_cause" / "native_v22_synthetic"
+RECEIPT = ROOT / "results" / "sft_root_cause" / "native_v22_canaries" / "pipeline_receipt.json"
 COMPONENTS = ("harness/native_generated_test_prompt.py", "harness/native_generated_test_leakage.py",
               "scripts/native_generated_tests_generate.py",
               "scripts/native_generated_tests_execute_wsl.py", "scripts/native_sandbox_inner.sh",
               "scripts/native_rehearsal_prepare_wsl.py", "scripts/native_generated_tests_analyse.py",
-              "scripts/native_pipeline_synthetic.py")
+              "scripts/native_pipeline_synthetic.py", "harness/native_launch_gate.py")
 
 # slot -> (designed candidate for "add", expected class; for "crash" the kill slot differs)
 DESIGN = {
