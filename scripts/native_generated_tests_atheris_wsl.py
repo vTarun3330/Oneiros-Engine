@@ -1,5 +1,10 @@
 """Actual atheris 2.3.0 comparison for native generated tests (protocol v2 s7, amendment v2.1 D,
-amendment v2.2 E).
+amendment v2.2 E, amendment v2.4 E).
+
+v2.4: the kill rule is scripts/native_atheris_results.py:judge (ordinary = buggy raise AND
+fixed ok, stable; two different exceptions are not a kill); every row keeps its per-witness
+confirmation replays so the authoritative loader can recompute each kill; the contract binds
+the exact manifest-declared preparation file.
 
 Runs in WSL as root. Runtime parity: every child uses CPython 3.11 (/usr/bin/python3.11, the
 base of the atheris venv) with atheris taken from its read-only site-packages.
@@ -53,9 +58,14 @@ import sys
 import tempfile
 import time
 
-DESIGN_VERSION = "oneiros_native_generated_tests_atheris_v3"
+DESIGN_VERSION = "oneiros_native_generated_tests_atheris_v4"
 HERE = Path(__file__).resolve().parent
 INNER = HERE / "native_sandbox_inner.sh"
+REPO_ROOT = HERE.parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+import native_generation_io as gio  # noqa: E402  (stdlib only)
+import native_atheris_results as verdicts  # noqa: E402  (stdlib only; the one kill rule)
 PYTHON = "/usr/bin/python3.11"
 ATHERIS_ROOT = "/opt/atheris311"
 ATHERIS_SITE = "/opt/atheris311/lib/python3.11/site-packages"
@@ -426,20 +436,18 @@ def replay(view: Path, target: dict, info: dict, inputs: list, cgroup: Path | No
     return result
 
 
-def confirmed(views: dict, target: dict, info: dict, witness: Path, cgroup: Path) -> dict:
-    """Fresh single-input processes, CONFIRMATIONS times per revision; stable and different."""
+def confirmed(mode: str, views: dict, target: dict, info: dict, witness: Path,
+              cgroup: Path) -> dict:
+    """Fresh single-input processes, CONFIRMATIONS times per revision, judged by the one
+    kill rule (native_atheris_results.judge)."""
     seen = {"buggy": [], "fixed": []}
     for label in ("buggy", "fixed"):
         for _ in range(CONFIRMATIONS):
             r = replay(views[label], target, info, [witness], cgroup)
             if "error" in r:
-                return {"kill": False, "replay_error": r["error"]}
+                return verdicts.judge(mode, [], [], r["error"])
             seen[label].append(r["results"][0])
-    stable = all(x == seen["buggy"][0] for x in seen["buggy"]) and \
-        all(x == seen["fixed"][0] for x in seen["fixed"])
-    b, f = seen["buggy"][0], seen["fixed"][0]
-    comparable = b[0] in ("ok", "raise") and f[0] in ("ok", "raise")
-    return {"kill": stable and comparable and b != f, "stable": stable, "buggy": b, "fixed": f}
+    return verdicts.judge(mode, seen["buggy"], seen["fixed"])
 
 
 def _end_reason(sup: dict, code, out: Path, budget: float) -> str:
@@ -542,7 +550,8 @@ def _verify(mode: str, views: dict, target: dict, info: dict, out: Path, result:
             reason: str, replay_group: Group) -> dict:
     """Replay and confirmation after the search; never part of the search budget."""
     if reason == "infrastructure_failure":
-        return {**result, "kill": False, "witnesses": 0, "confirmed": 0, "replay_errors": 0}
+        return {**result, "kill": False, "witnesses": 0, "confirmed": 0, "replay_errors": 0,
+                "confirmations": []}
     if mode == "posthoc":
         corpus, dropped = _intact(out / "corpus", "sha1")
         result.update(corpus=len(corpus), corpus_truncated=len(corpus) > CORPUS_CAP,
@@ -552,7 +561,7 @@ def _verify(mode: str, views: dict, target: dict, info: dict, out: Path, result:
                  for label in ("buggy", "fixed")}
         if any("error" in b for b in batch.values()):
             return {**result, "kill": False, "witnesses": 0, "confirmed": 0,
-                    "replay_errors": 1,
+                    "replay_errors": 1, "confirmations": [],
                     "replay_error_detail": [b.get("error") for b in batch.values()]}
         candidates = [p for p, x, y in zip(corpus, batch["buggy"]["results"],
                                            batch["fixed"]["results"])
@@ -564,11 +573,9 @@ def _verify(mode: str, views: dict, target: dict, info: dict, out: Path, result:
         result["dropped_partial_witnesses"] = dropped
     checks = []
     for w in witnesses:
-        verdict = confirmed(views, target, info, w, replay_group.path)
-        if mode == "ordinary" and verdict.get("buggy", [None])[0] != "raise":
-            verdict["kill"] = False
+        verdict = confirmed(mode, views, target, info, w, replay_group.path)
         checks.append({"witness": w.name[:16], **verdict})
-    return {**result, "witnesses": len(witnesses),
+    return {**result, "witnesses": len(witnesses), "confirmations": checks,
             "confirmed": sum(c["kill"] for c in checks),
             "replay_errors": sum("replay_error" in c for c in checks),
             "kill": any(c["kill"] for c in checks),
@@ -622,6 +629,12 @@ def stateful(x: int) -> int:
 
 def opaque(x: int) -> object:
     return object()
+
+
+def swap_exception(x: int) -> int:
+    if x == 91357:
+        raise ValueError("buggy exception")
+    return x
 
 
 def keyword(a: int, /, b: int = 2, *, c: int, d: str = "z") -> int:
@@ -681,13 +694,15 @@ def identity(x: int) -> int:
 '''
 CANARY_FIXED = CANARY_BUGGY.replace('raise ValueError("buggy crash")', "return 0") \
     .replace('raise IndexError("buggy only")', "return 0") \
-    .replace("return x + 1", "return x").replace('raise ValueError("kw bug")', "return 0")
+    .replace("return x + 1", "return x").replace('raise ValueError("kw bug")', "return 0") \
+    .replace('raise ValueError("buggy exception")', 'raise TypeError("fixed exception")')
 EXPECT = {("crash", "ordinary"): True, ("same_crash", "ordinary"): False,
           ("later", "ordinary"): True, ("wrong", "ordinary"): False,
           ("wrong", "posthoc"): True, ("wrong", "differential"): True,
           ("same_crash", "posthoc"): False, ("mutable", "differential"): False,
           ("stateful", "posthoc"): False, ("opaque", "posthoc"): False,
-          ("keyword", "ordinary"): True}
+          ("keyword", "ordinary"): True,
+          ("swap_exception", "ordinary"): False}      # v2.4 E.1: different exceptions
 
 
 def aggregate_budget_canary(work: Path, view: Path, budget: float = 4.0) -> dict:
@@ -760,7 +775,7 @@ def canaries(out_dir: Path) -> int:
                                   "sys.version.split()[0])" % ATHERIS_SITE],
                                  capture_output=True, text=True).stdout.split()
         names = ("crash", "same_crash", "later", "wrong", "mutable", "stateful", "opaque",
-                 "keyword", "variadic", "Box.total", "untyped")
+                 "keyword", "variadic", "Box.total", "untyped", "swap_exception")
         elig = {n: probe(sources["buggy"], "canarypkg.core", n) for n in names}
         elig["runtime_mismatch"] = probe(work / "views" / "py312", "canarypkg.core", "f")
         busy = aggregate_budget_canary(work, sources["buggy"])
@@ -805,6 +820,18 @@ def canaries(out_dir: Path) -> int:
         "worker_and_group_cleanup": all(r["cleanup_ok"] and r["replay_cleanup_ok"]
                                         for r in results.values())
         and not leftovers and not nobody,
+        "ordinary_different_exceptions_not_a_kill":
+            results["swap_exception:ordinary"]["kill"] is False
+            and results["swap_exception:ordinary"]["witnesses"] >= 1
+            and all(c.get("buggy", [None])[0] == "raise" and c.get("fixed", [None])[0] == "raise"
+                    for c in results["swap_exception:ordinary"]["confirmations"]),
+        "ordinary_raise_versus_ok_is_a_kill": results["crash:ordinary"]["kill"] is True,
+        "ordinary_same_exception_not_a_kill": results["same_crash:ordinary"]["kill"] is False,
+        "every_kill_recomputes_from_confirmations": all(
+            r["kill"] == any(verdicts.judge(r["mode"], c.get("buggy_all") or [],
+                                            c.get("fixed_all") or [],
+                                            c.get("replay_error"))["kill"]
+                             for c in r["confirmations"]) for r in results.values()),
         "fresh_views_unmutated_by_any_search": all(
             r["views_unchanged"] for r in [*results.values(), *repeat]),
         "repeat_same_seed_mode_independent": all(
@@ -816,6 +843,8 @@ def canaries(out_dir: Path) -> int:
     receipt = {"schema_version": "oneiros_native_atheris_canaries_v3",
                "design_version": DESIGN_VERSION, "atheris": version,
                "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+               "verdicts_sha256": hashlib.sha256((HERE / "native_atheris_results.py")
+                                                 .read_bytes()).hexdigest(),
                "inner_sha256": hashlib.sha256(INNER.read_bytes()).hexdigest(),
                "canary_budget_cpu_seconds": CANARY_BUDGET_SECONDS,
                "full_budget_cpu_seconds": FULL_BUDGET_CPU_SECONDS, "corpus_cap": CORPUS_CAP,
@@ -825,6 +854,8 @@ def canaries(out_dir: Path) -> int:
                "nobody_processes_after": nobody, "checks": checks,
                "passed": all(checks.values()),
                "note": "ordinary Atheris cannot kill the wrong-answer canary (no semantic oracle)"}
+    import receipt_sanitize                             # tracked receipt: no user paths
+    receipt = receipt_sanitize.scrub_json(receipt)
     (out_dir / "atheris_canary_receipt_v3.json").write_text(json.dumps(receipt, indent=1,
                                                                        sort_keys=True) + "\n")
     print(json.dumps({"passed": receipt["passed"],
@@ -834,17 +865,17 @@ def canaries(out_dir: Path) -> int:
 
 # --- durable real-panel run (NOT executed: no real-target Atheris is authorised) -------------
 
-def run(prep_path: Path, manifest_path: Path, out: Path, budget: int, seeds) -> int:
-    prep = {}
-    for line in prep_path.read_text(encoding="utf-8").splitlines():
-        if line.strip():
-            row = json.loads(line)
-            prep[row["key"]] = row
+def run(prep_path: Path, manifest_path: Path, out: Path, budget: int, seeds,
+        root: Path | None = None) -> int:
+    prepared = gio.resolve_prep(prep_path, manifest_path, root or REPO_ROOT)  # v2.4 C
+    prep = prepared["rows"]
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     contract = {"design_version": DESIGN_VERSION,
                 "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                 "inner_sha256": hashlib.sha256(INNER.read_bytes()).hexdigest(),
-                "prep_sha256": hashlib.sha256(prep_path.read_bytes()).hexdigest(),
+                "verdicts_sha256": hashlib.sha256((HERE / "native_atheris_results.py")
+                                                  .read_bytes()).hexdigest(),
+                "prep": {"path": prepared["path"], "sha256": prepared["sha256"]},
                 "manifest_sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
                 "budget_cpu_seconds": budget, "tolerance": tolerance(budget),
                 "seeds": list(seeds), "modes": list(MODES), "corpus_cap": CORPUS_CAP,

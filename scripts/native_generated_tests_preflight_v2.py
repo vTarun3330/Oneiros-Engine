@@ -69,7 +69,7 @@ def git(*args: str) -> str:
 
 def main() -> int:
     if not ALLOW_HISTORICAL_RERUN:
-        raise SystemExit("REFUSED: superseded by scripts/native_generated_tests_preflight_v2_3.py (amendments v2.2/v2.3); the v2.1 artifacts "
+        raise SystemExit("REFUSED: superseded by scripts/native_generated_tests_preflight_v2_2.py (amendment v2.2); the v2.1 artifacts "
                          "this script writes are immutable historical evidence")
     from harness.acquisition_receipt import ProtectedAccessMonitor
     ProtectedAccessMonitor.install(ROOT)

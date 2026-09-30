@@ -16,7 +16,10 @@ Three distinct states, evaluated WITHOUT writing anything:
     preflight bytes, the source identity, the job/protocol/model/adapter hashes, the condition,
     the arm and the output directory. A file merely existing at the path never authorises.
 ``launch_ready``
-    Both.
+    Both. For the SFT arm the pipeline is additionally ready only when the base arm has
+    completed and passes the exact single-arm verifier (amendment v2.4 I.2): every expected
+    row and candidate, full telemetry, and the same job, preflight, authorisation, backend,
+    model, protocols and generation source; its immutable hashes are returned.
 
 The preflight is never rewritten or re-timestamped here, so an authorisation that names its
 hash stays valid for as long as the source, cohort and model are unchanged.
@@ -33,9 +36,10 @@ EXECUTABLE_DIRS = ("engine", "harness", "scripts", "config", "tests")
 PROTOCOL_FILES = ("docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md",
                   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md",
                   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md",
-                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md")
+                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md",
+                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_4.md")
 RECEIPT_ONLY_PREFIX = "results/"
-PREFLIGHT_SCHEMA = "oneiros_native_generated_tests_preflight_v2_3"
+PREFLIGHT_SCHEMA = "oneiros_native_generated_tests_preflight_v2_4"
 AUTH_SCHEMA = "oneiros_native_gpu_authorization_v2"
 BRANCH = "experiment/research-eval-ablations"
 
@@ -247,11 +251,52 @@ def authorization_problems(root: Path, auth_path: Optional[Path], preflight_path
     return problems
 
 
+def base_arm_problems(root: Path, preflight_path: Path, auth_path: Optional[Path], *,
+                      backend: str,
+                      generation_source: Optional[Callable[[], Any]] = None) -> tuple:
+    """The completed base arm, verified exactly before the SFT arm may launch."""
+    from scripts.native_generation_io import resolve_cohort, verify_single_arm
+    pre = _load(preflight_path) or {}
+    job_rel = (pre.get("job") or {}).get("path")
+    manifest_rel = (pre.get("manifest") or {}).get("path")
+    base_rel = (pre.get("generation_outputs") or {}).get("base")
+    if not (job_rel and manifest_rel and base_rel):
+        return ["preflight lacks job/manifest/base output paths"], None
+    try:
+        cohort = resolve_cohort(Path(root) / job_rel, Path(root) / manifest_rel)
+        verified = verify_single_arm(Path(root) / base_rel, "base", cohort)
+    except SystemExit as exc:
+        return [f"base arm not complete and verified: {str(exc)[:200]}"], None
+    identity, problems = verified["identity"], []
+    if (verified["rows"], verified["candidates"]) != (cohort["expected"]["rows_per_arm"],
+                                                     cohort["expected"]["candidates_per_arm"]):
+        problems.append("base arm size differs from the frozen cohort")
+    if identity.get("preflight_sha256") != _sha_bytes(Path(preflight_path).read_bytes()):
+        problems.append("base arm used a different preflight")
+    if auth_path is not None and Path(auth_path).is_file() and \
+            identity.get("authorization_sha256") != _sha_bytes(Path(auth_path).read_bytes()):
+        problems.append("base arm used a different authorisation")
+    if identity.get("backend") != backend:
+        problems.append("base arm used a different backend")
+    if identity.get("model") != pre.get("model"):
+        problems.append("base arm used a different model snapshot")
+    raw = {p: _sha_bytes((Path(root) / p).read_bytes()) for p in PROTOCOL_FILES
+           if (Path(root) / p).is_file()}
+    if identity.get("protocol_sha256") != raw:
+        problems.append("base arm used different protocols")
+    if generation_source is not None and identity.get("source_tree") != generation_source():
+        problems.append("base arm used a different generation source")
+    summary = {k: verified[k] for k in ("rows", "candidates", "file_sha256", "contract_sha256",
+                                        "identity_sha256", "telemetry_schema")}
+    return problems, summary
+
+
 def evaluate(root: Path, preflight_path: Path, auth_path: Optional[Path], *, job_path: Path,
              condition: str, arm: str, out_dir: Path,
              model_identity: Callable[[], Mapping[str, Any]],
              adapter_sha256: Callable[[], Optional[str]],
-             fetch: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
+             fetch: Optional[Mapping[str, Any]] = None, backend: str = "hf",
+             generation_source: Optional[Callable[[], Any]] = None) -> Dict[str, Any]:
     """Pure check; never writes. ``fetch`` may be injected (tests); otherwise a fresh fetch."""
     root = Path(root)
     identity = source_identity(root)
@@ -262,7 +307,14 @@ def evaluate(root: Path, preflight_path: Path, auth_path: Optional[Path], *, job
     auth = authorization_problems(root, auth_path, Path(preflight_path), identity=identity,
                                   job_path=Path(job_path), condition=condition, arm=arm,
                                   out_dir=Path(out_dir))
+    base_verification = None
+    if arm == "sft":                                   # v2.4 I.2: strictly after a verified base
+        base, base_verification = base_arm_problems(root, Path(preflight_path), auth_path,
+                                                    backend=backend,
+                                                    generation_source=generation_source)
+        pipe += base
     return {"pipeline_ready": not pipe, "gpu_authorized": not auth,
+            "base_arm_verification": base_verification,
             "launch_ready": not pipe and not auth,
             "pipeline_problems": pipe, "authorization_problems": auth,
             "head": state["head"], "fetch": state["fetch"],

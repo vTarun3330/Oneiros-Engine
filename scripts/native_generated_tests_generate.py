@@ -41,9 +41,10 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.native_generation_io import TELEMETRY_SCHEMA, extract, row_problems  # noqa: E402
+from scripts.native_generation_io import (TELEMETRY_SCHEMA, extract, row_problems,  # noqa: E402
+                                          target_seed)
 
-GENERATOR_VERSION = "oneiros_native_generated_tests_generate_v3"
+GENERATOR_VERSION = "oneiros_native_generated_tests_generate_v4"
 CONTRACT = {
     "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
     "base_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
@@ -60,7 +61,8 @@ REMOVED_CONDITIONS = {"secondary_scaffolded_diagnostic": "removed by amendment v
 PROTOCOL_FILES = ("docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md",
                   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md",
                   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md",
-                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md")
+                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md",
+                  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_4.md")
 SOURCE_DIRS = ("engine", "harness", "scripts", "config")
 
 
@@ -85,10 +87,6 @@ def adapter_manifest(directory: Path) -> Dict[str, str]:
     """Every file in the adapter directory with its SHA-256 (adapter_config.json included)."""
     return {p.relative_to(directory).as_posix(): sha256_file(p)
             for p in sorted(Path(directory).rglob("*")) if p.is_file()}
-
-
-def target_seed(seed: int, target_key: str) -> int:
-    return int(hashlib.sha256(f"{seed}:{target_key}".encode()).hexdigest()[:8], 16)
 
 
 # --- job ------------------------------------------------------------------------------------
@@ -220,8 +218,8 @@ def library_versions() -> Dict[str, Optional[str]]:
 
 
 def collect_identity(condition: str, arm: str, job_path: Path, job: Mapping[str, Any],
-                     backend: str, preflight: Optional[Path], authorization: Optional[Path]
-                     ) -> Dict[str, Any]:
+                     backend: str, preflight: Optional[Path], authorization: Optional[Path],
+                     prior_arm: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
     from harness.source_identity import canonical_sha256
     return {
         "backend": backend, "condition": condition, "arm": arm,
@@ -236,6 +234,8 @@ def collect_identity(condition: str, arm: str, job_path: Path, job: Mapping[str,
         "libraries": library_versions(),
         "preflight_sha256": sha256_file(preflight) if preflight else None,
         "authorization_sha256": sha256_file(authorization) if authorization else None,
+        # sft only: the verified base arm it follows (v2.4 I.2); arm-specific by design
+        "prior_arm_verification": dict(prior_arm) if prior_arm else None,
     }
 
 
@@ -246,14 +246,15 @@ def adapter_sha256() -> str:
 
 
 def launch_gate(preflight: Optional[Path], authorization: Optional[Path], *, job_path: Path,
-                condition: str, arm: str, out_dir: Path) -> Dict[str, Any]:
+                condition: str, arm: str, out_dir: Path, backend: str = "hf") -> Dict[str, Any]:
     """Refuse unless the read-only launch gate reports launch_ready. Writes nothing."""
     from harness.native_launch_gate import evaluate
     if preflight is None or authorization is None:
         raise Refused("REFUSED: GPU generation needs --preflight and a GPU authorisation receipt")
     result = evaluate(ROOT, Path(preflight), Path(authorization), job_path=Path(job_path),
                       condition=condition, arm=arm, out_dir=Path(out_dir),
-                      model_identity=model_identity, adapter_sha256=adapter_sha256)
+                      model_identity=model_identity, adapter_sha256=adapter_sha256,
+                      backend=backend, generation_source=source_tree_identity)
     if not result["launch_ready"]:
         raise Refused("REFUSED: launch gate not ready: " + json.dumps(
             {k: result[k] for k in ("pipeline_ready", "gpu_authorized", "pipeline_problems",
@@ -355,7 +356,8 @@ def mock_backend(prompt: str, n: int, seed: int) -> Dict[str, Any]:
                            else len(raw.split()) + 1})
     walls = [round(0.01 * (b + 1), 6) for b in range(-(-n // CONTRACT["batch_size"]))]
     return {"prompt_tokens": len(prompt.split()), "batches": _batches(candidates, walls),
-            "model_load_seconds": 0.0, "peak_allocated_bytes": None, "peak_reserved_bytes": None}
+            "model_load_seconds": 0.0, "peak_allocated_bytes": None, "peak_reserved_bytes": None,
+            "process_peak_allocated_bytes": None, "process_peak_reserved_bytes": None}
 
 
 def texts_backend(texts: Callable[[str, int, int], List[str]]):
@@ -368,7 +370,8 @@ def texts_backend(texts: Callable[[str, int, int], List[str]]):
         walls = [0.01] * (-(-len(raws) // CONTRACT["batch_size"]))
         return {"prompt_tokens": len(prompt.split()), "batches": _batches(candidates, walls),
                 "model_load_seconds": 0.0, "peak_allocated_bytes": None,
-                "peak_reserved_bytes": None}
+                "peak_reserved_bytes": None, "process_peak_allocated_bytes": None,
+                "process_peak_reserved_bytes": None}
     return backend
 
 
@@ -395,7 +398,10 @@ def build_row(*, key: str, arm: str, condition: str, seed: int, tseed: int,
             "candidates_requested": CONTRACT["candidates"], "candidates_produced": len(produced),
             "model_load_seconds": result["model_load_seconds"],
             "peak_allocated_bytes": result["peak_allocated_bytes"],
-            "peak_reserved_bytes": result["peak_reserved_bytes"], "candidates": candidates}
+            "peak_reserved_bytes": result["peak_reserved_bytes"],
+            "process_peak_allocated_bytes": result["process_peak_allocated_bytes"],
+            "process_peak_reserved_bytes": result["process_peak_reserved_bytes"],
+            "candidates": candidates}
 
 
 def run(job: Mapping[str, Any], arm: str, condition: str, out_dir: Path,
@@ -449,6 +455,23 @@ def run(job: Mapping[str, Any], arm: str, condition: str, out_dir: Path,
             "file_sha256": sha256_file(path)}
 
 
+def measured_row(cuda, generate_row: Callable[[], Dict[str, Any]],
+                 process: Dict[str, int]) -> Dict[str, Any]:
+    """Row-scoped CUDA peaks (v2.4 B.4): synchronise and reset the peak statistics
+    immediately before the target-seed row, synchronise after it, then read that row's
+    peaks. Process-lifetime peaks are carried separately in ``process`` (updated here)."""
+    cuda.synchronize()
+    cuda.reset_peak_memory_stats()
+    result = generate_row()
+    cuda.synchronize()
+    allocated, reserved = int(cuda.max_memory_allocated()), int(cuda.max_memory_reserved())
+    process["allocated"] = max(process["allocated"], allocated)
+    process["reserved"] = max(process["reserved"], reserved)
+    return {**result, "peak_allocated_bytes": allocated, "peak_reserved_bytes": reserved,
+            "process_peak_allocated_bytes": process["allocated"],
+            "process_peak_reserved_bytes": process["reserved"]}
+
+
 def eos_ids(model, tokenizer) -> set:  # pragma: no cover - GPU path
     """Every EOS id of the model's generation config plus the tokenizer's EOS."""
     configured = getattr(model.generation_config, "eos_token_id", None)
@@ -489,8 +512,13 @@ def hf_backend(arm: str):  # pragma: no cover - GPU path; only reachable with au
     torch.cuda.synchronize()
     load_seconds = round(time.perf_counter() - started, 3)
     stop = eos_ids(model, tokenizer)
+    process = {"allocated": int(torch.cuda.max_memory_allocated()),     # includes model load
+               "reserved": int(torch.cuda.max_memory_reserved())}
 
     def generate(prompt: str, n: int, seed: int) -> Dict[str, Any]:
+        return measured_row(torch.cuda, lambda: _generate(prompt, n, seed), process)
+
+    def _generate(prompt: str, n: int, seed: int) -> Dict[str, Any]:
         text = format_chat_prompt(tokenizer, prompt)
         prompt_tokens = len(tokenizer(text, add_special_tokens=False)["input_ids"])
         if prompt_tokens > CONTRACT["prompt_token_limit"]:
@@ -523,9 +551,7 @@ def hf_backend(arm: str):  # pragma: no cover - GPU path; only reachable with au
                                    "eos_reached": f["eos_reached"]})
             batches.append({"wall_seconds": wall, "candidates": candidates})
         return {"prompt_tokens": prompt_tokens, "batches": batches,
-                "model_load_seconds": load_seconds,
-                "peak_allocated_bytes": int(torch.cuda.max_memory_allocated()),
-                "peak_reserved_bytes": int(torch.cuda.max_memory_reserved())}
+                "model_load_seconds": load_seconds}
     return generate
 
 
@@ -546,13 +572,15 @@ def main(argv=None) -> int:
     out = Path(args.out)
     auth = Path(args.authorization) if args.authorization else None
     preflight = Path(args.preflight) if args.preflight else None
+    gate = None
     if args.backend == "hf" or auth is not None:
         # the same read-only gate for the GPU path and for its mock rehearsal
-        launch_gate(preflight, auth, job_path=job_path, condition=args.condition,
-                    arm=args.arm, out_dir=out)
+        gate = launch_gate(preflight, auth, job_path=job_path, condition=args.condition,
+                           arm=args.arm, out_dir=out, backend=args.backend)
     backend = hf_backend(args.arm) if args.backend == "hf" else mock_backend
     identity = collect_identity(args.condition, args.arm, job_path, job, args.backend,
-                                Path(args.preflight) if args.preflight else None, auth)
+                                Path(args.preflight) if args.preflight else None, auth,
+                                (gate or {}).get("base_arm_verification"))
     print(json.dumps(run(job, args.arm, args.condition, out, identity, backend)))
     return 0
 

@@ -27,7 +27,8 @@ OUT_BASE = "results/sft_root_cause/native_generations/base"
 OUT_SFT = "results/sft_root_cause/native_generations/sft"
 # tracked receipts plus ignored local receipts (suite, canaries), like the real preflight
 INPUTS = ("results/manifest_v6.json", "results/prompt_records.json", "results/isolation_v6.json",
-          "results/sft_root_cause/full_suite.json", "results/sft_root_cause/canaries/canary.json")
+          "results/sft_root_cause/full_suite.json", "results/sft_root_cause/canaries/canary.json",
+          "results/sft_root_cause/rehearsal/records.jsonl")
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -79,6 +80,13 @@ def project(tmp_path):
     for rel in INPUTS:
         (repo / rel).parent.mkdir(parents=True, exist_ok=True)
         (repo / rel).write_text(json.dumps({"input": rel}))
+    from scripts.native_generation_io import cohort_fields     # an explicit v2.3+ cohort
+    job_bytes = (repo / "results/job.json").read_bytes()
+    keys = [i["target_key"] for i in json.loads(job_bytes)[COND]["items"]]
+    targets = [{"key": k, "repository": f"r{i}"} for i, k in enumerate(keys)]
+    (repo / "results/manifest_v6.json").write_text(json.dumps({
+        "targets": targets, "study_mode": "engineering_dress_rehearsal",
+        **cohort_fields(targets, "results/job.json", job_bytes, COND, {})}))
     source_commit = _commit_push(repo, "source")
     identity = gate.source_identity(repo)
     preflight = {"schema_version": gate.PREFLIGHT_SCHEMA, "pipeline_ready": True,
@@ -87,6 +95,8 @@ def project(tmp_path):
                  "job": {"path": "results/job.json",
                          "file_sha256": _sha(repo / "results/job.json")},
                  "inputs": {rel: _sha(repo / rel) for rel in ("results/job.json", *INPUTS)},
+                 "manifest": {"path": "results/manifest_v6.json"},
+                 "generation_outputs": {"base": OUT_BASE, "sft": OUT_SFT},
                  "model": MODEL, "adapter_manifest_sha256": ADAPTER}
     (repo / "results/preflight.json").write_text(json.dumps(preflight, sort_keys=True))
     receipt_commit = _commit_push(repo, "preflight receipt only")
@@ -115,6 +125,7 @@ def _authorise(p, **override) -> Path:
 
 def _evaluate(p, auth=None, arm="base", out=OUT_BASE, job="results/job.json", **kw):
     repo = p["repo"]
+    kw.setdefault("backend", "mock")
     return gate.evaluate(repo, repo / "results/preflight.json", auth, job_path=repo / job,
                          condition=kw.pop("condition", COND), arm=arm, out_dir=repo / out,
                          model_identity=kw.pop("model", lambda: MODEL),
@@ -323,7 +334,8 @@ def test_changed_tracked_input_is_rejected_even_when_committed(project, rel):
 
 
 @pytest.mark.parametrize("rel", ["results/sft_root_cause/full_suite.json",
-                                 "results/sft_root_cause/canaries/canary.json"])
+                                 "results/sft_root_cause/canaries/canary.json",
+                                 "results/sft_root_cause/rehearsal/records.jsonl"])
 def test_changed_ignored_suite_or_canary_receipt_is_rejected(project, rel):
     auth = _ready_with_auth(project)
     (project["repo"] / rel).write_text('{"passed": true, "forged": 1}')
@@ -376,14 +388,63 @@ def test_unrelated_results_change_is_not_a_receipt_only_descendant(project):
         _evaluate(project, auth=auth)["pipeline_problems"]
 
 
-def test_generation_output_of_the_first_arm_does_not_block_the_second(project):
+def _gen_argv(project, auth, arm):
+    repo = project["repo"]
+    out = OUT_BASE if arm == "base" else OUT_SFT
+    return ["run", "--job", str(repo / "results/job.json"), "--condition", COND, "--arm", arm,
+            "--out", str(repo / out), "--backend", "mock",
+            "--preflight", str(repo / "results/preflight.json"), "--authorization", str(auth)]
+
+
+def _patch_gen(project, monkeypatch):
+    monkeypatch.setattr(gen, "ROOT", project["repo"])
+    monkeypatch.setattr(gen, "model_identity", lambda: MODEL)
+    monkeypatch.setattr(gen, "adapter_sha256", lambda: ADAPTER)
+
+
+def test_sft_is_blocked_until_the_base_arm_is_complete_and_verified(project, monkeypatch):
     auth = _ready_with_auth(project)
-    base = project["repo"] / OUT_BASE
-    base.mkdir(parents=True)
-    (base / f"generations_{COND}_base.jsonl").write_text('{"key": "t0::42"}\n')
-    (base / f"contract_{COND}_base.json").write_text("{}")
-    result = _evaluate(project, auth=auth, arm="sft", out=OUT_SFT)
-    assert result["launch_ready"] is True, result
+    before = _evaluate(project, auth=auth, arm="sft", out=OUT_SFT, backend="mock")
+    assert before["launch_ready"] is False
+    assert any(p.startswith("base arm not complete and verified") for p in before["pipeline_problems"])
+    _patch_gen(project, monkeypatch)
+    with pytest.raises(gen.Refused, match="base arm not complete"):
+        gen.main(_gen_argv(project, auth, "sft"))
+    assert gen.main(_gen_argv(project, auth, "base")) == 0          # base first
+    after = _evaluate(project, auth=auth, arm="sft", out=OUT_SFT, backend="mock")
+    assert after["launch_ready"] is True, after                    # base output never blocks
+    verified = after["base_arm_verification"]
+    assert (verified["rows"], verified["candidates"]) == (6, 48)
+    assert gen.main(_gen_argv(project, auth, "sft")) == 0
+    sft_contract = json.loads((project["repo"] / OUT_SFT /
+                               f"contract_{COND}_sft.json").read_text())
+    assert sft_contract["identity"]["prior_arm_verification"]["file_sha256"] == \
+        verified["file_sha256"]
+
+
+@pytest.mark.parametrize("damage, fragment", [
+    (lambda path: path.write_text("".join(path.read_text().splitlines(True)[:-1])), "incomplete"),
+    (lambda path: path.write_bytes(path.read_bytes() + b'{"key"'), "partial line"),
+    (lambda path: path.write_text("".join(
+        json.dumps({**json.loads(l), "prompt_tokens": 0}) + "\n" if i == 0 else l
+        for i, l in enumerate(path.read_text().splitlines(True)))), "prompt_tokens"),
+])
+def test_damaged_base_arm_blocks_the_sft_launch(project, monkeypatch, damage, fragment):
+    auth = _ready_with_auth(project)
+    _patch_gen(project, monkeypatch)
+    assert gen.main(_gen_argv(project, auth, "base")) == 0
+    damage(project["repo"] / OUT_BASE / f"generations_{COND}_base.jsonl")
+    result = _evaluate(project, auth=auth, arm="sft", out=OUT_SFT, backend="mock")
+    assert result["launch_ready"] is False
+    assert any(fragment in p for p in result["pipeline_problems"]), result["pipeline_problems"]
+
+
+def test_base_from_another_backend_blocks_the_sft_launch(project, monkeypatch):
+    auth = _ready_with_auth(project)
+    _patch_gen(project, monkeypatch)
+    assert gen.main(_gen_argv(project, auth, "base")) == 0
+    result = _evaluate(project, auth=auth, arm="sft", out=OUT_SFT, backend="hf")
+    assert "base arm used a different backend" in result["pipeline_problems"]
 
 
 @pytest.mark.parametrize("rel", ["config/c.json", "tests/test_x.py",
@@ -396,3 +457,18 @@ def test_config_test_and_protocol_changes_remain_rejected(project, rel):
     assert "HEAD is not the preflight commit or a receipt-only descendant" in \
         result["pipeline_problems"]
     assert result["launch_ready"] is False
+
+
+def test_every_bound_input_is_revalidated(project):
+    """Tampering with ANY input recorded by the preflight blocks the launch."""
+    repo = project["repo"]
+    pre = json.loads((repo / "results/preflight.json").read_text())
+    auth = _ready_with_auth(project)
+    for rel in sorted(pre["inputs"]):
+        original = (repo / rel).read_bytes()
+        (repo / rel).write_bytes(original + b" ")
+        result = _evaluate(project, auth=auth)
+        assert f"input hash changed: {rel}" in result["pipeline_problems"], rel
+        assert result["launch_ready"] is False
+        (repo / rel).write_bytes(original)
+    assert _evaluate(project, auth=auth)["launch_ready"] is True

@@ -22,14 +22,14 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-OUT = ROOT / "results" / "sft_root_cause" / "native_v23_synthetic"
-RECEIPT = ROOT / "results" / "sft_root_cause" / "native_v23_canaries" / "pipeline_receipt.json"
+OUT = ROOT / "results" / "sft_root_cause" / "native_v24_synthetic"
+RECEIPT = ROOT / "results" / "sft_root_cause" / "native_v24_canaries" / "pipeline_receipt.json"
 COMPONENTS = ("harness/native_generated_test_prompt.py", "harness/native_generated_test_leakage.py",
               "scripts/native_generated_tests_generate.py",
               "scripts/native_generated_tests_execute_wsl.py", "scripts/native_sandbox_inner.sh",
               "scripts/native_rehearsal_prepare_wsl.py", "scripts/native_generated_tests_analyse.py",
               "scripts/native_pipeline_synthetic.py", "harness/native_launch_gate.py",
-              "scripts/native_generation_io.py")
+              "scripts/native_generation_io.py", "scripts/receipt_sanitize.py")
 
 # slot -> (designed candidate for "add", expected class; for "crash" the kill slot differs)
 DESIGN = {
@@ -113,9 +113,15 @@ def main() -> int:
     # amendment v2.3: an explicit cohort manifest (qualified / generation / exclusions)
     from scripts.native_generation_io import cohort_fields
     cohort_manifest = OUT / "manifest_cohort.json"
-    cohort_manifest.write_text(json.dumps({**manifest, **cohort_fields(
-        manifest["targets"], "job.json", job_bytes, "primary_whole_module", {})}, indent=1),
-        encoding="utf-8")
+    records = OUT / "records.jsonl"                # v2.4 C: the exact declared preparation
+    cohort_manifest.write_text(json.dumps({
+        **manifest, **cohort_fields(manifest["targets"], "job.json", job_bytes,
+                                    "primary_whole_module", {}),
+        "nature": "ENGINEERING SYNTHETIC PIPELINE TEST",
+        "study_mode": "engineering_dress_rehearsal",
+        "requalification_records": {"path": records.relative_to(ROOT).as_posix(),
+                                    "sha256": hashlib.sha256(records.read_bytes()).hexdigest()}},
+        indent=1), encoding="utf-8")
     gen_dir = OUT / "generations"
     if gen_dir.exists():
         import shutil
@@ -160,10 +166,20 @@ def main() -> int:
                        "--condition", "primary_whole_module",
                        "--study-mode", "engineering_dress_rehearsal", "--out", str(artifact)])
         result = json.loads(artifact.read_text(encoding="utf-8"))
-        checks["analysis_engineering_mode"] = ("SUPPRESSED" in result["decisions"]
-                                               and result["unique_bugs_killed"] == {"base": 0, "sft": 2}
-                                               and result["cohort"]["generation_targets"] == 2
-                                               and "generation_telemetry" in result)
+        # the 2-target, 1-repository toy must FAIL the inherited coverage gate (v2.4 G), so
+        # every arm comparison is suppressed; kill correctness is checked on the rows above
+        checks["analysis_engineering_mode"] = (
+            "SUPPRESSED" in result["decisions"]
+            and result["engineering_gate_passed"] is False
+            and result["engineering_gate"]["failures"] == ["1 repositories (< 5)"]
+            and result["arm_comparison"].startswith("SUPPRESSED")
+            and "unique_bugs_killed" not in result and "kill_at_8" not in result
+            and result["cohort"]["generation_targets"] == 2
+            and "generation_telemetry" in result)
+        checks["sft_kills_both_toy_targets"] = sorted(
+            {r["target_key"] for r in rows if r["arm"] == "sft" and r["class"] in
+             ("semantic_kill", "crash_kill")}) == sorted(i["target_key"] for i in job["items"])             and not any(r["class"] in ("semantic_kill", "crash_kill")
+                        for r in rows if r["arm"] == "base")
     except Exception as exc:
         checks["analysis_engineering_mode"] = False
         print("analysis failed:", exc)
@@ -176,6 +192,8 @@ def finish(checks: dict, detail: dict) -> int:
                "components_sha256": {c: hashlib.sha256((ROOT / c).read_bytes()).hexdigest()
                                      for c in COMPONENTS},
                "checks": checks, "passed": bool(checks) and all(checks.values()), **detail}
+    from scripts.receipt_sanitize import scrub_json     # tracked receipt: no user paths
+    receipt = scrub_json(receipt)
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     RECEIPT.write_text(json.dumps(receipt, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps({"passed": receipt["passed"], "checks": checks,

@@ -20,7 +20,8 @@ if str(ROOT) not in sys.path:
 
 def main(argv=None) -> int:
     from harness.native_launch_gate import evaluate
-    from scripts.native_generated_tests_generate import ARMS, adapter_sha256, model_identity
+    from scripts.native_generated_tests_generate import (ARMS, adapter_sha256, model_identity,
+                                                         source_tree_identity)
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--preflight", required=True)
@@ -29,11 +30,13 @@ def main(argv=None) -> int:
     parser.add_argument("--arm", required=True, choices=ARMS)
     parser.add_argument("--out", required=True)
     parser.add_argument("--condition", default="primary_whole_module")
+    parser.add_argument("--backend", default="hf", choices=("hf", "mock"))
     args = parser.parse_args(argv)
     result = evaluate(ROOT, ROOT / args.preflight, ROOT / args.authorization,
                       job_path=ROOT / args.job, condition=args.condition, arm=args.arm,
                       out_dir=ROOT / args.out, model_identity=model_identity,
-                      adapter_sha256=adapter_sha256)
+                      adapter_sha256=adapter_sha256, backend=args.backend,
+                      generation_source=source_tree_identity)
     print(json.dumps(result, indent=1, sort_keys=True))
     return 0 if result["launch_ready"] else 2
 

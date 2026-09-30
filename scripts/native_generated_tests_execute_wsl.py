@@ -38,7 +38,8 @@ import sys
 import tempfile
 import time
 
-DESIGN_VERSION = "oneiros_native_generated_tests_execute_v4"
+DESIGN_VERSION = "oneiros_native_generated_tests_execute_v5"
+REPO_ROOT = Path(__file__).resolve().parent.parent
 HERE = Path(__file__).resolve().parent
 INNER = HERE / "native_sandbox_inner.sh"
 if str(HERE) not in sys.path:
@@ -460,10 +461,25 @@ def run_sandboxed(python: str, env_dir: Path, view: Path, spec: dict, candidate:
     finally:
         shutil.rmtree(work, ignore_errors=True)
     path = out_dir / "report.json"
-    report = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {"harness_error": True}
+    raw = path.read_bytes() if path.exists() else b""
+    report = json.loads(raw.decode("utf-8")) if raw else {"harness_error": True}
     report.update(process_exit=code, seconds=seconds, tail=tail,
-                  wall_timeout=code in (124, 137, "backstop_timeout"))
+                  wall_timeout=code in (124, 137, "backstop_timeout"),
+                  raw_report_sha256=hashlib.sha256(raw).hexdigest() if raw else None)
     return report
+
+
+# Evidence kept per report (v2.4 D): everything classify() reads, nothing host-derived.
+EVIDENCE_FIELDS = ("attestation", "target_error", "collected", "collection_errors", "nodes",
+                   "exitstatus", "uid", "process_exit", "seconds", "wall_timeout",
+                   "harness_error", "raw_report_sha256")
+
+
+def sanitise(report: dict | None) -> dict | None:
+    """Sandbox-relative evidence only; the host-side process tail is dropped."""
+    if report is None:
+        return None
+    return {k: report[k] for k in EVIDENCE_FIELDS if k in report}
 
 
 def execute_candidate(target: dict, source: str, scratch: Path, enforce_policy: bool = True
@@ -471,13 +487,14 @@ def execute_candidate(target: dict, source: str, scratch: Path, enforce_policy: 
     """Static policy, buggy and fixed runs, rerun of potential kills, classification."""
     name = target["qualname"].split(".")[-1]
     static = static_check(source, name, enforce_policy)
+    expected = {label: target["module_sha256"][label] for label in ("buggy", "fixed")}
     if static["status"] != "ok":
-        return {"classification": classify(static, None, None), "static": static}
+        return {"classification": classify(static, None, None), "static": static,
+                "evidence": {"static": static, "expected": expected, "reports": {}}}
     spec = spec_for(target["module"], target["qualname"])
     runs = {label: run_sandboxed(target["python"], Path(target["env_dir"]),
                                  Path(target["views"][label]), spec, source, scratch / label)
             for label in ("buggy", "fixed")}
-    expected = {label: target["module_sha256"][label] for label in ("buggy", "fixed")}
     first = classify(static, runs["buggy"], runs["fixed"], None, expected)
     rerun = None
     if first["class"] in KILLS:
@@ -489,25 +506,89 @@ def execute_candidate(target: dict, source: str, scratch: Path, enforce_policy: 
                        "seconds": r.get("seconds"),
                        "attestation_ok": (r.get("attestation") or {}).get("module_sha256")
                        == expected[label]} for label, r in runs.items()}
+    reports = {"buggy": sanitise(runs["buggy"]), "fixed": sanitise(runs["fixed"])}
+    if rerun is not None:
+        reports.update(rerun_buggy=sanitise(rerun[0]), rerun_fixed=sanitise(rerun[1]))
     return {"classification": final, "static": static, "runs": summary,
-            "rerun": rerun is not None}
+            "rerun": rerun is not None,
+            "evidence": {"static": static, "expected": expected, "reports": reports}}
+
+
+def fixed_valid_of(cls: dict) -> bool:
+    return (cls.get("fixed_all_executed_passed_reached") is True
+            and cls["class"] not in ("nondeterminism",)
+            and (cls["class"] not in KILLS or cls.get("rerun_agrees") is True))
+
+
+def canary_status(reports: dict, expected: dict) -> bool:
+    """The known-good module ran, executed, passed and attested on both revisions."""
+    for label in ("buggy", "fixed"):
+        report = reports.get(label)
+        status = revision_outcome(report, expected.get(label))
+        node = ((report or {}).get("nodes") or {}).get(((report or {}).get("collected") or [""])[0], {})
+        if status["status"] != "ran" or not node or not _executed(node) or _failed(node):
+            return False
+    return True
+
+
+def verify_row(row: dict, module_source: str | None = None, target_name: str | None = None
+               ) -> list:
+    """Recompute a stored execution row from its retained evidence (v2.4 D). Returns the
+    disagreements; an empty list means the row is internally consistent."""
+    problems = []
+    evidence = row.get("evidence")
+    if not isinstance(evidence, dict):
+        return ["no retained evidence"]
+    canary = evidence.get("canary")
+    if not isinstance(canary, dict) or "reports" not in canary:
+        return ["no retained canary evidence"]
+    canary_passed = canary_status(canary["reports"], canary.get("expected") or {})
+    if row.get("canary_failed") is not (not canary_passed):
+        problems.append("canary_failed disagrees with the canary evidence")
+    if not canary_passed:
+        if row.get("class") != "environment_failure":
+            problems.append("failed canary but class is not environment_failure")
+        return problems
+    static, reports = evidence.get("static"), evidence.get("reports") or {}
+    if not isinstance(static, dict) or "status" not in static:
+        return problems + ["no static evidence"]
+    if module_source is not None and target_name is not None and \
+            static != static_check(module_source, target_name, True):
+        problems.append("static evidence disagrees with the module")
+    rerun = None
+    if "rerun_buggy" in reports or "rerun_fixed" in reports:
+        rerun = (reports.get("rerun_buggy"), reports.get("rerun_fixed"))
+    recomputed = classify(static, reports.get("buggy"), reports.get("fixed"), rerun,
+                          evidence.get("expected") or {})
+    if recomputed != row.get("classification") or recomputed["class"] != row.get("class"):
+        problems.append(f"class {row.get('class')!r} disagrees with evidence "
+                        f"({recomputed['class']!r})")
+    if recomputed["class"] in KILLS and rerun is None:
+        problems.append("kill without retained rerun evidence")
+    if fixed_valid_of(recomputed) is not row.get("fixed_valid"):
+        problems.append("fixed_valid disagrees with evidence")
+    return problems
 
 
 # --- durable run over real generations ------------------------------------------------------
 
-def canary_ok(target: dict, scratch: Path) -> bool:
-    """Known-good module in the same environment: proves the environment, not the model."""
+def canary_check(target: dict, scratch: Path) -> dict:
+    """Known-good module in the same environment: proves the environment, not the model.
+    Returns the verdict with its retained evidence (v2.4 D)."""
     top = target["qualname"].split(".")[0]
     good = f"from {target['module']} import {top}\n\n\ndef test_environment():\n    assert {top} is not None\n"
     spec = spec_for(target["module"], target["qualname"])
-    for label in ("buggy", "fixed"):
-        report = run_sandboxed(target["python"], Path(target["env_dir"]),
-                               Path(target["views"][label]), spec, good, scratch / f"canary_{label}")
-        status = revision_outcome(report, target["module_sha256"][label])
-        node = (report.get("nodes") or {}).get((report.get("collected") or [""])[0], {})
-        if status["status"] != "ran" or not _executed(node) or _failed(node):
-            return False
-    return True
+    expected = {label: target["module_sha256"][label] for label in ("buggy", "fixed")}
+    reports = {label: sanitise(run_sandboxed(target["python"], Path(target["env_dir"]),
+                                             Path(target["views"][label]), spec, good,
+                                             scratch / f"canary_{label}"))
+               for label in ("buggy", "fixed")}
+    return {"ok": canary_status(reports, expected), "reports": reports, "expected": expected,
+            "module_sha256": hashlib.sha256(good.encode()).hexdigest()}
+
+
+def canary_ok(target: dict, scratch: Path) -> bool:
+    return canary_check(target, scratch)["ok"]
 
 
 GENERATION_FIELDS = ("raw_sha256", "generated_tokens", "eos_reached", "finish_reason",
@@ -515,16 +596,10 @@ GENERATION_FIELDS = ("raw_sha256", "generated_tokens", "eos_reached", "finish_re
 
 
 def run(prep_path: Path, manifest_path: Path, job_path: Path, arms: dict, condition: str,
-        out: Path) -> int:
+        out: Path, root: Path | None = None) -> int:
     cohort = gio.resolve_cohort(job_path, manifest_path, condition)
-    prep = {}
-    for line in prep_path.read_text(encoding="utf-8").splitlines():
-        if line.strip():
-            row = json.loads(line)
-            prep[row["key"]] = row
-    missing = [k for k in cohort["generation"] if k not in prep]
-    if missing:
-        raise SystemExit(f"REFUSED: generation targets without preparation records: {missing[:3]}")
+    prepared = gio.resolve_prep(prep_path, manifest_path, root or REPO_ROOT)  # v2.4 C
+    prep = prepared["rows"]
     targets = []
     for key in cohort["generation"]:                  # the generation cohort only
         row = prep[key]
@@ -539,7 +614,8 @@ def run(prep_path: Path, manifest_path: Path, job_path: Path, arms: dict, condit
     contract = {"design_version": DESIGN_VERSION,
                 "executor_sha256": sha256_file(Path(__file__)), "inner_sha256": sha256_file(INNER),
                 "io_sha256": sha256_file(HERE / "native_generation_io.py"),
-                "prep_sha256": sha256_file(prep_path), "manifest_sha256": cohort["manifest_sha256"],
+                "prep": {"path": prepared["path"], "sha256": prepared["sha256"]},
+                "manifest_sha256": cohort["manifest_sha256"],
                 "job_file_sha256": cohort["job_file_sha256"], "job_sha256": cohort["job_sha256"],
                 "cohort": {"qualified": len(cohort["qualified"]),
                            "generation_targets": cohort["generation"],
@@ -590,7 +666,8 @@ def run(prep_path: Path, manifest_path: Path, job_path: Path, arms: dict, condit
     try:
         with results.open("a", encoding="utf-8") as handle:
             for t in targets:
-                env_ok = canary_ok(t, scratch_root / t["target_key"].replace("/", "_"))
+                canary = canary_check(t, scratch_root / t["target_key"].replace("/", "_"))
+                env_ok = canary["ok"]
                 for arm in ARMS:
                     for seed in SEEDS:
                         grow = gens["rows"][(arm, t["target_key"], seed)]
@@ -603,7 +680,7 @@ def run(prep_path: Path, manifest_path: Path, job_path: Path, arms: dict, condit
                                 outcome = execute_candidate(t, module, scratch_root / "c")
                             else:
                                 outcome = {"classification": {"class": "environment_failure"},
-                                           "canary_failed": True}
+                                           "canary_failed": True, "evidence": {}}
                             cls = outcome["classification"]
                             handle.write(json.dumps({
                                 "key": key, "contract_sha256": chash, "arm": arm, "seed": seed,
@@ -616,9 +693,8 @@ def run(prep_path: Path, manifest_path: Path, job_path: Path, arms: dict, condit
                                 "class": cls["class"], "classification": cls,
                                 "static": outcome.get("static"), "runs": outcome.get("runs"),
                                 "canary_failed": not env_ok,
-                                "fixed_valid": cls.get("fixed_all_executed_passed_reached") is True
-                                and cls["class"] not in ("nondeterminism",)
-                                and (cls["class"] not in KILLS or cls.get("rerun_agrees") is True)},
+                                "evidence": {**outcome["evidence"], "canary": canary},
+                                "fixed_valid": fixed_valid_of(cls)},
                                 sort_keys=True) + "\n")
                             handle.flush()
                             os.fsync(handle.fileno())
@@ -843,6 +919,8 @@ def canaries(out_dir: Path) -> int:
                                "observed": r["classification"]["class"]} for n, r in results.items()},
                "checks": checks, "passed": all(checks.values()),
                "nondeterminism": "covered by classifier unit tests (fresh filesystem per run)"}
+    import receipt_sanitize                             # tracked receipt: no user paths
+    receipt = receipt_sanitize.scrub_json(receipt)
     (out_dir / "canary_receipt_v2.json").write_text(json.dumps(receipt, indent=1, sort_keys=True)
                                                     + "\n", encoding="utf-8")
     print(json.dumps({"passed": receipt["passed"],

@@ -513,6 +513,59 @@ def _detach_flags() -> dict:
     return {"start_new_session": True}
 
 
+def _pid_alive(pid) -> bool:
+    """True if ``pid`` names a live process. Never signals it (on Windows os.kill(pid, 0)
+    would terminate it)."""
+    if not isinstance(pid, int) or pid <= 0:
+        return False
+    try:
+        import psutil
+        return psutil.pid_exists(pid) and psutil.Process(pid).status() != psutil.STATUS_ZOMBIE
+    except ImportError:
+        pass
+    except Exception:
+        return False
+    if os.name == "nt":
+        out = _run(["tasklist", "/FI", f"PID eq {pid}", "/NH"])
+        return str(pid) in out.split()
+    return Path(f"/proc/{pid}").exists()
+
+
+def exclusive_conflicts(key: str, runs_dir: Path) -> list[dict]:
+    """Runs holding the exclusive key ``key`` (amendment v2.4 I.1). A run blocks while it is
+    running with a live recorded process, or while its state is unknown (fail-closed).
+    Completed/failed runs, and 'running' runs whose recorded processes are all dead (stale),
+    do not block. Independent of --run-name and of the training-artifact validator."""
+    blocking = []
+    if not runs_dir.exists():
+        return blocking
+    for existing in sorted(runs_dir.iterdir()):
+        manifest_file = existing / "manifest.json"
+        if not manifest_file.exists():
+            continue
+        try:
+            other = json.loads(manifest_file.read_text(encoding="utf-8"))
+        except Exception:
+            blocking.append({"run_id": existing.name, "reason": "unreadable manifest"})
+            continue
+        if other.get("exclusive_key") != key:
+            continue
+        status_file = existing / "status.json"
+        try:
+            status = json.loads(status_file.read_text(encoding="utf-8"))
+        except Exception:
+            blocking.append({"run_id": existing.name, "reason": "state unknown (no status)"})
+            continue
+        state = status.get("state")
+        if state != "running":
+            continue
+        pids = [status.get(k) for k in ("supervisor_pid", "child_pid") if status.get(k)]
+        if not pids or any(_pid_alive(pid) for pid in pids):
+            blocking.append({"run_id": existing.name, "reason": "running",
+                             "pids": pids})
+    return blocking
+
+
 def cmd_start(args: argparse.Namespace) -> int:
     command = args.command
     if command and command[0] == "--":
@@ -565,11 +618,25 @@ def cmd_start(args: argparse.Namespace) -> int:
                 }, indent=2), file=sys.stderr)
                 return 3
 
+    # An exclusive key serialises launches that must never overlap (e.g. the base and SFT
+    # generation arms). --allow-concurrent does NOT override it.
+    exclusive_key = getattr(args, "exclusive_key", None)
+    if exclusive_key:
+        conflicts = exclusive_conflicts(exclusive_key, RUNS_DIR)
+        if conflicts:
+            print(json.dumps({
+                "error": "refusing to start: exclusive key held",
+                "exclusive_key": exclusive_key, "conflicts": conflicts,
+                "reason": "runs sharing an exclusive key must run strictly one at a time",
+            }, indent=2), file=sys.stderr)
+            return 4
+
     run_id = f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{args.name}"
     run_dir = RUNS_DIR / run_id
     run_dir.mkdir(parents=True, exist_ok=False)
 
     manifest = build_manifest(run_id, args.name, command)
+    manifest["exclusive_key"] = exclusive_key
     if args.resumed_from:
         manifest["resume"] = {
             "resumed": True,
@@ -719,6 +786,8 @@ def main() -> int:
 
     start = sub.add_parser("start", help="launch a detached, supervised run")
     start.add_argument("--name", required=True, help="short run label")
+    start.add_argument("--exclusive-key", default=None,
+                       help="serialise every run sharing this key (not overridable)")
     start.add_argument("--allow-concurrent", action="store_true",
                        help="permit a run that writes artifacts another running job owns")
     start.add_argument("--resumed-from", default=None)

@@ -130,3 +130,12 @@ crash-*
 # and must be reproducible from the repository; the ledgers they hash stay local.
 !results/sft_root_cause_*.json
 !results/sft_root_cause_*.md
+# Amendment v2.4 J: the four small v2.4 reproducibility receipts that the v2.4 preflight binds
+# are tracked so the branch is self-contained. Only these exact files; everything else under
+# results/sft_root_cause/ (ledgers, generations, views, quarantine) stays ignored.
+!results/sft_root_cause/
+!results/sft_root_cause/native_v24_canaries/
+!results/sft_root_cause/native_v24_full_suite.json
+!results/sft_root_cause/native_v24_canaries/pipeline_receipt.json
+!results/sft_root_cause/native_v24_canaries/canary_receipt_v2.json
+!results/sft_root_cause/native_v24_canaries/atheris_canary_receipt_v3.json

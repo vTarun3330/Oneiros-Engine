@@ -7,10 +7,13 @@ the sandbox executor (WSL, CPython 3.13) and the analysis.
   subset of the qualified targets, and that the excluded set equals the recorded
   pre-generation exclusions. The generation cohort is NEVER inferred from kept/qualified
   targets.
-* ``validate_row`` checks one generation row against telemetry schema
-  ``oneiros_native_generation_telemetry_v1`` (exact token IDs; EOS convention: the count
-  includes the first generated EOS and excludes later batch padding; ``hit_completion_limit``
-  only when no EOS was generated and exactly max_new_tokens were produced).
+* ``row_problems`` checks one generation row against telemetry schema
+  ``oneiros_native_generation_telemetry_v2`` (amendment v2.4 B): seed in {42, 43, 44},
+  key == target_key::seed, target_seed recomputed exactly, 0 < prompt_tokens <= 2048, the
+  job's prompt hash, exact candidate/batch counts, per-row CUDA peaks plus separately named
+  process-lifetime peaks; exact token IDs (the count includes the first generated EOS and
+  excludes later batch padding); ``hit_completion_limit`` only when no EOS was generated and
+  exactly max_new_tokens were produced.
 * ``load_arm_generations`` loads base/ and sft/ arm directories (or explicit per-arm paths),
   hashing every file and contract and refusing swapped arms, mismatched identities, and
   missing, duplicated, extra, stale or malformed rows.
@@ -24,15 +27,16 @@ from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional
 
 COHORT_VERSION = "oneiros_native_generation_cohort_v1"
-TELEMETRY_SCHEMA = "oneiros_native_generation_telemetry_v1"
+TELEMETRY_SCHEMA = "oneiros_native_generation_telemetry_v2"
 ARMS = ("base", "sft")
 SEEDS = (42, 43, 44)
 CANDIDATES = 8
 BATCH_SIZE = 2
 MAX_NEW_TOKENS = 1024
+PROMPT_TOKEN_LIMIT = 2048
 FINISH_REASONS = ("eos", "length")
 # identity fields that legitimately differ between the two arms of one experiment
-ARM_SPECIFIC = ("arm", "adapter_manifest_sha256")
+ARM_SPECIFIC = ("arm", "adapter_manifest_sha256", "prior_arm_verification")
 
 
 class CohortRefused(SystemExit):
@@ -49,6 +53,11 @@ def sha256_file(path: Path) -> str:
 
 def contract_sha(value: Any) -> str:
     return sha256_bytes(json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+
+
+def target_seed(seed: int, target_key: str) -> int:
+    """The per-target sampling seed, identical for both arms."""
+    return int(hashlib.sha256(f"{seed}:{target_key}".encode()).hexdigest()[:8], 16)
 
 
 def extract(raw: str) -> Dict[str, Any]:
@@ -138,12 +147,68 @@ def resolve_cohort(job_path: Path, manifest_path: Path,
     if problems:
         raise CohortRefused(f"REFUSED: generation cohort inconsistent: {problems}")
     return {"cohort_version": COHORT_VERSION, "condition": condition,
+            "nature": manifest.get("nature"), "study_mode": manifest.get("study_mode"),
+            "requalification_records": manifest.get("requalification_records"),
             "qualified": sorted(qualified), "generation": sorted(keys),
             "pre_generation_exclusions": list(manifest["pre_generation_exclusions"]),
             "repo_of": repo_of, "items": {i["target_key"]: i for i in job["items"]},
             "job_file_sha256": sha256_bytes(job_bytes), "job_sha256": job["job_sha256"],
             "manifest_sha256": sha256_file(manifest_path),
             "expected": expected_sizes(len(keys))}
+
+
+# --- preparation binding (amendment v2.4 section C) ----------------------------------------------
+
+PREP_REQUIRED = ("key", "category", "module", "qualname", "python_path", "env_dir", "interpreter",
+                 "views", "view_manifest_sha256", "module_sha256", "attestation",
+                 "environment_lock")
+
+
+def resolve_prep(prep_path: Path, manifest_path: Path, root: Path) -> Dict[str, Any]:
+    """The exact manifest-declared requalification records: path beneath ``root`` equal to
+    the declared path, exact SHA-256, one requalified record per qualified target, complete
+    fields. Never trusts a records file merely because it is well formed."""
+    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    declared = manifest.get("requalification_records") or {}
+    qualified = manifest.get("qualified_targets")
+    if not declared.get("path") or not declared.get("sha256") or not qualified:
+        raise CohortRefused("REFUSED: manifest declares no requalification records/qualified set")
+    root = Path(root).resolve()
+    given = Path(prep_path).resolve()
+    try:
+        given.relative_to(root)
+    except ValueError:
+        raise CohortRefused("REFUSED: --prep is not beneath the repository root") from None
+    if given != (root / declared["path"]).resolve():
+        raise CohortRefused(f"REFUSED: --prep is not the manifest-declared {declared['path']}")
+    data = given.read_bytes()
+    if sha256_bytes(data) != declared["sha256"]:
+        raise CohortRefused("REFUSED: preparation records differ from the manifest-declared hash")
+    rows: Dict[str, Dict[str, Any]] = {}
+    for number, line in enumerate(data.decode("utf-8").splitlines(), 1):
+        if not line.strip():
+            continue
+        try:
+            row = json.loads(line)
+        except ValueError:
+            raise CohortRefused(f"REFUSED: preparation line {number} malformed") from None
+        key = row.get("key")
+        if key in rows:
+            raise CohortRefused(f"REFUSED: duplicate preparation record {key}")
+        rows[key] = row
+    if set(rows) != set(qualified):
+        raise CohortRefused(f"REFUSED: preparation records {len(rows)} do not match the "
+                            f"{len(qualified)} qualified targets")
+    for key, row in rows.items():
+        missing = [f for f in PREP_REQUIRED if row.get(f) in (None, "", {}, [])]
+        if missing:
+            raise CohortRefused(f"REFUSED: preparation record {key} lacks {missing}")
+        if row["category"] != "requalified":
+            raise CohortRefused(f"REFUSED: preparation record {key} is {row['category']!r}")
+        for field in ("views", "view_manifest_sha256", "module_sha256"):
+            if not all(row[field].get(label) for label in ("buggy", "fixed")):
+                raise CohortRefused(f"REFUSED: preparation record {key} lacks {field}")
+    return {"path": declared["path"], "sha256": declared["sha256"], "rows": rows}
 
 
 # --- telemetry --------------------------------------------------------------------------------
@@ -188,13 +253,15 @@ def candidate_problems(c: Mapping[str, Any], max_new_tokens: int = MAX_NEW_TOKEN
 def row_problems(row: Mapping[str, Any], *, identity_sha256: str, arm: str, condition: str,
                  prompt_sha256: Optional[str], require_gpu_evidence: bool,
                  candidates: int = CANDIDATES, batch_size: int = BATCH_SIZE,
-                 max_new_tokens: int = MAX_NEW_TOKENS) -> List[str]:
+                 max_new_tokens: int = MAX_NEW_TOKENS,
+                 prompt_token_limit: int = PROMPT_TOKEN_LIMIT) -> List[str]:
     problems = []
     required = ("key", "arm", "condition", "seed", "target_seed", "target_key",
                 "identity_sha256", "prompt_sha256", "telemetry_schema", "prompt_tokens",
                 "wall_seconds", "batch_wall_seconds", "candidates_requested",
                 "candidates_produced", "model_load_seconds", "peak_allocated_bytes",
-                "peak_reserved_bytes", "candidates")
+                "peak_reserved_bytes", "process_peak_allocated_bytes",
+                "process_peak_reserved_bytes", "candidates")
     missing = [f for f in required if f not in row]
     if missing:
         return [f"missing {missing}"]
@@ -204,12 +271,20 @@ def row_problems(row: Mapping[str, Any], *, identity_sha256: str, arm: str, cond
         problems.append("identity (stale row)")
     if row["arm"] != arm or row["condition"] != condition:
         problems.append("arm/condition")
-    if row["key"] != f"{row['target_key']}::{row['seed']}":
+    seed = row["seed"]
+    if not isinstance(seed, int) or isinstance(seed, bool) or seed not in SEEDS:
+        problems.append("seed not in 42/43/44")
+    if not isinstance(row["target_key"], str) or row["key"] != f"{row['target_key']}::{seed}":
         problems.append("key")
+    elif not isinstance(row["target_seed"], int) or isinstance(row["target_seed"], bool) or \
+            not isinstance(seed, int) or row["target_seed"] != target_seed(seed, row["target_key"]):
+        problems.append("target_seed does not recompute")
     if prompt_sha256 is not None and row["prompt_sha256"] != prompt_sha256:
         problems.append("prompt hash differs from the job")
-    if not isinstance(row["prompt_tokens"], int) or row["prompt_tokens"] <= 0:
-        problems.append("prompt_tokens")
+    tokens = row["prompt_tokens"]
+    if not isinstance(tokens, int) or isinstance(tokens, bool) or \
+            not 0 < tokens <= prompt_token_limit:
+        problems.append("prompt_tokens outside 1..prompt limit")
     batches = math.ceil(candidates / batch_size)
     walls = row["batch_wall_seconds"]
     if not isinstance(walls, list) or len(walls) != batches or not all(_number(w) for w in walls):
@@ -219,9 +294,14 @@ def row_problems(row: Mapping[str, Any], *, identity_sha256: str, arm: str, cond
     if row["candidates_requested"] != candidates or row["candidates_produced"] != candidates or \
             not isinstance(row["candidates"], list) or len(row["candidates"]) != candidates:
         problems.append("candidate count")
-    for field in ("model_load_seconds", "peak_allocated_bytes", "peak_reserved_bytes"):
+    for field in ("model_load_seconds", "peak_allocated_bytes", "peak_reserved_bytes",
+                  "process_peak_allocated_bytes", "process_peak_reserved_bytes"):
         if not _number(row[field], allow_none=not require_gpu_evidence):
             problems.append(f"{field} missing or invalid")
+    if require_gpu_evidence and all(_number(row[f]) for f in (
+            "peak_allocated_bytes", "process_peak_allocated_bytes")) and \
+            row["peak_allocated_bytes"] > row["process_peak_allocated_bytes"]:
+        problems.append("row peak exceeds the process peak")
     for i, c in enumerate(row["candidates"] if isinstance(row["candidates"], list) else []):
         problems += [f"candidate {i}: {p}" for p in candidate_problems(c, max_new_tokens)]
     return problems
@@ -244,33 +324,79 @@ def arm_paths(root: Optional[Path], base: Optional[Path], sft: Optional[Path],
                   "contract": d / f"contract_{condition}_{arm}.json"} for arm, d in dirs.items()}
 
 
+def _arm_contract(p: Mapping[str, Path], arm: str, cohort: Mapping[str, Any]) -> Dict[str, Any]:
+    if not p["rows"].is_file() or not p["contract"].is_file():
+        raise CohortRefused(f"REFUSED: {arm} generation file or contract missing")
+    contract = json.loads(p["contract"].read_text(encoding="utf-8"))
+    identity = contract.get("identity") or {}
+    problems = []
+    if identity.get("arm") != arm:
+        problems.append(f"contract arm is {identity.get('arm')!r} (swapped arms?)")
+    if identity.get("condition") != cohort["condition"]:
+        problems.append("condition")
+    if identity.get("job_sha256") != cohort["job_sha256"] or \
+            identity.get("job_file_sha256") != cohort["job_file_sha256"]:
+        problems.append("job differs")
+    if contract.get("telemetry_schema") != TELEMETRY_SCHEMA:
+        problems.append("telemetry schema")
+    adapter = identity.get("adapter_manifest_sha256")
+    if (arm == "base") != (adapter is None):
+        problems.append("adapter identity inconsistent with the arm")
+    if problems:
+        raise CohortRefused(f"REFUSED: {arm} generation contract: {problems}")
+    return contract
+
+
+def _arm_rows(p: Mapping[str, Path], arm: str, contract: Mapping[str, Any],
+              cohort: Mapping[str, Any], gpu: bool) -> Dict[str, Dict[str, Any]]:
+    expected = {f"{t}::{s}" for t in cohort["generation"] for s in SEEDS}
+    data = p["rows"].read_bytes()
+    if data and not data.endswith(b"\n"):
+        raise CohortRefused(f"REFUSED: {arm} generation file ends with a partial line")
+    ihash = contract_sha(contract)
+    seen: Dict[str, Dict[str, Any]] = {}
+    for number, line in enumerate(data.decode("utf-8").splitlines(), 1):
+        try:
+            row = json.loads(line)
+        except ValueError:
+            raise CohortRefused(f"REFUSED: {arm} line {number} malformed") from None
+        key = row.get("key")
+        if key not in expected:
+            raise CohortRefused(f"REFUSED: {arm} line {number}: unexpected target-seed {key!r}")
+        if key in seen:
+            raise CohortRefused(f"REFUSED: {arm} line {number}: duplicate {key}")
+        problems = row_problems(row, identity_sha256=ihash, arm=arm,
+                                condition=cohort["condition"],
+                                prompt_sha256=cohort["items"][row["target_key"]]["prompt_sha256"],
+                                require_gpu_evidence=gpu)
+        if problems:
+            raise CohortRefused(f"REFUSED: {arm} {key}: {problems[:4]}")
+        seen[key] = row
+    if set(seen) != expected:
+        raise CohortRefused(f"REFUSED: {arm} generations incomplete: "
+                            f"{len(expected - set(seen))} target-seed rows missing")
+    return seen
+
+
+def verify_single_arm(arm_dir: Path, arm: str, cohort: Mapping[str, Any]) -> Dict[str, Any]:
+    """One arm complete and exact (amendment v2.4 I.2): every expected target-seed row,
+    full telemetry, the frozen job; returns immutable hashes. Never copies or merges."""
+    d = Path(arm_dir)
+    p = {"dir": d, "rows": d / f"generations_{cohort['condition']}_{arm}.jsonl",
+         "contract": d / f"contract_{cohort['condition']}_{arm}.json"}
+    contract = _arm_contract(p, arm, cohort)
+    rows = _arm_rows(p, arm, contract, cohort, contract["identity"].get("backend") == "hf")
+    return {"arm": arm, "rows": len(rows),
+            "candidates": sum(len(r["candidates"]) for r in rows.values()),
+            "file_sha256": sha256_file(p["rows"]), "contract_sha256": sha256_file(p["contract"]),
+            "identity_sha256": contract_sha(contract), "identity": contract["identity"],
+            "telemetry_schema": contract["telemetry_schema"]}
+
+
 def load_arm_generations(paths: Mapping[str, Mapping[str, Path]], cohort: Mapping[str, Any]
                          ) -> Dict[str, Any]:
-    condition = cohort["condition"]
-    contracts, out = {}, {"rows": {}, "files_sha256": {}, "contracts_sha256": {}}
-    for arm in ARMS:
-        p = paths[arm]
-        if not p["rows"].is_file() or not p["contract"].is_file():
-            raise CohortRefused(f"REFUSED: {arm} generation file or contract missing")
-        contract = json.loads(p["contract"].read_text(encoding="utf-8"))
-        identity = contract.get("identity") or {}
-        problems = []
-        if identity.get("arm") != arm:
-            problems.append(f"contract arm is {identity.get('arm')!r} (swapped arms?)")
-        if identity.get("condition") != condition:
-            problems.append("condition")
-        if identity.get("job_sha256") != cohort["job_sha256"] or \
-                identity.get("job_file_sha256") != cohort["job_file_sha256"]:
-            problems.append("job differs")
-        if contract.get("telemetry_schema") != TELEMETRY_SCHEMA:
-            problems.append("telemetry schema")
-        adapter = identity.get("adapter_manifest_sha256")
-        if (arm == "base") != (adapter is None):
-            problems.append("adapter identity inconsistent with the arm")
-        if problems:
-            raise CohortRefused(f"REFUSED: {arm} generation contract: {problems}")
-        contracts[arm] = contract
-        out["contracts_sha256"][arm] = sha256_file(p["contract"])
+    contracts = {arm: _arm_contract(paths[arm], arm, cohort) for arm in ARMS}
+    out = {"rows": {}, "files_sha256": {}, "contracts_sha256": {}}
     comparable = [{**{k: v for k, v in c.items() if k != "identity"},
                    "identity": {k: v for k, v in c["identity"].items() if k not in ARM_SPECIFIC}}
                   for c in (contracts["base"], contracts["sft"])]
@@ -280,35 +406,12 @@ def load_arm_generations(paths: Mapping[str, Mapping[str, Path]], cohort: Mappin
         raise CohortRefused(f"REFUSED: base and sft generation contracts differ beyond the arm: "
                             f"{diff or 'generator/contract'}")
     gpu = contracts["base"]["identity"].get("backend") == "hf"
-    expected = {f"{t}::{s}" for t in cohort["generation"] for s in SEEDS}
     for arm in ARMS:
-        data = paths[arm]["rows"].read_bytes()
-        if data and not data.endswith(b"\n"):
-            raise CohortRefused(f"REFUSED: {arm} generation file ends with a partial line")
-        ihash = contract_sha(contracts[arm])
-        seen = {}
-        for number, line in enumerate(data.decode("utf-8").splitlines(), 1):
-            try:
-                row = json.loads(line)
-            except ValueError:
-                raise CohortRefused(f"REFUSED: {arm} line {number} malformed") from None
-            key = row.get("key")
-            if key not in expected:
-                raise CohortRefused(f"REFUSED: {arm} line {number}: unexpected target-seed {key!r}")
-            if key in seen:
-                raise CohortRefused(f"REFUSED: {arm} line {number}: duplicate {key}")
-            problems = row_problems(row, identity_sha256=ihash, arm=arm, condition=condition,
-                                    prompt_sha256=cohort["items"][row["target_key"]]["prompt_sha256"],
-                                    require_gpu_evidence=gpu)
-            if problems:
-                raise CohortRefused(f"REFUSED: {arm} {key}: {problems[:4]}")
-            seen[key] = row
-        if set(seen) != expected:
-            raise CohortRefused(f"REFUSED: {arm} generations incomplete: "
-                                f"{len(expected - set(seen))} target-seed rows missing")
+        seen = _arm_rows(paths[arm], arm, contracts[arm], cohort, gpu)
         for row in seen.values():
             out["rows"][(arm, row["target_key"], int(row["seed"]))] = row
         out["files_sha256"][arm] = sha256_file(paths[arm]["rows"])
+        out["contracts_sha256"][arm] = sha256_file(paths[arm]["contract"])
     out["identity_sha256"] = {arm: contract_sha(contracts[arm]) for arm in ARMS}
     out["gpu_evidence_required"] = gpu
     return out

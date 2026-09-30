@@ -19,7 +19,7 @@ import time
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-OUT = "results/sft_root_cause/native_v22_full_suite.json"
+OUT = "results/sft_root_cause/native_v24_full_suite.json"
 
 
 def main(argv=None) -> int:
@@ -49,6 +49,8 @@ def main(argv=None) -> int:
                "tail": tail[-1500:]}
     if dirty:
         receipt["exit"] = receipt["exit"] or 99
+    from scripts.receipt_sanitize import scrub_json     # tracked receipt: no user paths
+    receipt = scrub_json(receipt)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(receipt, indent=1) + "\n", encoding="utf-8")
     print(json.dumps({k: receipt[k] for k in ("source_commit", "exit", "passed", "failed",

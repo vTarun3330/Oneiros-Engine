@@ -52,7 +52,7 @@ def test_budgets_and_parity_constants():
     assert ath.FULL_BUDGET_CPU_SECONDS == 600 and ath.CORPUS_CAP == 2000
     assert ath.PYTHON == "/usr/bin/python3.11"
     assert ath.MODES == ("ordinary", "posthoc", "differential")
-    assert ath.DESIGN_VERSION == "oneiros_native_generated_tests_atheris_v3"
+    assert ath.DESIGN_VERSION == "oneiros_native_generated_tests_atheris_v4"
     assert ath.tolerance(600) == pytest.approx(13.0) and ath.tolerance(20) == pytest.approx(1.4)
 
 

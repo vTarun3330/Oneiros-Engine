@@ -191,7 +191,7 @@ def test_generator_uses_the_launch_gate_and_no_file_existence_shortcut():
     assert "from harness.native_launch_gate import evaluate" in source
     assert "verify_authorization" not in source and ".exists()" not in source.split(
         "def launch_gate", 1)[1].split("def ", 1)[0]
-    assert gen.PROTOCOL_FILES[-1].endswith("PROTOCOL_V2_3.md")
+    assert gen.PROTOCOL_FILES[-1].endswith("PROTOCOL_V2_4.md")
 
 
 # --- generation telemetry (amendment v2.3 section B) ------------------------------------------
@@ -210,8 +210,8 @@ def test_finish_counts_through_the_first_eos_and_ignores_batch_padding():
 
 
 def test_telemetry_version_and_contract_fields():
-    assert gen.GENERATOR_VERSION == "oneiros_native_generated_tests_generate_v3"
-    assert gen.arm_contract(IDENTITY)["telemetry_schema"] == "oneiros_native_generation_telemetry_v1"
+    assert gen.GENERATOR_VERSION == "oneiros_native_generated_tests_generate_v4"
+    assert gen.arm_contract(IDENTITY)["telemetry_schema"] == "oneiros_native_generation_telemetry_v2"
     sampling = {k: gen.CONTRACT[k] for k in ("temperature", "top_p", "do_sample",
                                              "max_new_tokens", "candidates", "seeds")}
     assert sampling == {"temperature": 0.7, "top_p": 0.9, "do_sample": True,
@@ -313,3 +313,89 @@ def test_malformed_telemetry_quarantines_the_file(tmp_path):
     path.write_text("".join(json.dumps(r) + "\n" for r in rows))
     again = gen.run(_job(1), "base", "primary_whole_module", tmp_path, IDENTITY, gen.mock_backend)
     assert again["lines"] == 3 and list((tmp_path / "quarantine").iterdir())
+
+
+# --- telemetry v2 integrity (amendment v2.4 section B) ----------------------------------------
+
+@pytest.mark.parametrize("mutate, fragment", [
+    (lambda r: r.update(target_seed=r["target_seed"] + 1), "target_seed does not recompute"),
+    (lambda r: r.update(target_seed=str(r["target_seed"])), "target_seed does not recompute"),
+    (lambda r: r.update(seed=41, key=f"{r['target_key']}::41"), "seed not in 42/43/44"),
+    (lambda r: r.update(seed=True), "seed not in 42/43/44"),
+    (lambda r: r.update(prompt_tokens=0), "prompt_tokens outside"),
+    (lambda r: r.update(prompt_tokens=2049), "prompt_tokens outside"),
+    (lambda r: r.update(key=r["key"] + "x"), "key"),
+    (lambda r: r.update(prompt_sha256="0" * 64), "prompt hash differs"),
+    (lambda r: r.pop("process_peak_reserved_bytes"), "missing"),
+    (lambda r: r.update(batch_wall_seconds=r["batch_wall_seconds"][:3]), "batch_wall_seconds"),
+])
+def test_tampered_row_identity_is_refused_on_resume_and_downstream(tmp_path, mutate, fragment):
+    from scripts import native_generation_io as gio
+    job = _job(1)
+    path, rows = _row(tmp_path)
+    mutate(rows[0])
+    prompt = {i["target_key"]: i["prompt_sha256"] for i in job["items"]}
+    problems = gio.row_problems(rows[0], identity_sha256=rows[0]["identity_sha256"], arm="base",
+                                condition="primary_whole_module",
+                                prompt_sha256=prompt[job["items"][0]["target_key"]],
+                                require_gpu_evidence=False)
+    assert any(fragment in p for p in problems), problems
+    path.write_text("".join(json.dumps(r) + "\n" for r in rows))        # resume
+    again = gen.run(job, "base", "primary_whole_module", tmp_path, IDENTITY, gen.mock_backend)
+    assert again["lines"] == 3 and len(list((tmp_path / "quarantine").iterdir())) == 1
+    fresh = [json.loads(l) for l in path.read_text().splitlines()]
+    assert all(not gio.row_problems(r, identity_sha256=r["identity_sha256"], arm="base",
+                                    condition="primary_whole_module", prompt_sha256=None,
+                                    require_gpu_evidence=False) for r in fresh)
+
+
+class _FakeCuda:
+    def __init__(self, peaks):
+        self.calls, self.peaks, self.current = [], list(peaks), (0, 0)
+
+    def synchronize(self):
+        self.calls.append("synchronize")
+
+    def reset_peak_memory_stats(self):
+        self.calls.append("reset")
+        self.current = self.peaks.pop(0)
+
+    def max_memory_allocated(self):
+        self.calls.append("read_allocated")
+        return self.current[0]
+
+    def max_memory_reserved(self):
+        self.calls.append("read_reserved")
+        return self.current[1]
+
+
+def test_peak_memory_is_row_scoped_and_process_peak_is_separate():
+    cuda = _FakeCuda([(900, 1000), (500, 800)])
+    process = {"allocated": 700, "reserved": 750}           # e.g. after model load
+    order = []
+    first = gen.measured_row(cuda, lambda: order.append(list(cuda.calls)) or {"x": 1}, process)
+    assert order[0] == ["synchronize", "reset"]             # reset immediately before the row
+    assert cuda.calls == ["synchronize", "reset", "synchronize", "read_allocated",
+                          "read_reserved"]
+    assert (first["peak_allocated_bytes"], first["peak_reserved_bytes"]) == (900, 1000)
+    second = gen.measured_row(cuda, lambda: {"x": 2}, process)
+    assert (second["peak_allocated_bytes"], second["peak_reserved_bytes"]) == (500, 800)
+    assert (second["process_peak_allocated_bytes"], second["process_peak_reserved_bytes"]) == \
+        (900, 1000)                                          # lifetime maximum, named separately
+
+
+def test_row_peak_above_process_peak_is_refused():
+    from scripts import native_generation_io as gio
+    row = {"peak_allocated_bytes": 10, "process_peak_allocated_bytes": 5}
+    assert gio.row_problems.__code__.co_varnames  # function exists
+    base = gen.build_row(key="t0::42", arm="base", condition="primary_whole_module", seed=42,
+                         tseed=gen.target_seed(42, "t0"),
+                         item={"target_key": "t0", "prompt_sha256": "p"}, ihash="i",
+                         result={**gen.mock_backend("a b", 8, 1), "model_load_seconds": 1.0,
+                                 "peak_allocated_bytes": 10, "peak_reserved_bytes": 20,
+                                 "process_peak_allocated_bytes": 5,
+                                 "process_peak_reserved_bytes": 30})
+    problems = gio.row_problems(base, identity_sha256="i", arm="base",
+                                condition="primary_whole_module", prompt_sha256="p",
+                                require_gpu_evidence=True)
+    assert problems == ["row peak exceeds the process peak"] and row
