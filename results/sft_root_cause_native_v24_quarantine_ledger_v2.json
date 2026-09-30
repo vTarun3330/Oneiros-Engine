@@ -1,0 +1,138 @@
+{
+ "control_plane_failures": [
+  "server-side command classifier returned no verdict for repeated git add/status requests; the commands never executed (not repository failures)"
+ ],
+ "cycle": "amendment v2.4",
+ "entries": [
+  {
+   "artifact": "results/sft_root_cause/quarantine/v24_pipeline_attempt1/pipeline_receipt.json",
+   "corrective_change": "scripts/native_pipeline_synthetic.py now declares the exact preparation file and hash (commit a26b72f)",
+   "reason": "the synthetic cohort manifest did not declare the requalification records required by v2.4 C, so the executor correctly refused (execution_complete=false)",
+   "sha256": "a632732a98e4a7d21064f21399902571ec8d9c35d4c02d3513f262c5500ba528",
+   "superseded_by": {
+    "path": "results/sft_root_cause/native_v24_canaries/pipeline_receipt.json",
+    "sha256": "c9cd820221dcb2463514a6e60b6e98eda9c0e1696ac3e1e8a9dfca7d20f08e88"
+   }
+  },
+  {
+   "artifact": "results/sft_root_cause/quarantine/v24_pipeline_attempt2/pipeline_receipt.json",
+   "corrective_change": "the synthetic check asserts the gate failure and the suppression (commit a26b72f); later strengthened to assert every engineering subgate",
+   "reason": "the synthetic analysis check still expected arm-comparison metrics that the v2.4 coverage/repository gate correctly suppresses for the 2-target, 1-repository toy",
+   "sha256": "1487bc693881eeb4350d17673fa934bb1034c5fe2a07ad34720c1995fec24841",
+   "superseded_by": {
+    "path": "results/sft_root_cause/native_v24_canaries/pipeline_receipt.json",
+    "sha256": "c9cd820221dcb2463514a6e60b6e98eda9c0e1696ac3e1e8a9dfca7d20f08e88"
+   }
+  },
+  {
+   "artifact": "results/sft_root_cause/quarantine/v24_pipeline_attempt3/pipeline_receipt.json",
+   "corrective_change": "the synthetic check expects coverage=true, repositories=false (commit 397d2c1)",
+   "reason": "the strengthened synthetic check expected coverage_gate_passed=false, but the 2-target toy has 2 of 2 qualified targets eligible, so coverage correctly passes; only the repository and synthetic stage-receipt subgates fail (the analysis was correct)",
+   "sha256": "8ade4447c94f59acd83b50da8cfc8578a3087641caa0789d2cd3a747c1fc6aea",
+   "superseded_by": {
+    "path": "results/sft_root_cause/native_v24_canaries/pipeline_receipt.json",
+    "sha256": "c9cd820221dcb2463514a6e60b6e98eda9c0e1696ac3e1e8a9dfca7d20f08e88"
+   }
+  },
+  {
+   "artifact": "results/sft_root_cause/quarantine/v24_pipeline_attempt4/pipeline_receipt.json",
+   "corrective_change": "native_pipeline_synthetic.finish() writes UTF-8 LF bytes (follow-up commit after 397d2c1)",
+   "reason": "passed every check but was written with platform (CRLF) line endings, so its bytes would not reproduce on checkout",
+   "sha256": "33e5d3f4f9c68dd09a19a87839702b9e3e32f38a94100530b5254635bae638fa",
+   "superseded_by": {
+    "path": "results/sft_root_cause/native_v24_canaries/pipeline_receipt.json",
+    "sha256": "c9cd820221dcb2463514a6e60b6e98eda9c0e1696ac3e1e8a9dfca7d20f08e88"
+   }
+  }
+ ],
+ "retired_immutable_artifacts": [
+  {
+   "artifact": "results/sft_root_cause_native_v24_quarantine_ledger.json",
+   "committed_in": "c6077bc",
+   "reason": "ledger v1: its superseded_by hashes name the pre-fix pipeline receipt; succeeded by v2",
+   "sha256": "2fb360e67ced6e12e057074ce73e5d3be65fc03e3498da92e6ae65ec92370cdf",
+   "still_present_and_unchanged": true
+  },
+  {
+   "artifact": "results/sft_root_cause/native_v24_full_suite.json",
+   "committed_in": "c6077bc",
+   "reason": "full-suite receipt for pre-fix source caa0012 (immutable); succeeded by native_v24_full_suite_r2.json",
+   "sha256": "32ffd4545f33f36e2685db9a1f4e2797b92bd48b12f917ae00654f72a282a597",
+   "still_present_and_unchanged": true
+  },
+  {
+   "artifact": "results/sft_root_cause_native_generated_tests_preflight_v2_4.json",
+   "committed_in": "78bf3ef",
+   "reason": "preflight bound to pre-fix source caa0012; stale after the Atheris resume fix; no authorisation was ever bound to it; succeeded by preflight_v2_4_r2",
+   "sha256": "c5479bb371f6c8ecbfaaa06491c3bde0f14db46e4908b1d654b3d257963104cd",
+   "still_present_and_unchanged": true
+  }
+ ],
+ "schema_version": "oneiros_native_quarantine_ledger_v1",
+ "superseded_receipts": [
+  {
+   "artifact": "results/sft_root_cause/native_v24_canaries/pipeline_receipt.json",
+   "committed_in": "13b60da",
+   "reason": "superseded by the v2.4 implementation-conformance fix (live views, Atheris eligibility, analysis binding, complete gate, atomic launch); preserved in Git history",
+   "sha256": "92a02d0b70141cf09a339e48a17d9cb678754aac333a02d394dae8a767fc39c3",
+   "superseded_by": {
+    "path": "results/sft_root_cause/native_v24_canaries/pipeline_receipt.json",
+    "sha256": "c9cd820221dcb2463514a6e60b6e98eda9c0e1696ac3e1e8a9dfca7d20f08e88"
+   }
+  },
+  {
+   "artifact": "results/sft_root_cause/native_v24_canaries/canary_receipt_v2.json",
+   "committed_in": "13b60da",
+   "reason": "superseded by the v2.4 implementation-conformance fix (live views, Atheris eligibility, analysis binding, complete gate, atomic launch); preserved in Git history",
+   "sha256": "d5d41625ceb6ad42ab0bbf298514d963220db8ce2374b6d7adf5d890e63e48c9",
+   "superseded_by": {
+    "path": "results/sft_root_cause/native_v24_canaries/canary_receipt_v2.json",
+    "sha256": "6a949b02a3558bebfdbbaf1b07c7b8a1feca65492f20c1f11cc2aa05ae238d38"
+   }
+  },
+  {
+   "artifact": "results/sft_root_cause/native_v24_canaries/atheris_canary_receipt_v3.json",
+   "committed_in": "13b60da",
+   "reason": "superseded by the v2.4 implementation-conformance fix (live views, Atheris eligibility, analysis binding, complete gate, atomic launch); preserved in Git history",
+   "sha256": "3f8fa959404fcc193ce20c6823fb4bfced46bc601a659fb48a8686b7acf99950",
+   "superseded_by": {
+    "path": "results/sft_root_cause/native_v24_canaries/atheris_canary_receipt_v3.json",
+    "sha256": "084ec5bfb49c706130dbbd660e74227f396a069329143b89baf3e780f3556b30"
+   }
+  },
+  {
+   "artifact": "results/sft_root_cause/native_v24_canaries/pipeline_receipt.json",
+   "committed_in": "eeeaced",
+   "reason": "superseded by the Atheris resume-validation fix (one shared row validator for resume and the final loader; source change after this receipt); preserved in Git history",
+   "sha256": "9c9dd2799b7eff6b4ccbf3e044fd3baecdfd02b21049b7a73bd0a2cf3beeb017",
+   "superseded_by": {
+    "path": "results/sft_root_cause/native_v24_canaries/pipeline_receipt.json",
+    "sha256": "c9cd820221dcb2463514a6e60b6e98eda9c0e1696ac3e1e8a9dfca7d20f08e88"
+   }
+  },
+  {
+   "artifact": "results/sft_root_cause/native_v24_canaries/canary_receipt_v2.json",
+   "committed_in": "eeeaced",
+   "reason": "superseded by the Atheris resume-validation fix (one shared row validator for resume and the final loader; source change after this receipt); preserved in Git history",
+   "sha256": "6a949b02a3558bebfdbbaf1b07c7b8a1feca65492f20c1f11cc2aa05ae238d38",
+   "superseded_by": {
+    "path": "results/sft_root_cause/native_v24_canaries/canary_receipt_v2.json",
+    "sha256": "6a949b02a3558bebfdbbaf1b07c7b8a1feca65492f20c1f11cc2aa05ae238d38"
+   }
+  },
+  {
+   "artifact": "results/sft_root_cause/native_v24_canaries/atheris_canary_receipt_v3.json",
+   "committed_in": "eeeaced",
+   "reason": "superseded by the Atheris resume-validation fix (one shared row validator for resume and the final loader; source change after this receipt); preserved in Git history",
+   "sha256": "cf58b29016039f4f22fed950af8bb8eda096c8edfc96ee4cbdea0dd7ced2dd4f",
+   "superseded_by": {
+    "path": "results/sft_root_cause/native_v24_canaries/atheris_canary_receipt_v3.json",
+    "sha256": "084ec5bfb49c706130dbbd660e74227f396a069329143b89baf3e780f3556b30"
+   }
+  }
+ ],
+ "supersedes_ledger": {
+  "path": "results/sft_root_cause_native_v24_quarantine_ledger.json",
+  "sha256": "2fb360e67ced6e12e057074ce73e5d3be65fc03e3498da92e6ae65ec92370cdf"
+ }
+}

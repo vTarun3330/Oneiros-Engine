@@ -1,0 +1,19 @@
+{
+ "schema_version": "oneiros_native_full_suite_receipt_v2",
+ "source_commit": "573cd48a3b813ba230fd3626d3ae7299274ea337",
+ "tree_clean_at_start": true,
+ "executable_tree_sha256": "78edcf6679e8e51f98e165ffabb950e5972456b18715962d1cb7d52475ac9182",
+ "protocol_sha256": {
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md": "75131551082876d65be0609db619673417a6728e3c612cc2ebc69e808a1cc5a1",
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md": "8d48aa36def2e67d3ce5b876af0317fc4eb7199b5422eadca823980ec27d2901",
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md": "b5ebe83b37d184dd785b740267e7efd01a7022fa30df92ecba9f061985228998",
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md": "1ffda40c14c48788f21fb569f2888ad8c86988e6177b5de61d56714db3d172f4",
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_4.md": "ef2f231321314c25ccb156d9f6cfb9e44ff4823435173c8590623bf17deecd61"
+ },
+ "exit": 0,
+ "passed": 2636,
+ "failed": 0,
+ "skipped": 3,
+ "seconds": 557.4,
+ "tail": "ts/test_repository_isolation.py::test_tracked_receipt_loads_as_a_verified_frozen_universe\n  <unknown>:2: SyntaxWarning: invalid escape sequence '\\d'\n\ntests/test_repository_isolation.py::test_tracked_receipt_loads_as_a_verified_frozen_universe\n  <unknown>:2: SyntaxWarning: invalid escape sequence '\\/'\n\ntests/test_repository_isolation.py::test_tracked_receipt_loads_as_a_verified_frozen_universe\ntests/test_repository_isolation.py::test_tracked_receipt_loads_as_a_verified_frozen_universe\n  <unknown>:17: SyntaxWarning: invalid escape sequence '\\d'\n\ntests/test_repository_isolation.py::test_tracked_receipt_loads_as_a_verified_frozen_universe\ntests/test_repository_isolation.py::test_tracked_receipt_loads_as_a_verified_frozen_universe\n  <unknown>:18: SyntaxWarning: invalid escape sequence '\\*'\n\ntests/test_repository_isolation.py: 20 warnings\n  <unknown>:10: SyntaxWarning: invalid escape sequence '\\d'\n\ntests/test_repository_isolation.py: 16 warnings\n  <unknown>:12: SyntaxWarning: invalid escape sequence '\\s'\n\ntests/test_repository_isolation.py: 24 warnings\n  <unknown>:8: SyntaxWarning: invalid escape sequence '\\d'\n\ntests/test_repository_isolation.py::test_tracked_receipt_loads_as_a_verified_frozen_universe\ntests/test_repository_isolation.py::test_tracked_receipt_loads_as_a_verified_frozen_universe\n  <unknown>:12: SyntaxWarning: invalid escape sequence '\\.'\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n2636 passed, 3 skipped, 128 warnings in 548.59s (0:09:08)\n"
+}
