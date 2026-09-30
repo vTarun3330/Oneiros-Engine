@@ -1,0 +1,31 @@
+{
+ "checks": {
+  "analysis_engineering_mode": true,
+  "every_row_classified_as_designed": true,
+  "execution_complete": true,
+  "formal_preparation": true,
+  "grid_complete": true,
+  "job_complete": true,
+  "kills_rerun_and_fixed_valid": true,
+  "prompts_leakage_clean": true,
+  "sft_kills_both_toy_targets": true
+ },
+ "components_sha256": {
+  "harness/native_generated_test_leakage.py": "6e505343e66857e015d216537ade753941ef02b286d374856460347fa5c1cd1a",
+  "harness/native_generated_test_prompt.py": "b9a95eee7deec9c3888f54ff5c44efaa3d8b551cc616a8d3a4ad811de9c762b9",
+  "harness/native_launch_gate.py": "4f067ac09af8f361556e26295990eec4b1c67343e6e46536c142c57562a6017d",
+  "scripts/native_generated_tests_analyse.py": "dd078ab7d16bba5da59e4bb139158283baa602771a74e2a9424c31a94de149e7",
+  "scripts/native_generated_tests_execute_wsl.py": "c31f58fe6a75f083fabae7073dfd9236491a220a35dcd562b879bb5ed1149e35",
+  "scripts/native_generated_tests_generate.py": "2d39485f29d5c1bdf46278f8ef055ee3dda7cb461168e51ef950645a1cdd2bcb",
+  "scripts/native_generation_io.py": "40c360e54f9eee416bbaf1b6fe854f6cff2d0a445ba5bec6e63e9ba95ec2b517",
+  "scripts/native_pipeline_synthetic.py": "349d37946311ed5ec6a2570a591157fa6c11caf245572eb9c5d8eb4827c28bca",
+  "scripts/native_rehearsal_prepare_wsl.py": "c0ea053fcee84b0e12e0ea325c8f70b7a6ef14e9cb3e9902e5f7eb3894a34cfb",
+  "scripts/native_sandbox_inner.sh": "ff90215bb4aef3c864a0d3604ad0eb076de68c5a0754ac6053fed15b9ff42b18",
+  "scripts/receipt_sanitize.py": "ccc57690ad9aeafbc5a80666bbc433c8bdb6439c7f4f71a2643995677665d68c"
+ },
+ "execution_tail": "{\"rows\": 96, \"expected\": 96, \"complete\": true, \"qualified\": 2, \"generation_targets\": 2, \"pre_generation_excluded\": [], \"results_sha256\": \"cdf01ddf2e2a9d708aa1653722203d9b1a944d59e939e563d3c569b5ed474fe6\"}\n",
+ "mismatches": [],
+ "passed": true,
+ "rows": 96,
+ "schema_version": "oneiros_native_pipeline_synthetic_v1"
+}

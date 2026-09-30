@@ -1,0 +1,1008 @@
+{
+ "aggregate_budget": {
+  "aggregate_cpu_seconds": 4.054,
+  "budget": 4.0,
+  "cgroup_removed": true,
+  "leftover_processes": [],
+  "main_cpu_seconds": 4.054,
+  "ok": true,
+  "supervisor_reason": "cpu_budget_exhausted",
+  "tolerance": 1.08,
+  "wall_seconds": 1.54,
+  "worker_cpu_seconds": 0.0
+ },
+ "atheris": [
+  "2.3.0",
+  "3.11.15"
+ ],
+ "canary_budget_cpu_seconds": 20,
+ "cgroup_leftovers": [],
+ "checks": {
+  "aggregate_budget_two_busy_children": true,
+  "atheris_2_3_0_py311": true,
+  "canary_crash:ordinary": true,
+  "canary_keyword:ordinary": true,
+  "canary_later:ordinary": true,
+  "canary_mutable:differential": true,
+  "canary_opaque:posthoc": true,
+  "canary_same_crash:ordinary": true,
+  "canary_same_crash:posthoc": true,
+  "canary_stateful:posthoc": true,
+  "canary_swap_exception:ordinary": true,
+  "canary_wrong:differential": true,
+  "canary_wrong:ordinary": true,
+  "canary_wrong:posthoc": true,
+  "differential_worker_cpu_counted": true,
+  "eligibility": true,
+  "end_reasons_declared": true,
+  "every_kill_recomputes_from_confirmations": true,
+  "every_search_within_aggregate_budget": true,
+  "fresh_views_unmutated_by_any_search": true,
+  "isolation_canonical_path_identical": true,
+  "isolation_network_disabled": true,
+  "isolation_no_cross_run_state": true,
+  "isolation_unprivileged_nobody": true,
+  "isolation_write_to_target_refused": true,
+  "keyword_plan": true,
+  "ordinary_different_exceptions_not_a_kill": true,
+  "ordinary_raise_versus_ok_is_a_kill": true,
+  "ordinary_same_exception_not_a_kill": true,
+  "repeat_same_seed_mode_independent": true,
+  "replay_error_is_not_a_kill": true,
+  "worker_and_group_cleanup": true
+ },
+ "corpus_cap": 2000,
+ "design_version": "oneiros_native_generated_tests_atheris_v4",
+ "eligibility": {
+  "Box.total": {
+   "eligible": false,
+   "python": "3.11.15",
+   "reason": "instance_method_receiver"
+  },
+  "crash": {
+   "eligible": true,
+   "plan": [
+    {
+     "keyword": false,
+     "name": "x",
+     "type": "int"
+    }
+   ],
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "keyword": {
+   "eligible": true,
+   "plan": [
+    {
+     "keyword": false,
+     "name": "a",
+     "type": "int"
+    },
+    {
+     "keyword": false,
+     "name": "b",
+     "type": "int"
+    },
+    {
+     "keyword": true,
+     "name": "c",
+     "type": "int"
+    },
+    {
+     "keyword": true,
+     "name": "d",
+     "type": "str"
+    }
+   ],
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "later": {
+   "eligible": true,
+   "plan": [
+    {
+     "keyword": false,
+     "name": "x",
+     "type": "int"
+    }
+   ],
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "mutable": {
+   "eligible": true,
+   "plan": [
+    {
+     "keyword": false,
+     "name": "xs",
+     "type": "list[int]"
+    }
+   ],
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "opaque": {
+   "eligible": true,
+   "plan": [
+    {
+     "keyword": false,
+     "name": "x",
+     "type": "int"
+    }
+   ],
+   "python": "3.11.15",
+   "returns": "object"
+  },
+  "runtime_mismatch": {
+   "eligible": false,
+   "reason": "runtime_mismatch:SyntaxError"
+  },
+  "same_crash": {
+   "eligible": true,
+   "plan": [
+    {
+     "keyword": false,
+     "name": "x",
+     "type": "int"
+    }
+   ],
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "stateful": {
+   "eligible": true,
+   "plan": [
+    {
+     "keyword": false,
+     "name": "x",
+     "type": "int"
+    }
+   ],
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "swap_exception": {
+   "eligible": true,
+   "plan": [
+    {
+     "keyword": false,
+     "name": "x",
+     "type": "int"
+    }
+   ],
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "untyped": {
+   "eligible": false,
+   "python": "3.11.15",
+   "reason": "unsupported_parameter:x:None"
+  },
+  "variadic": {
+   "eligible": false,
+   "python": "3.11.15",
+   "reason": "variadic_signature"
+  },
+  "wrong": {
+   "eligible": true,
+   "plan": [
+    {
+     "keyword": false,
+     "name": "x",
+     "type": "int"
+    }
+   ],
+   "python": "3.11.15",
+   "returns": "int"
+  }
+ },
+ "full_budget_cpu_seconds": 600,
+ "inner_sha256": "ff90215bb4aef3c864a0d3604ad0eb076de68c5a0754ac6053fed15b9ff42b18",
+ "isolation": {
+  "canonical_path_identical": {
+   "ok": true,
+   "results": [
+    [
+     "ok",
+     [
+      "str",
+      "/target/canarypkg/core.py"
+     ]
+    ],
+    [
+     "ok",
+     [
+      "str",
+      "/target/canarypkg/core.py"
+     ]
+    ]
+   ]
+  },
+  "network_disabled": {
+   "ok": true,
+   "results": [
+    "ok",
+    [
+     "int",
+     0
+    ]
+   ]
+  },
+  "no_cross_run_state": {
+   "ok": true,
+   "results": [
+    [
+     "ok",
+     [
+      "int",
+      1
+     ]
+    ],
+    [
+     "ok",
+     [
+      "int",
+      1
+     ]
+    ]
+   ]
+  },
+  "unprivileged_nobody": {
+   "ok": true,
+   "results": [
+    "ok",
+    [
+     "int",
+     65534
+    ]
+   ]
+  },
+  "write_to_target_refused": {
+   "ok": true,
+   "results": [
+    [
+     "ok",
+     [
+      "int",
+      0
+     ]
+    ],
+    [
+     "ok",
+     [
+      "int",
+      0
+     ]
+    ]
+   ]
+  }
+ },
+ "nobody_processes_after": [],
+ "note": "ordinary Atheris cannot kill the wrong-answer canary (no semantic oracle)",
+ "passed": true,
+ "repeat": [
+  {
+   "aggregate_cpu_seconds": 5.039,
+   "budget_cpu_seconds": 5,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "corpus": 0,
+   "corpus_truncated": false,
+   "dropped_partial_inputs": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "exit": -9,
+   "kill": false,
+   "main_cpu_seconds": 5.039,
+   "mode": "posthoc",
+   "opaque_results": 0,
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.102,
+   "replay_errors": 0,
+   "seed": 43,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.1,
+   "views_unchanged": true,
+   "wall_seconds": 5.25,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 0.0
+  },
+  {
+   "aggregate_cpu_seconds": 5.02,
+   "budget_cpu_seconds": 5,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "corpus": 0,
+   "corpus_truncated": false,
+   "dropped_partial_inputs": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "exit": -9,
+   "kill": false,
+   "main_cpu_seconds": 5.02,
+   "mode": "posthoc",
+   "opaque_results": 0,
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.093,
+   "replay_errors": 0,
+   "seed": 43,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.1,
+   "views_unchanged": true,
+   "wall_seconds": 5.25,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 0.0
+  }
+ ],
+ "results": {
+  "crash:ordinary": {
+   "aggregate_cpu_seconds": 20.03,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "raise",
+      "ValueError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "ValueError"
+      ],
+      [
+       "raise",
+       "ValueError"
+      ]
+     ],
+     "fixed": [
+      "ok",
+      [
+       "int",
+       0
+      ]
+     ],
+     "fixed_all": [
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ]
+     ],
+     "kill": true,
+     "stable": true,
+     "witness": "8e13378459caee06"
+    }
+   ],
+   "confirmed": 1,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "exit": -9,
+   "expected_kill": true,
+   "kill": true,
+   "main_cpu_seconds": 20.03,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.198,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.87,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 0.0
+  },
+  "keyword:ordinary": {
+   "aggregate_cpu_seconds": 20.018,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "raise",
+      "ValueError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "ValueError"
+      ],
+      [
+       "raise",
+       "ValueError"
+      ]
+     ],
+     "fixed": [
+      "ok",
+      [
+       "int",
+       0
+      ]
+     ],
+     "fixed_all": [
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ]
+     ],
+     "kill": true,
+     "stable": true,
+     "witness": "0b7f951b0b6ac856"
+    }
+   ],
+   "confirmed": 1,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "exit": -9,
+   "expected_kill": true,
+   "kill": true,
+   "main_cpu_seconds": 20.018,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.185,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.78,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 0.0
+  },
+  "later:ordinary": {
+   "aggregate_cpu_seconds": 20.049,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "raise",
+      "IndexError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "IndexError"
+      ],
+      [
+       "raise",
+       "IndexError"
+      ]
+     ],
+     "fixed": [
+      "ok",
+      [
+       "int",
+       0
+      ]
+     ],
+     "fixed_all": [
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ]
+     ],
+     "kill": true,
+     "stable": true,
+     "witness": "3f9d67806bac88b5"
+    },
+    {
+     "buggy": [
+      "raise",
+      "KeyError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "KeyError"
+      ],
+      [
+       "raise",
+       "KeyError"
+      ]
+     ],
+     "fixed": [
+      "raise",
+      "KeyError"
+     ],
+     "fixed_all": [
+      [
+       "raise",
+       "KeyError"
+      ],
+      [
+       "raise",
+       "KeyError"
+      ]
+     ],
+     "kill": false,
+     "stable": true,
+     "witness": "ed8c515b9cf793f5"
+    }
+   ],
+   "confirmed": 1,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "exit": -9,
+   "expected_kill": true,
+   "kill": true,
+   "main_cpu_seconds": 20.049,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.36,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.9,
+   "within_budget": true,
+   "witnesses": 2,
+   "worker_cpu_seconds": 0.0
+  },
+  "mutable:differential": {
+   "aggregate_cpu_seconds": 19.349,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "completed",
+   "exit": 0,
+   "expected_kill": false,
+   "kill": false,
+   "label": "oracle-assisted upper bound",
+   "main_cpu_seconds": 10.226,
+   "mode": "differential",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.0,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": null,
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 22.22,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 9.123
+  },
+  "opaque:posthoc": {
+   "aggregate_cpu_seconds": 20.031,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "corpus": 0,
+   "corpus_truncated": false,
+   "dropped_partial_inputs": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "exit": -9,
+   "expected_kill": false,
+   "kill": false,
+   "main_cpu_seconds": 20.031,
+   "mode": "posthoc",
+   "opaque_results": 0,
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.094,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.84,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 0.0
+  },
+  "same_crash:ordinary": {
+   "aggregate_cpu_seconds": 20.007,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "raise",
+      "ValueError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "ValueError"
+      ],
+      [
+       "raise",
+       "ValueError"
+      ]
+     ],
+     "fixed": [
+      "raise",
+      "ValueError"
+     ],
+     "fixed_all": [
+      [
+       "raise",
+       "ValueError"
+      ],
+      [
+       "raise",
+       "ValueError"
+      ]
+     ],
+     "kill": false,
+     "stable": true,
+     "witness": "8e13378459caee06"
+    }
+   ],
+   "confirmed": 0,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "exit": -9,
+   "expected_kill": false,
+   "kill": false,
+   "main_cpu_seconds": 20.007,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.18,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.83,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 0.0
+  },
+  "same_crash:posthoc": {
+   "aggregate_cpu_seconds": 20.007,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "corpus": 55,
+   "corpus_truncated": false,
+   "dropped_partial_inputs": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "exit": -9,
+   "expected_kill": false,
+   "kill": false,
+   "main_cpu_seconds": 20.007,
+   "mode": "posthoc",
+   "opaque_results": 0,
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.097,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.79,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 0.0
+  },
+  "stateful:posthoc": {
+   "aggregate_cpu_seconds": 20.014,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "corpus": 0,
+   "corpus_truncated": false,
+   "dropped_partial_inputs": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "exit": -9,
+   "expected_kill": false,
+   "kill": false,
+   "main_cpu_seconds": 20.014,
+   "mode": "posthoc",
+   "opaque_results": 0,
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.096,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.76,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 0.0
+  },
+  "swap_exception:ordinary": {
+   "aggregate_cpu_seconds": 20.019,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "raise",
+      "ValueError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "ValueError"
+      ],
+      [
+       "raise",
+       "ValueError"
+      ]
+     ],
+     "fixed": [
+      "raise",
+      "TypeError"
+     ],
+     "fixed_all": [
+      [
+       "raise",
+       "TypeError"
+      ],
+      [
+       "raise",
+       "TypeError"
+      ]
+     ],
+     "kill": false,
+     "stable": true,
+     "witness": "8e13378459caee06"
+    }
+   ],
+   "confirmed": 0,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "exit": -9,
+   "expected_kill": false,
+   "kill": false,
+   "main_cpu_seconds": 20.019,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.184,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.84,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 0.0
+  },
+  "wrong:differential": {
+   "aggregate_cpu_seconds": 18.957,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "ok",
+      [
+       "int",
+       424243
+      ]
+     ],
+     "buggy_all": [
+      [
+       "ok",
+       [
+        "int",
+        424243
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        424243
+       ]
+      ]
+     ],
+     "fixed": [
+      "ok",
+      [
+       "int",
+       424242
+      ]
+     ],
+     "fixed_all": [
+      [
+       "ok",
+       [
+        "int",
+        424242
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        424242
+       ]
+      ]
+     ],
+     "kill": true,
+     "stable": true,
+     "witness": "f7e3e393967575f3"
+    }
+   ],
+   "confirmed": 1,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "completed",
+   "exit": 0,
+   "expected_kill": true,
+   "kill": true,
+   "label": "oracle-assisted upper bound",
+   "main_cpu_seconds": 10.291,
+   "mode": "differential",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.195,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": null,
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 22.24,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 8.666
+  },
+  "wrong:ordinary": {
+   "aggregate_cpu_seconds": 20.024,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "exit": -9,
+   "expected_kill": false,
+   "kill": false,
+   "main_cpu_seconds": 20.024,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.0,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.78,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 0.0
+  },
+  "wrong:posthoc": {
+   "aggregate_cpu_seconds": 20.056,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "ok",
+      [
+       "int",
+       424243
+      ]
+     ],
+     "buggy_all": [
+      [
+       "ok",
+       [
+        "int",
+        424243
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        424243
+       ]
+      ]
+     ],
+     "fixed": [
+      "ok",
+      [
+       "int",
+       424242
+      ]
+     ],
+     "fixed_all": [
+      [
+       "ok",
+       [
+        "int",
+        424242
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        424242
+       ]
+      ]
+     ],
+     "kill": true,
+     "stable": true,
+     "witness": "8f2848ccc1082412"
+    }
+   ],
+   "confirmed": 1,
+   "corpus": 58,
+   "corpus_truncated": false,
+   "dropped_partial_inputs": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "exit": -9,
+   "expected_kill": true,
+   "kill": true,
+   "main_cpu_seconds": 20.056,
+   "mode": "posthoc",
+   "opaque_results": 0,
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.283,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.81,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 0.0
+  }
+ },
+ "schema_version": "oneiros_native_atheris_canaries_v3",
+ "script_sha256": "8d6b0d90895abaf3497f4996bde035ef7db611c9fa923aa747649e9311eb6254",
+ "tolerance_rule": "1.0 CPU-second + 2% of the budget",
+ "verdicts_sha256": "f2c7ab1c8d7181f1a4757650ce6af20565465b1c6c29737ab979bb9c897f9f4d"
+}
