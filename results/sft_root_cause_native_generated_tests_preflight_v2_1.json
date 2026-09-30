@@ -1,0 +1,180 @@
+{
+ "blockers": [
+  "job_coverage_and_no_unrecorded_loss: {\"items\": 19, \"kept\": 24, \"refused\": [{\"details\": [\"issue_text: partial_is_collection and attr_name in partial\"], \"reason\": \"leakage\", \"target_key\": \"cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7\"}, {\"reason\": \"sequence_overflow\", \"target_key\": \"cand:pyparsing/pyparsing@"
+ ],
+ "checks": {
+  "adapter_manifest_complete": {
+   "ok": true
+  },
+  "atheris_canaries_passed_for_current_source": {
+   "ok": true
+  },
+  "clean_tree": {
+   "ok": true
+  },
+  "cli_help": {
+   "ok": true
+  },
+  "every_kept_target_v6_and_formally_requalified": {
+   "ok": true
+  },
+  "full_suite_green_clean_at_source": {
+   "detail": {
+    "failed": 0,
+    "passed": 2335,
+    "source_commit": "3c97919f87638acb36fa84ea509d042f5155deff",
+    "tree_clean_at_start": true
+   },
+   "ok": true
+  },
+  "generation_contract_complete_equality": {
+   "ok": true
+  },
+  "head_equals_fetched_origin": {
+   "ok": true
+  },
+  "identity_authorization_and_unit_tests": {
+   "detail": [
+    "79 passed, 1 warning in 7.19s"
+   ],
+   "ok": true
+  },
+  "isolation_bound_to_current_implementation": {
+   "detail": {
+    "reference_universe_sha256": "53080a7a7d73d62e628ecfcaf615b0a825b050101e2a3efbdb7e7ff83afcd2bd"
+   },
+   "ok": true
+  },
+  "job_coverage_and_no_unrecorded_loss": {
+   "detail": {
+    "items": 19,
+    "kept": 24,
+    "refused": [
+     {
+      "details": [
+       "issue_text: partial_is_collection and attr_name in partial"
+      ],
+      "reason": "leakage",
+      "target_key": "cand:marshmallow-code/marshmallow@252090c7c707166cf4fcfcdc73eb4376b7bbc4b7"
+     },
+     {
+      "reason": "sequence_overflow",
+      "target_key": "cand:pyparsing/pyparsing@65d503517d146f83ce3f2ef804ee9448e6a16957"
+     },
+     {
+      "details": [
+       "issue_text: if not largest_ordinal and rounded_value * power == powers[ordinal + 1]:"
+      ],
+      "reason": "leakage",
+      "target_key": "cand:python-humanize/humanize@ca892b368a535a79cc5e2181d052245b94fd6652"
+     },
+     {
+      "reason": "sequence_overflow",
+      "target_key": "cand:python-poetry/tomlkit@43668ddebc3f082bf385d328aceed18d26976897"
+     },
+     {
+      "reason": "sequence_overflow",
+      "target_key": "cand:tobymao/sqlglot@981e492413740f7740d2b0288e3da5b4028c767e"
+     }
+    ]
+   },
+   "ok": false
+  },
+  "manifest_present": {
+   "ok": true
+  },
+  "manifest_protected_audit_clean": {
+   "ok": true
+  },
+  "no_protected_access": {
+   "ok": true
+  },
+  "protocol_and_amendment_present": {
+   "ok": true
+  },
+  "protocol_hashes_exact": {
+   "ok": true
+  },
+  "rehearsal_rule": {
+   "ok": true
+  },
+  "sandbox_canaries_passed_for_current_source": {
+   "ok": true
+  },
+  "sequence_fit_within_limit": {
+   "ok": true
+  },
+  "source_manifest_and_target_set": {
+   "ok": true
+  },
+  "synthetic_pipeline_passed_for_current_source": {
+   "ok": true
+  }
+ },
+ "confirmation_acquisition": "NOT AUTHORISED",
+ "created_utc": "2026-09-30T06:45:31Z",
+ "estimates_not_executed": {
+  "basis": "batch 2 at ~60 generated tokens/s per sequence; 200 (typical) to 1024 (maximum) new tokens per candidate; model load ~1 min per arm",
+  "candidates": 912,
+  "gpu_hours_range": [
+   0.42,
+   2.16
+  ],
+  "gpu_memory_gib": "~4-6 PyTorch allocated (1.5B bf16 + LoRA, batch 2, <=3072 tokens)",
+  "storage_mb": "<50 raw generations; sandbox execution ~1-3 CPU-hours in WSL"
+ },
+ "generalization_established": false,
+ "generation_contract": {
+  "attention_implementation": "sdpa",
+  "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "base_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+  "batch_size": 2,
+  "candidates": 8,
+  "do_sample": true,
+  "duplicates": "kept",
+  "extraction": "whole_output_single_fence_strip",
+  "max_new_tokens": 1024,
+  "prompt_token_limit": 2048,
+  "raw_output_retained": true,
+  "reranking": "none",
+  "seeds": [
+   42,
+   43,
+   44
+  ],
+  "sequence_limit": 3072,
+  "sft_adapter": "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter",
+  "temperature": 0.7,
+  "top_p": 0.9
+ },
+ "gpu_authorized": false,
+ "gpu_generation_launched": false,
+ "inputs": {
+  "results/sft_root_cause/native_v21_canaries/atheris_canary_receipt_v2.json": "656375d03d90db18f1c8cbec2509b9c48bb2ed0845e10546539c36e42e6a8c38",
+  "results/sft_root_cause/native_v21_canaries/canary_receipt_v2.json": "f7ee1606e4cf991a8f85d6b0cc14ce4a01c265bd00428c852fbf42c3a7c31092",
+  "results/sft_root_cause/native_v21_canaries/pipeline_receipt.json": "8e8b3b42238a924c502d68c7d573ea0c3ab8cbd719a0839fb1f9d33e05e492f7",
+  "results/sft_root_cause/native_v2_full_suite.json": "ed465736533af836eb61276e3c76ce006bd5487aa9e8a147920696f3975d576d",
+  "results/sft_root_cause_native_v21_isolation_v6.json": "ae6728a12105897b1493ac9617dcf7f9d08ef2e8d0642471b42fd041afd6d5d5",
+  "results/sft_root_cause_native_v21_rehearsal_job_v2.json": "6eaf43387127b8615b37ef5f6979a6a5ad95217d25f35a0343ad33a8362881a2",
+  "results/sft_root_cause_native_v21_rehearsal_manifest_v4.json": "0c23408c5cfa5f3d7a8824ac895f19213a0855c5fe078b980cd6f07326df1ae8"
+ },
+ "launch_ready": false,
+ "pipeline_ready": false,
+ "proposed_gpu_commands_NOT_EXECUTED": [
+  ".venv-gpu/Scripts/python.exe scripts/gpu_run.py start --name native_v21_generate_base -- .venv-gpu/Scripts/python.exe scripts/native_generated_tests_generate.py run --job results/sft_root_cause_native_v21_rehearsal_job_v2.json --condition primary_whole_module --arm base --out results/sft_root_cause/native_v21_generations --backend hf --preflight results/sft_root_cause_native_generated_tests_preflight_v2_1.json --authorization results/sft_root_cause_native_gpu_authorization_v1.json",
+  ".venv-gpu/Scripts/python.exe scripts/gpu_run.py start --name native_v21_generate_sft -- .venv-gpu/Scripts/python.exe scripts/native_generated_tests_generate.py run --job results/sft_root_cause_native_v21_rehearsal_job_v2.json --condition primary_whole_module --arm sft --out results/sft_root_cause/native_v21_generations --backend hf --preflight results/sft_root_cause_native_generated_tests_preflight_v2_1.json --authorization results/sft_root_cause_native_gpu_authorization_v1.json"
+ ],
+ "protected_access_audit": {
+  "installed": true,
+  "method": "python audit hook",
+  "protected_paths_opened": []
+ },
+ "protocols": {
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md": "75131551082876d65be0609db619673417a6728e3c612cc2ebc69e808a1cc5a1",
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md": "8d48aa36def2e67d3ce5b876af0317fc4eb7199b5422eadca823980ec27d2901"
+ },
+ "receipt_commit": "this receipt is committed separately; its commit's parent must be source_commit",
+ "root_cause_established": false,
+ "schema_version": "oneiros_native_generated_tests_preflight_v2_1",
+ "source_commit": "3c97919f87638acb36fa84ea509d042f5155deff"
+}
