@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# Inner half of the generated-code sandbox (protocol v2 section 5). Runs as root INSIDE
-#   unshare --mount --pid --net --fork --mount-proc
-# and execs the command as nobody with no_new_privs, no capabilities and prlimit limits.
+# Inner half of the generated-code sandbox (protocol v2 section 5, amendment v2.1 section B).
+# Runs as root INSIDE  unshare --mount --pid --net --fork --mount-proc  and execs the command
+# as nobody with no_new_privs, no capabilities and prlimit limits.
 #
 # Environment (set by scripts/native_generated_tests_execute_wsl.py):
 #   SB_RO        newline-separated absolute paths kept visible read-only at their own path
-#   SB_MASK      newline-separated directories (inside SB_RO paths) hidden by empty tmpfs
+#   SB_TARGET    host directory (a sanitised revision view) mounted read-only at /target
 #   SB_OUT       host directory bound writable at /sandbox_out (outputs only)
 #   SB_WORK_SRC  host directory copied into the private /tmp/work
+#   SB_PYTHONPATH  PYTHONPATH for the command (identical for both revisions)
 #   SB_CPU SB_AS SB_NPROC SB_NOFILE SB_FSIZE SB_WALL   limits
 set -euo pipefail
 mount --make-rprivate /
@@ -18,11 +19,12 @@ i=0
 while IFS= read -r p; do
   [ -z "$p" ] && continue
   RO+=("$p"); mkdir -p "$STAGE/ro$i"; mount --bind "$p" "$STAGE/ro$i"; i=$((i + 1))
-done <<< "$SB_RO"
-mkdir -p "$STAGE/out" "$STAGE/work"
+done <<< "${SB_RO:-}"
+mkdir -p "$STAGE/out" "$STAGE/work" "$STAGE/target"
 mount --bind "$SB_OUT" "$STAGE/out"
+mount --bind "$SB_TARGET" "$STAGE/target"
 cp -a "$SB_WORK_SRC/." "$STAGE/work/"
-# Hide everything user- or host-specific: homes, Windows drives, other worktrees, caches.
+# Hide everything user- or host-specific: homes, Windows drives, worktrees, caches.
 for d in /root /home /mnt /tmp /srv /opt /var/lib /var/tmp /var/cache /media; do
   [ -d "$d" ] && mount -t tmpfs -o size=256m,mode=0755 tmpfs "$d"
 done
@@ -33,10 +35,10 @@ for p in "${RO[@]}"; do
   mount -o remount,bind,ro,nosuid,nodev "$p"
   i=$((i + 1))
 done
-while IFS= read -r m; do
-  [ -z "$m" ] && continue
-  [ -d "$m" ] && mount -t tmpfs -o ro,size=4k,mode=0555 tmpfs "$m"
-done <<< "${SB_MASK:-}"
+# One canonical path for either revision: nothing in it names buggy, fixed or a commit.
+mkdir -p /target
+mount --bind "$STAGE/target" /target
+mount -o remount,bind,ro,nosuid,nodev /target
 mkdir -p /sandbox_out /tmp/work
 mount --bind "$STAGE/out" /sandbox_out
 cp -a "$STAGE/work/." /tmp/work/
@@ -53,5 +55,5 @@ exec setpriv --reuid=65534 --regid=65534 --clear-groups --no-new-privs \
   timeout -k 5 "$SB_WALL" \
   env -i PATH=/usr/bin:/bin HOME=/tmp/work TMPDIR=/tmp/work LANG=C.UTF-8 \
       PYTHONDONTWRITEBYTECODE=1 PYTHONNOUSERSITE=1 PYTHONHASHSEED=0 \
-      PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=/tmp/work/plugin \
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH="$SB_PYTHONPATH" \
       "$@"
