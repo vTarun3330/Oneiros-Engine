@@ -1,0 +1,403 @@
+{
+ "confirmation_only_pool": {
+  "altair": [
+   "altair-viz/altair"
+  ],
+  "apispec": [
+   "marshmallow-code/apispec"
+  ],
+  "authlib": [
+   "lepture/authlib"
+  ],
+  "boltons": [
+   "mahmoud/boltons"
+  ],
+  "check-jsonschema": [
+   "python-jsonschema/check-jsonschema"
+  ],
+  "coveragepy": [
+   "nedbat/coveragepy"
+  ],
+  "dask": [
+   "dask/dask"
+  ],
+  "dateparser": [
+   "scrapinghub/dateparser"
+  ],
+  "dateutil": [
+   "dateutil/dateutil"
+  ],
+  "filesystem_spec": [
+   "fsspec/filesystem_spec"
+  ],
+  "flake8": [
+   "PyCQA/flake8"
+  ],
+  "freezegun": [
+   "spulec/freezegun"
+  ],
+  "glom": [
+   "mahmoud/glom"
+  ],
+  "graphene": [
+   "graphql-python/graphene"
+  ],
+  "graphql-core": [
+   "graphql-python/graphql-core"
+  ],
+  "gunicorn": [
+   "benoitc/gunicorn"
+  ],
+  "h2": [
+   "python-hyper/h2"
+  ],
+  "h5py": [
+   "h5py/h5py"
+  ],
+  "invoke": [
+   "pyinvoke/invoke"
+  ],
+  "ipython": [
+   "ipython/ipython"
+  ],
+  "jsonschema": [
+   "python-jsonschema/jsonschema"
+  ],
+  "lark": [
+   "lark-parser/lark"
+  ],
+  "markdown-it-py": [
+   "executablebooks/markdown-it-py"
+  ],
+  "mkdocs-material": [
+   "squidfunk/mkdocs-material"
+  ],
+  "mongo-python-driver": [
+   "mongodb/mongo-python-driver"
+  ],
+  "mutmut": [
+   "boxed/mutmut"
+  ],
+  "mypy": [
+   "python/mypy"
+  ],
+  "myst-parser": [
+   "executablebooks/MyST-Parser"
+  ],
+  "nbconvert": [
+   "jupyter/nbconvert"
+  ],
+  "nbformat": [
+   "jupyter/nbformat"
+  ],
+  "networkx": [
+   "networkx/networkx"
+  ],
+  "numba": [
+   "numba/numba"
+  ],
+  "packaging": [
+   "pypa/packaging"
+  ],
+  "panel": [
+   "holoviz/panel"
+  ],
+  "parse": [
+   "r1chardj0n3s/parse"
+  ],
+  "parsimonious": [
+   "erikrose/parsimonious"
+  ],
+  "peewee": [
+   "coleifer/peewee"
+  ],
+  "pipdeptree": [
+   "tox-dev/pipdeptree"
+  ],
+  "pipx": [
+   "pypa/pipx"
+  ],
+  "psycopg": [
+   "psycopg/psycopg"
+  ],
+  "pycodestyle": [
+   "PyCQA/pycodestyle"
+  ],
+  "pycparser": [
+   "eliben/pycparser"
+  ],
+  "pyfakefs": [
+   "pyfakefs/pyfakefs"
+  ],
+  "pyflakes": [
+   "PyCQA/pyflakes"
+  ],
+  "pyjwt": [
+   "jpadilla/pyjwt"
+  ],
+  "pymc": [
+   "pymc-devs/pymc"
+  ],
+  "pymysql": [
+   "PyMySQL/PyMySQL"
+  ],
+  "python-docx": [
+   "python-openxml/python-docx"
+  ],
+  "python-lsp-server": [
+   "python-lsp/python-lsp-server"
+  ],
+  "python-prompt-toolkit": [
+   "prompt-toolkit/python-prompt-toolkit"
+  ],
+  "python-slugify": [
+   "un33k/python-slugify"
+  ],
+  "python-tabulate": [
+   "astanin/python-tabulate"
+  ],
+  "pyvista": [
+   "pyvista/pyvista"
+  ],
+  "pyyaml": [
+   "yaml/pyyaml"
+  ],
+  "safety": [
+   "pyupio/safety"
+  ],
+  "schedule": [
+   "dbader/schedule"
+  ],
+  "stamina": [
+   "hynek/stamina"
+  ],
+  "textdistance": [
+   "life4/textdistance"
+  ],
+  "tomli": [
+   "hukkin/tomli"
+  ],
+  "toolz": [
+   "pytoolz/toolz"
+  ],
+  "tortoise-orm": [
+   "tortoise/tortoise-orm"
+  ],
+  "transitions": [
+   "pytransitions/transitions"
+  ],
+  "twine": [
+   "pypa/twine"
+  ],
+  "typeguard": [
+   "agronholm/typeguard"
+  ],
+  "tzlocal": [
+   "regebro/tzlocal"
+  ],
+  "validators": [
+   "python-validators/validators"
+  ],
+  "vcrpy": [
+   "kevin1024/vcrpy"
+  ],
+  "waitress": [
+   "Pylons/waitress"
+  ],
+  "weasyprint": [
+   "Kozea/WeasyPrint"
+  ],
+  "zarr-python": [
+   "zarr-developers/zarr-python"
+  ]
+ },
+ "disjointness": {
+  "candidate_level": "commit, issue, function fingerprint and bug lineage checked at acquisition against the frozen training fingerprints and the other pool",
+  "repository_key_overlap": 0
+ },
+ "eligible_keys": 106,
+ "excluded_from_universe": [
+  "anyio",
+  "apscheduler",
+  "arrow",
+  "attrs",
+  "autopep8",
+  "beets",
+  "blinker",
+  "bottle",
+  "cachetools",
+  "cattrs",
+  "cerberus",
+  "csvkit",
+  "faker",
+  "falcon",
+  "funcy",
+  "httpx",
+  "humanize",
+  "idna",
+  "jmespath.py",
+  "jsonpath-ng",
+  "loguru",
+  "markdown",
+  "marshmallow",
+  "mistune",
+  "mitmproxy",
+  "mkdocs",
+  "more-itertools",
+  "pendulum",
+  "pip",
+  "pip-tools",
+  "pydantic",
+  "pygments",
+  "pyparsing",
+  "pyupgrade",
+  "referencing",
+  "rich",
+  "schema",
+  "setuptools",
+  "sqlglot",
+  "sqlite-utils",
+  "starlette",
+  "tablib",
+  "tenacity",
+  "tomlkit",
+  "tox",
+  "typer",
+  "urllib3",
+  "uvicorn",
+  "websockets",
+  "yapf"
+ ],
+ "exclusion_ledger": {
+  "excluded_keys": 78,
+  "spec": "results/sft_root_cause_v25_confirmation_panel_spec.json"
+ },
+ "frozen_before_outcomes": true,
+ "licence_and_provenance": "recorded per repository by the acquisition mechanism (licence validation is part of its admission pipeline)",
+ "protected_material": "no validation, reserved-confirmation or sealed record is read; every corpus source repository is excluded by the ledger",
+ "rule": "order by sha256(salt + key); positions 0 mod 3 -> training expansion; others -> confirmation only",
+ "schema_version": "oneiros_v25_universe_partition_v1",
+ "source_lists_sha256": {
+  "docs/repository_native_candidate_repositories.json": "4efed779f706cc899749c370e64438745cfe3c01a292156c6d5e1e30a22179ee",
+  "docs/repository_native_confirmation_repositories.json": "87345799df7832d0d1e78e17a677f97dba56f8bc109f07781a808cf8276ee827",
+  "docs/repository_native_fresh_confirmation_repositories.json": "93a60d157cfc51c6e1e04322a500f12df6d509f1604d29335b9ce32e86ccf31e",
+  "docs/repository_native_previously_scanned_repositories.json": "acf6cea41e371876af33f54f69eefa4549f9555537c2f8f8532417109f421297"
+ },
+ "training_expansion_pool": {
+  "babel": [
+   "python-babel/babel"
+  ],
+  "bandit": [
+   "PyCQA/bandit"
+  ],
+  "bokeh": [
+   "bokeh/bokeh"
+  ],
+  "build": [
+   "pypa/build"
+  ],
+  "cbor2": [
+   "agronholm/cbor2"
+  ],
+  "copier": [
+   "copier-org/copier"
+  ],
+  "fabric": [
+   "fabric/fabric"
+  ],
+  "factory_boy": [
+   "FactoryBoy/factory_boy"
+  ],
+  "gitpython": [
+   "gitpython-developers/GitPython"
+  ],
+  "h11": [
+   "python-hyper/h11"
+  ],
+  "hatch": [
+   "pypa/hatch"
+  ],
+  "inflect": [
+   "jaraco/inflect"
+  ],
+  "isort": [
+   "PyCQA/isort",
+   "pycqa/isort"
+  ],
+  "jedi": [
+   "davidhalter/jedi"
+  ],
+  "monkeytype": [
+   "Instagram/MonkeyType"
+  ],
+  "msgpack-python": [
+   "msgpack/msgpack-python"
+  ],
+  "parso": [
+   "davidhalter/parso"
+  ],
+  "pdm": [
+   "pdm-project/pdm"
+  ],
+  "pexpect": [
+   "pexpect/pexpect"
+  ],
+  "platformdirs": [
+   "tox-dev/platformdirs"
+  ],
+  "plotly.py": [
+   "plotly/plotly.py"
+  ],
+  "prettytable": [
+   "jazzband/prettytable",
+   "prettytable/prettytable"
+  ],
+  "pyinfra": [
+   "pyinfra-dev/pyinfra"
+  ],
+  "pyomo": [
+   "Pyomo/pyomo"
+  ],
+  "pyopenssl": [
+   "pyca/pyopenssl"
+  ],
+  "python-dotenv": [
+   "theskumar/python-dotenv"
+  ],
+  "python-semver": [
+   "python-semver/python-semver"
+  ],
+  "python-sortedcontainers": [
+   "grantjenks/python-sortedcontainers"
+  ],
+  "responses": [
+   "getsentry/responses"
+  ],
+  "scipy": [
+   "scipy/scipy"
+  ],
+  "sqlfluff": [
+   "sqlfluff/sqlfluff"
+  ],
+  "statsmodels": [
+   "statsmodels/statsmodels"
+  ],
+  "strawberry": [
+   "strawberry-graphql/strawberry"
+  ],
+  "virtualenv": [
+   "pypa/virtualenv"
+  ],
+  "wheel": [
+   "pypa/wheel"
+  ],
+  "wtforms": [
+   "pallets-eco/wtforms"
+  ]
+ },
+ "universe_keys": 156,
+ "usage_ledger": {
+  "path": "results/sft_root_cause_v25_repository_usage_ledger.jsonl",
+  "rule": "append-only; one row per use: utc, pool, repository, purpose, artifact sha256"
+ }
+}
