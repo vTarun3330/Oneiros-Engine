@@ -1,0 +1,100 @@
+{
+ "consistent": true,
+ "historical_receipts_rewritten": false,
+ "patch_denominators": {
+  "by_project": {
+   "django": {
+    "cached_and_hash_verified": 31,
+    "environment_attempts_affected": 10,
+    "missing_instances": 10,
+    "repository_fragment_rows_affected": 12,
+    "required_instances": 41,
+    "verification_rows_affected": 12
+   },
+   "sympy": {
+    "cached_and_hash_verified": 29,
+    "environment_attempts_affected": 1,
+    "missing_instances": 1,
+    "repository_fragment_rows_affected": 1,
+    "required_instances": 30,
+    "verification_rows_affected": 1
+   },
+   "thefuck (BugsInPy)": {
+    "note": "BugsInPy: no SWE-bench patch needed (buggy/fixed commits)",
+    "required_instances": 0
+   }
+  },
+  "environment_attempts_affected": 11,
+  "missing": [
+   "django__django-12143",
+   "django__django-12304",
+   "django__django-13195",
+   "django__django-13512",
+   "django__django-13741",
+   "django__django-13933",
+   "django__django-14765",
+   "django__django-16631",
+   "django__django-16899",
+   "django__django-9296",
+   "sympy__sympy-22914"
+  ],
+  "repository_fragment_rows_affected": 13,
+  "unique_cached_and_hash_verified": 60,
+  "unique_missing_instances": 11,
+  "unique_required_patch_instances": 71,
+  "verification_rows_affected": 13
+ },
+ "patch_rule": "a patch is accepted only if BOTH sha256 equal the train record's gold_patch_sha256 / test_patch_sha256; no relaxation, no approximate matching",
+ "schema_version": "oneiros_v25_cpu2_accounting_erratum_v1",
+ "versions": {
+  "authorization_schema": {
+   "change": "successor introduced at 66e7397; no instance exists; v2 authorisations never match",
+   "current": "oneiros_native_gpu_authorization_v3"
+  },
+  "generator": {
+   "change": "v5 runs only v2.5 jobs (job schema bound into every arm contract); v4 outputs, jobs and preflights stay readable but cannot resume or launch",
+   "current": "oneiros_native_generated_tests_generate_v5"
+  },
+  "job_schema": {
+   "change": "new: pytest_module_v1 items built only by harness/native_generated_test_job_v25.py",
+   "current": "oneiros_native_generated_tests_job_v25"
+  },
+  "module_conversion": {
+   "current": "oneiros_v25_module_conversion_v2",
+   "history": {
+    "oneiros_v25_module_conversion_v1": {
+     "artifacts": "Stage 1 (receipt bf3f9828)",
+     "commit": "6b35b20",
+     "file_sha256": "7e06390e57af4415ccaefdd8d01c7a070a6dbcc0cc961df0e66e9716ff2dcc80"
+    },
+    "oneiros_v25_module_conversion_v2": {
+     "artifacts": "stage1_r2 (receipt a29c4972); that file still carried the v1 string, which this erratum corrects",
+     "commit": "d2ac726",
+     "file_sha256": "2900192d5610b0b20838bf973710c3f7a6ce1ce0fe9ea7cae74936e5cb46a9be"
+    }
+   }
+  },
+  "preflight_schema": {
+   "change": "successor introduced at 66e7397; no instance exists",
+   "current": "oneiros_native_generated_tests_preflight_v2_5"
+  },
+  "telemetry_schema": {
+   "change": "unchanged: per-row semantics are identical; the row identity hash binds the arm contract, which now carries the job schema and builder hashes",
+   "current": "oneiros_native_generation_telemetry_v2"
+  }
+ },
+ "wording_errata": [
+  {
+   "correct": "11 unique SWE-bench instances lack a hash-verified patch (10 django, 1 sympy); they affect 11 environment attempts and 13 verification rows (12 django, 1 sympy) because some instances carry several repository fragments. '12' was the Django verification-row count.",
+   "field": "main_causes[3]",
+   "receipt": "results/sft_root_cause_v25_repository_verification.json",
+   "said": "12 SWE-bench patches unavailable"
+  },
+  {
+   "correct": "unchanged (11 unique instances)",
+   "field": "next_source_work_before_single_freeze[3]",
+   "receipt": "results/sft_root_cause_v25_stop_decision.json",
+   "said": "the remaining 11 SWE-bench patches"
+  }
+ ]
+}

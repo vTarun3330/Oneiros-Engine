@@ -43,12 +43,9 @@ def _sha(path: Path) -> str:
 
 
 def _job_file(path: Path, n: int = 2) -> None:
-    prompts = [{"target_key": f"t{i}", "prompt": f"prompt {i}", "condition": "whole_module",
-                "prompt_sha256": hashlib.sha256(f"prompt {i}".encode()).hexdigest()}
-               for i in range(n)]
-    fit = gen.sequence_fit(prompts, len)
-    job = gen.build_job(prompts, {p["target_key"]: {"ok": True} for p in prompts}, fit)
-    path.write_text(json.dumps({COND: job}, sort_keys=True))
+    """A real v2.5 job (v2.5 builder, bound to the copied builder files of the project)."""
+    from tests.native_v25_job_helpers import v25_job_file
+    v25_job_file(path, n, root=path.parent.parent)
 
 
 def _commit_push(repo: Path, message: str) -> str:

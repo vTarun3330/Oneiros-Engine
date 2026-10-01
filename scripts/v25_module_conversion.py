@@ -20,7 +20,10 @@ import re
 import sys
 from typing import Dict, List, Optional
 
-VERSION = "oneiros_v25_module_conversion_v1"
+# v1 = Stage 1 (6b35b20, file sha 7e06390e...); v2 = stage1_r2 behaviour (future-import-safe
+# repository imports, name-imported TestCase subclasses; file sha 2900192d... at d2ac726, which
+# still carried the v1 string - erratum results/sft_root_cause_v25_cpu2_accounting_erratum.json)
+VERSION = "oneiros_v25_module_conversion_v2"
 OUTPUT_TYPE = "pytest_module_v1"
 INTERFACE_MODULE = "oneiros_target"
 BUILTINS = frozenset(dir(builtins))

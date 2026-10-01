@@ -1,4 +1,6 @@
-"""Durable candidate generation for native generated tests (protocol v2 + amendment v2.1).
+"""Durable candidate generation for native generated tests (protocol v2 + amendment v2.1;
+generator v5 for protocol v2.5: the CLI runs only a job built by
+``harness.native_generated_test_job_v25`` with the current pytest_module_v1 builder hash).
 
     run --job FILE --condition primary_whole_module --arm {base,sft} --out DIR
         --backend {mock,hf} [--preflight FILE --authorization FILE]
@@ -44,7 +46,7 @@ if str(ROOT) not in sys.path:
 from scripts.native_generation_io import (TELEMETRY_SCHEMA, extract, row_problems,  # noqa: E402
                                           target_seed)
 
-GENERATOR_VERSION = "oneiros_native_generated_tests_generate_v4"
+GENERATOR_VERSION = "oneiros_native_generated_tests_generate_v5"   # v2.5: v2.5 jobs only
 CONTRACT = {
     "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
     "base_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
@@ -310,8 +312,10 @@ def quarantine(path: Path, problems: Sequence[str]) -> Path:
 
 
 def arm_contract(identity: Mapping[str, Any]) -> Dict[str, Any]:
-    return {"generator_version": GENERATOR_VERSION, "contract": dict(CONTRACT),
-            "telemetry_schema": TELEMETRY_SCHEMA, "identity": dict(identity)}
+    from harness.native_generated_test_job_v25 import JOB_SCHEMA
+    return {"generator_version": GENERATOR_VERSION, "job_schema": JOB_SCHEMA,
+            "contract": dict(CONTRACT), "telemetry_schema": TELEMETRY_SCHEMA,
+            "identity": dict(identity)}
 
 
 def check_identity(out_dir: Path, contract: Mapping[str, Any], arm: str, condition: str) -> str:
@@ -574,7 +578,12 @@ def main(argv=None) -> int:
     parser.add_argument("--authorization", default=None)
     args = parser.parse_args(argv)
     job_path = Path(args.job)
-    job = select_condition(json.loads(job_path.read_text(encoding="utf-8")), args.condition)
+    # v2.5: only a job made by the v2.5 builder with the CURRENT builder hash runs (a v2.4 job,
+    # a stale builder or a non-pytest_module_v1 item refuses before anything is written)
+    from harness.native_generated_test_job_v25 import validate_job_file
+    job_file = json.loads(job_path.read_text(encoding="utf-8"))
+    validate_job_file(job_file, args.condition, ROOT)
+    job = select_condition(job_file, args.condition)
     out = Path(args.out)
     auth = Path(args.authorization) if args.authorization else None
     preflight = Path(args.preflight) if args.preflight else None

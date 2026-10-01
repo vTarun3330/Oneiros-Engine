@@ -160,8 +160,9 @@ def _snapshot_available():
 
 @pytest.mark.skipif(not _snapshot_available(), reason="base snapshot not local")
 def test_the_exact_cli_command_works_with_the_mock_backend(tmp_path):
+    from tests.native_v25_job_helpers import v25_job_file
     job_file = tmp_path / "job.json"
-    job_file.write_text(json.dumps({"primary_whole_module": _job(2)}))
+    v25_job_file(job_file, 2)
     out = tmp_path / "out"
     assert gen.main(["run", "--job", str(job_file), "--condition", "primary_whole_module",
                      "--arm", "sft", "--out", str(out), "--backend", "mock"]) == 0
@@ -178,8 +179,9 @@ def test_the_exact_cli_command_works_with_the_mock_backend(tmp_path):
 # gate of amendment v2.2 section D; its lifecycle is tested in tests/test_native_launch_gate.py.
 
 def test_cli_hf_refuses_without_preflight_and_authorisation(tmp_path):
+    from tests.native_v25_job_helpers import v25_job_file
     job_file = tmp_path / "job.json"
-    job_file.write_text(json.dumps({"primary_whole_module": _job(1)}))
+    v25_job_file(job_file, 1)
     with pytest.raises(gen.Refused, match="authorisation"):
         gen.main(["run", "--job", str(job_file), "--condition", "primary_whole_module",
                   "--arm", "sft", "--out", str(tmp_path / "o"), "--backend", "hf"])
@@ -210,7 +212,8 @@ def test_finish_counts_through_the_first_eos_and_ignores_batch_padding():
 
 
 def test_telemetry_version_and_contract_fields():
-    assert gen.GENERATOR_VERSION == "oneiros_native_generated_tests_generate_v4"
+    assert gen.GENERATOR_VERSION == "oneiros_native_generated_tests_generate_v5"
+    assert gen.arm_contract(IDENTITY)["job_schema"] == "oneiros_native_generated_tests_job_v25"
     assert gen.arm_contract(IDENTITY)["telemetry_schema"] == "oneiros_native_generation_telemetry_v2"
     sampling = {k: gen.CONTRACT[k] for k in ("temperature", "top_p", "do_sample",
                                              "max_new_tokens", "candidates", "seeds")}
