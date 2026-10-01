@@ -1,0 +1,103 @@
+{
+ "caps": {
+  "per_function": 3,
+  "per_lineage": 3,
+  "per_repository": 40
+ },
+ "conservation": "34 verified = 33 selected + 1 excluded",
+ "excluded_rows": [
+  {
+   "candidate_id": "official-repository::youtube-dl::26::test/test_utils.py__TestUtil__test_js_to_json_realworld",
+   "function": [
+    "youtube-dl",
+    "youtube_dl/utils.py",
+    "js_to_json"
+   ],
+   "index": 5723,
+   "project": "youtube-dl",
+   "reason": "excluded:per_function_cap",
+   "selected_rows_of_function": [
+    5715,
+    5722,
+    5734
+   ],
+   "task": "bugsinpy::youtube-dl::26"
+  }
+ ],
+ "funnel": {
+  "discovered_fragments": {
+   "canonical_tests": 163,
+   "crash_kills": 8,
+   "issues": 153,
+   "lineages": 153,
+   "repositories": 12,
+   "rows": 163,
+   "semantic_kills": 26
+  },
+  "environment_qualified": {
+   "canonical_tests": 105,
+   "crash_kills": 8,
+   "issues": 101,
+   "lineages": 101,
+   "repositories": 8,
+   "rows": 105,
+   "semantic_kills": 26
+  },
+  "excluded_exact_duplicates": 0,
+  "excluded_near_duplicates": 0,
+  "excluded_other": 0,
+  "excluded_per_function_cap": 1,
+  "excluded_per_lineage_cap": 0,
+  "excluded_per_repository_cap": 0,
+  "natively_verified_both_runs": {
+   "canonical_tests": 34,
+   "crash_kills": 8,
+   "issues": 34,
+   "lineages": 34,
+   "repositories": 4,
+   "rows": 34,
+   "semantic_kills": 26
+  },
+  "pre_selection_eligible": {
+   "canonical_tests": 34,
+   "crash_kills": 8,
+   "issues": 34,
+   "lineages": 34,
+   "repositories": 4,
+   "rows": 34,
+   "semantic_kills": 26
+  },
+  "selected": {
+   "canonical_tests": 33,
+   "crash_kills": 8,
+   "issues": 33,
+   "lineages": 33,
+   "repositories": 4,
+   "rows": 33,
+   "semantic_kills": 25
+  }
+ },
+ "inputs_sha256": {
+  "candidates": "f95202f968ece95f2b727713cfd19a2b41cdd642c9baf8392887cf4d0336675d",
+  "targets": "0bfeb88f30e8f715465b0b5207479931edf0e05c46c8a9cad778faa608e32b2f",
+  "verification_run1": "169895e017ff7b6b7f887d613ed6e1a1e0bb2c68313248b167888557621d82ff",
+  "verification_run2": "169895e017ff7b6b7f887d613ed6e1a1e0bb2c68313248b167888557621d82ff"
+ },
+ "near_duplicate_clusters_in_selection": {
+  "clusters": 33,
+  "multi_member": 0
+ },
+ "near_duplicate_policy": "reported, not removed",
+ "problems": [],
+ "schema_version": "oneiros_v26_selection_conservation_v1",
+ "sidecar": {
+  "path": "results/sft_root_cause/v26_funnel/selection_outcomes.jsonl",
+  "sha256": "0879156fa985ddfc1844584832ff0b59a0655c319a2a6f4fdb9b42b0759b2d79"
+ },
+ "status": "PASS",
+ "supersedes_wording_of": {
+  "erratum": "duplicates_ignored=0 counted only canonical duplicates; one verified row was excluded by the per-function cap",
+  "receipt": "results/sft_root_cause_v26_repository_verification_a3.json",
+  "sha256": "00ae59ead384c3a08a738233809b05feedd7cfb6634579b32030f0dd352e36c5"
+ }
+}
