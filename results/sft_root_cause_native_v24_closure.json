@@ -1,0 +1,32 @@
+{
+ "archives_verified_byte_identical": {
+  "native_v24_completed_965005d": 23,
+  "native_v24_repair_ceiling": 5
+ },
+ "bound_receipts": {
+  "results/sft_root_cause_native_v24_completed_artifacts_manifest.json": "2d14d8e4d04e426222e52f5bcb335c91eb40e0df5ed41aa675f937bc902e4a03",
+  "results/sft_root_cause_native_v24_repair_ceiling_definition.json": "09927f6a33a637be96008db4b8b680658aa2f045db762f30055a46f704325504",
+  "results/sft_root_cause_native_v24_repair_ceiling_results.json": "a21a9cfec972ca2ec9edd33feae23a27a122b211a61dec903389dd2b73f4878a",
+  "results/sft_root_cause_native_v24_sft_training_shape_audit.json": "fac747a1531e9acfeaf9572b9175dceaffacad08ff4f2516e775df4ba5422d71"
+ },
+ "claims": {
+  "atheris_superiority": false,
+  "generalization": false,
+  "root_cause": false,
+  "sft_benefit": false
+ },
+ "completed_at_commit": "965005d88f8f21efb292d7a9562ddf18891dabb8",
+ "panel_status": "the 23-target v2.4 panel influenced the diagnosis and is development/diagnostic only; never training, never confirmation",
+ "post_v24_executable_tree_sha256_at_closure": "ffae072bb684658f2a71a2fdf3807e46ff4683360c5f6f8c8b770ce151701222",
+ "retired_non_executable": {
+  "results/sft_root_cause_native_generated_tests_preflight_v2_4.json": "c5479bb371f6c8ecbfaaa06491c3bde0f14db46e4908b1d654b3d257963104cd",
+  "results/sft_root_cause_native_generated_tests_preflight_v2_4_r2.json": "7bb6113764bfd23539977ae6e0502f72bb87f76bc12e69100f829b736c9b90ff",
+  "results/sft_root_cause_native_gpu_authorization_v2.json": "a1982d08242c957abc27d3091e0c342fe9ef05498df95c0dfa48713a7e6d7a59"
+ },
+ "retirement_rule": "never reuse for any launch; the source identity they bind no longer matches HEAD; all future work starts a new v2.5 source/preflight/authorisation chain",
+ "schema_version": "oneiros_native_v24_closure_v1",
+ "source_identity_changed_since_v24": true,
+ "status": "v2.4 engineering rehearsal COMPLETED; closed",
+ "v24_executable_tree_sha256": "78edcf6679e8e51f98e165ffabb950e5972456b18715962d1cb7d52475ac9182",
+ "validation_or_sealed_access": false
+}
