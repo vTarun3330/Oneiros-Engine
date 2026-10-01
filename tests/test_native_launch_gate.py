@@ -477,7 +477,7 @@ def test_protocol_v2_5_is_bound_into_source_and_generation_identity(tmp_path):
     from scripts import native_generated_tests_generate as gen
     assert gate.PROTOCOL_FILES == gen.PROTOCOL_FILES
     assert "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5.md" in gate.PROTOCOL_FILES
-    assert gate.PROTOCOL_FILES[-1].endswith("PROTOCOL_V2_5_ADDENDUM_1.md")
+    assert gate.PROTOCOL_FILES[-1].endswith("PROTOCOL_V2_5_ADDENDUM_2.md")
     for p in gate.PROTOCOL_FILES:
         (tmp_path / p).parent.mkdir(parents=True, exist_ok=True)
         (tmp_path / p).write_text(f"# {p}\n")

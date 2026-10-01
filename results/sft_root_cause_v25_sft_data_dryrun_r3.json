@@ -1,0 +1,121 @@
+{
+ "candidate_pool": {
+  "repository_admitted": 7,
+  "repository_refused": [],
+  "synthetic_admitted": 620,
+  "synthetic_refusal_reasons": {},
+  "synthetic_refused": 0,
+  "token_fit_refused": [
+   {
+    "pair_id": "repo:5653",
+    "reasons": [
+     "prompt 2255 > 2048"
+    ]
+   }
+  ]
+ },
+ "caps": {
+  "family_share": 0.35,
+  "per_function": 3,
+  "per_lineage": 3,
+  "per_repository": 40,
+  "synthetic_per_repository_example": 1.0,
+  "synthetic_share": 0.6
+ },
+ "dropped_by_mixture": {
+  "synthetic replay budget": 614
+ },
+ "exposure_plan_addendum2": {
+  "checkpoint": "final update; no monitor; no confirmation/validation selection",
+  "duplicates_within_epoch": 0,
+  "epochs": 3,
+  "max_exposure_per_example": 3,
+  "optimizer_steps": 3,
+  "rule": "oneiros_v25_addendum2_exposure_v1",
+  "target_tokens_per_pass": 3474,
+  "total_target_tokens_upper_bound": 10422,
+  "unique_examples": 12,
+  "updates_per_pass": 1,
+  "warmup_steps": 2
+ },
+ "gate": {
+  "lineages": 60,
+  "repositories": 8,
+  "repository_tests": 150
+ },
+ "limits": {
+  "completion_tokens": 1024,
+  "prompt_tokens": 2048,
+  "sequence_tokens": 3072
+ },
+ "mixture": {
+  "by_complexity": {
+   "complex": 2,
+   "moderate": 3,
+   "repository_unscored": 6,
+   "simple": 1
+  },
+  "by_repository": {
+   "sympy": 4,
+   "thefuck": 2
+  },
+  "caps": {
+   "family_share": true,
+   "no_duplicates": true,
+   "per_function": true,
+   "per_lineage": true,
+   "per_repository": true,
+   "replay_ratio": true,
+   "synthetic_share": true
+  },
+  "caps_passed": true,
+  "duplicate_canonical_tests": 0,
+  "family_share": {
+   "arithmetic": 0.1181,
+   "boolean": 0.0417,
+   "boundary": 0.1597,
+   "comparison": 0.0764,
+   "logical": 0.0417,
+   "off_by_one": 0.0625,
+   "official_repository_pytest_reproduction": 0.1667,
+   "official_repository_swebench_reproduction": 0.3333
+  },
+  "max_per_function": 1,
+  "max_per_lineage": 1,
+  "max_per_repository": 4,
+  "pairs": 12,
+  "repositories": 2,
+  "repository_lineages": 6,
+  "repository_pairs": 6,
+  "synthetic_pairs": 6,
+  "synthetic_share": 0.5,
+  "training_gate": {
+   "lineages": false,
+   "repositories": false,
+   "repository_tests": false
+  },
+  "training_gate_passed": false
+ },
+ "pairs_file": {
+  "path": "results/sft_root_cause/v25_sft_dryrun/pairs_dry_run.jsonl",
+  "sha256": "99ce423ba83778720766db117085226cdab461d1f20fa0bb8fa48ef6e24b3dea"
+ },
+ "schema_version": "oneiros_v25_sft_pairs_v1",
+ "status": "DRY RUN: data only, no model weights touched",
+ "supervised_target_tokens": 3474,
+ "tokens": {
+  "combined": {
+   "max": 2101,
+   "sum": 12075
+  },
+  "completion": {
+   "max": 990,
+   "sum": 3474
+  },
+  "prompt": {
+   "max": 1156,
+   "sum": 8601
+  }
+ },
+ "train_ready": false
+}
