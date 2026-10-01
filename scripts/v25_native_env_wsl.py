@@ -152,8 +152,10 @@ def pytest_cases(python: str, checkout: Path, selectors: list, outdir: Path, lab
     cases = junit(xml)
     out = {}
     for sel in selectors:
-        path, _, name = sel.partition("::")
+        path, *middle, name = sel.split("::")     # path[::Class...]::test_name
         cls = path[:-3].replace("/", ".") if path.endswith(".py") else path
+        if middle:
+            cls = ".".join([cls, *middle])
         hits = {k: v for k, v in cases.items()
                 if k.split("::")[0].endswith(cls) and (
                     k.split("::")[1] == name or k.split("::")[1].startswith(name + "["))}
