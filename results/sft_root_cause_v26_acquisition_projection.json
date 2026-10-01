@@ -1,0 +1,228 @@
+{
+ "confirmation_pool": {
+  "probability_>=_80_targets": 0.0,
+  "qualified_targets": {
+   "expected": 9.94,
+   "median": 9,
+   "p05": 2,
+   "p95": 20
+  },
+  "repositories": 70
+ },
+ "deterministic_structural_maximum": {
+  "existing_13_repositories": {
+   "eligible_fragments_after_dedup_and_caps": 150,
+   "source": "results/sft_root_cause_v25_attainable_gate_decision.json"
+  },
+  "new_repositories": "none: the number of fix commits a new repository can supply is not bounded by any recorded quantity"
+ },
+ "inputs_sha256": {
+  "results/sft_root_cause_v25_repository_verification_r2.json": "60cdba0882d9665d7b31a7c75c6c844251c19b5683e01ca53198028ad676a2a5",
+  "results/sft_root_cause_v25_universe_partition.json": "6b3e2527243817d1f90fde5a8e333652129c977db328abcc67e38470791a709b",
+  "results/v4_3_repository_native_aprime_fresh_confirmation_pilot.json": "267923bddda5f1345c3d4c605d5c28982d9a455cb5f9769bf25c9af7440102c5"
+ },
+ "is_observed_evidence": false,
+ "limitations": [
+  "historical rates come from other repositories and mechanisms and may not transfer to the new pools",
+  "the pilot never admitted more than one fix commit per scanned repository, so simulated per-repository admissions cannot exceed one: a data artefact, not a bound",
+  "a projection never passes or fails an observed-data gate; only observed, verified, deduplicated rows can"
+ ],
+ "method": {
+  "cluster_data": {
+   "admissions_per_scanned_repository": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    1
+   ],
+   "positives": [
+    [
+     20,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     22,
+     14
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     18,
+     12
+    ],
+    [
+     24,
+     2
+    ]
+   ],
+   "qualification": [
+    [
+     5,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     47,
+     20
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     17,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     32,
+     22
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     21,
+     18
+    ],
+    [
+     24,
+     24
+    ]
+   ]
+  },
+  "clusters": {
+   "admissions_per_scanned_repository": 20,
+   "positives": 7,
+   "qualification": 12
+  },
+  "draws": 10000,
+  "seed": 20261002,
+  "type": "repository-clustered bootstrap posterior-predictive simulation"
+ },
+ "observed": {
+  "lineages": 28,
+  "repositories": 3,
+  "shortfall_to_gate": {
+   "lineages": 32,
+   "repositories": 5,
+   "repository_tests": 122
+  },
+  "verified_unique_repository_tests": 28
+ },
+ "rate_intervals_90": {
+  "admit": [
+   0.1,
+   0.4
+  ],
+  "positive": [
+   0.0408,
+   0.6
+  ],
+  "qualify": [
+   0.3596,
+   0.7746
+  ]
+ },
+ "scenarios": {
+  "central": {
+   "admit": 0.25,
+   "expected_positives_training_pool": 1.64,
+   "expected_qualified_targets_confirmation_pool": 9.93,
+   "positive": 0.3218,
+   "qualify": 0.5673
+  },
+  "optimistic": {
+   "admit": 0.4,
+   "expected_positives_training_pool": 6.69,
+   "expected_qualified_targets_confirmation_pool": 21.69,
+   "positive": 0.6,
+   "qualify": 0.7746
+  },
+  "pessimistic": {
+   "admit": 0.1,
+   "expected_positives_training_pool": 0.05,
+   "expected_qualified_targets_confirmation_pool": 2.52,
+   "positive": 0.0408,
+   "qualify": 0.3596
+  }
+ },
+ "schema_version": "oneiros_v26_acquisition_projection_v1",
+ "supersedes_wording_of": {
+  "erratum": "'upper_bound_if_every_admitted_commit_became_a_positive' (10.6) was an EXPECTED admitted count, not an upper bound; 1.9 was a point estimate",
+  "receipt": "results/sft_root_cause_v25_acquisition_projection.json",
+  "sha256": "817e8797dcb8b24a0f224f15c234990bfc8a79123635512808a4b7bfd2fc78b5"
+ },
+ "training_pool": {
+  "admitted_fix_commits": {
+   "expected": 9.01,
+   "median": 9,
+   "p05": 2,
+   "p95": 17
+  },
+  "new_repositories_with_a_positive": {
+   "expected": 1.63,
+   "median": 1,
+   "p05": 0,
+   "p95": 5
+  },
+  "probability": {
+   "new_repositories_>=_5": 0.064,
+   "positives_>=_shortfall_122": 0.0
+  },
+  "qualified": {
+   "expected": 5.09,
+   "median": 5,
+   "p05": 1,
+   "p95": 11
+  },
+  "repositories": 36,
+  "verified_positives": {
+   "expected": 1.63,
+   "median": 1,
+   "p05": 0,
+   "p95": 5
+  }
+ }
+}
