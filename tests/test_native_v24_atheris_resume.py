@@ -19,6 +19,16 @@ from scripts import native_generation_io as gio
 from tests import native_analysis_helpers as helpers
 from tests.test_native_v23_cohort_pipeline import QUALIFIED, world  # noqa: F401 (fixture)
 
+PLAN_INT_V5 = {"params": [{"name": "x", "spec": {"kind": "prim", "type": "int"}, "keyword": False}],
+               "receiver": None, "method": None}
+
+@pytest.fixture(autouse=True)
+def _fake_atheris_runtime(monkeypatch):
+    """v5 resolves each target's prepared interpreter; test worlds have none."""
+    from tests.native_analysis_helpers import fake_runtime
+    monkeypatch.setattr(ath, "runtime_for", fake_runtime)
+
+
 SEEDS = (42, 43, 44)
 CELLS = len(QUALIFIED) * len(ar.MODES) * len(SEEDS)
 
@@ -102,7 +112,7 @@ def _key_disagrees(rows):
 
 def _ineligible_label(rows):
     rows[3] = {k: rows[3][k] for k in ("key", "contract_sha256", "target_key", "mode", "seed")}
-    rows[3].update(eligible=False, status="atheris_ineligible", reason="variadic_signature",
+    rows[3].update(eligible=False, status="adapter_unsupported", reason="adapter_unsupported:variadic_signature",
                    kill=False)
     return rows
 
@@ -119,7 +129,7 @@ CORRUPTIONS = {
     "seed_as_string": _set(1, seed="42"),
     "stale_contract": _set(5, contract_sha256="0" * 64),
     "eligibility_disagrees": _corrupt_rows(_ineligible_label),
-    "status_reason_disagree": _set(6, reason="variadic_signature"),
+    "status_reason_disagree": _set(6, reason="adapter_unsupported:variadic_signature"),
     "missing_identity_field": _drop(2, "status"),
     "missing_evidence_field": _drop(7, "end_reason"),
     "missing_cpu_field": _drop(8, "aggregate_cpu_seconds"),
@@ -250,8 +260,8 @@ def test_eligibility_non_run_rows_carry_no_fabricated_evidence(world):
     chash = ar.contract_hash(contract)
     key = f"{QUALIFIED[1]}::ordinary::42"
     row = {"key": key, "contract_sha256": chash, "target_key": QUALIFIED[1], "mode": "ordinary",
-           "seed": 42, "eligible": False, "status": "atheris_ineligible",
-           "reason": "variadic_signature", "kill": False}
+           "seed": 42, "eligible": False, "status": "adapter_unsupported",
+           "reason": "adapter_unsupported:variadic_signature", "kill": False}
     ok = ar.validate_rows(_dump([row]), contract, qualified=QUALIFIED, seeds=SEEDS, budget=600,
                           complete=False)
     assert list(ok) == [key]

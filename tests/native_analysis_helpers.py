@@ -42,7 +42,7 @@ def valid_receipts(world, drop=(), mutate=None) -> dict:
                              "executor_sha256": sha(REPO / "scripts/native_generated_tests_execute_wsl.py"),
                              "inner_sha256": sha(REPO / "scripts/native_sandbox_inner.sh"),
                              "prepare_sha256": sha(REPO / "scripts/native_rehearsal_prepare_wsl.py")},
-        "atheris_canaries": {"schema_version": "oneiros_native_atheris_canaries_v3", "passed": True,
+        "atheris_canaries": {"schema_version": "oneiros_native_atheris_canaries_v4", "passed": True,
                              "design_version": ar.DESIGN_VERSION,
                              "script_sha256": sha(REPO / "scripts/native_generated_tests_atheris_wsl.py"),
                              "inner_sha256": sha(REPO / "scripts/native_sandbox_inner.sh"),
@@ -90,8 +90,20 @@ def analyse(world, results, contract, root, preflight=None, extra=(), out="analy
     return json.loads((world["tmp"] / out).read_text())
 
 
+PLAN_INT = {"params": [{"name": "x", "spec": {"kind": "prim", "type": "int"}, "keyword": False}],
+            "receiver": None, "method": None}
+FAKE_RUNTIME = {"available": True, "python": "/fake/env/bin/python", "env_dir": None,
+                "version": "3.11", "overlay": "/fake/overlay", "ro": [],
+                "overlay_manifest_sha256": "0" * 64}
+
+
+def fake_runtime(python, env_dir=None):
+    """Tests run on hosts without the per-target WSL runtimes: one fixed stand-in."""
+    return dict(FAKE_RUNTIME)
+
+
 def probe_eligible(view, module, qualname):
-    return {"eligible": True, "plan": [{"name": "x", "type": "int", "keyword": False}],
+    return {"eligible": True, "plan": PLAN_INT,
             "returns": "int", "python": "3.11.15"}
 
 
@@ -101,8 +113,8 @@ def atheris_contract(world, ineligible=()):
         world["prep"], world["manifest"], 600, (42, 43, 44), root=world["tmp"],
         probe_fn=probe_eligible)
     for key in ineligible:                       # applicability decided per target
-        eligibility[key] = {**eligibility[key], "status": "atheris_ineligible",
-                            "reason": "variadic_signature", "plan": None, "returns": None}
+        eligibility[key] = {**eligibility[key], "status": "adapter_unsupported",
+                            "reason": "adapter_unsupported:variadic_signature", "plan": None, "returns": None}
     contract = {**contract, "eligibility": eligibility,
                 "eligibility_sha256": ar.canonical_sha(eligibility)}
     return contract, prepared, eligibility
@@ -125,6 +137,7 @@ def fuzz_evidence(mode: str, seed: int, budget: int = 600, **over) -> dict:
            "main_cpu_seconds": budget + 0.4, "worker_cpu_seconds": 0.0,
            "end_reason": "cpu_budget_exhausted", "exit": -9, "reached": True,
            "within_budget": True, "cleanup_ok": True, "views_unchanged": True,
+           "environment_sha256": None, "environment_unchanged": True,
            "witnesses": 0, "confirmations": [], "confirmed": 0, "replay_errors": 0,
            "kill": False, "replay_cpu_seconds": 0.5, "replay_cleanup_ok": True}
     if mode == "posthoc":

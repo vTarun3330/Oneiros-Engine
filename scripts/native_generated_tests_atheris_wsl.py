@@ -58,7 +58,7 @@ import sys
 import tempfile
 import time
 
-DESIGN_VERSION = "oneiros_native_generated_tests_atheris_v4"
+DESIGN_VERSION = "oneiros_native_generated_tests_atheris_v5"
 HERE = Path(__file__).resolve().parent
 INNER = HERE / "native_sandbox_inner.sh"
 REPO_ROOT = HERE.parent
@@ -66,9 +66,6 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 import native_generation_io as gio  # noqa: E402  (stdlib only)
 import native_atheris_results as verdicts  # noqa: E402  (stdlib only; the one kill rule)
-PYTHON = "/usr/bin/python3.11"
-ATHERIS_ROOT = "/opt/atheris311"
-ATHERIS_SITE = "/opt/atheris311/lib/python3.11/site-packages"
 CGROUP_ROOT = Path("/sys/fs/cgroup/unified/oneiros_atheris")
 FULL_BUDGET_CPU_SECONDS = 600
 CANARY_BUDGET_SECONDS = 20
@@ -89,23 +86,69 @@ def tolerance(budget: float) -> float:
     return 1.0 + 0.02 * budget
 
 
-COMMON = r'''
-import base64, importlib, inspect, json, math, sys, typing
+# --- v5 runtime: the target's own interpreter and locked environment + a clean overlay -------
 
-SUPPORTED = {"int", "float", "str", "bytes", "bool", "list[int]", "list[str]", "list[float]"}
+ATHERIS_V5_ROOT = Path("/opt/oneiros_atheris_v5")
+RUNTIME: dict = {}
+
+
+def tree_manifest_sha256(root: Path) -> str:
+    """Hash of every file (relative path -> sha256) under ``root``; bytecode caches ignored."""
+    files = {p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+             for p in sorted(Path(root).rglob("*"))
+             if p.is_file() and "__pycache__" not in p.parts}
+    return hashlib.sha256(json.dumps(files, sort_keys=True).encode()).hexdigest()
+
+
+def environment_sha256(env_dir: str | None) -> str | None:
+    """Identity of a locked environment's site-packages (v2.5 C.2: hashed before and after)."""
+    if not env_dir:
+        return None
+    sites = sorted(Path(env_dir).glob("lib/python*/site-packages"))
+    return hashlib.sha256("".join(tree_manifest_sha256(s) for s in sites).encode()).hexdigest()
+
+
+def runtime_for(python: str, env_dir: str | None) -> dict:
+    """The v5 runtime of one target: its prepared interpreter and environment, plus the clean
+    read-only Atheris overlay for that CPython minor version. No overlay -> the infrastructure
+    category ``atheris_abi_unavailable``."""
+    version = subprocess.run([python, "-c", "import sys; print('%d.%d' % sys.version_info[:2])"],
+                             capture_output=True, text=True).stdout.strip()
+    overlay = ATHERIS_V5_ROOT / f"cp{version.replace('.', '')}"
+    if not (overlay / "atheris").is_dir():
+        return {"available": False, "reason": "atheris_abi_unavailable", "version": version}
+    base = Path(os.path.realpath(python)).parent.parent        # the interpreter's installation
+    ro = [str(overlay)] + ([env_dir] if env_dir else []) + \
+        ([str(base)] if not str(base).startswith("/usr") else [])
+    return {"available": True, "python": python, "env_dir": env_dir, "version": version,
+            "overlay": str(overlay), "overlay_manifest_sha256": tree_manifest_sha256(overlay),
+            "ro": ro}
+
+
+def set_runtime(runtime: dict) -> None:
+    if not runtime.get("available"):
+        raise RuntimeError(f"no usable Atheris runtime: {runtime.get('reason')}")
+    RUNTIME.clear()
+    RUNTIME.update(runtime)
+
+
+COMMON = r'''
+import base64, enum, importlib, inspect, json, math, sys, types, typing
+
+# Atheris adapter v5 (protocol v2.5 C.3-C.4). Supported: the primitives and lists below,
+# Optional/Union of supported types, Any (a FROZEN primitive menu), Enum members and Literal
+# values that are JSON primitives; instance-method receivers are constructed ONLY through the
+# class's own public __init__ with supported parameters. Anything else is explicitly
+# "adapter_unsupported:<reason>" - never an import/infrastructure failure, never a non-kill.
+PRIMS = ("int", "float", "str", "bytes", "bool")
+LISTS = ("list[int]", "list[str]", "list[float]")
+ANY_MENU = ("int", "float", "str", "bytes", "bool", "none")
 
 class Opaque(Exception):
     pass
 
-def type_name(annotation):
-    if annotation is inspect.Parameter.empty:
-        return None
-    if isinstance(annotation, str):
-        return annotation.replace("List[", "list[").replace("typing.", "")
-    if typing.get_origin(annotation) is list:
-        args = typing.get_args(annotation)
-        return "list[%s]" % getattr(args[0], "__name__", args[0]) if args else None
-    return getattr(annotation, "__name__", None)
+class Unsupported(Exception):
+    pass
 
 def resolve(module, qualname):
     obj = importlib.import_module(module)
@@ -113,43 +156,142 @@ def resolve(module, qualname):
         obj = getattr(obj, part)
     return obj
 
-def eligibility(func, qualname):
+def type_name(annotation):
+    """Return-type name used only for the contract-violation check."""
+    if isinstance(annotation, str):
+        return annotation.replace("typing.", "")
+    return getattr(annotation, "__name__", None)
+
+def type_spec(a, depth=0):
+    if depth > 3:
+        raise Unsupported("nested_too_deep")
+    if a is inspect.Parameter.empty:
+        raise Unsupported("None")
+    if a is typing.Any:
+        return {"kind": "any"}
+    if a is None or a is type(None):
+        return {"kind": "none"}
+    if isinstance(a, str):
+        name = a.replace("List[", "list[").replace("typing.", "")
+        if name in PRIMS or name in LISTS:
+            return {"kind": "prim", "type": name}
+        raise Unsupported(name)
+    origin, args = typing.get_origin(a), typing.get_args(a)
+    if origin is list and len(args) == 1 and getattr(args[0], "__name__", None) in ("int", "str", "float"):
+        return {"kind": "prim", "type": "list[%s]" % args[0].__name__}
+    if origin is typing.Union or (getattr(types, "UnionType", None) is not None and origin is types.UnionType):
+        return {"kind": "union", "options": [type_spec(x, depth + 1) for x in args]}
+    if origin is typing.Literal:
+        if args and all(v is None or type(v) in (bool, int, float, str) for v in args):
+            return {"kind": "literal", "values": list(args)}
+        raise Unsupported("Literal")
+    if inspect.isclass(a) and issubclass(a, enum.Enum):
+        members = list(a.__members__)
+        if not members:
+            raise Unsupported(a.__name__)
+        return {"kind": "enum", "module": a.__module__, "qualname": a.__qualname__, "members": members}
+    name = getattr(a, "__name__", None)
+    if name in PRIMS:
+        return {"kind": "prim", "type": name}
+    raise Unsupported(str(name or a)[:40])
+
+class UnsupportedParam(Exception):
+    pass
+
+def param_plan(func, skip_first=False):
+    sig = inspect.signature(func)
     try:
-        sig = inspect.signature(func)
-    except (TypeError, ValueError):
-        return {"eligible": False, "reason": "no_signature"}
-    params = list(sig.parameters.values())
-    if "." in qualname and params and params[0].name == "self":
-        return {"eligible": False, "reason": "instance_method_receiver"}
+        hints = typing.get_type_hints(func)
+    except Exception:
+        hints = {}
+    params = list(sig.parameters.values())[1 if skip_first else 0:]
     plan = []
     for p in params:
         if p.kind in (p.VAR_POSITIONAL, p.VAR_KEYWORD):
-            return {"eligible": False, "reason": "variadic_signature"}
-        name = type_name(p.annotation)
-        if name in SUPPORTED:
-            plan.append({"name": p.name, "type": name,
-                         "keyword": p.kind == p.KEYWORD_ONLY})
-        elif p.default is inspect.Parameter.empty:
-            return {"eligible": False, "reason": "unsupported_parameter:%s:%s" % (p.name, name)}
-    return {"eligible": True, "plan": plan, "returns": type_name(sig.return_annotation)}
+            raise UnsupportedParam("variadic_signature")
+        try:
+            spec = type_spec(hints.get(p.name, p.annotation))
+        except Unsupported as exc:
+            if p.default is inspect.Parameter.empty:
+                raise UnsupportedParam("unsupported_parameter:%s:%s" % (p.name, exc))
+            continue
+        plan.append({"name": p.name, "spec": spec, "keyword": p.kind == p.KEYWORD_ONLY})
+    return plan
 
-def build(fdp, plan):
+def eligibility(func, qualname, module):
+    def no(reason):
+        return {"eligible": False, "reason": "adapter_unsupported:" + reason}
+    receiver, method = None, None
+    try:
+        owner = resolve(module, qualname.rsplit(".", 1)[0]) if "." in qualname else None
+        raw = inspect.getattr_static(owner, qualname.rsplit(".", 1)[1]) \
+            if inspect.isclass(owner) else None
+        if inspect.isfunction(raw):                 # a plain instance method: needs a receiver
+            if owner.__init__ is object.__init__:
+                cplan = []
+            else:
+                try:
+                    cplan = param_plan(owner.__init__, skip_first=True)
+                except UnsupportedParam as exc:
+                    return no("receiver_constructor:" + str(exc))
+            receiver = {"module": module, "qualname": qualname.rsplit(".", 1)[0], "plan": cplan}
+            method = qualname.rsplit(".", 1)[1]
+            params = param_plan(raw, skip_first=True)
+        else:
+            params = param_plan(func)
+    except UnsupportedParam as exc:
+        return no(str(exc))
+    except (TypeError, ValueError):
+        return no("no_signature")
+    try:
+        returns = typing.get_type_hints(func).get("return", inspect.signature(func).return_annotation)
+    except Exception:
+        returns = inspect.Parameter.empty
+    return {"eligible": True, "plan": {"params": params, "receiver": receiver, "method": method},
+            "returns": type_name(returns) if returns is not inspect.Parameter.empty else None}
+
+def value_for(fdp, s):
+    k = s["kind"]
+    if k == "none":
+        return None
+    if k == "any":
+        pick = ANY_MENU[fdp.ConsumeIntInRange(0, len(ANY_MENU) - 1)]
+        return None if pick == "none" else value_for(fdp, {"kind": "prim", "type": pick})
+    if k == "union":
+        return value_for(fdp, s["options"][fdp.ConsumeIntInRange(0, len(s["options"]) - 1)])
+    if k == "literal":
+        return s["values"][fdp.ConsumeIntInRange(0, len(s["values"]) - 1)]
+    if k == "enum":
+        return resolve(s["module"], s["qualname"])[s["members"][fdp.ConsumeIntInRange(0, len(s["members"]) - 1)]]
+    t = s["type"]
+    if t == "int": return fdp.ConsumeIntInRange(-10**6, 10**6)
+    if t == "float": return fdp.ConsumeRegularFloat()
+    if t == "str": return fdp.ConsumeUnicodeNoSurrogates(32)
+    if t == "bytes": return fdp.ConsumeBytes(32)
+    if t == "bool": return fdp.ConsumeBool()
+    if t == "list[int]": return [fdp.ConsumeIntInRange(-1000, 1000) for _ in range(fdp.ConsumeIntInRange(0, 8))]
+    if t == "list[str]": return [fdp.ConsumeUnicodeNoSurrogates(8) for _ in range(fdp.ConsumeIntInRange(0, 8))]
+    return [fdp.ConsumeRegularFloat() for _ in range(fdp.ConsumeIntInRange(0, 8))]
+
+def build(fdp, params):
     args, kwargs = [], {}
-    for p in plan:
-        t = p["type"]
-        if t == "int": v = fdp.ConsumeIntInRange(-10**6, 10**6)
-        elif t == "float": v = fdp.ConsumeRegularFloat()
-        elif t == "str": v = fdp.ConsumeUnicodeNoSurrogates(32)
-        elif t == "bytes": v = fdp.ConsumeBytes(32)
-        elif t == "bool": v = fdp.ConsumeBool()
-        elif t == "list[int]": v = [fdp.ConsumeIntInRange(-1000, 1000) for _ in range(fdp.ConsumeIntInRange(0, 8))]
-        elif t == "list[str]": v = [fdp.ConsumeUnicodeNoSurrogates(8) for _ in range(fdp.ConsumeIntInRange(0, 8))]
-        else: v = [fdp.ConsumeRegularFloat() for _ in range(fdp.ConsumeIntInRange(0, 8))]
+    for p in params:
+        v = value_for(fdp, p["spec"])
         if p["keyword"]:
             kwargs[p["name"]] = v
         else:
             args.append(v)
     return args, kwargs
+
+def invoke(func, plan, fdp):
+    """Call the target once; a receiver is built (constructor arguments consumed first)."""
+    target = func
+    if plan.get("receiver"):
+        r = plan["receiver"]
+        rargs, rkwargs = build(fdp, r["plan"])
+        target = getattr(resolve(r["module"], r["qualname"])(*rargs, **rkwargs), plan["method"])
+    args, kwargs = build(fdp, plan["params"])
+    return target(*args, **kwargs)
 
 def canonical(value, depth=0):
     if depth > 6:
@@ -170,9 +312,8 @@ def canonical(value, depth=0):
     raise Opaque(type(value).__name__)
 
 def outcome(func, plan, data, atheris, returns):
-    args, kwargs = build(atheris.FuzzedDataProvider(data), plan)
     try:
-        value = func(*args, **kwargs)
+        value = invoke(func, plan, atheris.FuzzedDataProvider(data))
     except Exception as exc:
         return ["raise", type(exc).__name__]
     names = {"int": int, "float": float, "str": str, "bytes": bytes, "bool": bool}
@@ -194,7 +335,8 @@ except SyntaxError as exc:
 except Exception as exc:
     print(json.dumps({"eligible": False, "reason": "import_failure:" + type(exc).__name__}))
     raise SystemExit(0)
-print(json.dumps({**eligibility(func, spec["qualname"]), "python": sys.version.split()[0]}))
+print(json.dumps({**eligibility(func, spec["qualname"], spec["module"]),
+                  "python": sys.version.split()[0]}))
 '''
 
 FUZZ = COMMON + r'''
@@ -361,14 +503,19 @@ def _launch(script: str, spec: dict, view: Path, out_dir: Path, *, cpu: int, wal
         (work / "inputs").mkdir(exist_ok=True)
         (work / "inputs" / name).write_bytes(data)
     out_dir.mkdir(parents=True, exist_ok=True)
-    env = {"PATH": "/usr/bin:/bin", "SB_RO": ATHERIS_ROOT, "SB_TARGET": str(view),
+    if not RUNTIME:
+        raise RuntimeError("v5: set_runtime() must select the target's runtime first")
+    # v5: the target's own interpreter and locked environment (read-only), Atheris from the
+    # clean overlay appended after /target; nothing from the system site-packages
+    env = {"PATH": "/usr/bin:/bin", "SB_RO": "\n".join(RUNTIME["ro"]), "SB_TARGET": str(view),
            "SB_OUT": str(out_dir), "SB_WORK_SRC": str(work),
-           "SB_PYTHONPATH": f"/target:{ATHERIS_SITE}", "SB_CPU": str(cpu),
+           "SB_PYTHONPATH": f"/target:{RUNTIME['overlay']}", "SB_CPU": str(cpu),
            "SB_AS": str(SANDBOX_LIMITS["as"]), "SB_NPROC": str(SANDBOX_LIMITS["nproc"]),
            "SB_NOFILE": str(SANDBOX_LIMITS["nofile"]), "SB_FSIZE": str(SANDBOX_LIMITS["fsize"]),
            "SB_WALL": str(wall)}
     argv = ["unshare", "--mount", "--pid", "--net", "--fork", "--mount-proc", "--",
-            "/bin/bash", str(INNER), PYTHON, "-B", "/tmp/work/child.py", "/tmp/work/spec.json"]
+            "/bin/bash", str(INNER), RUNTIME["python"], "-B", "-s", "/tmp/work/child.py",
+            "/tmp/work/spec.json"]
     if cgroup is not None:
         argv = ["/bin/sh", "-c", 'echo $$ > "$0/cgroup.procs" && exec "$@"', str(cgroup), *argv]
     return subprocess.Popen(argv, env=env, **popen), work
@@ -484,6 +631,7 @@ def fuzz(mode: str, sources: dict, target: dict, info: dict, seed: int, budget: 
     views = {label: fresh_view(sources[label], run_dir / "views" / label)
              for label in ("buggy", "fixed")}
     source_hashes = {label: tree_sha256(sources[label]) for label in views}
+    env_before = environment_sha256(RUNTIME.get("env_dir"))      # v2.5 C.2
     out = run_dir / "out"
     spec = {"module": target["module"], "qualname": target["qualname"], "plan": info["plan"],
             "returns": info["returns"], "mode": mode, "seed": seed, "budget": budget,
@@ -536,7 +684,9 @@ def fuzz(mode: str, sources: dict, target: dict, info: dict, seed: int, budget: 
               "exit": main.returncode, "reached": (out / "reached").exists(),
               "within_budget": sup["aggregate_cpu_seconds"] <= budget + tolerance(budget),
               "cleanup_ok": cleanup_ok,
-              "views_unchanged": all(tree_sha256(views[k]) == h for k, h in source_hashes.items())}
+              "views_unchanged": all(tree_sha256(views[k]) == h for k, h in source_hashes.items()),
+              "environment_sha256": env_before,
+              "environment_unchanged": environment_sha256(RUNTIME.get("env_dir")) == env_before}
     replay_group = Group(f"replay_{mode}_{seed}")
     try:
         verdict = _verify(mode, views, target, info, out, result, reason, replay_group)
@@ -691,18 +841,83 @@ def network(x: int) -> int:
 def identity(x: int) -> int:
     import os
     return os.getuid()
+
+
+# --- v5 adapter canaries (protocol v2.5 C.3-C.5) ---
+import enum
+import typing
+
+
+class Color(enum.Enum):
+    RED = 1
+    BLUE = 2
+
+
+def shade(c: Color) -> int:
+    return c.value
+
+
+def union_val(x: typing.Optional[int]) -> int:
+    if x == 4242:
+        raise ValueError("union bug")
+    return 0 if x is None else x
+
+
+def any_val(x: typing.Any) -> str:
+    return type(x).__name__
+
+
+def lit(mode: typing.Literal["a", "b"]) -> str:
+    return mode
+
+
+class Account:
+    def __init__(self, balance: int):
+        self.balance = balance
+
+    def withdraw(self, amount: int) -> int:
+        if amount == 31337:
+            raise ValueError("receiver bug")
+        return self.balance - amount
+
+
+class Widget:
+    pass
+
+
+def custom(o: Widget) -> int:
+    return 1
 '''
+# a module needing packages that exist ONLY in the target's locked environment (cattrs and the
+# newer attrs whose NothingType the system python3.11 dist-packages attrs 23.2.0 lacks)
+CANARY_ENVMOD = "from attrs import NothingType\nimport cattrs\n\n\ndef f(x: int) -> int:\n    return x\n"
+CANARY_ENV_PACKAGES = ("attrs==25.3.0", "cattrs==25.1.1")
 CANARY_FIXED = CANARY_BUGGY.replace('raise ValueError("buggy crash")', "return 0") \
     .replace('raise IndexError("buggy only")', "return 0") \
     .replace("return x + 1", "return x").replace('raise ValueError("kw bug")', "return 0") \
-    .replace('raise ValueError("buggy exception")', 'raise TypeError("fixed exception")')
+    .replace('raise ValueError("buggy exception")', 'raise TypeError("fixed exception")') \
+    .replace('raise ValueError("union bug")', "return 0") \
+    .replace('raise ValueError("receiver bug")', "return 0")
 EXPECT = {("crash", "ordinary"): True, ("same_crash", "ordinary"): False,
           ("later", "ordinary"): True, ("wrong", "ordinary"): False,
           ("wrong", "posthoc"): True, ("wrong", "differential"): True,
           ("same_crash", "posthoc"): False, ("mutable", "differential"): False,
           ("stateful", "posthoc"): False, ("opaque", "posthoc"): False,
           ("keyword", "ordinary"): True,
-          ("swap_exception", "ordinary"): False}      # v2.4 E.1: different exceptions
+          ("swap_exception", "ordinary"): False,      # v2.4 E.1: different exceptions
+          ("union_val", "ordinary"): True,            # v2.5 C.4: Optional/Union adapter
+          ("Account.withdraw", "ordinary"): True}     # v2.5 C.3: constructed receiver
+
+
+def canary_runtime(work: Path, python: str, packages=()) -> dict:
+    """A locked canary environment built like a prepared target's (uv venv + pinned packages),
+    and its v5 runtime."""
+    env = work / f"env_{Path(python).name}"
+    subprocess.run(["uv", "venv", "-q", "--python", python, str(env)], check=True)
+    if packages:
+        subprocess.run(["uv", "pip", "install", "-q", "--python", str(env / "bin" / "python"),
+                        *packages], check=True)
+    return runtime_for(str(env / "bin" / "python"), str(env))
 
 
 def aggregate_budget_canary(work: Path, view: Path, budget: float = 4.0) -> dict:
@@ -729,8 +944,9 @@ def aggregate_budget_canary(work: Path, view: Path, budget: float = 4.0) -> dict
 def isolation_canaries(views: dict, work: Path) -> dict:
     """Write attempts, observed path, cross-run state, network and privileges."""
     target = {"module": "canarypkg.core"}
-    int_plan = {"plan": [{"name": "x", "type": "int", "keyword": False}], "returns": "int"}
-    str_plan = {"plan": [{"name": "x", "type": "int", "keyword": False}], "returns": "str"}
+    params = [{"name": "x", "spec": {"kind": "prim", "type": "int"}, "keyword": False}]
+    int_plan = {"plan": {"params": params, "receiver": None, "method": None}, "returns": "int"}
+    str_plan = {"plan": {"params": params, "receiver": None, "method": None}, "returns": "str"}
     data = work / "one_input"
     data.write_bytes(b"\x00" * 8)
     out = {}
@@ -796,20 +1012,31 @@ def canaries(out_dir: Path) -> int:
             (pkg / "__init__.py").write_text("")
             (pkg / "helpers.py").write_text(CANARY_HELPERS)
             (pkg / "core.py").write_text(body)          # the SAME basename in both views
+            (pkg / "envmod.py").write_text(CANARY_ENVMOD)
             sources[label] = work / "views" / label
         mismatch = work / "views" / "py312" / "canarypkg"
         mismatch.mkdir(parents=True)
         (mismatch / "__init__.py").write_text("")
         (mismatch / "core.py").write_text("type Alias = int\n\ndef f(x: int) -> int:\n    return x\n")
-        version = subprocess.run([PYTHON, "-c", "import sys; sys.path.insert(0, %r); import atheris, "
+        # v5: every child runs in a locked canary environment built like a prepared target's
+        runtime = canary_runtime(work, "/usr/bin/python3.11", CANARY_ENV_PACKAGES)
+        set_runtime(runtime)
+        env_before = environment_sha256(runtime["env_dir"])
+        version = subprocess.run([runtime["python"], "-s", "-c",
+                                  "import sys; sys.path.append(%r); import atheris, "
                                   "importlib.metadata as m; print(m.version('atheris'), "
-                                  "sys.version.split()[0])" % ATHERIS_SITE],
+                                  "sys.version.split()[0]); print(atheris.__file__)"
+                                  % runtime["overlay"]],
                                  capture_output=True, text=True).stdout.split()
+        abi = canary_runtime(work, "/usr/bin/python3.12")      # no Atheris 2.3.0 wheel
         names = ("crash", "same_crash", "later", "wrong", "mutable", "stateful", "opaque",
-                 "keyword", "variadic", "Box.total", "untyped", "swap_exception")
+                 "keyword", "variadic", "Box.total", "untyped", "swap_exception", "shade",
+                 "union_val", "any_val", "lit", "Account.withdraw", "custom")
         elig = {n: probe(sources["buggy"], "canarypkg.core", n) for n in names}
+        elig["envmod.f"] = probe(sources["buggy"], "canarypkg.envmod", "f")
         elig["runtime_mismatch"] = probe(work / "views" / "py312", "canarypkg.core", "f")
         elig["import_failure"] = probe(sources["buggy"], "canarypkg.no_such_module", "f")
+        elig["abi_unavailable"] = {"eligible": False, "reason": abi.get("reason")}
         classified = {n: verdicts.classify_probe(info) for n, info in elig.items()}
         live = live_view_canaries(sources, work)
         print(f"live views: {json.dumps(live)}", flush=True)
@@ -836,16 +1063,37 @@ def canaries(out_dir: Path) -> int:
         leftovers = ([p.name for p in CGROUP_ROOT.iterdir() if p.is_dir()]
                      if CGROUP_ROOT.exists() else [])
         nobody = subprocess.run(["pgrep", "-u", "65534"], capture_output=True, text=True).stdout.split()
+        env_after = environment_sha256(runtime["env_dir"])
     finally:
+        RUNTIME.clear()
         shutil.rmtree(work, ignore_errors=True)
+    unsupported = "adapter_unsupported:"
     checks = {
-        "atheris_2_3_0_py311": version[:1] == ["2.3.0"] and version[1].startswith("3.11"),
+        "atheris_2_3_0_from_overlay_in_target_runtime": version[:1] == ["2.3.0"]
+        and version[1].startswith("3.11") and version[2].startswith(runtime["overlay"]),
         "eligibility": elig["crash"]["eligible"] and elig["keyword"]["eligible"]
         and not elig["untyped"]["eligible"]
-        and elig["Box.total"]["reason"] == "instance_method_receiver"
-        and elig["variadic"]["reason"] == "variadic_signature"
+        and elig["variadic"]["reason"] == unsupported + "variadic_signature"
         and elig["runtime_mismatch"]["reason"].startswith("runtime_mismatch"),
-        "keyword_plan": [p["keyword"] for p in elig["keyword"]["plan"]] == [False, False, True, True],
+        "keyword_plan": [p["keyword"] for p in elig["keyword"]["plan"]["params"]]
+        == [False, False, True, True],
+        "env_only_dependency_imports_in_target_runtime": elig["envmod.f"].get("eligible") is True,
+        "environment_unchanged_by_every_search": env_after == env_before and all(
+            r.get("environment_unchanged") is True for r in [*results.values(), *repeat]),
+        "receiver_constructed_through_public_constructor":
+            elig["Account.withdraw"].get("eligible") is True
+            and elig["Account.withdraw"]["plan"]["receiver"]["plan"][0]["name"] == "balance"
+            and elig["Box.total"].get("eligible") is True
+            and results["Account.withdraw:ordinary"]["kill"] is True,
+        "union_any_enum_literal_supported": all(
+            elig[n].get("eligible") is True for n in ("shade", "union_val", "any_val", "lit"))
+            and results["union_val:ordinary"]["kill"] is True,
+        "unsupported_stays_explicit": classified["variadic"] == "adapter_unsupported"
+            and elig["untyped"]["reason"].startswith(unsupported + "unsupported_parameter:x:")
+            and elig["custom"]["reason"].startswith(unsupported + "unsupported_parameter:o:"),
+        "abi_unavailable_is_infrastructure": elig["abi_unavailable"]["reason"]
+            == "atheris_abi_unavailable"
+            and classified["abi_unavailable"] == "infrastructure_failure",
         "replay_error_is_not_a_kill": "error" in bad,
         "aggregate_budget_two_busy_children": busy["ok"],
         "every_search_within_aggregate_budget": all(r["within_budget"] for r in results.values()),
@@ -877,9 +1125,9 @@ def canaries(out_dir: Path) -> int:
             for r in rows),
         "applicability_versus_infrastructure": (
             classified["crash"] == "eligible" and classified["keyword"] == "eligible"
-            and classified["variadic"] == "atheris_ineligible"
-            and classified["Box.total"] == "atheris_ineligible"
-            and classified["untyped"] == "atheris_ineligible"
+            and classified["variadic"] == "adapter_unsupported"
+            and classified["Box.total"] == "eligible"
+            and classified["untyped"] == "adapter_unsupported"
             and classified["runtime_mismatch"] == "infrastructure_failure"
             and classified["import_failure"] == "infrastructure_failure"
             and elig["import_failure"]["reason"].startswith("import_failure")),
@@ -891,7 +1139,7 @@ def canaries(out_dir: Path) -> int:
         **{f"isolation_{k}": v["ok"] for k, v in isolation.items()},
         **{f"canary_{k}": v["kill"] == v["expected_kill"] and v["reached"]
            for k, v in results.items()}}
-    receipt = {"schema_version": "oneiros_native_atheris_canaries_v3",
+    receipt = {"schema_version": "oneiros_native_atheris_canaries_v4",
                "design_version": DESIGN_VERSION, "atheris": version,
                "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                "verdicts_sha256": hashlib.sha256((HERE / "native_atheris_results.py")
@@ -900,6 +1148,12 @@ def canaries(out_dir: Path) -> int:
                "canary_budget_cpu_seconds": CANARY_BUDGET_SECONDS,
                "full_budget_cpu_seconds": FULL_BUDGET_CPU_SECONDS, "corpus_cap": CORPUS_CAP,
                "tolerance_rule": "1.0 CPU-second + 2% of the budget",
+               "runtime": {"version": runtime["version"],
+                           "overlay_manifest_sha256": runtime["overlay_manifest_sha256"],
+                           "environment_packages": list(CANARY_ENV_PACKAGES),
+                           "environment_sha256_before": env_before,
+                           "environment_sha256_after": env_after},
+               "abi_probe": {"version": abi.get("version"), "reason": abi.get("reason")},
                "eligibility": elig, "probe_classes": classified, "live_views": live,
                "aggregate_budget": busy, "isolation": isolation,
                "results": results, "repeat": repeat, "cgroup_leftovers": leftovers,
@@ -908,7 +1162,7 @@ def canaries(out_dir: Path) -> int:
                "note": "ordinary Atheris cannot kill the wrong-answer canary (no semantic oracle)"}
     import receipt_sanitize                             # tracked receipt: no user paths
     receipt = receipt_sanitize.scrub_json(receipt)
-    (out_dir / "atheris_canary_receipt_v3.json").write_text(json.dumps(receipt, indent=1,
+    (out_dir / "atheris_canary_receipt_v4.json").write_text(json.dumps(receipt, indent=1,
                                                                        sort_keys=True) + "\n")
     print(json.dumps({"passed": receipt["passed"],
                       "failed": [k for k, v in checks.items() if not v]}, indent=1))
@@ -917,23 +1171,36 @@ def canaries(out_dir: Path) -> int:
 
 # --- durable real-panel run (NOT executed: no real-target Atheris is authorised) -------------
 
-def eligibility_entry(key: str, row: dict, info: dict, views: dict) -> dict:
+def runtime_identity(runtime: dict) -> dict:
+    """What the contract binds about a target's v5 runtime (no host paths)."""
+    if not runtime.get("available"):
+        return {"available": False, "reason": runtime.get("reason"),
+                "version": runtime.get("version")}
+    return {"available": True, "version": runtime["version"],
+            "overlay_manifest_sha256": runtime["overlay_manifest_sha256"],
+            "environment_sha256": environment_sha256(runtime.get("env_dir"))}
+
+
+def eligibility_entry(key: str, row: dict, info: dict, views: dict,
+                      runtime: dict | None = None) -> dict:
     status = verdicts.classify_probe(info)
     return {"target_key": key, "module": row["module"], "qualname": row["qualname"],
             "status": status,
             "reason": None if status == "eligible" else (info.get("reason") or "probe_failure"),
             "plan": info.get("plan") if status == "eligible" else None,
             "returns": info.get("returns") if status == "eligible" else None,
-            "views": views, "prep_record_sha256": gio.contract_sha(row)}
+            "runtime": runtime, "views": views, "prep_record_sha256": gio.contract_sha(row)}
 
 
 def prepare_contract(prep_path: Path, manifest_path: Path, budget: int, seeds,
-                     root: Path | None = None, probe_fn=None) -> tuple:
-    """Everything the contract binds, established BEFORE any write (amendment v2.4 C/E):
-    the exact preparation file, BOTH live views of all qualified targets re-hashed against
-    their preparation manifests, and a frozen per-target eligibility map from probes on fresh
-    copies of the buggy views."""
+                     root: Path | None = None, probe_fn=None, runtime_fn=None) -> tuple:
+    """Everything the contract binds, established BEFORE any write (amendment v2.4 C/E,
+    protocol v2.5 C): the exact preparation file, BOTH live views of all qualified targets
+    re-hashed against their preparation manifests, each target's v5 runtime identity (its own
+    interpreter and locked environment + the clean overlay), and a frozen per-target
+    eligibility map from probes on fresh copies of the buggy views run IN that runtime."""
     probe_fn = probe_fn or probe
+    runtime_fn = runtime_fn or (lambda row: runtime_for(row["python_path"], row["env_dir"]))
     prepared = gio.resolve_prep(prep_path, manifest_path, root or REPO_ROOT)
     manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
     qualified = list(manifest["qualified_targets"])
@@ -943,13 +1210,20 @@ def prepare_contract(prep_path: Path, manifest_path: Path, budget: int, seeds,
     try:
         for i, key in enumerate(qualified):
             row = prepared["rows"][key]
-            view = fresh_view(Path(row["views"]["buggy"]), scratch / f"t{i:02d}")
-            try:
-                info = probe_fn(view, row["module"], row["qualname"])
-            except Exception as exc:                      # noqa: BLE001 - infrastructure
-                info = {"eligible": False, "reason": f"probe_failure:{type(exc).__name__}"}
-            eligibility[key] = eligibility_entry(key, row, info, live[key])
+            runtime = runtime_fn(row)
+            if not runtime.get("available"):                     # infrastructure, never ABI
+                info = {"eligible": False, "reason": runtime.get("reason")}   # -> unsupported
+            else:
+                set_runtime(runtime)
+                view = fresh_view(Path(row["views"]["buggy"]), scratch / f"t{i:02d}")
+                try:
+                    info = probe_fn(view, row["module"], row["qualname"])
+                except Exception as exc:                      # noqa: BLE001 - infrastructure
+                    info = {"eligible": False, "reason": f"probe_failure:{type(exc).__name__}"}
+            eligibility[key] = eligibility_entry(key, row, info, live[key],
+                                                 runtime_identity(runtime))
     finally:
+        RUNTIME.clear()
         shutil.rmtree(scratch, ignore_errors=True)
     contract = {"design_version": DESIGN_VERSION,
                 "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
@@ -960,16 +1234,20 @@ def prepare_contract(prep_path: Path, manifest_path: Path, budget: int, seeds,
                 "manifest_sha256": hashlib.sha256(manifest_path.read_bytes()).hexdigest(),
                 "budget_cpu_seconds": budget, "tolerance": tolerance(budget),
                 "seeds": list(seeds), "modes": list(MODES), "corpus_cap": CORPUS_CAP,
-                "python": PYTHON, "live_views": live,
+                "runtime_policy": "each target's prepared interpreter and locked environment "
+                                  "(read-only), Atheris 2.3.0 from a clean read-only overlay "
+                                  "per CPython minor version; environment hashed before and "
+                                  "after every search", "live_views": live,
                 "live_views_sha256": gio.contract_sha(live), "eligibility": eligibility,
                 "eligibility_sha256": gio.contract_sha(eligibility)}
     return contract, prepared, eligibility
 
 
 def run(prep_path: Path, manifest_path: Path, out: Path, budget: int, seeds,
-        root: Path | None = None) -> int:
+        root: Path | None = None, runtime_fn=None) -> int:
+    runtime_fn = runtime_fn or (lambda row: runtime_for(row["python_path"], row["env_dir"]))
     contract, prepared, eligibility = prepare_contract(prep_path, manifest_path, budget, seeds,
-                                                       root)
+                                                       root, runtime_fn=runtime_fn)
     prep = prepared["rows"]
     manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
     # v2.3 D.3: Atheris may cover every QUALIFIED target (explicit in the successor manifest);
@@ -1011,6 +1289,12 @@ def run(prep_path: Path, manifest_path: Path, out: Path, budget: int, seeds,
             target = {"module": row["module"], "qualname": row["qualname"]}
             info = {"eligible": True, "plan": entry["plan"], "returns": entry["returns"]}
             sources = {k: Path(v) for k, v in row["views"].items()}
+            if entry["status"] == "eligible":
+                runtime = runtime_fn(row)                  # v5: the target's own runtime,
+                if runtime_identity(runtime) != entry["runtime"]:   # unchanged since probing
+                    raise SystemExit(f"REFUSED: the runtime of {key} changed after the "
+                                     "contract froze it; results preserved")
+                set_runtime(runtime)
             work = Path(tempfile.mkdtemp(prefix="oneiros_atheris_"))
             try:
                 for mode in MODES:

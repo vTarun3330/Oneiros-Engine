@@ -85,7 +85,12 @@ ATHERIS_REQUIRED_CHECKS = (
     "ordinary_same_exception_not_a_kill", "every_kill_recomputes_from_confirmations",
     "aggregate_budget_two_busy_children", "worker_and_group_cleanup",
     "live_view_drift_refused", "applicability_versus_infrastructure",
-    "real_rows_structurally_valid")
+    "real_rows_structurally_valid",
+    # Atheris v5 (protocol v2.5 C)
+    "atheris_2_3_0_from_overlay_in_target_runtime", "env_only_dependency_imports_in_target_runtime",
+    "environment_unchanged_by_every_search", "receiver_constructed_through_public_constructor",
+    "union_any_enum_literal_supported", "unsupported_stays_explicit",
+    "abi_unavailable_is_infrastructure")
 STAGE_RECEIPTS = ("full_suite", "synthetic_pipeline")
 CANARY_RECEIPTS = ("sandbox_canaries", "atheris_canaries")
 TELEMETRY_FIELDS = ("generated_tokens", "eos_reached", "finish_reason", "hit_completion_limit",
@@ -256,7 +261,7 @@ def join_atheris(validated: Mapping[str, Any], grid, targets, eligible, qualifie
     return {
         "atheris_denominators": {
             "qualified": len(qualified), "atheris_cells": validated["cells"],
-            "atheris_usable": len(usable), "atheris_ineligible": validated["counts"]["atheris_ineligible"],
+            "atheris_usable": len(usable), "atheris_adapter_unsupported": validated["counts"]["adapter_unsupported"],
             "atheris_infrastructure_excluded": len(infra),
             "generation_targets": len(targets), "infrastructure_eligible": len(eligible),
             "joint": len(joint),
@@ -333,7 +338,7 @@ def receipt_problems(kind: str, entry: Mapping[str, Any] | None, artifact_root: 
             bad.append("not bound to the current source")
     elif kind == "atheris_canaries":
         from scripts.native_atheris_results import DESIGN_VERSION
-        if r.get("schema_version") != "oneiros_native_atheris_canaries_v3" or \
+        if r.get("schema_version") != "oneiros_native_atheris_canaries_v4" or \
                 r.get("design_version") != DESIGN_VERSION:
             bad.append("schema")
         checks = r.get("checks") or {}

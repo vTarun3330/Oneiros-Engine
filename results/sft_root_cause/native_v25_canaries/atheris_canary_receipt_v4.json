@@ -1,0 +1,1480 @@
+{
+ "abi_probe": {
+  "reason": "atheris_abi_unavailable",
+  "version": "3.12"
+ },
+ "aggregate_budget": {
+  "aggregate_cpu_seconds": 4.067,
+  "budget": 4.0,
+  "cgroup_removed": true,
+  "leftover_processes": [],
+  "main_cpu_seconds": 4.067,
+  "ok": true,
+  "supervisor_reason": "cpu_budget_exhausted",
+  "tolerance": 1.08,
+  "wall_seconds": 1.41,
+  "worker_cpu_seconds": 0.0
+ },
+ "atheris": [
+  "2.3.0",
+  "3.11.15",
+  "/opt/oneiros_atheris_v5/cp311/atheris/__init__.py"
+ ],
+ "canary_budget_cpu_seconds": 20,
+ "cgroup_leftovers": [],
+ "checks": {
+  "abi_unavailable_is_infrastructure": true,
+  "aggregate_budget_two_busy_children": true,
+  "applicability_versus_infrastructure": true,
+  "atheris_2_3_0_from_overlay_in_target_runtime": true,
+  "canary_Account.withdraw:ordinary": true,
+  "canary_crash:ordinary": true,
+  "canary_keyword:ordinary": true,
+  "canary_later:ordinary": true,
+  "canary_mutable:differential": true,
+  "canary_opaque:posthoc": true,
+  "canary_same_crash:ordinary": true,
+  "canary_same_crash:posthoc": true,
+  "canary_stateful:posthoc": true,
+  "canary_swap_exception:ordinary": true,
+  "canary_union_val:ordinary": true,
+  "canary_wrong:differential": true,
+  "canary_wrong:ordinary": true,
+  "canary_wrong:posthoc": true,
+  "differential_worker_cpu_counted": true,
+  "eligibility": true,
+  "end_reasons_declared": true,
+  "env_only_dependency_imports_in_target_runtime": true,
+  "environment_unchanged_by_every_search": true,
+  "every_kill_recomputes_from_confirmations": true,
+  "every_search_within_aggregate_budget": true,
+  "fresh_views_unmutated_by_any_search": true,
+  "isolation_canonical_path_identical": true,
+  "isolation_network_disabled": true,
+  "isolation_no_cross_run_state": true,
+  "isolation_unprivileged_nobody": true,
+  "isolation_write_to_target_refused": true,
+  "keyword_plan": true,
+  "live_view_drift_refused": true,
+  "ordinary_different_exceptions_not_a_kill": true,
+  "ordinary_raise_versus_ok_is_a_kill": true,
+  "ordinary_same_exception_not_a_kill": true,
+  "real_rows_structurally_valid": true,
+  "receiver_constructed_through_public_constructor": true,
+  "repeat_same_seed_mode_independent": true,
+  "replay_error_is_not_a_kill": true,
+  "union_any_enum_literal_supported": true,
+  "unsupported_stays_explicit": true,
+  "worker_and_group_cleanup": true
+ },
+ "corpus_cap": 2000,
+ "design_version": "oneiros_native_generated_tests_atheris_v5",
+ "eligibility": {
+  "Account.withdraw": {
+   "eligible": true,
+   "plan": {
+    "method": "withdraw",
+    "params": [
+     {
+      "keyword": false,
+      "name": "amount",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     }
+    ],
+    "receiver": {
+     "module": "canarypkg.core",
+     "plan": [
+      {
+       "keyword": false,
+       "name": "balance",
+       "spec": {
+        "kind": "prim",
+        "type": "int"
+       }
+      }
+     ],
+     "qualname": "Account"
+    }
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "Box.total": {
+   "eligible": true,
+   "plan": {
+    "method": "total",
+    "params": [
+     {
+      "keyword": false,
+      "name": "n",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     }
+    ],
+    "receiver": {
+     "module": "canarypkg.core",
+     "plan": [],
+     "qualname": "Box"
+    }
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "abi_unavailable": {
+   "eligible": false,
+   "reason": "atheris_abi_unavailable"
+  },
+  "any_val": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "x",
+      "spec": {
+       "kind": "any"
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "str"
+  },
+  "crash": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "x",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "custom": {
+   "eligible": false,
+   "python": "3.11.15",
+   "reason": "adapter_unsupported:unsupported_parameter:o:Widget"
+  },
+  "envmod.f": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "x",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "import_failure": {
+   "eligible": false,
+   "reason": "import_failure:ModuleNotFoundError"
+  },
+  "keyword": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "a",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     },
+     {
+      "keyword": false,
+      "name": "b",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     },
+     {
+      "keyword": true,
+      "name": "c",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     },
+     {
+      "keyword": true,
+      "name": "d",
+      "spec": {
+       "kind": "prim",
+       "type": "str"
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "later": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "x",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "lit": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "mode",
+      "spec": {
+       "kind": "literal",
+       "values": [
+        "a",
+        "b"
+       ]
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "str"
+  },
+  "mutable": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "xs",
+      "spec": {
+       "kind": "prim",
+       "type": "list[int]"
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "opaque": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "x",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "object"
+  },
+  "runtime_mismatch": {
+   "eligible": false,
+   "reason": "runtime_mismatch:SyntaxError"
+  },
+  "same_crash": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "x",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "shade": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "c",
+      "spec": {
+       "kind": "enum",
+       "members": [
+        "RED",
+        "BLUE"
+       ],
+       "module": "canarypkg.core",
+       "qualname": "Color"
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "stateful": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "x",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "swap_exception": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "x",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "union_val": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "x",
+      "spec": {
+       "kind": "union",
+       "options": [
+        {
+         "kind": "prim",
+         "type": "int"
+        },
+        {
+         "kind": "none"
+        }
+       ]
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  },
+  "untyped": {
+   "eligible": false,
+   "python": "3.11.15",
+   "reason": "adapter_unsupported:unsupported_parameter:x:None"
+  },
+  "variadic": {
+   "eligible": false,
+   "python": "3.11.15",
+   "reason": "adapter_unsupported:variadic_signature"
+  },
+  "wrong": {
+   "eligible": true,
+   "plan": {
+    "method": null,
+    "params": [
+     {
+      "keyword": false,
+      "name": "x",
+      "spec": {
+       "kind": "prim",
+       "type": "int"
+      }
+     }
+    ],
+    "receiver": null
+   },
+   "python": "3.11.15",
+   "returns": "int"
+  }
+ },
+ "full_budget_cpu_seconds": 600,
+ "inner_sha256": "ff90215bb4aef3c864a0d3604ad0eb076de68c5a0754ac6053fed15b9ff42b18",
+ "isolation": {
+  "canonical_path_identical": {
+   "ok": true,
+   "results": [
+    [
+     "ok",
+     [
+      "str",
+      "/target/canarypkg/core.py"
+     ]
+    ],
+    [
+     "ok",
+     [
+      "str",
+      "/target/canarypkg/core.py"
+     ]
+    ]
+   ]
+  },
+  "network_disabled": {
+   "ok": true,
+   "results": [
+    "ok",
+    [
+     "int",
+     0
+    ]
+   ]
+  },
+  "no_cross_run_state": {
+   "ok": true,
+   "results": [
+    [
+     "ok",
+     [
+      "int",
+      1
+     ]
+    ],
+    [
+     "ok",
+     [
+      "int",
+      1
+     ]
+    ]
+   ]
+  },
+  "unprivileged_nobody": {
+   "ok": true,
+   "results": [
+    "ok",
+    [
+     "int",
+     65534
+    ]
+   ]
+  },
+  "write_to_target_refused": {
+   "ok": true,
+   "results": [
+    [
+     "ok",
+     [
+      "int",
+      0
+     ]
+    ],
+    [
+     "ok",
+     [
+      "int",
+      0
+     ]
+    ]
+   ]
+  }
+ },
+ "live_views": {
+  "buggy_drift_refused": true,
+  "fixed_drift_refused": true,
+  "missing_view_refused": true,
+  "symlink_refused": true,
+  "unchanged_views_verify": true
+ },
+ "nobody_processes_after": [],
+ "note": "ordinary Atheris cannot kill the wrong-answer canary (no semantic oracle)",
+ "passed": true,
+ "probe_classes": {
+  "Account.withdraw": "eligible",
+  "Box.total": "eligible",
+  "abi_unavailable": "infrastructure_failure",
+  "any_val": "eligible",
+  "crash": "eligible",
+  "custom": "adapter_unsupported",
+  "envmod.f": "eligible",
+  "import_failure": "infrastructure_failure",
+  "keyword": "eligible",
+  "later": "eligible",
+  "lit": "eligible",
+  "mutable": "eligible",
+  "opaque": "eligible",
+  "runtime_mismatch": "infrastructure_failure",
+  "same_crash": "eligible",
+  "shade": "eligible",
+  "stateful": "eligible",
+  "swap_exception": "eligible",
+  "union_val": "eligible",
+  "untyped": "adapter_unsupported",
+  "variadic": "adapter_unsupported",
+  "wrong": "eligible"
+ },
+ "repeat": [
+  {
+   "aggregate_cpu_seconds": 5.025,
+   "budget_cpu_seconds": 5,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "corpus": 0,
+   "corpus_truncated": false,
+   "dropped_partial_inputs": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "kill": false,
+   "main_cpu_seconds": 5.025,
+   "mode": "posthoc",
+   "opaque_results": 0,
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.104,
+   "replay_errors": 0,
+   "seed": 43,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.1,
+   "views_unchanged": true,
+   "wall_seconds": 4.98,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 0.0
+  },
+  {
+   "aggregate_cpu_seconds": 5.018,
+   "budget_cpu_seconds": 5,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "corpus": 0,
+   "corpus_truncated": false,
+   "dropped_partial_inputs": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "kill": false,
+   "main_cpu_seconds": 5.018,
+   "mode": "posthoc",
+   "opaque_results": 0,
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.098,
+   "replay_errors": 0,
+   "seed": 43,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.1,
+   "views_unchanged": true,
+   "wall_seconds": 5.02,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 0.0
+  }
+ ],
+ "results": {
+  "Account.withdraw:ordinary": {
+   "aggregate_cpu_seconds": 20.042,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "raise",
+      "ValueError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "ValueError"
+      ],
+      [
+       "raise",
+       "ValueError"
+      ]
+     ],
+     "fixed": [
+      "ok",
+      [
+       "int",
+       0
+      ]
+     ],
+     "fixed_all": [
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ]
+     ],
+     "kill": true,
+     "stable": true,
+     "witness": "746ce607d1687319"
+    }
+   ],
+   "confirmed": 1,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "expected_kill": true,
+   "kill": true,
+   "main_cpu_seconds": 20.042,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.207,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.26,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 0.0
+  },
+  "crash:ordinary": {
+   "aggregate_cpu_seconds": 20.055,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "raise",
+      "ValueError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "ValueError"
+      ],
+      [
+       "raise",
+       "ValueError"
+      ]
+     ],
+     "fixed": [
+      "ok",
+      [
+       "int",
+       0
+      ]
+     ],
+     "fixed_all": [
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ]
+     ],
+     "kill": true,
+     "stable": true,
+     "witness": "8e13378459caee06"
+    }
+   ],
+   "confirmed": 1,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "expected_kill": true,
+   "kill": true,
+   "main_cpu_seconds": 20.055,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.193,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.2,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 0.0
+  },
+  "keyword:ordinary": {
+   "aggregate_cpu_seconds": 20.013,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "raise",
+      "ValueError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "ValueError"
+      ],
+      [
+       "raise",
+       "ValueError"
+      ]
+     ],
+     "fixed": [
+      "ok",
+      [
+       "int",
+       0
+      ]
+     ],
+     "fixed_all": [
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ]
+     ],
+     "kill": true,
+     "stable": true,
+     "witness": "0b7f951b0b6ac856"
+    }
+   ],
+   "confirmed": 1,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "expected_kill": true,
+   "kill": true,
+   "main_cpu_seconds": 20.013,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.202,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.21,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 0.0
+  },
+  "later:ordinary": {
+   "aggregate_cpu_seconds": 20.047,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "raise",
+      "IndexError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "IndexError"
+      ],
+      [
+       "raise",
+       "IndexError"
+      ]
+     ],
+     "fixed": [
+      "ok",
+      [
+       "int",
+       0
+      ]
+     ],
+     "fixed_all": [
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ]
+     ],
+     "kill": true,
+     "stable": true,
+     "witness": "3f9d67806bac88b5"
+    },
+    {
+     "buggy": [
+      "raise",
+      "KeyError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "KeyError"
+      ],
+      [
+       "raise",
+       "KeyError"
+      ]
+     ],
+     "fixed": [
+      "raise",
+      "KeyError"
+     ],
+     "fixed_all": [
+      [
+       "raise",
+       "KeyError"
+      ],
+      [
+       "raise",
+       "KeyError"
+      ]
+     ],
+     "kill": false,
+     "stable": true,
+     "witness": "ed8c515b9cf793f5"
+    }
+   ],
+   "confirmed": 1,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "expected_kill": true,
+   "kill": true,
+   "main_cpu_seconds": 20.047,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.41,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.25,
+   "within_budget": true,
+   "witnesses": 2,
+   "worker_cpu_seconds": 0.0
+  },
+  "mutable:differential": {
+   "aggregate_cpu_seconds": 19.143,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "completed",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": 0,
+   "expected_kill": false,
+   "kill": false,
+   "label": "oracle-assisted upper bound",
+   "main_cpu_seconds": 10.09,
+   "mode": "differential",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.0,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": null,
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 21.12,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 9.053
+  },
+  "opaque:posthoc": {
+   "aggregate_cpu_seconds": 20.029,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "corpus": 0,
+   "corpus_truncated": false,
+   "dropped_partial_inputs": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "expected_kill": false,
+   "kill": false,
+   "main_cpu_seconds": 20.029,
+   "mode": "posthoc",
+   "opaque_results": 0,
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.095,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 19.98,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 0.0
+  },
+  "same_crash:ordinary": {
+   "aggregate_cpu_seconds": 20.035,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "raise",
+      "ValueError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "ValueError"
+      ],
+      [
+       "raise",
+       "ValueError"
+      ]
+     ],
+     "fixed": [
+      "raise",
+      "ValueError"
+     ],
+     "fixed_all": [
+      [
+       "raise",
+       "ValueError"
+      ],
+      [
+       "raise",
+       "ValueError"
+      ]
+     ],
+     "kill": false,
+     "stable": true,
+     "witness": "8e13378459caee06"
+    }
+   ],
+   "confirmed": 0,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "expected_kill": false,
+   "kill": false,
+   "main_cpu_seconds": 20.035,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.202,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 19.96,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 0.0
+  },
+  "same_crash:posthoc": {
+   "aggregate_cpu_seconds": 20.046,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "corpus": 55,
+   "corpus_truncated": false,
+   "dropped_partial_inputs": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "expected_kill": false,
+   "kill": false,
+   "main_cpu_seconds": 20.046,
+   "mode": "posthoc",
+   "opaque_results": 0,
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.101,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.0,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 0.0
+  },
+  "stateful:posthoc": {
+   "aggregate_cpu_seconds": 20.038,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "corpus": 0,
+   "corpus_truncated": false,
+   "dropped_partial_inputs": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "expected_kill": false,
+   "kill": false,
+   "main_cpu_seconds": 20.038,
+   "mode": "posthoc",
+   "opaque_results": 0,
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.108,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.17,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 0.0
+  },
+  "swap_exception:ordinary": {
+   "aggregate_cpu_seconds": 20.015,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "raise",
+      "ValueError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "ValueError"
+      ],
+      [
+       "raise",
+       "ValueError"
+      ]
+     ],
+     "fixed": [
+      "raise",
+      "TypeError"
+     ],
+     "fixed_all": [
+      [
+       "raise",
+       "TypeError"
+      ],
+      [
+       "raise",
+       "TypeError"
+      ]
+     ],
+     "kill": false,
+     "stable": true,
+     "witness": "8e13378459caee06"
+    }
+   ],
+   "confirmed": 0,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "expected_kill": false,
+   "kill": false,
+   "main_cpu_seconds": 20.015,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.199,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.0,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 0.0
+  },
+  "union_val:ordinary": {
+   "aggregate_cpu_seconds": 20.051,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "raise",
+      "ValueError"
+     ],
+     "buggy_all": [
+      [
+       "raise",
+       "ValueError"
+      ],
+      [
+       "raise",
+       "ValueError"
+      ]
+     ],
+     "fixed": [
+      "ok",
+      [
+       "int",
+       0
+      ]
+     ],
+     "fixed_all": [
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        0
+       ]
+      ]
+     ],
+     "kill": true,
+     "stable": true,
+     "witness": "760782c458b6d05c"
+    }
+   ],
+   "confirmed": 1,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "expected_kill": true,
+   "kill": true,
+   "main_cpu_seconds": 20.051,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.206,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.04,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 0.0
+  },
+  "wrong:differential": {
+   "aggregate_cpu_seconds": 18.721,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "ok",
+      [
+       "int",
+       424243
+      ]
+     ],
+     "buggy_all": [
+      [
+       "ok",
+       [
+        "int",
+        424243
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        424243
+       ]
+      ]
+     ],
+     "fixed": [
+      "ok",
+      [
+       "int",
+       424242
+      ]
+     ],
+     "fixed_all": [
+      [
+       "ok",
+       [
+        "int",
+        424242
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        424242
+       ]
+      ]
+     ],
+     "kill": true,
+     "stable": true,
+     "witness": "f7e3e393967575f3"
+    }
+   ],
+   "confirmed": 1,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "completed",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": 0,
+   "expected_kill": true,
+   "kill": true,
+   "label": "oracle-assisted upper bound",
+   "main_cpu_seconds": 10.182,
+   "mode": "differential",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.201,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": null,
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 21.1,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 8.539
+  },
+  "wrong:ordinary": {
+   "aggregate_cpu_seconds": 20.019,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [],
+   "confirmed": 0,
+   "dropped_partial_witnesses": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "expected_kill": false,
+   "kill": false,
+   "main_cpu_seconds": 20.019,
+   "mode": "ordinary",
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.0,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 19.99,
+   "within_budget": true,
+   "witnesses": 0,
+   "worker_cpu_seconds": 0.0
+  },
+  "wrong:posthoc": {
+   "aggregate_cpu_seconds": 20.034,
+   "budget_cpu_seconds": 20,
+   "cleanup_ok": true,
+   "confirmations": [
+    {
+     "buggy": [
+      "ok",
+      [
+       "int",
+       424243
+      ]
+     ],
+     "buggy_all": [
+      [
+       "ok",
+       [
+        "int",
+        424243
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        424243
+       ]
+      ]
+     ],
+     "fixed": [
+      "ok",
+      [
+       "int",
+       424242
+      ]
+     ],
+     "fixed_all": [
+      [
+       "ok",
+       [
+        "int",
+        424242
+       ]
+      ],
+      [
+       "ok",
+       [
+        "int",
+        424242
+       ]
+      ]
+     ],
+     "kill": true,
+     "stable": true,
+     "witness": "8f2848ccc1082412"
+    }
+   ],
+   "confirmed": 1,
+   "corpus": 58,
+   "corpus_truncated": false,
+   "dropped_partial_inputs": 0,
+   "end_reason": "cpu_budget_exhausted",
+   "environment_sha256": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+   "environment_unchanged": true,
+   "exit": -9,
+   "expected_kill": true,
+   "kill": true,
+   "main_cpu_seconds": 20.034,
+   "mode": "posthoc",
+   "opaque_results": 0,
+   "reached": true,
+   "replay_cleanup_ok": true,
+   "replay_cpu_seconds": 0.305,
+   "replay_errors": 0,
+   "seed": 42,
+   "supervisor_reason": "cpu_budget_exhausted",
+   "tolerance_cpu_seconds": 1.4,
+   "views_unchanged": true,
+   "wall_seconds": 20.06,
+   "within_budget": true,
+   "witnesses": 1,
+   "worker_cpu_seconds": 0.0
+  }
+ },
+ "runtime": {
+  "environment_packages": [
+   "attrs==25.3.0",
+   "cattrs==25.1.1"
+  ],
+  "environment_sha256_after": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+  "environment_sha256_before": "2869cb8bba84abcd5f60ce024533718d5198fd46153d5a7fb11be8d66f1c365e",
+  "overlay_manifest_sha256": "640bf415819c212f641fad46e00fcb8724374ce4c8fb278969360743953aa9f6",
+  "version": "3.11"
+ },
+ "schema_version": "oneiros_native_atheris_canaries_v4",
+ "script_sha256": "d05417a683f8e820a97ca3301412d750272ae98ab6ad2ba143064383a3aa007d",
+ "tolerance_rule": "1.0 CPU-second + 2% of the budget",
+ "verdicts_sha256": "bf3292df674325e52d99410be9ece139791413645fdca64ec72a7cb1456c021e"
+}

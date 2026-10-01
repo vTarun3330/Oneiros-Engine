@@ -1,0 +1,72 @@
+[
+ {
+  "available": true,
+  "contents": [
+   "asan_with_fuzzer.so",
+   "atheris",
+   "atheris-2.3.0.dist-info",
+   "atheris.libs",
+   "atheris_no_libfuzzer.py",
+   "libclang_rt.fuzzer_no_main.a",
+   "ubsan_cxx_with_fuzzer.so",
+   "ubsan_with_fuzzer.so"
+  ],
+  "manifest_sha256": "77d09298f55ed53d73341ddefd1c37eddcfba943cf8d21be9e1208a1d324da52",
+  "path": "/opt/oneiros_atheris_v5/cp38",
+  "version": "3.8"
+ },
+ {
+  "available": true,
+  "contents": [
+   "asan_with_fuzzer.so",
+   "atheris",
+   "atheris-2.3.0.dist-info",
+   "atheris.libs",
+   "atheris_no_libfuzzer.py",
+   "libclang_rt.fuzzer_no_main.a",
+   "ubsan_cxx_with_fuzzer.so",
+   "ubsan_with_fuzzer.so"
+  ],
+  "manifest_sha256": "f56eb55bc51f54bace01e1cb57dcd4e2dfc2d7aa83c6d31709e52c7f20e2f0e8",
+  "path": "/opt/oneiros_atheris_v5/cp39",
+  "version": "3.9"
+ },
+ {
+  "available": true,
+  "contents": [
+   "asan_with_fuzzer.so",
+   "atheris",
+   "atheris-2.3.0.dist-info",
+   "atheris.libs",
+   "atheris_no_libfuzzer.py",
+   "libclang_rt.fuzzer_no_main.a",
+   "ubsan_cxx_with_fuzzer.so",
+   "ubsan_with_fuzzer.so"
+  ],
+  "manifest_sha256": "ca0c11015cbf3cec18f94a1b8961a2e30564c57c10afddfc6f4dcdd5d891e090",
+  "path": "/opt/oneiros_atheris_v5/cp310",
+  "version": "3.10"
+ },
+ {
+  "available": true,
+  "contents": [
+   "asan_with_fuzzer.so",
+   "atheris",
+   "atheris-2.3.0.dist-info",
+   "atheris.libs",
+   "atheris_no_libfuzzer.py",
+   "libclang_rt.fuzzer_no_main.a",
+   "ubsan_cxx_with_fuzzer.so",
+   "ubsan_with_fuzzer.so"
+  ],
+  "manifest_sha256": "640bf415819c212f641fad46e00fcb8724374ce4c8fb278969360743953aa9f6",
+  "path": "/opt/oneiros_atheris_v5/cp311",
+  "version": "3.11"
+ },
+ {
+  "available": false,
+  "category": "atheris_abi_unavailable",
+  "detail": "is==2.3.0, we can conclude that your requirements are\n      unsatisfiable.\n\nhint: Wheels are required for `atheris` because building from source is disabled for all packages (i.e., with `--no-build`)\n",
+  "version": "3.12"
+ }
+]

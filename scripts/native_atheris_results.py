@@ -9,8 +9,9 @@ Standard library only: imported by the Atheris runner (WSL, CPython 3.11) and th
                 differential mode stays an oracle-assisted upper bound).
 
 ``classify_probe`` separates applicability from infrastructure: a legitimately unsupported
-signature (no_signature, instance_method_receiver, variadic_signature, unsupported_parameter)
-is ``atheris_ineligible``; import, runtime, probe, environment, interpreter or view failures -
+signature (v5: no_signature, variadic_signature, unsupported_parameter, receiver_constructor)
+is ``adapter_unsupported`` (v5: every such reason is prefixed ``adapter_unsupported:``);
+import, runtime, probe, environment, interpreter, ABI or view failures -
 anything else - are ``infrastructure_failure``.
 
 ``validate_rows`` is the ONE row validator, shared by the live resume path (``complete=False``)
@@ -37,16 +38,15 @@ import json
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence
 
-DESIGN_VERSION = "oneiros_native_generated_tests_atheris_v4"
+DESIGN_VERSION = "oneiros_native_generated_tests_atheris_v5"
 MODES = ("ordinary", "posthoc", "differential")
 SEEDS = (42, 43, 44)
 CONFIRMATIONS = 2
 BUDGET = 600
 CORPUS_CAP = 2000
 USABLE_END = ("completed", "cpu_budget_exhausted")
-APPLICABILITY_REASONS = ("no_signature", "instance_method_receiver", "variadic_signature")
-APPLICABILITY_PREFIXES = ("unsupported_parameter:",)
-STATUSES = ("eligible", "atheris_ineligible", "infrastructure_failure")
+APPLICABILITY_PREFIX = "adapter_unsupported:"        # v5 adapter (protocol v2.5 C.4-C.5)
+STATUSES = ("eligible", "adapter_unsupported", "infrastructure_failure")
 END_REASONS = ("completed", "cpu_budget_exhausted", "wall_timeout", "crashed",
                "infrastructure_failure")
 SUPERVISOR_REASONS = (None, "cpu_budget_exhausted", "wall_timeout")
@@ -60,7 +60,8 @@ SEARCH_REQUIRED = {"budget_cpu_seconds": "num", "tolerance_cpu_seconds": "num",
                    "aggregate_cpu_seconds": "num", "main_cpu_seconds": "num",
                    "worker_cpu_seconds": "num", "end_reason": "end", "exit": "exit",
                    "reached": "bool", "within_budget": "bool", "cleanup_ok": "bool",
-                   "views_unchanged": "bool", "witnesses": "count", "confirmations": "checks",
+                   "views_unchanged": "bool", "environment_sha256": "digest_or_none",
+                   "environment_unchanged": "bool", "witnesses": "count", "confirmations": "checks",
                    "confirmed": "count", "replay_errors": "count", "kill": "bool",
                    "replay_cpu_seconds": "num", "replay_cleanup_ok": "bool"}
 SEARCH_OPTIONAL = {"corpus": ("count", ("posthoc",)),
@@ -86,9 +87,8 @@ def classify_probe(info: Mapping[str, Any]) -> str:
     if info.get("eligible") is True:
         return "eligible"
     reason = info.get("reason")
-    if isinstance(reason, str) and (reason in APPLICABILITY_REASONS
-                                    or reason.startswith(APPLICABILITY_PREFIXES)):
-        return "atheris_ineligible"
+    if isinstance(reason, str) and reason.startswith(APPLICABILITY_PREFIX):
+        return "adapter_unsupported"
     return "infrastructure_failure"
 
 
@@ -119,7 +119,8 @@ def contract_hash(contract: Mapping[str, Any]) -> str:
 
 def _row_problems(row: Mapping[str, Any], budget: float) -> List[str]:
     problems = []
-    for field, want in (("reached", True), ("views_unchanged", True), ("within_budget", True),
+    for field, want in (("reached", True), ("views_unchanged", True),
+                        ("environment_unchanged", True), ("within_budget", True),
                         ("cleanup_ok", True), ("replay_cleanup_ok", True)):
         if row.get(field) is not want:
             problems.append(f"{field} is not true")
@@ -145,6 +146,8 @@ def _row_problems(row: Mapping[str, Any], budget: float) -> List[str]:
 
 
 def _type_ok(kind: str, value: Any) -> bool:
+    if kind == "digest_or_none":
+        return value is None or (isinstance(value, str) and len(value) == 64)
     if kind == "num":
         return isinstance(value, (int, float)) and not isinstance(value, bool) and value >= 0
     if kind == "count":
@@ -268,7 +271,8 @@ def _eligibility_problems(contract: Mapping[str, Any], qualified: Sequence[str],
                 {"eligible": status == "eligible", "reason": e.get("reason")}) != status:
             problems.append(f"eligibility status {status!r} inconsistent with reason "
                             f"{e.get('reason')!r} for {key}")
-        if status == "eligible" and not isinstance(e.get("plan"), list):
+        if status == "eligible" and not (isinstance(e.get("plan"), dict)
+                                         and isinstance(e["plan"].get("params"), list)):
             problems.append(f"eligible target without an argument plan: {key}")
     return problems
 
@@ -299,8 +303,8 @@ def load_results(results_path: Path, contract_path: Path, *, qualified: Sequence
     for t in qualified:
         trow = [rows[f"{t}::{m}::{s}"] for m in MODES for s in seeds]
         status = eligibility[t]["status"]
-        if status == "atheris_ineligible":
-            targets[t] = {"status": "atheris_ineligible", "reason": eligibility[t]["reason"]}
+        if status == "adapter_unsupported":
+            targets[t] = {"status": "adapter_unsupported", "reason": eligibility[t]["reason"]}
             continue
         if status == "infrastructure_failure":
             targets[t] = {"status": "infrastructure_excluded",
@@ -317,4 +321,4 @@ def load_results(results_path: Path, contract_path: Path, *, qualified: Sequence
             "live_views_sha256": contract["live_views_sha256"],
             "eligibility_sha256": contract["eligibility_sha256"],
             "counts": {s: sum(v["status"] == s for v in targets.values())
-                       for s in ("usable", "atheris_ineligible", "infrastructure_excluded")}}
+                       for s in ("usable", "adapter_unsupported", "infrastructure_excluded")}}

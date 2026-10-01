@@ -178,7 +178,7 @@ def test_24_qualified_23_generated_pipeline_end_to_end(world, monkeypatch):
     # Atheris: 24 rows; the joint comparison is restricted to generated AND eligible targets
     den = result["atheris_denominators"]
     assert {k: v for k, v in den.items() if k != "rule"} == {
-        "qualified": 24, "atheris_cells": 216, "atheris_usable": 23, "atheris_ineligible": 1,
+        "qualified": 24, "atheris_cells": 216, "atheris_usable": 23, "atheris_adapter_unsupported": 1,
         "atheris_infrastructure_excluded": 0, "generation_targets": 23,
         "infrastructure_eligible": 23, "joint": 22}
     assert result["atheris_jointly_eligible"]["atheris_unique_kills"] == {
@@ -511,6 +511,17 @@ def test_analysis_refuses_a_tampered_execution_row(world, monkeypatch):
 # --- Atheris design v4 (amendment v2.4 section E) ----------------------------------------------
 
 from scripts import native_atheris_results as ar  # noqa: E402
+from scripts import native_generated_tests_atheris_wsl as ath  # noqa: E402
+
+PLAN_INT_V5 ={"params": [{"name": "x", "spec": {"kind": "prim", "type": "int"}, "keyword": False}],
+               "receiver": None, "method": None}
+
+@pytest.fixture(autouse=True)
+def _fake_atheris_runtime(monkeypatch):
+    """v5 resolves each target's prepared interpreter; test worlds have none."""
+    from tests.native_analysis_helpers import fake_runtime
+    monkeypatch.setattr(ath, "runtime_for", fake_runtime)
+
 
 RAISE, OTHER, OK = ["raise", "ValueError"], ["raise", "TypeError"], ["ok", ["int", 1]]
 KILLED = (EXCLUDED, QUALIFIED[1])
@@ -591,7 +602,7 @@ def test_posthoc_and_differential_semantics_are_unchanged():
 def test_valid_216_cell_grid_loads(world):
     loaded = _load_atheris(world, *_atheris_fixture(world))
     assert loaded["cells"] == 216 and loaded["counts"] == {
-        "usable": 23, "atheris_ineligible": 1, "infrastructure_excluded": 0}
+        "usable": 23, "adapter_unsupported": 1, "infrastructure_excluded": 0}
 
 
 @pytest.mark.parametrize("mutate, fragment", [

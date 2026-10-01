@@ -26,6 +26,16 @@ from scripts import native_generation_io as gio
 from tests.test_native_v23_cohort_pipeline import (  # noqa: F401  (fixture + helpers)
     COND, EXCLUDED, GENERATED, QUALIFIED, _generate, _stub_sandbox, world)
 
+PLAN_INT_V5 = {"params": [{"name": "x", "spec": {"kind": "prim", "type": "int"}, "keyword": False}],
+               "receiver": None, "method": None}
+
+@pytest.fixture(autouse=True)
+def _fake_atheris_runtime(monkeypatch):
+    """v5 resolves each target's prepared interpreter; test worlds have none."""
+    from tests.native_analysis_helpers import fake_runtime
+    monkeypatch.setattr(ath, "runtime_for", fake_runtime)
+
+
 REPO = Path(__file__).resolve().parent.parent
 
 
@@ -89,7 +99,7 @@ def test_executor_refuses_a_drifted_generation_view_before_execution(world, monk
 
 
 def _probe_ok(view, module, qualname):
-    return {"eligible": True, "plan": [{"name": "x", "type": "int", "keyword": False}],
+    return {"eligible": True, "plan": PLAN_INT_V5,
             "returns": "int", "python": "3.11.15"}
 
 
@@ -122,13 +132,19 @@ def test_atheris_verifies_both_revisions_of_all_24_qualified_targets(world, monk
 # --- E. applicability versus infrastructure failure ----------------------------------------------
 
 @pytest.mark.parametrize("info, status", [
-    ({"eligible": True, "plan": [], "returns": None}, "eligible"),
-    ({"eligible": False, "reason": "no_signature"}, "atheris_ineligible"),
-    ({"eligible": False, "reason": "instance_method_receiver"}, "atheris_ineligible"),
-    ({"eligible": False, "reason": "variadic_signature"}, "atheris_ineligible"),
-    ({"eligible": False, "reason": "unsupported_parameter:x:Widget"}, "atheris_ineligible"),
+    ({"eligible": True, "plan": PLAN_INT_V5, "returns": None}, "eligible"),
+    ({"eligible": False, "reason": "adapter_unsupported:no_signature"}, "adapter_unsupported"),
+    ({"eligible": False, "reason": "adapter_unsupported:receiver_constructor:x:Widget"},
+     "adapter_unsupported"),
+    ({"eligible": False, "reason": "adapter_unsupported:variadic_signature"},
+     "adapter_unsupported"),
+    ({"eligible": False, "reason": "adapter_unsupported:unsupported_parameter:x:Widget"},
+     "adapter_unsupported"),
+    # v5: an unprefixed v4 applicability reason is NOT trusted as applicability
+    ({"eligible": False, "reason": "variadic_signature"}, "infrastructure_failure"),
     ({"eligible": False, "reason": "import_failure:ImportError"}, "infrastructure_failure"),
     ({"eligible": False, "reason": "runtime_mismatch:SyntaxError"}, "infrastructure_failure"),
+    ({"eligible": False, "reason": "atheris_abi_unavailable"}, "infrastructure_failure"),
     ({"eligible": False, "reason": "probe_failure"}, "infrastructure_failure"),
     ({"eligible": False, "reason": "view_missing"}, "infrastructure_failure"),
     ({"eligible": False, "reason": None}, "infrastructure_failure"),
@@ -201,19 +217,19 @@ def _load(world, contract, rows, prepared):
 
 def test_applicability_and_infrastructure_targets_are_reported_separately(world):
     rows = _prep_rows(world)
-    probes = {rows[QUALIFIED[0]]["module"]: {"eligible": False, "reason": "variadic_signature"}}
+    probes = {rows[QUALIFIED[0]]["module"]: {"eligible": False, "reason": "adapter_unsupported:variadic_signature"}}
     contract, prepared, eligibility = _atheris_world(world)
-    eligibility[QUALIFIED[5]] = {**eligibility[QUALIFIED[5]], "status": "atheris_ineligible",
-                                 "reason": "variadic_signature", "plan": None, "returns": None}
+    eligibility[QUALIFIED[5]] = {**eligibility[QUALIFIED[5]], "status": "adapter_unsupported",
+                                 "reason": "adapter_unsupported:variadic_signature", "plan": None, "returns": None}
     eligibility[QUALIFIED[6]] = {**eligibility[QUALIFIED[6]], "status": "infrastructure_failure",
                                  "reason": "import_failure:ModuleNotFoundError", "plan": None,
                                  "returns": None}
     contract = {**contract, "eligibility": eligibility,
                 "eligibility_sha256": gio.contract_sha(eligibility)}
     loaded = _load(world, contract, _grid(contract, eligibility), prepared)
-    assert loaded["targets"][QUALIFIED[5]]["status"] == "atheris_ineligible"
+    assert loaded["targets"][QUALIFIED[5]]["status"] == "adapter_unsupported"
     assert loaded["targets"][QUALIFIED[6]]["status"] == "infrastructure_excluded"
-    assert loaded["counts"] == {"usable": 22, "atheris_ineligible": 1, "infrastructure_excluded": 1}
+    assert loaded["counts"] == {"usable": 22, "adapter_unsupported": 1, "infrastructure_excluded": 1}
     assert probes
 
 
@@ -221,8 +237,8 @@ def test_fabricated_ineligible_rows_for_an_eligible_target_are_refused(world):
     contract, prepared, eligibility = _atheris_world(world)
 
     def forge(rows):
-        return [{**r, "eligible": False, "status": "atheris_ineligible",
-                 "reason": "variadic_signature", "kill": False}
+        return [{**r, "eligible": False, "status": "adapter_unsupported",
+                 "reason": "adapter_unsupported:variadic_signature", "kill": False}
                 if r["target_key"] == QUALIFIED[3] else r for r in rows]
     with pytest.raises(SystemExit, match="frozen eligibility"):
         _load(world, contract, _grid(contract, eligibility, forge), prepared)
@@ -230,7 +246,7 @@ def test_fabricated_ineligible_rows_for_an_eligible_target_are_refused(world):
 
 def test_an_infrastructure_reason_labelled_ineligible_is_refused(world):
     contract, prepared, eligibility = _atheris_world(world)
-    eligibility[QUALIFIED[4]] = {**eligibility[QUALIFIED[4]], "status": "atheris_ineligible",
+    eligibility[QUALIFIED[4]] = {**eligibility[QUALIFIED[4]], "status": "adapter_unsupported",
                                  "reason": "probe_failure", "plan": None, "returns": None}
     contract = {**contract, "eligibility": eligibility,
                 "eligibility_sha256": gio.contract_sha(eligibility)}
@@ -270,7 +286,7 @@ def valid_receipts(world, drop=(), mutate=None) -> dict:
                              "executor_sha256": _sha(REPO / "scripts/native_generated_tests_execute_wsl.py"),
                              "inner_sha256": _sha(REPO / "scripts/native_sandbox_inner.sh"),
                              "prepare_sha256": _sha(REPO / "scripts/native_rehearsal_prepare_wsl.py")},
-        "atheris_canaries": {"schema_version": "oneiros_native_atheris_canaries_v3", "passed": True,
+        "atheris_canaries": {"schema_version": "oneiros_native_atheris_canaries_v4", "passed": True,
                              "design_version": ar.DESIGN_VERSION,
                              "script_sha256": _sha(REPO / "scripts/native_generated_tests_atheris_wsl.py"),
                              "inner_sha256": _sha(REPO / "scripts/native_sandbox_inner.sh"),
