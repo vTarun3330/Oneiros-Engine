@@ -1,0 +1,207 @@
+{
+ "conversion_version": "oneiros_v25_module_conversion_v1",
+ "counts": {
+  "converted": 5724,
+  "examples": 5735,
+  "verified_positive": 5265,
+  "verified_unique_functions": 505,
+  "verified_unique_modules": 1558,
+  "verified_unique_records": 2110
+ },
+ "duplicates": {
+  "exact_duplicate_example_pairs": 0,
+  "same_module_text_across_records": 3707
+ },
+ "inputs": {
+  "converted_candidates_sha256": "ca4d8c8f8f353a00d01d53194636dca22b674da16aa367d06c21d35d10f2a127",
+  "examples_sha256": "30e9436f7aa16709b8710ba410d653666c3eb8e11d4bdf9de55979a6f4c02167",
+  "verification_runs_identical": true,
+  "verification_runs_sha256": [
+   "149fde67b87d7aa5d93fb225ab5c5d39d4ab34e4ee4eaf3580053356ce218d17",
+   "149fde67b87d7aa5d93fb225ab5c5d39d4ab34e4ee4eaf3580053356ce218d17"
+  ]
+ },
+ "isolation": {
+  "split": "train only (non-train corpus files hard-blocked)",
+  "v24_panel_projects_present": [],
+  "validation_or_sealed_access": false
+ },
+ "output_type": "pytest_module_v1",
+ "rejections": {
+  "conversion": {
+   "target_not_defined_in_both_revisions": 11
+  },
+  "verification": {
+   "executed:skipped_or_xfail": 5,
+   "executed:timeout": 230,
+   "pending_native_environment:None": 224
+  }
+ },
+ "repository_examples": "converted with their public import header; verification pending native buggy/fixed environments (not prepared)",
+ "schema_version": "oneiros_v25_converted_corpus_stage1_v1",
+ "scripts_sha256": {
+  "scripts/v25_converted_corpus.py": "ad2567db62a46b1fe39eba9d03cc84c7101465007981c9e1fc54212b4c00b1e7",
+  "scripts/v25_module_conversion.py": "7e06390e57af4415ccaefdd8d01c7a070a6dbcc0cc961df0e66e9716ff2dcc80",
+  "scripts/v25_verify_converted_wsl.py": "f57737dd7d25bcfc204022de4b6845cb25b9dc63e2b186153ef07d0a04570b67"
+ },
+ "slices": {
+  "bug_family": {
+   "arithmetic": {
+    "effective_weight_verified": 1509,
+    "rows": 1599,
+    "verified": 1509
+   },
+   "boolean": {
+    "effective_weight_verified": 66,
+    "rows": 72,
+    "verified": 66
+   },
+   "boundary": {
+    "effective_weight_verified": 2150,
+    "rows": 2229,
+    "verified": 2150
+   },
+   "comparison": {
+    "effective_weight_verified": 783,
+    "rows": 806,
+    "verified": 783
+   },
+   "data_validation": {
+    "effective_weight_verified": 4,
+    "rows": 4,
+    "verified": 4
+   },
+   "identity": {
+    "effective_weight_verified": 4,
+    "rows": 4,
+    "verified": 4
+   },
+   "index": {
+    "effective_weight_verified": 79,
+    "rows": 79,
+    "verified": 79
+   },
+   "list_operations": {
+    "effective_weight_verified": 2,
+    "rows": 2,
+    "verified": 2
+   },
+   "logical": {
+    "effective_weight_verified": 117,
+    "rows": 120,
+    "verified": 117
+   },
+   "membership": {
+    "effective_weight_verified": 36,
+    "rows": 36,
+    "verified": 36
+   },
+   "negate_removal": {
+    "effective_weight_verified": 41,
+    "rows": 41,
+    "verified": 41
+   },
+   "off_by_one": {
+    "effective_weight_verified": 393,
+    "rows": 437,
+    "verified": 393
+   },
+   "official_repository_pytest_reproduction": {
+    "effective_weight_verified": 0,
+    "rows": 51,
+    "verified": 0
+   },
+   "official_repository_swebench_reproduction": {
+    "effective_weight_verified": 0,
+    "rows": 150,
+    "verified": 0
+   },
+   "official_repository_unittest_reproduction": {
+    "effective_weight_verified": 0,
+    "rows": 23,
+    "verified": 0
+   },
+   "return": {
+    "effective_weight_verified": 70,
+    "rows": 71,
+    "verified": 70
+   },
+   "string": {
+    "effective_weight_verified": 9,
+    "rows": 9,
+    "verified": 9
+   },
+   "string_manipulation": {
+    "effective_weight_verified": 2,
+    "rows": 2,
+    "verified": 2
+   }
+  },
+  "complexity": {
+   "complex": {
+    "effective_weight_verified": 3094,
+    "rows": 3265,
+    "verified": 3094
+   },
+   "moderate": {
+    "effective_weight_verified": 1504,
+    "rows": 1564,
+    "verified": 1504
+   },
+   "simple": {
+    "effective_weight_verified": 667,
+    "rows": 682,
+    "verified": 667
+   },
+   "unindexed": {
+    "effective_weight_verified": 0,
+    "rows": 224,
+    "verified": 0
+   }
+  },
+  "dataset": {
+   "BugsInPy": {
+    "effective_weight_verified": 0,
+    "rows": 74,
+    "verified": 0
+   },
+   "SWE-bench Verified": {
+    "effective_weight_verified": 0,
+    "rows": 150,
+    "verified": 0
+   },
+   "humaneval": {
+    "effective_weight_verified": 1107,
+    "rows": 1119,
+    "verified": 1107
+   },
+   "manual_curated_examples": {
+    "effective_weight_verified": 8,
+    "rows": 8,
+    "verified": 8
+   },
+   "mbpp": {
+    "effective_weight_verified": 4150,
+    "rows": 4384,
+    "verified": 4150
+   }
+  },
+  "execution_mode": {
+   "function_assertion": {
+    "effective_weight_verified": 5265,
+    "rows": 5511,
+    "verified": 5265
+   },
+   "repository_pytest_fragment": {
+    "effective_weight_verified": 0,
+    "rows": 201,
+    "verified": 0
+   },
+   "repository_unittest_fragment": {
+    "effective_weight_verified": 0,
+    "rows": 23,
+    "verified": 0
+   }
+  }
+ }
+}
