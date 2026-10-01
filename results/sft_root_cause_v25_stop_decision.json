@@ -1,0 +1,29 @@
+{
+ "decision": "STOP before the pilot and before the v2.5 preflight; do NOT authorise the pilot",
+ "gpu_used": false,
+ "health": {
+  "failed": 0,
+  "full_suite_receipt": "results/sft_root_cause/native_v25_full_suite_health_66e7397.json",
+  "passed": 2732,
+  "sha256": "2dddd080bbe7a6d121f91aac2a79f651ead0adc5b0a28cc21cab608c18288972",
+  "skipped": 3
+ },
+ "next_source_work_before_single_freeze": [
+  "Django-aware verification runner (settings/test runner) - would admit up to 16 qualified Django environments",
+  "a v2.5 view rule that keeps runtime packages named 'testing' (e.g. sympy.testing) while still stripping tests - +10 sympy",
+  "train-only acquisition of new repository bugs from >=6 further repositories outside the panel exclusion ledger",
+  "the remaining 11 SWE-bench patches"
+ ],
+ "pilot_sample_exported": {
+  "path_role": "results/sft_root_cause/v25_pilot/export.jsonl (local)",
+  "per_project": {
+   "sympy": 11,
+   "thefuck": 19
+  },
+  "sha256": "94a4976e2edabc48a68953fb3621239bf6cac0b4dcbd97140ad441066131db89",
+  "targets": 30
+ },
+ "reason": "the executable train-repository pool is 2 repositories / 37 qualified targets (thefuck 24, sympy 13); addendum 1 requires >=150 canonical repository tests from >=8 repositories and >=60 lineages before training, so no pilot yield on this pool can pass the training gate (futile by construction); and the fixes that would enlarge the pool change source, which would make any preflight frozen now stale",
+ "schema_version": "oneiros_v25_stop_decision_v1",
+ "validation_or_sealed_access": false
+}
