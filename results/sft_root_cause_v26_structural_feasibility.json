@@ -1,0 +1,107 @@
+{
+ "caps": {
+  "per_function": 3,
+  "per_lineage": 3,
+  "per_repository": 40
+ },
+ "confirmation_only_pool": {
+  "repositories": 70,
+  "use": "confirmation only; never counted toward training"
+ },
+ "decision": {
+  "chosen_option": "A",
+  "label": "STRICT_TRAINING_INFEASIBLE_UNDER_CURRENT_PROTOCOL",
+  "project_status": "continuing: repository-disjoint confirmation panel and evaluation of existing models",
+  "text": "the strict v2.6 training arm is closed as NOT READY / INFEASIBLE with the available evidence: no SFT on the 33 examples; the gate is not weakened; the 33 rows are preserved as verified evidence and possible future replay material"
+ },
+ "deterministic_maximum": {
+  "a_all_163_eligible_fragments_existing_repositories": {
+   "all_reachable": false,
+   "assumption": "every eligible fragment verifies, including those whose environment is an infrastructure failure today",
+   "by_repository": {
+    "ansible": 5,
+    "astropy": 2,
+    "django": 40,
+    "fastapi": 1,
+    "flask": 1,
+    "httpie": 1,
+    "matplotlib": 17,
+    "sanic": 1,
+    "sympy": 36,
+    "thefuck": 24,
+    "tornado": 1,
+    "youtube-dl": 17
+   },
+   "fragments": 163,
+   "maximum": {
+    "lineages": 139,
+    "repositories": 12,
+    "repository_tests": 146
+   },
+   "reachable": {
+    "lineages": true,
+    "repositories": true,
+    "repository_tests": false
+   }
+  },
+  "b_qualified_environments_today": {
+   "all_reachable": false,
+   "assumption": "every fragment with a qualified environment verifies",
+   "by_repository": {
+    "ansible": 5,
+    "django": 28,
+    "fastapi": 1,
+    "httpie": 1,
+    "sympy": 27,
+    "thefuck": 24,
+    "tornado": 1,
+    "youtube-dl": 14
+   },
+   "fragments": 105,
+   "maximum": {
+    "lineages": 97,
+    "repositories": 8,
+    "repository_tests": 101
+   },
+   "reachable": {
+    "lineages": true,
+    "repositories": true,
+    "repository_tests": false
+   }
+  }
+ },
+ "gate": {
+  "lineages": 60,
+  "repositories": 8,
+  "repository_tests": 150
+ },
+ "inputs_sha256": {
+  "results/sft_root_cause/v25_native_r2/targets_a3.jsonl": "0bfeb88f30e8f715465b0b5207479931edf0e05c46c8a9cad778faa608e32b2f",
+  "results/sft_root_cause/v26_funnel/diagnostics.jsonl": "b660771b6992265df6170f0c082da256fce19a7ffbd2d49ecdec0498b93e387f",
+  "results/sft_root_cause/v26_verify_a3/repository_verification_run1.jsonl": "169895e017ff7b6b7f887d613ed6e1a1e0bb2c68313248b167888557621d82ff",
+  "results/sft_root_cause_v25_universe_partition.json": "6b3e2527243817d1f90fde5a8e333652129c977db328abcc67e38470791a709b",
+  "results/sft_root_cause_v26_repository_verification_a3.json": "00ae59ead384c3a08a738233809b05feedd7cfb6634579b32030f0dd352e36c5",
+  "results/sft_root_cause_v26_selection_conservation.json": "688839cdbee8d83f6e9932ab8fff31d49c12e486069dbaba7f57e2d81f9f9640"
+ },
+ "observed": {
+  "lineages": 33,
+  "repositories": 4,
+  "selected_tests": 33,
+  "source": "results/sft_root_cause_v26_selection_conservation.json"
+ },
+ "overlap_with_selected": {
+  "note": "the 33 selected rows are a subset of both universes; the maxima above already include them",
+  "selected_rows_inside_universe_a": 33
+ },
+ "qualified_environments_are_not_positives": {
+  "qualified_environment_lineages": 101,
+  "verified_positive_lineages": 33
+ },
+ "schema_version": "oneiros_v26_structural_feasibility_v1",
+ "training_expansion_pool": {
+  "acquired_candidates": 0,
+  "maximum": "UNKNOWN",
+  "reason": "no acquisition has run (authentication pending); no recorded quantity bounds its yield",
+  "repositories": 36
+ }
+}

@@ -55,3 +55,25 @@ def test_tracked_conservation_receipt_balances_34_to_33():
     assert f["excluded_per_function_cap"] == 1 and f["excluded_exact_duplicates"] == 0
     assert [x["task"] for x in r["excluded_rows"]] == ["bugsinpy::youtube-dl::26"]
     assert (f["selected"]["semantic_kills"], f["selected"]["crash_kills"]) == (25, 8)
+
+
+def test_structural_maximum_applies_every_cap_and_dedup():
+    from scripts.v26_structural_feasibility import maximum
+    rows = [{"canonical": f"c{i}", "function": "F", "lineage": f"l{i}", "repository": "r"}
+            for i in range(5)]                                     # one function: cap 3
+    rows += [{"canonical": "c0", "function": "G", "lineage": "x", "repository": "r"}]  # dup
+    rows += [{"canonical": f"d{i}", "function": f"g{i}", "lineage": "L", "repository": "s"}
+             for i in range(5)]                                     # one lineage: cap 3
+    out = maximum(rows)
+    assert out["maximum"] == {"repository_tests": 6, "repositories": 2, "lineages": 4}
+    assert out["all_reachable"] is False
+
+
+def test_tracked_feasibility_is_below_the_gate_and_never_rescued_by_confirmation():
+    r = json.loads((ROOT / "results/sft_root_cause_v26_structural_feasibility.json")
+                   .read_text(encoding="utf-8"))
+    a = r["deterministic_maximum"]["a_all_163_eligible_fragments_existing_repositories"]
+    assert a["maximum"]["repository_tests"] < 150 and a["all_reachable"] is False
+    assert r["decision"]["label"] == "STRICT_TRAINING_INFEASIBLE_UNDER_CURRENT_PROTOCOL"
+    assert r["training_expansion_pool"]["maximum"] == "UNKNOWN"
+    assert "never counted toward training" in r["confirmation_only_pool"]["use"]
