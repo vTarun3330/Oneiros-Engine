@@ -126,6 +126,48 @@ def canonical_ids(module: str) -> dict:
             "near_duplicate_cluster": near}
 
 
+def load_train_records() -> list:
+    """Train shard only, with every train check of ``verify_development_view`` EXCEPT hashing
+    the combined complexity sidecar (it carries non-train metadata and is not used here):
+    view schema, parent-corpus binding, sealed split declared excluded, train shard hash and
+    membership, per-record content hashes and schema, group disjointness, exclusions hash."""
+    from harness import corpus_view as cv
+    parent = json.loads((CORPUS / "manifest.json").read_text(encoding="utf-8"))
+    view_dir = CORPUS / "development_view"
+    view = json.loads((view_dir / "manifest.json").read_text(encoding="utf-8"))
+    files = parent.get("files", {})
+    if view.get("schema_version") != cv.VIEW_SCHEMA_VERSION or \
+            view.get("source_corpus_id") != parent.get("corpus_id") or \
+            view.get("source_records_sha256") != files.get("records.json", {}).get("sha256") or \
+            view.get("source_splits_sha256") != files.get("splits.json", {}).get("sha256") or \
+            set(view.get("sealed_splits_excluded", [])) != set(cv.SEALED_SPLITS) or \
+            "train" not in view.get("included_splits", []):
+        raise SystemExit("REFUSED: development view manifest fails its train gates")
+    descriptor = view["splits"]["train"]
+    shard = view_dir / descriptor["filename"]
+    if sha(shard) != descriptor["sha256"]:
+        raise SystemExit("REFUSED: train shard hash")
+    records = json.loads(shard.read_text(encoding="utf-8"))
+    ids = [r["id"] for r in records]
+    if len(records) != descriptor["record_count"] or \
+            hashlib.sha256(json.dumps(ids, sort_keys=True, separators=(",", ":"))
+                           .encode()).hexdigest() != descriptor["record_ids_sha256"] or \
+            parent["splits"]["train"]["record_ids_sha256"] != descriptor["record_ids_sha256"]:
+        raise SystemExit("REFUSED: train shard membership")
+    groups = set()
+    for r in records:
+        if cv.record_content_hash(r) != r.get("content_hash") or \
+                r.get("schema_version") != parent.get("schema_version"):
+            raise SystemExit("REFUSED: modified train record")
+        groups.add(r.get("group_id"))
+    exclusions = view["training_exclusions"]
+    epath = view_dir / exclusions["filename"]
+    if sha(epath) != exclusions["sha256"]:
+        raise SystemExit("REFUSED: training exclusions hash")
+    excluded = {e["record_id"] for e in json.loads(epath.read_text(encoding="utf-8"))}
+    return [r for r in records if r["id"] not in excluded]
+
+
 def train_complexity(code: str, entry_point: str) -> str:
     from harness.function_complexity import analyze_function_complexity
     try:
@@ -136,13 +178,14 @@ def train_complexity(code: str, entry_point: str) -> str:
 
 def prepare(examples: Path, out: Path) -> int:
     install_audit()                                  # before ANY corpus/config load
-    from harness.corpus_view import load_development_split
     from scripts import v25_module_conversion as mc
     if sha(examples) != EXAMPLES_SHA:
         raise SystemExit("REFUSED: examples differ from the audited exact rebuild")
-    records = {r["id"]: r for r in load_development_split(CORPUS, "train")}
+    records = {r["id"]: r for r in load_train_records()}
     rows = [json.loads(l) for l in examples.read_text(encoding="utf-8").splitlines()]
-    out.mkdir(parents=True, exist_ok=False)
+    out.mkdir(parents=True, exist_ok=True)
+    if (out / "converted_candidates.jsonl").exists():
+        raise SystemExit("REFUSED: candidates exist; earlier attempts stay quarantined")
     lines = []
     for i, ex in enumerate(rows):
         rec = records[ex["id"]]
@@ -286,19 +329,31 @@ def receipt(directory: Path) -> int:
     if (hdir / "verification_run1.jsonl").is_file():
         old = {v["index"]: v for v in map(json.loads, (hdir / "verification_run1.jsonl")
                                           .read_text(encoding="utf-8").splitlines())}
-        changed = [{"index": r["index"], "old": [old.get(r["index"], {}).get("status"),
-                                                 old.get(r["index"], {}).get("accepted")],
-                    "new": [r["verification"], r["verified"]],
-                    "reason": r["reject_reason"]}
-                   for r in rows if (old.get(r["index"], {}).get("accepted") is True)
-                   != r["verified"] or old.get(r["index"], {}).get("status")
-                   != r["verification"]]
+        old_conv = {c["index"]: c["conversion"] for c in map(
+            json.loads, (hdir / "converted_candidates.jsonl").read_text(encoding="utf-8")
+            .splitlines())}
+
+        def state(conv, verdict):
+            return ["converted" if conv.get("accepted") else
+                    f"rejected:{conv.get('reason')}", verdict.get("accepted") is True]
+        changed = []
+        for r in rows:
+            before = state(old_conv.get(r["index"], {}), old.get(r["index"], {}))
+            after = ["converted" if r["converted"] else f"rejected:{r['reject_reason']}",
+                     r["verified"]]
+            if before != after:
+                changed.append({"index": r["index"], "execution_mode": r["execution_mode"],
+                                "project": r["project"], "old": before, "new": after,
+                                "reason": r["reject_reason"]})
         hist = {"historical_receipt_sha256": sha(ROOT / HISTORICAL["receipt"]),
                 "historical_verified": sum(v.get("accepted") is True for v in old.values()),
                 "r2_verified": len(ok), "changed_rows": len(changed),
                 "changed_by_transition": dict(Counter(
                     f"{c['old']}->{c['new']}:{c['reason']}" for c in changed)),
-                "changed_examples": changed[:25]}
+                "changed_rows_all": changed,
+                "explanation": "r2 repository conversion rejects fragments that define no "
+                               "top-level test and modules refused by the frozen candidate "
+                               "policy; the historical converter accepted every fragment"}
     leak = sorted({r["provenance_project"] for r in rows
                    if (r["provenance_project"] or "").lower() in V24_PANEL_PROJECTS})
     by = lambda f: {str(k): {"rows": sum(1 for r in rows if r[f] == k),  # noqa: E731
@@ -369,7 +424,7 @@ def receipt(directory: Path) -> int:
     status = publish_once(RECEIPT, out)
     print(json.dumps({"status": status, "counts": out["counts"], "duplicates": duplicates,
                       "rejections": out["rejections"], "comparison": {
-                          k: v for k, v in hist.items() if k != "changed_examples"},
+                          k: v for k, v in hist.items() if k != "changed_rows_all"},
                       "access": out["access_audit"]["passed"]}, indent=1, default=str))
     return 0
 

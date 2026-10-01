@@ -1,0 +1,114 @@
+{
+ "archive_directory_name": "native_v25_stage1_r2",
+ "byte_identical_to_originals": true,
+ "items": [
+  {
+   "bytes": 12148368,
+   "file": "converted_candidates.jsonl",
+   "rows": 5735,
+   "sha256": "8bd87bd5bee599b66977163f7c52f3a588f4d12f724e472d3b0d5530a28f750e"
+  },
+  {
+   "bytes": 830,
+   "file": "prepare_access_receipt.json",
+   "rows": null,
+   "sha256": "fd9f0c7320b85acf5b2b1a02ebf4ecd91b8aa940bbd493ac751bbfdc9913da58"
+  },
+  {
+   "bytes": 13439,
+   "file": "quarantine_attempt1/receipt_attempt1.json",
+   "rows": null,
+   "sha256": "6b0fd21daee1fbb596fb8e8e67b0ccf8f9b9bb2399a55a5548ed5666b460e8e8"
+  },
+  {
+   "bytes": 646,
+   "file": "quarantine_attempt1/synthetic_env_manifest.json",
+   "rows": null,
+   "sha256": "84407df18184fc1d2e35bc94c96df4c99f1cc678430c0a00aba3e807c0a9651c"
+  },
+  {
+   "bytes": 1177923,
+   "file": "quarantine_attempt1/verification_run1.jsonl",
+   "rows": 5735,
+   "sha256": "1e2197b6f68989981e8afdd962c5a07932964954786be7f7214a8f66cd93f4a3"
+  },
+  {
+   "bytes": 187915,
+   "file": "quarantine_attempt1/verification_run1.timing.jsonl",
+   "rows": 5735,
+   "sha256": "727d321f07815c1fce6cc742a87edc4c2fe6bb095720c70c9e5b1c19eda460b0"
+  },
+  {
+   "bytes": 1177923,
+   "file": "quarantine_attempt1/verification_run2.jsonl",
+   "rows": 5735,
+   "sha256": "1e2197b6f68989981e8afdd962c5a07932964954786be7f7214a8f66cd93f4a3"
+  },
+  {
+   "bytes": 187424,
+   "file": "quarantine_attempt1/verification_run2.timing.jsonl",
+   "rows": 5735,
+   "sha256": "83866b5f5b6696722191254da22f25262864d270538378c063082ba29bd3426c"
+  },
+  {
+   "bytes": 12018027,
+   "file": "quarantine_attempt2/converted_candidates.jsonl",
+   "rows": 5735,
+   "sha256": "0eb6e578497ffa3a4eee321cac57881d58d617f23f830104d43099961c11294e"
+  },
+  {
+   "bytes": 830,
+   "file": "quarantine_attempt2/prepare_access_receipt.json",
+   "rows": null,
+   "sha256": "fd9f0c7320b85acf5b2b1a02ebf4ecd91b8aa940bbd493ac751bbfdc9913da58"
+  },
+  {
+   "bytes": 646,
+   "file": "quarantine_attempt2/synthetic_env_manifest.json",
+   "rows": null,
+   "sha256": "84407df18184fc1d2e35bc94c96df4c99f1cc678430c0a00aba3e807c0a9651c"
+  },
+  {
+   "bytes": 412077,
+   "file": "selection_view_synthetic.jsonl",
+   "rows": 620,
+   "sha256": "f3b5d1edab83e6d299960ee90198ee2835f9fb25073b38fc555afcc44a5dba66"
+  },
+  {
+   "bytes": 646,
+   "file": "synthetic_env_manifest.json",
+   "rows": null,
+   "sha256": "84407df18184fc1d2e35bc94c96df4c99f1cc678430c0a00aba3e807c0a9651c"
+  },
+  {
+   "bytes": 1179696,
+   "file": "verification_run1.jsonl",
+   "rows": 5735,
+   "sha256": "3c0f71c937efd0bf37ee10fec151b3217ce1d9cb687ed485d538d5eef69c5ff2"
+  },
+  {
+   "bytes": 187410,
+   "file": "verification_run1.timing.jsonl",
+   "rows": 5735,
+   "sha256": "02391afaabfa210167fbf09d54258bcc6708b62b4bdd83188eb985177c98e469"
+  },
+  {
+   "bytes": 1179696,
+   "file": "verification_run2.jsonl",
+   "rows": 5735,
+   "sha256": "3c0f71c937efd0bf37ee10fec151b3217ce1d9cb687ed485d538d5eef69c5ff2"
+  },
+  {
+   "bytes": 187392,
+   "file": "verification_run2.timing.jsonl",
+   "rows": 5735,
+   "sha256": "b50f2d7a30353e5e1847af858535d05baa8d733f96ff4dc0263c47536bf94e71"
+  }
+ ],
+ "quarantined_attempts": {
+  "quarantine_attempt1": "verifier labelled conversion-rejected repository rows pending; comparison ignored conversion changes",
+  "quarantine_attempt2": "repository converter missed TestCase subclasses imported by name (93 Django false rejections); run stopped"
+ },
+ "read_only": true,
+ "schema_version": "oneiros_v25_stage1_r2_archive_manifest_v1"
+}

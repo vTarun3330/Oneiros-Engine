@@ -95,6 +95,23 @@ def test_malformed_or_testless_inputs_are_rejected(fragment, ctx, reason):
     assert mc.convert_repository(fragment, ctx)["reason"] == reason
 
 
+@pytest.mark.parametrize("fragment", [
+    "class FinderTests(SimpleTestCase):\n    def test_find(self):\n        self.assertTrue(A)\n",
+    "class X(unittest.TestCase):\n    def test_a(self):\n        self.assertTrue(A)\n",
+    "class TestThing:\n    def test_a(self):\n        assert A\n",
+])
+def test_test_classes_imported_by_name_or_attribute_are_recognised(fragment):
+    out = mc.convert_repository(fragment, _ctx("import unittest\nfrom django.test import "
+                                               "SimpleTestCase\nfrom pkg import A"))
+    assert out["accepted"], out
+
+
+def test_a_class_without_test_methods_is_not_a_test():
+    out = mc.convert_repository("class Helper(SimpleTestCase):\n    def setUp(self):\n"
+                                "        pass\n", _ctx("from django.test import SimpleTestCase"))
+    assert out["reason"] == "no_test_defined"
+
+
 def test_fabricated_header_import_stays_pending_never_verified_here():
     out = mc.convert_repository("def test_t():\n    assert Ghost()\n",
                                 _ctx("from pkg.nowhere import Ghost"))

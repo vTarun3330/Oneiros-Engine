@@ -1,0 +1,1907 @@
+{
+ "access_audit": {
+  "passed": true,
+  "prepare": {
+   "combined_complexity_manifest_opened": false,
+   "opened": [
+    "data/corpus/v4_1_research_hardened_candidate/development_view/manifest.json",
+    "data/corpus/v4_1_research_hardened_candidate/development_view/train.records.json",
+    "data/corpus/v4_1_research_hardened_candidate/development_view/training_exclusions.json",
+    "data/corpus/v4_1_research_hardened_candidate/manifest.json"
+   ],
+   "passed": true,
+   "rule": "only data/corpus/v4_1_research_hardened_candidate/development_view/manifest.json, data/corpus/v4_1_research_hardened_candidate/development_view/train.records.json, data/corpus/v4_1_research_hardened_candidate/development_view/training_exclusions.json, data/corpus/v4_1_research_hardened_candidate/manifest.json may be opened under data/corpus; sealed_final and reserved-confirmation ids never",
+   "violations": []
+  },
+  "receipt": {
+   "combined_complexity_manifest_opened": false,
+   "opened": [],
+   "passed": true,
+   "rule": "only data/corpus/v4_1_research_hardened_candidate/development_view/manifest.json, data/corpus/v4_1_research_hardened_candidate/development_view/train.records.json, data/corpus/v4_1_research_hardened_candidate/development_view/training_exclusions.json, data/corpus/v4_1_research_hardened_candidate/manifest.json may be opened under data/corpus; sealed_final and reserved-confirmation ids never",
+   "violations": []
+  }
+ },
+ "claims": {
+  "sft_improvement": false,
+  "training_ready": false
+ },
+ "comparison_with_historical_stage1": {
+  "changed_by_transition": {
+   "['converted', False]->['rejected:candidate_policy:policy_refused', False]:candidate_policy:policy_refused": 94,
+   "['converted', False]->['rejected:no_test_defined', False]:no_test_defined": 7
+  },
+  "changed_rows": 101,
+  "changed_rows_all": [
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5514,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "ansible",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5515,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "ansible",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5520,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "matplotlib",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5521,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "matplotlib",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5523,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "matplotlib",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5527,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "matplotlib",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5528,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "matplotlib",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5529,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "matplotlib",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5531,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "matplotlib",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5532,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "matplotlib",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5535,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "sanic",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5538,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "astropy",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5539,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5540,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5543,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5544,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5545,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5546,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5548,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5549,
+    "new": [
+     "rejected:no_test_defined",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "no_test_defined"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5550,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5552,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5554,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5555,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5557,
+    "new": [
+     "rejected:no_test_defined",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "no_test_defined"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5563,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5566,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5574,
+    "new": [
+     "rejected:no_test_defined",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "no_test_defined"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5575,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5576,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5577,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5578,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5580,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5583,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5584,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5585,
+    "new": [
+     "rejected:no_test_defined",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "no_test_defined"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5586,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5587,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5588,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5589,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5592,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5593,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5595,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5596,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5598,
+    "new": [
+     "rejected:no_test_defined",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "no_test_defined"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5599,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5600,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5601,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5602,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5603,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5605,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5608,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5613,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5614,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5616,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5617,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5618,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5623,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5624,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5625,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5626,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5627,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5628,
+    "new": [
+     "rejected:no_test_defined",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "no_test_defined"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5629,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5631,
+    "new": [
+     "rejected:no_test_defined",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "no_test_defined"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5632,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5633,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5637,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5638,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5642,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5643,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "django",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5646,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "matplotlib",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5647,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "matplotlib",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5649,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "pylint",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5677,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "sympy",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5685,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "sympy",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5695,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "thefuck",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_pytest_fragment",
+    "index": 5703,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "thefuck",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5712,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "tornado",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5713,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5714,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5715,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5716,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5717,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5718,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5719,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5720,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5721,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5722,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5723,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5724,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5725,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5726,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5727,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5728,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5729,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5730,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5731,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5732,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5733,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   },
+   {
+    "execution_mode": "repository_unittest_fragment",
+    "index": 5734,
+    "new": [
+     "rejected:candidate_policy:policy_refused",
+     false
+    ],
+    "old": [
+     "converted",
+     false
+    ],
+    "project": "youtube-dl",
+    "reason": "candidate_policy:policy_refused"
+   }
+  ],
+  "explanation": "r2 repository conversion rejects fragments that define no top-level test and modules refused by the frozen candidate policy; the historical converter accepted every fragment",
+  "historical_receipt_sha256": "bf3f98286db3aa80ef494723b80949f2720c38e6cb5f1514e19fb1f12b23b924",
+  "historical_verified": 5265,
+  "r2_verified": 5265
+ },
+ "complexity_note": "synthetic tiers are small-function AST complexity (oneiros_buggy_ast_complexity_v1 on train buggy code), not repository-scale complexity",
+ "counts": {
+  "converted": 5623,
+  "examples": 5735,
+  "verified_positive_rows": 5265
+ },
+ "duplicates": {
+  "effective_training_weight_verified": 5265,
+  "exact_duplicate_example_occurrences": 0,
+  "near_duplicate_clusters": 845,
+  "near_duplicate_clusters_with_several_canonical_tests": 371,
+  "note": "the verified rows are NOT 5k distinct tests: identical module texts recur across sibling mutants of the same function",
+  "repeated_module_text_occurrences": 3707,
+  "rows_verified": 5265,
+  "unique_canonical_ast_modules": 1558,
+  "unique_function_canonical_test_pairs": 1558,
+  "unique_function_group_ids": 505,
+  "unique_raw_module_texts": 1558,
+  "unique_record_ids": 2110
+ },
+ "exclusion_audit": {
+  "_functions_lost_entirely": {
+   "complexity": {
+    "moderate": 0.6111,
+    "simple": 0.3889
+   },
+   "count": 3
+  },
+  "_reference_all_synthetic": {
+   "completion_chars": {
+    "max": 418,
+    "n": 5511,
+    "p50": 45,
+    "p90": 88
+   },
+   "complexity": {
+    "complex": 0.5925,
+    "moderate": 0.2838,
+    "simple": 0.1238
+   },
+   "dataset": {
+    "humaneval": 0.203,
+    "manual_curated_examples": 0.0015,
+    "mbpp": 0.7955
+   },
+   "rows": 5511,
+   "seconds_verified": {
+    "max": 0.78,
+    "n": 5265,
+    "p50": 0.51,
+    "p90": 0.54
+   }
+  },
+  "executed:skipped_or_xfail": {
+   "bug_family": {
+    "boundary": 0.2,
+    "comparison": 0.6,
+    "return": 0.2
+   },
+   "completion_chars": {
+    "max": 49,
+    "n": 5,
+    "p50": 42,
+    "p90": 49
+   },
+   "complexity": {
+    "complex": 0.2,
+    "simple": 0.8
+   },
+   "dataset": {
+    "mbpp": 1.0
+   },
+   "functions": 2,
+   "rows": 5,
+   "seconds": {
+    "max": 10.28,
+    "n": 5,
+    "p50": 0.51,
+    "p90": 0.53
+   },
+   "top_functions": [
+    [
+     "function:semantic:615403525147961cfb8365e1917cd2076f191ad6f1786cbd9d81c108a9638da2",
+     4
+    ],
+    [
+     "function:semantic:f86b8417c3a2f8c8b63cc83ca4c51f64f7c1ca1ab9e56e34418cbfb9cbae30d0",
+     1
+    ]
+   ]
+  },
+  "executed:timeout": {
+   "bug_family": {
+    "arithmetic": 0.3783,
+    "boolean": 0.0261,
+    "boundary": 0.3174,
+    "comparison": 0.0739,
+    "logical": 0.013,
+    "off_by_one": 0.1913
+   },
+   "completion_chars": {
+    "max": 230,
+    "n": 230,
+    "p50": 45.0,
+    "p90": 75
+   },
+   "complexity": {
+    "complex": 0.7391,
+    "moderate": 0.213,
+    "simple": 0.0478
+   },
+   "dataset": {
+    "humaneval": 0.0522,
+    "mbpp": 0.9478
+   },
+   "functions": 42,
+   "rows": 230,
+   "seconds": {
+    "max": 10.86,
+    "n": 230,
+    "p50": 10.5,
+    "p90": 10.53
+   },
+   "top_functions": [
+    [
+     "function:semantic:8d2bb8eb8bf50c530577af1c06b2dd37d8aef14ceac7925bd28bbe108fe45584",
+     32
+    ],
+    [
+     "function:semantic:e5d30255f9af62505b4f4ae98e4b39da987316fa6a85a8969c026de2835350c3",
+     14
+    ],
+    [
+     "function:semantic:c28ac1961af1f2283696a7fa1ac4090a257dd99a274573170caf7e287d41a278",
+     11
+    ],
+    [
+     "function:semantic:e61ffb1c6a5f2630579e59b0af63dc2190dfda8018b8f64525a981b325ab8677",
+     9
+    ],
+    [
+     "function:semantic:f319ccd92b0d1a3eefd37c99565aebc2334557ec929b6e324f8f9438216887cd",
+     9
+    ],
+    [
+     "function:semantic:0bfd415fa9a0fea642e9dc30b4fed2f248e9e77e321f2033afd01225b8cdc165",
+     9
+    ],
+    [
+     "function:semantic:f9a8be278e2d1694aac161781b4958254040eb490ca7c8a1399ac9af65657ad7",
+     8
+    ],
+    [
+     "function:semantic:2c35bb9e24cb9c2fd7af96b1640317d4589b60ed5b6be5646551ddb9424b3e92",
+     8
+    ]
+   ]
+  },
+  "target_not_defined_in_both_revisions": {
+   "bug_family": {
+    "arithmetic": 0.2727,
+    "boundary": 0.4545,
+    "comparison": 0.2727
+   },
+   "completion_chars": {
+    "max": 26,
+    "n": 11,
+    "p50": 23,
+    "p90": 26
+   },
+   "complexity": {
+    "moderate": 1.0
+   },
+   "dataset": {
+    "mbpp": 1.0
+   },
+   "functions": 1,
+   "rows": 11,
+   "seconds": {},
+   "top_functions": [
+    [
+     "function:semantic:cfb5ce9f902b227bdb0f8e4ac8045d42da6deb25c8e43132e1ffeefdcfc4c5bf",
+     11
+    ]
+   ]
+  }
+ },
+ "isolation": {
+  "split": "train only",
+  "v24_panel_projects_present": []
+ },
+ "output_type": "pytest_module_v1",
+ "provenance": {
+  "candidate_policy": "static_check in native_generated_tests_execute_wsl.py (hash above)",
+  "converted_candidates_sha256": "8bd87bd5bee599b66977163f7c52f3a588f4d12f724e472d3b0d5530a28f750e",
+  "executable_tree_sha256": "61c04da41875c50efb081c3234bc1bdc6e7d3f31619bd84663277368603e2121",
+  "git_commit": "52ab32b872162809d6fbd7096b110331bf899f51",
+  "protocol_v2_5_sha256": "c707d8ae9f8b6cce8ab50e87d417175c9e947687c64b4c3de4d67eebe96022f7",
+  "repeatability_note": "two runs of the same deterministic pipeline; repeatability, NOT independent validation",
+  "repeatability_runs_sha256": [
+   "3c0f71c937efd0bf37ee10fec151b3217ce1d9cb687ed485d538d5eef69c5ff2",
+   "3c0f71c937efd0bf37ee10fec151b3217ce1d9cb687ed485d538d5eef69c5ff2"
+  ],
+  "scripts_sha256": {
+   "harness/function_complexity.py": "83c6e3dfa21374555ce35454838d0fe16668f407f241d05417918d428ca63497",
+   "scripts/native_generated_tests_execute_wsl.py": "f1ef59dd80443e745d616fb95905ccf316144cd42dd211460cd4185baa64dcca",
+   "scripts/native_sandbox_inner.sh": "ff90215bb4aef3c864a0d3604ad0eb076de68c5a0754ac6053fed15b9ff42b18",
+   "scripts/v25_converted_corpus.py": "808bd7a5c76f96345cdc554050c5dfddf54cea46fff4f74a4aa35b2e07783221",
+   "scripts/v25_module_conversion.py": "2900192d5610b0b20838bf973710c3f7a6ce1ce0fe9ea7cae74936e5cb46a9be",
+   "scripts/v25_verify_converted_wsl.py": "86ba2398a88e5b6b676ae9af62ea2550f213aa275e05bfb73c00ee242a7cfdcc"
+  },
+  "source_examples_rebuild_note": "rebuilt with the training-commit loader, which itself opened the combined complexity manifest (historical; the original training did the same)",
+  "source_examples_rebuild_receipt_sha256": "fac747a1531e9acfeaf9572b9175dceaffacad08ff4f2516e775df4ba5422d71",
+  "source_examples_sha256": "30e9436f7aa16709b8710ba410d653666c3eb8e11d4bdf9de55979a6f4c02167",
+  "synthetic_environment": {
+   "distributions": [
+    "iniconfig-2.3.0.dist-info",
+    "packaging-26.3.dist-info",
+    "pluggy-1.6.0.dist-info",
+    "pygments-2.21.0.dist-info",
+    "pytest-9.1.1.dist-info"
+   ],
+   "executor_limits": {
+    "address_space_bytes": 4294967296,
+    "cpu_seconds": 60,
+    "fsize_bytes": 52428800,
+    "nofile": 256,
+    "nproc": 64,
+    "per_test_seconds": 10,
+    "wall_seconds": 90
+   },
+   "module_limits": {
+    "asserts": 100,
+    "target_calls": 200,
+    "tests": 25
+   },
+   "path_role": "pinned synthetic verification venv",
+   "pytest": "9.1.1",
+   "python": "3.11.15",
+   "site_packages_sha256": "8797c95d7a8ba9c67ca314c0d8670173178ef97c2ff6dca2f63f55b40136ae81",
+   "workers": 16
+  }
+ },
+ "rejections": {
+  "conversion": {
+   "candidate_policy:policy_refused": 94,
+   "no_test_defined": 7,
+   "target_not_defined_in_both_revisions": 11
+  },
+  "verification": {
+   "executed:skipped_or_xfail": 5,
+   "executed:timeout": 230,
+   "pending_native_environment:None": 123
+  }
+ },
+ "repository_examples": "converted with their public import header; verification pending native buggy/fixed environments",
+ "schema_version": "oneiros_v25_converted_corpus_stage1_r2_v1",
+ "slices": {
+  "bug_family": {
+   "arithmetic": {
+    "rows": 1599,
+    "verified": 1509,
+    "verified_canonical_tests": 847,
+    "verified_functions": 308
+   },
+   "boolean": {
+    "rows": 72,
+    "verified": 66,
+    "verified_canonical_tests": 61,
+    "verified_functions": 30
+   },
+   "boundary": {
+    "rows": 2229,
+    "verified": 2150,
+    "verified_canonical_tests": 927,
+    "verified_functions": 325
+   },
+   "comparison": {
+    "rows": 806,
+    "verified": 783,
+    "verified_canonical_tests": 588,
+    "verified_functions": 215
+   },
+   "data_validation": {
+    "rows": 4,
+    "verified": 4,
+    "verified_canonical_tests": 4,
+    "verified_functions": 3
+   },
+   "identity": {
+    "rows": 4,
+    "verified": 4,
+    "verified_canonical_tests": 4,
+    "verified_functions": 2
+   },
+   "index": {
+    "rows": 79,
+    "verified": 79,
+    "verified_canonical_tests": 68,
+    "verified_functions": 26
+   },
+   "list_operations": {
+    "rows": 2,
+    "verified": 2,
+    "verified_canonical_tests": 2,
+    "verified_functions": 1
+   },
+   "logical": {
+    "rows": 120,
+    "verified": 117,
+    "verified_canonical_tests": 94,
+    "verified_functions": 41
+   },
+   "membership": {
+    "rows": 36,
+    "verified": 36,
+    "verified_canonical_tests": 36,
+    "verified_functions": 15
+   },
+   "negate_removal": {
+    "rows": 41,
+    "verified": 41,
+    "verified_canonical_tests": 36,
+    "verified_functions": 14
+   },
+   "off_by_one": {
+    "rows": 437,
+    "verified": 393,
+    "verified_canonical_tests": 260,
+    "verified_functions": 96
+   },
+   "official_repository_pytest_reproduction": {
+    "rows": 51,
+    "verified": 0,
+    "verified_canonical_tests": 0,
+    "verified_functions": 0
+   },
+   "official_repository_swebench_reproduction": {
+    "rows": 150,
+    "verified": 0,
+    "verified_canonical_tests": 0,
+    "verified_functions": 0
+   },
+   "official_repository_unittest_reproduction": {
+    "rows": 23,
+    "verified": 0,
+    "verified_canonical_tests": 0,
+    "verified_functions": 0
+   },
+   "return": {
+    "rows": 71,
+    "verified": 70,
+    "verified_canonical_tests": 70,
+    "verified_functions": 31
+   },
+   "string": {
+    "rows": 9,
+    "verified": 9,
+    "verified_canonical_tests": 9,
+    "verified_functions": 3
+   },
+   "string_manipulation": {
+    "rows": 2,
+    "verified": 2,
+    "verified_canonical_tests": 2,
+    "verified_functions": 1
+   }
+  },
+  "complexity": {
+   "complex": {
+    "rows": 3265,
+    "verified": 3094,
+    "verified_canonical_tests": 547,
+    "verified_functions": 161
+   },
+   "moderate": {
+    "rows": 1564,
+    "verified": 1504,
+    "verified_canonical_tests": 633,
+    "verified_functions": 207
+   },
+   "repository_unscored": {
+    "rows": 224,
+    "verified": 0,
+    "verified_canonical_tests": 0,
+    "verified_functions": 0
+   },
+   "simple": {
+    "rows": 682,
+    "verified": 667,
+    "verified_canonical_tests": 380,
+    "verified_functions": 138
+   }
+  },
+  "dataset": {
+   "BugsInPy": {
+    "rows": 74,
+    "verified": 0,
+    "verified_canonical_tests": 0,
+    "verified_functions": 0
+   },
+   "SWE-bench Verified": {
+    "rows": 150,
+    "verified": 0,
+    "verified_canonical_tests": 0,
+    "verified_functions": 0
+   },
+   "humaneval": {
+    "rows": 1119,
+    "verified": 1107,
+    "verified_canonical_tests": 418,
+    "verified_functions": 98
+   },
+   "manual_curated_examples": {
+    "rows": 8,
+    "verified": 8,
+    "verified_canonical_tests": 8,
+    "verified_functions": 5
+   },
+   "mbpp": {
+    "rows": 4384,
+    "verified": 4150,
+    "verified_canonical_tests": 1132,
+    "verified_functions": 402
+   }
+  },
+  "execution_mode": {
+   "function_assertion": {
+    "rows": 5511,
+    "verified": 5265,
+    "verified_canonical_tests": 1558,
+    "verified_functions": 505
+   },
+   "repository_pytest_fragment": {
+    "rows": 201,
+    "verified": 0,
+    "verified_canonical_tests": 0,
+    "verified_functions": 0
+   },
+   "repository_unittest_fragment": {
+    "rows": 23,
+    "verified": 0,
+    "verified_canonical_tests": 0,
+    "verified_functions": 0
+   }
+  }
+ },
+ "supersedes": {
+  "receipt": "results/sft_root_cause_v25_converted_corpus_stage1.json",
+  "sha256": "bf3f98286db3aa80ef494723b80949f2720c38e6cb5f1514e19fb1f12b23b924",
+  "why": "its validation_or_sealed_access=false claim was incorrect at the metadata level (the combined complexity manifest was opened); duplicate accounting and provenance were incomplete"
+ }
+}

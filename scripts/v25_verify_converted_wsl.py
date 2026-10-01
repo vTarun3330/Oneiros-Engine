@@ -52,10 +52,10 @@ def view_for(row: dict) -> dict:
 
 def verify(row: dict) -> dict:
     out = {"index": row["index"], "module_sha256": row["conversion"].get("module_sha256")}
-    if row["execution_mode"] != "function_assertion":
-        return {**out, "status": "pending_native_environment", "accepted": False}
     if not row["conversion"]["accepted"]:
         return {**out, "status": "conversion_rejected", "accepted": False}
+    if row["execution_mode"] != "function_assertion":
+        return {**out, "status": "pending_native_environment", "accepted": False}
     scratch = Path(tempfile.mkdtemp(prefix="oneiros_v25v_"))
     try:
         outcome = ex.execute_candidate(view_for(row), row["conversion"]["module"], scratch)

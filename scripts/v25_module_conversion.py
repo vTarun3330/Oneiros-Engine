@@ -145,8 +145,12 @@ def _defines_test(tree: ast.AST) -> bool:
     for node in tree.body:
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and                 node.name.startswith("test"):
             return True
-        if isinstance(node, ast.ClassDef) and (node.name.startswith("Test") or any(
-                isinstance(b, ast.Attribute) and b.attr == "TestCase" for b in node.bases)):
+        # a class with at least one test* method (pytest Test* classes and unittest/Django
+        # TestCase subclasses imported by name or by attribute alike); collection itself is
+        # proven later by execution
+        if isinstance(node, ast.ClassDef) and any(
+                isinstance(m, (ast.FunctionDef, ast.AsyncFunctionDef))
+                and m.name.startswith("test") for m in node.body):
             return True
     return False
 

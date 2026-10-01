@@ -1,0 +1,114 @@
+{
+ "inputs": {
+  "converted_candidates_sha256": "8bd87bd5bee599b66977163f7c52f3a588f4d12f724e472d3b0d5530a28f750e",
+  "repeatability_run_sha256": "3c0f71c937efd0bf37ee10fec151b3217ce1d9cb687ed485d538d5eef69c5ff2"
+ },
+ "mixture_view": {
+  "addendum_minimum_repository_tests": 150,
+  "max_synthetic_rows_given_current_repository": 0,
+  "replay_rule": "synthetic replay <= 1 per verified repository example (addendum 1)",
+  "training_gate": "FAILS until >= 150 canonical repository tests from >= 8 repositories and >= 60 lineages are verified"
+ },
+ "repository": {
+  "status": "pending native environments (Phases 6-7)",
+  "verified_rows": 0
+ },
+ "rules": {
+  "per_function_canonical_tests": 3,
+  "repetition": "none",
+  "selection": "greedy mutant set cover per function; ties by mutants killed then canonical hash",
+  "synthetic_source_group": "synthetic_mutation_functions"
+ },
+ "schema_version": "oneiros_v25_selection_view_v1",
+ "script_sha256": "bdf476ec441fee7d2b7a8ec8393c2094cbd4b72acd2eae14057e921095af9c47",
+ "selection_file_sha256": "f3b5d1edab83e6d299960ee90198ee2835f9fb25073b38fc555afcc44a5dba66",
+ "synthetic": {
+  "complexity_note": "small-function AST tiers; not repository-scale",
+  "distribution_function_weighted": {
+   "complexity": {
+    "complex": 161,
+    "moderate": 207,
+    "simple": 137
+   },
+   "dataset": {
+    "humaneval": 98,
+    "manual_curated_examples": 5,
+    "mbpp": 402
+   }
+  },
+  "distribution_row_weighted": {
+   "bug_family": {
+    "arithmetic": 1509,
+    "boolean": 66,
+    "boundary": 2150,
+    "comparison": 783,
+    "data_validation": 4,
+    "identity": 4,
+    "index": 79,
+    "list_operations": 2,
+    "logical": 117,
+    "membership": 36,
+    "negate_removal": 41,
+    "off_by_one": 393,
+    "return": 70,
+    "string": 9,
+    "string_manipulation": 2
+   },
+   "complexity": {
+    "complex": 3094,
+    "moderate": 1504,
+    "simple": 667
+   },
+   "dataset": {
+    "humaneval": 1107,
+    "manual_curated_examples": 8,
+    "mbpp": 4150
+   }
+  },
+  "distribution_unique_test_weighted": {
+   "complexity": {
+    "complex": 240,
+    "moderate": 237,
+    "simple": 143
+   },
+   "dataset": {
+    "humaneval": 142,
+    "manual_curated_examples": 5,
+    "mbpp": 473
+   },
+   "family_share": {
+    "arithmetic": 0.2894,
+    "boolean": 0.0335,
+    "boundary": 0.3086,
+    "comparison": 0.1927,
+    "data_validation": 0.0048,
+    "identity": 0.0009,
+    "index": 0.0145,
+    "list_operations": 0.0016,
+    "logical": 0.0301,
+    "membership": 0.0148,
+    "negate_removal": 0.0135,
+    "off_by_one": 0.058,
+    "return": 0.0341,
+    "string": 0.0019,
+    "string_manipulation": 0.0016
+   }
+  },
+  "family_cap": {
+   "cap": 0.35,
+   "over_cap": {}
+  },
+  "functions": 505,
+  "mutants_covered_by_selection": 2105,
+  "mutants_total": 2110,
+  "near_duplicate_clusters_selected": 548,
+  "selected_per_function": {
+   "1": 405,
+   "2": 85,
+   "3": 15
+  },
+  "selected_unique_tests": 620,
+  "unique_canonical_tests": 1558,
+  "verified_rows": 5265
+ }
+}
