@@ -1,0 +1,548 @@
+{
+ "adapter": "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter",
+ "adapter_manifest_sha256": "82f24fed40316249f307fc6b835f2d1fa9d1b7ada61e72e9892fb397e377f2a0",
+ "classification": "materially_mismatched",
+ "findings": [
+  "5,511/6,889 effective examples (80.0%) are a single bare assert statement (median 21 tokens); the target name is undefined in 99.8% of them (it relied on the function being in scope)",
+  "0/6,889 effective examples import pytest; 0/6,889 import the target",
+  "only 605/6,889 effective examples (8.8%) are self-contained modules (all repository fragments)",
+  "30/201 repository pytest fragments use pytest without importing it; 22/23 unittest fragments use unittest without importing it",
+  "training prompts requested `assert_statement` (synthetic) or `pytest_fragment` (repository); the v2.4 prompt also says `pytest_fragment` but execution requires a whole importable module"
+ ],
+ "method": "exact rebuild with the training-commit code (git archive 816bbc2), train split only, audit hook hard-blocking every non-train corpus file; rebuilt twice byte-identically",
+ "rebuild": {
+  "corpus_files_opened": [
+   "v4_1_research_hardened_candidate/development_view/complexity_manifest.json",
+   "v4_1_research_hardened_candidate/development_view/manifest.json",
+   "v4_1_research_hardened_candidate/development_view/train.records.json",
+   "v4_1_research_hardened_candidate/development_view/training_exclusions.json",
+   "v4_1_research_hardened_candidate/manifest.json"
+  ],
+  "effective_repository": 1378,
+  "effective_total": 6889,
+  "exact_reproduction": true,
+  "examples_sha256": "30e9436f7aa16709b8710ba410d653666c3eb8e11d4bdf9de55979a6f4c02167",
+  "expected_from_sft_metadata": {
+   "effective_repository": 1378,
+   "effective_total": 6889,
+   "unique_repository": 224,
+   "unique_synthetic": 5511
+  },
+  "records_without_winners": 0,
+  "selected_pairs": 2400,
+  "unique_repository": 224,
+  "unique_synthetic": 5511
+ },
+ "schema_version": "oneiros_sft_training_shape_audit_v1",
+ "scripts_sha256": {
+  "scripts/sft_training_shape_audit.py": "e3e5bae120bc0f603a9dee24c09ae2382747c58def865a15ef9df6fd7f04a126",
+  "scripts/sft_training_shape_rebuild.py": "b610f77fe5b01a15114effc45b85d604c332070021959c043e89047088851604"
+ },
+ "shape_report": {
+  "ALL": {
+   "assertion_only": "5511/5735 unique; 5511/6889 effective (80.0%)",
+   "effective": 6889,
+   "exact_duplicate_completions": 3942,
+   "fence": "1/5735 unique; 8/6889 effective (0.1%)",
+   "imports": "142/5735 unique; 722/6889 effective (10.5%)",
+   "imports_pytest": "0/5735 unique; 0/6889 effective (0.0%)",
+   "imports_target": "0/5735 unique; 0/6889 effective (0.0%)",
+   "near_duplicate_completions": 3943,
+   "parses": "5735/5735 unique; 6889/6889 effective (100.0%)",
+   "prose_examples": 8,
+   "pytest_used_but_not_imported": 30,
+   "self_contained_module": "119/5735 unique; 605/6889 effective (8.8%)",
+   "target_undefined": "5500/5735 unique; 5500/6889 effective (79.8%)",
+   "test_class": "41/5735 unique; 293/6889 effective (4.3%)",
+   "test_function": "217/5735 unique; 1350/6889 effective (19.6%)",
+   "tokens": {
+    "max": 984,
+    "p50": 22,
+    "p90": 62
+   },
+   "top_undefined_names": [
+    [
+     "lcs_of_three",
+     80
+    ],
+    [
+     "generate_matrix",
+     78
+    ],
+    [
+     "get_maxgold",
+     75
+    ],
+    [
+     "sort_tuple",
+     64
+    ],
+    [
+     "no_of_subsequences",
+     62
+    ],
+    [
+     "max_sum",
+     56
+    ]
+   ],
+   "unique": 5735,
+   "uses_pytest": "30/5735 unique; 240/6889 effective (3.5%)"
+  },
+  "complexity:None": {
+   "assertion_only": "5511/5735 unique; 5511/6889 effective (80.0%)",
+   "effective": 6889,
+   "exact_duplicate_completions": 3942,
+   "fence": "1/5735 unique; 8/6889 effective (0.1%)",
+   "imports": "142/5735 unique; 722/6889 effective (10.5%)",
+   "imports_pytest": "0/5735 unique; 0/6889 effective (0.0%)",
+   "imports_target": "0/5735 unique; 0/6889 effective (0.0%)",
+   "near_duplicate_completions": 3943,
+   "parses": "5735/5735 unique; 6889/6889 effective (100.0%)",
+   "prose_examples": 8,
+   "pytest_used_but_not_imported": 30,
+   "self_contained_module": "119/5735 unique; 605/6889 effective (8.8%)",
+   "target_undefined": "5500/5735 unique; 5500/6889 effective (79.8%)",
+   "test_class": "41/5735 unique; 293/6889 effective (4.3%)",
+   "test_function": "217/5735 unique; 1350/6889 effective (19.6%)",
+   "tokens": {
+    "max": 984,
+    "p50": 22,
+    "p90": 62
+   },
+   "top_undefined_names": [
+    [
+     "lcs_of_three",
+     80
+    ],
+    [
+     "generate_matrix",
+     78
+    ],
+    [
+     "get_maxgold",
+     75
+    ],
+    [
+     "sort_tuple",
+     64
+    ],
+    [
+     "no_of_subsequences",
+     62
+    ],
+    [
+     "max_sum",
+     56
+    ]
+   ],
+   "unique": 5735,
+   "uses_pytest": "30/5735 unique; 240/6889 effective (3.5%)"
+  },
+  "dataset:BugsInPy": {
+   "assertion_only": "0/74 unique; 0/592 effective (0.0%)",
+   "effective": 592,
+   "exact_duplicate_completions": 1,
+   "fence": "0/74 unique; 0/592 effective (0.0%)",
+   "imports": "0/74 unique; 0/592 effective (0.0%)",
+   "imports_pytest": "0/74 unique; 0/592 effective (0.0%)",
+   "imports_target": "0/74 unique; 0/592 effective (0.0%)",
+   "near_duplicate_completions": 1,
+   "parses": "74/74 unique; 592/592 effective (100.0%)",
+   "prose_examples": 1,
+   "pytest_used_but_not_imported": 25,
+   "self_contained_module": "0/74 unique; 0/592 effective (0.0%)",
+   "target_undefined": "0/74 unique; 0/592 effective (0.0%)",
+   "test_class": "32/74 unique; 256/592 effective (43.2%)",
+   "test_function": "74/74 unique; 592/592 effective (100.0%)",
+   "tokens": {
+    "max": 686,
+    "p50": 129,
+    "p90": 463
+   },
+   "top_undefined_names": [
+    [
+     "pytest",
+     25
+    ],
+    [
+     "unittest",
+     24
+    ],
+    [
+     "Command",
+     18
+    ],
+    [
+     "plt",
+     12
+    ],
+    [
+     "get_new_command",
+     12
+    ],
+    [
+     "json",
+     9
+    ]
+   ],
+   "unique": 74,
+   "uses_pytest": "25/74 unique; 200/592 effective (33.8%)"
+  },
+  "dataset:SWE-bench Verified": {
+   "assertion_only": "0/150 unique; 0/786 effective (0.0%)",
+   "effective": 786,
+   "exact_duplicate_completions": 0,
+   "fence": "1/150 unique; 8/786 effective (1.0%)",
+   "imports": "142/150 unique; 722/786 effective (91.9%)",
+   "imports_pytest": "0/150 unique; 0/786 effective (0.0%)",
+   "imports_target": "0/150 unique; 0/786 effective (0.0%)",
+   "near_duplicate_completions": 0,
+   "parses": "150/150 unique; 786/786 effective (100.0%)",
+   "prose_examples": 7,
+   "pytest_used_but_not_imported": 5,
+   "self_contained_module": "119/150 unique; 605/786 effective (77.0%)",
+   "target_undefined": "0/150 unique; 0/786 effective (0.0%)",
+   "test_class": "9/150 unique; 37/786 effective (4.7%)",
+   "test_function": "143/150 unique; 758/786 effective (96.4%)",
+   "tokens": {
+    "max": 984,
+    "p50": 335,
+    "p90": 735
+   },
+   "top_undefined_names": [
+    [
+     "pytest",
+     5
+    ],
+    [
+     "x",
+     4
+    ],
+    [
+     "plt",
+     3
+    ],
+    [
+     "Suit",
+     2
+    ],
+    [
+     "y",
+     2
+    ],
+    [
+     "assert_allclose",
+     1
+    ]
+   ],
+   "unique": 150,
+   "uses_pytest": "5/150 unique; 40/786 effective (5.1%)"
+  },
+  "dataset:humaneval": {
+   "assertion_only": "1119/1119 unique; 1119/1119 effective (100.0%)",
+   "effective": 1119,
+   "exact_duplicate_completions": 701,
+   "fence": "0/1119 unique; 0/1119 effective (0.0%)",
+   "imports": "0/1119 unique; 0/1119 effective (0.0%)",
+   "imports_pytest": "0/1119 unique; 0/1119 effective (0.0%)",
+   "imports_target": "0/1119 unique; 0/1119 effective (0.0%)",
+   "near_duplicate_completions": 701,
+   "parses": "1119/1119 unique; 1119/1119 effective (100.0%)",
+   "prose_examples": 0,
+   "pytest_used_but_not_imported": 0,
+   "self_contained_module": "0/1119 unique; 0/1119 effective (0.0%)",
+   "target_undefined": "1119/1119 unique; 1119/1119 effective (100.0%)",
+   "test_class": "0/1119 unique; 0/1119 effective (0.0%)",
+   "test_function": "0/1119 unique; 0/1119 effective (0.0%)",
+   "tokens": {
+    "max": 135,
+    "p50": 19,
+    "p90": 44
+   },
+   "top_undefined_names": [
+    [
+     "minPath",
+     48
+    ],
+    [
+     "fix_spaces",
+     40
+    ],
+    [
+     "tri",
+     36
+    ],
+    [
+     "even_odd_palindrome",
+     35
+    ],
+    [
+     "triangle_area",
+     34
+    ],
+    [
+     "f",
+     33
+    ]
+   ],
+   "unique": 1119,
+   "uses_pytest": "0/1119 unique; 0/1119 effective (0.0%)"
+  },
+  "dataset:manual_curated_examples": {
+   "assertion_only": "8/8 unique; 8/8 effective (100.0%)",
+   "effective": 8,
+   "exact_duplicate_completions": 0,
+   "fence": "0/8 unique; 0/8 effective (0.0%)",
+   "imports": "0/8 unique; 0/8 effective (0.0%)",
+   "imports_pytest": "0/8 unique; 0/8 effective (0.0%)",
+   "imports_target": "0/8 unique; 0/8 effective (0.0%)",
+   "near_duplicate_completions": 1,
+   "parses": "8/8 unique; 8/8 effective (100.0%)",
+   "prose_examples": 0,
+   "pytest_used_but_not_imported": 0,
+   "self_contained_module": "0/8 unique; 0/8 effective (0.0%)",
+   "target_undefined": "8/8 unique; 8/8 effective (100.0%)",
+   "test_class": "0/8 unique; 0/8 effective (0.0%)",
+   "test_function": "0/8 unique; 0/8 effective (0.0%)",
+   "tokens": {
+    "max": 16,
+    "p50": 11,
+    "p90": 13
+   },
+   "top_undefined_names": [
+    [
+     "parse_query_param",
+     2
+    ],
+    [
+     "find_max",
+     2
+    ],
+    [
+     "match_command",
+     2
+    ],
+    [
+     "safe_int",
+     1
+    ],
+    [
+     "parse_duration",
+     1
+    ]
+   ],
+   "unique": 8,
+   "uses_pytest": "0/8 unique; 0/8 effective (0.0%)"
+  },
+  "dataset:mbpp": {
+   "assertion_only": "4384/4384 unique; 4384/4384 effective (100.0%)",
+   "effective": 4384,
+   "exact_duplicate_completions": 3240,
+   "fence": "0/4384 unique; 0/4384 effective (0.0%)",
+   "imports": "0/4384 unique; 0/4384 effective (0.0%)",
+   "imports_pytest": "0/4384 unique; 0/4384 effective (0.0%)",
+   "imports_target": "0/4384 unique; 0/4384 effective (0.0%)",
+   "near_duplicate_completions": 3240,
+   "parses": "4384/4384 unique; 4384/4384 effective (100.0%)",
+   "prose_examples": 0,
+   "pytest_used_but_not_imported": 0,
+   "self_contained_module": "0/4384 unique; 0/4384 effective (0.0%)",
+   "target_undefined": "4373/4384 unique; 4373/4384 effective (99.7%)",
+   "test_class": "0/4384 unique; 0/4384 effective (0.0%)",
+   "test_function": "0/4384 unique; 0/4384 effective (0.0%)",
+   "tokens": {
+    "max": 194,
+    "p50": 21,
+    "p90": 49
+   },
+   "top_undefined_names": [
+    [
+     "lcs_of_three",
+     80
+    ],
+    [
+     "generate_matrix",
+     78
+    ],
+    [
+     "get_maxgold",
+     75
+    ],
+    [
+     "sort_tuple",
+     64
+    ],
+    [
+     "no_of_subsequences",
+     62
+    ],
+    [
+     "max_sum",
+     56
+    ]
+   ],
+   "unique": 4384,
+   "uses_pytest": "0/4384 unique; 0/4384 effective (0.0%)"
+  },
+  "mode:function_assertion": {
+   "assertion_only": "5511/5511 unique; 5511/5511 effective (100.0%)",
+   "effective": 5511,
+   "exact_duplicate_completions": 3941,
+   "fence": "0/5511 unique; 0/5511 effective (0.0%)",
+   "imports": "0/5511 unique; 0/5511 effective (0.0%)",
+   "imports_pytest": "0/5511 unique; 0/5511 effective (0.0%)",
+   "imports_target": "0/5511 unique; 0/5511 effective (0.0%)",
+   "near_duplicate_completions": 3942,
+   "parses": "5511/5511 unique; 5511/5511 effective (100.0%)",
+   "prose_examples": 0,
+   "pytest_used_but_not_imported": 0,
+   "self_contained_module": "0/5511 unique; 0/5511 effective (0.0%)",
+   "target_undefined": "5500/5511 unique; 5500/5511 effective (99.8%)",
+   "test_class": "0/5511 unique; 0/5511 effective (0.0%)",
+   "test_function": "0/5511 unique; 0/5511 effective (0.0%)",
+   "tokens": {
+    "max": 194,
+    "p50": 21,
+    "p90": 48
+   },
+   "top_undefined_names": [
+    [
+     "lcs_of_three",
+     80
+    ],
+    [
+     "generate_matrix",
+     78
+    ],
+    [
+     "get_maxgold",
+     75
+    ],
+    [
+     "sort_tuple",
+     64
+    ],
+    [
+     "no_of_subsequences",
+     62
+    ],
+    [
+     "max_sum",
+     56
+    ]
+   ],
+   "unique": 5511,
+   "uses_pytest": "0/5511 unique; 0/5511 effective (0.0%)"
+  },
+  "mode:repository_pytest_fragment": {
+   "assertion_only": "0/201 unique; 0/1194 effective (0.0%)",
+   "effective": 1194,
+   "exact_duplicate_completions": 1,
+   "fence": "1/201 unique; 8/1194 effective (0.7%)",
+   "imports": "142/201 unique; 722/1194 effective (60.5%)",
+   "imports_pytest": "0/201 unique; 0/1194 effective (0.0%)",
+   "imports_target": "0/201 unique; 0/1194 effective (0.0%)",
+   "near_duplicate_completions": 1,
+   "parses": "201/201 unique; 1194/1194 effective (100.0%)",
+   "prose_examples": 8,
+   "pytest_used_but_not_imported": 30,
+   "self_contained_module": "119/201 unique; 605/1194 effective (50.7%)",
+   "target_undefined": "0/201 unique; 0/1194 effective (0.0%)",
+   "test_class": "19/201 unique; 117/1194 effective (9.8%)",
+   "test_function": "194/201 unique; 1166/1194 effective (97.7%)",
+   "tokens": {
+    "max": 984,
+    "p50": 257,
+    "p90": 636
+   },
+   "top_undefined_names": [
+    [
+     "pytest",
+     30
+    ],
+    [
+     "Command",
+     18
+    ],
+    [
+     "plt",
+     15
+    ],
+    [
+     "get_new_command",
+     12
+    ],
+    [
+     "np",
+     9
+    ],
+    [
+     "match",
+     7
+    ]
+   ],
+   "unique": 201,
+   "uses_pytest": "30/201 unique; 240/1194 effective (20.1%)"
+  },
+  "mode:repository_unittest_fragment": {
+   "assertion_only": "0/23 unique; 0/184 effective (0.0%)",
+   "effective": 184,
+   "exact_duplicate_completions": 0,
+   "fence": "0/23 unique; 0/184 effective (0.0%)",
+   "imports": "0/23 unique; 0/184 effective (0.0%)",
+   "imports_pytest": "0/23 unique; 0/184 effective (0.0%)",
+   "imports_target": "0/23 unique; 0/184 effective (0.0%)",
+   "near_duplicate_completions": 0,
+   "parses": "23/23 unique; 184/184 effective (100.0%)",
+   "prose_examples": 0,
+   "pytest_used_but_not_imported": 0,
+   "self_contained_module": "0/23 unique; 0/184 effective (0.0%)",
+   "target_undefined": "0/23 unique; 0/184 effective (0.0%)",
+   "test_class": "22/23 unique; 176/184 effective (95.7%)",
+   "test_function": "23/23 unique; 184/184 effective (100.0%)",
+   "tokens": {
+    "max": 686,
+    "p50": 226,
+    "p90": 508
+   },
+   "top_undefined_names": [
+    [
+     "unittest",
+     22
+    ],
+    [
+     "js_to_json",
+     7
+    ],
+    [
+     "json",
+     7
+    ],
+    [
+     "urljoin",
+     2
+    ],
+    [
+     "parse_dfxp_time_expr",
+     2
+    ],
+    [
+     "unescapeHTML",
+     2
+    ]
+   ],
+   "unique": 23,
+   "uses_pytest": "0/23 unique; 0/184 effective (0.0%)"
+  }
+ },
+ "training_identity": {
+  "completion_format_in_loss": "dp.completion.strip() + eos_token (no wrapper)",
+  "corpus_id": "oneiros-corpus-v4.1-research-hardened-candidate",
+  "dataset_fingerprint_sha256": "62e4c23fb425a04f9aeabb7eecd0d00fcf780c3f0bc2c24a8df56521159d56f0",
+  "sft_run_config_sha256": "d2ddbab90345306c8025d6c1ee35314ca2ee9dd29291f0111f08aa0c22c24110",
+  "training_git_commit": "816bbc2218cb878efc31007f8669b959b15a4a0c"
+ },
+ "v24_contract": "one self-contained pytest-compatible module: required imports (pytest, the target), no prose, no Markdown fences, target reachable",
+ "validation_or_sealed_access": false
+}
