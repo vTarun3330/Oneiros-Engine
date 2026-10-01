@@ -1,0 +1,133 @@
+{
+ "access_audit": {
+  "opened": [
+   "data/corpus/v4_1_research_hardened_candidate/development_view/manifest.json",
+   "data/corpus/v4_1_research_hardened_candidate/development_view/train.records.json",
+   "data/corpus/v4_1_research_hardened_candidate/development_view/training_exclusions.json",
+   "data/corpus/v4_1_research_hardened_candidate/manifest.json"
+  ],
+  "passed": true
+ },
+ "by_project": {
+  "ansible": {
+   "unrecoverable:forbidden_module_used_by_test": 1,
+   "unrecoverable:forbidden_name_or_attribute_used": 1
+  },
+  "astropy": {
+   "unrecoverable:test_support_import_required": 1
+  },
+  "django": {
+   "conversion:no_test_defined": 7,
+   "recoverable:unused_forbidden_import_removed": 6,
+   "unrecoverable:forbidden_module_used_by_test": 6,
+   "unrecoverable:forbidden_name_or_attribute_used": 1,
+   "unrecoverable:test_support_import_required": 39
+  },
+  "matplotlib": {
+   "recoverable:unused_forbidden_import_removed": 9,
+   "unrecoverable:forbidden_module_used_by_test": 1
+  },
+  "pylint": {
+   "unrecoverable:forbidden_module_used_by_test": 1
+  },
+  "sanic": {
+   "recoverable:unused_forbidden_import_removed": 1
+  },
+  "sympy": {
+   "recoverable:unused_forbidden_import_removed": 2
+  },
+  "thefuck": {
+   "unrecoverable:test_support_import_required": 2
+  },
+  "tornado": {
+   "recoverable:unused_forbidden_import_removed": 1
+  },
+  "youtube-dl": {
+   "recoverable:unused_forbidden_import_removed": 21,
+   "unrecoverable:test_support_import_required": 1
+  }
+ },
+ "categories": {
+  "conversion:no_test_defined": 7,
+  "recoverable:unused_forbidden_import_removed": 40,
+  "unrecoverable:forbidden_module_used_by_test": 9,
+  "unrecoverable:forbidden_name_or_attribute_used": 2,
+  "unrecoverable:test_support_import_required": 43
+ },
+ "never": [
+  "global os/sys allowance",
+  "test-support imports",
+  "assertion or expected value edits",
+  "sandbox weakening",
+  "filesystem/network/process access"
+ ],
+ "recoverable_before_execution": 40,
+ "recoverable_indices": [
+  5520,
+  5521,
+  5523,
+  5527,
+  5528,
+  5529,
+  5531,
+  5532,
+  5535,
+  5544,
+  5548,
+  5554,
+  5576,
+  5600,
+  5625,
+  5647,
+  5677,
+  5685,
+  5712,
+  5713,
+  5714,
+  5715,
+  5716,
+  5717,
+  5718,
+  5719,
+  5720,
+  5722,
+  5723,
+  5724,
+  5725,
+  5726,
+  5727,
+  5728,
+  5729,
+  5730,
+  5731,
+  5732,
+  5733,
+  5734
+ ],
+ "rejected_repository_rows": 101,
+ "rows_file": {
+  "path": "results/sft_root_cause/v25_policy_recovery/policy_recovery_rows.jsonl",
+  "sha256": "54499c631e5f08ea4714c2c6c24938fbb4a20be326e1044868f5ca88fc79fca1"
+ },
+ "rule": "oneiros_v25_unused_forbidden_import_removal_v1",
+ "schema_version": "oneiros_v25_policy_recovery_audit_v1",
+ "script_sha256": "cf1387fc3e67fc18d318503f5f7b740c2390c6941f22166ff9c479f659f9b60c",
+ "status": "AUDIT: recovered rows are candidates only; they still need native buggy/fixed verification twice",
+ "violations": {
+  "attribute:__file__": 1,
+  "import:builtins": 1,
+  "import:importlib": 5,
+  "import:inspect": 2,
+  "import:io": 40,
+  "import:os": 63,
+  "import:pathlib": 15,
+  "import:pickle": 18,
+  "import:shutil": 8,
+  "import:signal": 3,
+  "import:socket": 1,
+  "import:subprocess": 5,
+  "import:sys": 37,
+  "import:tempfile": 13,
+  "name:open": 1
+ }
+}
