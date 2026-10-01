@@ -107,6 +107,32 @@ def build_targets(out: Path) -> int:
     return 0
 
 
+def split_pr_diff(diff: str) -> tuple:
+    """SWE-bench's split of a pull-request diff: non-test files (gold patch) and test files
+    (test patch), without git's ``index`` lines. Used only as a fallback source whose result
+    is accepted when BOTH hashes equal the train record's."""
+    diff = re.sub(r"^index [0-9a-f]+\.\.[0-9a-f]+( \d+)?\n", "", diff, flags=re.M)
+    parts = [p for p in re.split(r"(?=^diff --git )", diff, flags=re.M)
+             if p.startswith("diff --git")]
+
+    def is_test(part: str) -> bool:
+        return re.search(r"(^|/)(tests?|testing)/|test_[^/ ]*\.py|_test\.py",
+                         part.split("\n", 1)[0]) is not None
+    return ("".join(p for p in parts if not is_test(p)),
+            "".join(p for p in parts if is_test(p)))
+
+
+def pr_diff_patches(task: str) -> tuple | None:
+    repo, number = task.rsplit("-", 1)
+    owner, name = repo.split("__")
+    try:
+        with urllib.request.urlopen(f"https://github.com/{owner}/{name}/pull/{number}.diff",
+                                    timeout=60) as resp:
+            return split_pr_diff(resp.read().decode("utf-8"))
+    except Exception:                                      # noqa: BLE001 - recorded upstream
+        return None
+
+
 def fetch_patches(out: Path, only_canary: bool) -> int:
     rows = [json.loads(l) for l in (out / "targets.jsonl").read_text(encoding="utf-8")
             .splitlines()]
@@ -119,6 +145,14 @@ def fetch_patches(out: Path, only_canary: bool) -> int:
         dest = cache / f"{r['task']}.json"
         if dest.exists():
             status[r["task"]] = "cached"
+            continue
+        pr = pr_diff_patches(r["task"])
+        if pr is not None and sha_text(pr[0]) == r["gold_patch_sha256"] and \
+                sha_text(pr[1]) == r["test_patch_sha256"]:
+            dest.write_bytes(json.dumps({"task": r["task"], "patch": pr[0], "test_patch": pr[1],
+                                         "source": "github_pull_request_diff"},
+                                        sort_keys=True).encode("utf-8"))
+            status[r["task"]] = "fetched_and_hash_verified"
             continue
         where = urllib.parse.quote(f"\"instance_id\"='{r['task']}'")
         try:

@@ -74,6 +74,7 @@ def project(tmp_path):
         (repo / rel).write_text(text)
     (repo / "harness").mkdir()
     shutil.copy(ROOT / "harness/native_generated_test_prompt.py", repo / "harness")
+    shutil.copy(ROOT / "harness/native_generated_test_prompt_v25.py", repo / "harness")
     (repo / "results").mkdir()
     _job_file(repo / "results/job.json")
     (repo / ".gitignore").write_text("results/sft_root_cause/\n")

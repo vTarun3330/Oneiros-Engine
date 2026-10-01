@@ -227,7 +227,11 @@ def collect_identity(condition: str, arm: str, job_path: Path, job: Mapping[str,
         "backend": backend, "condition": condition, "arm": arm,
         "source_commit": _git("rev-parse", "HEAD"), "source_tree": source_tree_identity(),
         "generator_sha256": canonical_sha256(Path(__file__)),
-        "prompt_builder_sha256": canonical_sha256(ROOT / "harness/native_generated_test_prompt.py"),
+        # v2.5: the pytest_module_v1 builder AND the v2.4 permitted-view code it reuses
+        "prompt_builder_sha256": {
+            "v25_pytest_module_v1": canonical_sha256(
+                ROOT / "harness/native_generated_test_prompt_v25.py"),
+            "permitted_view": canonical_sha256(ROOT / "harness/native_generated_test_prompt.py")},
         "protocol_sha256": {p: sha256_file(ROOT / p) for p in PROTOCOL_FILES},
         "job_file_sha256": sha256_file(job_path), "job_sha256": job["job_sha256"],
         "model": model_identity(),

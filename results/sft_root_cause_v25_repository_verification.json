@@ -1,0 +1,106 @@
+{
+ "addendum1_minimum": {
+  "canonical_repository_tests": 150,
+  "lineages": 60,
+  "repositories": 8
+ },
+ "environment_runs_note": "thefuck run2/run3 and swebench run1/run2 identical on category, lock, views, module hashes and qualification",
+ "environment_runs_sha256": {
+  "swebench": [
+   "7fd7ba13575caad7736388249a94b8caa70845e655aa120f6b76796e57773c84",
+   "a6a8ce2146a7ce0b0f1b8be85c30c230fe2857c0db02067148611e8e4a6bb7be"
+  ],
+  "thefuck": [
+   "16aa1ff79662093ff40115f7679e023be7da399c180adf0e9cf59a082ee52465",
+   "8a23728168a25dbf985f81c5e2dc2dadadd0f675526060522df3a7f91f99706e"
+  ]
+ },
+ "environments": {
+  "django": {
+   "not_stable_3_of_3": 1,
+   "patch_unavailable": 10,
+   "qualified": 16,
+   "runner_error": 1,
+   "runner_incompatible": 11,
+   "view_attestation_failed": 2
+  },
+  "sympy": {
+   "patch_unavailable": 1,
+   "qualified": 13,
+   "runner_incompatible": 6,
+   "view_attestation_failed": 10
+  },
+  "thefuck": {
+   "qualified": 24
+  }
+ },
+ "main_causes": [
+  "fragments import the project's own test-support code (tests.utils, conftest fixtures) stripped from views by design",
+  "Django needs its own runner/settings, absent from the pytest sandbox",
+  "the frozen view rule strips sympy.testing, breaking 10 sympy imports",
+  "12 SWE-bench patches unavailable (row API failing; PR-diff fallback hash-mismatched)",
+  "94 repository fragments refused by the frozen candidate policy (os/sys imports)"
+ ],
+ "patches": {
+  "cached_and_hash_verified": 60,
+  "needed": 71
+ },
+ "schema_version": "oneiros_v25_repository_verification_receipt_v1",
+ "scripts_sha256": {
+  "scripts/v25_native_env_wsl.py": "ce7885b541defe9e9b548e9c67953bc47d9df737bb1ca0b1a297cc3c6f244515",
+  "scripts/v25_native_targets.py": "75f1e0a5df2ed0b0da1bb21fcffde920cb27578d93b941f16fc39a47daa95de4",
+  "scripts/v25_verify_repository_wsl.py": "661977a811d269ac13bb6fdbacbf1950fd9f29c588d3b87d60e159d6cc0a6141"
+ },
+ "training_gate": "FAILS: converted official fragments supply far too few self-contained repository positives",
+ "verification_by_project": {
+  "django": {
+   "environment:not_stable_3_of_3": 1,
+   "environment:patch_unavailable": 12,
+   "environment:runner_error": 1,
+   "environment:runner_incompatible": 11,
+   "environment:view_attestation_failed": 3,
+   "runner_incompatible": 19
+  },
+  "sympy": {
+   "environment:patch_unavailable": 1,
+   "environment:runner_incompatible": 8,
+   "environment:view_attestation_failed": 12,
+   "executed:collection_failure": 1,
+   "executed:crash_kill": 2,
+   "executed:fabricated_import": 4,
+   "executed:semantic_kill": 3,
+   "executed:target_not_reached": 1,
+   "target_unlocalizable": 2
+  },
+  "thefuck": {
+   "executed:collection_failure": 1,
+   "executed:fabricated_import": 12,
+   "executed:no_tests_collected": 3,
+   "executed:semantic_kill": 2,
+   "executed:skipped_or_xfail": 2,
+   "target_unlocalizable": 4
+  }
+ },
+ "verification_runs_identical": true,
+ "verification_runs_sha256": {
+  "verify_swebench": "64288f3ae8a548c95d590efb80cc5796699d7c9deb1dfc0de01c1c23f9331d15",
+  "verify_thefuck": "278da8b125406ab66d16ce737d15d024a021a1782f9610b68f2d14ec01674188"
+ },
+ "verified_repository_positives": {
+  "lineages": 7,
+  "repositories": [
+   "sympy",
+   "thefuck"
+  ],
+  "rows": 7,
+  "tasks": [
+   "bugsinpy::thefuck::32",
+   "bugsinpy::thefuck::7",
+   "sympy__sympy-12096",
+   "sympy__sympy-12481",
+   "sympy__sympy-13480",
+   "sympy__sympy-13615",
+   "sympy__sympy-15017"
+  ]
+ }
+}
