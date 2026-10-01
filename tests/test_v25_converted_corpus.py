@@ -46,8 +46,10 @@ def test_the_audit_ignores_unrelated_files(monkeypatch):
 def test_prepare_installs_the_audit_before_loading_the_corpus():
     import inspect
     source = inspect.getsource(cc.prepare)
-    assert source.index("install_audit()") < source.index("load_development_split")
-    assert "load_complexity_index" not in inspect.getsource(cc)
+    assert source.index("install_audit()") < source.index("load_train_records()")
+    module = inspect.getsource(cc)
+    assert "load_complexity_index" not in module and "load_development_split" not in module
+    assert "complexity_manifest" not in inspect.getsource(cc.load_train_records)
 
 
 def test_complexity_is_computed_from_train_code_only():
