@@ -1,0 +1,88 @@
+{
+ "anything_launched": false,
+ "blockers": [
+  "pilot universe has 7 repositories with qualified environments (< 8 required); 87 qualified target lineages",
+  "150 verified repository positives are not reachable: 28 verified unique tests from 3 repositories after exhausting the 13 existing train repositories (shortfall 122 / 5 / 32)",
+  "bounded train-only acquisition NOT RUN: no GitHub credential configured; even unblocked it projects <= 10.6 admitted fix commits from the 36-repository training pool ({'can_close_gate': False, 'expected_admitted_fix_commits': 10.6, 'expected_verified_positives': 1.9, 'shortfall': {'lineages': 32, 'repositories': 5, 'repository_tests': 122}, 'upper_bound_if_every_admitted_commit_became_a_positive': 10.6})",
+  "confirmation panel not acquired (same credential blocker); projected ~11.7 qualified targets from the 70-repository confirmation pool (< 80): underpowered by addendum 1",
+  "final mixed corpus not built: the frozen 150/8/60 training gate fails"
+ ],
+ "canaries_not_rerun": "sandbox, native-environment and Atheris canaries were not rerun for a freeze because the preflight is structurally refused; Atheris v5 canary receipt v4 and the Phase 13 ABI readiness stand",
+ "claims": {
+  "atheris_superiority": false,
+  "confirmation_ready": false,
+  "generalization": false,
+  "root_cause_established": false,
+  "sft_improvement": false,
+  "training_ready": false
+ },
+ "decision": "REFUSED: no v2.5 pilot preflight produced; DO NOT AUTHORIZE PILOT",
+ "full_suite": {
+  "failed": 0,
+  "passed": 2786,
+  "receipt": "results/sft_root_cause/native_v25_cpu2_full_suite_fb04648.json",
+  "sha256": "ccd0c7ee2c772b3f03227c1e1294a1cebe7a7404461ac8856cdab0314b2f564c",
+  "skipped": 3,
+  "source_commit": "fb04648c1d5390720b0a461994d83081f47a2d95"
+ },
+ "gpu_authorization_created": false,
+ "identities": {
+  "adapter_manifest_sha256": "82f24fed40316249f307fc6b835f2d1fa9d1b7ada61e72e9892fb397e377f2a0",
+  "authorization_schema": "oneiros_native_gpu_authorization_v3",
+  "generator_version": "oneiros_native_generated_tests_generate_v5",
+  "job_schema": "oneiros_native_generated_tests_job_v25",
+  "model": {
+   "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+   "snapshot_manifest_sha256": "1358a55051e7cf5e8963a2b2e3cd1a2fc6a3768552fb24e8a5e2a5afb8f43364",
+   "tokenizer_manifest_sha256": "bc2ebf6999bee86ccae422d3bcba5c799bd7c29cf6f7e7522db01e37a03979d3"
+  },
+  "preflight_schema": "oneiros_native_generated_tests_preflight_v2_5",
+  "prompt_builder": {
+   "builder_sha256": {
+    "permitted_view": "b9a95eee7deec9c3888f54ff5c44efaa3d8b551cc616a8d3a4ad811de9c762b9",
+    "v25_pytest_module_v1": "995cf270d2c7836edde29e48286281b30b03708b6bbef102bef422bb2f1e815a"
+   },
+   "builder_version": "oneiros_native_generated_test_prompt_v25_pytest_module_v1",
+   "output_type": "pytest_module_v1",
+   "scanner_version": "oneiros_native_generated_test_leakage_v2"
+  },
+  "protocol_sha256": {
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md": "75131551082876d65be0609db619673417a6728e3c612cc2ebc69e808a1cc5a1",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md": "8d48aa36def2e67d3ce5b876af0317fc4eb7199b5422eadca823980ec27d2901",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md": "b5ebe83b37d184dd785b740267e7efd01a7022fa30df92ecba9f061985228998",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md": "1ffda40c14c48788f21fb569f2888ad8c86988e6177b5de61d56714db3d172f4",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_4.md": "ef2f231321314c25ccb156d9f6cfb9e44ff4823435173c8590623bf17deecd61",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5.md": "c707d8ae9f8b6cce8ab50e87d417175c9e947687c64b4c3de4d67eebe96022f7",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5_ADDENDUM_1.md": "7676aac2c58ef2bf35a435b42ee40b81a4fe6d8143175e21c417b0bcfc2c9149",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5_ADDENDUM_2.md": "e348060a4d06bb11c86d38cd9a0e1f1d781d5e4ec59c41463b42d07dd39510dc"
+  }
+ },
+ "preflight_conditions": {
+  "all_identities_frozen": false,
+  "projected_150_positives_within_10_gpu_hours": false,
+  "universe_8_repositories_60_lineages": false
+ },
+ "receipts_sha256": {
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5_ADDENDUM_2.md": "e348060a4d06bb11c86d38cd9a0e1f1d781d5e4ec59c41463b42d07dd39510dc",
+  "results/sft_root_cause_v25_acquisition_projection.json": "817e8797dcb8b24a0f224f15c234990bfc8a79123635512808a4b7bfd2fc78b5",
+  "results/sft_root_cause_v25_atheris_readiness.json": "8d812915ed1956af47f187cda13fffef3854a954eb752b2488c2e13908ff0a51",
+  "results/sft_root_cause_v25_attainable_gate_decision.json": "e5a7fc6ad0871817f769c0657e9abe8681219039d05c12b072f69c392dc5a569",
+  "results/sft_root_cause_v25_cpu2_accounting_erratum.json": "47c7d33dfb128ddfbe8ae6413e0e3c7da99757b2f6cb8f8b0f1ce825a8701a52",
+  "results/sft_root_cause_v25_cpu2_archive_manifest.json": "ef5a32a3f0fa4f5af20af884e2ec67e472956e6182da41821ca84e0bc5760dbb",
+  "results/sft_root_cause_v25_cpu2_archive_manifest_r2.json": "e01b3c37ee74a41cfdb3e9faaaed378940ee5234526443dd0b68bad99f7e21b8",
+  "results/sft_root_cause_v25_cpu2_phase0_reverification.json": "e1833fa233debbdc83064e0d8251f807da4618a49fc9c497273665391202570e",
+  "results/sft_root_cause_v25_native_attempt_spec.json": "0e0050d3a45921fcf95fc3f0069160d48ca0693f91bf3f3ab322c836e636f11a",
+  "results/sft_root_cause_v25_policy_recovery_audit.json": "bea33b34a7d261ee36870adddf7248d997f090dc03074f3bf831184d40e8e067",
+  "results/sft_root_cause_v25_power_simulation.json": "901cd87fb2fdc7ffd74e0bfc0be62f0577f8b0cb1e2702013d7e468f3d336828",
+  "results/sft_root_cause_v25_repository_verification_r2.json": "60cdba0882d9665d7b31a7c75c6c844251c19b5683e01ca53198028ad676a2a5",
+  "results/sft_root_cause_v25_sft_data_dryrun_r3.json": "6d2f3bd683160d3d27683b378152807ce9a192abd347072f51444e17003a0a81",
+  "results/sft_root_cause_v25_universe_partition.json": "6b3e2527243817d1f90fde5a8e333652129c977db328abcc67e38470791a709b"
+ },
+ "schema_version": "oneiros_v25_cpu2_preflight_decision_v1",
+ "source_commit": "fb04648c1d5390720b0a461994d83081f47a2d95",
+ "validation_or_sealed_access": false,
+ "wiring_verified_by_tests": {
+  "job_builder_uses_v25_prompt": "tests/test_native_generated_job_v25.py",
+  "trainer_consumes_v25_pairs": "tests/test_v25_sft_data.py"
+ }
+}
