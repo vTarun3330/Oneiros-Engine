@@ -1,0 +1,263 @@
+{
+ "addendum1_claims_reproduced": {
+  "addendum1_claim_base0.10_effect0.10_power~0.7": 0.6985,
+  "addendum1_claim_base<=0.05_effect0.10_power>=0.83": 0.855,
+  "addendum1_claim_base<=0.05_effect0.15_power>=0.95": 0.9745
+ },
+ "model": "- R repositories, n targets each; repository random effect u_r ~ N(0, SD^2) on the logit scale\n  (SD = 1.1), shared by both arms;\n- per target and seed, arm A kills (Kill@8 for that seed) with p_A = logistic(logit(base) + u_r)\n  and arm C with p_C = logistic(logit(base) + delta + u_r), where delta is chosen so that the\n  marginal effect at u = 0 is ``effect`` points (logit(base + effect) - logit(base));\n- target Kill@8 = mean over 3 seeds; paired difference C - A per target; repository means;\n  two-sided sign-flip test (exact over 2^R sign vectors, harness/v25_inference.py) at alpha.",
+ "note": "the panel thresholds of addendum 1 are NOT changed by this simulation; any discrepancy is reported, never acted on after model outcomes",
+ "parameters": {
+  "alpha": 0.05,
+  "base_rates": [
+   0.0,
+   0.05,
+   0.1
+  ],
+  "effects": [
+   0.0,
+   0.1,
+   0.15
+  ],
+  "panels": [
+   {
+    "per_repository": 8,
+    "repositories": 10
+   },
+   {
+    "per_repository": 8,
+    "repositories": 8
+   },
+   {
+    "per_repository": 8,
+    "repositories": 5
+   }
+  ],
+  "repository_logit_sd": 1.1,
+  "seed": 20261001,
+  "seeds_per_target": 3,
+  "simulations": 2000
+ },
+ "schema_version": "oneiros_v25_power_simulation_v1",
+ "scripts_sha256": {
+  "harness/v25_inference.py": "74c3989fc338af9756cb173a87ccdb0d250aaed03fef11ac152e1b681fceb56d",
+  "scripts/v25_power_simulation.py": "b2efe547bac269ecd70c7e691b2918c44f8c8936c63cb0deed324b4fd100ed9d"
+ },
+ "table": [
+  {
+   "base": 0.0,
+   "effect": 0.0,
+   "per_repository": 8,
+   "power": 0.0,
+   "repositories": 10,
+   "targets": 80
+  },
+  {
+   "base": 0.0,
+   "effect": 0.1,
+   "per_repository": 8,
+   "power": 0.98,
+   "repositories": 10,
+   "targets": 80
+  },
+  {
+   "base": 0.0,
+   "effect": 0.15,
+   "per_repository": 8,
+   "power": 0.998,
+   "repositories": 10,
+   "targets": 80
+  },
+  {
+   "base": 0.05,
+   "effect": 0.0,
+   "per_repository": 8,
+   "power": 0.025,
+   "repositories": 10,
+   "targets": 80
+  },
+  {
+   "base": 0.05,
+   "effect": 0.1,
+   "per_repository": 8,
+   "power": 0.855,
+   "repositories": 10,
+   "targets": 80
+  },
+  {
+   "base": 0.05,
+   "effect": 0.15,
+   "per_repository": 8,
+   "power": 0.9745,
+   "repositories": 10,
+   "targets": 80
+  },
+  {
+   "base": 0.1,
+   "effect": 0.0,
+   "per_repository": 8,
+   "power": 0.036,
+   "repositories": 10,
+   "targets": 80
+  },
+  {
+   "base": 0.1,
+   "effect": 0.1,
+   "per_repository": 8,
+   "power": 0.6985,
+   "repositories": 10,
+   "targets": 80
+  },
+  {
+   "base": 0.1,
+   "effect": 0.15,
+   "per_repository": 8,
+   "power": 0.9245,
+   "repositories": 10,
+   "targets": 80
+  },
+  {
+   "base": 0.0,
+   "effect": 0.0,
+   "per_repository": 8,
+   "power": 0.0,
+   "repositories": 8,
+   "targets": 64
+  },
+  {
+   "base": 0.0,
+   "effect": 0.1,
+   "per_repository": 8,
+   "power": 0.8455,
+   "repositories": 8,
+   "targets": 64
+  },
+  {
+   "base": 0.0,
+   "effect": 0.15,
+   "per_repository": 8,
+   "power": 0.9515,
+   "repositories": 8,
+   "targets": 64
+  },
+  {
+   "base": 0.05,
+   "effect": 0.0,
+   "per_repository": 8,
+   "power": 0.011,
+   "repositories": 8,
+   "targets": 64
+  },
+  {
+   "base": 0.05,
+   "effect": 0.1,
+   "per_repository": 8,
+   "power": 0.64,
+   "repositories": 8,
+   "targets": 64
+  },
+  {
+   "base": 0.05,
+   "effect": 0.15,
+   "per_repository": 8,
+   "power": 0.881,
+   "repositories": 8,
+   "targets": 64
+  },
+  {
+   "base": 0.1,
+   "effect": 0.0,
+   "per_repository": 8,
+   "power": 0.0185,
+   "repositories": 8,
+   "targets": 64
+  },
+  {
+   "base": 0.1,
+   "effect": 0.1,
+   "per_repository": 8,
+   "power": 0.523,
+   "repositories": 8,
+   "targets": 64
+  },
+  {
+   "base": 0.1,
+   "effect": 0.15,
+   "per_repository": 8,
+   "power": 0.811,
+   "repositories": 8,
+   "targets": 64
+  },
+  {
+   "base": 0.0,
+   "effect": 0.0,
+   "per_repository": 8,
+   "power": 0.0,
+   "repositories": 5,
+   "targets": 40
+  },
+  {
+   "base": 0.0,
+   "effect": 0.1,
+   "per_repository": 8,
+   "power": 0.0,
+   "repositories": 5,
+   "targets": 40
+  },
+  {
+   "base": 0.0,
+   "effect": 0.15,
+   "per_repository": 8,
+   "power": 0.0,
+   "repositories": 5,
+   "targets": 40
+  },
+  {
+   "base": 0.05,
+   "effect": 0.0,
+   "per_repository": 8,
+   "power": 0.0,
+   "repositories": 5,
+   "targets": 40
+  },
+  {
+   "base": 0.05,
+   "effect": 0.1,
+   "per_repository": 8,
+   "power": 0.0,
+   "repositories": 5,
+   "targets": 40
+  },
+  {
+   "base": 0.05,
+   "effect": 0.15,
+   "per_repository": 8,
+   "power": 0.0,
+   "repositories": 5,
+   "targets": 40
+  },
+  {
+   "base": 0.1,
+   "effect": 0.0,
+   "per_repository": 8,
+   "power": 0.0,
+   "repositories": 5,
+   "targets": 40
+  },
+  {
+   "base": 0.1,
+   "effect": 0.1,
+   "per_repository": 8,
+   "power": 0.0,
+   "repositories": 5,
+   "targets": 40
+  },
+  {
+   "base": 0.1,
+   "effect": 0.15,
+   "per_repository": 8,
+   "power": 0.0,
+   "repositories": 5,
+   "targets": 40
+  }
+ ]
+}
