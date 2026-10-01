@@ -1,0 +1,496 @@
+{
+ "builder_sha256": "2211f2d6910cae57cd083d5e4f68cd259a85cebead2e012009e738b17328f76b",
+ "earlier_attempts_preserved": {
+  "canary_swebench_run1.jsonl": "d842b87e802a1879a1f058936913acc9687ae8c6a6c2afc83a5ec35dcba65b8b",
+  "canary_swebench_run2.jsonl": "c2bdf376836bc0e6b93758b60b5233c9600049a70ffda82d28cbdecb74c4f370",
+  "canary_sympy_r2_run1.jsonl": "3a47e23ef67310c8528c883aa6710cebe084e995d2bec10876ab8c4f97dc4222",
+  "canary_sympy_r2_run2.jsonl": "5ddd6ac1d35cb66578ec3aab1b267fe956255312a66861a3df4f2950367fd4a6",
+  "canary_thefuck_run1.jsonl": "bae886bfb0c49a681667444aeba42b8c03b6baabbe4e94893a6f0f259c396004",
+  "canary_thefuck_run2.jsonl": "468923b20bc5846b87dc4ee47b630e025d68dfd560cb21862d7b89278da3a9e3",
+  "canary_thefuck_run3.jsonl": "23b099b05555b74d588a760ab254376ee709902e149f294f933457ff6e7786e1",
+  "canary_thefuck_run4.jsonl": "be8fcfb5dca1ccd063fd3bf171b04d98e30a48b495d6c4e37af582503b53940e",
+  "canary_thefuck_run5.jsonl": "fc843e1d9906a4f7500e9f1f2022762b1a64841f3c181ebe55b957b8eb7e4669"
+ },
+ "final_runs_sha256": [
+  "557e717056e1878bc0106dc729c8e4c1ada1074e8e8d6a8711a8f47e0e95d894",
+  "496a499adb063cc1eb27de2be84f08db2da72fb0b1384a0bb8759831bb6ed4e3"
+ ],
+ "infrastructure_fixes_before_final": [
+  "BugsInPy requirements name the project as an editable git requirement: that line dropped (project imported from the checkout)",
+  "editable installs of old setup.py projects fail under a date cutoff: the project is never installed, only imported via PYTHONPATH",
+  "venv console-script RECORD hashes embed the venv path: reproducibility now compares two builds at the same path",
+  "old mpmath sdists cannot build under a 2016 cutoff: SWE-bench's documented pin mpmath==1.3.0 (+ pytest==7.4.4)",
+  "old sympy re-binds a submodule name, breaking 'import a.b.c as m': attestation uses importlib.import_module like the sandbox"
+ ],
+ "passed": true,
+ "patches": "SWE-bench gold/test patches fetched per train instance by id; every one matched the train record's SHA-256",
+ "per_instance": {
+  "bugsinpy::thefuck::1": {
+   "category": "qualified",
+   "cross_run_identical": true,
+   "dropped_self_requirements": [
+    "-e git+https://github.com/nvbn/thefuck@2ced7a7f33ae0bec3ffc7a43ce95330bdf6cfcb9#egg=thefuck"
+   ],
+   "environment_lock": {
+    "freeze_sha256": "cc20a12b4dddf5f17c973185d996f5af7ca0a7bade0aaf7bb7e1c2e85cac8c0e",
+    "python": "3.7.17",
+    "site_packages_files": 2425,
+    "site_packages_manifest_sha256": "980e6ac1c23741e7a9bf000779b77f1322af64f76eea729a2bad3c992560ffb5"
+   },
+   "environment_reproducible": true,
+   "install_command": [
+    "uv",
+    "pip",
+    "install",
+    "-q",
+    "--python",
+    "<prep>/env/bin/python",
+    "-r",
+    "<prep>/env_requirements.txt"
+   ],
+   "interpreter": "3.7.17",
+   "module_sha256": {
+    "buggy": "879454997d1d40a415e410ee1c373500d39366c67b6378b83980004c30405a34",
+    "fixed": "738e569c7edff9bf943148ac6c30c21176608ab27ac8f59d399712be6181f522"
+   },
+   "official": {
+    "observed": {
+     "buggy": {
+      "tests/rules/test_pip_unknown_command.py::test_get_new_command": "failed"
+     },
+     "fixed": {
+      "tests/rules/test_pip_unknown_command.py::test_get_new_command": "passed"
+     }
+    },
+    "repeats": 3,
+    "selectors": 1,
+    "stable_3_of_3": 1
+   },
+   "project": "thefuck",
+   "resolution_cutoff": "2020-01-13T23:28:20+01:00",
+   "view_manifest_sha256": {
+    "buggy": "c34b130392cf9739394c14b23752d8e9f38f2e8bb0d36e25216991464fc36f5e",
+    "fixed": "e1e4cdf060f7658e03b546c4c5cf988b69f90177a431b48aa9f8462f38afe7ae"
+   },
+   "wall_seconds": 3.2
+  },
+  "bugsinpy::thefuck::10": {
+   "category": "qualified",
+   "cross_run_identical": true,
+   "dropped_self_requirements": [
+    "-e git+https://github.com/nvbn/thefuck@8bd6c5da67e55c64257345efa4e3cc454c42475c#egg=thefuck"
+   ],
+   "environment_lock": {
+    "freeze_sha256": "aa94741e0ab0c621b13000637f7e3694f1187d246a02af4d35fbbde5a6ee66bb",
+    "python": "3.7.17",
+    "site_packages_files": 2420,
+    "site_packages_manifest_sha256": "3daa8f0e92a8127ffbb165a102b5931923a8a4864a2c13167805a41f4af0e41b"
+   },
+   "environment_reproducible": true,
+   "install_command": [
+    "uv",
+    "pip",
+    "install",
+    "-q",
+    "--python",
+    "<prep>/env/bin/python",
+    "-r",
+    "<prep>/env_requirements.txt"
+   ],
+   "interpreter": "3.7.17",
+   "module_sha256": {
+    "buggy": "ed30ab9de57f9bc7d524c684859b364e308d942ba6bcbd84663bd9e32002d1d8",
+    "fixed": "cac7389c6405da7843012ba19c0f66f9c31f7bb61b62a55b29789a56dcb82edd"
+   },
+   "official": {
+    "observed": {
+     "buggy": {
+      "tests/rules/test_man.py::test_get_new_command": "failed"
+     },
+     "fixed": {
+      "tests/rules/test_man.py::test_get_new_command": "passed"
+     }
+    },
+    "repeats": 3,
+    "selectors": 1,
+    "stable_3_of_3": 1
+   },
+   "project": "thefuck",
+   "resolution_cutoff": "2016-10-03T12:03:57-04:00",
+   "view_manifest_sha256": {
+    "buggy": "211239505187050fca160dc29a231419be243b96f8a2bf418f7183e227935a16",
+    "fixed": "b827332501c0dda20fe0ff907f035d3e37d4b191e5bd707a47b2ba3f0a15029b"
+   },
+   "wall_seconds": 2.5
+  },
+  "bugsinpy::thefuck::11": {
+   "category": "qualified",
+   "cross_run_identical": true,
+   "dropped_self_requirements": [
+    "-e git+https://github.com/nvbn/thefuck@8bd6c5da67e55c64257345efa4e3cc454c42475c#egg=thefuck"
+   ],
+   "environment_lock": {
+    "freeze_sha256": "aa94741e0ab0c621b13000637f7e3694f1187d246a02af4d35fbbde5a6ee66bb",
+    "python": "3.7.17",
+    "site_packages_files": 2420,
+    "site_packages_manifest_sha256": "921ab1656a29d7d1ba55af76040c7c0a9cd4a6300ad4592c3cf7a1fa31508219"
+   },
+   "environment_reproducible": true,
+   "install_command": [
+    "uv",
+    "pip",
+    "install",
+    "-q",
+    "--python",
+    "<prep>/env/bin/python",
+    "-r",
+    "<prep>/env_requirements.txt"
+   ],
+   "interpreter": "3.7.17",
+   "module_sha256": {
+    "buggy": "717a1f8b4dc0e43c0221fa395f3616dbaafbb407d3a55e940e0192712eb96614",
+    "fixed": "30949db00882d2711f4fe4ad5078706a3daa62dcd1c4fe03481487be1cc7f470"
+   },
+   "official": {
+    "observed": {
+     "buggy": {
+      "tests/rules/test_git_push.py::test_get_new_command": "failed"
+     },
+     "fixed": {
+      "tests/rules/test_git_push.py::test_get_new_command": "passed"
+     }
+    },
+    "repeats": 3,
+    "selectors": 1,
+    "stable_3_of_3": 1
+   },
+   "project": "thefuck",
+   "resolution_cutoff": "2016-10-02T17:21:04+02:00",
+   "view_manifest_sha256": {
+    "buggy": "d89ec970dce66b921afd7ce427394cd2852e6492e04bb207b04fb8f279008618",
+    "fixed": "37c05767a50fbb356b7b12f28b4b1cdd1fc7fed0edf3b5b8b098b1191cfebb5e"
+   },
+   "wall_seconds": 2.6
+  },
+  "django__django-10999": {
+   "category": "runner_incompatible",
+   "cross_run_identical": true,
+   "dropped_self_requirements": [],
+   "environment_lock": {
+    "freeze_sha256": "96ec094ecdc5c74953a4116121fedd1e4010210f7f6cd0555804038421ca2370",
+    "python": "3.8.20",
+    "site_packages_files": 922,
+    "site_packages_manifest_sha256": "b238e428534e45290564d1104cef6e7af9e8a27a93d28d07ce20c6d79b5f4861"
+   },
+   "environment_reproducible": true,
+   "install_command": [
+    "uv",
+    "pip",
+    "install",
+    "-q",
+    "--python",
+    "<prep>/env/bin/python",
+    "--exclude-newer",
+    "2019-02-21T12:52:10-05:00",
+    "asgiref",
+    "pytz",
+    "sqlparse",
+    "pytest"
+   ],
+   "interpreter": "3.8.20",
+   "module_sha256": {
+    "buggy": "d4a35e4e0a013e765814cae3eb43f44ea95714a5111b94e4f72a6f119a242d58",
+    "fixed": "06e74f6fc9ef5765ef461183d0452ee062675441e205685c4465ef436d549a7f"
+   },
+   "official": {
+    "observed": {
+     "buggy": {
+      "django:utils_tests.test_dateparse.DurationParseTests.test_negative": "missing",
+      "django:utils_tests.test_dateparse.DurationParseTests.test_parse_postgresql_format": "missing"
+     },
+     "fixed": {
+      "django:utils_tests.test_dateparse.DurationParseTests.test_negative": "passed",
+      "django:utils_tests.test_dateparse.DurationParseTests.test_parse_postgresql_format": "passed"
+     }
+    },
+    "repeats": 3,
+    "selectors": 2,
+    "stable_3_of_3": 0
+   },
+   "project": "django",
+   "resolution_cutoff": "2019-02-21T12:52:10-05:00",
+   "view_manifest_sha256": {
+    "buggy": "b278472593d6f0cf89c336733e1ef364f189f083b7c945a92383adc505bb8eb3",
+    "fixed": "992d4e379c7afb299523506bcc652e7f5c1794cf5aaa7d28bb29dd5be3aa21a3"
+   },
+   "wall_seconds": 6.4
+  },
+  "django__django-11095": {
+   "category": "qualified",
+   "cross_run_identical": true,
+   "dropped_self_requirements": [],
+   "environment_lock": {
+    "freeze_sha256": "8bbf6642dccbc3ba96082353413e495903f6f796f5677e704b25cfa933092dfc",
+    "python": "3.8.20",
+    "site_packages_files": 924,
+    "site_packages_manifest_sha256": "49312a28caeaa46d712c1ba0f904822203be1868a6dece6d8dfb9afc6cef33f4"
+   },
+   "environment_reproducible": true,
+   "install_command": [
+    "uv",
+    "pip",
+    "install",
+    "-q",
+    "--python",
+    "<prep>/env/bin/python",
+    "--exclude-newer",
+    "2019-04-16T10:45:45+02:00",
+    "asgiref",
+    "pytz",
+    "sqlparse",
+    "pytest"
+   ],
+   "interpreter": "3.8.20",
+   "module_sha256": {
+    "buggy": "f755fbe374feb302c5308b5472a3122c4f58f0406d7a4e2a9633fd916a5daa86",
+    "fixed": "1c1c99e857572c3279039ea83e24551d1e07c4552d601511bccc20c766846157"
+   },
+   "official": {
+    "observed": {
+     "buggy": {
+      "django:generic_inline_admin.tests.GenericInlineModelAdminTest.test_get_inline_instances_override_get_inlines": "failed"
+     },
+     "fixed": {
+      "django:generic_inline_admin.tests.GenericInlineModelAdminTest.test_get_inline_instances_override_get_inlines": "passed"
+     }
+    },
+    "repeats": 3,
+    "selectors": 1,
+    "stable_3_of_3": 1
+   },
+   "project": "django",
+   "resolution_cutoff": "2019-04-16T10:45:45+02:00",
+   "view_manifest_sha256": {
+    "buggy": "8e841092d13b1233663186332a75d6837fa543af3b6161149d94dccff75e13ac",
+    "fixed": "97c91ad970fbbda29658a03f2c9a63272fad52b7abd7c7e6dba22107ea08fa40"
+   },
+   "wall_seconds": 6.5
+  },
+  "django__django-11179": {
+   "category": "qualified",
+   "cross_run_identical": true,
+   "dropped_self_requirements": [],
+   "environment_lock": {
+    "freeze_sha256": "3c05d3a3417ce91e59efc7b58e1c9e2eccfd71ca95962bac915466598098f210",
+    "python": "3.8.20",
+    "site_packages_files": 923,
+    "site_packages_manifest_sha256": "6d14d985fe76be4d253ee2873791d9b8416cb4e75580bdfe4ed294426ef01b65"
+   },
+   "environment_reproducible": true,
+   "install_command": [
+    "uv",
+    "pip",
+    "install",
+    "-q",
+    "--python",
+    "<prep>/env/bin/python",
+    "--exclude-newer",
+    "2019-04-08T11:26:06+02:00",
+    "asgiref",
+    "pytz",
+    "sqlparse",
+    "pytest"
+   ],
+   "interpreter": "3.8.20",
+   "module_sha256": {
+    "buggy": "a09990d086e41b6a59f9bf7e704ced12d91e4725ddc994a128fecb638e7ea18a",
+    "fixed": "a2d2b7f0aa1e0a69b54a0bb7e801e15476dd6444b54b700890d713cc6be5c3c0"
+   },
+   "official": {
+    "observed": {
+     "buggy": {
+      "django:delete.tests.FastDeleteTests.test_fast_delete_instance_set_pk_none": "failed"
+     },
+     "fixed": {
+      "django:delete.tests.FastDeleteTests.test_fast_delete_instance_set_pk_none": "passed"
+     }
+    },
+    "repeats": 3,
+    "selectors": 1,
+    "stable_3_of_3": 1
+   },
+   "project": "django",
+   "resolution_cutoff": "2019-04-08T11:26:06+02:00",
+   "view_manifest_sha256": {
+    "buggy": "2949df2293944adcb6cf883a47242007161bc9ddebb6d1e0463518e4c2c1f8eb",
+    "fixed": "9bac321fb1bc4993fd77a7dc5ea41a0343e986eb15439d5db6b2eaf1416b2fbd"
+   },
+   "wall_seconds": 6.4
+  },
+  "sympy__sympy-11618": {
+   "category": "qualified",
+   "cross_run_identical": true,
+   "dropped_self_requirements": [],
+   "environment_lock": {
+    "freeze_sha256": "d8edb617c31dd2e94e940fbd67ae1ba9848eb7f274bb25a2c639a3095bfcd012",
+    "python": "3.9.25",
+    "site_packages_files": 266,
+    "site_packages_manifest_sha256": "7f566ee9425d0536c242033d0cc2cd3e00462dbcc67d0fed4f9ef88bc9d15277"
+   },
+   "environment_reproducible": true,
+   "install_command": [
+    "uv",
+    "pip",
+    "install",
+    "-q",
+    "--python",
+    "<prep>/env/bin/python",
+    "mpmath==1.3.0",
+    "pytest==7.4.4"
+   ],
+   "interpreter": "3.9.25",
+   "module_sha256": {
+    "buggy": "93ff52597095b4fc8b2ce9d7785373f30150b4f78a92b6a22c228c1c13f7a75a",
+    "fixed": "dd817febcdbc7f24de731c0cbb58d30c74ef3dc1dfcc0a9c04a8df119467c19a"
+   },
+   "official": {
+    "observed": {
+     "buggy": {
+      "sympy/geometry/tests/test_point.py::test_issue_11617": "failed"
+     },
+     "fixed": {
+      "sympy/geometry/tests/test_point.py::test_issue_11617": "passed"
+     }
+    },
+    "repeats": 3,
+    "selectors": 1,
+    "stable_3_of_3": 1
+   },
+   "project": "sympy",
+   "resolution_cutoff": "2016-09-15T12:21:23-05:00",
+   "view_manifest_sha256": {
+    "buggy": "8b4442bc83faa0e73086ed8f4ca5bcda10b5604edb5f823af19e526d53aad59d",
+    "fixed": "22ac5fb3ebfcc3003effa06bd9faffc630966adf115d991b49b00c33f678f2ec"
+   },
+   "wall_seconds": 6.1
+  },
+  "sympy__sympy-12096": {
+   "category": "qualified",
+   "cross_run_identical": true,
+   "dropped_self_requirements": [],
+   "environment_lock": {
+    "freeze_sha256": "d8edb617c31dd2e94e940fbd67ae1ba9848eb7f274bb25a2c639a3095bfcd012",
+    "python": "3.9.25",
+    "site_packages_files": 266,
+    "site_packages_manifest_sha256": "48e0da1add018b0e68b974cf88b3d5fb173e1f5cdf6b0a323302ca2f47dbab6e"
+   },
+   "environment_reproducible": true,
+   "install_command": [
+    "uv",
+    "pip",
+    "install",
+    "-q",
+    "--python",
+    "<prep>/env/bin/python",
+    "mpmath==1.3.0",
+    "pytest==7.4.4"
+   ],
+   "interpreter": "3.9.25",
+   "module_sha256": {
+    "buggy": "3a6035aa8c07d7323ddeffac02d110dc6554e322ee9dc86b2203176dbe2e501f",
+    "fixed": "0ca412c7aa9b01d32f020f44f5b413e9b5a27e3a55762b4cb0b36c3823f05fd1"
+   },
+   "official": {
+    "observed": {
+     "buggy": {
+      "sympy/utilities/tests/test_lambdify.py::test_issue_12092": "failed"
+     },
+     "fixed": {
+      "sympy/utilities/tests/test_lambdify.py::test_issue_12092": "passed"
+     }
+    },
+    "repeats": 3,
+    "selectors": 1,
+    "stable_3_of_3": 1
+   },
+   "project": "sympy",
+   "resolution_cutoff": "2017-02-03T14:50:52-06:00",
+   "view_manifest_sha256": {
+    "buggy": "d18bfc6c229ab9cb10a926b62257cafe28ff204ad1bec316cb6a3c5df0fa363b",
+    "fixed": "7b4d20cefad2e9fc3e64f1822d9cb870102b600cccda4212614a40717c218082"
+   },
+   "wall_seconds": 6.0
+  },
+  "sympy__sympy-12419": {
+   "category": "qualified",
+   "cross_run_identical": true,
+   "dropped_self_requirements": [],
+   "environment_lock": {
+    "freeze_sha256": "d8edb617c31dd2e94e940fbd67ae1ba9848eb7f274bb25a2c639a3095bfcd012",
+    "python": "3.9.25",
+    "site_packages_files": 266,
+    "site_packages_manifest_sha256": "5cf47f13362f83d4343df13922c632c34b8b62bfa815c7f75712c4af5a08ba94"
+   },
+   "environment_reproducible": true,
+   "install_command": [
+    "uv",
+    "pip",
+    "install",
+    "-q",
+    "--python",
+    "<prep>/env/bin/python",
+    "mpmath==1.3.0",
+    "pytest==7.4.4"
+   ],
+   "interpreter": "3.9.25",
+   "module_sha256": {
+    "buggy": "c2cd2d1c416fc238b667114130cfe20c9854a136e43086cc42718171bae9ce6f",
+    "fixed": "5b61ca3366b54e6d7d4c47648ac99d5c898c50fb3067bddace7ee88337329ad9"
+   },
+   "official": {
+    "observed": {
+     "buggy": {
+      "sympy/matrices/expressions/tests/test_matexpr.py::test_Identity": "failed"
+     },
+     "fixed": {
+      "sympy/matrices/expressions/tests/test_matexpr.py::test_Identity": "passed"
+     }
+    },
+    "repeats": 3,
+    "selectors": 1,
+    "stable_3_of_3": 1
+   },
+   "project": "sympy",
+   "resolution_cutoff": "2017-03-25T10:56:42+01:00",
+   "view_manifest_sha256": {
+    "buggy": "33765b63005aaa72dab3c55fcffcd5f449b110203ff2a49ed9603acf528f2368",
+    "fixed": "6937a037e6089ec3fb841159a84d7a930732336519b832c36188b974e223ebbf"
+   },
+   "wall_seconds": 5.7
+  }
+ },
+ "per_repository": {
+  "django": {
+   "all_reproducible": true,
+   "canary_passed": true,
+   "instances": 3,
+   "qualified": 2
+  },
+  "sympy": {
+   "all_reproducible": true,
+   "canary_passed": true,
+   "instances": 3,
+   "qualified": 3
+  },
+  "thefuck": {
+   "all_reproducible": true,
+   "canary_passed": true,
+   "instances": 3,
+   "qualified": 3
+  }
+ },
+ "schema_version": "oneiros_v25_native_env_canary_receipt_v1",
+ "spec_sha256": "ac528777676bfea015b1563909961472498fc3d10b92eb67be5551a5337e2e0a",
+ "targets_script_sha256": "a069706135c2d9ce629d10ffd1a64a5df846595feedc88a210e4b3dd184f3f76",
+ "targets_sha256": "588a52a7ceed66d08780e3db1489774118036a10da49a0ac384a0fef09c18742"
+}
