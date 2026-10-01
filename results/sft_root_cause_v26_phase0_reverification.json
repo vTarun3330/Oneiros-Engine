@@ -1,0 +1,47 @@
+{
+ "archives": {
+  "native_v25_cpu2_phase6_14": {
+   "byte_verified": 133,
+   "items": 133
+  },
+  "native_v25_cpu_a5be32e": {
+   "byte_verified": 85,
+   "items": 85
+  },
+  "native_v25_stage1_6b35b20": {
+   "byte_verified": 5,
+   "items": 5
+  },
+  "native_v25_stage1_r2": {
+   "byte_verified": 17,
+   "items": 17
+  }
+ },
+ "full_suite_currentness": {
+  "certifies_current_source": false,
+  "current_executable_tree_sha256": "e1b28e333304d5deaac2ac52ecac1f19fd24ddb2286d6fba0f7fc54494907527",
+  "note": "751539e added scripts/v25_cpu2_preflight_decision.py after the suite ran at fb04648; a new suite run is required at the final source",
+  "receipt": "results/sft_root_cause/native_v25_cpu2_full_suite_fb04648.json",
+  "receipt_executable_tree_sha256": "7468c76de81d191435a36df4491faf51bd2f28c5ab6280fb38398c6c840595f6",
+  "receipt_source_commit": "fb04648c1d5390720b0a461994d83081f47a2d95"
+ },
+ "head": "751539ef1adbea52a0fa432a5524634b2f399c79",
+ "head_equals_origin": true,
+ "issues": [],
+ "key_artifacts_sha256": {
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5.md": "c707d8ae9f8b6cce8ab50e87d417175c9e947687c64b4c3de4d67eebe96022f7",
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5_ADDENDUM_1.md": "7676aac2c58ef2bf35a435b42ee40b81a4fe6d8143175e21c417b0bcfc2c9149",
+  "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5_ADDENDUM_2.md": "e348060a4d06bb11c86d38cd9a0e1f1d781d5e4ec59c41463b42d07dd39510dc",
+  "results/sft_root_cause/native_v25_cpu2_full_suite_fb04648.json": "ccd0c7ee2c772b3f03227c1e1294a1cebe7a7404461ac8856cdab0314b2f564c",
+  "results/sft_root_cause_v25_acquisition_projection.json": "817e8797dcb8b24a0f224f15c234990bfc8a79123635512808a4b7bfd2fc78b5",
+  "results/sft_root_cause_v25_atheris_readiness.json": "8d812915ed1956af47f187cda13fffef3854a954eb752b2488c2e13908ff0a51",
+  "results/sft_root_cause_v25_attainable_gate_decision.json": "e5a7fc6ad0871817f769c0657e9abe8681219039d05c12b072f69c392dc5a569",
+  "results/sft_root_cause_v25_cpu2_preflight_decision.json": "1187d79d004612a540054f5ce5d147dae60ad44427eb2e60f2b46e8789e8618f",
+  "results/sft_root_cause_v25_repository_verification_r2.json": "60cdba0882d9665d7b31a7c75c6c844251c19b5683e01ca53198028ad676a2a5",
+  "results/sft_root_cause_v25_universe_partition.json": "6b3e2527243817d1f90fde5a8e333652129c977db328abcc67e38470791a709b"
+ },
+ "protected_access": "none (no corpus, validation, confirmation-only or sealed path opened)",
+ "schema_version": "oneiros_v26_phase0_reverification_v1",
+ "v25_status": "COMPLETED NEGATIVE FEASIBILITY RESULT: the frozen 150/8/60 training gate is not reachable from the 13 existing train repositories (28 verified unique tests, 3 repositories, 28 lineages); no SFT was trained, so this is not a failed model training",
+ "worktree_clean": true
+}
