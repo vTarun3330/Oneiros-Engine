@@ -1,0 +1,174 @@
+{
+ "decision_rules": [
+  "R4 substantially restores fixed validity AND semantic kills -> mechanical output-contract mismatch is a major bottleneck",
+  "R4 restores fixed validity but not kills -> mechanical validity plus semantic oracle weakness",
+  "training targets mostly assertion fragments / no imports -> training/evaluation contract mismatch",
+  "training targets aligned but SFT omits imports -> forgetting / prompt incompatibility / truncation",
+  "repair barely changes fixed validity -> prioritise context/input/oracle"
+ ],
+ "executor": {
+  "frozen_v24_executor_sha256": "f1ef59dd80443e745d616fb95905ccf316144cd42dd211460cd4185baa64dcca",
+  "script": "scripts/repair_ceiling_execute_wsl.py",
+  "sha256": "00e337f2d4e13f7ac9f7a817880da960efa45da82f415c06320f26966d676a3e"
+ },
+ "inputs": {
+  "results/sft_root_cause/native_v24_execution/results_primary_whole_module.jsonl": "e40c912d23eccb3fb8a6b0cd06c11e27a48052582f4e60d1f1507ce7471a0d55",
+  "results/sft_root_cause/native_v24_generations/base/generations_primary_whole_module_base.jsonl": "e71367acefdbad5a422aba3790376454f04831d80c4b5dec6ac1429e31eb9f44",
+  "results/sft_root_cause/native_v24_generations/sft/generations_primary_whole_module_sft.jsonl": "5af755e9f947175a1996037865e1c96023faf36e78cd87678be066367d6e59d9",
+  "results/sft_root_cause_native_v24_rehearsal_job_v5.json": "53948495758839c55fa911fd3a59f57d9cc4541954fa5c9c83c7a0ff3857f817"
+ },
+ "label": "post-hoc exploratory diagnostic; NOT a primary metric; cannot establish confirmation-level improvement",
+ "outcome_free_applicability": {
+  "base:R0": {
+   "applied": {},
+   "candidates": 552,
+   "changed": 0,
+   "not_applied": {}
+  },
+  "base:R1": {
+   "applied": {
+    "R1": 273
+   },
+   "candidates": 552,
+   "changed": 273,
+   "not_applied": {
+    "R1:no_fence": 255,
+    "R1:unclosed_fence": 24
+   }
+  },
+  "base:R2": {
+   "applied": {
+    "R2": 47
+   },
+   "candidates": 552,
+   "changed": 47,
+   "not_applied": {
+    "R2:already_imported": 207,
+    "R2:pytest_not_referenced": 298
+   }
+  },
+  "base:R3": {
+   "applied": {
+    "R3": 292
+   },
+   "candidates": 552,
+   "changed": 292,
+   "not_applied": {
+    "R3:already_imported": 260
+   }
+  },
+  "base:R4": {
+   "applied": {
+    "R1": 273,
+    "R2": 47,
+    "R3": 274
+   },
+   "candidates": 552,
+   "changed": 428,
+   "not_applied": {
+    "R1:no_fence": 255,
+    "R1:unclosed_fence": 24,
+    "R2:already_imported": 207,
+    "R2:pytest_not_referenced": 298,
+    "R3:already_imported": 278
+   }
+  },
+  "sft:R0": {
+   "applied": {},
+   "candidates": 552,
+   "changed": 0,
+   "not_applied": {}
+  },
+  "sft:R1": {
+   "applied": {},
+   "candidates": 552,
+   "changed": 0,
+   "not_applied": {
+    "R1:no_fence": 552
+   }
+  },
+  "sft:R2": {
+   "applied": {
+    "R2": 265
+   },
+   "candidates": 552,
+   "changed": 265,
+   "not_applied": {
+    "R2:already_imported": 70,
+    "R2:pytest_not_referenced": 217
+   }
+  },
+  "sft:R3": {
+   "applied": {
+    "R3": 487
+   },
+   "candidates": 552,
+   "changed": 487,
+   "not_applied": {
+    "R3:already_imported": 65
+   }
+  },
+  "sft:R4": {
+   "applied": {
+    "R2": 265,
+    "R3": 487
+   },
+   "candidates": 552,
+   "changed": 488,
+   "not_applied": {
+    "R1:no_fence": 552,
+    "R2:already_imported": 70,
+    "R2:pytest_not_referenced": 217,
+    "R3:already_imported": 65
+   }
+  }
+ },
+ "primary_diagnostic_outcome": "fixed-valid semantic execution, then confirmed kills; parse improvement alone is not success",
+ "schema_version": "oneiros_repair_ceiling_definition_v1",
+ "study": "posthoc_exploratory_mechanical_repair_ceiling",
+ "transforms": {
+  "conditions": [
+   "R0",
+   "R1",
+   "R2",
+   "R3",
+   "R4"
+  ],
+  "confirmation_claims": false,
+  "inputs": [
+   "v2.4 retained candidate module (R0)",
+   "v2.4 job prompt (model-visible), for R3 only"
+  ],
+  "never_used": [
+   "fixed code",
+   "patches",
+   "official tests",
+   "execution outcomes",
+   "validation or sealed records"
+  ],
+  "primary_metric_replacement": false,
+  "rules": [
+   "model-visible prompt. Nothing here reads fixed code, patches, official tests or any execution",
+   "outcome, so no transform can be outcome-conditioned. Standard library only (imported by the",
+   "WSL runner).",
+   "",
+   "  R0  original retained module, unchanged.",
+   "  R1  single-fence extraction: only when the module contains exactly one CLOSED fence whose",
+   "      language tag is empty, ``python`` or ``py``; the module becomes that block. Several",
+   "      fences, an unclosed fence or another language are refused (module unchanged).",
+   "  R2  pytest import: when ``pytest.`` is referenced and no import binds ``pytest``, insert",
+   "      ``import pytest``.",
+   "  R3  target import: insert the EXACT statement the prompt gives on its",
+   "      ``Import the target with: `...` `` line when the module does not already bind every name",
+   "      that statement binds. No such prompt line: not applicable (unchanged).",
+   "  R4  R1, then R2, then R3, in that fixed order, for every candidate.",
+   "",
+   "Insertion point (R2/R3): the top of the module, except after any leading ``from __future__``"
+  ],
+  "selection": "none: every condition applied to every candidate; no best-of choice",
+  "study": "posthoc_exploratory_mechanical_repair_ceiling",
+  "transforms_version": "oneiros_repair_ceiling_transforms_v1",
+  "unchanged_candidates": "a candidate whose module a condition leaves byte-identical keeps its v2.4 execution row (same input); only changed modules are executed"
+ },
+ "transforms_sha256": "af2fec5410a407e002731b24193ff8e850f78e445858be7a5cc332e27bfd7ffe"
+}
