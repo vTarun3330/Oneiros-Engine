@@ -448,7 +448,8 @@ def test_base_from_another_backend_blocks_the_sft_launch(project, monkeypatch):
 
 
 @pytest.mark.parametrize("rel", ["config/c.json", "tests/test_x.py",
-                                 "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md"])
+                                 "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md",
+                                 "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5.md"])
 def test_config_test_and_protocol_changes_remain_rejected(project, rel):
     auth = _ready_with_auth(project)
     (project["repo"] / rel).write_text("changed\n")
@@ -472,3 +473,18 @@ def test_every_bound_input_is_revalidated(project):
         assert result["launch_ready"] is False
         (repo / rel).write_bytes(original)
     assert _evaluate(project, auth=auth)["launch_ready"] is True
+
+
+def test_protocol_v2_5_is_bound_into_source_and_generation_identity(tmp_path):
+    from scripts import native_generated_tests_generate as gen
+    assert gate.PROTOCOL_FILES == gen.PROTOCOL_FILES
+    assert gate.PROTOCOL_FILES[-1].endswith("PROTOCOL_V2_5.md")
+    for p in gate.PROTOCOL_FILES:
+        (tmp_path / p).parent.mkdir(parents=True, exist_ok=True)
+        (tmp_path / p).write_text(f"# {p}\n")
+    before = gate.source_identity(tmp_path)
+    v25 = tmp_path / gate.PROTOCOL_FILES[-1]
+    v25.write_bytes(v25.read_bytes() + b"x")         # one byte
+    after = gate.source_identity(tmp_path)
+    assert before["protocol_sha256"] != after["protocol_sha256"]
+    assert gate.PROTOCOL_FILES[-1] in after["protocol_sha256"]

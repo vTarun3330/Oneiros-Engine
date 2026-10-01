@@ -63,9 +63,32 @@ def verify(row: dict) -> dict:
         shutil.rmtree(scratch, ignore_errors=True)
     cls = outcome["classification"]
     fixed_valid = ex.fixed_valid_of(cls)
+    seconds = {label: (outcome.get("runs") or {}).get(label, {}).get("seconds")
+               for label in ("buggy", "fixed")}
     return {**out, "status": "executed", "class": cls["class"], "fixed_valid": fixed_valid,
             "rerun_agrees": cls.get("rerun_agrees"),
-            "accepted": cls["class"] in ex.KILLS and fixed_valid}
+            "accepted": cls["class"] in ex.KILLS and fixed_valid,
+            "_seconds": round(sum(s or 0 for s in seconds.values()), 2)}
+
+
+def env_manifest() -> dict:
+    """Deterministic identity of the pinned synthetic verification environment."""
+    import subprocess
+    site = sorted(p for p in (ENV / "lib").rglob("*") if p.is_file()
+                  and "__pycache__" not in p.parts)
+    files = {p.relative_to(ENV).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+             for p in site}
+    version = subprocess.run([str(ENV / "bin" / "python"), "-c",
+                              "import sys, pytest; print(sys.version.split()[0], "
+                              "pytest.__version__)"], capture_output=True, text=True
+                             ).stdout.split()
+    dists = sorted(p.name for p in (ENV / "lib").rglob("*.dist-info"))
+    return {"path_role": "pinned synthetic verification venv", "python": version[0],
+            "pytest": version[1], "distributions": dists,
+            "site_packages_sha256": hashlib.sha256(json.dumps(files, sort_keys=True)
+                                                   .encode()).hexdigest(),
+            "executor_limits": ex.LIMITS, "module_limits": ex.MODULE_LIMITS,
+            "workers": WORKERS}
 
 
 def main(argv=None) -> int:
@@ -83,10 +106,20 @@ def main(argv=None) -> int:
     for row in rows:                       # views are created once, before any worker starts
         if row["execution_mode"] == "function_assertion" and row["conversion"]["accepted"]:
             view_for(row)
+    manifest = env_manifest()
+    mpath = directory / "synthetic_env_manifest.json"
+    if mpath.exists() and json.loads(mpath.read_text(encoding="utf-8")) != manifest:
+        raise SystemExit("REFUSED: the verification environment changed between runs")
+    mpath.write_bytes((json.dumps(manifest, indent=1, sort_keys=True) + "\n").encode())
     with Pool(WORKERS) as pool:
         verdicts = pool.map(verify, rows, chunksize=8)
+    # deterministic verdicts (compared byte for byte) and a separate, non-deterministic
+    # timing sidecar used only by the exclusion audit
+    timing = [{"index": v["index"], "seconds": v.pop("_seconds", None)} for v in verdicts]
     out.write_bytes(("\n".join(json.dumps(v, sort_keys=True) for v in verdicts) + "\n")
                     .encode("utf-8"))
+    (directory / f"verification_run{args.run}.timing.jsonl").write_bytes(
+        ("\n".join(json.dumps(t, sort_keys=True) for t in timing) + "\n").encode("utf-8"))
     accepted = sum(v["accepted"] for v in verdicts)
     print(json.dumps({"rows": len(verdicts), "accepted": accepted,
                       "sha256": hashlib.sha256(out.read_bytes()).hexdigest()}))

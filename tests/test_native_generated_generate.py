@@ -191,7 +191,7 @@ def test_generator_uses_the_launch_gate_and_no_file_existence_shortcut():
     assert "from harness.native_launch_gate import evaluate" in source
     assert "verify_authorization" not in source and ".exists()" not in source.split(
         "def launch_gate", 1)[1].split("def ", 1)[0]
-    assert gen.PROTOCOL_FILES[-1].endswith("PROTOCOL_V2_4.md")
+    assert gen.PROTOCOL_FILES[-1].endswith("PROTOCOL_V2_5.md")
 
 
 # --- generation telemetry (amendment v2.3 section B) ------------------------------------------

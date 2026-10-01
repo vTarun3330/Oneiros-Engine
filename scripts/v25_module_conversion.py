@@ -135,18 +135,49 @@ def repository_header(support_context: str) -> Optional[str]:
     return header or None
 
 
+def _attribute_roots(tree: ast.AST) -> set:
+    """Names used as ``name.attr`` (module-style use)."""
+    return {n.value.id for n in ast.walk(tree)
+            if isinstance(n, ast.Attribute) and isinstance(n.value, ast.Name)}
+
+
+def _defines_test(tree: ast.AST) -> bool:
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and                 node.name.startswith("test"):
+            return True
+        if isinstance(node, ast.ClassDef) and (node.name.startswith("Test") or any(
+                isinstance(b, ast.Attribute) and b.attr == "TestCase" for b in node.bases)):
+            return True
+    return False
+
+
 def convert_repository(fragment: str, support_context: str) -> Dict[str, object]:
+    """Public import header + the verified fragment, unchanged. ``from __future__`` imports
+    stay first; ``pytest``/``unittest``/another stdlib module is added only when the fragment
+    uses it as ``name.attr`` and nothing binds it. Every inserted line is recorded."""
     header = repository_header(support_context)
     if header is None:
         return {"accepted": False, "reason": "no_public_import_header"}
-    module = header + "\n\n\n" + fragment.strip() + "\n"
     try:
-        tree = ast.parse(module)
+        frag_tree = ast.parse(fragment.strip())
+    except (SyntaxError, ValueError):
+        return {"accepted": False, "reason": "fragment_does_not_parse"}
+    if not _defines_test(frag_tree):
+        return {"accepted": False, "reason": "no_test_defined"}
+    lines = header.splitlines()
+    future = [l for l in lines if l.startswith("from __future__ import")]
+    rest = [l for l in lines if l not in future]
+    try:
+        bound = _loads_and_binds(ast.parse("\n".join(rest)))[1] | _loads_and_binds(frag_tree)[1]
+    except (SyntaxError, ValueError):
+        return {"accepted": False, "reason": "malformed_header"}
+    added = [f"import {m}" for m in sorted(_attribute_roots(frag_tree) - bound)
+             if m in ("pytest",) or m in STDLIB]
+    module = "\n".join([*future, *added, *rest]) + "\n\n\n" + fragment.strip() + "\n"
+    try:
+        ast.parse(module)
     except (SyntaxError, ValueError):
         return {"accepted": False, "reason": "converted_module_does_not_parse"}
-    if "pytest." in fragment and not any(
-            isinstance(n, ast.Import) and any(a.name == "pytest" for a in n.names)
-            for n in ast.walk(tree)):
-        module = "import pytest\n" + module
-    return {"accepted": True, "module": module, "imports_added": header.splitlines(),
-            "module_sha256": sha256(module), "verification": "pending_native_environment"}
+    return {"accepted": True, "module": module, "imports_added": [*header.splitlines(), *added],
+            "inserted_imports": added, "module_sha256": sha256(module),
+            "verification": "pending_native_environment"}
