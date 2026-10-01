@@ -1,0 +1,24 @@
+{
+ "active_exclusive_lock": false,
+ "archives_byte_identical": {
+  "native_v24_completed_965005d": 23,
+  "native_v24_repair_ceiling": 5
+ },
+ "finding_accepted": "load_complexity_index() reads the combined development_view/complexity_manifest.json (6,894 entries vs 5,941 train records), i.e. non-train split METADATA. The Stage-1 receipt (bf3f9828) and the training-shape rebuild (fac747a1, via the training-commit loader) therefore wrongly claimed no validation access. No validation outcomes, tests or code were read; the claim is superseded in stage1_r2.",
+ "gpu_idle": true,
+ "hashes": {
+  "converted_candidates": "ca4d8c8f8f353a00d01d53194636dca22b674da16aa367d06c21d35d10f2a127",
+  "stage1_receipt": "bf3f98286db3aa80ef494723b80949f2720c38e6cb5f1514e19fb1f12b23b924",
+  "v24_closure": "99221ce8cf1c79518448447b926a15033b4892b3cc71b59ac0cefcce82788a89",
+  "v25_protocol": "c707d8ae9f8b6cce8ab50e87d417175c9e947687c64b4c3de4d67eebe96022f7",
+  "verification_run1": "149fde67b87d7aa5d93fb225ab5c5d39d4ab34e4ee4eaf3580053356ce218d17",
+  "verification_run2": "149fde67b87d7aa5d93fb225ab5c5d39d4ab34e4ee4eaf3580053356ce218d17"
+ },
+ "head": "6b35b20af7937968afd38c43ad6d3f1af1750692",
+ "head_equals_origin": true,
+ "oneiros_processes": 0,
+ "protected_access_in_phase0": "none (no corpus, validation, reserved or sealed path opened)",
+ "reconstructed_source_examples_sha256": "30e9436f7aa16709b8710ba410d653666c3eb8e11d4bdf9de55979a6f4c02167",
+ "schema_version": "oneiros_v25_phase0_reverification_v1",
+ "worktree_clean": true
+}
