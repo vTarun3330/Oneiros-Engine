@@ -1,0 +1,45 @@
+{
+ "active_exclusive_locks": [
+  "released"
+ ],
+ "archives": {
+  "native_v25_stage1_6b35b20": {
+   "byte_verified": 5,
+   "items": 5
+  },
+  "native_v25_stage1_r2": {
+   "byte_verified": 17,
+   "items": 17
+  }
+ },
+ "full_suite": {
+  "failed": 0,
+  "head_is_receipt_only_descendant": true,
+  "passed": 2732,
+  "receipt": "results/sft_root_cause/native_v25_full_suite_health_66e7397.json",
+  "sha256": "2dddd080bbe7a6d121f91aac2a79f651ead0adc5b0a28cc21cab608c18288972",
+  "skipped": 3,
+  "source_commit": "66e7397440bf38f19f4a629cefe847fd808ecad6"
+ },
+ "head": "a5be32ea09e5f0899099b634dcb0702603803fbe",
+ "head_equals_origin": true,
+ "issues": [],
+ "protected_access_in_phase0": "none (no corpus, validation, reserved or sealed path opened)",
+ "receipts_after_stage1": {
+  "results/sft_root_cause/native_v25_canaries/atheris_canary_receipt_v4.json": "9bf28c23e6d72729a62ecb7624c97235c72649f76620a35cae01e8b63724ebdb",
+  "results/sft_root_cause/native_v25_canaries/atheris_overlays.json": "0544af61392a4abe7196eb78d2d9e3cfbbb1424ace7fceee4bfe3f67b49bd2f9",
+  "results/sft_root_cause/native_v25_full_suite_health_66e7397.json": "2dddd080bbe7a6d121f91aac2a79f651ead0adc5b0a28cc21cab608c18288972",
+  "results/sft_root_cause_v25_confirmation_panel_spec.json": "21e132b2efe3251cdf65043aa3eb56e1b56567827a75ff737327d584281e5be8",
+  "results/sft_root_cause_v25_converted_corpus_stage1_r2.json": "a29c497262d1b932bf4ea13bed1791821c161393182541f08c09fbab5249c4fd",
+  "results/sft_root_cause_v25_native_env_canary_receipt.json": "70c59154e994067bb84beccb0628eb34fe4e4cae64000659188c202b71d70a19",
+  "results/sft_root_cause_v25_native_env_canary_spec.json": "ac528777676bfea015b1563909961472498fc3d10b92eb67be5551a5337e2e0a",
+  "results/sft_root_cause_v25_phase0_reverification.json": "2bb0a59ca1802ca658c109ad04d8c330fe7219256a69da878993a1cb6a64aec3",
+  "results/sft_root_cause_v25_repository_verification.json": "97544ca3efe0ecddcd239f5c7727c3e443589402ae65ab6d397f9f1f713a27f7",
+  "results/sft_root_cause_v25_selection_view.json": "573e788553e4e60c3613e4e7e438f574c3f0b51b181b949f1b21ff06e4b182fc",
+  "results/sft_root_cause_v25_stage1_archive_manifest.json": "46c1c17520e645e4d47dd77282711400401be26f690887bb80475ac868b3bd57",
+  "results/sft_root_cause_v25_stage1_r2_archive_manifest.json": "a6ea58a5ae51fda8c0cc02fc13b5cafe2933c9d2b2af72c2c9b0b88e94bd44d9",
+  "results/sft_root_cause_v25_stop_decision.json": "72033d8bef0636dad8d5c33dac265855b7d5e9aa76cbc85fb884dd736ae06ec8"
+ },
+ "schema_version": "oneiros_v25_cpu2_phase0_reverification_v1",
+ "worktree_clean": true
+}
