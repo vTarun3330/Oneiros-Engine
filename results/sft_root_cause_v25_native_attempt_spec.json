@@ -1,0 +1,238 @@
+{
+ "access_audit": {
+  "opened": [
+   "data/BugsInPy_repo/projects/ansible/bugs/10/bug.info",
+   "data/BugsInPy_repo/projects/ansible/bugs/14/bug.info",
+   "data/BugsInPy_repo/projects/ansible/bugs/17/bug.info",
+   "data/BugsInPy_repo/projects/ansible/bugs/7/bug.info",
+   "data/BugsInPy_repo/projects/ansible/bugs/8/bug.info",
+   "data/BugsInPy_repo/projects/fastapi/bugs/12/bug.info",
+   "data/BugsInPy_repo/projects/httpie/bugs/2/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/10/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/11/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/13/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/14/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/15/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/16/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/17/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/19/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/20/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/25/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/27/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/28/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/29/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/7/bug.info",
+   "data/BugsInPy_repo/projects/matplotlib/bugs/9/bug.info",
+   "data/BugsInPy_repo/projects/sanic/bugs/5/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/1/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/10/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/11/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/12/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/13/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/14/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/17/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/18/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/19/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/21/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/22/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/23/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/24/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/25/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/26/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/27/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/3/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/31/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/32/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/4/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/5/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/6/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/7/bug.info",
+   "data/BugsInPy_repo/projects/thefuck/bugs/9/bug.info",
+   "data/BugsInPy_repo/projects/tornado/bugs/16/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/1/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/10/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/13/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/15/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/17/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/20/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/21/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/23/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/25/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/26/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/27/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/28/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/29/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/3/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/34/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/37/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/41/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/43/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/5/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/6/bug.info",
+   "data/BugsInPy_repo/projects/youtube-dl/bugs/7/bug.info",
+   "data/corpus/v4_1_research_hardened_candidate/development_view/manifest.json",
+   "data/corpus/v4_1_research_hardened_candidate/development_view/train.records.json",
+   "data/corpus/v4_1_research_hardened_candidate/development_view/training_exclusions.json",
+   "data/corpus/v4_1_research_hardened_candidate/manifest.json"
+  ],
+  "passed": true
+ },
+ "already_attempted": [
+  "django",
+  "sympy",
+  "thefuck"
+ ],
+ "attempt_order": [
+  "youtube-dl",
+  "ansible",
+  "fastapi",
+  "flask",
+  "httpie",
+  "sanic",
+  "tornado",
+  "matplotlib",
+  "astropy",
+  "pylint"
+ ],
+ "existing_project_fixes": {
+  "django_verification": "a Django settings layer (django test_sqlite-equivalent settings, django.setup() at interpreter start via a .pth file) in a SEPARATE copy of the qualified environment, recorded with its own lock; the candidate module, the static policy and the sandbox are unchanged; official/gold tests never enter the view",
+  "patches": "remaining 11 SWE-bench instances: exact sha256 equality with train metadata only (row API, then PR-diff split); no relaxation",
+  "test_support": "project tests.*/conftest imports stay rejected",
+  "view_rule_v2": "keep <pkg>/testing (and only that) when it is a package inside the import-root package AND packaging metadata of that revision ships it (literal dotted name, or find_packages/packages=find without excluding it); test_*.py, *_test.py, conftest.py and test/tests directories are still stripped at any depth; a manifest check proves no official test file is in a view"
+ },
+ "frozen_before_outcomes": true,
+ "order_rule": "projects with eligible fragments first; pure Python before compiled; then more eligible fragments; then name",
+ "output_dirs": "results/sft_root_cause/v25_native_r2/<project>/ (fresh per project)",
+ "projects": [
+  {
+   "compiled_extensions": false,
+   "datasets": [
+    "BugsInPy"
+   ],
+   "eligible_fragments": 21,
+   "estimated_build_cost": "low (pure Python)",
+   "interpreters": {
+    "3.7": 21
+   },
+   "lineages": 21,
+   "project": "youtube-dl"
+  },
+  {
+   "compiled_extensions": false,
+   "datasets": [
+    "BugsInPy"
+   ],
+   "eligible_fragments": 5,
+   "estimated_build_cost": "low (pure Python)",
+   "interpreters": {
+    "3.7": 5
+   },
+   "lineages": 5,
+   "project": "ansible"
+  },
+  {
+   "compiled_extensions": false,
+   "datasets": [
+    "BugsInPy"
+   ],
+   "eligible_fragments": 1,
+   "estimated_build_cost": "low (pure Python)",
+   "interpreters": {
+    "3.8": 1
+   },
+   "lineages": 1,
+   "project": "fastapi"
+  },
+  {
+   "compiled_extensions": false,
+   "datasets": [
+    "SWE-bench Verified"
+   ],
+   "eligible_fragments": 1,
+   "estimated_build_cost": "low (pure Python)",
+   "interpreters": {
+    "3.11": 1
+   },
+   "lineages": 1,
+   "project": "flask"
+  },
+  {
+   "compiled_extensions": false,
+   "datasets": [
+    "BugsInPy"
+   ],
+   "eligible_fragments": 1,
+   "estimated_build_cost": "low (pure Python)",
+   "interpreters": {
+    "3.7": 1
+   },
+   "lineages": 1,
+   "project": "httpie"
+  },
+  {
+   "compiled_extensions": false,
+   "datasets": [
+    "BugsInPy"
+   ],
+   "eligible_fragments": 1,
+   "estimated_build_cost": "low (pure Python)",
+   "interpreters": {
+    "3.8": 1
+   },
+   "lineages": 1,
+   "project": "sanic"
+  },
+  {
+   "compiled_extensions": false,
+   "datasets": [
+    "BugsInPy"
+   ],
+   "eligible_fragments": 1,
+   "estimated_build_cost": "low (pure Python)",
+   "interpreters": {
+    "3.7": 1
+   },
+   "lineages": 1,
+   "project": "tornado"
+  },
+  {
+   "compiled_extensions": true,
+   "datasets": [
+    "BugsInPy",
+    "SWE-bench Verified"
+   ],
+   "eligible_fragments": 17,
+   "estimated_build_cost": "high (C extensions not built: expected view_attestation_failed)",
+   "interpreters": {
+    "3.11": 1,
+    "3.8": 16
+   },
+   "lineages": 17,
+   "project": "matplotlib"
+  },
+  {
+   "compiled_extensions": true,
+   "datasets": [
+    "SWE-bench Verified"
+   ],
+   "eligible_fragments": 2,
+   "estimated_build_cost": "high (C extensions not built: expected view_attestation_failed)",
+   "interpreters": {
+    "3.9": 2
+   },
+   "lineages": 2,
+   "project": "astropy"
+  },
+  {
+   "compiled_extensions": false,
+   "datasets": [],
+   "eligible_fragments": 0,
+   "estimated_build_cost": "low (pure Python)",
+   "interpreters": {},
+   "lineages": 0,
+   "project": "pylint"
+  }
+ ],
+ "repeatability": "environments built twice (identical lock); official buggy/fixed 3/3; candidates verified in two runs; byte identity and normalised semantic identity reported separately",
+ "schema_version": "oneiros_v25_native_attempt_spec_v1"
+}
