@@ -1,0 +1,48 @@
+{
+ "decision": "C",
+ "decision_text": "the existing train repositories cannot structurally reach 8 repositories (7 have any qualified environment) and verified only 28 unique tests from 3 repositories; bounded train-only acquisition from the frozen training-expansion pool is required",
+ "gate_relaxed": false,
+ "pre_execution_structural_maximum": {
+  "after_dedup_and_caps": 150,
+  "lineages": 143,
+  "note": "even 100% verification of every eligible fragment would have reached exactly 150; observed native verification is far lower",
+  "policy_valid_or_recovered_fragments": 163,
+  "repositories": 12
+ },
+ "qualified_repositories": 7,
+ "qualified_target_lineages": 87,
+ "qualified_target_lineages_by_repository": {
+  "django": 20,
+  "fastapi": 1,
+  "httpie": 1,
+  "sympy": 22,
+  "thefuck": 24,
+  "tornado": 1,
+  "youtube-dl": 18
+ },
+ "schema_version": "oneiros_v25_attainable_gate_decision_v1",
+ "verification_receipt_sha256": "60cdba0882d9665d7b31a7c75c6c844251c19b5683e01ca53198028ad676a2a5",
+ "verified_unique_repository_tests": {
+  "by_project": {
+   "sympy": 14,
+   "thefuck": 2,
+   "youtube-dl": 12
+  },
+  "functions": 25,
+  "gate": {
+   "lineages": 60,
+   "repositories": 8,
+   "repository_tests": 150
+  },
+  "lineages": 28,
+  "passed": false,
+  "recovered_rows_verified": 13,
+  "repositories": 3,
+  "repository_tests": 28,
+  "shortfall": {
+   "lineages": 32,
+   "repositories": 5,
+   "repository_tests": 122
+  }
+ }
+}

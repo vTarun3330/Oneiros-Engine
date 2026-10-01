@@ -29,6 +29,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
 sys.path.insert(0, str(HERE))
 import native_generated_tests_execute_wsl as ex  # noqa: E402
+import v25_django_layer_wsl as dj  # noqa: E402
 
 CANDIDATES = "results/sft_root_cause/v25_corpus_stage1_r2/converted_candidates.jsonl"
 TARGETS = "results/sft_root_cause/v25_native/targets.jsonl"
@@ -82,7 +83,14 @@ def main(argv=None) -> int:
     parser.add_argument("--envs", required=True)
     parser.add_argument("--run", type=int, required=True)
     parser.add_argument("--out", required=True)
+    parser.add_argument("--candidates", default=CANDIDATES)
+    parser.add_argument("--targets", default=TARGETS)
+    parser.add_argument("--runners", default=",".join(SANDBOX_RUNNERS),
+                        help="projects run in the pytest sandbox, or 'all'")
+    parser.add_argument("--django-layer", action="store_true",
+                        help="run django through the v2.5 Django settings layer")
     args = parser.parse_args(argv)
+    runners = None if args.runners == "all" else set(args.runners.split(","))
     out_dir = REPO / args.out
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / f"repository_verification_run{args.run}.jsonl"
@@ -90,18 +98,34 @@ def main(argv=None) -> int:
         raise SystemExit(f"REFUSED: {out.name} exists")
     envs = {r["task"]: r for r in map(json.loads, (REPO / args.envs).read_text(encoding="utf-8")
                                       .splitlines())}
-    targets = [json.loads(l) for l in (REPO / TARGETS).read_text(encoding="utf-8").splitlines()]
-    cands = {c["index"]: c for c in map(json.loads, (REPO / CANDIDATES).read_text(
+    targets = [json.loads(l) for l in (REPO / args.targets).read_text(encoding="utf-8")
+               .splitlines()]
+    cands = {c["index"]: c for c in map(json.loads, (REPO / args.candidates).read_text(
         encoding="utf-8").splitlines())}
+    layers = {}
     verdicts = []
     scratch = Path(tempfile.mkdtemp(prefix="oneiros_v25_repo_"))
     try:
         for t in targets:
             env = envs.get(t["task"])
+            django = t["project"] == "django"
+            runnable = (django and args.django_layer) or (not django and (
+                runners is None or t["project"] in runners))
             target, why = (None, "no_environment_row") if env is None else (
                 (None, f"environment:{env['category']}") if env["category"] != "qualified"
-                else (None, "runner_incompatible") if t["project"] not in SANDBOX_RUNNERS
+                else (None, "runner_incompatible") if not runnable
                 else target_for(env))
+            if target is not None and django:
+                layered = dj.layered_env(env["env_dir"])
+                python = str(layered / "bin" / Path(env["python_path"]).name)
+                check = dj.canary(python, env["views"]["buggy"])
+                layers[t["task"]] = {"layer": dj.VERSION, "files": dj.layer_files_sha256(),
+                                     "canary_ok": check["ok"], "canary_error": check["error"],
+                                     "lock": ex.env_lock(python)}
+                if not check["ok"]:
+                    target, why = None, "django_layer_canary_failed"
+                else:
+                    target = {**target, "python": python, "env_dir": str(layered)}
             for frag in t["fragments"]:
                 cand = cands[frag["index"]]
                 row = {"index": frag["index"], "task": t["task"], "project": t["project"],
@@ -124,6 +148,9 @@ def main(argv=None) -> int:
         shutil.rmtree(scratch, ignore_errors=True)
     out.write_bytes(("\n".join(json.dumps(v, sort_keys=True) for v in verdicts) + "\n")
                     .encode("utf-8"))
+    if layers:
+        (out_dir / f"django_layers_run{args.run}.json").write_bytes(
+            (json.dumps(layers, indent=1, sort_keys=True) + "\n").encode("utf-8"))
     print(json.dumps({"rows": len(verdicts), "accepted": sum(v["accepted"] for v in verdicts),
                       "sha256": hashlib.sha256(out.read_bytes()).hexdigest()}))
     return 0

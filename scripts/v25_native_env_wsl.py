@@ -34,6 +34,7 @@ sys.path.insert(0, str(HERE))
 from native_rehearsal_wsl import junit, module_name, run  # noqa: E402
 from native_generated_tests_execute_wsl import (  # noqa: E402
     build_view, env_lock, generated_files, import_root)
+import v25_view_rule  # noqa: E402
 
 REPOS = Path("/root/oneiros_v25_repos")
 WORK = Path("/root/oneiros_v25_native")
@@ -41,6 +42,7 @@ INTERPRETERS = {"3.7": "/usr/bin/python3.7", "3.8": "/usr/bin/python3.8",
                 "3.9": "/usr/bin/python3.9", "3.10": "python3.10", "3.11": "/usr/bin/python3.11",
                 "3.12": "/usr/bin/python3.12"}
 REPEATS = 3
+VIEW_RULE = "v1"            # v1 = the frozen executor rule; v2 = scripts/v25_view_rule.py
 INSTALL_TIMEOUT = 1800
 TEST_TIMEOUT = 1200
 DJANGO_LINE = re.compile(r"^(test\w*) \(([\w.]+?)(?:\.(test\w*))?\)\s*\.\.\.\s*(ok|FAIL|ERROR|"
@@ -84,8 +86,32 @@ SWEBENCH_DEPENDENCIES = {
     "django": ["asgiref", "pytz", "sqlparse", "pytest"]}
 
 
+# attempt-2 infrastructure fixes (v2.5 CPU program 2): UTF-16 requirement files, pinned self
+# distributions, BugsInPy bugs without requirements, and the venv-era setuptools seed
+SELF_DISTRIBUTIONS = {"ansible": {"ansible", "ansible-base", "ansible-core"}}
+ERA_SETUPTOOLS = "setuptools==57.5.0"
+BUGSINPY_PYTEST = "pytest==7.4.4"
+
+
+def read_requirements(path: Path) -> str:
+    data = path.read_bytes()
+    if data.startswith((b"\xff\xfe", b"\xfe\xff")):
+        return data.decode("utf-16")
+    return data.decode("utf-8-sig")
+
+
+def requirement_name(line: str) -> str:
+    name = re.split(r"[<>=!~\[; @]", line.strip(), maxsplit=1)[0]
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def is_self_requirement(line: str, project: str) -> bool:
+    names = {re.sub(r"[-_.]+", "-", project).lower()} | SELF_DISTRIBUTIONS.get(project, set())
+    return bool(line.strip()) and requirement_name(line) in names
+
+
 def build_env(env_dir: Path, python_path: str, project: str, date: str,
-              requirements: Path | None) -> dict:
+              requirements: Path | None, bugsinpy: bool = False) -> dict:
     if env_dir.exists():
         shutil.rmtree(env_dir)
     venv = run(["uv", "venv", "-q", "--python", python_path, str(env_dir)], timeout=300)
@@ -94,16 +120,25 @@ def build_env(env_dir: Path, python_path: str, project: str, date: str,
     python = str(env_dir / "bin" / "python")
     dropped = []
     if requirements is not None:
-        # BugsInPy: its exact pins (they fix every version, so no date cutoff), minus the line
-        # naming the project itself as an editable git requirement
+        # BugsInPy: its exact pins (they fix every version, so no date cutoff), minus every line
+        # naming the project itself (editable git requirement, or a pinned self distribution
+        # such as ansible-base==2.10.0.dev0: the project is never installed)
         kept = []
-        for line in requirements.read_text(encoding="utf-8").splitlines():
-            (dropped if "git+" in line else kept).append(line)
+        for line in read_requirements(requirements).splitlines():
+            (dropped if "git+" in line or is_self_requirement(line, project) else kept) \
+                .append(line)
         pinned = env_dir.parent / f"{env_dir.name}_requirements.txt"
         pinned.write_text("\n".join(kept) + "\n", encoding="utf-8")
         cmd = ["uv", "pip", "install", "-q", "--python", python, "-r", str(pinned)]
         if not any(l.lower().startswith("pytest==") for l in kept):
             cmd.append("pytest")
+        if not any(requirement_name(l) == "setuptools" for l in kept):
+            cmd.append(ERA_SETUPTOOLS)
+    elif bugsinpy:
+        # BugsInPy bug without requirements.txt: an exact pytest pin (no date cutoff), plus the
+        # setuptools that virtualenvs of the era seeded (pkg_resources)
+        cmd = ["uv", "pip", "install", "-q", "--python", python, BUGSINPY_PYTEST,
+               ERA_SETUPTOOLS]
     else:
         deps = SWEBENCH_DEPENDENCIES.get(project, ["pytest"])
         # exact pins are reproducible on their own; anything unpinned resolves at the buggy
@@ -232,7 +267,8 @@ def prepare(t: dict, patches: Path) -> dict:
         # second build replacing the first; byte-identical locks prove reproducibility
         envs = []
         for _ in range(2):
-            built = build_env(base / "env", python_path, t["project"], date, requirements)
+            built = build_env(base / "env", python_path, t["project"], date, requirements,
+                              bugsinpy=bool(t.get("bugsinpy_bug")))
             if not built["ok"]:
                 return {**row, "category": built["failure"], "failure": built.get("tail")}
             envs.append(built)
@@ -246,10 +282,23 @@ def prepare(t: dict, patches: Path) -> dict:
         root_rel = import_root(t["target_file"])
         extra = generated_files(co / "fixed", root_rel)
         views = {label: base / "views" / label for label in ("buggy", "fixed")}
-        manifests = {label: build_view(co / label, root_rel, views[label], extra)
+        builder = v25_view_rule.build_view_v2 if VIEW_RULE == "v2" else build_view
+        manifests = {label: builder(co / label, root_rel, views[label], extra)
                      for label in views}
         row["views"] = {k: str(v) for k, v in views.items()}
         row["view_manifest_sha256"] = {k: v["manifest_sha256"] for k, v in manifests.items()}
+        row["view_rule"] = v25_view_rule.VERSION if VIEW_RULE == "v2" else "executor_build_view"
+        row["kept_testing_packages"] = manifests["buggy"].get("kept_testing_packages", {})
+        official = [s.split("::")[0] for s in t["selectors"] if not s.startswith(
+            ("django:", "unresolved:"))] + list(t.get("test_paths") or [])
+        if patch is not None:
+            official += re.findall(r"^\+\+\+ b/(\S+)", patch["test_patch"], re.M)
+        absent = {label: v25_view_rule.official_files_absent(views[label], root_rel, official)
+                  for label in views}
+        row["official_tests_absent_from_views"] = all(a["ok"] for a in absent.values())
+        if not row["official_tests_absent_from_views"]:
+            return {**row, "category": "view_contains_official_test",
+                    "failure": {k: a["present"] for k, a in absent.items()}}
         module = module_name(t["target_file"])
         attest_rows = {label: attest(python, views[label], module) for label in views}
         row["module"] = module
@@ -312,13 +361,18 @@ def prepare(t: dict, patches: Path) -> dict:
 
 
 def main(argv=None) -> int:
+    global WORK, VIEW_RULE
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--targets", required=True)
     parser.add_argument("--canary-only", action="store_true")
     parser.add_argument("--projects", default="")
     parser.add_argument("--out", required=True)
+    parser.add_argument("--work", default=str(WORK), help="fresh work root per program")
+    parser.add_argument("--patches", default="", help="patch cache (default: next to targets)")
+    parser.add_argument("--view-rule", choices=("v1", "v2"), default="v1")
     args = parser.parse_args(argv)
+    WORK, VIEW_RULE = Path(args.work), args.view_rule
     tpath = REPO_ROOT / args.targets
     targets = [json.loads(l) for l in tpath.read_text(encoding="utf-8").splitlines()]
     wanted = set(filter(None, args.projects.split(",")))
@@ -330,7 +384,8 @@ def main(argv=None) -> int:
     rows = []
     for t in targets:
         started = time.time()
-        row = {**prepare(t, tpath.parent / "patches"),
+        row = {**prepare(t, (REPO_ROOT / args.patches) if args.patches
+                         else tpath.parent / "patches"),
                "wall_seconds": round(time.time() - started, 1)}
         rows.append(row)
         print(json.dumps({k: row.get(k) for k in ("task", "category", "wall_seconds",
