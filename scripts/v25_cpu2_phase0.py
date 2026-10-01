@@ -5,7 +5,7 @@ Stage-1 commit, byte-verifies the Stage-1 and Stage-1-r2 external archives again
 manifests, checks the full-suite receipt is bound to 66e7397 and that HEAD is its receipt-only
 descendant, and publishes a new receipt (never overwriting).
 
-    python scripts/v25_cpu2_phase0.py
+    python scripts/v25_cpu2_phase0.py --archive-root <external archive directory>
 """
 from __future__ import annotations
 
@@ -23,7 +23,6 @@ RECEIPT = "results/sft_root_cause_v25_cpu2_phase0_reverification.json"
 EXPECTED_HEAD = "a5be32ea09e5f0899099b634dcb0702603803fbe"
 STAGE1_COMMIT = "6b35b20"
 SUITE_COMMIT = "66e7397440bf38f19f4a629cefe847fd808ecad6"
-ARCHIVE_ROOT = Path(r"C:\Users\Student2\oneiros_archive")
 ARCHIVE_MANIFESTS = ("results/sft_root_cause_v25_stage1_archive_manifest.json",
                      "results/sft_root_cause_v25_stage1_r2_archive_manifest.json")
 HEALTH = "results/sft_root_cause/native_v25_full_suite_health_66e7397.json"
@@ -43,7 +42,12 @@ def sha(path: Path) -> str:
     return h.hexdigest()
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    import argparse
+    from harness.archive_verify import resolve_root
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--archive-root", required=True)
+    archive_root = resolve_root(parser.parse_args(argv).archive_root)
     from scripts.native_rehearsal_rebuild_v22 import publish_once
     issues = []
     head = git("rev-parse", "HEAD")
@@ -68,7 +72,7 @@ def main() -> int:
     archives = {}
     for rel in ARCHIVE_MANIFESTS:
         man = json.loads((ROOT / rel).read_text(encoding="utf-8"))
-        base = ARCHIVE_ROOT / man["archive_directory_name"]
+        base = archive_root / man["archive_directory_name"]
         ok = 0
         for item in man["items"]:
             path = base / item["file"]

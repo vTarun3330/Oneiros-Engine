@@ -5,7 +5,7 @@ and receipts, byte-verifies every external archive against its tracked manifest,
 current canonical executable-tree hash and compares it with the last full-suite receipt, and
 records v2.5 as a completed NEGATIVE FEASIBILITY result (not failed model training).
 
-    python scripts/v26_phase0.py
+    python scripts/v26_phase0.py --archive-root <external archive directory>
 """
 from __future__ import annotations
 
@@ -21,7 +21,6 @@ if str(ROOT) not in sys.path:
 
 RECEIPT = "results/sft_root_cause_v26_phase0_reverification.json"
 EXPECTED_HEAD = "751539ef1adbea52a0fa432a5524634b2f399c79"
-ARCHIVE_ROOT = Path(r"C:\Users\Student2\oneiros_archive")
 ARCHIVES = ("results/sft_root_cause_v25_stage1_archive_manifest.json",
             "results/sft_root_cause_v25_stage1_r2_archive_manifest.json",
             "results/sft_root_cause_v25_cpu2_archive_manifest.json",
@@ -51,7 +50,12 @@ def sha(path: Path) -> str:
     return h.hexdigest()
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    import argparse
+    from harness.archive_verify import resolve_root
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--archive-root", required=True)
+    archive_root = resolve_root(parser.parse_args(argv).archive_root)
     from harness.native_launch_gate import source_identity
     from scripts.native_rehearsal_rebuild_v22 import publish_once
     issues = []
@@ -70,7 +74,7 @@ def main() -> int:
     archives = {}
     for rel in ARCHIVES:
         man = json.loads((ROOT / rel).read_text(encoding="utf-8"))
-        base = ARCHIVE_ROOT / man["archive_directory_name"]
+        base = archive_root / man["archive_directory_name"]
         bad = [i["file"] for i in man["items"]
                if not (base / i["file"]).is_file() or sha(base / i["file"]) != i["sha256"]]
         archives[man["archive_directory_name"]] = {"items": len(man["items"]),

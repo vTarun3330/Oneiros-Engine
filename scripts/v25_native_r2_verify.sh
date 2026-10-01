@@ -3,7 +3,7 @@
 # the attempt-2 environments (every project in the pytest sandbox; django through the v2.5
 # Django settings layer). Run detached; outputs are never overwritten (the verifier refuses).
 set -u
-REPO=/mnt/c/Users/Student2/Desktop/Capstone/oneiros
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"   # this checkout, wherever it lives
 cd "$REPO"
 D=results/sft_root_cause/v25_native_r2
 for RUN in 1 2; do

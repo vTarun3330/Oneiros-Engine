@@ -5,7 +5,7 @@ Multi-gigabyte WSL environments are preserved by RECIPE (``v25_native/env_recipe
 install inputs, full freeze text, recomputed locks equal to the recorded ones), which is itself
 archived. Only the portable manifest is tracked.
 
-    python scripts/v25_cpu2_archive.py
+    python scripts/v25_cpu2_archive.py --archive-root <existing external archive directory>
 """
 from __future__ import annotations
 
@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-ARCHIVE = Path(r"C:\Users\Student2\oneiros_archive\native_v25_cpu_a5be32e")
+ARCHIVE = Path("native_v25_cpu_a5be32e")            # name only; the root is --archive-root
 MANIFEST = "results/sft_root_cause_v25_cpu2_archive_manifest.json"
 BASE = "results/sft_root_cause"
 SOURCES = ("v25_native", "v25_pilot", "v25_panel", "native_v25_canaries/quarantine_attempt1")
@@ -63,12 +63,15 @@ def main(argv=None) -> int:
     import argparse
     global ARCHIVE, MANIFEST, SOURCES
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--archive-root", required=True,
+                        help="existing external archive directory (never created here)")
     parser.add_argument("--archive-name", default=ARCHIVE.name)
     parser.add_argument("--manifest", default=MANIFEST)
     parser.add_argument("--sources", nargs="*", default=list(SOURCES))
     parser.add_argument("--recipes", default="v25_native/env_recipes.jsonl")
     args = parser.parse_args(argv)
-    ARCHIVE = ARCHIVE.parent / args.archive_name
+    from harness.archive_verify import resolve_root
+    ARCHIVE = resolve_root(args.archive_root) / args.archive_name
     MANIFEST, SOURCES = args.manifest, tuple(args.sources)
     from scripts.native_rehearsal_rebuild_v22 import publish_once
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True,

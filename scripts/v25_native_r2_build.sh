@@ -8,7 +8,7 @@ set -u
 RUN="${1:?run number}"
 ATTEMPT="${2:-a2}"
 VIEW="${3:-v2}"
-REPO=/mnt/c/Users/Student2/Desktop/Capstone/oneiros
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"   # this checkout, wherever it lives
 cd "$REPO"
 OUT=results/sft_root_cause/v25_native_r2
 ORDER="youtube-dl ansible fastapi flask httpie sanic tornado matplotlib astropy pylint django sympy"
