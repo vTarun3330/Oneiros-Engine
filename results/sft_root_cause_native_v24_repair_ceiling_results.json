@@ -1,0 +1,425 @@
+{
+ "definition_sha256": "09927f6a33a637be96008db4b8b680658aa2f045db762f30055a46f704325504",
+ "delta_vs_R0": {
+  "R1": {
+   "base": {
+    "collected": 230,
+    "crash_kills": 0,
+    "executed": 200,
+    "fixed_valid": 5,
+    "kill_at_8_percent": 0.0,
+    "parsed": 268,
+    "reached": 35,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   },
+   "sft": {
+    "collected": 0,
+    "crash_kills": 0,
+    "executed": 0,
+    "fixed_valid": 0,
+    "kill_at_8_percent": 0.0,
+    "parsed": 0,
+    "reached": 0,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   }
+  },
+  "R2": {
+   "base": {
+    "collected": 0,
+    "crash_kills": 0,
+    "executed": 0,
+    "fixed_valid": 0,
+    "kill_at_8_percent": 0.0,
+    "parsed": 0,
+    "reached": 0,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   },
+   "sft": {
+    "collected": 111,
+    "crash_kills": 0,
+    "executed": 84,
+    "fixed_valid": 0,
+    "kill_at_8_percent": 0.0,
+    "parsed": 0,
+    "reached": 0,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   }
+  },
+  "R3": {
+   "base": {
+    "collected": 0,
+    "crash_kills": 0,
+    "executed": 1,
+    "fixed_valid": 32,
+    "kill_at_8_percent": 0.0,
+    "parsed": 0,
+    "reached": 66,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   },
+   "sft": {
+    "collected": 0,
+    "crash_kills": 0,
+    "executed": 0,
+    "fixed_valid": 8,
+    "kill_at_8_percent": 0.0,
+    "parsed": 0,
+    "reached": 35,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   }
+  },
+  "R4": {
+   "base": {
+    "collected": 231,
+    "crash_kills": 0,
+    "executed": 202,
+    "fixed_valid": 49,
+    "kill_at_8_percent": 0.0,
+    "parsed": 268,
+    "reached": 140,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   },
+   "sft": {
+    "collected": 114,
+    "crash_kills": 0,
+    "executed": 84,
+    "fixed_valid": 17,
+    "kill_at_8_percent": 0.0,
+    "parsed": 0,
+    "reached": 91,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   }
+  }
+ },
+ "execution": {
+  "executed": 1770,
+  "reused_same_module": 510,
+  "reused_v24_rows": 2136
+ },
+ "inputs": {
+  "results/sft_root_cause/native_v24_execution/results_primary_whole_module.jsonl": "e40c912d23eccb3fb8a6b0cd06c11e27a48052582f4e60d1f1507ce7471a0d55",
+  "results/sft_root_cause/native_v24_repair_ceiling/results_R1.jsonl": "2f4c99a0c9532a960ac706760e56d84256ebd00e9653781629b81920871bd126",
+  "results/sft_root_cause/native_v24_repair_ceiling/results_R2.jsonl": "a15bc1741870e2bc249f67e9d3e5a59143643910fd47acd25e4e556c29b7811b",
+  "results/sft_root_cause/native_v24_repair_ceiling/results_R3.jsonl": "8ef21f9774b9a7091d3911945273e95d760bd24ff0819e2b7d68c29cfaadddbf",
+  "results/sft_root_cause/native_v24_repair_ceiling/results_R4.jsonl": "7334cf731195c7cd7f053ba44610122c23a6df449e2ff7e2e14ce09970fa1a32"
+ },
+ "label": "exploratory diagnostic; R0 is the v2.4 primary result; no significance, promotion or confirmation claim",
+ "metrics": {
+  "R0": {
+   "base": {
+    "candidates": 552,
+    "classes": {
+     "collection_failure": 12,
+     "fabricated_import": 4,
+     "fixed_side_failure": 23,
+     "no_tests_collected": 2,
+     "pass_both": 17,
+     "policy_refused": 5,
+     "semantic_kill": 1,
+     "skipped_or_xfail": 19,
+     "syntax_failure": 300,
+     "target_not_reached": 169
+    },
+    "collected": 229,
+    "completion_limit_syntax_failures": 24,
+    "crash_kills": 0,
+    "executed": 210,
+    "fixed_valid": 18,
+    "fixed_valid_targets": 6,
+    "kill_at_1_percent": 0.0,
+    "kill_at_4_percent": 0.0,
+    "kill_at_8_percent": 1.449,
+    "killed_targets": [
+     "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978"
+    ],
+    "parsed": 247,
+    "reached": 41,
+    "semantic_kills": 1,
+    "unique_bugs_killed": 1
+   },
+   "sft": {
+    "candidates": 552,
+    "classes": {
+     "collection_failure": 203,
+     "fabricated_import": 46,
+     "fixed_side_failure": 16,
+     "no_tests_collected": 1,
+     "pass_both": 3,
+     "policy_refused": 22,
+     "skipped_or_xfail": 7,
+     "syntax_failure": 114,
+     "target_not_reached": 140
+    },
+    "collected": 166,
+    "completion_limit_syntax_failures": 81,
+    "crash_kills": 0,
+    "executed": 159,
+    "fixed_valid": 3,
+    "fixed_valid_targets": 3,
+    "kill_at_1_percent": 0.0,
+    "kill_at_4_percent": 0.0,
+    "kill_at_8_percent": 0.0,
+    "killed_targets": [],
+    "parsed": 416,
+    "reached": 19,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   }
+  },
+  "R1": {
+   "base": {
+    "candidates": 552,
+    "classes": {
+     "collection_failure": 38,
+     "fabricated_import": 16,
+     "fixed_side_failure": 53,
+     "no_tests_collected": 2,
+     "pass_both": 22,
+     "policy_refused": 8,
+     "semantic_kill": 1,
+     "skipped_or_xfail": 49,
+     "syntax_failure": 29,
+     "target_not_reached": 334
+    },
+    "collected": 459,
+    "completion_limit_syntax_failures": 24,
+    "crash_kills": 0,
+    "executed": 410,
+    "fixed_valid": 23,
+    "fixed_valid_targets": 10,
+    "kill_at_1_percent": 0.0,
+    "kill_at_4_percent": 0.0,
+    "kill_at_8_percent": 1.449,
+    "killed_targets": [
+     "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978"
+    ],
+    "parsed": 515,
+    "reached": 76,
+    "semantic_kills": 1,
+    "unique_bugs_killed": 1
+   },
+   "sft": {
+    "candidates": 552,
+    "classes": {
+     "collection_failure": 203,
+     "fabricated_import": 46,
+     "fixed_side_failure": 16,
+     "no_tests_collected": 1,
+     "pass_both": 3,
+     "policy_refused": 22,
+     "skipped_or_xfail": 7,
+     "syntax_failure": 114,
+     "target_not_reached": 140
+    },
+    "collected": 166,
+    "completion_limit_syntax_failures": 81,
+    "crash_kills": 0,
+    "executed": 159,
+    "fixed_valid": 3,
+    "fixed_valid_targets": 3,
+    "kill_at_1_percent": 0.0,
+    "kill_at_4_percent": 0.0,
+    "kill_at_8_percent": 0.0,
+    "killed_targets": [],
+    "parsed": 416,
+    "reached": 19,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   }
+  },
+  "R2": {
+   "base": {
+    "candidates": 552,
+    "classes": {
+     "collection_failure": 12,
+     "fabricated_import": 4,
+     "fixed_side_failure": 23,
+     "no_tests_collected": 2,
+     "pass_both": 17,
+     "policy_refused": 5,
+     "semantic_kill": 1,
+     "skipped_or_xfail": 19,
+     "syntax_failure": 300,
+     "target_not_reached": 169
+    },
+    "collected": 229,
+    "completion_limit_syntax_failures": 24,
+    "crash_kills": 0,
+    "executed": 210,
+    "fixed_valid": 18,
+    "fixed_valid_targets": 6,
+    "kill_at_1_percent": 0.0,
+    "kill_at_4_percent": 0.0,
+    "kill_at_8_percent": 1.449,
+    "killed_targets": [
+     "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978"
+    ],
+    "parsed": 247,
+    "reached": 41,
+    "semantic_kills": 1,
+    "unique_bugs_killed": 1
+   },
+   "sft": {
+    "candidates": 552,
+    "classes": {
+     "collection_failure": 91,
+     "fabricated_import": 47,
+     "fixed_side_failure": 16,
+     "no_tests_collected": 1,
+     "pass_both": 3,
+     "policy_refused": 22,
+     "skipped_or_xfail": 34,
+     "syntax_failure": 114,
+     "target_not_reached": 224
+    },
+    "collected": 277,
+    "completion_limit_syntax_failures": 81,
+    "crash_kills": 0,
+    "executed": 243,
+    "fixed_valid": 3,
+    "fixed_valid_targets": 3,
+    "kill_at_1_percent": 0.0,
+    "kill_at_4_percent": 0.0,
+    "kill_at_8_percent": 0.0,
+    "killed_targets": [],
+    "parsed": 416,
+    "reached": 19,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   }
+  },
+  "R3": {
+   "base": {
+    "candidates": 552,
+    "classes": {
+     "collection_failure": 11,
+     "fabricated_import": 4,
+     "fixed_side_failure": 57,
+     "no_tests_collected": 3,
+     "pass_both": 49,
+     "policy_refused": 5,
+     "semantic_kill": 1,
+     "skipped_or_xfail": 18,
+     "syntax_failure": 300,
+     "target_not_reached": 104
+    },
+    "collected": 229,
+    "completion_limit_syntax_failures": 24,
+    "crash_kills": 0,
+    "executed": 211,
+    "fixed_valid": 50,
+    "fixed_valid_targets": 10,
+    "kill_at_1_percent": 0.0,
+    "kill_at_4_percent": 0.0,
+    "kill_at_8_percent": 1.449,
+    "killed_targets": [
+     "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978"
+    ],
+    "parsed": 247,
+    "reached": 107,
+    "semantic_kills": 1,
+    "unique_bugs_killed": 1
+   },
+   "sft": {
+    "candidates": 552,
+    "classes": {
+     "collection_failure": 203,
+     "fabricated_import": 46,
+     "fixed_side_failure": 43,
+     "no_tests_collected": 1,
+     "pass_both": 11,
+     "policy_refused": 22,
+     "skipped_or_xfail": 7,
+     "syntax_failure": 114,
+     "target_not_reached": 105
+    },
+    "collected": 166,
+    "completion_limit_syntax_failures": 81,
+    "crash_kills": 0,
+    "executed": 159,
+    "fixed_valid": 11,
+    "fixed_valid_targets": 6,
+    "kill_at_1_percent": 0.0,
+    "kill_at_4_percent": 0.0,
+    "kill_at_8_percent": 0.0,
+    "killed_targets": [],
+    "parsed": 416,
+    "reached": 54,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   }
+  },
+  "R4": {
+   "base": {
+    "candidates": 552,
+    "classes": {
+     "collection_failure": 36,
+     "fabricated_import": 16,
+     "fixed_side_failure": 114,
+     "no_tests_collected": 3,
+     "pass_both": 66,
+     "policy_refused": 8,
+     "semantic_kill": 1,
+     "skipped_or_xfail": 48,
+     "syntax_failure": 29,
+     "target_not_reached": 231
+    },
+    "collected": 460,
+    "completion_limit_syntax_failures": 24,
+    "crash_kills": 0,
+    "executed": 412,
+    "fixed_valid": 67,
+    "fixed_valid_targets": 11,
+    "kill_at_1_percent": 0.0,
+    "kill_at_4_percent": 0.0,
+    "kill_at_8_percent": 1.449,
+    "killed_targets": [
+     "cand:python-humanize/humanize@08cf2c3026cfd7c553e397e1d91ea069eb2a4978"
+    ],
+    "parsed": 515,
+    "reached": 181,
+    "semantic_kills": 1,
+    "unique_bugs_killed": 1
+   },
+   "sft": {
+    "candidates": 552,
+    "classes": {
+     "collection_failure": 87,
+     "fabricated_import": 48,
+     "fixed_side_failure": 90,
+     "no_tests_collected": 1,
+     "pass_both": 20,
+     "policy_refused": 22,
+     "skipped_or_xfail": 37,
+     "syntax_failure": 114,
+     "target_not_reached": 133
+    },
+    "collected": 280,
+    "completion_limit_syntax_failures": 81,
+    "crash_kills": 0,
+    "executed": 243,
+    "fixed_valid": 20,
+    "fixed_valid_targets": 7,
+    "kill_at_1_percent": 0.0,
+    "kill_at_4_percent": 0.0,
+    "kill_at_8_percent": 0.0,
+    "killed_targets": [],
+    "parsed": 416,
+    "reached": 110,
+    "semantic_kills": 0,
+    "unique_bugs_killed": 0
+   }
+  }
+ },
+ "schema_version": "oneiros_repair_ceiling_results_v1",
+ "study": "posthoc_exploratory_mechanical_repair_ceiling",
+ "summariser_sha256": "8903829eab35fa11014d3d215be04c37e2680b1993c0c5c62e015642ae6be305",
+ "targets": 23
+}
