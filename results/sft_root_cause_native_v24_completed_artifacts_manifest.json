@@ -1,0 +1,222 @@
+{
+ "adapter_manifest_sha256": "82f24fed40316249f307fc6b835f2d1fa9d1b7ada61e72e9892fb397e377f2a0",
+ "archive": {
+  "byte_identical": true,
+  "directory_name": "native_v24_completed_965005d",
+  "files": 23,
+  "mismatched": []
+ },
+ "artifacts": [
+  {
+   "bytes": 2857,
+   "path": "results/sft_root_cause/native_v24_generations/base/contract_primary_whole_module_base.json",
+   "sha256": "bc859da9e09981516736a2373cd6d68a2b873bcac887cd9e0596290a9446d780"
+  },
+  {
+   "bytes": 1077746,
+   "candidates": 552,
+   "path": "results/sft_root_cause/native_v24_generations/base/generations_primary_whole_module_base.jsonl",
+   "rows": 69,
+   "sha256": "e71367acefdbad5a422aba3790376454f04831d80c4b5dec6ac1429e31eb9f44"
+  },
+  {
+   "bytes": 3293,
+   "path": "results/sft_root_cause/native_v24_generations/sft/contract_primary_whole_module_sft.json",
+   "sha256": "b0c8182c1c42e35d76e7a203223fe7a2e9c1776624489e8ac9290ed02fa486f9"
+  },
+  {
+   "bytes": 1494087,
+   "candidates": 552,
+   "path": "results/sft_root_cause/native_v24_generations/sft/generations_primary_whole_module_sft.jsonl",
+   "rows": 69,
+   "sha256": "5af755e9f947175a1996037865e1c96023faf36e78cd87678be066367d6e59d9"
+  },
+  {
+   "bytes": 4046,
+   "path": "results/sft_root_cause/native_v24_execution/execute_contract_primary_whole_module.json",
+   "sha256": "faa0c02b66acadf97428ca7396fa836a28327e1d5825f431b61d8d1fe0b200fb"
+  },
+  {
+   "bytes": 5130303,
+   "path": "results/sft_root_cause/native_v24_execution/results_primary_whole_module.jsonl",
+   "rows": 1104,
+   "rows_by_arm": {
+    "base": 552,
+    "sft": 552
+   },
+   "sha256": "e40c912d23eccb3fb8a6b0cd06c11e27a48052582f4e60d1f1507ce7471a0d55"
+  },
+  {
+   "bytes": 15217,
+   "path": "results/sft_root_cause/native_v24_analysis_pre_atheris.json",
+   "sha256": "1cc4cc4132e21f6355f6dbbf7ba3fe95894edaa2fb8b23acc688d27e5a02f045"
+  }
+ ],
+ "atheris": "NOT RUN: contract preview found 5 cattrs targets failing as infrastructure (system python3.11 attrs 23.2.0 instead of the prepared environment); no fuzzing budget spent",
+ "bound": {
+  "results/sft_root_cause_native_generated_tests_preflight_v2_4_r2.json": "7bb6113764bfd23539977ae6e0502f72bb87f76bc12e69100f829b736c9b90ff",
+  "results/sft_root_cause_native_gpu_authorization_v2.json": "a1982d08242c957abc27d3091e0c342fe9ef05498df95c0dfa48713a7e6d7a59"
+ },
+ "claims": {
+  "atheris_superiority": false,
+  "generalization": false,
+  "root_cause": false,
+  "sft_benefit": false
+ },
+ "engineering_gate_passed": true,
+ "executable_tree_sha256": "78edcf6679e8e51f98e165ffabb950e5972456b18715962d1cb7d52475ac9182",
+ "generation_identities": {
+  "base": {
+   "adapter_manifest_sha256": null,
+   "arm": "base",
+   "authorization_sha256": "a1982d08242c957abc27d3091e0c342fe9ef05498df95c0dfa48713a7e6d7a59",
+   "backend": "hf",
+   "condition": "primary_whole_module",
+   "generator_sha256": "2d39485f29d5c1bdf46278f8ef055ee3dda7cb461168e51ef950645a1cdd2bcb",
+   "job_file_sha256": "53948495758839c55fa911fd3a59f57d9cc4541954fa5c9c83c7a0ff3857f817",
+   "job_sha256": "d428f952efc37c84e9ead9fab1569853836613b2dcf67f08fb8805b8264c3a53",
+   "libraries": {
+    "accelerate": "1.2.1",
+    "cuda": "12.4",
+    "peft": "0.14.0",
+    "tokenizers": "0.21.4",
+    "torch": "2.5.1+cu124",
+    "transformers": "4.48.3"
+   },
+   "model": {
+    "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "snapshot_manifest_sha256": "1358a55051e7cf5e8963a2b2e3cd1a2fc6a3768552fb24e8a5e2a5afb8f43364",
+    "tokenizer_manifest_sha256": "bc2ebf6999bee86ccae422d3bcba5c799bd7c29cf6f7e7522db01e37a03979d3"
+   },
+   "preflight_sha256": "7bb6113764bfd23539977ae6e0502f72bb87f76bc12e69100f829b736c9b90ff",
+   "prior_arm_verification": null,
+   "prompt_builder_sha256": "b9a95eee7deec9c3888f54ff5c44efaa3d8b551cc616a8d3a4ad811de9c762b9",
+   "protocol_sha256": {
+    "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md": "75131551082876d65be0609db619673417a6728e3c612cc2ebc69e808a1cc5a1",
+    "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md": "8d48aa36def2e67d3ce5b876af0317fc4eb7199b5422eadca823980ec27d2901",
+    "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md": "b5ebe83b37d184dd785b740267e7efd01a7022fa30df92ecba9f061985228998",
+    "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md": "1ffda40c14c48788f21fb569f2888ad8c86988e6177b5de61d56714db3d172f4",
+    "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_4.md": "ef2f231321314c25ccb156d9f6cfb9e44ff4823435173c8590623bf17deecd61"
+   },
+   "source_commit": "965005d88f8f21efb292d7a9562ddf18891dabb8",
+   "source_tree": {
+    "files": 351,
+    "sha256": "d057d5cf02e660777b456655ef7e3177e1d0219488478ddfd99156648cc0be38"
+   }
+  },
+  "sft": {
+   "adapter_manifest_sha256": "82f24fed40316249f307fc6b835f2d1fa9d1b7ada61e72e9892fb397e377f2a0",
+   "arm": "sft",
+   "authorization_sha256": "a1982d08242c957abc27d3091e0c342fe9ef05498df95c0dfa48713a7e6d7a59",
+   "backend": "hf",
+   "condition": "primary_whole_module",
+   "generator_sha256": "2d39485f29d5c1bdf46278f8ef055ee3dda7cb461168e51ef950645a1cdd2bcb",
+   "job_file_sha256": "53948495758839c55fa911fd3a59f57d9cc4541954fa5c9c83c7a0ff3857f817",
+   "job_sha256": "d428f952efc37c84e9ead9fab1569853836613b2dcf67f08fb8805b8264c3a53",
+   "libraries": {
+    "accelerate": "1.2.1",
+    "cuda": "12.4",
+    "peft": "0.14.0",
+    "tokenizers": "0.21.4",
+    "torch": "2.5.1+cu124",
+    "transformers": "4.48.3"
+   },
+   "model": {
+    "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "snapshot_manifest_sha256": "1358a55051e7cf5e8963a2b2e3cd1a2fc6a3768552fb24e8a5e2a5afb8f43364",
+    "tokenizer_manifest_sha256": "bc2ebf6999bee86ccae422d3bcba5c799bd7c29cf6f7e7522db01e37a03979d3"
+   },
+   "preflight_sha256": "7bb6113764bfd23539977ae6e0502f72bb87f76bc12e69100f829b736c9b90ff",
+   "prior_arm_verification": {
+    "candidates": 552,
+    "contract_sha256": "bc859da9e09981516736a2373cd6d68a2b873bcac887cd9e0596290a9446d780",
+    "file_sha256": "e71367acefdbad5a422aba3790376454f04831d80c4b5dec6ac1429e31eb9f44",
+    "identity_sha256": "bc0b8d0312543ac3dd9fc566e1cfc539bc9c25ecd3973929046ddbffc3daf457",
+    "rows": 69,
+    "telemetry_schema": "oneiros_native_generation_telemetry_v2"
+   },
+   "prompt_builder_sha256": "b9a95eee7deec9c3888f54ff5c44efaa3d8b551cc616a8d3a4ad811de9c762b9",
+   "protocol_sha256": {
+    "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md": "75131551082876d65be0609db619673417a6728e3c612cc2ebc69e808a1cc5a1",
+    "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md": "8d48aa36def2e67d3ce5b876af0317fc4eb7199b5422eadca823980ec27d2901",
+    "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md": "b5ebe83b37d184dd785b740267e7efd01a7022fa30df92ecba9f061985228998",
+    "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md": "1ffda40c14c48788f21fb569f2888ad8c86988e6177b5de61d56714db3d172f4",
+    "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_4.md": "ef2f231321314c25ccb156d9f6cfb9e44ff4823435173c8590623bf17deecd61"
+   },
+   "source_commit": "965005d88f8f21efb292d7a9562ddf18891dabb8",
+   "source_tree": {
+    "files": 351,
+    "sha256": "d057d5cf02e660777b456655ef7e3177e1d0219488478ddfd99156648cc0be38"
+   }
+  }
+ },
+ "gpu_runs": [
+  {
+   "run_dir": "runs/20261001-013100-native_v24_generate_base",
+   "status": {
+    "artifact_validation": {
+     "artifact_contract": "none_declared",
+     "reason": "no --run-name; validated on exit code alone",
+     "validated": true
+    },
+    "duration_seconds": 1878.2,
+    "end_utc": "2026-09-30T20:32:20+00:00",
+    "exit_code": 0,
+    "last_checkpoint": null,
+    "name": "native_v24_generate_base",
+    "progress": {
+     "last_log_line": "{\"mode\": \"fresh\", \"identity_sha256\": \"bc0b8d0312543ac3dd9fc566e1cfc539bc9c25ecd3973929046ddbffc3daf457\", \"lines\": 69, \"file_sha256\": \"e71367acefdbad5a422aba3790376454f04831d80c4b5dec6ac1429e31eb9f44\"}",
+     "last_monitored_step": null
+    },
+    "run_id": "20261001-013100-native_v24_generate_base",
+    "schema_version": "oneiros_gpu_run_v1",
+    "start_utc": "2026-09-30T20:01:00+00:00",
+    "state": "completed",
+    "termination": {
+     "confidence": "certain",
+     "detail": "child exited 0",
+     "reason": "completed"
+    },
+    "traceback": null
+   }
+  },
+  {
+   "run_dir": "runs/20261001-020339-native_v24_generate_sft",
+   "status": {
+    "artifact_validation": {
+     "artifact_contract": "none_declared",
+     "reason": "no --run-name; validated on exit code alone",
+     "validated": true
+    },
+    "duration_seconds": 5837.8,
+    "end_utc": "2026-09-30T22:10:59+00:00",
+    "exit_code": 0,
+    "last_checkpoint": null,
+    "name": "native_v24_generate_sft",
+    "progress": {
+     "last_log_line": "{\"mode\": \"fresh\", \"identity_sha256\": \"f9d128fb678d270b97f8156249e07b9a7d038392aac2993b131e2d075ec3d88e\", \"lines\": 69, \"file_sha256\": \"5af755e9f947175a1996037865e1c96023faf36e78cd87678be066367d6e59d9\"}",
+     "last_monitored_step": null
+    },
+    "run_id": "20261001-020339-native_v24_generate_sft",
+    "schema_version": "oneiros_gpu_run_v1",
+    "start_utc": "2026-09-30T20:33:39+00:00",
+    "state": "completed",
+    "termination": {
+     "confidence": "certain",
+     "detail": "child exited 0",
+     "reason": "completed"
+    },
+    "traceback": null
+   }
+  }
+ ],
+ "model": {
+  "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+  "snapshot_manifest_sha256": "1358a55051e7cf5e8963a2b2e3cd1a2fc6a3768552fb24e8a5e2a5afb8f43364",
+  "tokenizer_manifest_sha256": "bc2ebf6999bee86ccae422d3bcba5c799bd7c29cf6f7e7522db01e37a03979d3"
+ },
+ "note": "generation, execution and analysis artifacts are Git-ignored and local-only on the GPU machine; this receipt binds their exact bytes",
+ "schema_version": "oneiros_native_v24_completed_artifacts_v1",
+ "source_commit": "0419ca74bfa0796eacb8a324cd32702b64fb4348",
+ "study_mode": "engineering_dress_rehearsal"
+}
