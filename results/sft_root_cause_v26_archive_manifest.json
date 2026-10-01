@@ -1,0 +1,1114 @@
+{
+ "archive_directory_name": "native_v26_phase2_d60bea5",
+ "byte_identical_to_originals": true,
+ "issues": [],
+ "items": [
+  {
+   "bytes": 11078,
+   "file": "v25_native_r2/ansible/envs_a2_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 5,
+   "sha256": "e7e70b0a713fedfc588f9e2e77f9c82caeb1548c7929ccc8feb43daf5fd5d011"
+  },
+  {
+   "bytes": 11078,
+   "file": "v25_native_r2/ansible/envs_a2_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 5,
+   "sha256": "9aac006dc0e58f807ef5d3a760d629c3e5040ea2c99482940b4fdce505abf05f"
+  },
+  {
+   "bytes": 11413,
+   "file": "v25_native_r2/ansible/envs_a3_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 5,
+   "sha256": "8b1f337e46893eefe78cfa2245a4a3d38524d35a174c10762e75979784e2ea83"
+  },
+  {
+   "bytes": 11411,
+   "file": "v25_native_r2/ansible/envs_a3_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 5,
+   "sha256": "81d9af23af0907607272cecd53f2d76b36d70309e9dc3f72882673ff4fa2a6d5"
+  },
+  {
+   "bytes": 2227,
+   "file": "v25_native_r2/ansible/quarantine_attempt1/envs_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 5,
+   "sha256": "fb1268022a1110593cadcf55df1f48867dedd03bcf68834d79b354ad309423a7"
+  },
+  {
+   "bytes": 2242,
+   "file": "v25_native_r2/astropy/envs_a2_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 2,
+   "sha256": "fa6f97bb3d0d1620a8fd9502d494acec4c0291025f923f5d651bba240d9e7dff"
+  },
+  {
+   "bytes": 2242,
+   "file": "v25_native_r2/astropy/envs_a2_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 2,
+   "sha256": "2b329e95f92cf24ba067a1286307d30ab46d8d75a179626cb18536e0eb6487c5"
+  },
+  {
+   "bytes": 2242,
+   "file": "v25_native_r2/astropy/envs_a3_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 2,
+   "sha256": "8c17d1dd3ef8198c9ba61a2d18546c4b8a3589e96585a79bd07ebebc4cfa0999"
+  },
+  {
+   "bytes": 2242,
+   "file": "v25_native_r2/astropy/envs_a3_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 2,
+   "sha256": "dafb551ac4c6ebce49118b453bf4337e563433cebaff3b6e85a5af64cc65c9ae"
+  },
+  {
+   "bytes": 453,
+   "file": "v25_native_r2/astropy/quarantine_attempt1/envs_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 2,
+   "sha256": "515945dcf244c51d9415ef3fca7220ebf5b2881784712ffb86c0971e25c9953a"
+  },
+  {
+   "bytes": 13589,
+   "file": "v25_native_r2/atheris_readiness.jsonl",
+   "role": "other",
+   "rows": 87,
+   "sha256": "02ca14c230606547e221d248c4e1c7db1e9dd772cfd2c086e4c58db43b5b71b8"
+  },
+  {
+   "bytes": 3020,
+   "file": "v25_native_r2/build_attempt0_syntaxerror.log",
+   "role": "other",
+   "rows": null,
+   "sha256": "b9c30b1782f3bc8a5c0b72d7b29d60e1c3abd5e71b55e41c970b6288f534d76a"
+  },
+  {
+   "bytes": 16162,
+   "file": "v25_native_r2/build_attempt1.log",
+   "role": "other",
+   "rows": null,
+   "sha256": "9b3439d6c86037df58d3b7f57e082fb9d051f3c4d514746edf512deceaebae28"
+  },
+  {
+   "bytes": 12252347,
+   "file": "v25_native_r2/converted_candidates_r2r.jsonl",
+   "role": "other",
+   "rows": 5735,
+   "sha256": "f95202f968ece95f2b727713cfd19a2b41cdd642c9baf8392887cf4d0336675d"
+  },
+  {
+   "bytes": 91039,
+   "file": "v25_native_r2/django/envs_a2_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 47,
+   "sha256": "7c17a3d840a086b7d3edf373fc9510c8b226bcc5f8aefb81b7345fa50a992ac1"
+  },
+  {
+   "bytes": 91039,
+   "file": "v25_native_r2/django/envs_a2_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 47,
+   "sha256": "9805c91a756c277edc3e7c3b171252e66d665c51056523100f1ef1d80349f7af"
+  },
+  {
+   "bytes": 94356,
+   "file": "v25_native_r2/django/envs_a3_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 47,
+   "sha256": "d18852dac285797c39b3279830722cab7a08801fba38f26ed8d62434e8c01929"
+  },
+  {
+   "bytes": 94355,
+   "file": "v25_native_r2/django/envs_a3_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 47,
+   "sha256": "05629a1168756bc49f0c2b9c9b8c69b67a6a8d98a61b37926177a283d4a23e72"
+  },
+  {
+   "bytes": 77168,
+   "file": "v25_native_r2/django/quarantine_attempt1/envs_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 47,
+   "sha256": "9767afed10f4b5284a8c0cf9f0f489d0bfac097d0fe68b909a7fd60beca3db38"
+  },
+  {
+   "bytes": 145437,
+   "file": "v25_native_r2/env_recipes.jsonl",
+   "role": "environment rebuild recipes (requirements, freeze, locks)",
+   "rows": 130,
+   "sha256": "fded623eaab67a16ea07058893fe30ade33a1e6d51e099b6937a69616137706e"
+  },
+  {
+   "bytes": 247218,
+   "file": "v25_native_r2/envs_a2_final.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 129,
+   "sha256": "d75a61c65d4f53322964b2a9abfba3da7c651c7684ed8c5ee954f151218bef21"
+  },
+  {
+   "bytes": 251605,
+   "file": "v25_native_r2/envs_a3_final.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 129,
+   "sha256": "9925c0de3e9dafbf62f80fe2975c386d7a9d9e936271551aba2fff78ccce9582"
+  },
+  {
+   "bytes": 2148,
+   "file": "v25_native_r2/fastapi/envs_a2_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "245d6a00278cbe8b7dd7b576460d53e39387c3d3a1d3ca192e452113efc52d09"
+  },
+  {
+   "bytes": 2148,
+   "file": "v25_native_r2/fastapi/envs_a2_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "52b40d0c2c3a9888d921e09ea74170aeb7977afe93508fc96c42506626eb48e1"
+  },
+  {
+   "bytes": 2148,
+   "file": "v25_native_r2/fastapi/envs_a3_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "a12af482f79dccaafdd748a9727c6ea9048384d02fed288e15a14b6a60eedeea"
+  },
+  {
+   "bytes": 2148,
+   "file": "v25_native_r2/fastapi/envs_a3_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "f067d0a2a8fe00e1c562c84c970c05206f9f43e9bc819c68cac7a31c38d40b1e"
+  },
+  {
+   "bytes": 306,
+   "file": "v25_native_r2/fastapi/quarantine_attempt1/envs_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "2ed43f1642e09950ce2364044782635650aeb5f764a96fa3fb8590202826a2b0"
+  },
+  {
+   "bytes": 212,
+   "file": "v25_native_r2/flask/envs_a2_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "094ea955ec92f15faf8101c7a33031e6e192423f7bea3890e738d01063003351"
+  },
+  {
+   "bytes": 212,
+   "file": "v25_native_r2/flask/envs_a2_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "094ea955ec92f15faf8101c7a33031e6e192423f7bea3890e738d01063003351"
+  },
+  {
+   "bytes": 212,
+   "file": "v25_native_r2/flask/envs_a3_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "094ea955ec92f15faf8101c7a33031e6e192423f7bea3890e738d01063003351"
+  },
+  {
+   "bytes": 212,
+   "file": "v25_native_r2/flask/envs_a3_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "094ea955ec92f15faf8101c7a33031e6e192423f7bea3890e738d01063003351"
+  },
+  {
+   "bytes": 212,
+   "file": "v25_native_r2/flask/quarantine_attempt1/envs_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "1e0a57687b07318b2c6d735cebfe76973de320d1e745880b46c2d06e75a4bebc"
+  },
+  {
+   "bytes": 2020,
+   "file": "v25_native_r2/httpie/envs_a2_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "894bd05d793a9298c69231ef8baef2d2c29636719e9dd57efd8a01f565138411"
+  },
+  {
+   "bytes": 2020,
+   "file": "v25_native_r2/httpie/envs_a2_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "d1f1946020c07230ca9d65cf1a2194cfacd72a074cca3600f3de410f8d070f1e"
+  },
+  {
+   "bytes": 2020,
+   "file": "v25_native_r2/httpie/envs_a3_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "ff313ccca766c6a8a96d996168d9e2909dc5980b5200c29f6d311699b8b75c63"
+  },
+  {
+   "bytes": 2020,
+   "file": "v25_native_r2/httpie/envs_a3_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "4267a164a3f4ead815827f517ba68e0357cd433c913445e8c793e88a7bb065c6"
+  },
+  {
+   "bytes": 1939,
+   "file": "v25_native_r2/httpie/quarantine_attempt1/envs_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "0b8ececc494100a43840b8b883c5fc307fb6142a9f8f91ea811be27098a0c14b"
+  },
+  {
+   "bytes": 35334,
+   "file": "v25_native_r2/matplotlib/envs_a2_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 17,
+   "sha256": "9f6b54e2445fb2b1984d84ccc691f137a647cce1aebef23caded8ae69979124e"
+  },
+  {
+   "bytes": 35334,
+   "file": "v25_native_r2/matplotlib/envs_a2_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 17,
+   "sha256": "a60e063990e765e4196d72dc90effab7692c0c086c3e13b7bb9dca8f04a2538b"
+  },
+  {
+   "bytes": 35334,
+   "file": "v25_native_r2/matplotlib/envs_a3_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 17,
+   "sha256": "c938463276aca9f807b70143a7cbd8a694053ecdb810d8668a5ed30c0f287d9c"
+  },
+  {
+   "bytes": 35334,
+   "file": "v25_native_r2/matplotlib/envs_a3_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 17,
+   "sha256": "6647c8260e181d69bed38afd616801fde9b1e5f06ff5d83a9f4020bcb94ff924"
+  },
+  {
+   "bytes": 31239,
+   "file": "v25_native_r2/matplotlib/quarantine_attempt1/envs_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 17,
+   "sha256": "8c928fe14082aedbb94bda8ca0e0c5c215921f5f1517706197455eef0c34dc81"
+  },
+  {
+   "bytes": 3398,
+   "file": "v25_native_r2/patch_fetch_a2.log",
+   "role": "other",
+   "rows": null,
+   "sha256": "1e85e7454b6cef3cf50466c9a9b4e578b9b1d9a457b49fffbf670c7fe3dea718"
+  },
+  {
+   "bytes": 1893,
+   "file": "v25_native_r2/patches/astropy__astropy-14096.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "1f919fc12d6fa5b75687632821e46a142eb12ba6eb19d70f8efe686871808555"
+  },
+  {
+   "bytes": 1575,
+   "file": "v25_native_r2/patches/django__django-10999.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "2d03d65dace8eccb42da35e4b7dd2adffd0bb0dcf4b8f7a6340069cdcc4e8ea9"
+  },
+  {
+   "bytes": 2667,
+   "file": "v25_native_r2/patches/django__django-11095.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "1dbd55c902e50f051aca7ff3fe5aa19017f00b7602679b66c8b1dbf62ab08078"
+  },
+  {
+   "bytes": 1665,
+   "file": "v25_native_r2/patches/django__django-11179.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "cf675a990d14eed6d41ba97f1a84dd2bff06ff3f79dc462483540e782c45f2e3"
+  },
+  {
+   "bytes": 1561,
+   "file": "v25_native_r2/patches/django__django-11206.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "24fa6df6e26d6f3fbb2730bdf70db33abe5cc101bf0a644b7aa1bd1c0f8a3e5f"
+  },
+  {
+   "bytes": 2472,
+   "file": "v25_native_r2/patches/django__django-11333.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "baf267a3366e05ef3c89a05c3805253b2edc112154cb77773425107395e0605b"
+  },
+  {
+   "bytes": 1753,
+   "file": "v25_native_r2/patches/django__django-11451.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "5fb3b329a7b7885699c447ef5c8c6d51b98f13d412641b41899a39d4b2c1a030"
+  },
+  {
+   "bytes": 4751,
+   "file": "v25_native_r2/patches/django__django-11477.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "817c10eb0fffedde8ce0c1f5b75db36d7c0694a92623130dae0a40d01312e53b"
+  },
+  {
+   "bytes": 1451,
+   "file": "v25_native_r2/patches/django__django-11490.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "65206debb7ae64c43bc8384a7399ece79f0879e2dd10bc3fa28b08bf05256fcd"
+  },
+  {
+   "bytes": 1939,
+   "file": "v25_native_r2/patches/django__django-11603.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "4ab5e80b5bc6d5bf6bfc519fd66b8d95e9ae3217fbcbd04c0cbcb40a65b03bc6"
+  },
+  {
+   "bytes": 2779,
+   "file": "v25_native_r2/patches/django__django-11820.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "24600e8ae7f565200da1851af6a2800331ad2910312b5710d3c1e03bdb67f425"
+  },
+  {
+   "bytes": 3268,
+   "file": "v25_native_r2/patches/django__django-11848.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "9dc6c704bcf43fb378a8e82498e2318a892bd2bdd44c754239f5128b3f8bbdb6"
+  },
+  {
+   "bytes": 2029,
+   "file": "v25_native_r2/patches/django__django-11951.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "96f55bfda5575fcecb67baf4778ac63dc1ec3bc8bfc2e212cc5687492d9c3660"
+  },
+  {
+   "bytes": 1274,
+   "file": "v25_native_r2/patches/django__django-11964.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "440939f616a3c25eb6ab43d1cc070e4c62843248dbb1ceca897f1366c023eb66"
+  },
+  {
+   "bytes": 3724,
+   "file": "v25_native_r2/patches/django__django-12039.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "d62917461b93c0788cff6d38d917d5ebc80d77ec7a2603a30370e17947a6fd91"
+  },
+  {
+   "bytes": 2188,
+   "file": "v25_native_r2/patches/django__django-12050.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "7ae2a1cb3b1015124d94dfbb4eed063c0b564068ea3156617d0fff5d15250c49"
+  },
+  {
+   "bytes": 2374,
+   "file": "v25_native_r2/patches/django__django-12143.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "c70bf4a07804b0277a8a7b0a916d552b138b232ad723c9e5956865517e072ca8"
+  },
+  {
+   "bytes": 4585,
+   "file": "v25_native_r2/patches/django__django-12155.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "b13c79bace02b1921fb7fcbabee43f31ba147fdffcd9dd5542ad7dab7f618ea7"
+  },
+  {
+   "bytes": 3041,
+   "file": "v25_native_r2/patches/django__django-12273.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "8e89528aae276374ef8dd633dc0af4faf52246ae2867fc035ccd2f3f22104184"
+  },
+  {
+   "bytes": 4055,
+   "file": "v25_native_r2/patches/django__django-12276.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "fda3e974f59573e8cc595339d1948b7c3be7cbebeebfc22397c1a61972f71d34"
+  },
+  {
+   "bytes": 1469,
+   "file": "v25_native_r2/patches/django__django-12304.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "3385adad0be1ff12c26d9f76767580d05155f559a33a96e4461a914a88736d0b"
+  },
+  {
+   "bytes": 2073,
+   "file": "v25_native_r2/patches/django__django-12308.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "cf4b34b7d51ce815009ae285584cbe94a4b556fc18fa984a731abbbf5bb9c4a6"
+  },
+  {
+   "bytes": 1978,
+   "file": "v25_native_r2/patches/django__django-13023.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "69dae5cc2a238fa42e9df2cd90392ce9eccb5f4117a2feb2f6638c374f14c108"
+  },
+  {
+   "bytes": 6133,
+   "file": "v25_native_r2/patches/django__django-13195.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "3994b2cc5784bf50b65ad94a2b07a5e5cf141db17de7bf9df5db43d459275e18"
+  },
+  {
+   "bytes": 2905,
+   "file": "v25_native_r2/patches/django__django-13512.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "cf43a099ff218d378a69d17379179843fe2e20a026fbb3f8713641cd0fdeb3d4"
+  },
+  {
+   "bytes": 1721,
+   "file": "v25_native_r2/patches/django__django-13741.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "971c60e25ea21000dbcabe948dd3cb6b540e88bb3ff07ad02b3da40ebb8cf562"
+  },
+  {
+   "bytes": 1237,
+   "file": "v25_native_r2/patches/django__django-14089.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "121b0a8b065d9d483a22836648a8f785e57067b254f5dd7905e687ca7bdf1104"
+  },
+  {
+   "bytes": 1452,
+   "file": "v25_native_r2/patches/django__django-14373.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "aab38325b5f23c36c49677202cb91263c4429843dd42004e9ecb12b86aa561df"
+  },
+  {
+   "bytes": 2384,
+   "file": "v25_native_r2/patches/django__django-14500.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "470a4bb97394bc0d817551958c98562bec709b4ec34496f76222c045425c3f07"
+  },
+  {
+   "bytes": 2154,
+   "file": "v25_native_r2/patches/django__django-14534.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "b7ac930b175e165671b4a1ea22df90b42a05f06e1af0d61dd380fef6e5c5e537"
+  },
+  {
+   "bytes": 3057,
+   "file": "v25_native_r2/patches/django__django-14999.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "ee76484ca4d3a34141ed10aa86c7e11014a33593e8166181de4a94212a212600"
+  },
+  {
+   "bytes": 4080,
+   "file": "v25_native_r2/patches/django__django-15127.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "72d1c17165d2dd0ee97110de7d797243f4fb48f909fc27ea2d7aa961e3732ce9"
+  },
+  {
+   "bytes": 2236,
+   "file": "v25_native_r2/patches/django__django-15278.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "3c3661c774a0e6aab543af3bda58db60466895be09891349c8decc75902b5c81"
+  },
+  {
+   "bytes": 3330,
+   "file": "v25_native_r2/patches/django__django-15569.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "28eca271056f1d3d3f7cdd23d76b2467857029b526763b61a687aa6889cf9f55"
+  },
+  {
+   "bytes": 1775,
+   "file": "v25_native_r2/patches/django__django-15695.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "547ba49435c39b7d26342556d9fd136dad623a55807f3251ebbc054effddadd4"
+  },
+  {
+   "bytes": 1207,
+   "file": "v25_native_r2/patches/django__django-15851.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "43977e96760306c3f360ec583e537a29471ebfcaa66bad7495e5df61f3f4ffd5"
+  },
+  {
+   "bytes": 1177,
+   "file": "v25_native_r2/patches/django__django-16485.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "135c8d53d8d61d121929c150e838c7c186853c5e5f986b66d677e47b3745dddc"
+  },
+  {
+   "bytes": 3420,
+   "file": "v25_native_r2/patches/django__django-16527.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "fe53afc198174177adcc17f428dfdae809ae038d89595bebad338c13fde69fdc"
+  },
+  {
+   "bytes": 3110,
+   "file": "v25_native_r2/patches/django__django-16595.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "17ff18f163266ec535166fb4f0e0c03fe018c6d9805d4ac1e911e00d1749f3db"
+  },
+  {
+   "bytes": 4534,
+   "file": "v25_native_r2/patches/django__django-16631.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "c5ee439230af86160d4548f77a205ac77390cf403af9ad0532fc9324fa1fc7e9"
+  },
+  {
+   "bytes": 1494,
+   "file": "v25_native_r2/patches/django__django-16819.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "d68e19ba46c75946e2927a24ff12968c104d4bacf6038862119e92355b554678"
+  },
+  {
+   "bytes": 2692,
+   "file": "v25_native_r2/patches/django__django-16950.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "85d10d1fd78ce5d939b3f8bc1cfda34bebef4f1fb15ba55ae1a27ddd3e9b7cd1"
+  },
+  {
+   "bytes": 1293,
+   "file": "v25_native_r2/patches/django__django-9296.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "daab7045296efead56475771b650c8824b6e7fc19017828b7c8f1112f123c576"
+  },
+  {
+   "bytes": 2439,
+   "file": "v25_native_r2/patches/matplotlib__matplotlib-20676.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "49832a9c2680f84a1752d0331e7fb019c2a9800e97a9758386122a24723d021a"
+  },
+  {
+   "bytes": 3873,
+   "file": "v25_native_r2/patches/matplotlib__matplotlib-25960.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "3828b475dc9a60cdffb259bcedb4f73860e79133316ba270bee9ff10e475b7ad"
+  },
+  {
+   "bytes": 1458,
+   "file": "v25_native_r2/patches/sympy__sympy-11618.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "60d7e53bc925922e290b0a97b4f39605e3a761ceb10d79fd7c7db90c7107c75f"
+  },
+  {
+   "bytes": 1148,
+   "file": "v25_native_r2/patches/sympy__sympy-12096.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "b44c1b3adeb07d095bc92b04e29cbf2da0a0b1f2fd7bdc482c57182baad4ab04"
+  },
+  {
+   "bytes": 2470,
+   "file": "v25_native_r2/patches/sympy__sympy-12419.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "a3c5480b05b8d6441e30dd0e26c8fb9f8d9bc381c8a86ae0ce1fbfd900a2e886"
+  },
+  {
+   "bytes": 2017,
+   "file": "v25_native_r2/patches/sympy__sympy-12481.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "4ea34f8bf9d47b057d23e93500af360a28107f901ad07cfc661af701959d23bb"
+  },
+  {
+   "bytes": 1136,
+   "file": "v25_native_r2/patches/sympy__sympy-13480.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "d4b673141e42497c10948367b15ec890781070f3f8d562cae9299a33fa8f9375"
+  },
+  {
+   "bytes": 1565,
+   "file": "v25_native_r2/patches/sympy__sympy-13615.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "0db1dbcd4cb0ffc25315d0991cbdb3325aefa1b473f2f788e3dc3c9e0746b44d"
+  },
+  {
+   "bytes": 1432,
+   "file": "v25_native_r2/patches/sympy__sympy-13647.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "49e6a60183a5b0749ffc02f48b7ca90804aabcef5e7b9ef11157f3c0279ba4f9"
+  },
+  {
+   "bytes": 1559,
+   "file": "v25_native_r2/patches/sympy__sympy-13757.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "f0ea537fc8d7b218d0adf26a1384b76b59cbc88b0c41f77180a85257b09f9c01"
+  },
+  {
+   "bytes": 2330,
+   "file": "v25_native_r2/patches/sympy__sympy-14976.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "b71324bf3e9331cdabaed7b263caa0a0800e01ff4d933a8001c0f0595045a6a8"
+  },
+  {
+   "bytes": 1746,
+   "file": "v25_native_r2/patches/sympy__sympy-15017.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "26ca5b12b6333fa8d8cf5330e28544e4b27a68edbd9f30845f0f6846b7ef3641"
+  },
+  {
+   "bytes": 1770,
+   "file": "v25_native_r2/patches/sympy__sympy-15345.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "f7463e83582e22c1832a6725ef2ded8c674a33e2a160fb83178c9695b8b96bc0"
+  },
+  {
+   "bytes": 1057,
+   "file": "v25_native_r2/patches/sympy__sympy-15875.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "3a49ed0c1bccca80a237f2e9a89e64a01108b983956d1ebd940d818044c6ab60"
+  },
+  {
+   "bytes": 1383,
+   "file": "v25_native_r2/patches/sympy__sympy-16450.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "035a6e2400563bee4f282d9f155085ae5ccc4bd43be9bd898beea93805cb801c"
+  },
+  {
+   "bytes": 1182,
+   "file": "v25_native_r2/patches/sympy__sympy-16886.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "565a65cc5d3cfedda2766ac3b3f4da7e4fea77357deb045bb29b0fa15e335690"
+  },
+  {
+   "bytes": 2361,
+   "file": "v25_native_r2/patches/sympy__sympy-18211.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "80f19741bb5fd2ba0ef7f5446ce26ab2bb4272e4023d6a3253f9f3977940064c"
+  },
+  {
+   "bytes": 2063,
+   "file": "v25_native_r2/patches/sympy__sympy-18698.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "13b46016f50ded778dffa8c708811714f55ddbd065318b39c39abad4cebd3840"
+  },
+  {
+   "bytes": 1308,
+   "file": "v25_native_r2/patches/sympy__sympy-19040.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "276f7f6958e62a05dc977dcae0c3d0bbb667edc2abad5f49756e5cd764e81712"
+  },
+  {
+   "bytes": 2051,
+   "file": "v25_native_r2/patches/sympy__sympy-19346.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "39931b163066017358a862ff079919c01dee635588277770426d5f29e5bd5de1"
+  },
+  {
+   "bytes": 954,
+   "file": "v25_native_r2/patches/sympy__sympy-19637.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "651b0ee9260d12098fa2f5a7fcaaa9e69b60a84cca29fc3008548f378e96f7d8"
+  },
+  {
+   "bytes": 2863,
+   "file": "v25_native_r2/patches/sympy__sympy-19783.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "b6ae8bb33a3c9ebae0c630a229ef9fbd6382fd448cd054db8e47eed9b1390b51"
+  },
+  {
+   "bytes": 1703,
+   "file": "v25_native_r2/patches/sympy__sympy-20801.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "31ce35b697104293a97678e63d0900be0fdc7436755ffa690bdc2ab5a9858dc9"
+  },
+  {
+   "bytes": 3092,
+   "file": "v25_native_r2/patches/sympy__sympy-20916.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "3a6a03b1c34ec335155c5c55ee0fbedee2318411ee6147c80e3be60650e6ae06"
+  },
+  {
+   "bytes": 1937,
+   "file": "v25_native_r2/patches/sympy__sympy-22456.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "55ea69d529f82fceaad02c71dcff480ce3d0a49a800a803f004e06d840907ade"
+  },
+  {
+   "bytes": 1242,
+   "file": "v25_native_r2/patches/sympy__sympy-23262.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "745730479a05b6845a9963702963e94f330ebb0d3492663c6df66368f143be15"
+  },
+  {
+   "bytes": 2524,
+   "file": "v25_native_r2/patches/sympy__sympy-23413.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "65754b32a676b2adb8c3d5b431e84d9fabacdaea24cf2d6129602dd98f471831"
+  },
+  {
+   "bytes": 1168,
+   "file": "v25_native_r2/patches/sympy__sympy-23950.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "40c574ad2630c42eae6fe5c435ba66bf58e47684879004a097fb6dd12cbf40bf"
+  },
+  {
+   "bytes": 2215,
+   "file": "v25_native_r2/patches/sympy__sympy-24066.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "9e3f3a9c0974e8f5c33d8dc76c302086ba677b05d7911a619a3a25769d0aba97"
+  },
+  {
+   "bytes": 3202,
+   "file": "v25_native_r2/patches/sympy__sympy-24443.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "2c5a3dc6d2af23996711c5a5a32b8ebcc287c96d059f3e87f66f64de2c8d39d6"
+  },
+  {
+   "bytes": 1468,
+   "file": "v25_native_r2/patches/sympy__sympy-24539.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "6daf9b84aad1eed3b676ce976d5a89657f7896180c86dbfb5e58a72c0e070283"
+  },
+  {
+   "bytes": 1388,
+   "file": "v25_native_r2/patches/sympy__sympy-24562.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "a1ae83e74c0f29a01b99e14b55fc921277c3c6c9f821e20c8943262bd8053859"
+  },
+  {
+   "bytes": 2533,
+   "file": "v25_native_r2/patches/sympy__sympy-24661.json",
+   "role": "SWE-bench gold+test patch, hash-verified against train metadata",
+   "rows": null,
+   "sha256": "379e998068bb4ebd5b758f4a4c7ed6c5a0ef8a75a77511fd56f10976058cd274"
+  },
+  {
+   "bytes": 1,
+   "file": "v25_native_r2/pylint/envs_a2_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 0,
+   "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+  },
+  {
+   "bytes": 1,
+   "file": "v25_native_r2/pylint/envs_a2_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 0,
+   "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+  },
+  {
+   "bytes": 1,
+   "file": "v25_native_r2/pylint/envs_a3_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 0,
+   "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+  },
+  {
+   "bytes": 1,
+   "file": "v25_native_r2/pylint/envs_a3_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 0,
+   "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+  },
+  {
+   "bytes": 1,
+   "file": "v25_native_r2/pylint/quarantine_attempt1/envs_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 0,
+   "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+  },
+  {
+   "bytes": 590,
+   "file": "v25_native_r2/sanic/envs_a2_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "943ac532de007f4d49ca47ce8af0c9e4db48fff116ce92bfce053522c91ebf42"
+  },
+  {
+   "bytes": 590,
+   "file": "v25_native_r2/sanic/envs_a2_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "6b9b5b4993dd6df2f2f87045a2c47fdb20738de6d65950ccf8e364a4520a2207"
+  },
+  {
+   "bytes": 590,
+   "file": "v25_native_r2/sanic/envs_a3_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "6b9b5b4993dd6df2f2f87045a2c47fdb20738de6d65950ccf8e364a4520a2207"
+  },
+  {
+   "bytes": 590,
+   "file": "v25_native_r2/sanic/envs_a3_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "6b9b5b4993dd6df2f2f87045a2c47fdb20738de6d65950ccf8e364a4520a2207"
+  },
+  {
+   "bytes": 289,
+   "file": "v25_native_r2/sanic/quarantine_attempt1/envs_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "0fdd5238de303f5e6ac07992bb86332e7c514d6f39a7d3073e57337a3959e0e9"
+  },
+  {
+   "bytes": 62091,
+   "file": "v25_native_r2/sympy/envs_a2_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 32,
+   "sha256": "b0c17b897d351077adcfd8bf9c04f01964d853b7f98c04e1d3010f1f1edc5b66"
+  },
+  {
+   "bytes": 62092,
+   "file": "v25_native_r2/sympy/envs_a2_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 32,
+   "sha256": "2fbcad9f4103f226a4649e0b109ea018142dd7f3833a3d5b7b450738d42829e2"
+  },
+  {
+   "bytes": 62831,
+   "file": "v25_native_r2/sympy/envs_a3_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 32,
+   "sha256": "9b1d9c5e1c5854e3e4a0f7e5fe5b1e1a3b35db30e579db646a93a0580456d38a"
+  },
+  {
+   "bytes": 62830,
+   "file": "v25_native_r2/sympy/envs_a3_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 32,
+   "sha256": "3d73d873ab8e0ce98a688e1cfe185af46a0203589b47afa17abe0ca304156ef5"
+  },
+  {
+   "bytes": 58326,
+   "file": "v25_native_r2/sympy/quarantine_attempt1/envs_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 32,
+   "sha256": "e00eb0bb11d2d943210f6552ca51c43367165d1f8ddf7fc02e011c53f669f684"
+  },
+  {
+   "bytes": 130553,
+   "file": "v25_native_r2/targets.jsonl",
+   "role": "train-only native target manifest",
+   "rows": 153,
+   "sha256": "97a943a580d441683262e820a7f55c771b85ad6b00554fe8b9d0ed5e0a608d3d"
+  },
+  {
+   "bytes": 131776,
+   "file": "v25_native_r2/targets_a2.jsonl",
+   "role": "other",
+   "rows": 153,
+   "sha256": "bf95c9e75335c828128f682044b24c40ec93ed02740b1cf1d87ccf7444a01fae"
+  },
+  {
+   "bytes": 131635,
+   "file": "v25_native_r2/targets_a3.jsonl",
+   "role": "other",
+   "rows": 153,
+   "sha256": "0bfeb88f30e8f715465b0b5207479931edf0e05c46c8a9cad778faa608e32b2f"
+  },
+  {
+   "bytes": 1999,
+   "file": "v25_native_r2/tornado/envs_a2_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "2c9fb898d945cc6d7855192aa3f229b1ccd3b681526e80337181e2ee70f9cf2b"
+  },
+  {
+   "bytes": 1999,
+   "file": "v25_native_r2/tornado/envs_a2_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "ad5189ecc141d9029fba24150309cae3856fd47c2870b64067fb07faaca06e70"
+  },
+  {
+   "bytes": 1999,
+   "file": "v25_native_r2/tornado/envs_a3_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "45f3333256b2e1a961f9190b9694bcee1846bc512882d5ccbd19b738ed7e16da"
+  },
+  {
+   "bytes": 1999,
+   "file": "v25_native_r2/tornado/envs_a3_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "45f3333256b2e1a961f9190b9694bcee1846bc512882d5ccbd19b738ed7e16da"
+  },
+  {
+   "bytes": 625,
+   "file": "v25_native_r2/tornado/quarantine_attempt1/envs_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 1,
+   "sha256": "cc1a2cbc1e787c922fce280c67f8efd41a8ef7a24dffb3233e3ac22cf7a4b771"
+  },
+  {
+   "bytes": 7893,
+   "file": "v25_native_r2/verify_a2/django_layers_run1.json",
+   "role": "other",
+   "rows": null,
+   "sha256": "57d8e66f6ff11ff19dc26ff292af0da573d2bba4d6d82335aea510806ada4c9f"
+  },
+  {
+   "bytes": 7893,
+   "file": "v25_native_r2/verify_a2/django_layers_run2.json",
+   "role": "other",
+   "rows": null,
+   "sha256": "57d8e66f6ff11ff19dc26ff292af0da573d2bba4d6d82335aea510806ada4c9f"
+  },
+  {
+   "bytes": 41999,
+   "file": "v25_native_r2/verify_a2/repository_verification_run1.jsonl",
+   "role": "repository-candidate verification run",
+   "rows": 163,
+   "sha256": "896de4cfa90078c8044c8af87cd3dfd39eb7c77c661c4f9c2b9c2c7bb9e527fb"
+  },
+  {
+   "bytes": 41999,
+   "file": "v25_native_r2/verify_a2/repository_verification_run2.jsonl",
+   "role": "repository-candidate verification run",
+   "rows": 163,
+   "sha256": "896de4cfa90078c8044c8af87cd3dfd39eb7c77c661c4f9c2b9c2c7bb9e527fb"
+  },
+  {
+   "bytes": 38464,
+   "file": "v25_native_r2/youtube-dl/envs_a2_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 21,
+   "sha256": "5e2cea730903fa48c008ba2882081f3ac72c0e854b5d15dc8fcf9320858b4000"
+  },
+  {
+   "bytes": 38464,
+   "file": "v25_native_r2/youtube-dl/envs_a2_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 21,
+   "sha256": "be1eba57047d4abf12eab895238251d593359671cfbe2783fea1297c1caaac60"
+  },
+  {
+   "bytes": 38464,
+   "file": "v25_native_r2/youtube-dl/envs_a3_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 21,
+   "sha256": "8b78b76a5d7847f8a9ac8f103817936426c97a73dbbd847471651f5a9b24a6f0"
+  },
+  {
+   "bytes": 38464,
+   "file": "v25_native_r2/youtube-dl/envs_a3_run2.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 21,
+   "sha256": "a26c053f93e9b1aace396bbb2646e14b3d63b412a04b222feaae7413f579b56f"
+  },
+  {
+   "bytes": 31683,
+   "file": "v25_native_r2/youtube-dl/quarantine_attempt1/envs_run1.jsonl",
+   "role": "native environment results (build/qualification run)",
+   "rows": 21,
+   "sha256": "9adc1a8466987a9bb40f42c655edbfc8b7000c584fb96b2845f847dce6431205"
+  },
+  {
+   "bytes": 134862,
+   "file": "v26_funnel/diagnostics.jsonl",
+   "role": "other",
+   "rows": 163,
+   "sha256": "b660771b6992265df6170f0c082da256fce19a7ffbd2d49ecdec0498b93e387f"
+  },
+  {
+   "bytes": 8526,
+   "file": "v26_verify_a3/django_layers_run1.json",
+   "role": "other",
+   "rows": null,
+   "sha256": "dcfc865a95d310d1c9bf5cb28eaab381c2122fe800b8105beb5c419654652d1d"
+  },
+  {
+   "bytes": 8526,
+   "file": "v26_verify_a3/django_layers_run2.json",
+   "role": "other",
+   "rows": null,
+   "sha256": "dcfc865a95d310d1c9bf5cb28eaab381c2122fe800b8105beb5c419654652d1d"
+  },
+  {
+   "bytes": 59184,
+   "file": "v26_verify_a3/repository_verification_run1.jsonl",
+   "role": "repository-candidate verification run",
+   "rows": 163,
+   "sha256": "169895e017ff7b6b7f887d613ed6e1a1e0bb2c68313248b167888557621d82ff"
+  },
+  {
+   "bytes": 59184,
+   "file": "v26_verify_a3/repository_verification_run2.jsonl",
+   "role": "repository-candidate verification run",
+   "rows": 163,
+   "sha256": "169895e017ff7b6b7f887d613ed6e1a1e0bb2c68313248b167888557621d82ff"
+  }
+ ],
+ "originating_commit": "d60bea50ac934fad7fdccd4192c483d70d106daa",
+ "read_only": true,
+ "schema_version": "oneiros_v25_cpu2_archive_manifest_v1",
+ "wsl_environments_by_recipe": {
+  "environments": 129,
+  "lock_matches_recorded": 88,
+  "not_copied": [
+   "/root/oneiros_v25_native (9.2 GB)",
+   "/root/oneiros_v25_native_r2",
+   "/opt/oneiros_atheris_v5 (461 MB; RECORD-verified wheels, spec in overlays.json)"
+  ],
+  "present_and_lock_recomputed": 88,
+  "rebuild": "scripts/v25_native_env_wsl.py with targets.jsonl, the cached patches and each recipe's interpreter, cutoff and requirements; identity = recorded freeze_sha256 + site_packages_manifest_sha256 + view manifests",
+  "recipes_file": "v25_native_r2/env_recipes.jsonl"
+ }
+}
