@@ -72,6 +72,40 @@ def unittest_selectors(project: str, bug: str) -> list:
     return out
 
 
+def _test_patch(patch_dir: str, task: str) -> str | None:
+    path = ROOT / patch_dir / f"{task}.json"
+    return json.loads(path.read_text(encoding="utf-8"))["test_patch"] if path.is_file() else None
+
+
+def normalise_selectors(selectors: list, test_patch: str | None) -> list:
+    """v2.6 generic selector fixes (attempt a3):
+    R1 - Django 4.x reports ``test_x (module.Class.test_x)``: a selector ending in a doubled
+    method name is reduced to ``module.Class.test_x``;
+    R2 - an ``unresolved:test_x`` selector resolves to ``path::test_x`` when exactly one file of
+    the hash-verified official test patch adds ``def test_x(``."""
+    import re
+    files = {}
+    if test_patch:
+        for part in re.split(r"(?=^diff --git )", test_patch, flags=re.M):
+            m = re.match(r"diff --git a/(\S+)", part)
+            if m:
+                files[m.group(1)] = part
+    out = []
+    for sel in selectors:
+        if sel.startswith("django:"):
+            comps = sel.split(":", 1)[1].split(".")
+            if len(comps) >= 2 and comps[-1] == comps[-2]:
+                sel = "django:" + ".".join(comps[:-1])
+        elif sel.startswith("unresolved:"):
+            name = sel.split(":", 1)[1]
+            hits = [p for p, text in files.items()
+                    if re.search(rf"^\+\s*def {re.escape(name)}\(", text, re.M)]
+            if len(hits) == 1:
+                sel = f"{hits[0]}::{name}"
+        out.append(sel)
+    return out
+
+
 def interpreter_for(project: str, dataset: str, prov: dict, canary: dict) -> str | None:
     from scripts.v25_native_attempt_spec import SWEBENCH_INTERPRETERS, bugsinpy_python
     if dataset == "BugsInPy":
@@ -88,6 +122,9 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--out", required=True)
+    parser.add_argument("--normalise-selectors", action="store_true",
+                        help="v2.6 a3: apply normalise_selectors (R1, R2)")
+    parser.add_argument("--patches", default="results/sft_root_cause/v25_native_r2/patches")
     parser.add_argument("--targets-name", default="targets.jsonl",
                         help="successor targets file; an existing overlay must reproduce")
     args = parser.parse_args(argv)
@@ -134,7 +171,10 @@ def main(argv=None) -> int:
             row.update(buggy_commit=prov["base_commit"],
                        gold_patch_sha256=prov["gold_patch_sha256"],
                        test_patch_sha256=prov["test_patch_sha256"],
-                       selectors=_swebench_selectors(prov), test_paths=prov.get("test_paths"))
+                       selectors=(normalise_selectors(_swebench_selectors(prov),
+                                                      _test_patch(args.patches, task))
+                                  if args.normalise_selectors else _swebench_selectors(prov)),
+                       test_paths=prov.get("test_paths"))
         else:
             row.update(buggy_commit=prov["buggy_commit"], fixed_commit=prov["fixed_commit"],
                        bugsinpy_bug=prov["bug_id"],

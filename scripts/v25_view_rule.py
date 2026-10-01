@@ -37,8 +37,19 @@ def _sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def shipped_testing_packages(checkout: Path, root_rel: str) -> dict:
-    """{dotted name: evidence} for every ``<pkg>/.../testing`` package the revision ships."""
+VERSION_V3 = "oneiros_v26_view_rule_v3"
+
+
+def _contains_test_files(directory: Path) -> bool:
+    return any(p.is_file() and is_test_file(p.name) for p in directory.rglob("*.py"))
+
+
+def shipped_testing_packages(checkout: Path, root_rel: str,
+                             names: tuple = ("testing",)) -> dict:
+    """{dotted name: evidence} for every ``<pkg>/.../<name>`` package the revision ships.
+    v2: names = ("testing",). v3 adds "test": a ``<pkg>/test`` package is kept only when it
+    contains NO test file at any depth (runtime test API such as ``django.test``, never a
+    project test suite such as ``tornado/test``)."""
     source_root = checkout / root_rel if root_rel else checkout
     meta = {n: (checkout / n).read_text(encoding="utf-8", errors="replace")
             for n in PACKAGING if (checkout / n).is_file()}
@@ -48,10 +59,13 @@ def shipped_testing_packages(checkout: Path, root_rel: str) -> dict:
     found = {}
     for top in sorted(p for p in source_root.iterdir()
                       if p.is_dir() and (p / "__init__.py").exists()):
-        for d in sorted(top.rglob("testing")):
+        for d in sorted(x for name in names for x in top.rglob(name)):
             rel = d.relative_to(source_root)
             if not d.is_dir() or not (d / "__init__.py").exists() or \
-                    any(part in OTHER_SKIP | STRIP_ALWAYS for part in rel.parts):
+                    any(part in OTHER_SKIP | STRIP_ALWAYS for part in rel.parts[:-1]) or \
+                    rel.parts[-1] in OTHER_SKIP:
+                continue
+            if rel.parts[-1] in STRIP_ALWAYS and _contains_test_files(d):
                 continue
             # every ancestor must be a package too (importable as a dotted name)
             if not all((source_root / Path(*rel.parts[:i]) / "__init__.py").exists()
@@ -66,9 +80,16 @@ def shipped_testing_packages(checkout: Path, root_rel: str) -> dict:
     return found
 
 
-def build_view_v2(checkout: Path, root_rel: str, dest: Path, extra: dict | None = None) -> dict:
+def build_view_v3(checkout: Path, root_rel: str, dest: Path, extra: dict | None = None) -> dict:
+    """v2 plus shipped, test-free ``<pkg>/test`` runtime packages."""
+    return build_view_v2(checkout, root_rel, dest, extra, names=("testing", "test"),
+                         version=VERSION_V3)
+
+
+def build_view_v2(checkout: Path, root_rel: str, dest: Path, extra: dict | None = None,
+                  names: tuple = ("testing",), version: str = VERSION) -> dict:
     source_root = checkout / root_rel if root_rel else checkout
-    shipped = shipped_testing_packages(checkout, root_rel)
+    shipped = shipped_testing_packages(checkout, root_rel, names)
     keep = {tuple(d.split(".")) for d in shipped}
     if dest.exists():
         shutil.rmtree(dest)
@@ -84,6 +105,8 @@ def build_view_v2(checkout: Path, root_rel: str, dest: Path, extra: dict | None 
 
     def skipped(rel: Path) -> bool:
         for i, part in enumerate(rel.parts[:-1] if rel.suffix else rel.parts):
+            if tuple(rel.parts[:i + 1]) in keep:
+                continue
             if part in OTHER_SKIP or part in STRIP_ALWAYS:
                 return True
             if part == "testing" and tuple(rel.parts[:i + 1]) not in keep:
@@ -107,7 +130,7 @@ def build_view_v2(checkout: Path, root_rel: str, dest: Path, extra: dict | None 
             target.write_bytes(data)
     files = {p.relative_to(dest).as_posix(): _sha(p) for p in sorted(dest.rglob("*"))
              if p.is_file()}
-    return {"files": len(files), "view_rule": VERSION, "kept_testing_packages": shipped,
+    return {"files": len(files), "view_rule": version, "kept_testing_packages": shipped,
             "manifest_sha256": hashlib.sha256(json.dumps(files, sort_keys=True).encode())
             .hexdigest(), "tops": [t.name for t in tops]}
 

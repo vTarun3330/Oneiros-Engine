@@ -1,0 +1,3751 @@
+{
+ "by_owner": {
+  "candidate": 6,
+  "context": 19,
+  "harness": 72,
+  "infrastructure": 38,
+  "positive": 28
+ },
+ "categories": {
+  "collection:collection_failure": {
+   "fragments": 1,
+   "lineages": 1,
+   "of": 163,
+   "owner": "harness",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "sympy"
+   ]
+  },
+  "collection:collection_failure:project_fixture_required": {
+   "fragments": 1,
+   "lineages": 1,
+   "of": 163,
+   "owner": "context",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "thefuck"
+   ]
+  },
+  "collection:no_tests_collected:project_fixture_required": {
+   "fragments": 3,
+   "lineages": 3,
+   "of": 163,
+   "owner": "context",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "thefuck"
+   ]
+  },
+  "collection:skipped_or_xfail:project_fixture_required": {
+   "fragments": 2,
+   "lineages": 2,
+   "of": 163,
+   "owner": "context",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "thefuck"
+   ]
+  },
+  "environment:environment_install_failed": {
+   "fragments": 4,
+   "lineages": 4,
+   "of": 163,
+   "owner": "infrastructure",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "sanic",
+    "youtube-dl"
+   ]
+  },
+  "environment:no_approved_interpreter": {
+   "fragments": 1,
+   "lineages": 1,
+   "of": 163,
+   "owner": "infrastructure",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "django"
+   ]
+  },
+  "environment:not_stable_3_of_3": {
+   "fragments": 1,
+   "lineages": 1,
+   "of": 163,
+   "owner": "infrastructure",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "django"
+   ]
+  },
+  "environment:patch_unavailable": {
+   "fragments": 8,
+   "lineages": 8,
+   "of": 163,
+   "owner": "infrastructure",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "astropy",
+    "django",
+    "flask",
+    "sympy"
+   ]
+  },
+  "environment:runner_error": {
+   "fragments": 1,
+   "lineages": 1,
+   "of": 163,
+   "owner": "harness",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "django"
+   ]
+  },
+  "environment:runner_incompatible": {
+   "fragments": 33,
+   "lineages": 28,
+   "of": 163,
+   "owner": "harness",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "ansible",
+    "django",
+    "sympy"
+   ]
+  },
+  "environment:view_attestation_failed": {
+   "fragments": 24,
+   "lineages": 22,
+   "of": 163,
+   "owner": "infrastructure",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "astropy",
+    "django",
+    "matplotlib"
+   ]
+  },
+  "environment:view_contains_official_test": {
+   "fragments": 1,
+   "lineages": 1,
+   "of": 163,
+   "owner": "harness",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "sympy"
+   ]
+  },
+  "execution:timeout": {
+   "fragments": 1,
+   "lineages": 1,
+   "of": 163,
+   "owner": "candidate",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "youtube-dl"
+   ]
+  },
+  "import:project_test_support_required": {
+   "fragments": 13,
+   "lineages": 13,
+   "of": 163,
+   "owner": "context",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "httpie",
+    "thefuck"
+   ]
+  },
+  "import:runtime_test_package_stripped_by_view": {
+   "fragments": 20,
+   "lineages": 18,
+   "of": 163,
+   "owner": "harness",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "recoverable_ceiling": 20,
+   "repositories": [
+    "django",
+    "tornado"
+   ]
+  },
+  "localization:first_change_outside_function": {
+   "fragments": 11,
+   "lineages": 10,
+   "of": 163,
+   "owner": "harness",
+   "recoverable_by": "F2 any-changed-function target",
+   "recoverable_ceiling": 11,
+   "repositories": [
+    "django",
+    "sympy",
+    "thefuck",
+    "youtube-dl"
+   ]
+  },
+  "localization:no_function_changed": {
+   "fragments": 3,
+   "lineages": 3,
+   "of": 163,
+   "owner": "candidate",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "sympy"
+   ]
+  },
+  "positive:crash_kill": {
+   "fragments": 8,
+   "lineages": 8,
+   "of": 163,
+   "owner": "positive",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "sympy",
+    "youtube-dl"
+   ]
+  },
+  "positive:semantic_kill": {
+   "fragments": 20,
+   "lineages": 20,
+   "of": 163,
+   "owner": "positive",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "sympy",
+    "thefuck",
+    "youtube-dl"
+   ]
+  },
+  "reach:async_or_threaded_dispatch_untracked": {
+   "fragments": 1,
+   "lineages": 1,
+   "of": 163,
+   "owner": "harness",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "fastapi"
+   ]
+  },
+  "reach:changed_function_not_executed": {
+   "fragments": 2,
+   "lineages": 2,
+   "of": 163,
+   "owner": "candidate",
+   "recoverable_by": null,
+   "recoverable_ceiling": 0,
+   "repositories": [
+    "sympy",
+    "youtube-dl"
+   ]
+  },
+  "reach:nested_localization_outer_also_changed": {
+   "fragments": 4,
+   "lineages": 4,
+   "of": 163,
+   "owner": "harness",
+   "recoverable_by": "F2 any-changed-function target",
+   "recoverable_ceiling": 4,
+   "repositories": [
+    "sympy",
+    "youtube-dl"
+   ]
+  }
+ },
+ "denominator_fragments": 163,
+ "diagnostics": {
+  "path": "results/sft_root_cause/v26_funnel/diagnostics.jsonl",
+  "sha256": "b660771b6992265df6170f0c082da256fce19a7ffbd2d49ecdec0498b93e387f"
+ },
+ "funnel_cumulative": {
+  "buggy_failed": 28,
+  "eligible": 163,
+  "environment_available": 90,
+  "fixed_passed": 28,
+  "import_context_valid": 43,
+  "kill": 28,
+  "target_localized": 76,
+  "target_reached": 28,
+  "test_collected": 38,
+  "test_executed": 36
+ },
+ "overfitting_risk": "F1 and F2 are repository-independent rules (packaging metadata and AST change sets); no per-record exception exists",
+ "positives": {
+  "crash_kill": 8,
+  "note": "crash kills are kept separate from semantic (oracle) kills",
+  "semantic_kill": 20
+ },
+ "recovery_ceiling_from_generic_fixes": {
+  "F1_view_rule_runtime_test_packages": 20,
+  "F2_any_changed_function_target": 15,
+  "note": "ceilings assume every unblocked fragment then verifies; the actual yield must be re-observed"
+ },
+ "rows": [
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5536,
+   "owner": "infrastructure",
+   "primary": "environment:patch_unavailable",
+   "project": "astropy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "astropy__astropy-12907"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5537,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "astropy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "astropy__astropy-14096"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5511,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "ansible",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::ansible::10"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5512,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "ansible",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::ansible::14"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5513,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "ansible",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::ansible::17"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5516,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "ansible",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::ansible::7"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5517,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "ansible",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::ansible::8"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5518,
+   "owner": "harness",
+   "primary": "reach:async_or_threaded_dispatch_untracked",
+   "project": "fastapi",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::fastapi::12"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5519,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "httpie",
+   "recoverable_by": null,
+   "secondary": [
+    "module:utils"
+   ],
+   "task": "bugsinpy::httpie::2"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5520,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::10"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5521,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::11"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5522,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::13"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5523,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::14"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5524,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::15"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5525,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::16"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5526,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::17"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5527,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::19"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5528,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::20"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5529,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::25"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5530,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::27"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5531,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::28"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5532,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::29"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5533,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::7"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5534,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::matplotlib::9"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5535,
+   "owner": "infrastructure",
+   "primary": "environment:environment_install_failed",
+   "project": "sanic",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::sanic::5"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5694,
+   "owner": "context",
+   "primary": "collection:collection_failure:project_fixture_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::thefuck::1"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5686,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [
+    "module:tests"
+   ],
+   "task": "bugsinpy::thefuck::10"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5687,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [
+    "module:tests"
+   ],
+   "task": "bugsinpy::thefuck::11"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5688,
+   "owner": "harness",
+   "primary": "localization:first_change_outside_function",
+   "project": "thefuck",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "bugsinpy::thefuck::12"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5689,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [
+    "module:tests"
+   ],
+   "task": "bugsinpy::thefuck::13"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5690,
+   "owner": "context",
+   "primary": "collection:no_tests_collected:project_fixture_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::thefuck::14"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5691,
+   "owner": "harness",
+   "primary": "localization:first_change_outside_function",
+   "project": "thefuck",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "bugsinpy::thefuck::17"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5692,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [
+    "module:tests"
+   ],
+   "task": "bugsinpy::thefuck::18"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5693,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [
+    "module:tests"
+   ],
+   "task": "bugsinpy::thefuck::19"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5696,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [
+    "module:tests"
+   ],
+   "task": "bugsinpy::thefuck::21"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5697,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [
+    "module:tests"
+   ],
+   "task": "bugsinpy::thefuck::22"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5698,
+   "owner": "harness",
+   "primary": "localization:first_change_outside_function",
+   "project": "thefuck",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "bugsinpy::thefuck::23"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5699,
+   "owner": "harness",
+   "primary": "localization:first_change_outside_function",
+   "project": "thefuck",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "bugsinpy::thefuck::24"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5700,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [
+    "module:tests"
+   ],
+   "task": "bugsinpy::thefuck::25"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5701,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [
+    "module:tests"
+   ],
+   "task": "bugsinpy::thefuck::26"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5702,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [
+    "module:tests"
+   ],
+   "task": "bugsinpy::thefuck::27"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5706,
+   "owner": "context",
+   "primary": "collection:no_tests_collected:project_fixture_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::thefuck::3"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5704,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [
+    "module:tests"
+   ],
+   "task": "bugsinpy::thefuck::31"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5705,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::thefuck::32"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5707,
+   "owner": "context",
+   "primary": "collection:no_tests_collected:project_fixture_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::thefuck::4"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": true,
+    "test_executed": false
+   },
+   "index": 5708,
+   "owner": "context",
+   "primary": "collection:skipped_or_xfail:project_fixture_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::thefuck::5"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": true,
+    "test_executed": false
+   },
+   "index": 5709,
+   "owner": "context",
+   "primary": "collection:skipped_or_xfail:project_fixture_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::thefuck::6"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5710,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::thefuck::7"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5711,
+   "owner": "context",
+   "primary": "import:project_test_support_required",
+   "project": "thefuck",
+   "recoverable_by": null,
+   "secondary": [
+    "module:tests"
+   ],
+   "task": "bugsinpy::thefuck::9"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5712,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "tornado",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "bugsinpy::tornado::16"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5717,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::1"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5713,
+   "owner": "candidate",
+   "primary": "execution:timeout",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::10"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5714,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::13"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5715,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::15"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5716,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::17"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5718,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::20"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5719,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::21"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5720,
+   "owner": "harness",
+   "primary": "reach:nested_localization_outer_also_changed",
+   "project": "youtube-dl",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::23"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5722,
+   "owner": "harness",
+   "primary": "reach:nested_localization_outer_also_changed",
+   "project": "youtube-dl",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::25"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5723,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::26"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5724,
+   "owner": "infrastructure",
+   "primary": "environment:environment_install_failed",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::27"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5725,
+   "owner": "infrastructure",
+   "primary": "environment:environment_install_failed",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::28"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5726,
+   "owner": "infrastructure",
+   "primary": "environment:environment_install_failed",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::29"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5729,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::3"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5727,
+   "owner": "candidate",
+   "primary": "reach:changed_function_not_executed",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::34"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5728,
+   "owner": "harness",
+   "primary": "localization:first_change_outside_function",
+   "project": "youtube-dl",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::37"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5730,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::41"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5731,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::43"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5732,
+   "owner": "positive",
+   "primary": "positive:crash_kill",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::5"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5733,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "youtube-dl",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::6"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5734,
+   "owner": "harness",
+   "primary": "reach:nested_localization_outer_also_changed",
+   "project": "youtube-dl",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "bugsinpy::youtube-dl::7"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5541,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-10999"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5542,
+   "owner": "harness",
+   "primary": "localization:first_change_outside_function",
+   "project": "django",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "django__django-11095"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5544,
+   "owner": "infrastructure",
+   "primary": "environment:patch_unavailable",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-11133"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5547,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-11179"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5548,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-11206"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5551,
+   "owner": "harness",
+   "primary": "localization:first_change_outside_function",
+   "project": "django",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "django__django-11333"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5553,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-11451"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5554,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-11477"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5556,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-11490"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5558,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-11603"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5559,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-11820"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5560,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-11848"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5561,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-11951"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5562,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-11964"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5564,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-12039"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5565,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-12050"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5567,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-12143"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5568,
+   "owner": "infrastructure",
+   "primary": "environment:not_stable_3_of_3",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-12155"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5569,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-12273"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5570,
+   "owner": "harness",
+   "primary": "localization:first_change_outside_function",
+   "project": "django",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "django__django-12276"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5571,
+   "owner": "harness",
+   "primary": "localization:first_change_outside_function",
+   "project": "django",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "django__django-12276"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5572,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-12304"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5573,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-12308"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5576,
+   "owner": "infrastructure",
+   "primary": "environment:patch_unavailable",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-12419"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5579,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-13023"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5581,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-13195"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5582,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-13195"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5590,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-13512"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5591,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-13512"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5594,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-13741"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5597,
+   "owner": "infrastructure",
+   "primary": "environment:patch_unavailable",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-13933"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5600,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-14089"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5604,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-14373"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5606,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-14500"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5607,
+   "owner": "harness",
+   "primary": "environment:runner_error",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-14534"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5609,
+   "owner": "infrastructure",
+   "primary": "environment:patch_unavailable",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-14765"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5610,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-14999"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5611,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-15127"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5612,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-15127"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5615,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-15278"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5619,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-15569"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5620,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-15569"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5621,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-15569"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5622,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-15695"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5625,
+   "owner": "infrastructure",
+   "primary": "environment:no_approved_interpreter",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-15851"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5630,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-16485"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5634,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-16527"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5635,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-16595"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5636,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-16631"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5639,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-16819"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5640,
+   "owner": "infrastructure",
+   "primary": "environment:patch_unavailable",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-16899"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5641,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "django",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "django__django-16950"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5644,
+   "owner": "harness",
+   "primary": "import:runtime_test_package_stripped_by_view",
+   "project": "django",
+   "recoverable_by": "F1 view rule keeps shipped test-free <pkg>/test packages",
+   "secondary": [],
+   "task": "django__django-9296"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5645,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "matplotlib__matplotlib-20676"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5647,
+   "owner": "infrastructure",
+   "primary": "environment:view_attestation_failed",
+   "project": "matplotlib",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "matplotlib__matplotlib-25960"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5648,
+   "owner": "infrastructure",
+   "primary": "environment:patch_unavailable",
+   "project": "flask",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "pallets__flask-5014"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5650,
+   "owner": "harness",
+   "primary": "collection:collection_failure",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-11618"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5651,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-12096"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5652,
+   "owner": "harness",
+   "primary": "localization:first_change_outside_function",
+   "project": "sympy",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "sympy__sympy-12419"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5653,
+   "owner": "positive",
+   "primary": "positive:crash_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-12481"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5654,
+   "owner": "positive",
+   "primary": "positive:crash_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-13480"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5655,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-13615"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5656,
+   "owner": "harness",
+   "primary": "reach:nested_localization_outer_also_changed",
+   "project": "sympy",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "sympy__sympy-13647"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5657,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-13757"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5658,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-13757"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5659,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-14976"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5660,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-14976"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5661,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-15017"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5662,
+   "owner": "candidate",
+   "primary": "localization:no_function_changed",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-15345"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5663,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-15875"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5664,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-16450"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5665,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-16886"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5666,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-18211"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5667,
+   "owner": "harness",
+   "primary": "localization:first_change_outside_function",
+   "project": "sympy",
+   "recoverable_by": "F2 any-changed-function target",
+   "secondary": [],
+   "task": "sympy__sympy-18698"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5668,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-19040"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": true,
+    "kill": false,
+    "target_localized": true,
+    "target_reached": false,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5669,
+   "owner": "candidate",
+   "primary": "reach:changed_function_not_executed",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-19346"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5670,
+   "owner": "positive",
+   "primary": "positive:crash_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-19637"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5671,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-19783"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5672,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-19783"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5673,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-20801"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5674,
+   "owner": "harness",
+   "primary": "environment:view_contains_official_test",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-20916"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5675,
+   "owner": "candidate",
+   "primary": "localization:no_function_changed",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-22456"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5676,
+   "owner": "infrastructure",
+   "primary": "environment:patch_unavailable",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-22914"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5677,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-23262"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5678,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-23413"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": false,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5679,
+   "owner": "harness",
+   "primary": "environment:runner_incompatible",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-23413"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5680,
+   "owner": "positive",
+   "primary": "positive:crash_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-23950"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5681,
+   "owner": "positive",
+   "primary": "positive:crash_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-24066"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5682,
+   "owner": "positive",
+   "primary": "positive:crash_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-24443"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5683,
+   "owner": "positive",
+   "primary": "positive:semantic_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-24539"
+  },
+  {
+   "funnel": {
+    "buggy_failed": true,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": true,
+    "import_context_valid": true,
+    "kill": true,
+    "target_localized": true,
+    "target_reached": true,
+    "test_collected": true,
+    "test_executed": true
+   },
+   "index": 5684,
+   "owner": "positive",
+   "primary": "positive:crash_kill",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-24562"
+  },
+  {
+   "funnel": {
+    "buggy_failed": false,
+    "eligible": true,
+    "environment_available": true,
+    "fixed_passed": false,
+    "import_context_valid": false,
+    "kill": false,
+    "target_localized": false,
+    "target_reached": false,
+    "test_collected": false,
+    "test_executed": false
+   },
+   "index": 5685,
+   "owner": "candidate",
+   "primary": "localization:no_function_changed",
+   "project": "sympy",
+   "recoverable_by": null,
+   "secondary": [],
+   "task": "sympy__sympy-24661"
+  }
+ ],
+ "schema_version": "oneiros_v26_failure_funnel_v1"
+}

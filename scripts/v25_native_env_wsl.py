@@ -45,6 +45,7 @@ REPEATS = 3
 VIEW_RULE = "v1"            # v1 = the frozen executor rule; v2 = scripts/v25_view_rule.py
 INSTALL_TIMEOUT = 1800
 TEST_TIMEOUT = 1200
+DJANGO_FAILED = re.compile(r"^(FAIL|ERROR): (test\w*) \(([\w.]+?)(?:\.(test\w*))?\)", re.M)
 DJANGO_LINE = re.compile(r"^(test\w*) \(([\w.]+?)(?:\.(test\w*))?\)\s*\.\.\.\s*(ok|FAIL|ERROR|"
                          r"skipped|expected failure|unexpected success)", re.M)
 
@@ -83,6 +84,8 @@ def interpreter(version: str) -> str | None:
 SWEBENCH_DEPENDENCIES = {
     # SWE-bench's documented sympy pin; old mpmath sdists cannot build under a 2016 cutoff
     "sympy": ["mpmath==1.3.0", "pytest==7.4.4"],
+    # v2.6 R3b: old sympy imports the ``py`` library that pytest of its era depended on
+    "sympy_v3": ["mpmath==1.3.0", "pytest==7.4.4", "py==1.11.0"],
     "django": ["asgiref", "pytz", "sqlparse", "pytest"]}
 
 
@@ -140,7 +143,8 @@ def build_env(env_dir: Path, python_path: str, project: str, date: str,
         cmd = ["uv", "pip", "install", "-q", "--python", python, BUGSINPY_PYTEST,
                ERA_SETUPTOOLS]
     else:
-        deps = SWEBENCH_DEPENDENCIES.get(project, ["pytest"])
+        deps = SWEBENCH_DEPENDENCIES.get(f"{project}_v3" if VIEW_RULE == "v3" else project,
+                                         SWEBENCH_DEPENDENCIES.get(project, ["pytest"]))
         # exact pins are reproducible on their own; anything unpinned resolves at the buggy
         # commit's date
         cutoff = [] if all("==" in d for d in deps) else ["--exclude-newer", date]
@@ -178,10 +182,13 @@ def attest(python: str, view: Path, module: str) -> dict:
             "error": done.stderr[-300:] if not ok else None}
 
 
-def pytest_cases(python: str, checkout: Path, selectors: list, outdir: Path, label: str) -> dict:
+def pytest_cases(python: str, checkout: Path, selectors: list, outdir: Path, label: str,
+                 root_rel: str = "") -> dict:
     xml = outdir / f"{label}.xml"
     env = {"PATH": "/usr/bin:/bin", "PYTHONDONTWRITEBYTECODE": "1", "PYTHONNOUSERSITE": "1",
-           "PYTHONPATH": str(checkout), "HOME": str(outdir)}
+           # v2.6 R4: the import root (lib/, src/) is importable, as the project expects
+           "PYTHONPATH": (f"{checkout / root_rel}:{checkout}" if root_rel else str(checkout)),
+           "HOME": str(outdir)}
     run([python, "-B", "-m", "pytest", "-p", "no:cacheprovider", "-q", "-o", "addopts=",
          f"--junitxml={xml}", *selectors], cwd=checkout, timeout=TEST_TIMEOUT, env=env)
     cases = junit(xml)
@@ -282,12 +289,14 @@ def prepare(t: dict, patches: Path) -> dict:
         root_rel = import_root(t["target_file"])
         extra = generated_files(co / "fixed", root_rel)
         views = {label: base / "views" / label for label in ("buggy", "fixed")}
-        builder = v25_view_rule.build_view_v2 if VIEW_RULE == "v2" else build_view
+        builder = {"v2": v25_view_rule.build_view_v2,
+                   "v3": v25_view_rule.build_view_v3}.get(VIEW_RULE, build_view)
         manifests = {label: builder(co / label, root_rel, views[label], extra)
                      for label in views}
         row["views"] = {k: str(v) for k, v in views.items()}
         row["view_manifest_sha256"] = {k: v["manifest_sha256"] for k, v in manifests.items()}
-        row["view_rule"] = v25_view_rule.VERSION if VIEW_RULE == "v2" else "executor_build_view"
+        row["view_rule"] = {"v2": v25_view_rule.VERSION, "v3": v25_view_rule.VERSION_V3}.get(
+            VIEW_RULE, "executor_build_view")
         row["kept_testing_packages"] = manifests["buggy"].get("kept_testing_packages", {})
         official = [s.split("::")[0] for s in t["selectors"] if not s.startswith(
             ("django:", "unresolved:"))] + list(t.get("test_paths") or [])
@@ -329,11 +338,16 @@ def prepare(t: dict, patches: Path) -> dict:
                         full = f"{owner}.{inner}" if inner else f"{owner}.{method}"
                         status[full] = {"ok": "passed", "FAIL": "failed",
                                         "ERROR": "failed"}.get(verdict, "skipped")
+                    # v2.6 R3a: a failing subTest prints no verdict on the test's own line;
+                    # its FAIL:/ERROR: summary sections make the test failed
+                    for m in DJANGO_FAILED.finditer(done["full"]):
+                        _, method, owner, inner = m.groups()
+                        status[f"{owner}.{inner}" if inner else f"{owner}.{method}"] = "failed"
                     runs[label].append({s: status.get(s.split(":", 1)[1], "missing")
                                         for s in t["selectors"]})
                 else:
                     runs[label].append(pytest_cases(python, checkout, t["selectors"], outdir,
-                                                    f"{label}{i}"))
+                                                    f"{label}{i}", root_rel))
         stable = [s for s in t["selectors"]
                   if all(r[s] == "failed" for r in runs["buggy"])
                   and all(r[s] == "passed" for r in runs["fixed"])]
@@ -370,7 +384,7 @@ def main(argv=None) -> int:
     parser.add_argument("--out", required=True)
     parser.add_argument("--work", default=str(WORK), help="fresh work root per program")
     parser.add_argument("--patches", default="", help="patch cache (default: next to targets)")
-    parser.add_argument("--view-rule", choices=("v1", "v2"), default="v1")
+    parser.add_argument("--view-rule", choices=("v1", "v2", "v3"), default="v1")
     args = parser.parse_args(argv)
     WORK, VIEW_RULE = Path(args.work), args.view_rule
     tpath = REPO_ROOT / args.targets

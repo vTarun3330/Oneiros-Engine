@@ -61,3 +61,22 @@ def test_official_test_files_are_proven_absent(tmp_path):
         "pkg/testing/tests/test_pytest.py::test", "pkg/tests/test_core.py"])["ok"]
     bad = vr.official_files_absent(tmp_path / "view", "", ["pkg/testing/pytest.py"])
     assert not bad["ok"] and bad["present"] == ["pkg/testing/pytest.py"]
+
+
+def test_v3_keeps_a_shipped_test_free_test_package_but_never_a_test_suite(tmp_path):
+    files = {**BASE, "setup.py": "packages=find_packages()\n",
+             "pkg/test/__init__.py": "", "pkg/test/client.py": "class Client: pass\n",
+             "pkg/test/utils.py": "def override(): pass\n",
+             "other/__init__.py": "", "other/test/__init__.py": "",
+             "other/test/util.py": "X = 1\n", "other/test/gen_test.py": "def test(): 0\n"}
+    co = _tree(tmp_path / "co", files)
+    out = vr.build_view_v3(co, "", tmp_path / "view")
+    view = tmp_path / "view"
+    assert out["view_rule"] == vr.VERSION_V3
+    assert "pkg.test" in out["kept_testing_packages"]
+    assert "other.test" not in out["kept_testing_packages"]          # a project test suite
+    assert (view / "pkg/test/client.py").is_file()
+    assert not (view / "other/test").exists()
+    assert not (view / "pkg/tests/test_core.py").exists()
+    v2 = vr.build_view_v2(co, "", tmp_path / "v2")
+    assert v2["view_rule"] == vr.VERSION and "pkg.test" not in v2["kept_testing_packages"]
