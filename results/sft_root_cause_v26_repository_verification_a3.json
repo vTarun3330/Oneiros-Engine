@@ -1,0 +1,299 @@
+{
+ "attempt": "a3",
+ "environment_categories": {
+  "ansible": {
+   "qualified": 5
+  },
+  "astropy": {
+   "patch_unavailable": 1,
+   "view_attestation_failed": 1
+  },
+  "django": {
+   "no_approved_interpreter": 1,
+   "not_stable_3_of_3": 1,
+   "patch_unavailable": 5,
+   "qualified": 25,
+   "runner_error": 1,
+   "runner_incompatible": 10,
+   "view_attestation_failed": 4
+  },
+  "fastapi": {
+   "qualified": 1
+  },
+  "flask": {
+   "patch_unavailable": 1
+  },
+  "httpie": {
+   "qualified": 1
+  },
+  "matplotlib": {
+   "view_attestation_failed": 17
+  },
+  "sanic": {
+   "environment_install_failed": 1
+  },
+  "sympy": {
+   "patch_unavailable": 1,
+   "qualified": 26,
+   "runner_incompatible": 4,
+   "view_contains_official_test": 1
+  },
+  "thefuck": {
+   "qualified": 24
+  },
+  "tornado": {
+   "qualified": 1
+  },
+  "youtube-dl": {
+   "environment_install_failed": 3,
+   "qualified": 18
+  }
+ },
+ "environment_repeatability": {
+  "ansible": {
+   "byte_identical": false,
+   "normalised_identical": true
+  },
+  "astropy": {
+   "byte_identical": false,
+   "normalised_identical": true
+  },
+  "django": {
+   "byte_identical": false,
+   "normalised_identical": true
+  },
+  "fastapi": {
+   "byte_identical": false,
+   "normalised_identical": true
+  },
+  "flask": {
+   "byte_identical": true,
+   "normalised_identical": true
+  },
+  "httpie": {
+   "byte_identical": false,
+   "normalised_identical": true
+  },
+  "matplotlib": {
+   "byte_identical": false,
+   "normalised_identical": true
+  },
+  "pylint": {
+   "byte_identical": true,
+   "normalised_identical": true
+  },
+  "sanic": {
+   "byte_identical": true,
+   "normalised_identical": true
+  },
+  "sympy": {
+   "byte_identical": false,
+   "normalised_identical": true
+  },
+  "tornado": {
+   "byte_identical": true,
+   "normalised_identical": true
+  },
+  "youtube-dl": {
+   "byte_identical": false,
+   "normalised_identical": true
+  }
+ },
+ "historical_v25": {
+  "lineages": 28,
+  "repositories": 3,
+  "repository_tests": 28
+ },
+ "inputs": {
+  "candidates": "f95202f968ece95f2b727713cfd19a2b41cdd642c9baf8392887cf4d0336675d",
+  "environment_results": {
+   "ansible": [
+    "8b1f337e46893eefe78cfa2245a4a3d38524d35a174c10762e75979784e2ea83",
+    "81d9af23af0907607272cecd53f2d76b36d70309e9dc3f72882673ff4fa2a6d5"
+   ],
+   "astropy": [
+    "8c17d1dd3ef8198c9ba61a2d18546c4b8a3589e96585a79bd07ebebc4cfa0999",
+    "dafb551ac4c6ebce49118b453bf4337e563433cebaff3b6e85a5af64cc65c9ae"
+   ],
+   "django": [
+    "d18852dac285797c39b3279830722cab7a08801fba38f26ed8d62434e8c01929",
+    "05629a1168756bc49f0c2b9c9b8c69b67a6a8d98a61b37926177a283d4a23e72"
+   ],
+   "fastapi": [
+    "a12af482f79dccaafdd748a9727c6ea9048384d02fed288e15a14b6a60eedeea",
+    "f067d0a2a8fe00e1c562c84c970c05206f9f43e9bc819c68cac7a31c38d40b1e"
+   ],
+   "flask": [
+    "094ea955ec92f15faf8101c7a33031e6e192423f7bea3890e738d01063003351",
+    "094ea955ec92f15faf8101c7a33031e6e192423f7bea3890e738d01063003351"
+   ],
+   "httpie": [
+    "ff313ccca766c6a8a96d996168d9e2909dc5980b5200c29f6d311699b8b75c63",
+    "4267a164a3f4ead815827f517ba68e0357cd433c913445e8c793e88a7bb065c6"
+   ],
+   "matplotlib": [
+    "c938463276aca9f807b70143a7cbd8a694053ecdb810d8668a5ed30c0f287d9c",
+    "6647c8260e181d69bed38afd616801fde9b1e5f06ff5d83a9f4020bcb94ff924"
+   ],
+   "pylint": [
+    "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+   ],
+   "sanic": [
+    "6b9b5b4993dd6df2f2f87045a2c47fdb20738de6d65950ccf8e364a4520a2207",
+    "6b9b5b4993dd6df2f2f87045a2c47fdb20738de6d65950ccf8e364a4520a2207"
+   ],
+   "sympy": [
+    "9b1d9c5e1c5854e3e4a0f7e5fe5b1e1a3b35db30e579db646a93a0580456d38a",
+    "3d73d873ab8e0ce98a688e1cfe185af46a0203589b47afa17abe0ca304156ef5"
+   ],
+   "tornado": [
+    "45f3333256b2e1a961f9190b9694bcee1846bc512882d5ccbd19b738ed7e16da",
+    "45f3333256b2e1a961f9190b9694bcee1846bc512882d5ccbd19b738ed7e16da"
+   ],
+   "youtube-dl": [
+    "8b78b76a5d7847f8a9ac8f103817936426c97a73dbbd847471651f5a9b24a6f0",
+    "a26c053f93e9b1aace396bbb2646e14b3d63b412a04b222feaae7413f579b56f"
+   ]
+  },
+  "targets": "0bfeb88f30e8f715465b0b5207479931edf0e05c46c8a9cad778faa608e32b2f",
+  "thefuck_environments": "8a23728168a25dbf985f81c5e2dc2dadadd0f675526060522df3a7f91f99706e",
+  "verifier_outputs": [
+   "169895e017ff7b6b7f887d613ed6e1a1e0bb2c68313248b167888557621d82ff",
+   "169895e017ff7b6b7f887d613ed6e1a1e0bb2c68313248b167888557621d82ff"
+  ]
+ },
+ "kills": {
+  "crash_kill": 8,
+  "semantic_kill": 25
+ },
+ "observed_training_gate": {
+  "duplicates_ignored": 0,
+  "gate": {
+   "lineages": 60,
+   "repositories": 8,
+   "repository_tests": 150
+  },
+  "observed": {
+   "lineages": 33,
+   "repositories": 4,
+   "repository_tests": 33
+  },
+  "shortfall": {
+   "lineages": 27,
+   "repositories": 4,
+   "repository_tests": 117
+  },
+  "status": "FAIL"
+ },
+ "qualified_environments": {
+  "by_repository": {
+   "ansible": 5,
+   "django": 25,
+   "fastapi": 1,
+   "httpie": 1,
+   "sympy": 26,
+   "thefuck": 24,
+   "tornado": 1,
+   "youtube-dl": 18
+  },
+  "lineages": 101,
+  "repositories": 8
+ },
+ "rules": {
+  "frozen_at": "1febae4 (before these outcomes)",
+  "runner_fixes": [
+   "R1",
+   "R2",
+   "R3a",
+   "R3b",
+   "R4"
+  ],
+  "target_rule": "oneiros_v26_target_any_changed_function_v1",
+  "view_rule": "oneiros_v26_view_rule_v3"
+ },
+ "schema_version": "oneiros_v26_repository_verification_a3_v1",
+ "scripts_sha256": {
+  "harness/v26_readiness.py": "3e8422a552da62b36a8c1dcd5b245146f8ef9579100258c12cd542fc31b59376",
+  "scripts/native_generated_tests_execute_wsl.py": "f1ef59dd80443e745d616fb95905ccf316144cd42dd211460cd4185baa64dcca",
+  "scripts/native_sandbox_inner.sh": "ff90215bb4aef3c864a0d3604ad0eb076de68c5a0754ac6053fed15b9ff42b18",
+  "scripts/v25_django_layer_wsl.py": "e713814ea7e21d45a8b3d846a22f0e159cb369fd4a6a2693a331bd27135859c8",
+  "scripts/v25_native_env_wsl.py": "2ccd5c4f9568f2ac66cef31822b2594149319a800b4b5c7001e845a1e096ff64",
+  "scripts/v25_native_r2_build.sh": "9e8855b8c54f830a90d29fde4bf70e94700327b6ff92357244bed557f19a700e",
+  "scripts/v25_native_targets_r2.py": "cc13ab661bb4316041cc1fd5b74ac9d37d77bd23a4f89148719c5cd90026904b",
+  "scripts/v25_view_rule.py": "14ffb15975c0e19f98ed2423f0f55eca875e1e3150c3ae9058084f05791a6bbd",
+  "scripts/v26_funnel_diag_wsl.py": "952e6e226b1856e0ff77941a77aef992925e9da10263b9be46c3b2f2ae6d28fe",
+  "scripts/v26_verify_repository_wsl.py": "3a49ce092c39a4cd2145b8c49af6521dd945f6b7fe2086fe097188996862d0d0"
+ },
+ "source_commit": "1febae4410ba14b6557c9e6cb96edaba2af44bf1",
+ "verification_by_project": {
+  "ansible": {
+   "executed:collection_failure": 2,
+   "executed:fabricated_import": 1,
+   "executed:target_not_reached": 2
+  },
+  "astropy": {
+   "environment:patch_unavailable": 1,
+   "environment:view_attestation_failed": 1
+  },
+  "django": {
+   "environment:no_approved_interpreter": 1,
+   "environment:not_stable_3_of_3": 1,
+   "environment:patch_unavailable": 5,
+   "environment:runner_error": 1,
+   "environment:runner_incompatible": 11,
+   "environment:view_attestation_failed": 6,
+   "executed:fabricated_import": 21,
+   "executed:semantic_kill": 1,
+   "executed:target_not_reached": 5,
+   "target_unlocalizable": 1
+  },
+  "fastapi": {
+   "executed:target_not_reached": 1
+  },
+  "flask": {
+   "environment:patch_unavailable": 1
+  },
+  "httpie": {
+   "executed:fabricated_import": 1
+  },
+  "matplotlib": {
+   "environment:view_attestation_failed": 17
+  },
+  "sanic": {
+   "environment:environment_install_failed": 1
+  },
+  "sympy": {
+   "environment:patch_unavailable": 1,
+   "environment:runner_incompatible": 7,
+   "environment:view_contains_official_test": 1,
+   "executed:crash_kill": 7,
+   "executed:semantic_kill": 10,
+   "executed:target_not_reached": 4,
+   "target_unlocalizable": 6
+  },
+  "thefuck": {
+   "executed:collection_failure": 1,
+   "executed:fabricated_import": 15,
+   "executed:no_tests_collected": 4,
+   "executed:semantic_kill": 2,
+   "executed:skipped_or_xfail": 2
+  },
+  "tornado": {
+   "executed:fabricated_import": 1
+  },
+  "youtube-dl": {
+   "environment:environment_install_failed": 3,
+   "executed:buggy_test_error": 1,
+   "executed:crash_kill": 1,
+   "executed:semantic_kill": 13,
+   "executed:target_not_reached": 2,
+   "executed:timeout": 1
+  }
+ },
+ "verification_repeatability": {
+  "byte_identical": true,
+  "normalised_identical": true
+ },
+ "verified_positive_rows": 34
+}

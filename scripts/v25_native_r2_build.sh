@@ -7,6 +7,7 @@
 set -u
 RUN="${1:?run number}"
 ATTEMPT="${2:-a2}"
+VIEW="${3:-v2}"
 REPO=/mnt/c/Users/Student2/Desktop/Capstone/oneiros
 cd "$REPO"
 OUT=results/sft_root_cause/v25_native_r2
@@ -16,7 +17,7 @@ for p in $ORDER; do
   if [ -e "$OUT/$p/envs_${ATTEMPT}_run$RUN.jsonl" ]; then echo "skip $p (exists)"; continue; fi
   echo "=== $p $(date -Is)"
   bash scripts/wsl_native_python.sh scripts/v25_native_env_wsl.py \
-    --targets "$OUT/targets_${ATTEMPT}.jsonl" --projects "$p" --view-rule v2 \
+    --targets "$OUT/targets_${ATTEMPT}.jsonl" --projects "$p" --view-rule "$VIEW" \
     --work /root/oneiros_v25_native_r2 --patches "$OUT/patches" \
     --out "$OUT/$p/envs_${ATTEMPT}_run$RUN.jsonl"
 done
