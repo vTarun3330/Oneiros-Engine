@@ -1,0 +1,55 @@
+{
+ "atheris_comparable_confirmation_subset": {
+  "reason": "confirmation panel not acquired (blocked; see acquisition projection)",
+  "size": 0
+ },
+ "by_project": {
+  "django": {
+   "eligible_abi": 20
+  },
+  "fastapi": {
+   "eligible_abi": 1
+  },
+  "httpie": {
+   "atheris_abi_unavailable": 1
+  },
+  "sympy": {
+   "eligible_abi": 22
+  },
+  "thefuck": {
+   "atheris_abi_unavailable": 24
+  },
+  "tornado": {
+   "atheris_abi_unavailable": 1
+  },
+  "youtube-dl": {
+   "atheris_abi_unavailable": 18
+  }
+ },
+ "design_version": "oneiros_native_generated_tests_atheris_v5",
+ "existing_canaries": {
+  "receipt": "results/sft_root_cause/native_v25_canaries/atheris_canary_receipt_v4.json",
+  "redesign": "none (no failing canary)",
+  "sha256": "9bf28c23e6d72729a62ecb7624c97235c72649f76620a35cae01e8b63724ebdb"
+ },
+ "fuzzing_run": false,
+ "qualified_train_environments": 87,
+ "rows_file": {
+  "path": "results/sft_root_cause/v25_native_r2/atheris_readiness.jsonl",
+  "sha256": "02ca14c230606547e221d248c4e1c7db1e9dd772cfd2c086e4c58db43b5b71b8"
+ },
+ "rules": {
+  "eligible_abi": "overlay import with the target interpreter succeeded and the environment lock was identical before and after",
+  "python_3.12": "atheris_abi_unavailable (unchanged)",
+  "python_3.7": "no Atheris 2.3.0 wheel -> atheris_abi_unavailable (infrastructure; never adapter-unsupported, never a non-kill)"
+ },
+ "schema_version": "oneiros_v25_atheris_readiness_v1",
+ "scripts_sha256": {
+  "scripts/v25_atheris_readiness_wsl.py": "ac21e02245a86e92a2f5587fa7581b424eef515e9638474f88270704eb342142"
+ },
+ "status": {
+  "atheris_abi_unavailable": 44,
+  "eligible_abi": 43
+ },
+ "structural_eligibility_frozen": "per target: ABI status above; adapter eligibility is decided by the frozen v5 probe at evaluation time"
+}
