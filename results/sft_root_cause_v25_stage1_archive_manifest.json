@@ -1,0 +1,45 @@
+{
+ "archive_directory_name": "native_v25_stage1_6b35b20",
+ "byte_identical_to_originals": true,
+ "items": [
+  {
+   "bytes": 11188409,
+   "file": "converted_candidates.jsonl",
+   "role": "stage1 converted candidates (results/sft_root_cause/v25_corpus_stage1)",
+   "rows": 5735,
+   "sha256": "ca4d8c8f8f353a00d01d53194636dca22b674da16aa367d06c21d35d10f2a127"
+  },
+  {
+   "bytes": 1186665,
+   "file": "verification_run1.jsonl",
+   "role": "stage1 repeatability run 1",
+   "rows": 5735,
+   "sha256": "149fde67b87d7aa5d93fb225ab5c5d39d4ab34e4ee4eaf3580053356ce218d17"
+  },
+  {
+   "bytes": 1186665,
+   "file": "verification_run2.jsonl",
+   "role": "stage1 repeatability run 2",
+   "rows": 5735,
+   "sha256": "149fde67b87d7aa5d93fb225ab5c5d39d4ab34e4ee4eaf3580053356ce218d17"
+  },
+  {
+   "bytes": 6756255,
+   "file": "sft_examples_816b.jsonl",
+   "role": "exact rebuilt SFT examples (training commit 816bbc2; receipt fac747a1)",
+   "rows": 5735,
+   "sha256": "30e9436f7aa16709b8710ba410d653666c3eb8e11d4bdf9de55979a6f4c02167"
+  },
+  {
+   "bytes": 845,
+   "file": "sft_examples_816b.summary.json",
+   "role": "rebuild summary",
+   "rows": null,
+   "sha256": "e11c8e8e7dad4001ec3d273c2bdff5e3ba0ede8eec73b1582fa2bf5d36becd45"
+  }
+ ],
+ "originating_commit": "6b35b20af7937968afd38c43ad6d3f1af1750692",
+ "originating_receipt_sha256": "bf3f98286db3aa80ef494723b80949f2720c38e6cb5f1514e19fb1f12b23b924",
+ "read_only": true,
+ "schema_version": "oneiros_v25_stage1_archive_manifest_v1"
+}
