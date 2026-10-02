@@ -1,0 +1,37 @@
+{
+ "candidates_acquired": 0,
+ "decision_required": [
+  "A: exclude the 14 (56-repository confirmation pool) - follows the existing no-reuse rule",
+  "B: explicitly permit the 14 (70 repositories) because no commit-level contact ever occurred"
+ ],
+ "detected_by": "the acquisition runner's own fail-closed reuse check (canary attempt 2), before any repository was contacted",
+ "erratum_of": {
+  "defect": "the previously-scanned list is a dict {'repositories': [...]}; the audit iterated its keys, so 'previously_scanned_list: 0' was wrong",
+  "receipt": "results/sft_root_cause_v27_confirmation_overlap_pre.json",
+  "sha256": "d7c9770f9f0c28b52c42186a55f24ee5dc362cc16beb877f0fa5303564543f0f"
+ },
+ "gate_1_status": "FAIL as stated: 'exactly 70 confirmation repositories' and 'no earlier-pilot reuse unless explicitly permitted' cannot both hold",
+ "outcomes_observed": false,
+ "overlap": {
+  "contact_depth": "no commit, candidate, code or test of any of the 14 was ever inspected (9 listed only; 5 repository-metadata licence screens, all rejected NOASSERTION)",
+  "count": 14,
+  "list_definition": "every repository listed by the failed policy-A pilot or reached by the refused A-prime confirmation pilot",
+  "repositories": {
+   "astanin/python-tabulate": "listed only",
+   "dateutil/dateutil": "metadata screen (licence)",
+   "dbader/schedule": "listed only",
+   "life4/textdistance": "listed only",
+   "mahmoud/boltons": "metadata screen (licence)",
+   "mahmoud/glom": "listed only",
+   "networkx/networkx": "metadata screen (licence)",
+   "python-jsonschema/jsonschema": "listed only",
+   "python-validators/validators": "listed only",
+   "python/mypy": "metadata screen (licence)",
+   "pytoolz/toolz": "metadata screen (licence)",
+   "r1chardj0n3s/parse": "listed only",
+   "scrapinghub/dateparser": "listed only",
+   "un33k/python-slugify": "listed only"
+  }
+ },
+ "schema_version": "oneiros_v27_phase1_overlap_erratum_v1"
+}
