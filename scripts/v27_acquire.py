@@ -28,6 +28,8 @@ import sys
 import time
 
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 DEFAULT_GH = Path(r"C:\Program Files\GitHub CLI\gh.exe")
 RUNNER = "scripts/run_repository_native_acquisition_pilot.py"
 TOKEN_SHAPES = re.compile(r"\b(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b")
@@ -83,8 +85,11 @@ def untrusted_env_for_gh() -> dict:
     return untrusted_env()
 
 
-def stalled_candidate(heartbeat: Path, timeout: float, now: float) -> dict | None:
-    """The candidate the heartbeat has reported for longer than ``timeout`` seconds."""
+def stalled_candidate(heartbeat: Path, timeout: float, now: float,
+                      since: float = 0.0) -> dict | None:
+    """The candidate the heartbeat has reported for longer than ``timeout`` seconds. A heartbeat
+    written before ``since`` (the current child's start) belongs to an earlier process and is
+    never a stall of this one."""
     try:
         beat = json.loads(heartbeat.read_text(encoding="utf-8"))
     except (OSError, ValueError):
@@ -93,6 +98,8 @@ def stalled_candidate(heartbeat: Path, timeout: float, now: float) -> dict | Non
         return None
     import calendar
     started = calendar.timegm(time.strptime(beat["utc"], "%Y-%m-%dT%H:%M:%SZ"))
+    if started < since:
+        return None
     return beat if now - started > timeout else None
 
 
@@ -120,10 +127,11 @@ def run_child(cmd: list, token: str, log_path: Path, heartbeat: Path | None = No
         reader = threading.Thread(target=pump, daemon=True)
         reader.start()
         stalled = None
+        child_start = time.time() - 1
         while proc.poll() is None:
             time.sleep(5)
             if heartbeat is not None and timeout is not None:
-                stalled = stalled_candidate(heartbeat, timeout, time.time())
+                stalled = stalled_candidate(heartbeat, timeout, time.time(), child_start)
                 if stalled is not None:
                     proc.kill()
                     break

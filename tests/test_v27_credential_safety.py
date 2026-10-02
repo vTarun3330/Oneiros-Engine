@@ -96,35 +96,54 @@ def test_unauthenticated_gh_refuses(tmp_path, monkeypatch):
         wa.main(["--config", config(tmp_path)], gh=bad, child=bad)
 
 
+
+STUCK_CHILD = r'''import json, pathlib, sys, time
+flag, hb = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
+now = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+if not flag.exists():
+    flag.write_text('1')
+    hb.write_text(json.dumps({'utc': now, 'phase': 'candidate', 'repository': 'o/r',
+                              'commit': 'abc123'}))
+    time.sleep(120)
+hb.write_text(json.dumps({'utc': now, 'phase': 'finished'}))
+print('done')
+'''
+
+
 def test_watchdog_journals_a_stalled_candidate_and_restarts(tmp_path, capsys, monkeypatch):
-    import time as _t
     monkeypatch.setattr(wa, "ROOT", tmp_path)
     store = tmp_path / "store"
     store.mkdir()
-    stall_utc = _t.strftime("%Y-%m-%dT%H:%M:%SZ", _t.gmtime(_t.time() - 3600))
-    flag = tmp_path / "first_run_done"
-    # first run: stuck on one candidate (old heartbeat, never exits); second run: exits 0
-    kid = child(tmp_path,
-                "import json, pathlib, sys, time\n"
-                f"flag = pathlib.Path(r'{flag}')\n"
-                "if not flag.exists():\n"
-                "    flag.write_text('1')\n"
-                f"    pathlib.Path(r'{store / 'heartbeat.json'}').write_text(json.dumps("
-                f"{{'utc': '{stall_utc}', 'phase': 'candidate', 'repository': 'o/r', "
-                "'commit': 'abc123'}))\n"
-                "    time.sleep(120)\n"
-                f"pathlib.Path(r'{store / 'heartbeat.json'}').write_text(json.dumps("
-                "{'utc': '2099-01-01T00:00:00Z', 'phase': 'finished'}))\n"
-                "print('done')\n")
+    script = tmp_path / "stuck.py"
+    script.write_text(STUCK_CHILD, encoding="utf-8")
+    kid = [sys.executable, str(script), str(tmp_path / "flag"), str(store / "heartbeat.json")]
     cfg = tmp_path / "cfg.json"
     cfg.write_text(json.dumps({"store": str(store)}))
-    code = wa.main(["--config", str(cfg), "--candidate-timeout", "60"],
+    code = wa.main(["--config", str(cfg), "--candidate-timeout", "3"],
                    gh=fake_gh(tmp_path), child=kid)
     out = capsys.readouterr().out
     assert code == 0 and '"evaluation_timeouts": ["cand:o/r@abc123"]' in out
     journal = [json.loads(l) for l in (store / "journal.jsonl").read_text().splitlines()]
     assert journal[0]["key"] == "cand:o/r@abc123"
     assert journal[0]["failure"] == "evaluation_timeout"
+
+
+def test_a_stale_heartbeat_from_an_earlier_process_is_ignored(tmp_path, capsys, monkeypatch):
+    monkeypatch.setattr(wa, "ROOT", tmp_path)
+    store = tmp_path / "store"
+    store.mkdir()
+    (store / "heartbeat.json").write_text(json.dumps(
+        {"utc": "2026-01-01T00:00:00Z", "phase": "candidate", "repository": "o/r",
+         "commit": "old"}))
+    script = tmp_path / "slow.py"
+    script.write_text("import time\ntime.sleep(12)\nprint('ok')\n", encoding="utf-8")
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"store": str(store)}))
+    code = wa.main(["--config", str(cfg), "--candidate-timeout", "3"],
+                   gh=fake_gh(tmp_path), child=[sys.executable, str(script)])
+    out = capsys.readouterr().out
+    assert code == 0 and '"evaluation_timeouts": []' in out
+    assert not (store / "journal.jsonl").exists()
 
 
 def test_a_fresh_heartbeat_is_not_a_stall(tmp_path):
@@ -134,5 +153,6 @@ def test_a_fresh_heartbeat_is_not_a_stall(tmp_path):
                               "phase": "candidate", "repository": "o/r", "commit": "c"}))
     assert wa.stalled_candidate(hb, 60, _t.time()) is None
     assert wa.stalled_candidate(hb, 60, _t.time() + 120)["commit"] == "c"
+    assert wa.stalled_candidate(hb, 60, _t.time() + 120, since=_t.time() + 100) is None
     hb.write_text(json.dumps({"utc": "2000-01-01T00:00:00Z", "phase": "scan"}))
     assert wa.stalled_candidate(hb, 60, _t.time()) is None
