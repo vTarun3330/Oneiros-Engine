@@ -1,0 +1,146 @@
+{
+ "candidate_level_checks_after_acquisition": [
+  "fix commit and issue identities vs every earlier journal",
+  "target-function canonical fingerprint vs the frozen training fingerprints (7596 functions, sha256 ecf2907c352b15c977acb4209af4f8b5ce7b814cc4587800a21bc8c8572fe305)",
+  "lineage (repository key, fix commit, function fingerprint)",
+  "renames / aliases resolved by the acquisition API"
+ ],
+ "checked_before_acquisition": true,
+ "earlier_contact_interpretation": "repository-level metadata screening only (licence screen); no commit, candidate, code or test of these repositories was ever inspected; no reuse",
+ "earlier_metadata_only_contacts": {
+  "boltons": [
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "acquisition_pilot"
+   },
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "a_prime_retrospective"
+   }
+  ],
+  "dateutil": [
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "acquisition_pilot"
+   },
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "a_prime_retrospective"
+   }
+  ],
+  "gunicorn": [
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "aprime_fresh_confirmation_pilot"
+   }
+  ],
+  "mypy": [
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "aprime_confirmation_pilot"
+   },
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "aprime_sample_revalidation_v6"
+   }
+  ],
+  "networkx": [
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "acquisition_pilot"
+   },
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "a_prime_retrospective"
+   }
+  ],
+  "packaging": [
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "aprime_fresh_confirmation_pilot"
+   }
+  ],
+  "psycopg": [
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:LGPL-3.0"
+    ],
+    "store": "aprime_fresh_confirmation_pilot"
+   }
+  ],
+  "pycparser": [
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "aprime_fresh_confirmation_pilot"
+   }
+  ],
+  "toolz": [
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "acquisition_pilot"
+   },
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "a_prime_retrospective"
+   }
+  ],
+  "waitress": [
+   {
+    "record": "repo",
+    "screen_problems": [
+     "licence_not_admitted_by_d2:NOASSERTION"
+    ],
+    "store": "aprime_fresh_confirmation_pilot"
+   }
+  ]
+ },
+ "protected_material": "no validation, reserved-confirmation or sealed record opened",
+ "repository_overlap": {
+  "exclusion_ledger": 0,
+  "exclusion_ledger_keys": 78,
+  "ledger_covers": "every training repository, every BugsInPy / SWE-bench repository, the v2.4 diagnostic panel and the earlier pilots' cloned repositories",
+  "previously_scanned_list": 0,
+  "training_expansion_pool": 0
+ },
+ "schema_version": "oneiros_v27_confirmation_overlap_pre_v1"
+}

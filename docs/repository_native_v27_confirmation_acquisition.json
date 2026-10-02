@@ -1,0 +1,25 @@
+{
+ "candidates_since": "2025-01-01",
+ "exclude_journals": [
+  "data/repository_native/acquisition_pilot/journal.jsonl",
+  "data/repository_native/aprime_confirmation_pilot/journal.jsonl",
+  "data/repository_native/aprime_fresh_confirmation_pilot/journal.jsonl",
+  "data/repository_native/a_prime_retrospective/journal.jsonl",
+  "data/repository_native/aprime_sample_revalidation_v6/journal.jsonl"
+ ],
+ "exclude_repository_files": [
+  "docs/repository_native_previously_scanned_repositories.json"
+ ],
+ "expected_repository_list_sha256": "0018660e5c169f3302d31d3d1fe3f5892cb12639b242dc39d7aa84140f649ef8",
+ "fetch_since": "2024-12-01",
+ "label": "v2.7 CONFIRMATION-ONLY acquisition over the frozen 70-repository pool; candidate pool only, no evaluation set, no model, no GPU",
+ "max_candidates": 1000000,
+ "min_repositories": 10000,
+ "per_repository_cap": 30,
+ "report": "results/sft_root_cause_v27_confirmation_acquisition_report.json",
+ "repositories_file": "docs/repository_native_v27_confirmation_repositories.json",
+ "role": "CONFIRMATION_ONLY",
+ "stopping_rule": "every repository of the frozen list is processed (max_candidates and min_repositories are unreachable sentinels); at most 30 classified fix commits per repository, newest-first as the runner lists them; independent of outcomes",
+ "store": "data/repository_native/v27_confirmation",
+ "training_prohibited": true
+}

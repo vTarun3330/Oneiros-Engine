@@ -1,0 +1,26 @@
+{
+ "admission": [
+  "policy-A single-target fix with authenticated regression evidence",
+  "native environment builds twice identically",
+  "official regression test fails 3/3 on buggy, passes 3/3 on fixed",
+  "target reached",
+  "prompt-leakage audit passes",
+  "zero training overlap (repository, issue, commit, lineage, function fingerprint, near duplicate)"
+ ],
+ "frozen_before": "any v2.7 confirmation candidate is acquired",
+ "schema_version": "oneiros_v27_confirmation_panel_gate_v1",
+ "selection": {
+  "complexity_strata": [
+   "simple",
+   "moderate",
+   "complex"
+  ],
+  "max_per_repository": 8,
+  "min_defect_families": 4,
+  "min_repositories": 10,
+  "order": "structural only: per repository, admitted candidates by fixed commit date then sha; never model, repair or Atheris outcomes",
+  "targets": 80
+ },
+ "underpowered_rule": "fewer than 80 targets or 10 repositories after the bounded pool is exhausted -> freeze as built, CONFIRMATION_BUILT_UNDERPOWERED: exploratory estimation only",
+ "use": "confirmation only; never training, replay, relearning, tuning, checkpoint selection or repair"
+}

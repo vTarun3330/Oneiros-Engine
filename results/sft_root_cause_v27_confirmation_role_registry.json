@@ -1,0 +1,781 @@
+{
+ "repositories": [
+  {
+   "aliases": [
+    "Kozea/WeasyPrint"
+   ],
+   "repository": "Kozea/WeasyPrint",
+   "repository_key": "weasyprint",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/Kozea/WeasyPrint"
+  },
+  {
+   "aliases": [
+    "PyCQA/flake8"
+   ],
+   "repository": "PyCQA/flake8",
+   "repository_key": "flake8",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/PyCQA/flake8"
+  },
+  {
+   "aliases": [
+    "PyCQA/pycodestyle"
+   ],
+   "repository": "PyCQA/pycodestyle",
+   "repository_key": "pycodestyle",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/PyCQA/pycodestyle"
+  },
+  {
+   "aliases": [
+    "PyCQA/pyflakes"
+   ],
+   "repository": "PyCQA/pyflakes",
+   "repository_key": "pyflakes",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/PyCQA/pyflakes"
+  },
+  {
+   "aliases": [
+    "PyMySQL/PyMySQL"
+   ],
+   "repository": "PyMySQL/PyMySQL",
+   "repository_key": "pymysql",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/PyMySQL/PyMySQL"
+  },
+  {
+   "aliases": [
+    "Pylons/waitress"
+   ],
+   "repository": "Pylons/waitress",
+   "repository_key": "waitress",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/Pylons/waitress"
+  },
+  {
+   "aliases": [
+    "agronholm/typeguard"
+   ],
+   "repository": "agronholm/typeguard",
+   "repository_key": "typeguard",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/agronholm/typeguard"
+  },
+  {
+   "aliases": [
+    "altair-viz/altair"
+   ],
+   "repository": "altair-viz/altair",
+   "repository_key": "altair",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/altair-viz/altair"
+  },
+  {
+   "aliases": [
+    "astanin/python-tabulate"
+   ],
+   "repository": "astanin/python-tabulate",
+   "repository_key": "python-tabulate",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/astanin/python-tabulate"
+  },
+  {
+   "aliases": [
+    "benoitc/gunicorn"
+   ],
+   "repository": "benoitc/gunicorn",
+   "repository_key": "gunicorn",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/benoitc/gunicorn"
+  },
+  {
+   "aliases": [
+    "boxed/mutmut"
+   ],
+   "repository": "boxed/mutmut",
+   "repository_key": "mutmut",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/boxed/mutmut"
+  },
+  {
+   "aliases": [
+    "coleifer/peewee"
+   ],
+   "repository": "coleifer/peewee",
+   "repository_key": "peewee",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/coleifer/peewee"
+  },
+  {
+   "aliases": [
+    "dask/dask"
+   ],
+   "repository": "dask/dask",
+   "repository_key": "dask",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/dask/dask"
+  },
+  {
+   "aliases": [
+    "dateutil/dateutil"
+   ],
+   "repository": "dateutil/dateutil",
+   "repository_key": "dateutil",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/dateutil/dateutil"
+  },
+  {
+   "aliases": [
+    "dbader/schedule"
+   ],
+   "repository": "dbader/schedule",
+   "repository_key": "schedule",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/dbader/schedule"
+  },
+  {
+   "aliases": [
+    "eliben/pycparser"
+   ],
+   "repository": "eliben/pycparser",
+   "repository_key": "pycparser",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/eliben/pycparser"
+  },
+  {
+   "aliases": [
+    "erikrose/parsimonious"
+   ],
+   "repository": "erikrose/parsimonious",
+   "repository_key": "parsimonious",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/erikrose/parsimonious"
+  },
+  {
+   "aliases": [
+    "executablebooks/MyST-Parser"
+   ],
+   "repository": "executablebooks/MyST-Parser",
+   "repository_key": "myst-parser",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/executablebooks/MyST-Parser"
+  },
+  {
+   "aliases": [
+    "executablebooks/markdown-it-py"
+   ],
+   "repository": "executablebooks/markdown-it-py",
+   "repository_key": "markdown-it-py",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/executablebooks/markdown-it-py"
+  },
+  {
+   "aliases": [
+    "fsspec/filesystem_spec"
+   ],
+   "repository": "fsspec/filesystem_spec",
+   "repository_key": "filesystem_spec",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/fsspec/filesystem_spec"
+  },
+  {
+   "aliases": [
+    "graphql-python/graphene"
+   ],
+   "repository": "graphql-python/graphene",
+   "repository_key": "graphene",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/graphql-python/graphene"
+  },
+  {
+   "aliases": [
+    "graphql-python/graphql-core"
+   ],
+   "repository": "graphql-python/graphql-core",
+   "repository_key": "graphql-core",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/graphql-python/graphql-core"
+  },
+  {
+   "aliases": [
+    "h5py/h5py"
+   ],
+   "repository": "h5py/h5py",
+   "repository_key": "h5py",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/h5py/h5py"
+  },
+  {
+   "aliases": [
+    "holoviz/panel"
+   ],
+   "repository": "holoviz/panel",
+   "repository_key": "panel",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/holoviz/panel"
+  },
+  {
+   "aliases": [
+    "hukkin/tomli"
+   ],
+   "repository": "hukkin/tomli",
+   "repository_key": "tomli",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/hukkin/tomli"
+  },
+  {
+   "aliases": [
+    "hynek/stamina"
+   ],
+   "repository": "hynek/stamina",
+   "repository_key": "stamina",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/hynek/stamina"
+  },
+  {
+   "aliases": [
+    "ipython/ipython"
+   ],
+   "repository": "ipython/ipython",
+   "repository_key": "ipython",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/ipython/ipython"
+  },
+  {
+   "aliases": [
+    "jpadilla/pyjwt"
+   ],
+   "repository": "jpadilla/pyjwt",
+   "repository_key": "pyjwt",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/jpadilla/pyjwt"
+  },
+  {
+   "aliases": [
+    "jupyter/nbconvert"
+   ],
+   "repository": "jupyter/nbconvert",
+   "repository_key": "nbconvert",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/jupyter/nbconvert"
+  },
+  {
+   "aliases": [
+    "jupyter/nbformat"
+   ],
+   "repository": "jupyter/nbformat",
+   "repository_key": "nbformat",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/jupyter/nbformat"
+  },
+  {
+   "aliases": [
+    "kevin1024/vcrpy"
+   ],
+   "repository": "kevin1024/vcrpy",
+   "repository_key": "vcrpy",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/kevin1024/vcrpy"
+  },
+  {
+   "aliases": [
+    "lark-parser/lark"
+   ],
+   "repository": "lark-parser/lark",
+   "repository_key": "lark",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/lark-parser/lark"
+  },
+  {
+   "aliases": [
+    "lepture/authlib"
+   ],
+   "repository": "lepture/authlib",
+   "repository_key": "authlib",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/lepture/authlib"
+  },
+  {
+   "aliases": [
+    "life4/textdistance"
+   ],
+   "repository": "life4/textdistance",
+   "repository_key": "textdistance",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/life4/textdistance"
+  },
+  {
+   "aliases": [
+    "mahmoud/boltons"
+   ],
+   "repository": "mahmoud/boltons",
+   "repository_key": "boltons",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/mahmoud/boltons"
+  },
+  {
+   "aliases": [
+    "mahmoud/glom"
+   ],
+   "repository": "mahmoud/glom",
+   "repository_key": "glom",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/mahmoud/glom"
+  },
+  {
+   "aliases": [
+    "marshmallow-code/apispec"
+   ],
+   "repository": "marshmallow-code/apispec",
+   "repository_key": "apispec",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/marshmallow-code/apispec"
+  },
+  {
+   "aliases": [
+    "mongodb/mongo-python-driver"
+   ],
+   "repository": "mongodb/mongo-python-driver",
+   "repository_key": "mongo-python-driver",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/mongodb/mongo-python-driver"
+  },
+  {
+   "aliases": [
+    "nedbat/coveragepy"
+   ],
+   "repository": "nedbat/coveragepy",
+   "repository_key": "coveragepy",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/nedbat/coveragepy"
+  },
+  {
+   "aliases": [
+    "networkx/networkx"
+   ],
+   "repository": "networkx/networkx",
+   "repository_key": "networkx",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/networkx/networkx"
+  },
+  {
+   "aliases": [
+    "numba/numba"
+   ],
+   "repository": "numba/numba",
+   "repository_key": "numba",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/numba/numba"
+  },
+  {
+   "aliases": [
+    "prompt-toolkit/python-prompt-toolkit"
+   ],
+   "repository": "prompt-toolkit/python-prompt-toolkit",
+   "repository_key": "python-prompt-toolkit",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/prompt-toolkit/python-prompt-toolkit"
+  },
+  {
+   "aliases": [
+    "psycopg/psycopg"
+   ],
+   "repository": "psycopg/psycopg",
+   "repository_key": "psycopg",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/psycopg/psycopg"
+  },
+  {
+   "aliases": [
+    "pyfakefs/pyfakefs"
+   ],
+   "repository": "pyfakefs/pyfakefs",
+   "repository_key": "pyfakefs",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/pyfakefs/pyfakefs"
+  },
+  {
+   "aliases": [
+    "pyinvoke/invoke"
+   ],
+   "repository": "pyinvoke/invoke",
+   "repository_key": "invoke",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/pyinvoke/invoke"
+  },
+  {
+   "aliases": [
+    "pymc-devs/pymc"
+   ],
+   "repository": "pymc-devs/pymc",
+   "repository_key": "pymc",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/pymc-devs/pymc"
+  },
+  {
+   "aliases": [
+    "pypa/packaging"
+   ],
+   "repository": "pypa/packaging",
+   "repository_key": "packaging",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/pypa/packaging"
+  },
+  {
+   "aliases": [
+    "pypa/pipx"
+   ],
+   "repository": "pypa/pipx",
+   "repository_key": "pipx",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/pypa/pipx"
+  },
+  {
+   "aliases": [
+    "pypa/twine"
+   ],
+   "repository": "pypa/twine",
+   "repository_key": "twine",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/pypa/twine"
+  },
+  {
+   "aliases": [
+    "python-hyper/h2"
+   ],
+   "repository": "python-hyper/h2",
+   "repository_key": "h2",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/python-hyper/h2"
+  },
+  {
+   "aliases": [
+    "python-jsonschema/check-jsonschema"
+   ],
+   "repository": "python-jsonschema/check-jsonschema",
+   "repository_key": "check-jsonschema",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/python-jsonschema/check-jsonschema"
+  },
+  {
+   "aliases": [
+    "python-jsonschema/jsonschema"
+   ],
+   "repository": "python-jsonschema/jsonschema",
+   "repository_key": "jsonschema",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/python-jsonschema/jsonschema"
+  },
+  {
+   "aliases": [
+    "python-lsp/python-lsp-server"
+   ],
+   "repository": "python-lsp/python-lsp-server",
+   "repository_key": "python-lsp-server",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/python-lsp/python-lsp-server"
+  },
+  {
+   "aliases": [
+    "python-openxml/python-docx"
+   ],
+   "repository": "python-openxml/python-docx",
+   "repository_key": "python-docx",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/python-openxml/python-docx"
+  },
+  {
+   "aliases": [
+    "python-validators/validators"
+   ],
+   "repository": "python-validators/validators",
+   "repository_key": "validators",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/python-validators/validators"
+  },
+  {
+   "aliases": [
+    "python/mypy"
+   ],
+   "repository": "python/mypy",
+   "repository_key": "mypy",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/python/mypy"
+  },
+  {
+   "aliases": [
+    "pytoolz/toolz"
+   ],
+   "repository": "pytoolz/toolz",
+   "repository_key": "toolz",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/pytoolz/toolz"
+  },
+  {
+   "aliases": [
+    "pytransitions/transitions"
+   ],
+   "repository": "pytransitions/transitions",
+   "repository_key": "transitions",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/pytransitions/transitions"
+  },
+  {
+   "aliases": [
+    "pyupio/safety"
+   ],
+   "repository": "pyupio/safety",
+   "repository_key": "safety",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/pyupio/safety"
+  },
+  {
+   "aliases": [
+    "pyvista/pyvista"
+   ],
+   "repository": "pyvista/pyvista",
+   "repository_key": "pyvista",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/pyvista/pyvista"
+  },
+  {
+   "aliases": [
+    "r1chardj0n3s/parse"
+   ],
+   "repository": "r1chardj0n3s/parse",
+   "repository_key": "parse",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/r1chardj0n3s/parse"
+  },
+  {
+   "aliases": [
+    "regebro/tzlocal"
+   ],
+   "repository": "regebro/tzlocal",
+   "repository_key": "tzlocal",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/regebro/tzlocal"
+  },
+  {
+   "aliases": [
+    "scrapinghub/dateparser"
+   ],
+   "repository": "scrapinghub/dateparser",
+   "repository_key": "dateparser",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/scrapinghub/dateparser"
+  },
+  {
+   "aliases": [
+    "spulec/freezegun"
+   ],
+   "repository": "spulec/freezegun",
+   "repository_key": "freezegun",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/spulec/freezegun"
+  },
+  {
+   "aliases": [
+    "squidfunk/mkdocs-material"
+   ],
+   "repository": "squidfunk/mkdocs-material",
+   "repository_key": "mkdocs-material",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/squidfunk/mkdocs-material"
+  },
+  {
+   "aliases": [
+    "tortoise/tortoise-orm"
+   ],
+   "repository": "tortoise/tortoise-orm",
+   "repository_key": "tortoise-orm",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/tortoise/tortoise-orm"
+  },
+  {
+   "aliases": [
+    "tox-dev/pipdeptree"
+   ],
+   "repository": "tox-dev/pipdeptree",
+   "repository_key": "pipdeptree",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/tox-dev/pipdeptree"
+  },
+  {
+   "aliases": [
+    "un33k/python-slugify"
+   ],
+   "repository": "un33k/python-slugify",
+   "repository_key": "python-slugify",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/un33k/python-slugify"
+  },
+  {
+   "aliases": [
+    "yaml/pyyaml"
+   ],
+   "repository": "yaml/pyyaml",
+   "repository_key": "pyyaml",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/yaml/pyyaml"
+  },
+  {
+   "aliases": [
+    "zarr-developers/zarr-python"
+   ],
+   "repository": "zarr-developers/zarr-python",
+   "repository_key": "zarr-python",
+   "role": "CONFIRMATION_ONLY",
+   "status": "listed",
+   "training_prohibited": true,
+   "url": "https://github.com/zarr-developers/zarr-python"
+  }
+ ],
+ "role": "CONFIRMATION_ONLY",
+ "schema_version": "oneiros_v27_confirmation_role_registry_v1",
+ "source_partition": {
+  "path": "results/sft_root_cause_v25_universe_partition.json",
+  "sha256": "6b3e2527243817d1f90fde5a8e333652129c977db328abcc67e38470791a709b"
+ },
+ "training_prohibited": true
+}

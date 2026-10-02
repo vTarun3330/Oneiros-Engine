@@ -1,0 +1,16 @@
+{
+ "artifacts_sha256": {
+  "docs/repository_native_v27_confirmation_acquisition.json": "32971e65a93b925add084577eda0851dc1cd1470e48c4bbe79fd4fce573a9869",
+  "docs/repository_native_v27_confirmation_panel_gate.json": "757fe23691ad5594355b47101d48569103768318f483f88028a6f4b3d681dcee",
+  "docs/repository_native_v27_confirmation_repositories.json": "0018660e5c169f3302d31d3d1fe3f5892cb12639b242dc39d7aa84140f649ef8",
+  "results/sft_root_cause_v25_confirmation_panel_spec.json": "21e132b2efe3251cdf65043aa3eb56e1b56567827a75ff737327d584281e5be8",
+  "results/sft_root_cause_v25_universe_partition.json": "6b3e2527243817d1f90fde5a8e333652129c977db328abcc67e38470791a709b",
+  "results/sft_root_cause_v27_confirmation_overlap_pre.json": "d7c9770f9f0c28b52c42186a55f24ee5dc362cc16beb877f0fa5303564543f0f",
+  "results/sft_root_cause_v27_confirmation_role_registry.json": "19c4c973e1bd140ac607fbf7c7cb24820068c91d837fe9d3a7c56c39a5703423"
+ },
+ "command": "python scripts/v27_acquire.py --config docs/repository_native_v27_confirmation_acquisition.json",
+ "frozen_before_any_result": true,
+ "repositories": 70,
+ "role": "CONFIRMATION_ONLY",
+ "schema_version": "oneiros_v27_confirmation_preflight_v1"
+}
