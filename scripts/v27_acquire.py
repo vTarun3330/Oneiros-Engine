@@ -31,7 +31,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 DEFAULT_GH = Path(r"C:\Program Files\GitHub CLI\gh.exe")
-RUNNER = "scripts/run_repository_native_acquisition_pilot.py"
+RUNNER = "scripts/v27_runner.py"            # unchanged runner + line-split cache
 TOKEN_SHAPES = re.compile(r"\b(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b")
 CREDENTIAL_PREFIXES = ("GITHUB_", "GH_", "SSH_", "GIT_ASKPASS", "GIT_CREDENTIAL",
                        "GCM_", "GIT_TERMINAL_PROMPT")
