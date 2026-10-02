@@ -1,0 +1,5 @@
+[
+ "astanin/python-tabulate",
+ "boxed/mutmut",
+ "python-jsonschema/check-jsonschema"
+]
