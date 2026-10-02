@@ -16,8 +16,14 @@ def test_outside_support_is_null_not_zero():
 
 def test_inside_support_zero_is_a_real_estimate():
     out = p2.threshold_probability([0, 1, 2, 3], 10, (0, 36))
-    assert out["probability"] == 0.0 and out["status"] == "ESTIMATED"
-    assert p2.threshold_probability([5, 5], 4, (0, 36))["probability"] == 1.0
+    assert out["monte_carlo_estimate"] == 0.0 and out["status"] == "ESTIMATED"
+    assert "probability" not in out and 0 < out["upper_95_one_sided"] < 1
+    assert "NOT an exact probability of zero" in out["interpretation"]
+    big = p2.threshold_probability([0] * 10_000, 10, (0, 36))
+    assert abs(big["upper_95_one_sided"] - 0.0003) < 0.00002          # rule of three
+    assert p2.threshold_probability([5, 5], 4, (0, 36))["monte_carlo_estimate"] == 1.0
+    mid = p2.threshold_probability([1] * 50 + [0] * 50, 1, (0, 36))
+    assert mid["monte_carlo_estimate"] == 0.5 and 0.5 < mid["upper_95_one_sided"] < 0.7
 
 
 def test_shortfall_is_derived_from_the_current_counts():

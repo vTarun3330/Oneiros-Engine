@@ -1,0 +1,49 @@
+{
+ "affected_reports": {
+  "results/sft_root_cause_v25_cpu2_preflight_decision.json": "'exhausting the 13 existing train repositories' -> 12 repositories with eligible fragments; conclusion unchanged (refused)",
+  "results/sft_root_cause_v26_phase0_reverification.json": "'13 existing train repositories' -> the 163 eligible fragments come from 12 repositories (pylint contributed no eligible fragment)",
+  "results/sft_root_cause_v26_structural_feasibility.json": "use the exact successor; greedy counts are lower bounds",
+  "scripts/v26_structural_feasibility.py": "heuristic diagnostic only"
+ },
+ "decision": "do not train on the 33 observed examples; GPU training not authorised; next: repository-disjoint confirmation panel, then evaluation of existing models",
+ "not_used": "GLOBAL_STRICT_TRAINING_ARM_STRUCTURALLY_INFEASIBLE",
+ "repository_count_reconciliation": {
+  "difference": "pylint: its only repository fragment needs project test support",
+  "repositories_with_eligible_fragments": 12,
+  "train_repositories_with_records": 13
+ },
+ "schema_version": "oneiros_v26_phase4_supersession_v1",
+ "scope": "the exact maxima apply ONLY to the currently materialized 163-fragment universe of 12 repositories (A) and its qualified subset (B); the 36-repository training-expansion pool is unacquired and its feasibility is UNKNOWN. This is not a global proof that strict training is impossible.",
+ "states": {
+  "CURRENT_GPU_TRAINING_NOT_AUTHORIZED": true,
+  "CURRENT_MATERIALIZED_UNIVERSE_STRUCTURALLY_INFEASIBLE_FOR_150": true,
+  "CURRENT_OBSERVED_CORPUS_NOT_TRAINING_READY": true,
+  "TRAINING_EXPANSION_POOL_FEASIBILITY_UNKNOWN": true,
+  "TRAINING_EXPANSION_POOL_NOT_MATERIALIZED": true
+ },
+ "successor": {
+  "artifact": "results/sft_root_cause_v26_structural_feasibility_v2_exact.json",
+  "constraint_manifest_sha256": "11da8ff446f7651ba30e1bb8453b7356ccfbc4d8182c90c95f324f9f9981da24",
+  "method": "binary MILP (HiGHS), OPTIMAL / INFEASIBLE terminations only, independently validated witnesses",
+  "sha256": "aba1b748f94b25a001ac8eed3d716fd85ae1a7ac80f7ba50db5820dc10c481d8",
+  "universe_A_joint_150_8_60": "INFEASIBLE",
+  "universe_A_max_tests": 146,
+  "universe_B_max_tests": 101,
+  "witness_file": {
+   "path": "results/sft_root_cause/v26_funnel/exact_witnesses.json",
+   "sha256": "d0ff43d79dc3e95a3fb9ae6528e5e6f3ae2fd23c58e408a84148d977fd2010bb"
+  }
+ },
+ "superseded": {
+  "artifact": "results/sft_root_cause_v26_structural_feasibility.json",
+  "kept_unchanged": true,
+  "method": "greedy selection sorted by canonical AST",
+  "overstatements": [
+   "its source called the greedy selection optimal",
+   "its 'maximum' lineages (139) was a witness count; the exact maximum is 142",
+   "its label STRICT_TRAINING_INFEASIBLE_UNDER_CURRENT_PROTOCOL read as a claim about the whole protocol, including the unacquired 36-repository expansion pool"
+  ],
+  "sha256": "112405b91961001cadf3a30e37edf206abb3742353d37b7c7f809890271a03b3",
+  "status_of_its_numbers": "HEURISTIC_FEASIBLE_SET / LOWER_BOUND"
+ }
+}

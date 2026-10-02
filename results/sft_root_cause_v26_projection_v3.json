@@ -1,0 +1,263 @@
+{
+ "cluster_data": {
+  "admissions_per_scanned_repository": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   0,
+   0,
+   1,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1,
+   1,
+   1
+  ],
+  "positives": [
+   [
+    5,
+    0
+   ],
+   [
+    25,
+    1
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    26,
+    17
+   ],
+   [
+    24,
+    2
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    18,
+    13
+   ]
+  ],
+  "qualification": [
+   [
+    5,
+    5
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    47,
+    25
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    17,
+    0
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    32,
+    26
+   ],
+   [
+    24,
+    24
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    21,
+    18
+   ]
+  ]
+ },
+ "confirmation_pool": {
+  "qualified_targets": {
+   "expected": 11.55,
+   "median": 11,
+   "observed_max_draw": 39,
+   "observed_min_draw": 0,
+   "p05": 3,
+   "p95": 22
+  },
+  "repositories": 70,
+  "thresholds": {
+   "repositories_10": {
+    "draws": 10000,
+    "interpretation": "Monte Carlo estimate under the planning simulation; a zero estimate is NOT an exact probability of zero",
+    "monte_carlo_estimate": 0.5973,
+    "simulated_exceedances": 5973,
+    "status": "ESTIMATED",
+    "support": [
+     0,
+     70
+    ],
+    "threshold": 10,
+    "upper_95_one_sided": 0.605395
+   },
+   "targets_80": {
+    "meaning": "outside what this simulator can produce; NOT impossible",
+    "monte_carlo_estimate": null,
+    "probability": null,
+    "simulated_exceedances": 0,
+    "status": "NOT_ESTIMABLE_OUTSIDE_SUPPORT",
+    "support": [
+     0,
+     70
+    ],
+    "threshold": 80
+   }
+  }
+ },
+ "derived_shortfall": {
+  "lineages": 27,
+  "repositories": 4,
+  "repository_tests": 117
+ },
+ "draws": 10000,
+ "evidence_class": "exploratory planning evidence only",
+ "inputs_sha256": {
+  "results/sft_root_cause_v25_universe_partition.json": "6b3e2527243817d1f90fde5a8e333652129c977db328abcc67e38470791a709b",
+  "results/sft_root_cause_v26_repository_verification_a3.json": "00ae59ead384c3a08a738233809b05feedd7cfb6634579b32030f0dd352e36c5",
+  "results/sft_root_cause_v26_selection_conservation.json": "688839cdbee8d83f6e9932ab8fff31d49c12e486069dbaba7f57e2d81f9f9640",
+  "results/v4_3_repository_native_aprime_fresh_confirmation_pilot.json": "267923bddda5f1345c3d4c605d5c28982d9a455cb5f9769bf25c9af7440102c5"
+ },
+ "is_observed_evidence": false,
+ "method": "repository-cluster bootstrap planning simulation",
+ "observed_base": {
+  "lineages": 33,
+  "repositories": 4,
+  "repository_tests": 33,
+  "source": "results/sft_root_cause_v26_selection_conservation.json"
+ },
+ "schema_version": "oneiros_v26_projection_v3",
+ "seed": 20261003,
+ "simulator_support": {
+  "confirmation_pool_counts": [
+   0,
+   70
+  ],
+  "per_repository_admissions": [
+   0,
+   1
+  ],
+  "restriction": "the pilot admitted at most one fix commit per scanned repository; resampling cannot exceed it",
+  "training_pool_counts": [
+   0,
+   36
+  ]
+ },
+ "supersedes_wording_of": {
+  "erratum": "estimated zeros were labelled 'probability'; they are Monte Carlo estimates with an upper bound",
+  "receipt": "results/sft_root_cause_v26_projection_v2.json",
+  "sha256": "c78f2885083030ceae68d495870ed165fd9594a0009b5777ead09cd7dbfb0c58"
+ },
+ "training_pool": {
+  "admitted_fix_commits": {
+   "expected": 8.96,
+   "median": 9,
+   "observed_max_draw": 27,
+   "observed_min_draw": 0,
+   "p05": 2,
+   "p95": 17
+  },
+  "new_repositories_with_a_positive": {
+   "expected": 1.93,
+   "median": 2,
+   "observed_max_draw": 14,
+   "observed_min_draw": 0,
+   "p05": 0,
+   "p95": 5
+  },
+  "repositories": 36,
+  "thresholds": {
+   "additional_lineages": {
+    "draws": 10000,
+    "interpretation": "Monte Carlo estimate under the planning simulation; a zero estimate is NOT an exact probability of zero",
+    "monte_carlo_estimate": 0.0,
+    "simulated_exceedances": 0,
+    "status": "ESTIMATED",
+    "support": [
+     0,
+     36
+    ],
+    "threshold": 27,
+    "upper_95_one_sided": 0.0003
+   },
+   "additional_repositories": {
+    "draws": 10000,
+    "interpretation": "Monte Carlo estimate under the planning simulation; a zero estimate is NOT an exact probability of zero",
+    "monte_carlo_estimate": 0.1731,
+    "simulated_exceedances": 1731,
+    "status": "ESTIMATED",
+    "support": [
+     0,
+     36
+    ],
+    "threshold": 4,
+    "upper_95_one_sided": 0.179443
+   },
+   "additional_tests": {
+    "meaning": "outside what this simulator can produce; NOT impossible",
+    "monte_carlo_estimate": null,
+    "probability": null,
+    "simulated_exceedances": 0,
+    "status": "NOT_ESTIMABLE_OUTSIDE_SUPPORT",
+    "support": [
+     0,
+     36
+    ],
+    "threshold": 117
+   }
+  },
+  "verified_positives": {
+   "expected": 1.93,
+   "median": 2,
+   "observed_max_draw": 14,
+   "observed_min_draw": 0,
+   "p05": 0,
+   "p95": 5
+  }
+ },
+ "unknown_quantities": [
+  "fix commits admitted per repository under production acquisition (pilot: <= 1)",
+  "qualifying lineages per repository under the real per-function / per-repository caps",
+  "transfer of historical rates to the new pools"
+ ]
+}

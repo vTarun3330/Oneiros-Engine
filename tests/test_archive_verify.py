@@ -66,3 +66,12 @@ def test_no_personal_absolute_path_in_v25_v26_source():
             or (ROOT / f).is_file() and "/Users/Student2/" in
             (ROOT / f).read_text(encoding="utf-8", errors="ignore")]
     assert hits == []
+
+
+def test_tracked_archive_receipt_redacts_the_absolute_path():
+    r = json.loads((ROOT / "results/sft_root_cause_v26_archive_verification_v2.json")
+                   .read_text(encoding="utf-8"))
+    assert r["absolute_path_redacted"] is True and "archive_root" not in r
+    assert len(r["archive_root_fingerprint_sha256"]) == 64
+    assert r["byte_verified"] == r["items"] == 396
+    assert "Student2" not in json.dumps(r)

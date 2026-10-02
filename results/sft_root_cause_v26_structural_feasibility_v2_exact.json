@@ -1,0 +1,351 @@
+{
+ "constraint_manifest": {
+  "affected_candidates": {
+   "A": 163,
+   "B": 105
+  },
+  "rules": [
+   {
+    "bound": 1,
+    "type": "canonical_test_unique (exact-duplicate exclusion)"
+   },
+   {
+    "bound": 3,
+    "type": "per_function_cap"
+   },
+   {
+    "bound": 3,
+    "type": "per_lineage_cap"
+   },
+   {
+    "bound": 40,
+    "type": "per_repository_cap"
+   },
+   {
+    "bound": null,
+    "note": "policy: reported, not removed (no constraint)",
+    "type": "near_duplicates"
+   },
+   {
+    "bound": "training pool only; confirmation / validation / sealed rejected before the model is built",
+    "type": "membership"
+   }
+  ],
+  "source": {
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5_ADDENDUM_1.md": "7676aac2c58ef2bf35a435b42ee40b81a4fe6d8143175e21c417b0bcfc2c9149",
+   "harness/v26_exact_selection.py": "cd3b64534be2c97fe72f1c563413fa1ed6b83b2b76e7d1ba4f4deb93f7b6689b"
+  }
+ },
+ "constraint_manifest_sha256": "11da8ff446f7651ba30e1bb8453b7356ccfbc4d8182c90c95f324f9f9981da24",
+ "inputs_sha256": {
+  "results/sft_root_cause/v25_native_r2/converted_candidates_r2r.jsonl": "f95202f968ece95f2b727713cfd19a2b41cdd642c9baf8392887cf4d0336675d",
+  "results/sft_root_cause/v25_native_r2/targets_a3.jsonl": "0bfeb88f30e8f715465b0b5207479931edf0e05c46c8a9cad778faa608e32b2f",
+  "results/sft_root_cause/v26_funnel/diagnostics.jsonl": "b660771b6992265df6170f0c082da256fce19a7ffbd2d49ecdec0498b93e387f",
+  "results/sft_root_cause/v26_verify_a3/repository_verification_run1.jsonl": "169895e017ff7b6b7f887d613ed6e1a1e0bb2c68313248b167888557621d82ff",
+  "results/sft_root_cause_v26_selection_conservation.json": "688839cdbee8d83f6e9932ab8fff31d49c12e486069dbaba7f57e2d81f9f9640"
+ },
+ "reproduces_independent_audit_146_101": true,
+ "schema_version": "oneiros_v26_structural_feasibility_v2_exact",
+ "scope": "the exact maxima apply ONLY to the currently materialized 163-fragment universe of 12 repositories (A) and its qualified subset (B); the 36-repository training-expansion pool is unacquired and its feasibility is UNKNOWN. This is not a global proof that strict training is impossible.",
+ "solver": {
+  "accepted_terminations": [
+   "INFEASIBLE",
+   "OPTIMAL"
+  ],
+  "name": "HiGHS via scipy.optimize.milp",
+  "parameters": {
+   "mip_rel_gap": 0.0,
+   "presolve": true,
+   "time_limit_seconds": 600.0
+  },
+  "scipy": "1.18.1"
+ },
+ "states": {
+  "CURRENT_GPU_TRAINING_NOT_AUTHORIZED": true,
+  "CURRENT_MATERIALIZED_UNIVERSE_STRUCTURALLY_INFEASIBLE_FOR_150": true,
+  "CURRENT_OBSERVED_CORPUS_NOT_TRAINING_READY": true,
+  "TRAINING_EXPANSION_POOL_FEASIBILITY_UNKNOWN": true,
+  "TRAINING_EXPANSION_POOL_NOT_MATERIALIZED": true
+ },
+ "supersedes_method_of": {
+  "artifact": "results/sft_root_cause_v26_structural_feasibility.json",
+  "method": "greedy (sorted by canonical); its counts are a HEURISTIC_FEASIBLE_SET / LOWER_BOUND, not maxima",
+  "sha256": "112405b91961001cadf3a30e37edf206abb3742353d37b7c7f809890271a03b3"
+ },
+ "universe_A_all_163_materialized_fragments": {
+  "candidates": 163,
+  "results": {
+   "heuristic_greedy": {
+    "label": "HEURISTIC_FEASIBLE_SET / LOWER_BOUND",
+    "tests": 146,
+    "valid": true
+   },
+   "joint_feasibility_150_8_60": {
+    "best_bound": null,
+    "constraint_kinds": {
+     "lineage_indicator": 153,
+     "min_lineages": 1,
+     "min_repositories": 1,
+     "min_tests": 1,
+     "per_function": 1,
+     "per_repository": 1,
+     "repository_indicator": 12
+    },
+    "constraints": 170,
+    "mip_gap": null,
+    "runtime_seconds": 0.003,
+    "status": "INFEASIBLE",
+    "variables": 328
+   },
+   "lex_max_lineages_at_max_tests": {
+    "best_bound": -142.0,
+    "constraint_kinds": {
+     "fix_tests": 1,
+     "lineage_indicator": 153,
+     "per_function": 1,
+     "per_repository": 1,
+     "repository_indicator": 12
+    },
+    "constraints": 168,
+    "mip_gap": 0.0,
+    "objective_value": 142,
+    "runtime_seconds": 0.005,
+    "status": "OPTIMAL",
+    "variables": 328,
+    "witness_counts": {
+     "lineages": 142,
+     "repositories": 12,
+     "repository_tests": 146
+    },
+    "witness_sha256": "551c41d29c188069f362576525c678295fb08b0aaaf5b5a4608eb0ce06f99339",
+    "witness_valid": true
+   },
+   "lex_max_repositories_at_max_tests": {
+    "best_bound": -12.0,
+    "constraint_kinds": {
+     "fix_tests": 1,
+     "lineage_indicator": 153,
+     "per_function": 1,
+     "per_repository": 1,
+     "repository_indicator": 12
+    },
+    "constraints": 168,
+    "mip_gap": 0.0,
+    "objective_value": 12,
+    "runtime_seconds": 0.002,
+    "status": "OPTIMAL",
+    "variables": 328,
+    "witness_counts": {
+     "lineages": 136,
+     "repositories": 12,
+     "repository_tests": 146
+    },
+    "witness_sha256": "2ed83f8fb5f770be0de3e984e52e0372815c13d1effefdcd1ec2b21a3f3fae1e",
+    "witness_valid": true
+   },
+   "max_lineages": {
+    "best_bound": -142.0,
+    "constraint_kinds": {
+     "lineage_indicator": 153,
+     "per_function": 1,
+     "per_repository": 1,
+     "repository_indicator": 12
+    },
+    "constraints": 167,
+    "mip_gap": 0.0,
+    "objective_value": 142,
+    "runtime_seconds": 0.002,
+    "status": "OPTIMAL",
+    "variables": 328,
+    "witness_counts": {
+     "lineages": 142,
+     "repositories": 12,
+     "repository_tests": 146
+    },
+    "witness_sha256": "551c41d29c188069f362576525c678295fb08b0aaaf5b5a4608eb0ce06f99339",
+    "witness_valid": true
+   },
+   "max_repositories": {
+    "best_bound": -12.0,
+    "constraint_kinds": {
+     "lineage_indicator": 153,
+     "per_function": 1,
+     "per_repository": 1,
+     "repository_indicator": 12
+    },
+    "constraints": 167,
+    "mip_gap": 0.0,
+    "objective_value": 12,
+    "runtime_seconds": 0.003,
+    "status": "OPTIMAL",
+    "variables": 328,
+    "witness_counts": {
+     "lineages": 133,
+     "repositories": 12,
+     "repository_tests": 143
+    },
+    "witness_sha256": "6a5c723ce84d4e847b040d7c27cd2838cef3e46543d048b5c6667c7cc91dbd0e",
+    "witness_valid": true
+   },
+   "max_tests": {
+    "best_bound": -146.0,
+    "constraint_kinds": {
+     "lineage_indicator": 153,
+     "per_function": 1,
+     "per_repository": 1,
+     "repository_indicator": 12
+    },
+    "constraints": 167,
+    "mip_gap": 0.0,
+    "objective_value": 146,
+    "runtime_seconds": 0.002,
+    "status": "OPTIMAL",
+    "variables": 328,
+    "witness_counts": {
+     "lineages": 136,
+     "repositories": 12,
+     "repository_tests": 146
+    },
+    "witness_sha256": "2ed83f8fb5f770be0de3e984e52e0372815c13d1effefdcd1ec2b21a3f3fae1e",
+    "witness_valid": true
+   }
+  }
+ },
+ "universe_B_qualified_environments_today": {
+  "candidates": 105,
+  "results": {
+   "heuristic_greedy": {
+    "label": "HEURISTIC_FEASIBLE_SET / LOWER_BOUND",
+    "tests": 101,
+    "valid": true
+   },
+   "joint_feasibility_150_8_60": {
+    "best_bound": null,
+    "constraint_kinds": {
+     "lineage_indicator": 101,
+     "min_lineages": 1,
+     "min_repositories": 1,
+     "min_tests": 1,
+     "per_function": 1,
+     "repository_indicator": 8
+    },
+    "constraints": 113,
+    "mip_gap": null,
+    "runtime_seconds": 0.001,
+    "status": "INFEASIBLE",
+    "variables": 214
+   },
+   "lex_max_lineages_at_max_tests": {
+    "best_bound": -97.0,
+    "constraint_kinds": {
+     "fix_tests": 1,
+     "lineage_indicator": 101,
+     "per_function": 1,
+     "repository_indicator": 8
+    },
+    "constraints": 111,
+    "mip_gap": 0.0,
+    "objective_value": 97,
+    "runtime_seconds": 0.003,
+    "status": "OPTIMAL",
+    "variables": 214,
+    "witness_counts": {
+     "lineages": 97,
+     "repositories": 8,
+     "repository_tests": 101
+    },
+    "witness_sha256": "e62b42f03bf6be55113e54b321cc4c7dcab819850df8507afcf523cf9e2bab70",
+    "witness_valid": true
+   },
+   "lex_max_repositories_at_max_tests": {
+    "best_bound": -8.0,
+    "constraint_kinds": {
+     "fix_tests": 1,
+     "lineage_indicator": 101,
+     "per_function": 1,
+     "repository_indicator": 8
+    },
+    "constraints": 111,
+    "mip_gap": 0.0,
+    "objective_value": 8,
+    "runtime_seconds": 0.002,
+    "status": "OPTIMAL",
+    "variables": 214,
+    "witness_counts": {
+     "lineages": 97,
+     "repositories": 8,
+     "repository_tests": 101
+    },
+    "witness_sha256": "e62b42f03bf6be55113e54b321cc4c7dcab819850df8507afcf523cf9e2bab70",
+    "witness_valid": true
+   },
+   "max_lineages": {
+    "best_bound": -97.0,
+    "constraint_kinds": {
+     "lineage_indicator": 101,
+     "per_function": 1,
+     "repository_indicator": 8
+    },
+    "constraints": 110,
+    "mip_gap": 0.0,
+    "objective_value": 97,
+    "runtime_seconds": 0.001,
+    "status": "OPTIMAL",
+    "variables": 214,
+    "witness_counts": {
+     "lineages": 97,
+     "repositories": 8,
+     "repository_tests": 101
+    },
+    "witness_sha256": "e62b42f03bf6be55113e54b321cc4c7dcab819850df8507afcf523cf9e2bab70",
+    "witness_valid": true
+   },
+   "max_repositories": {
+    "best_bound": -8.0,
+    "constraint_kinds": {
+     "lineage_indicator": 101,
+     "per_function": 1,
+     "repository_indicator": 8
+    },
+    "constraints": 110,
+    "mip_gap": 0.0,
+    "objective_value": 8,
+    "runtime_seconds": 0.001,
+    "status": "OPTIMAL",
+    "variables": 214,
+    "witness_counts": {
+     "lineages": 94,
+     "repositories": 8,
+     "repository_tests": 98
+    },
+    "witness_sha256": "072f77f61ccc08764cc0241d30f447515abaf93efb85bd203531d6806a832118",
+    "witness_valid": true
+   },
+   "max_tests": {
+    "best_bound": -101.0,
+    "constraint_kinds": {
+     "lineage_indicator": 101,
+     "per_function": 1,
+     "repository_indicator": 8
+    },
+    "constraints": 110,
+    "mip_gap": 0.0,
+    "objective_value": 101,
+    "runtime_seconds": 0.001,
+    "status": "OPTIMAL",
+    "variables": 214,
+    "witness_counts": {
+     "lineages": 97,
+     "repositories": 8,
+     "repository_tests": 101
+    },
+    "witness_sha256": "e62b42f03bf6be55113e54b321cc4c7dcab819850df8507afcf523cf9e2bab70",
+    "witness_valid": true
+   }
+  }
+ },
+ "witness_file": {
+  "path": "results/sft_root_cause/v26_funnel/exact_witnesses.json",
+  "sha256": "d0ff43d79dc3e95a3fb9ae6528e5e6f3ae2fd23c58e408a84148d977fd2010bb"
+ }
+}

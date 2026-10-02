@@ -1,8 +1,9 @@
 """Portable, read-only verification of external byte-verified archives (stdlib only).
 
 The archive root is ALWAYS supplied by the caller (``--archive-root``); no personal path is
-compiled into tracked source. Fails closed: a missing root, a missing manifest, a missing archive
-directory or any byte difference is an error. Never creates, moves, renames or deletes anything.
+compiled into tracked source. ``verify`` returns the resolved root for local display; tracked
+receipts redact it (scripts/v26_archive_verify.py). Fails closed: a missing root, a missing
+manifest, a missing archive directory or any byte difference is an error. Never creates, moves, renames or deletes anything.
 """
 from __future__ import annotations
 

@@ -1,4 +1,8 @@
-"""v2.6 Phase 4: deterministic structural feasibility of the strict 150/8/60 training gate.
+"""HEURISTIC DIAGNOSTIC ONLY (superseded by scripts/v26_structural_feasibility_exact.py; see
+results/sft_root_cause_v26_phase4_supersession.json): its greedy counts are a
+HEURISTIC_FEASIBLE_SET / LOWER_BOUND, not maxima.
+
+v2.6 Phase 4: deterministic structural feasibility of the strict 150/8/60 training gate.
 
 Deterministic MAXIMA under the exact frozen selection rules (canonical-test deduplication,
 <= 3 per function, <= 3 per lineage, <= 40 per repository), assuming every remaining candidate
@@ -46,8 +50,9 @@ def jsonl(rel: str) -> list:
 
 
 def maximum(rows: list) -> dict:
-    """Greedy is optimal here: every cap is a per-group upper bound on independent rows, and a
-    canonical duplicate never adds a test; take one row per canonical test, then caps."""
+    """Greedy feasible set (one row per canonical test, then caps). NOT optimal in general
+    under intersecting caps (tests/test_v26_exact_selection.py has a counterexample): its
+    counts are a LOWER BOUND. The exact maxima are in the v2 exact successor."""
     seen, fn, lin, repo, kept = set(), Counter(), Counter(), Counter(), []
     for r in sorted(rows, key=lambda r: r["canonical"]):
         if r["canonical"] in seen or fn[r["function"]] >= CAPS["per_function"] or \

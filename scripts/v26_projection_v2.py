@@ -34,7 +34,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-RECEIPT = "results/sft_root_cause_v26_projection_v2.json"
+RECEIPT = "results/sft_root_cause_v26_projection_v3.json"   # v2 receipt kept as history
 PILOT = "results/v4_3_repository_native_aprime_fresh_confirmation_pilot.json"
 A3 = "results/sft_root_cause_v26_repository_verification_a3.json"
 CONSERVATION = "results/sft_root_cause_v26_selection_conservation.json"
@@ -56,12 +56,30 @@ def threshold_probability(draws: Sequence[int], threshold: int, support: Sequenc
     lo, hi = support
     exceed = sum(d >= threshold for d in draws)
     if threshold > hi or threshold < lo:
-        return {"threshold": threshold, "probability": None,
+        return {"threshold": threshold, "monte_carlo_estimate": None, "probability": None,
                 "status": "NOT_ESTIMABLE_OUTSIDE_SUPPORT", "support": [lo, hi],
                 "simulated_exceedances": exceed,
                 "meaning": "outside what this simulator can produce; NOT impossible"}
-    return {"threshold": threshold, "probability": exceed / len(draws), "status": "ESTIMATED",
-            "support": [lo, hi], "simulated_exceedances": exceed}
+    n = len(draws)
+    # exact one-sided 95% (Clopper-Pearson) upper bound on the exceedance probability
+    upper = 1 - 0.05 ** (1 / n) if exceed == 0 else _cp_upper(exceed, n)
+    return {"threshold": threshold, "monte_carlo_estimate": exceed / n,
+            "upper_95_one_sided": round(upper, 6), "status": "ESTIMATED",
+            "support": [lo, hi], "simulated_exceedances": exceed, "draws": n,
+            "interpretation": "Monte Carlo estimate under the planning simulation; a zero "
+                              "estimate is NOT an exact probability of zero"}
+
+
+def _cp_upper(k: int, n: int, alpha: float = 0.05) -> float:
+    """One-sided Clopper-Pearson upper bound by bisection on the binomial CDF."""
+    from math import exp, lgamma, log
+    lo, hi = k / n, 1.0
+    for _ in range(60):
+        mid = (lo + hi) / 2
+        cdf = sum(exp(lgamma(n + 1) - lgamma(j + 1) - lgamma(n - j + 1) + j * log(mid)
+                      + (n - j) * log(1 - mid)) for j in range(k + 1)) if mid < 1 else 1.0
+        lo, hi = (mid, hi) if cdf > alpha else (lo, mid)
+    return hi
 
 
 def summary(values: List[int]) -> Dict:
@@ -127,7 +145,11 @@ def main() -> int:
     tr, cf = simulate(train_pool, c), simulate(conf_pool, c, seed=SEED + 1)
     tr_support, cf_support = (0, train_pool * per_repo_max), (0, conf_pool * per_repo_max)
     receipt = {
-        "schema_version": "oneiros_v26_projection_v2",
+        "schema_version": "oneiros_v26_projection_v3",
+        "supersedes_wording_of": {"receipt": "results/sft_root_cause_v26_projection_v2.json",
+                                  "sha256": sha("results/sft_root_cause_v26_projection_v2.json"),
+                                  "erratum": "estimated zeros were labelled 'probability'; they "
+                                             "are Monte Carlo estimates with an upper bound"},
         "method": METHOD, "evidence_class": "exploratory planning evidence only",
         "is_observed_evidence": False, "draws": DRAWS, "seed": SEED,
         "observed_base": {**observed, "source": CONSERVATION},

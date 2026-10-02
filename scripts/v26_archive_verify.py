@@ -3,8 +3,11 @@
     python scripts/v26_archive_verify.py --archive-root "<external archive directory>" \
         [--receipt results/sft_root_cause_v26_archive_verification.json]
 
-The archive root is required (no personal path in tracked source); it may contain spaces. The
-resolved absolute root is recorded. Fails closed on a missing root, manifest or directory.
+The archive root is required (no personal path in tracked source); it may contain spaces. It is
+resolved at run time and printed to the local terminal only. A TRACKED receipt never contains the
+absolute path: it records ``absolute_path_redacted: true``, a SHA-256 fingerprint of the
+normalised root, the manifest hashes, archive names, item counts and the content verification.
+Fails closed on a missing root, manifest or directory.
 """
 from __future__ import annotations
 
@@ -38,8 +41,11 @@ def main(argv=None) -> int:
     if args.receipt:
         from scripts.native_rehearsal_rebuild_v22 import publish_once
         payload = {"schema_version": "oneiros_v26_archive_verification_v1", **result}
-        payload.pop("archive_root")       # machine-specific: printed, never tracked
-        payload["archive_root_supplied_by"] = "--archive-root (resolved at run time)"
+        root = payload.pop("archive_root")  # machine-specific: printed, never tracked
+        payload.update(archive_root_supplied_by="--archive-root (resolved at run time)",
+                       absolute_path_redacted=True,
+                       archive_root_fingerprint_sha256=hashlib.sha256(
+                           str(Path(root)).replace("\\", "/").lower().encode()).hexdigest())
         print(publish_once(args.receipt, payload))
     print(json.dumps({k: v for k, v in result.items() if k != "manifests_sha256"}, indent=1))
     return 0 if result["passed"] else 1
