@@ -94,3 +94,45 @@ def test_unauthenticated_gh_refuses(tmp_path, monkeypatch):
     bad = child(tmp_path, "import sys\nprint('not logged in'); sys.exit(1)\n")
     with pytest.raises(SystemExit, match="not authenticated"):
         wa.main(["--config", config(tmp_path)], gh=bad, child=bad)
+
+
+def test_watchdog_journals_a_stalled_candidate_and_restarts(tmp_path, capsys, monkeypatch):
+    import time as _t
+    monkeypatch.setattr(wa, "ROOT", tmp_path)
+    store = tmp_path / "store"
+    store.mkdir()
+    stall_utc = _t.strftime("%Y-%m-%dT%H:%M:%SZ", _t.gmtime(_t.time() - 3600))
+    flag = tmp_path / "first_run_done"
+    # first run: stuck on one candidate (old heartbeat, never exits); second run: exits 0
+    kid = child(tmp_path,
+                "import json, pathlib, sys, time\n"
+                f"flag = pathlib.Path(r'{flag}')\n"
+                "if not flag.exists():\n"
+                "    flag.write_text('1')\n"
+                f"    pathlib.Path(r'{store / 'heartbeat.json'}').write_text(json.dumps("
+                f"{{'utc': '{stall_utc}', 'phase': 'candidate', 'repository': 'o/r', "
+                "'commit': 'abc123'}))\n"
+                "    time.sleep(120)\n"
+                f"pathlib.Path(r'{store / 'heartbeat.json'}').write_text(json.dumps("
+                "{'utc': '2099-01-01T00:00:00Z', 'phase': 'finished'}))\n"
+                "print('done')\n")
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"store": str(store)}))
+    code = wa.main(["--config", str(cfg), "--candidate-timeout", "60"],
+                   gh=fake_gh(tmp_path), child=kid)
+    out = capsys.readouterr().out
+    assert code == 0 and '"evaluation_timeouts": ["cand:o/r@abc123"]' in out
+    journal = [json.loads(l) for l in (store / "journal.jsonl").read_text().splitlines()]
+    assert journal[0]["key"] == "cand:o/r@abc123"
+    assert journal[0]["failure"] == "evaluation_timeout"
+
+
+def test_a_fresh_heartbeat_is_not_a_stall(tmp_path):
+    import time as _t
+    hb = tmp_path / "hb.json"
+    hb.write_text(json.dumps({"utc": _t.strftime("%Y-%m-%dT%H:%M:%SZ", _t.gmtime()),
+                              "phase": "candidate", "repository": "o/r", "commit": "c"}))
+    assert wa.stalled_candidate(hb, 60, _t.time()) is None
+    assert wa.stalled_candidate(hb, 60, _t.time() + 120)["commit"] == "c"
+    hb.write_text(json.dumps({"utc": "2000-01-01T00:00:00Z", "phase": "scan"}))
+    assert wa.stalled_candidate(hb, 60, _t.time()) is None

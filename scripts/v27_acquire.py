@@ -25,6 +25,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_GH = Path(r"C:\Program Files\GitHub CLI\gh.exe")
@@ -82,29 +83,71 @@ def untrusted_env_for_gh() -> dict:
     return untrusted_env()
 
 
-def run_child(cmd: list, token: str, log_path: Path) -> int:
+def stalled_candidate(heartbeat: Path, timeout: float, now: float) -> dict | None:
+    """The candidate the heartbeat has reported for longer than ``timeout`` seconds."""
+    try:
+        beat = json.loads(heartbeat.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if beat.get("phase") != "candidate" or not beat.get("commit"):
+        return None
+    import calendar
+    started = calendar.timegm(time.strptime(beat["utc"], "%Y-%m-%dT%H:%M:%SZ"))
+    return beat if now - started > timeout else None
+
+
+def run_child(cmd: list, token: str, log_path: Path, heartbeat: Path | None = None,
+              timeout: float | None = None) -> tuple:
+    """-> (exit code, stalled heartbeat or None). A stall stops the child."""
+    import threading
     env = untrusted_env()
     env["GITHUB_TOKEN"] = token
     env["PYTHONUNBUFFERED"] = "1"
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    exposed = False
+    state = {"exposed": False}
     with log_path.open("a", encoding="utf-8") as log:
         proc = subprocess.Popen(cmd, cwd=ROOT, env=env, stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT, text=True, encoding="utf-8",
                                 errors="replace")
-        for line in proc.stdout:
-            clean = redact(line, [token])
-            exposed |= clean != line and token in line
-            sys.stdout.write(clean)
-            log.write(clean)
-            log.flush()
+
+        def pump():
+            for line in proc.stdout:
+                clean = redact(line, [token])
+                state["exposed"] |= clean != line and token in line
+                sys.stdout.write(clean)
+                log.write(clean)
+                log.flush()
+        reader = threading.Thread(target=pump, daemon=True)
+        reader.start()
+        stalled = None
+        while proc.poll() is None:
+            time.sleep(5)
+            if heartbeat is not None and timeout is not None:
+                stalled = stalled_candidate(heartbeat, timeout, time.time())
+                if stalled is not None:
+                    proc.kill()
+                    break
         code = proc.wait()
+        reader.join(timeout=30)
     env.clear()
-    if exposed:
+    if state["exposed"]:
         sys.stdout.write("[credential-safety] the child printed the token; it was redacted, "
                          "the run is stopped: revoke with gh auth logout and log in again\n")
-        return 3
-    return code
+        return 3, None
+    return code, stalled
+
+
+def record_timeout(journal_path: Path, beat: dict, timeout: float) -> str:
+    """Journal a stalled candidate as the INFRASTRUCTURE exclusion ``evaluation_timeout``."""
+    from harness.github_acquisition import Journal
+    key = f"cand:{beat['repository']}@{beat['commit']}"
+    journal = Journal(journal_path)
+    if not journal.done(key):
+        journal.record(key, {"repository": beat["repository"], "fixed_commit": beat["commit"],
+                             "failure": "evaluation_timeout",
+                             "detail": f"candidate evaluation exceeded {int(timeout)} s "
+                                       "(v2.7 wrapper watchdog; infrastructure exclusion)"})
+    return key
 
 
 def main(argv=None, *, gh=None, child=None) -> int:
@@ -112,6 +155,9 @@ def main(argv=None, *, gh=None, child=None) -> int:
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--config", required=True)
     parser.add_argument("--log", default=None)
+    parser.add_argument("--candidate-timeout", type=float, default=1800.0,
+                        help="seconds one candidate may stay in evaluation (frozen: 1800)")
+    parser.add_argument("--max-restarts", type=int, default=25)
     args = parser.parse_args(argv)
     gh_cmd = resolve_gh(gh)
     account = auth_account(gh_cmd)
@@ -126,11 +172,23 @@ def main(argv=None, *, gh=None, child=None) -> int:
     log = Path(args.log) if args.log else ROOT / config["store"] / "wrapper.log"
     print(json.dumps({"authenticated_requests": True, "account": account,
                       "host": "github.com", "config": args.config}))
+    store = ROOT / config["store"]
+    timeouts = []
     try:
-        code = run_child(cmd, token, log)
+        for _ in range(args.max_restarts + 1):
+            code, stalled = run_child(cmd, token, log, store / "heartbeat.json",
+                                      args.candidate_timeout)
+            if stalled is None:
+                break
+            timeouts.append(record_timeout(store / "journal.jsonl", stalled,
+                                           args.candidate_timeout))
+            print(json.dumps({"watchdog": "evaluation_timeout", "candidate": timeouts[-1],
+                              "restarting": True}), flush=True)
+        else:
+            code = 4
     finally:
         token = None                                    # noqa: F841 - drop the reference
-    print(json.dumps({"child_exit": code}))
+    print(json.dumps({"child_exit": code, "evaluation_timeouts": timeouts}))
     return code
 
 
