@@ -1,0 +1,41 @@
+{
+ "command": [
+  "<python>",
+  "-m",
+  "pytest",
+  "-q",
+  "-rs",
+  "-p",
+  "no:cacheprovider"
+ ],
+ "concurrency": "run alone: no acquisition, native execution, Atheris or build process",
+ "environment": {
+  "platform": "Windows-11-10.0.26200-SP0",
+  "pytest": "8.4.2",
+  "python": "3.12.14",
+  "torch": "2.5.1+cu124",
+  "transformers": "4.48.3"
+ },
+ "errors": 0,
+ "executable_tree_sha256": "e4ad7efd5e623297fd4d78a61cd671d964f26e46e6b8d997fbcda9f54ac23cc7",
+ "exit": 0,
+ "failed": 0,
+ "passed": 2882,
+ "post_run": {
+  "concurrent_heavy_processes": null,
+  "executable_tree_sha256": "e4ad7efd5e623297fd4d78a61cd671d964f26e46e6b8d997fbcda9f54ac23cc7",
+  "identity_stable": true,
+  "source_commit": "3a6d315aafeb817165e54ccd794b6881933b3d68",
+  "tree_clean": true
+ },
+ "schema_version": "oneiros_v26_full_suite_receipt_v1",
+ "seconds": 592.1,
+ "skip_reasons": [
+  "tests\\test_locked_validation_binding.py:83: evaluation sources moved after locked validation completed; the binding correctly refuses a rerun",
+  "tests\\test_locked_validation_binding.py:322: evaluation sources moved after locked validation completed; the binding correctly refuses a rerun",
+  "tests\\test_preflight_locked_validation.py:52: locked validation has run; the preflight now refuses a rerun"
+ ],
+ "skipped": 3,
+ "source_commit": "3a6d315aafeb817165e54ccd794b6881933b3d68",
+ "tree_clean_at_start": true
+}
