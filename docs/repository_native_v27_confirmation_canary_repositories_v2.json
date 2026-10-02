@@ -1,0 +1,12 @@
+{
+ "repositories": [
+  "astanin/python-tabulate",
+  "boxed/mutmut",
+  "python-jsonschema/check-jsonschema"
+ ],
+ "supersedes": {
+  "erratum": "the runner reads {\"repositories\": [...]}; same names, same order",
+  "path": "docs/repository_native_v27_confirmation_canary_repositories.json",
+  "sha256": "5f8ac49aac88ed24329402dbd66a6fde62194008ec138f32031295d521119155"
+ }
+}

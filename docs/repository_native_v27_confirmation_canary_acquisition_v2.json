@@ -1,0 +1,29 @@
+{
+ "candidates_since": "2025-01-01",
+ "exclude_journals": [
+  "data/repository_native/acquisition_pilot/journal.jsonl",
+  "data/repository_native/aprime_confirmation_pilot/journal.jsonl",
+  "data/repository_native/aprime_fresh_confirmation_pilot/journal.jsonl",
+  "data/repository_native/a_prime_retrospective/journal.jsonl",
+  "data/repository_native/aprime_sample_revalidation_v6/journal.jsonl"
+ ],
+ "exclude_repository_files": [
+  "docs/repository_native_previously_scanned_repositories.json"
+ ],
+ "expected_repository_list_sha256": "1647352dc1721e394d218fcc78a11ac98e17af6425b2581ae6dfaa5090f504eb",
+ "fetch_since": "2024-12-01",
+ "label": "v2.7 CONFIRMATION-ONLY acquisition CANARY (3 repositories chosen by sha256('oneiros-v27-canary:'+key) before any outcome); no model, no GPU",
+ "max_candidates": 1000000,
+ "min_repositories": 10000,
+ "per_repository_cap": 30,
+ "report": "results/sft_root_cause_v27_confirmation_canary_acquisition_report_r2.json",
+ "repositories_file": "docs/repository_native_v27_confirmation_canary_repositories_v2.json",
+ "role": "CONFIRMATION_ONLY",
+ "stopping_rule": "every repository of the frozen list is processed (max_candidates and min_repositories are unreachable sentinels); at most 30 classified fix commits per repository, newest-first as the runner lists them; independent of outcomes",
+ "store": "data/repository_native/v27_confirmation_canary_r2",
+ "supersedes_config": {
+  "path": "docs/repository_native_v27_confirmation_canary_acquisition.json",
+  "sha256": "ee0ae19f958110823b2ed66ec7b67ae65f626e6d946ccf8b1b1d64b4df28479e"
+ },
+ "training_prohibited": true
+}
