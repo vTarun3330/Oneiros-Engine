@@ -1,0 +1,494 @@
+{
+ "admitted": [
+  {
+   "auxiliary": [
+    [
+     "test/test_regression.py",
+     "test",
+     "fbd9da510759fa05a37636d04767a2ee485c9f6aac45d9a61420f4f60e6506eb"
+    ]
+   ],
+   "bug_family_heuristic": "call_or_argument",
+   "key": "cand:astanin/python-tabulate@87a9a4e07a5efb39b81fdb6ac513b1d345bb21fb",
+   "patch_sha256": "7b62b999eb5b1b1d567c623289992fd633380abd5676c4e9fbd48743b9ce4ae8",
+   "record_sha256": "49e06a220e78620c6b24533aa3829ee85130373191bd8c62eaa0c420eab5e68c",
+   "sidecar_address": "045124d86690a4f89d1993e787dd890a0fa5ebaf0dc531f05b3273e0eef8bec8",
+   "target": "tabulate",
+   "target_file": "tabulate/__init__.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "HISTORY.rst",
+     "documentation",
+     "20fa36bfffaad778e9d3dc5b6aecd895f92e7ddcff92a8065e345f8eacea326b"
+    ],
+    [
+     "tests/runners/__init__.py",
+     "test",
+     "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    ],
+    [
+     "tests/runners/test_harness.py",
+     "test",
+     "b33de33ac8d23a1807f029054fa200c0eb760cc8cfc0501d08cd8e2b969b53e0"
+    ]
+   ],
+   "bug_family_heuristic": "none_or_empty_handling",
+   "key": "cand:boxed/mutmut@4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8",
+   "patch_sha256": "9bb38751a49be087dcc0122b081c137b2bd01a791e44e08d015f272822706689",
+   "record_sha256": "d0cbb1382802b8c8b7b0abfada56c01efff7a32725c3413d65f11a738a0b401e",
+   "sidecar_address": "68ab22e61f7599a8a3651be642b8ff14fbc4c6e2c62471726f95b230b5b4436f",
+   "target": "ListAllTestsResult.clear_out_obsolete_test_names",
+   "target_file": "src/mutmut/runners/harness.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "docs/Makefile",
+     "documentation",
+     "e28bea20312df50271378b2234842be2ed3ce01422b20f3e03a4cdd2a736590a"
+    ]
+   ],
+   "bug_family_heuristic": "boundary_or_comparison",
+   "key": "cand:boxed/mutmut@5f3911d1aab72fda6fe08cf140e20257050a0cb7",
+   "patch_sha256": "604f55418a3846491ed895758705532dc9fb481d89a2212d88b8c9cf99c95ac1",
+   "record_sha256": "38a7cdf05199b3f670ade5d2c6af182a78bc595d736cc2b1f1de9e747cc7fcee",
+   "sidecar_address": "3be3e3e336e11b1f7e2e4456f10fcbe5dd7ad3bc82022947584787bcaa5f6ad1",
+   "target": "PytestRunner.run_stats.StatsCollector.pytest_runtest_makereport",
+   "target_file": "src/mutmut/__main__.py",
+   "tier": "simple"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/mutation/test_mutation.py",
+     "test",
+     "55e231bd9f8adc027d509d5e2082413b3cfa56e3a860a70ccb59e6bc6698e4dc"
+    ]
+   ],
+   "bug_family_heuristic": "exception_handling",
+   "key": "cand:boxed/mutmut@dc58270d5234752e22247f814431750eafcf6e5f",
+   "patch_sha256": "23d0c0e5f4b0504b76985b0d27a4cbfc7c47f2d431a733afa49772e8f6026ae6",
+   "record_sha256": "ed5ede4162c9cf34086e0c4936f26b7a72d546766c5cbe72516d047fc10316f4",
+   "sidecar_address": "399e82b4bbb74d67748a813d3d714b5b7e43bc1414624bf879ab482cc49303f2",
+   "target": "MutationVisitor._skip_node_and_children",
+   "target_file": "src/mutmut/mutation/file_mutation.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/mutation/test_trampoline.py",
+     "test",
+     "d8c5cfdb19360cac68277a31129ffb3ca39b80a623c59256900573791849f196"
+    ]
+   ],
+   "bug_family_heuristic": "exception_handling",
+   "key": "cand:boxed/mutmut@8799708c2fede4befff4648ca7693337cb9955db",
+   "patch_sha256": "64c68412235ec9b7879d61dd75ebbc9a46a52302c96f3b424f8c7f4d5bd17387",
+   "record_sha256": "05c23c20886bef75ddadf1c621441b088a779141390121aeb415e02dbcaaf124",
+   "sidecar_address": "c62e06d6fc9ae90aa1c970bfd4dbc73370d03e194e10bb3404e37dca70521757",
+   "target": "wrap_in_trampoline.mutmut_mutated",
+   "target_file": "src/mutmut/mutation/trampoline.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/test_type_checking.py",
+     "test",
+     "11fc708d474db701365dff9c83abcb42cda1e10a5ac9ada0b884179702d30599"
+    ]
+   ],
+   "bug_family_heuristic": "none_or_empty_handling",
+   "key": "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1",
+   "patch_sha256": "2de43bd3f4873c5e6915b0c0c9a671c109374250387e399380b9f44fb1dede6e",
+   "record_sha256": "31869f1e39bb9367880a331d9f5d1b969ea52a56f07c136bcae2dcb5226e1d02",
+   "sidecar_address": "3c64e8f1acd47c21b84351e4b5df9bad142e544f6571211448631c2d8dcaa902",
+   "target": "filter_mutants_with_type_checker",
+   "target_file": "src/mutmut/mutation/file_mutation.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/test_mutation.py",
+     "test",
+     "0026753e24daaefba92fdf37dea43aea8d4a90cdae750b4e0264f36209e59825"
+    ]
+   ],
+   "bug_family_heuristic": "boundary_or_comparison",
+   "key": "cand:boxed/mutmut@385449458ef3d89ba4ac1f50e08e4b088ce9a634",
+   "patch_sha256": "6eedca81577b8f28bc5cf78726c2b6cfc3fc25757fe1f04b9ae1b476dba624df",
+   "record_sha256": "a501929a07cfee96a212563110db40c5b40c8cea7d4e56753d654108185ebcb2",
+   "sidecar_address": "e6530f30cdc1e114d6ce6640fb963f46fb3be06b63dc46bb750242bd6dd173f2",
+   "target": "operator_string",
+   "target_file": "mutmut/node_mutation.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [],
+   "bug_family_heuristic": "other_logic",
+   "key": "cand:boxed/mutmut@d908ad521b2017d1e7afd44dbe2521bc21cc30e5",
+   "patch_sha256": "f3fbb7fd0e38d85658c63d0e28f67d270e6842a1a61f3ef9e8c0093a07e75621",
+   "record_sha256": "efd36f21c9932df811aafd8d09a95af41b4369d5d43cf8610b5e3d8b0f8cc7cd",
+   "sidecar_address": "9bb3b5034e611dc6f2fe3c439a221ace13ac26c998b5c2a0dcbaff9765d3a6f0",
+   "target": "record_trampoline_hit",
+   "target_file": "mutmut/__main__.py",
+   "tier": "complex"
+  },
+  {
+   "auxiliary": [
+    [
+     "tests/e2e/snapshots/config.json",
+     "test",
+     "5399571b562f05ee513e0e5f934fbc77e8e0c6d482d68295cbd5a2439881a782"
+    ],
+    [
+     "tests/e2e/snapshots/my_lib.json",
+     "test",
+     "57380adcdc59dc226620818fd272dd9c5f4bf09383c0671a76b92f8a636a251f"
+    ],
+    [
+     "tests/test_mutation.py",
+     "test",
+     "9326d6a0a681926646487d39895265adf9b3d6398afe8fe31102b6e6b8baa79e"
+    ]
+   ],
+   "bug_family_heuristic": "boundary_or_comparison",
+   "key": "cand:boxed/mutmut@b7b4f90ca5969442b7a56abd4d8c7e62708a5cc6",
+   "patch_sha256": "dcde5f5e04ea50f18c3d2c67a75c1a36d21ee25a3d605c57ad84f99a1bf747ca",
+   "record_sha256": "99362dff4f8566b44f57081344fddf06e512df68255d1cfb9cb344874a0211f5",
+   "sidecar_address": "82044a7a76802821f9a1dee6168a2667d3b169a41da19eac7494d567453ae773",
+   "target": "operator_string",
+   "target_file": "mutmut/node_mutation.py",
+   "tier": "complex"
+  }
+ ],
+ "admitted_per_repository": {
+  "astanin/python-tabulate": 1,
+  "boxed/mutmut": 8
+ },
+ "bug_family_shares_heuristic": {
+  "boundary_or_comparison": 0.333,
+  "call_or_argument": 0.111,
+  "exception_handling": 0.222,
+  "none_or_empty_handling": 0.222,
+  "other_logic": 0.111,
+  "type_or_conversion": 0.0
+ },
+ "candidate_comparison_with_reference": null,
+ "changed_file_categories": {
+  "documentation": 19,
+  "production_source": 91,
+  "runtime_or_config": 32,
+  "test": 74
+ },
+ "complexity_shares": {
+  "complex": 0.889,
+  "simple": 0.111
+ },
+ "counts": {
+  "acquisition_failures": {},
+  "admitted": 9,
+  "admitted_with_authenticated_regression_test": 7,
+  "authenticated": 10,
+  "auxiliary_evidence_failures": 0,
+  "candidates_inspected": 41,
+  "module_level_or_out_of_function_hunk_exclusions": 4,
+  "near_duplicate_function_exclusions": 0,
+  "near_duplicate_patch_exclusions": 2,
+  "other_production_source_exclusions": 16,
+  "pyi_or_other_source_file_exclusions": 0,
+  "reached_pipeline": 22,
+  "runtime_or_config_exclusions": 5,
+  "same_organisation_exclusions": 0,
+  "unique_fix_commits_admitted": 9,
+  "unique_functions_admitted": 9,
+  "unique_repositories_admitted": 2,
+  "unique_repositories_inspected": 2,
+  "vendored_or_generated_exclusions": 0,
+  "within_set_duplicates_removed": 0
+ },
+ "created_utc": "2026-10-02T10:31:41Z",
+ "events": {
+  "evaluation_set_created": false,
+  "model_called": false,
+  "network_accessed": true,
+  "protected_data_access": false
+ },
+ "exclusions_all_reasons": {
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:e2e_projects/forkserver_basic/src/fs_calc/__init__.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:e2e_projects/mutate_only_covered_lines/src/mutate_only_covered_lines/ignore_single_init_dep.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:mutmut/file_mutation.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/__main__.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/code_coverage.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/configuration.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/core.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/models/__init__.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/models/results.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/mutation/data.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/mutation/trampoline.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/mutation/trampoline_templates.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/runners/harness.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/stats.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/utils/logging_utils.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/workers/isolation.py": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:ARCHITECTURE.rst": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:CONTRIBUTING.rst": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:e2e_projects/benchmark_1k/mutmut_preload.txt": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:e2e_projects/benchmark_1k/pyproject.toml": 1,
+  "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:e2e_projects/forkserver_basic/pyproject.toml": 1,
+  "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 3,
+  "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 4,
+  "insufficient_isolation_evidence:authentication:target_function_missing_or_ambiguous_in_fixed_file": 3,
+  "multiple_functions_changed": 5,
+  "no_existing_function_changed": 6,
+  "no_production_python_file_changed": 5,
+  "patch_near_duplicate_of_known_bug": 2,
+  "target_file_added_by_fix": 2,
+  "target_file_deleted_by_fix": 1
+ },
+ "exclusions_primary_family": {
+  "auth:changed_production_source_outside_target": 1,
+  "auth:changed_runtime_or_config_outside_target": 2,
+  "auth:fixed_commit_is_not_a_direct_single_parent_commit": 3,
+  "auth:production_hunk_outside_target_function": 4,
+  "auth:target_function_missing_or_ambiguous_in_fixed_file": 2,
+  "multiple_functions_changed": 5,
+  "no_existing_function_changed": 6,
+  "no_production_python_file_changed": 5,
+  "patch_near_duplicate_of_known_bug": 1,
+  "target_file_added_by_fix": 2,
+  "target_file_deleted_by_fix": 1
+ },
+ "gate": {
+  "no_protected_data_access": true
+ },
+ "gate_definition": null,
+ "identity": {
+  "api": {
+   "api_calls": 29,
+   "api_retries": 0,
+   "api_seconds": 19.9,
+   "authenticated_requests": true,
+   "elapsed_seconds": 536.3,
+   "rate_limit_and_backoff_wait_seconds": 2.5,
+   "sessions": 1
+  },
+  "bundle_generation": "aa95ab604888d405b59fa1e8",
+  "bundle_manifest_sha256": "aa95ab604888d405b59fa1e85d48a8f7ec9d6307323f750bcf3e58e505abb5c7",
+  "candidate_repository_list_sha256": "1647352dc1721e394d218fcc78a11ac98e17af6425b2581ae6dfaa5090f504eb",
+  "command": "python scripts/run_repository_native_acquisition_pilot.py --config docs/repository_native_v27_confirmation_canary_acquisition_v3.json",
+  "configuration": {
+   "candidates_since": "2025-01-01",
+   "exclude_journals": [
+    "data/repository_native/acquisition_pilot/journal.jsonl",
+    "data/repository_native/aprime_confirmation_pilot/journal.jsonl",
+    "data/repository_native/aprime_fresh_confirmation_pilot/journal.jsonl",
+    "data/repository_native/a_prime_retrospective/journal.jsonl",
+    "data/repository_native/aprime_sample_revalidation_v6/journal.jsonl"
+   ],
+   "exclude_repository_files": [
+    "docs/repository_native_v27_previously_scanned_minus_permitted.json"
+   ],
+   "expected_repository_list_sha256": "1647352dc1721e394d218fcc78a11ac98e17af6425b2581ae6dfaa5090f504eb",
+   "fetch_since": "2024-12-01",
+   "label": "v2.7 CONFIRMATION-ONLY acquisition CANARY (3 repositories chosen by sha256('oneiros-v27-canary:'+key) before any outcome); no model, no GPU",
+   "max_candidates": 1000000,
+   "min_repositories": 10000,
+   "per_repository_cap": 30,
+   "pool_decision": {
+    "path": "results/sft_root_cause_v27_pool_decision.json",
+    "sha256": "160e618e7e5f813721b5ea111c497e5cda5f6697055d8a13874d350e52b76a42"
+   },
+   "report": "results/sft_root_cause_v27_confirmation_canary_acquisition_report_r3.json",
+   "repositories_file": "docs/repository_native_v27_confirmation_canary_repositories_v2.json",
+   "role": "CONFIRMATION_ONLY",
+   "stopping_rule": "every repository of the frozen list is processed (max_candidates and min_repositories are unreachable sentinels); at most 30 classified fix commits per repository, newest-first as the runner lists them; independent of outcomes",
+   "store": "data/repository_native/v27_confirmation_canary_r3",
+   "supersedes_config": {
+    "path": "docs/repository_native_v27_confirmation_canary_acquisition_v2.json",
+    "sha256": "49e0b02032ad9d85e844c7074182ea1749fd6caa2b5345b35a8613beae6618e5"
+   },
+   "training_prohibited": true
+  },
+  "diff_policy_id": "A_prime_direct_parent_single_target_source_with_auxiliary_tests_docs",
+  "dirty_paths": [],
+  "dirty_tree": false,
+  "end_utc": "2026-10-02T10:31:38Z",
+  "git_commit": "3f075e58819453c2d2ecdc72ef163252160c8240",
+  "isolation_version": "oneiros_repository_isolation_v6",
+  "journal_sha256": "0934098cfc1bcc36dd0360de9d177af4e086fb32d8ad3166171d374fa4f610b1",
+  "reference_universe_receipt_sha256": "53080a7a7d73d62e628ecfcaf615b0a825b050101e2a3efbdb7e7ff83afcd2bd",
+  "source_tree_files": 746,
+  "source_tree_sha256": "1c2f7644a76c030b1410a0025c0ca31704e5fa81e76f43f81fce71acb8f6432b",
+  "start_utc": "2026-10-02T10:22:42Z",
+  "store_verification": {
+   "objects_checked": 531,
+   "problems": 0
+  },
+  "tool_source_sha256": {
+   "harness/acquisition_receipt.py": "31ed3ac4335cba0dedda28b259f20e93b7444dcd1b34b95b26225fe0fd35b670",
+   "harness/github_acquisition.py": "3e8e7a421396e6f2d7878e8429d4c678a0965e8cfe5e9a12c9d3d024fbaf0805",
+   "harness/repository_isolation.py": "70ca1ab6dd1b6dc2d0e837a8b9490aa56764ac2ad33171130cc495a757ea11ab",
+   "harness/repository_native_candidates.py": "49426ba394073f81cefefffc94c030180cb3fc54542dbc7458805c4ecf92adb7",
+   "harness/vendored_code_exclusions.json": "2a92e6def0b71a168efd83771379a58adebb9bad454fd1ce77a0699c55b74a2b",
+   "scripts/run_repository_native_acquisition_pilot.py": "bc46bc2a0dc515aee1e2e6fd004859ac0b94e70043c817fb5e0e13c6901c5dd7"
+  }
+ },
+ "label": "v2.7 CONFIRMATION-ONLY acquisition CANARY (3 repositories chosen by sha256('oneiros-v27-canary:'+key) before any outcome); no model, no GPU",
+ "maximum_repository_share": 0.889,
+ "n400_interpretation": {
+  "extrapolated": {
+   "assumptions": [
+    "unscanned repositories in the frozen pool pass repository screening at the observed pass fraction",
+    "unscanned repositories have the median observed fix-candidate supply since 2025",
+    "the pilot admission yield applies to every repository",
+    "at most 12 targets per repository"
+   ],
+   "projection": {
+    "acquisition_hours_at_measured_rate": 0.1,
+    "acquisition_storage_gb": 0.01,
+    "admission_rate": 0.12,
+    "candidates_to_inspect": 41,
+    "feasible_within_pool_and_budget": false,
+    "median_fix_candidate_supply_per_repository": 20.5,
+    "pool_repositories": 3,
+    "projected_admitted_with_cap": 4.9,
+    "repositories_contributing_at_least_one": 2
+   }
+  },
+  "interpretation": "a passing corrected confirmation pilot justifies a later 20-30 target native rehearsal; it does not guarantee 400 qualified targets",
+  "not_measured": [
+   "native qualification yield (official tests on both revisions)",
+   "N=400 supply is NOT proven by the scanned repositories"
+  ],
+  "observed": {
+   "admission_yield": 0.2195,
+   "candidates_inspected": 41,
+   "fix_candidate_supply_per_scanned_repository": {
+    "astanin/python-tabulate": 15,
+    "boxed/mutmut": 26
+   },
+   "repositories_scanned": 2,
+   "wilson_95": [
+    0.12,
+    0.3671
+   ]
+  }
+ },
+ "native_qualification_workload": {
+  "admitted_targets": 9,
+  "note": "qualification is NOT performed here; 3 runs x 2 revisions per target",
+  "official_test_runs_needed": 54,
+  "with_authenticated_regression_test": 7
+ },
+ "policy": {
+  "candidates_since": "2025-01-01",
+  "diff_policy": "A_prime_direct_parent_single_target_source_with_auxiliary_tests_docs",
+  "fix_commit_selection": "first-parent default-branch commits whose message describes a fix and links a PR/issue (heuristic)",
+  "per_repository_candidate_cap": 30,
+  "temporal_cutoff_epoch": 1735689600
+ },
+ "projection_for_n400": {
+  "at_point_estimate": {
+   "acquisition_hours_at_measured_rate": 0.1,
+   "acquisition_storage_gb": 0.01,
+   "admission_rate": 0.21951219512195122,
+   "candidates_to_inspect": 41,
+   "feasible_within_pool_and_budget": false,
+   "median_fix_candidate_supply_per_repository": 20.5,
+   "pool_repositories": 3,
+   "projected_admitted_with_cap": 9.0,
+   "repositories_contributing_at_least_one": 2
+  },
+  "at_wilson_lower": {
+   "acquisition_hours_at_measured_rate": 0.1,
+   "acquisition_storage_gb": 0.01,
+   "admission_rate": 0.12,
+   "candidates_to_inspect": 41,
+   "feasible_within_pool_and_budget": false,
+   "median_fix_candidate_supply_per_repository": 20.5,
+   "pool_repositories": 3,
+   "projected_admitted_with_cap": 4.9,
+   "repositories_contributing_at_least_one": 2
+  },
+  "at_wilson_upper": {
+   "acquisition_hours_at_measured_rate": 0.1,
+   "acquisition_storage_gb": 0.01,
+   "admission_rate": 0.3671,
+   "candidates_to_inspect": 41,
+   "feasible_within_pool_and_budget": false,
+   "median_fix_candidate_supply_per_repository": 20.5,
+   "pool_repositories": 3,
+   "projected_admitted_with_cap": 15.1,
+   "repositories_contributing_at_least_one": 2
+  }
+ },
+ "protected_access_evidence": {
+  "complete": true,
+  "incomplete_sessions": [],
+  "installed": true,
+  "method": "sys.addaudithook: every Python-process file open ('open' events) and every subprocess launch ('subprocess.Popen' events: executable, arguments, working directory) is checked against the resolved protected locations; opens performed inside external subprocesses are NOT observed, so subprocess commands and their path arguments are recorded and git's local paths are confined to the store",
+  "protected_accesses": [],
+  "protection_policy": "oneiros_protected_locations_v2",
+  "scope_end_utc": "2026-10-02T10:31:41Z",
+  "scope_start_utc": "2026-10-02T10:22:00Z",
+  "sessions": [
+   {
+    "opens_checked": 13998,
+    "scope_end_utc": "2026-10-02T10:31:41Z",
+    "scope_start_utc": "2026-10-02T10:22:00Z",
+    "session": "2026-10-02T10:22:00Z:55784",
+    "subprocesses": 1689
+   }
+  ],
+  "subprocess_git_dirs_confined_to_store": true,
+  "subprocess_log_addresses": [
+   "9f1a386e09a43f92dca9b7c66a2610e292de696af3182e95829db53f68a205dc"
+  ]
+ },
+ "report_schema": "oneiros_repository_native_acquisition_report_v2",
+ "repositories": {
+  "listed": 3,
+  "reached": 3,
+  "renames": {},
+  "same_organisation_for_review": [],
+  "scans": {
+   "astanin/python-tabulate": {
+    "commits_scanned": 110,
+    "failure": null,
+    "fix_candidate_supply": 15,
+    "skipped_prior_commits": 0
+   },
+   "boxed/mutmut": {
+    "commits_scanned": 189,
+    "failure": null,
+    "fix_candidate_supply": 26,
+    "skipped_prior_commits": 0
+   }
+  },
+  "screened_out": {
+   "python-jsonschema/check-jsonschema": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ]
+  }
+ },
+ "schema_version": "oneiros_acquisition_receipt_v2",
+ "store_verification": {
+  "objects_checked": 531,
+  "problems": []
+ },
+ "yield": {
+  "admission_yield": 0.2195,
+  "note": "admission yield precedes native qualification (Phase 3); it is an upper bound on the mined-to-qualified yield",
+  "wilson_95": [
+   0.12,
+   0.3671
+  ]
+ }
+}

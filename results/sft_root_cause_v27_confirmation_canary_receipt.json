@@ -1,0 +1,62 @@
+{
+ "acquisition": {
+  "authenticated_requests": true,
+  "counts": {
+   "admitted": 9,
+   "admitted_with_authenticated_regression_test": 7,
+   "candidates_inspected": 41,
+   "unique_repositories_inspected": 2
+  },
+  "protected_data_access": false,
+  "remote_writes": 0,
+  "report": "results/sft_root_cause_v27_confirmation_canary_acquisition_report_r3.json",
+  "screened_out": {
+   "python-jsonschema/check-jsonschema": "licence_not_admitted_by_d2:NOASSERTION"
+  },
+  "sha256": "7329b805556f1f971cf77678c2869f6e55f1ad1d0fc390493b5de99f1ed0634b"
+ },
+ "credential_safety": {
+  "finding": "gh stores its token in plain-text hosts.yml readable from WSL; every untrusted native step now runs inside the isolation",
+  "token_shaped_strings_in_outputs": 0,
+  "wrapper_tests": "tests/test_v27_credential_safety.py (7 pass)",
+  "wsl_isolation": "scripts/wsl_isolated.sh: /mnt hidden except this repository and /mnt/wsl; canary: credential_store_visible 0, appdata_visible 0, dns_ok 1"
+ },
+ "gate": "PASS",
+ "native": {
+  "exports": {
+   "buggy_view_model_visible": "results/sft_root_cause/v27_confirmation/canary_prep/buggy_view",
+   "verifier_hidden": "results/sft_root_cause/v27_confirmation/canary_prep/verifier"
+  },
+  "prepared": 6,
+  "records_sha256": {
+   "prep": "9bd641fb67b760c220f6b26073d9fb46c5a9f713590932784bc003ace9ea50d7",
+   "rehearsal": "1800bd37cea6e36e59deef1fb5131b46f5b34e006dc6404cabdd13c0e3d51d9b"
+  },
+  "rehearsal": {
+   "natively_qualified": 6,
+   "test_infrastructure_error": 1
+  },
+  "requalified_3_of_3": 6
+ },
+ "overlap_audit": {
+  "excluded_no_regression_test": 2,
+  "targets": 7,
+  "training_or_prior_overlap": 0
+ },
+ "pending_for_panel": "target-reach evidence and the prompt-leakage audit run at panel freeze",
+ "preserved_failed_attempts": [
+  "canary attempt 1: runner list format (before any repository contact)",
+  "rehearsal attempt 1: DNS hidden by isolation (all clones failed)",
+  "prep attempt 1: relative prep root (environment install)"
+ ],
+ "repositories": [
+  "astanin/python-tabulate",
+  "boxed/mutmut",
+  "python-jsonschema/check-jsonschema"
+ ],
+ "resume": {
+  "rerun_on_store_copy": "0 API calls, 41 candidate records unchanged"
+ },
+ "schema_version": "oneiros_v27_confirmation_canary_receipt_v1",
+ "selection_rule": "3 smallest sha256('oneiros-v27-canary:'+key), frozen before any outcome"
+}
