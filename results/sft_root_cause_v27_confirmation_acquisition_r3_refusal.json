@@ -1,0 +1,46 @@
+{
+ "attempt": "r3",
+ "audit_sessions": {
+  "closed": [
+   "2026-10-06T05:37:08Z:51276"
+  ],
+  "incomplete": [
+   "2026-10-02T10:44:02Z:27252",
+   "2026-10-02T12:46:58Z:7140",
+   "2026-10-02T12:49:01Z:3316",
+   "2026-10-02T13:06:04Z:41032"
+  ],
+  "started": [
+   "2026-10-02T10:44:02Z:27252",
+   "2026-10-02T12:46:58Z:7140",
+   "2026-10-02T12:49:01Z:3316",
+   "2026-10-02T13:06:04Z:41032",
+   "2026-10-06T05:37:08Z:51276"
+  ]
+ },
+ "config": {
+  "path": "docs/repository_native_v27_confirmation_acquisition_v3.json",
+  "sha256": "30439dc1eb89943651c69e77a7dff7deddd50bd76aa28b2169b831e0c74d7ae0"
+ },
+ "interpretation": "no protected access was recorded, but the windows after each interrupted session's last snapshot are unaudited, so the gate cannot be certified; the r3 store is preserved and never used for the panel",
+ "journal": {
+  "entries": 933,
+  "path": "data/repository_native/v27_confirmation_r3/journal.jsonl",
+  "sha256": "5c1dd5b5be4a06b4a5ba6c9cac06d59d6cd2a870dc4fa72cc358dc6f66eac417"
+ },
+ "refusal": "gate.no_protected_data_access contradicts the observed event; protected-access evidence is incomplete (an audit session never closed)",
+ "runs": [
+  "20261002-161359 (stopped)",
+  "resume 181656 (failed at start)",
+  "resume2 181858 (stopped)",
+  "resume3 183602 (watchdog read raced heartbeat replace, WinError 5)",
+  "20261006-110703 resume4 (all 70 processed; publication refused)"
+ ],
+ "schema_version": "oneiros_v27_acquisition_refusal_v1",
+ "snapshot_evidence": {
+  "entries_with_snapshot": 926,
+  "protected_accesses_recorded": 0
+ },
+ "status": "FAILED_PUBLICATION_REFUSED",
+ "successor": "docs/repository_native_v27_confirmation_acquisition_v4.json"
+}

@@ -1,0 +1,34 @@
+{
+ "candidates_since": "2025-01-01",
+ "exclude_journals": [
+  "data/repository_native/acquisition_pilot/journal.jsonl",
+  "data/repository_native/aprime_confirmation_pilot/journal.jsonl",
+  "data/repository_native/aprime_fresh_confirmation_pilot/journal.jsonl",
+  "data/repository_native/a_prime_retrospective/journal.jsonl",
+  "data/repository_native/aprime_sample_revalidation_v6/journal.jsonl"
+ ],
+ "exclude_repository_files": [
+  "docs/repository_native_v27_previously_scanned_minus_permitted.json"
+ ],
+ "expected_repository_list_sha256": "77c677f2ed40d2e6096b9e2f4c1236b53cc5402733913ddcf0bc4806cc85e2e2",
+ "fetch_since": "2024-12-01",
+ "label": "v2.7 CONFIRMATION-ONLY acquisition over the frozen 70-repository pool; candidate pool only, no evaluation set, no model, no GPU",
+ "max_candidates": 1000000,
+ "min_repositories": 10000,
+ "per_repository_cap": 30,
+ "pool_decision": {
+  "path": "results/sft_root_cause_v27_pool_decision.json",
+  "sha256": "160e618e7e5f813721b5ea111c497e5cda5f6697055d8a13874d350e52b76a42"
+ },
+ "report": "results/sft_root_cause_v27_confirmation_acquisition_report_r4.json",
+ "repositories_file": "docs/repository_native_v27_confirmation_repositories_v2.json",
+ "role": "CONFIRMATION_ONLY",
+ "stopping_rule": "every repository of the frozen list is processed (max_candidates and min_repositories are unreachable sentinels); at most 30 classified fix commits per repository, newest-first as the runner lists them; independent of outcomes",
+ "store": "data/repository_native/v27_confirmation_r4",
+ "supersedes_config": {
+  "path": "docs/repository_native_v27_confirmation_acquisition_v3.json",
+  "reason": "r3 reached all 70 repositories but publication was REFUSED (fail-closed): 4 of 5 audit sessions were interrupted (stop, failed start, stop, watchdog-read crash), so protected-access evidence is incomplete. r4 repeats the identical frozen rules in ONE uninterrupted session in a fresh store; only store and report paths differ. Not an outcome-driven change.",
+  "sha256": "30439dc1eb89943651c69e77a7dff7deddd50bd76aa28b2169b831e0c74d7ae0"
+ },
+ "training_prohibited": true
+}
