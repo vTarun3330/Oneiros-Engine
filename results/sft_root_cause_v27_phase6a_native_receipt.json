@@ -1,0 +1,67 @@
+{
+ "atheris_harness_canaries": {
+  "checks": 43,
+  "failed": [],
+  "failed_attempt": {
+   "output": "phase6/atheris_canaries.a1_failed_cgroup_path",
+   "reason": "FileNotFoundError /sys/fs/cgroup/unified/oneiros_atheris: WSL kernel 6.18 is pure cgroup v2 at /sys/fs/cgroup",
+   "run_id": "20261006-164716-v27_phase6_atheris_canaries"
+  },
+  "passed": true,
+  "process_note": "this run was launched by a tool call the user rejected; the durable launcher had already detached it. It completed before the pause and was misreported as not started; disclosed in-session",
+  "receipt_sha256": "be29d52ee6346fbf9d327976be40e2cec486fdf2218fb65bab86c2555157170b",
+  "run_id": "20261006-164809-v27_phase6_atheris_canaries_a2",
+  "script_sha256": "f86080163a3060a7c11a147775fd12fbbd2f5902b34fe3e6862c0c3e540e73a5",
+  "script_sha256_matches_committed_fix": true
+ },
+ "cohort": {
+  "path": "results/sft_root_cause_v27_confirmation_panel_r4_cohort.json",
+  "sha256": "f9efb7d29ecf87ccdc148f64a9794ee052cb16a90484e7134873455b3848827b"
+ },
+ "execution_sandbox_canaries": {
+  "checks": 37,
+  "executor_sha256": "f1ef59dd80443e745d616fb95905ccf316144cd42dd211460cd4185baa64dcca",
+  "failed": [],
+  "passed": true,
+  "receipt_sha256": "6a949b02a3558bebfdbbaf1b07c7b8a1feca65492f20c1f11cc2aa05ae238d38",
+  "run_id": "20261006-164325-v27_phase6_exec_canaries"
+ },
+ "model_free_native_control": {
+  "deterministic": 34,
+  "earlier_attempt": {
+   "reason": "cohort declared 51-record prep file; resolver requires one record per cohort target; panel-only byte-identical records derived",
+   "run_id": "20261006-164433-v27_phase6_native_control",
+   "state": "failed"
+  },
+  "environment_exclusions": {
+   "cand:fsspec/filesystem_spec@ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e": "sandbox_policy_blocks_ctypes_dlopen (import of numpy / fsspec.utils loads ctypes; identical on both revisions and both repetitions)",
+   "cand:fsspec/filesystem_spec@ee30764e64dbd338f7494a45b30b1ece1465386f": "sandbox_policy_blocks_ctypes_dlopen (import of numpy / fsspec.utils loads ctypes; identical on both revisions and both repetitions)",
+   "cand:pyvista/pyvista@507e77ca880fdd34757989df7422e101595818a9": "sandbox_policy_blocks_ctypes_dlopen (import of numpy / fsspec.utils loads ctypes; identical on both revisions and both repetitions)",
+   "cand:pyvista/pyvista@631db08ed32f898ec8f59cbffa30cf80e9cbb1a3": "sandbox_policy_blocks_ctypes_dlopen (import of numpy / fsspec.utils loads ctypes; identical on both revisions and both repetitions)",
+   "cand:pyvista/pyvista@eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116": "sandbox_policy_blocks_ctypes_dlopen (import of numpy / fsspec.utils loads ctypes; identical on both revisions and both repetitions)"
+  },
+  "evaluable_repositories": 14,
+  "evaluable_targets": 29,
+  "passed": 29,
+  "repetitions": 2,
+  "results_sha256": "0f11878a04a4e4f0afc88209b988a98f860654fa5f3738fa16cfb61c9c5a3cb0",
+  "run_id": "20261006-164607-v27_phase6_native_control_a3",
+  "superseded": {
+   "native_control.a2_no_evidence.jsonl": "8b842b29e6657e6a59ffac50322858655ec90450060dc94f7e9aec49947339c2",
+   "reason": "identical verdicts; retained no per-run evidence"
+  },
+  "targets": 34
+ },
+ "no_model_no_gpu": true,
+ "not_yet_done": [
+  "Atheris adapter-eligibility probes on the panel cohort (no fuzzing)",
+  "Oneiros/Atheris common subset",
+  "panel acceptance by the user (UNDERPOWERED; ctypes policy and dependency-resolution decisions open)"
+ ],
+ "panel": {
+  "path": "results/sft_root_cause_v27_confirmation_panel_r4.json",
+  "sha256": "432965c0c0a89c505d76b3852c4b8714b99aae1d247e2c3d1f818cd0984c4317"
+ },
+ "schema_version": "oneiros_v27_phase6a_native_receipt_v1",
+ "status": "PASS_WITH_ENVIRONMENT_EXCLUSIONS"
+}

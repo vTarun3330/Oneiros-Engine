@@ -66,7 +66,17 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 import native_generation_io as gio  # noqa: E402  (stdlib only)
 import native_atheris_results as verdicts  # noqa: E402  (stdlib only; the one kill rule)
-CGROUP_ROOT = Path("/sys/fs/cgroup/unified/oneiros_atheris")
+def _cgroup2_mount() -> Path:
+    """The cgroup-v2 hierarchy: the hybrid layout's /sys/fs/cgroup/unified (older WSL kernels)
+    or, on a pure cgroup-v2 kernel (WSL 6.x), /sys/fs/cgroup itself. Same controller files and
+    cgroup.kill / cpu.stat accounting either way."""
+    for candidate in (Path("/sys/fs/cgroup/unified"), Path("/sys/fs/cgroup")):
+        if (candidate / "cgroup.controllers").is_file():
+            return candidate
+    return Path("/sys/fs/cgroup/unified")
+
+
+CGROUP_ROOT = _cgroup2_mount() / "oneiros_atheris"
 FULL_BUDGET_CPU_SECONDS = 600
 CANARY_BUDGET_SECONDS = 20
 WALL_BACKSTOP = 300
