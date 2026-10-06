@@ -103,6 +103,16 @@ def stalled_candidate(heartbeat: Path, timeout: float, now: float,
     return beat if now - started > timeout else None
 
 
+def heartbeat_stale(heartbeat: Path, timeout: float, now: float, since: float) -> bool:
+    """The heartbeat file was written by THIS child (mtime >= since) and not since ``timeout``
+    seconds. Uses stat only (no file handle)."""
+    try:
+        mtime = heartbeat.stat().st_mtime
+    except OSError:
+        return False
+    return mtime >= since and now - mtime > timeout
+
+
 def run_child(cmd: list, token: str, log_path: Path, heartbeat: Path | None = None,
               timeout: float | None = None) -> tuple:
     """-> (exit code, stalled heartbeat or None). A stall stops the child."""
@@ -128,13 +138,29 @@ def run_child(cmd: list, token: str, log_path: Path, heartbeat: Path | None = No
         reader.start()
         stalled = None
         child_start = time.time() - 1
+        inspected_mtime = None
         while proc.poll() is None:
             time.sleep(5)
-            if heartbeat is not None and timeout is not None:
-                stalled = stalled_candidate(heartbeat, timeout, time.time(), child_start)
-                if stalled is not None:
-                    proc.kill()
-                    break
+            if proc.poll() is not None:
+                break
+            if heartbeat is None or timeout is None or \
+                    not heartbeat_stale(heartbeat, timeout, time.time(), child_start):
+                continue
+            # Opening the heartbeat races the child's atomic replace on Windows (PermissionError
+            # in the writer), so it is read only once it has been untouched for ``timeout``
+            # seconds, and at most once per written version.
+            try:
+                mtime = heartbeat.stat().st_mtime
+            except OSError:
+                continue
+            if mtime == inspected_mtime:
+                continue
+            inspected_mtime = mtime
+            stalled = stalled_candidate(heartbeat, timeout, time.time(), child_start)
+            if stalled is not None:
+                proc.kill()
+                proc.wait()
+                break
         code = proc.wait()
         reader.join(timeout=30)
     env.clear()

@@ -156,3 +156,23 @@ def test_a_fresh_heartbeat_is_not_a_stall(tmp_path):
     assert wa.stalled_candidate(hb, 60, _t.time() + 120, since=_t.time() + 100) is None
     hb.write_text(json.dumps({"utc": "2000-01-01T00:00:00Z", "phase": "scan"}))
     assert wa.stalled_candidate(hb, 60, _t.time()) is None
+
+
+def test_a_quiet_phase_outside_candidate_evaluation_is_never_killed(tmp_path, capsys,
+                                                                    monkeypatch):
+    monkeypatch.setattr(wa, "ROOT", tmp_path)
+    store = tmp_path / "store"
+    store.mkdir()
+    script = tmp_path / "scan.py"
+    script.write_text(
+        "import json, pathlib, sys, time\n"
+        "hb = pathlib.Path(sys.argv[1])\n"
+        "hb.write_text(json.dumps({'utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),"
+        " 'phase': 'scan'}))\n"
+        "time.sleep(12)\nprint('scan complete')\n", encoding="utf-8")
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"store": str(store)}))
+    code = wa.main(["--config", str(cfg), "--candidate-timeout", "3"], gh=fake_gh(tmp_path),
+                   child=[sys.executable, str(script), str(store / "heartbeat.json")])
+    out = capsys.readouterr().out
+    assert code == 0 and "scan complete" in out and '"evaluation_timeouts": []' in out
