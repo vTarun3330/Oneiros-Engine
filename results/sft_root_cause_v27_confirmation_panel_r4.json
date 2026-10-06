@@ -1,0 +1,1018 @@
+{
+ "acquisition_counts": {
+  "acquisition_failures": {
+   "not_found": 1
+  },
+  "admitted": 113,
+  "admitted_with_authenticated_regression_test": 85,
+  "authenticated": 125,
+  "auxiliary_evidence_failures": 1,
+  "candidates_inspected": 804,
+  "module_level_or_out_of_function_hunk_exclusions": 93,
+  "near_duplicate_function_exclusions": 0,
+  "near_duplicate_patch_exclusions": 28,
+  "other_production_source_exclusions": 228,
+  "pyi_or_other_source_file_exclusions": 8,
+  "reached_pipeline": 340,
+  "runtime_or_config_exclusions": 68,
+  "same_organisation_exclusions": 0,
+  "unique_fix_commits_admitted": 113,
+  "unique_functions_admitted": 113,
+  "unique_repositories_admitted": 31,
+  "unique_repositories_inspected": 47,
+  "vendored_or_generated_exclusions": 0,
+  "within_set_duplicates_removed": 1
+ },
+ "claims_allowed": "exploratory only: cannot support promotion or equivalence",
+ "complexity": {
+  "complex": 25,
+  "moderate": 7,
+  "simple": 2
+ },
+ "defect_families": {
+  "boundary_or_comparison": 6,
+  "call_or_argument": 4,
+  "exception_handling": 7,
+  "none_or_empty_handling": 8,
+  "other_logic": 8,
+  "type_or_conversion": 1
+ },
+ "exclusions": [
+  {
+   "key": "cand:astanin/python-tabulate@87a9a4e07a5efb39b81fdb6ac513b1d345bb21fb",
+   "reason": "prompt:sequence_overflow",
+   "repository": "astanin/python-tabulate"
+  },
+  {
+   "key": "cand:boxed/mutmut@8799708c2fede4befff4648ca7693337cb9955db",
+   "reason": "prompt:prompt_refused",
+   "repository": "boxed/mutmut"
+  },
+  {
+   "key": "cand:boxed/mutmut@b7b4f90ca5969442b7a56abd4d8c7e62708a5cc6",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "boxed/mutmut"
+  },
+  {
+   "key": "cand:coleifer/peewee@19a1ca7e15fe44198ffa8a20b151626b66b7f35e",
+   "reason": "rehearsal:official_tests_do_not_distinguish",
+   "repository": "coleifer/peewee"
+  },
+  {
+   "key": "cand:coveragepy/coveragepy@08c7fd66c2db6f09412ac752c4b043f9df4e7bfb",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "coveragepy/coveragepy"
+  },
+  {
+   "key": "cand:coveragepy/coveragepy@1ed39982fe550fc542a9ed3d5561dec29737b0dc",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "coveragepy/coveragepy"
+  },
+  {
+   "key": "cand:coveragepy/coveragepy@2d99fd7696e0bccec8037479a4e45c1ecccb8058",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "coveragepy/coveragepy"
+  },
+  {
+   "key": "cand:coveragepy/coveragepy@9b05cc93f67c8fee529d086f878ea0e9d9f08c5d",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "coveragepy/coveragepy"
+  },
+  {
+   "key": "cand:coveragepy/coveragepy@e1ace967060842e8fd8d77ab85a7e405b72fd041",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "coveragepy/coveragepy"
+  },
+  {
+   "key": "cand:coveragepy/coveragepy@fb056581f5e89558b226d8df411e5ddf9ffc643a",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "coveragepy/coveragepy"
+  },
+  {
+   "key": "cand:dask/dask@06bb168d6afe65b5563aa011719e6a4f84c39dd8",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "dask/dask"
+  },
+  {
+   "key": "cand:dask/dask@f8e1de3ec8666747eabf66e34d1c6842cffad155",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "dask/dask"
+  },
+  {
+   "key": "cand:executablebooks/markdown-it-py@8501cf3369dc879353c5e5a2280941f73c42d392",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "executablebooks/markdown-it-py"
+  },
+  {
+   "key": "cand:executablebooks/myst-parser@838129687219517e31a395736397c957d93532dd",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "executablebooks/myst-parser"
+  },
+  {
+   "key": "cand:fsspec/filesystem_spec@4c19cfc72ab275090f8cf989a6e1a6498186588e",
+   "reason": "rehearsal:official_tests_do_not_distinguish",
+   "repository": "fsspec/filesystem_spec"
+  },
+  {
+   "key": "cand:graphql-python/graphql-core@eb76e076a69c3d1b7af914b59ce0b8f2988d9f61",
+   "reason": "target_not_reached:not_reached",
+   "repository": "graphql-python/graphql-core"
+  },
+  {
+   "key": "cand:holoviz/panel@1e6d5fd6dd46c2e6e95f5a96a36c38689caebf5b",
+   "reason": "rehearsal:environment_install_failed",
+   "repository": "holoviz/panel"
+  },
+  {
+   "key": "cand:holoviz/panel@5c7fe6a9740e60de9d6584ba375e55f8312e01ef",
+   "reason": "rehearsal:environment_install_failed",
+   "repository": "holoviz/panel"
+  },
+  {
+   "key": "cand:holoviz/panel@639c276c89d453e867b07d67538299092de8be59",
+   "reason": "rehearsal:environment_install_failed",
+   "repository": "holoviz/panel"
+  },
+  {
+   "key": "cand:holoviz/panel@8eb87aaa186c9fb438e02541f3abe21f9ca106dc",
+   "reason": "rehearsal:environment_install_failed",
+   "repository": "holoviz/panel"
+  },
+  {
+   "key": "cand:holoviz/panel@d25c0227e9c81fadfa06aac9ba4d39fed918ae6a",
+   "reason": "rehearsal:environment_install_failed",
+   "repository": "holoviz/panel"
+  },
+  {
+   "key": "cand:holoviz/panel@f52855c71ea6e26be4453f03f8387814e4738873",
+   "reason": "rehearsal:environment_install_failed",
+   "repository": "holoviz/panel"
+  },
+  {
+   "key": "cand:hynek/stamina@10012a65209a02da7e516c2f3a2a95a80d75ac3f",
+   "reason": "prompt:leakage",
+   "repository": "hynek/stamina"
+  },
+  {
+   "key": "cand:jupyter/nbconvert@ed3bcf8d5b404ac66a89a506783315d087a13302",
+   "reason": "rehearsal:official_tests_do_not_distinguish",
+   "repository": "jupyter/nbconvert"
+  },
+  {
+   "key": "cand:kevin1024/vcrpy@3f78330c1eedcc6ffd5e7bc39c0a4e401d333dfc",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "kevin1024/vcrpy"
+  },
+  {
+   "key": "cand:kozea/weasyprint@148bc049a87cd7f18a97e81245598c5db64f0b2e",
+   "reason": "prompt:sequence_overflow",
+   "repository": "kozea/weasyprint"
+  },
+  {
+   "key": "cand:kozea/weasyprint@1db9d5c4924dcd210d9379b0c41b1e1b1ee5aa70",
+   "reason": "rehearsal:official_tests_do_not_distinguish",
+   "repository": "kozea/weasyprint"
+  },
+  {
+   "key": "cand:kozea/weasyprint@4106b87b908cb1ce609e1eb2dab84ac9bbd769bc",
+   "reason": "rehearsal:official_tests_do_not_distinguish",
+   "repository": "kozea/weasyprint"
+  },
+  {
+   "key": "cand:marshmallow-code/apispec@e916ed4179c9376ab10f7b3d5d69cd2eba511c0b",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "marshmallow-code/apispec"
+  },
+  {
+   "key": "cand:pycqa/pyflakes@23082bce15a0b3448d07b7b30169bde2c0c6c326",
+   "reason": "requalification:not_stable_3_of_3",
+   "repository": "pycqa/pyflakes"
+  },
+  {
+   "key": "cand:pymysql/pymysql@86a8a95a31196f0c1e7c2bdb42471522a0fef63b",
+   "reason": "rehearsal:official_tests_do_not_distinguish",
+   "repository": "pymysql/pymysql"
+  },
+  {
+   "key": "cand:pypa/pipx@16c12bf41245f3ebca0aa92173496b62a6cc5d3c",
+   "reason": "requalification:not_stable_3_of_3",
+   "repository": "pypa/pipx"
+  },
+  {
+   "key": "cand:pypa/pipx@84eaad372a118d7428ae1835ded1c523e99784f0",
+   "reason": "requalification:view_attestation_failed",
+   "repository": "pypa/pipx"
+  },
+  {
+   "key": "cand:python-hyper/h2@aba9ad6c369eb817df081f1424a3e712a5a3e877",
+   "reason": "requalification:environment_install_failed",
+   "repository": "python-hyper/h2"
+  },
+  {
+   "key": "cand:python-validators/validators@25fcef05c293def421fd3f6714403a54fce993cf",
+   "reason": "requalification:view_attestation_failed",
+   "repository": "python-validators/validators"
+  },
+  {
+   "key": "cand:pyvista/pyvista@252444812a736e1a1cc211733ad697e250d154eb",
+   "reason": "prompt:sequence_overflow",
+   "repository": "pyvista/pyvista"
+  },
+  {
+   "key": "cand:pyvista/pyvista@96c0a4f063049211eab8559e1580b63732979127",
+   "reason": "prompt:sequence_overflow",
+   "repository": "pyvista/pyvista"
+  },
+  {
+   "key": "cand:pyvista/pyvista@c47f909073a80734d97d759c9fe1a867c4584f29",
+   "reason": "prompt:sequence_overflow",
+   "repository": "pyvista/pyvista"
+  },
+  {
+   "key": "cand:scrapinghub/dateparser@06ca032deff4d5eec281af4030f34b46e9fe7adc",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "scrapinghub/dateparser"
+  },
+  {
+   "key": "cand:scrapinghub/dateparser@315e396b35cf131df1b8df15144fe2d60aa6d74a",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "scrapinghub/dateparser"
+  },
+  {
+   "key": "cand:tortoise/tortoise-orm@403a4dce3fca495b12fe493d7dfad9f186d406a2",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "tortoise/tortoise-orm"
+  },
+  {
+   "key": "cand:tortoise/tortoise-orm@6e241de469af908872cddaf5b87c9e3ea5a98941",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "tortoise/tortoise-orm"
+  },
+  {
+   "key": "cand:tortoise/tortoise-orm@95795cc1c0e6d645f78c33beb0466d13fa8963c7",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "tortoise/tortoise-orm"
+  },
+  {
+   "key": "cand:tortoise/tortoise-orm@960b5855988fa09fb9139b4764daee03fdbe4354",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "tortoise/tortoise-orm"
+  },
+  {
+   "key": "cand:tortoise/tortoise-orm@bc4f971bb840c90af422108b8cf07a68c04cbd65",
+   "reason": "prompt:prompt_refused",
+   "repository": "tortoise/tortoise-orm"
+  },
+  {
+   "key": "cand:tortoise/tortoise-orm@c37cfb811f070a8012ffd39e825ab3539ad04524",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "tortoise/tortoise-orm"
+  },
+  {
+   "key": "cand:tortoise/tortoise-orm@f6f072bf4da2b2a0789e799322f07d831e170842",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "tortoise/tortoise-orm"
+  },
+  {
+   "key": "cand:vega/altair@432157b2304e0e30d89167ab26d1f7987f615a31",
+   "reason": "prompt:sequence_overflow",
+   "repository": "vega/altair"
+  },
+  {
+   "key": "cand:vega/altair@49e745b80ae60c06dbc27d7025b7b031d47398b5",
+   "reason": "rehearsal:test_infrastructure_error",
+   "repository": "vega/altair"
+  },
+  {
+   "key": "cand:fsspec/filesystem_spec@d7a07e9004bfab63793344b981fc8e06f53107ab",
+   "reason": "per_repository_cap",
+   "repository": "fsspec/filesystem_spec"
+  },
+  {
+   "key": "cand:fsspec/filesystem_spec@3ad8eb358e2553d543b7a14fa6a98daec15a3696",
+   "reason": "per_repository_cap",
+   "repository": "fsspec/filesystem_spec"
+  }
+ ],
+ "exclusions_by_reason": {
+  "per_repository_cap": 2,
+  "prompt": 9,
+  "rehearsal": 34,
+  "requalification": 5,
+  "target_not_reached": 1
+ },
+ "frozen_before_any_model_or_atheris_outcome": true,
+ "funnel": {
+  "natively_qualified": 51,
+  "prompt_leakage_and_token_fit_passed": 36,
+  "requalified_3_of_3": 46,
+  "selected": 34,
+  "target_reached": 45,
+  "with_regression_test_and_no_overlap": 85
+ },
+ "gate": {
+  "path": "docs/repository_native_v27_confirmation_panel_gate.json",
+  "sha256": "757fe23691ad5594355b47101d48569103768318f483f88028a6f4b3d681dcee"
+ },
+ "hidden_evaluator_bundle": {
+  "path": "results/sft_root_cause/v27_confirmation/r4_panel/hidden_evaluator_bundle.json",
+  "sha256": "a8df1d1f9c4f56df8da53a6b7041e2391fe72735a7ccdb8fb7d42a306f47830b"
+ },
+ "inputs_sha256": {
+  "results/sft_root_cause/v27_confirmation/r4_native_reach.jsonl": "02b90bfc2849ae1fea8bd76daf84ae8565d465c085f7ef85885458b1529c2320",
+  "results/sft_root_cause/v27_confirmation/r4_prep/records.jsonl": "ecb94b7cf45ed688ceb495d07e699b16b8926bbb1b15ec5f77fb75979eef97f2",
+  "results/sft_root_cause/v27_confirmation/r4_qualification_manifest.json": "ba1725065cdcbbc9ebdfcca57792eae394f8ea64cb85a6204b5f51ef841192aa",
+  "results/sft_root_cause/v27_confirmation/r4_rehearsal/records.jsonl": "73e5d3b416e8137893fd4cc348fa7c76c09a686609c7d0da1ca6f89b45274b2d",
+  "results/sft_root_cause/v27_confirmation/r4_rehearsal_manifest.json": "d02265bd713d59c9a82549439c5757bca2a0daf24a01fa3c7dfcb94b2fbe3771",
+  "results/sft_root_cause_v27_confirmation_acquisition_report_r4.json": "2cb23dc5c9b4e6d429b04ff2bc9982d0ab683e5b644e13d08dd01c0049522aa7"
+ },
+ "model_visible_bundle": {
+  "path": "results/sft_root_cause/v27_confirmation/r4_panel/model_visible_bundle.json",
+  "sha256": "ffff6dd91a1646b6682b722e7fdb5dac6b8e053df6044f42291d63999f361873"
+ },
+ "name": "r4",
+ "panel_status": {
+  "claim_scope": "exploratory only: cannot support promotion or equivalence",
+  "counts": {
+   "complexity_strata": [
+    "complex",
+    "moderate",
+    "simple"
+   ],
+   "defect_families": 6,
+   "repositories": 15,
+   "targets": 34
+  },
+  "minimum": {
+   "complexity_strata": [
+    "simple",
+    "moderate",
+    "complex"
+   ],
+   "defect_families": 4,
+   "max_per_repository": 8,
+   "repositories": 10,
+   "targets": 80
+  },
+  "status": "BUILT_UNDERPOWERED"
+ },
+ "per_repository": {
+  "boxed/mutmut": 4,
+  "coleifer/peewee": 4,
+  "fsspec/filesystem_spec": 8,
+  "hynek/stamina": 1,
+  "jpadilla/pyjwt": 2,
+  "kozea/weasyprint": 2,
+  "marshmallow-code/apispec": 1,
+  "prompt-toolkit/python-prompt-toolkit": 1,
+  "pymysql/pymysql": 1,
+  "pypa/pipx": 1,
+  "python-lsp/python-lsp-server": 2,
+  "pytransitions/transitions": 2,
+  "pyvista/pyvista": 3,
+  "tox-dev/pipdeptree": 1,
+  "vega/altair": 1
+ },
+ "schema_version": "oneiros_v27_confirmation_panel_v1",
+ "status": "CONFIRMATION_BUILT_UNDERPOWERED",
+ "targets": [
+  {
+   "buggy_commit": "9f672beb93d91bb610c787421f42d0345388e9f7",
+   "complexity": "complex",
+   "defect_family": "boundary_or_comparison",
+   "difference_exposing_tests": [
+    "tests.test_mutation::test_bug_github_issue_435"
+   ],
+   "environment_lock_sha256": "0ad141ed0cba51ba21e0a6da2d775f26de71b029f8dd8fbcf603ec7e38d35162",
+   "fixed_commit": "385449458ef3d89ba4ac1f50e08e4b088ce9a634",
+   "function_fingerprint": "2752843ba07c84ced734f6e811793179e73ed78f57f55ab0ddbc7da927de78aa",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "mutmut@385449458ef3d89ba4ac1f50e08e4b088ce9a634#2752843ba07c84ce",
+   "repository": "boxed/mutmut",
+   "tag": "boxed__mutmut_385449458ef3d89ba4ac1f50e08e4b088ce9a634",
+   "target": "operator_string",
+   "target_file": "mutmut/node_mutation.py",
+   "target_id": "cand:boxed/mutmut@385449458ef3d89ba4ac1f50e08e4b088ce9a634"
+  },
+  {
+   "buggy_commit": "107b5a3b4bc851f5d2bbc98f58845a7b7ccfb9c6",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "difference_exposing_tests": [
+    "tests.test_type_checking::test_filter_mutants_ignores_type_errors_in_files_without_mutants"
+   ],
+   "environment_lock_sha256": "773beb0377e31071a9a5947aaf50daa5f7a6d54835247ba9772a2c69dcd4aac9",
+   "fixed_commit": "5b8721f51479ea909d919ac495af69f6040a64d1",
+   "function_fingerprint": "62ccb511fd10cc0b516b97e528c98b5635d92b75b0e096d3e42f8441d498ed6c",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "mutmut@5b8721f51479ea909d919ac495af69f6040a64d1#62ccb511fd10cc0b",
+   "repository": "boxed/mutmut",
+   "tag": "boxed__mutmut_5b8721f51479ea909d919ac495af69f6040a64d1",
+   "target": "filter_mutants_with_type_checker",
+   "target_file": "src/mutmut/mutation/file_mutation.py",
+   "target_id": "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1"
+  },
+  {
+   "buggy_commit": "01ed58b61bfc99d0219d3b616e3efffc9ddc0d79",
+   "complexity": "complex",
+   "defect_family": "exception_handling",
+   "difference_exposing_tests": [
+    "tests.mutation.test_mutation::test_mutate_methods_of_decorated_classes[@dataclass(frozen=True)]",
+    "tests.mutation.test_mutation::test_mutate_methods_of_decorated_classes[@dataclass]"
+   ],
+   "environment_lock_sha256": "54603f36c6c29e439b77cd2c065498bf84634b236e40410599f36b06fcacdaa5",
+   "fixed_commit": "dc58270d5234752e22247f814431750eafcf6e5f",
+   "function_fingerprint": "4444dd5d6e972fc7f9c6098122a539916153e2491b58b2ee065a109a5162ebdb",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "mutmut@dc58270d5234752e22247f814431750eafcf6e5f#4444dd5d6e972fc7",
+   "repository": "boxed/mutmut",
+   "tag": "boxed__mutmut_dc58270d5234752e22247f814431750eafcf6e5f",
+   "target": "MutationVisitor._skip_node_and_children",
+   "target_file": "src/mutmut/mutation/file_mutation.py",
+   "target_id": "cand:boxed/mutmut@dc58270d5234752e22247f814431750eafcf6e5f"
+  },
+  {
+   "buggy_commit": "c3a8f4b402b01873cc788774c0ce15d2a1cebb86",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "difference_exposing_tests": [
+    "tests.runners.test_harness.TestClearOutObsoleteTestNames::test_obsolete_test_durations_are_dropped_and_persisted",
+    "tests.runners.test_harness.TestClearOutObsoleteTestNames::test_obsolete_test_names_are_dropped_and_persisted"
+   ],
+   "environment_lock_sha256": "5caf7ecb60b7627f064592a4e72ad2c1673c4d82730828a7eba1b8914b9e8f85",
+   "fixed_commit": "4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8",
+   "function_fingerprint": "7d1dd393cf2e71b6a054d0697289e6b43726ea74dc5922383d762977f4be1949",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "mutmut@4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8#7d1dd393cf2e71b6",
+   "repository": "boxed/mutmut",
+   "tag": "boxed__mutmut_4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8",
+   "target": "ListAllTestsResult.clear_out_obsolete_test_names",
+   "target_file": "src/mutmut/runners/harness.py",
+   "target_id": "cand:boxed/mutmut@4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8"
+  },
+  {
+   "buggy_commit": "f8ff6af96cd8b0d3a303a5ec1d514b59837178d6",
+   "complexity": "complex",
+   "defect_family": "call_or_argument",
+   "difference_exposing_tests": [
+    "tests.schema.TestModelDDL::test_index_nulls_distinct"
+   ],
+   "environment_lock_sha256": "e45e50356113fb3fdbd7c43852c47621f55b7567f9deba96226a16deb801aaa4",
+   "fixed_commit": "c511fb137f7b3d91436aabc5a7963ada217147ec",
+   "function_fingerprint": "397c8d8af2b9a38ac158d7537a5f0c0910e04b2832cefeddf0402917d65a840c",
+   "licence_spdx": "MIT",
+   "lineage": "peewee@c511fb137f7b3d91436aabc5a7963ada217147ec#397c8d8af2b9a38a",
+   "repository": "coleifer/peewee",
+   "tag": "coleifer__peewee_c511fb137f7b3d91436aabc5a7963ada217147ec",
+   "target": "Index.__sql__",
+   "target_file": "peewee.py",
+   "target_id": "cand:coleifer/peewee@c511fb137f7b3d91436aabc5a7963ada217147ec"
+  },
+  {
+   "buggy_commit": "90bd5c4b21c4633788eb78b26f91a8de35a6c4e3",
+   "complexity": "complex",
+   "defect_family": "call_or_argument",
+   "difference_exposing_tests": [
+    "tests.shortcuts.TestModelToDict::test_no_lazy_load"
+   ],
+   "environment_lock_sha256": "8495fb24291a97319856b38a9f1885183341e54062c4e986392db5b680d1937d",
+   "fixed_commit": "47db8f79337eb7385854649ef3c9267ed508838b",
+   "function_fingerprint": "94615c2dafbac68f1eb2b7a02832bad2b8dc3e4a4e9f8381f9f97cff15119037",
+   "licence_spdx": "MIT",
+   "lineage": "peewee@47db8f79337eb7385854649ef3c9267ed508838b#94615c2dafbac68f",
+   "repository": "coleifer/peewee",
+   "tag": "coleifer__peewee_47db8f79337eb7385854649ef3c9267ed508838b",
+   "target": "model_to_dict",
+   "target_file": "playhouse/shortcuts.py",
+   "target_id": "cand:coleifer/peewee@47db8f79337eb7385854649ef3c9267ed508838b"
+  },
+  {
+   "buggy_commit": "7edbd3243e68b10abf10d8ded53fb323eb9239dc",
+   "complexity": "simple",
+   "defect_family": "other_logic",
+   "difference_exposing_tests": [
+    "tests.schema.TestModelDDL::test_constraint_inheritance"
+   ],
+   "environment_lock_sha256": "2f9a9d0db13963aaa4fa1c675ea01aa1b1c47df19037b255d609bbde6cb5fd92",
+   "fixed_commit": "914f4fc24002fb6f9ad0f2763b148a5ac63545a0",
+   "function_fingerprint": "fac4a45137009c07d8d1fa28cf4bd91431d8b8901370c2832b0241c478aafa23",
+   "licence_spdx": "MIT",
+   "lineage": "peewee@914f4fc24002fb6f9ad0f2763b148a5ac63545a0#fac4a45137009c07",
+   "repository": "coleifer/peewee",
+   "tag": "coleifer__peewee_914f4fc24002fb6f9ad0f2763b148a5ac63545a0",
+   "target": "Entity.__getattr__",
+   "target_file": "peewee.py",
+   "target_id": "cand:coleifer/peewee@914f4fc24002fb6f9ad0f2763b148a5ac63545a0"
+  },
+  {
+   "buggy_commit": "c12b753156e36b1cf75606290bb240b4748d55d5",
+   "complexity": "moderate",
+   "defect_family": "other_logic",
+   "difference_exposing_tests": [
+    "tests.models.TestScalarIntegration::test_scalar_implicit_limit"
+   ],
+   "environment_lock_sha256": "39abf83d448ef27302caa398e3a2d22aebc76e679f0f879746e102e53593fce1",
+   "fixed_commit": "f5e439d3eaa3aecc5621c6f121df854086eec008",
+   "function_fingerprint": "d85e7ed0bd7c490fefff66c52eae092c47f598abc85543f8f016aff4807a24f3",
+   "licence_spdx": "MIT",
+   "lineage": "peewee@f5e439d3eaa3aecc5621c6f121df854086eec008#d85e7ed0bd7c490f",
+   "repository": "coleifer/peewee",
+   "tag": "coleifer__peewee_f5e439d3eaa3aecc5621c6f121df854086eec008",
+   "target": "SelectBase.scalar",
+   "target_file": "peewee.py",
+   "target_id": "cand:coleifer/peewee@f5e439d3eaa3aecc5621c6f121df854086eec008"
+  },
+  {
+   "buggy_commit": "86438783f93b1398ef245b92f0e6063b445b611c",
+   "complexity": "complex",
+   "defect_family": "other_logic",
+   "difference_exposing_tests": [
+    "fsspec.tests.test_cache_threads::test_async_fs_sync_mode_shares_instance"
+   ],
+   "environment_lock_sha256": "332367f905234de2d864913edb6e5352e379ddc26be6e80b76611e70bbef9136",
+   "fixed_commit": "5eec9f9353b8d517d296428441a84fa26e9a6438",
+   "function_fingerprint": "249423969ed230922de2d9ca6782f9b732b525b017810b1d8314b8fd72c5bc3e",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "filesystem_spec@5eec9f9353b8d517d296428441a84fa26e9a6438#249423969ed23092",
+   "repository": "fsspec/filesystem_spec",
+   "tag": "fsspec__filesystem_spec_5eec9f9353b8d517d296428441a84fa26e9a6438",
+   "target": "_Cached.__call__",
+   "target_file": "fsspec/spec.py",
+   "target_id": "cand:fsspec/filesystem_spec@5eec9f9353b8d517d296428441a84fa26e9a6438"
+  },
+  {
+   "buggy_commit": "2818611ab2a197cb3d560d50be09fdb5fbff775d",
+   "complexity": "complex",
+   "defect_family": "call_or_argument",
+   "difference_exposing_tests": [
+    "fsspec.tests.test_spec::test_cat_ranges_forwards_kwargs"
+   ],
+   "environment_lock_sha256": "eb66957af29cc715908e30bc9431ea2e04e65c4d32fefc8bb9c1b41005130973",
+   "fixed_commit": "073aac840748ab95bea39468306123268e316184",
+   "function_fingerprint": "2792225023a4d463986af46ce17f0d3eff30e9ca3e28fc933af6e6138f331c0a",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "filesystem_spec@073aac840748ab95bea39468306123268e316184#2792225023a4d463",
+   "repository": "fsspec/filesystem_spec",
+   "tag": "fsspec__filesystem_spec_073aac840748ab95bea39468306123268e316184",
+   "target": "AbstractFileSystem.cat_ranges",
+   "target_file": "fsspec/spec.py",
+   "target_id": "cand:fsspec/filesystem_spec@073aac840748ab95bea39468306123268e316184"
+  },
+  {
+   "buggy_commit": "073aac840748ab95bea39468306123268e316184",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "difference_exposing_tests": [
+    "fsspec.tests.test_async::test_cat_ranges_on_error_raise_propagates"
+   ],
+   "environment_lock_sha256": "1a9e2739d843a0d7060d30fa4584b05f19e8ffbc586d548445f2fa4a699bdaa1",
+   "fixed_commit": "652325d9b9459286a5b72c7e6228b061fb29827c",
+   "function_fingerprint": "d2e848ebc8ab1d08fc211d9eee0d47295ae580c073d5f71bad2b0397c1477524",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "filesystem_spec@652325d9b9459286a5b72c7e6228b061fb29827c#d2e848ebc8ab1d08",
+   "repository": "fsspec/filesystem_spec",
+   "tag": "fsspec__filesystem_spec_652325d9b9459286a5b72c7e6228b061fb29827c",
+   "target": "AsyncFileSystem._cat_ranges",
+   "target_file": "fsspec/asyn.py",
+   "target_id": "cand:fsspec/filesystem_spec@652325d9b9459286a5b72c7e6228b061fb29827c"
+  },
+  {
+   "buggy_commit": "c028e90fd180fef858a2b8d370c5d27efba5c3be",
+   "complexity": "complex",
+   "defect_family": "other_logic",
+   "difference_exposing_tests": [
+    "fsspec.implementations.tests.test_local::test_linked_directories"
+   ],
+   "environment_lock_sha256": "e3c64f65ce44d853a4720aa550308445eddf465fcde992cb1ee59e5f9b84338d",
+   "fixed_commit": "933e992fc8d3247606b6d01abd22673989e5393c",
+   "function_fingerprint": "20430d8a1b6f5374aaee87d2c25b78162f446417a1d20865eb7021b663632fde",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "filesystem_spec@933e992fc8d3247606b6d01abd22673989e5393c#20430d8a1b6f5374",
+   "repository": "fsspec/filesystem_spec",
+   "tag": "fsspec__filesystem_spec_933e992fc8d3247606b6d01abd22673989e5393c",
+   "target": "LocalFileSystem.rm",
+   "target_file": "fsspec/implementations/local.py",
+   "target_id": "cand:fsspec/filesystem_spec@933e992fc8d3247606b6d01abd22673989e5393c"
+  },
+  {
+   "buggy_commit": "669de5e157cd3ce3f9bf71c7bceb7bb31c8c7a55",
+   "complexity": "complex",
+   "defect_family": "boundary_or_comparison",
+   "difference_exposing_tests": [
+    "fsspec.tests.test_utils::test_merge_offset_ranges_edges[starts0-ends0-expected0-False]",
+    "fsspec.tests.test_utils::test_merge_offset_ranges_edges[starts0-ends0-expected0-True]",
+    "fsspec.tests.test_utils::test_merge_offset_ranges_edges[starts2-ends2-expected2-False]",
+    "fsspec.tests.test_utils::test_merge_offset_ranges_edges[starts2-ends2-expected2-True]",
+    "fsspec.tests.test_utils::test_merge_offset_ranges_edges[starts3-ends3-expected3-False]",
+    "fsspec.tests.test_utils::test_merge_offset_ranges_edges[starts3-ends3-expected3-True]",
+    "fsspec.tests.test_utils::test_merge_offset_ranges_edges[starts4-ends4-expected4-False]",
+    "fsspec.tests.test_utils::test_merge_offset_ranges_edges[starts4-ends4-expected4-True]",
+    "fsspec.tests.test_utils::test_merge_offset_ranges_many_sequential_is_fast",
+    "fsspec.tests.test_utils::test_merge_offset_ranges_unsorted_keeps_coverage[starts2-ends2]"
+   ],
+   "environment_lock_sha256": "d319b06fcc266935287394e2c0076119fc3a48d7190ff620aabb4b48c2f1af2f",
+   "fixed_commit": "1724d540ee917f926f93b32b6580e637b3777adc",
+   "function_fingerprint": "0f9106013b7113a062288b085bb55205326fa9d2081b7c7bf5a0a4d2e8f4157d",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "filesystem_spec@1724d540ee917f926f93b32b6580e637b3777adc#0f9106013b7113a0",
+   "repository": "fsspec/filesystem_spec",
+   "tag": "fsspec__filesystem_spec_1724d540ee917f926f93b32b6580e637b3777adc",
+   "target": "merge_offset_ranges",
+   "target_file": "fsspec/utils.py",
+   "target_id": "cand:fsspec/filesystem_spec@1724d540ee917f926f93b32b6580e637b3777adc"
+  },
+  {
+   "buggy_commit": "c0baa49b9c38ee412031ee426121c24a7c2262a9",
+   "complexity": "moderate",
+   "defect_family": "other_logic",
+   "difference_exposing_tests": [
+    "fsspec.implementations.tests.test_cached::test_whole_file_cache_tail[filecache]",
+    "fsspec.implementations.tests.test_cached::test_whole_file_cache_tail[simplecache]"
+   ],
+   "environment_lock_sha256": "779f4bbfaa3454e120c896ceba58700ebb2fe9915c6aeb32c35cb37b544746a6",
+   "fixed_commit": "1da4c7132a720fe1059d94774b46d6cda625b453",
+   "function_fingerprint": "ff207265471dfb7653efd087a1c6125fce6571de30413a90d3eee387c427be4a",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "filesystem_spec@1da4c7132a720fe1059d94774b46d6cda625b453#ff207265471dfb76",
+   "repository": "fsspec/filesystem_spec",
+   "tag": "fsspec__filesystem_spec_1da4c7132a720fe1059d94774b46d6cda625b453",
+   "target": "AbstractFileSystem.tail",
+   "target_file": "fsspec/spec.py",
+   "target_id": "cand:fsspec/filesystem_spec@1da4c7132a720fe1059d94774b46d6cda625b453"
+  },
+  {
+   "buggy_commit": "39cbfb152ecded83b19a6a24ed52f055f5ad8bb8",
+   "complexity": "moderate",
+   "defect_family": "other_logic",
+   "difference_exposing_tests": [
+    "fsspec.implementations.tests.test_data::test_info_without_protocol"
+   ],
+   "environment_lock_sha256": "bb6b1e21e45861cea096e206194ecdcf560072e58d44b48f3420f61723aac504",
+   "fixed_commit": "ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e",
+   "function_fingerprint": "ac792d8d929e92ccd0c83d402592baba7a4aa532b0c5800c675785c1404edb5d",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "filesystem_spec@ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e#ac792d8d929e92cc",
+   "repository": "fsspec/filesystem_spec",
+   "tag": "fsspec__filesystem_spec_ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e",
+   "target": "DataFileSystem.info",
+   "target_file": "fsspec/implementations/data.py",
+   "target_id": "cand:fsspec/filesystem_spec@ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e"
+  },
+  {
+   "buggy_commit": "6ae5db8d96f4e47d400c3a2296e24aff08ed469c",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "difference_exposing_tests": [
+    "fsspec.implementations.tests.test_cached::test_clear_expired_cache_accepts_zero",
+    "fsspec.implementations.tests.test_cached::test_clear_expired_cache_honours_disabled_expiry"
+   ],
+   "environment_lock_sha256": "0cb9e2921a95b88700a0a4dbf7f7ab84bdd309d655e0b33aefafa5aedc42eef0",
+   "fixed_commit": "ee30764e64dbd338f7494a45b30b1ece1465386f",
+   "function_fingerprint": "a7dac44e75d0270932a2454bed6d6a126c6f8399567a920d30752f0111c122bb",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "filesystem_spec@ee30764e64dbd338f7494a45b30b1ece1465386f#a7dac44e75d02709",
+   "repository": "fsspec/filesystem_spec",
+   "tag": "fsspec__filesystem_spec_ee30764e64dbd338f7494a45b30b1ece1465386f",
+   "target": "CachingFileSystem.clear_expired_cache",
+   "target_file": "fsspec/implementations/cached.py",
+   "target_id": "cand:fsspec/filesystem_spec@ee30764e64dbd338f7494a45b30b1ece1465386f"
+  },
+  {
+   "buggy_commit": "c5c6e848540d64e3e679c78ecf455ffcd9489f76",
+   "complexity": "moderate",
+   "defect_family": "exception_handling",
+   "difference_exposing_tests": [
+    "tests.test_sync::test_backoff_no_overflow_on_high_attempt_numbers"
+   ],
+   "environment_lock_sha256": "9f8730fa7af87124bb8202671248dfd9743f82101fe9029bcdfa923b9408ba39",
+   "fixed_commit": "b09d541fdff686970c166faac27f388b841aeca2",
+   "function_fingerprint": "a8013d3db5505a36427c057a685d9822cce46c5a3b9f56d5dc8281dab852e507",
+   "licence_spdx": "MIT",
+   "lineage": "stamina@b09d541fdff686970c166faac27f388b841aeca2#a8013d3db5505a36",
+   "repository": "hynek/stamina",
+   "tag": "hynek__stamina_b09d541fdff686970c166faac27f388b841aeca2",
+   "target": "_compute_backoff",
+   "target_file": "src/stamina/_core.py",
+   "target_id": "cand:hynek/stamina@b09d541fdff686970c166faac27f388b841aeca2"
+  },
+  {
+   "buggy_commit": "c9d4d5375bf464ef363506fed9eb6e7f33217ab6",
+   "complexity": "moderate",
+   "defect_family": "exception_handling",
+   "difference_exposing_tests": [
+    "tests.test_algorithms.TestAlgorithms::test_hmac_should_reject_nonstring_key"
+   ],
+   "environment_lock_sha256": "ce7ce2dfad33b7237d393802537960221f61876f715b0173ca7437f4f949fe68",
+   "fixed_commit": "171062d2d734315272a901100aa4b109f2fc3c19",
+   "function_fingerprint": "e2cc74c9c91c2319fa64f65c9d6046854218022eea06605eb37a7443bf8f9a24",
+   "licence_spdx": "MIT",
+   "lineage": "pyjwt@171062d2d734315272a901100aa4b109f2fc3c19#e2cc74c9c91c2319",
+   "repository": "jpadilla/pyjwt",
+   "tag": "jpadilla__pyjwt_171062d2d734315272a901100aa4b109f2fc3c19",
+   "target": "force_bytes",
+   "target_file": "jwt/utils.py",
+   "target_id": "cand:jpadilla/pyjwt@171062d2d734315272a901100aa4b109f2fc3c19"
+  },
+  {
+   "buggy_commit": "1d41a6478e1562e68ff667fcd703356acf085f68",
+   "complexity": "complex",
+   "defect_family": "exception_handling",
+   "difference_exposing_tests": [
+    "tests.test_api_jws.TestJWS::test_decode_accepts_canonical_base64url_padding[Zg==-f]",
+    "tests.test_api_jws.TestJWS::test_decode_accepts_canonical_base64url_padding[Zm8=-fo]",
+    "tests.test_api_jws.TestJWS::test_decode_accepts_padded_crypto_segment",
+    "tests.test_api_jwt.TestJWT::test_decodes_valid_es256_jwt[alb-padded]"
+   ],
+   "environment_lock_sha256": "7c9e92335fc1c03a391be1faf81f09c1dee91fec7de2a5d5f11aeeebccda67ae",
+   "fixed_commit": "7bf32526738fe837387bdedd4849a4a525c33a79",
+   "function_fingerprint": "095ace717cc08d31250b1ce9d3d3891766418e819f1c4599adcd0281bd2adaf6",
+   "licence_spdx": "MIT",
+   "lineage": "pyjwt@7bf32526738fe837387bdedd4849a4a525c33a79#095ace717cc08d31",
+   "repository": "jpadilla/pyjwt",
+   "tag": "jpadilla__pyjwt_7bf32526738fe837387bdedd4849a4a525c33a79",
+   "target": "PyJWS._decode_base64url_segment",
+   "target_file": "jwt/api_jws.py",
+   "target_id": "cand:jpadilla/pyjwt@7bf32526738fe837387bdedd4849a4a525c33a79"
+  },
+  {
+   "buggy_commit": "41d4fb63a7f041904d4cf68a790017258998f915",
+   "complexity": "complex",
+   "defect_family": "other_logic",
+   "difference_exposing_tests": [
+    "tests.layout.test_flex::test_flex_grow_in_flex_column",
+    "tests.layout.test_flex::test_flex_inline_flex",
+    "tests.layout.test_flex::test_flex_inline_grid",
+    "tests.layout.test_flex::test_flex_inline_table"
+   ],
+   "environment_lock_sha256": "edd39b2791f12b56d06755d7f373ff89f8ef814ef869e4f6a661761345d66ef2",
+   "fixed_commit": "d4d5a2a5a5e99afee8b8302ffab1265013f68cc1",
+   "function_fingerprint": "6a2921aa31d55a95efb0b8365499d458e0c037afd403b07d012459833f1e4d65",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "weasyprint@d4d5a2a5a5e99afee8b8302ffab1265013f68cc1#6a2921aa31d55a95",
+   "repository": "kozea/weasyprint",
+   "tag": "kozea__weasyprint_d4d5a2a5a5e99afee8b8302ffab1265013f68cc1",
+   "target": "blockify",
+   "target_file": "weasyprint/formatting_structure/build.py",
+   "target_id": "cand:kozea/weasyprint@d4d5a2a5a5e99afee8b8302ffab1265013f68cc1"
+  },
+  {
+   "buggy_commit": "4041083e9d9aa5d8262fd402ebf223b00d82f372",
+   "complexity": "complex",
+   "defect_family": "boundary_or_comparison",
+   "difference_exposing_tests": [
+    "tests.layout.test_table::test_table_colspan_rounding_error"
+   ],
+   "environment_lock_sha256": "cb56ea2dc264d35d2b176affe07eff518f97ced4daa763fbee860190ed39b742",
+   "fixed_commit": "0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2",
+   "function_fingerprint": "fc1fc5ec1d55e72e5797cba8106b3204a51febe2310fba2fcd14528d799fc8ea",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "weasyprint@0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2#fc1fc5ec1d55e72e",
+   "repository": "kozea/weasyprint",
+   "tag": "kozea__weasyprint_0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2",
+   "target": "auto_table_layout",
+   "target_file": "weasyprint/layout/table.py",
+   "target_id": "cand:kozea/weasyprint@0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2"
+  },
+  {
+   "buggy_commit": "af1755fe9c358fbb402b38a9612f3c8fd0daa1ba",
+   "complexity": "complex",
+   "defect_family": "boundary_or_comparison",
+   "difference_exposing_tests": [
+    "tests.test_ext_marshmallow_field::test_datetime2property_iso8601[2.0]",
+    "tests.test_ext_marshmallow_field::test_datetime2property_iso8601[3.0.0]",
+    "tests.test_ext_marshmallow_field::test_datetime2property_rfc822[2.0]",
+    "tests.test_ext_marshmallow_field::test_datetime2property_rfc822[3.0.0]"
+   ],
+   "environment_lock_sha256": "ee62c9819874418bcc1d0d91665647cefe2efbf2c64f18976f91a7f0e585bcb5",
+   "fixed_commit": "f767e7522fd8c4280f1b21341f61476c7fe7e54e",
+   "function_fingerprint": "6a7ae0c567e594b51e75fc097fccccfc9db9bfc40f691fb0d69f2ed487cd297f",
+   "licence_spdx": "MIT",
+   "lineage": "apispec@f767e7522fd8c4280f1b21341f61476c7fe7e54e#6a7ae0c567e594b5",
+   "repository": "marshmallow-code/apispec",
+   "tag": "marshmallow-code__apispec_f767e7522fd8c4280f1b21341f61476c7fe7e54e",
+   "target": "FieldConverterMixin.datetime2properties",
+   "target_file": "src/apispec/ext/marshmallow/field_converter.py",
+   "target_id": "cand:marshmallow-code/apispec@f767e7522fd8c4280f1b21341f61476c7fe7e54e"
+  },
+  {
+   "buggy_commit": "d8adbe9bfcf5f7e95b015d8ab12e2985b9a7822b",
+   "complexity": "moderate",
+   "defect_family": "none_or_empty_handling",
+   "difference_exposing_tests": [
+    "tests.test_document::test_get_word_before_cursor_with_whitespace_and_pattern"
+   ],
+   "environment_lock_sha256": "c7dc19bd4aebe30e815b6366e622d7119963d05c2c1c40cbfcecc04702668a86",
+   "fixed_commit": "75eca874f8b3abbe7643d075711917504f3e4f6b",
+   "function_fingerprint": "23abc2f9475149131cc21dee5dc3cb544b45909c87a7d171a156d988404c8380",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "python-prompt-toolkit@75eca874f8b3abbe7643d075711917504f3e4f6b#23abc2f947514913",
+   "repository": "prompt-toolkit/python-prompt-toolkit",
+   "tag": "prompt-toolkit__python-prompt-toolkit_75eca874f8b3abbe7643d075711917504f3e4f6b",
+   "target": "Document._is_word_before_cursor_complete",
+   "target_file": "src/prompt_toolkit/document.py",
+   "target_id": "cand:prompt-toolkit/python-prompt-toolkit@75eca874f8b3abbe7643d075711917504f3e4f6b"
+  },
+  {
+   "buggy_commit": "0de7a22bb8b56a2e0860309e1c95ad6cb6053f4f",
+   "complexity": "complex",
+   "defect_family": "boundary_or_comparison",
+   "difference_exposing_tests": [
+    "pymysql.tests.test_converters.TestConverter::test_escape_timedelta"
+   ],
+   "environment_lock_sha256": "859c45cd243ec59f6e4d2fd40c115d51b65b82a92278ffa3423fd34726409c7f",
+   "fixed_commit": "34f267684f8cdfa0923fe6be4a990efa0cfda015",
+   "function_fingerprint": "60656ff7bceee103a26dc7e1226abbf98fddca4fcbbef5687c65063118682db1",
+   "licence_spdx": "MIT",
+   "lineage": "pymysql@34f267684f8cdfa0923fe6be4a990efa0cfda015#60656ff7bceee103",
+   "repository": "pymysql/pymysql",
+   "tag": "pymysql__pymysql_34f267684f8cdfa0923fe6be4a990efa0cfda015",
+   "target": "escape_timedelta",
+   "target_file": "pymysql/converters.py",
+   "target_id": "cand:pymysql/pymysql@34f267684f8cdfa0923fe6be4a990efa0cfda015"
+  },
+  {
+   "buggy_commit": "68940187711937229188b29e2e3f6f1863a07dd1",
+   "complexity": "complex",
+   "defect_family": "exception_handling",
+   "difference_exposing_tests": [
+    "tests.test_common::test_get_exposed_paths_ignores_foreign_binary[nul-in-interpreter]"
+   ],
+   "environment_lock_sha256": "0523609c7b27568b7c58b92557aec0f566894a924190fce366ebdeadca85a66b",
+   "fixed_commit": "c8b1893db865ad581774a8aa8f467d7926ca1d88",
+   "function_fingerprint": "c11da6cde755d25cb30cb169068850c785114f605124ace802890158e3d16ffe",
+   "licence_spdx": "MIT",
+   "lineage": "pipx@c8b1893db865ad581774a8aa8f467d7926ca1d88#c11da6cde755d25c",
+   "repository": "pypa/pipx",
+   "tag": "pypa__pipx_c8b1893db865ad581774a8aa8f467d7926ca1d88",
+   "target": "_copy_launcher_targets_venv",
+   "target_file": "src/pipx/commands/common.py",
+   "target_id": "cand:pypa/pipx@c8b1893db865ad581774a8aa8f467d7926ca1d88"
+  },
+  {
+   "buggy_commit": "e088ce349bfcc3f7b51bd194c0af52dffa667950",
+   "complexity": "complex",
+   "defect_family": "exception_handling",
+   "difference_exposing_tests": [
+    "test.test_utils::test_find_parents_cross_mount"
+   ],
+   "environment_lock_sha256": "85f05a9eac2b0ed0c1458782fa58e7e20770c17d75cc532d3484562697ccf33f",
+   "fixed_commit": "1a10b605aa731daba20e8c1827542b7145ad3059",
+   "function_fingerprint": "d0b8e9ccd3e48edf9b15b976c6ba7326caffde96aac13ff8134ee444df54c98d",
+   "licence_spdx": "MIT",
+   "lineage": "python-lsp-server@1a10b605aa731daba20e8c1827542b7145ad3059#d0b8e9ccd3e48edf",
+   "repository": "python-lsp/python-lsp-server",
+   "tag": "python-lsp__python-lsp-server_1a10b605aa731daba20e8c1827542b7145ad3059",
+   "target": "find_parents",
+   "target_file": "pylsp/_utils.py",
+   "target_id": "cand:python-lsp/python-lsp-server@1a10b605aa731daba20e8c1827542b7145ad3059"
+  },
+  {
+   "buggy_commit": "1a10b605aa731daba20e8c1827542b7145ad3059",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "difference_exposing_tests": [
+    "test.plugins.test_definitions::test_definition_without_source_position"
+   ],
+   "environment_lock_sha256": "3db5e69879963f8345b12128290fa1264cd0bd2860d270ea6be9842b38c18cce",
+   "fixed_commit": "19fc07aa5dd444303cead45d841115a897252cd3",
+   "function_fingerprint": "4aae6b2e48a2c94125518dbe9c479545ed0bcc0a815a7ca9a2f394648cc25cc3",
+   "licence_spdx": "MIT",
+   "lineage": "python-lsp-server@19fc07aa5dd444303cead45d841115a897252cd3#4aae6b2e48a2c941",
+   "repository": "python-lsp/python-lsp-server",
+   "tag": "python-lsp__python-lsp-server_19fc07aa5dd444303cead45d841115a897252cd3",
+   "target": "pylsp_definitions",
+   "target_file": "pylsp/plugins/definition.py",
+   "target_id": "cand:python-lsp/python-lsp-server@19fc07aa5dd444303cead45d841115a897252cd3"
+  },
+  {
+   "buggy_commit": "4d8d103b52e3eaad6dc8e82c829fb98319782406",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "difference_exposing_tests": [
+    "tests.test_nesting.TestSeparatorUnicode::test_add_nested_instances",
+    "tests.test_nesting.TestSeparatorsDot::test_add_nested_instances",
+    "tests.test_nesting.TestSeparatorsSlash::test_add_nested_instances"
+   ],
+   "environment_lock_sha256": "e45b9644bbe3670e5e59d7042396bb6706764e2cd21ebef8763eac7adffff592",
+   "fixed_commit": "8f6ca5f4ca268dd154f0a968d3861afada10430b",
+   "function_fingerprint": "fb93d222735c0718298047f03d1ab78a6d3313406aa3fe080fd2fe4b91425bce",
+   "licence_spdx": "MIT",
+   "lineage": "transitions@8f6ca5f4ca268dd154f0a968d3861afada10430b#fb93d222735c0718",
+   "repository": "pytransitions/transitions",
+   "tag": "pytransitions__transitions_8f6ca5f4ca268dd154f0a968d3861afada10430b",
+   "target": "FunctionWrapper.add",
+   "target_file": "transitions/extensions/nesting.py",
+   "target_id": "cand:pytransitions/transitions@8f6ca5f4ca268dd154f0a968d3861afada10430b"
+  },
+  {
+   "buggy_commit": "018fd5512a2996d4d7cd0bf25e23cffbc8c81736",
+   "complexity": "simple",
+   "defect_family": "call_or_argument",
+   "difference_exposing_tests": [
+    "tests.test_core.TestTransitions::test_dispatch_with_error"
+   ],
+   "environment_lock_sha256": "1081f9ef0417e6b8989fe558b71a1a661a91bca356e1b4b57f648213978088a5",
+   "fixed_commit": "f970687f48f807dd5974f59c4d76abed2bd1e7bd",
+   "function_fingerprint": "be9e506761e173e36ae74f793e8e518076cc0f1e53bc3f1a4ed6bcbf5938ec5d",
+   "licence_spdx": "MIT",
+   "lineage": "transitions@f970687f48f807dd5974f59c4d76abed2bd1e7bd#be9e506761e173e3",
+   "repository": "pytransitions/transitions",
+   "tag": "pytransitions__transitions_f970687f48f807dd5974f59c4d76abed2bd1e7bd",
+   "target": "Machine.dispatch",
+   "target_file": "transitions/core.py",
+   "target_id": "cand:pytransitions/transitions@f970687f48f807dd5974f59c4d76abed2bd1e7bd"
+  },
+  {
+   "buggy_commit": "80266c5baaf5c3d4ba9df9e70e7cf736febd2a67",
+   "complexity": "complex",
+   "defect_family": "boundary_or_comparison",
+   "difference_exposing_tests": [
+    "tests.plotting.test_plotting::test_screenshot_scaled_restores_window"
+   ],
+   "environment_lock_sha256": "74d7db6d22cf2deef668db4ffa71f46d0d577b27ae4bf5a3bd11f04c2e256b05",
+   "fixed_commit": "631db08ed32f898ec8f59cbffa30cf80e9cbb1a3",
+   "function_fingerprint": "03c86327827412be9934f323a13b7be25c4d6cf629052a1befedaec78c162dc6",
+   "licence_spdx": "MIT",
+   "lineage": "pyvista@631db08ed32f898ec8f59cbffa30cf80e9cbb1a3#03c86327827412be",
+   "repository": "pyvista/pyvista",
+   "tag": "pyvista__pyvista_631db08ed32f898ec8f59cbffa30cf80e9cbb1a3",
+   "target": "run_image_filter",
+   "target_file": "pyvista/plotting/utilities/regression.py",
+   "target_id": "cand:pyvista/pyvista@631db08ed32f898ec8f59cbffa30cf80e9cbb1a3"
+  },
+  {
+   "buggy_commit": "96409c4c822388b7238410b2d232f6ec3fceb3e2",
+   "complexity": "complex",
+   "defect_family": "type_or_conversion",
+   "difference_exposing_tests": [
+    "tests.plotting.test_lookup_table::test_named_opacity_matching_n_values"
+   ],
+   "environment_lock_sha256": "a80381d763dee4b5df63faf2f50ffb11b6e552d928480fd5b88e6b53caf25fd3",
+   "fixed_commit": "eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116",
+   "function_fingerprint": "05280c9d4a76a8d86fbc43996f3512710ff1be15116d8a54d59232fb331f6b52",
+   "licence_spdx": "MIT",
+   "lineage": "pyvista@eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116#05280c9d4a76a8d8",
+   "repository": "pyvista/pyvista",
+   "tag": "pyvista__pyvista_eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116",
+   "target": "LookupTable.apply_opacity",
+   "target_file": "pyvista/plotting/lookup_table.py",
+   "target_id": "cand:pyvista/pyvista@eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116"
+  },
+  {
+   "buggy_commit": "5cb68204922cac06b18dd3587b92db05163a72be",
+   "complexity": "moderate",
+   "defect_family": "exception_handling",
+   "difference_exposing_tests": [
+    "tests.core.test_ipython_completion::test_allow_ipython_completion_without_guarded_eval"
+   ],
+   "environment_lock_sha256": "5b638c7612c8f020bae1d1358a697a621b292f68655a046236396c7e4fbeab6e",
+   "fixed_commit": "507e77ca880fdd34757989df7422e101595818a9",
+   "function_fingerprint": "e3cf9e170ac32ea2765b81080ba1c58708e8e6e12ef478a9187448ff51347143",
+   "licence_spdx": "MIT",
+   "lineage": "pyvista@507e77ca880fdd34757989df7422e101595818a9#e3cf9e170ac32ea2",
+   "repository": "pyvista/pyvista",
+   "tag": "pyvista__pyvista_507e77ca880fdd34757989df7422e101595818a9",
+   "target": "_allow_ipython_completion",
+   "target_file": "pyvista/core/utilities/misc.py",
+   "target_id": "cand:pyvista/pyvista@507e77ca880fdd34757989df7422e101595818a9"
+  },
+  {
+   "buggy_commit": "416def8edabffa1de32bcc6e796285d052bcf868",
+   "complexity": "complex",
+   "defect_family": "other_logic",
+   "difference_exposing_tests": [
+    "tests.test_detect_env::test_detect_active_interpreter_continue_when_other_detections_fail"
+   ],
+   "environment_lock_sha256": "f08d9e315e8ffa4b198e8cbbd08eab8cabd98c0420fb54df840ab3ec5cb86441",
+   "fixed_commit": "214e9d48069909b7ff0fa6492632084b2fc6080d",
+   "function_fingerprint": "9fdb05b69a461c11bc45aaaa3556528d3be580a33d978878248444d0b365f05d",
+   "licence_spdx": "MIT",
+   "lineage": "pipdeptree@214e9d48069909b7ff0fa6492632084b2fc6080d#9fdb05b69a461c11",
+   "repository": "tox-dev/pipdeptree",
+   "tag": "tox-dev__pipdeptree_214e9d48069909b7ff0fa6492632084b2fc6080d",
+   "target": "detect_active_interpreter",
+   "target_file": "src/pipdeptree/_detect_env.py",
+   "target_id": "cand:tox-dev/pipdeptree@214e9d48069909b7ff0fa6492632084b2fc6080d"
+  },
+  {
+   "buggy_commit": "6667dc4f78cdf2e08c1f7e2eb95568fcbc370977",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "difference_exposing_tests": [
+    "tests.utils.test_utils::test_sanitize_polars_datetime_timezone_preserved"
+   ],
+   "environment_lock_sha256": "f3ce14804a4dd9986d454721801f913b98d362dadadf88f1d460ce6febcfb43b",
+   "fixed_commit": "6c0bf289faa3c5f56a3c731cf864edb1d495c957",
+   "function_fingerprint": "96d7f87312e20280553111ffd7220530d1f0797b90ebbc97647d185273190ddb",
+   "licence_spdx": "BSD-3-Clause",
+   "lineage": "altair@6c0bf289faa3c5f56a3c731cf864edb1d495c957#96d7f87312e20280",
+   "repository": "vega/altair",
+   "tag": "vega__altair_6c0bf289faa3c5f56a3c731cf864edb1d495c957",
+   "target": "sanitize_narwhals_dataframe",
+   "target_file": "altair/utils/core.py",
+   "target_id": "cand:vega/altair@6c0bf289faa3c5f56a3c731cf864edb1d495c957"
+  }
+ ],
+ "targets_sha256": "e8487453f85ca670026373c0e8f15653edcc12307956993eded9d535a8797eae",
+ "use": "confirmation only; never training, replay, relearning, tuning, checkpoint selection or repair"
+}

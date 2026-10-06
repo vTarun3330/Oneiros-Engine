@@ -8,6 +8,17 @@ target's prepared environment and the same pytest invocation, plus a tiny tracin
 (sys.setprofile) that records whether the target function's code object (name + target file)
 is entered. ``reach_verified``: entered on BOTH revisions while the selected tests run.
 
+v2 (measurement defects found on r4; generic, applied to every target, outcome-independent):
+- test ids ``pkg.mod.Cls::test[p]`` resolve to the longest dotted prefix that is an existing
+  ``.py`` file (v1 turned class names into file paths -> pytest usage error, exit 4);
+- a run whose pytest exit code is not 0/1 (usage error, no tests collected, crash) is
+  ``unmeasured`` (infrastructure), never ``not_reached``;
+- the tracing plugin survives interpreter shutdown (v1 raised when module globals were None)
+  and writes its result the moment the target is entered (v3: a project plugin crashing in
+  its own session teardown, e.g. pytest_pyvista with the cache provider disabled, lost it);
+- build-generated files missing from a fresh worktree (e.g. a hatch-vcs ``_version.py``) are
+  copied from the target's prepared views, as qualification did.
+
     bash scripts/wsl_isolated.sh bash scripts/wsl_native_python.sh scripts/v27_native_reach_wsl.py \
         --manifest M --prep DIR --out FILE
 """
@@ -32,21 +43,30 @@ PLUGIN = '''
 import json, os, sys
 _NAME = os.environ["ONEIROS_REACH_NAME"]
 _FILE = os.environ["ONEIROS_REACH_FILE"]
+_OUT = os.environ["ONEIROS_REACH_OUT"]
 _HIT = {"entered": False}
-def _prof(frame, event, arg):
-    if event == "call" and not _HIT["entered"]:
-        co = frame.f_code
-        if co.co_name == _NAME and co.co_filename.replace("\\\\", "/").endswith(_FILE):
-            _HIT["entered"] = True
+def _save(_hit=_HIT, _out=_OUT, _dump=json.dump):
+    with open(_out, "w") as fh:
+        _dump(_hit, fh)
+def _prof(frame, event, arg, _hit=_HIT, _name=_NAME, _file=_FILE, _save=_save):
+    try:
+        if event == "call" and not _hit["entered"]:
+            co = frame.f_code
+            if co.co_name == _name and co.co_filename.replace("\\\\", "/").endswith(_file):
+                _hit["entered"] = True
+                _save()          # recorded at once: a later plugin crash cannot lose it
+    except Exception:
+        pass
     return None
 def pytest_configure(config):
     sys.setprofile(_prof)
     import threading
     threading.setprofile(_prof)
+def pytest_sessionstart(session):
+    _save()
 def pytest_unconfigure(config):
     sys.setprofile(None)
-    with open(os.environ["ONEIROS_REACH_OUT"], "w") as fh:
-        json.dump(_HIT, fh)
+    _save()
 '''
 
 
@@ -55,13 +75,34 @@ def git(repo: Path, *args) -> subprocess.CompletedProcess:
                           timeout=900)
 
 
-def pytest_ids(test_ids: list) -> list:
-    """``pkg.mod::Cls::test`` -> ``pkg/mod.py::Cls::test``."""
+def pytest_ids(test_ids: list, checkout: Path) -> list:
+    """``pkg.mod.Cls::test[p]`` -> ``pkg/mod.py::Cls::test[p]`` (longest existing module)."""
     out = []
     for tid in test_ids:
-        mod, _, rest = tid.partition("::")
-        out.append(mod.replace(".", "/") + ".py" + ("::" + rest if rest else ""))
+        dotted, _, rest = tid.partition("::")
+        parts = dotted.split(".")
+        for cut in range(len(parts), 0, -1):
+            if (checkout / ("/".join(parts[:cut]) + ".py")).is_file():
+                break
+        else:
+            cut = len(parts)
+        node = "::".join(["/".join(parts[:cut]) + ".py", *parts[cut:], *([rest] if rest else [])])
+        out.append(node)
     return out
+
+
+def copy_generated(view: Path, checkout: Path) -> list:
+    """Files the prepared view has but the fresh worktree lacks (build-generated only)."""
+    copied = []
+    if view.is_dir():
+        for src in view.rglob("*.py"):
+            rel = src.relative_to(view)
+            dst = checkout / rel
+            if not dst.exists():
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(src, dst)
+                copied.append(rel.as_posix())
+    return sorted(copied)
 
 
 def run_reach(python: str, checkout: Path, root_rel: str, tests: list, name: str,
@@ -79,8 +120,9 @@ def run_reach(python: str, checkout: Path, root_rel: str, tests: list, name: str
                            "oneiros_reach_plugin", "-q", "-o", "addopts=", *tests],
                           cwd=checkout, env=env, capture_output=True, text=True, timeout=900)
     hit = json.loads(out.read_text()) if out.exists() else {"entered": None}
-    return {"exit": done.returncode, "entered": hit.get("entered"),
-            "tail": (done.stdout + done.stderr)[-300:] if hit.get("entered") is None else None}
+    entered = hit.get("entered") if done.returncode in (0, 1) else None   # tests did not run
+    return {"exit": done.returncode, "entered": entered,
+            "tail": (done.stdout + done.stderr)[-300:] if entered is None else None}
 
 
 def main(argv=None) -> int:
@@ -125,9 +167,15 @@ def main(argv=None) -> int:
                 root_rel = import_root(t["target_file"])
                 rel_file = t["target_file"][len(root_rel) + 1:] if root_rel else t["target_file"]
                 name = rec["qualname"].split(".")[-1]
+                views = Path(rec["env_dir"]).parent / "views"
+                generated = {}
+                for label in ("fixed", "buggy"):
+                    dest = work / label / root_rel if root_rel else work / label
+                    generated[label] = copy_generated(views / label, dest)
                 for label in ("fixed", "buggy"):
                     res[label] = run_reach(rec["python_path"], work / label, root_rel,
-                                           pytest_ids(t["difference_exposing_tests"]), name,
+                                           pytest_ids(t["difference_exposing_tests"],
+                                                      work / label), name,
                                            rel_file, work / f"r_{label}", label)
             except Exception as exc:                      # noqa: BLE001 - recorded
                 rows.append({**row, "reach": f"runner_error:{type(exc).__name__}"})
@@ -137,7 +185,10 @@ def main(argv=None) -> int:
                     git(repo, "worktree", "remove", "--force", str(work / label))
                 git(repo, "worktree", "prune")
             ok = res["fixed"]["entered"] is True and res["buggy"]["entered"] is True
-            rows.append({**row, "reach": "reach_verified" if ok else "not_reached",
+            measured = all(v["entered"] is not None for v in res.values())
+            rows.append({**row, "reach": "reach_verified" if ok else
+                         "not_reached" if measured else "unmeasured",
+                         "generated_files_copied": generated,
                          "entered": {k: v["entered"] for k, v in res.items()},
                          "exit": {k: v["exit"] for k, v in res.items()},
                          "detail": {k: v["tail"] for k, v in res.items() if v["tail"]} or None})

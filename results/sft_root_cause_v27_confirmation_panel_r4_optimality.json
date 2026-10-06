@@ -1,0 +1,105 @@
+{
+ "admissible_pool": 36,
+ "exact_maximum_repositories": 15,
+ "exact_maximum_targets": 34,
+ "frozen_selection_order": null,
+ "gate_minimum": {
+  "complexity_strata": [
+   "simple",
+   "moderate",
+   "complex"
+  ],
+  "defect_families": 4,
+  "max_per_repository": 8,
+  "repositories": 10,
+  "targets": 80
+ },
+ "method": "exact: per-repository exhaustive maximum of distinct-fingerprint, distinct-lineage subsets under the cap; repositories are independent",
+ "panel": {
+  "path": "results/sft_root_cause_v27_confirmation_panel_r4.json",
+  "sha256": "432965c0c0a89c505d76b3852c4b8714b99aae1d247e2c3d1f818cd0984c4317"
+ },
+ "per_repository": {
+  "boxed/mutmut": {
+   "admissible": 4,
+   "maximum": 4,
+   "selected": 4
+  },
+  "coleifer/peewee": {
+   "admissible": 4,
+   "maximum": 4,
+   "selected": 4
+  },
+  "fsspec/filesystem_spec": {
+   "admissible": 10,
+   "maximum": 8,
+   "selected": 8
+  },
+  "hynek/stamina": {
+   "admissible": 1,
+   "maximum": 1,
+   "selected": 1
+  },
+  "jpadilla/pyjwt": {
+   "admissible": 2,
+   "maximum": 2,
+   "selected": 2
+  },
+  "kozea/weasyprint": {
+   "admissible": 2,
+   "maximum": 2,
+   "selected": 2
+  },
+  "marshmallow-code/apispec": {
+   "admissible": 1,
+   "maximum": 1,
+   "selected": 1
+  },
+  "prompt-toolkit/python-prompt-toolkit": {
+   "admissible": 1,
+   "maximum": 1,
+   "selected": 1
+  },
+  "pymysql/pymysql": {
+   "admissible": 1,
+   "maximum": 1,
+   "selected": 1
+  },
+  "pypa/pipx": {
+   "admissible": 1,
+   "maximum": 1,
+   "selected": 1
+  },
+  "python-lsp/python-lsp-server": {
+   "admissible": 2,
+   "maximum": 2,
+   "selected": 2
+  },
+  "pytransitions/transitions": {
+   "admissible": 2,
+   "maximum": 2,
+   "selected": 2
+  },
+  "pyvista/pyvista": {
+   "admissible": 3,
+   "maximum": 3,
+   "selected": 3
+  },
+  "tox-dev/pipdeptree": {
+   "admissible": 1,
+   "maximum": 1,
+   "selected": 1
+  },
+  "vega/altair": {
+   "admissible": 1,
+   "maximum": 1,
+   "selected": 1
+  }
+ },
+ "schema_version": "oneiros_v27_panel_optimality_v1",
+ "scope_note": "infeasibility holds for this materialized r4 pool only; it says nothing about the ceiling of unmaterialized repositories",
+ "selected_targets": 34,
+ "selection_exclusions": 2,
+ "selection_is_optimal": true,
+ "target_80_feasible_in_materialized_pool": false
+}
