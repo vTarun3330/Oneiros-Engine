@@ -1,0 +1,879 @@
+{
+ "common_subset_ids": [
+  "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1",
+  "cand:hynek/stamina@b09d541fdff686970c166faac27f388b841aeca2",
+  "cand:jpadilla/pyjwt@171062d2d734315272a901100aa4b109f2fc3c19",
+  "cand:jpadilla/pyjwt@7bf32526738fe837387bdedd4849a4a525c33a79",
+  "cand:prompt-toolkit/python-prompt-toolkit@75eca874f8b3abbe7643d075711917504f3e4f6b"
+ ],
+ "common_subset_ids_sha256": "25a63d56287e1325d6e122797fa4c870472cfa91f32d4206eb5f4f812a44d200",
+ "composition": {
+  "complexity": {
+   "complex": 2,
+   "moderate": 3
+  },
+  "defect_family": {
+   "exception_handling": 3,
+   "none_or_empty_handling": 2
+  },
+  "max_per_repository": 2,
+  "per_repository": {
+   "boxed/mutmut": 1,
+   "hynek/stamina": 1,
+   "jpadilla/pyjwt": 2,
+   "prompt-toolkit/python-prompt-toolkit": 1
+  },
+  "repositories": 4,
+  "targets": 5
+ },
+ "definition": "frozen panel AND native-runnable (model-free control, deterministic) AND Atheris-eligible (same adapter plan on both revisions, instrumentation, deterministic seed invocation) AND no environment/harness failure",
+ "exclusions_by_class_and_reason": [
+  {
+   "class": "adapter",
+   "count": 4,
+   "reason": "adapter_unsupported:receiver_constructor:unsupported_parameter"
+  },
+  {
+   "class": "adapter",
+   "count": 8,
+   "reason": "adapter_unsupported:receiver_constructor:variadic_signature"
+  },
+  {
+   "class": "adapter",
+   "count": 1,
+   "reason": "adapter_unsupported:unsupported_parameter:box"
+  },
+  {
+   "class": "adapter",
+   "count": 1,
+   "reason": "adapter_unsupported:unsupported_parameter:config"
+  },
+  {
+   "class": "adapter",
+   "count": 1,
+   "reason": "adapter_unsupported:unsupported_parameter:context"
+  },
+  {
+   "class": "adapter",
+   "count": 1,
+   "reason": "adapter_unsupported:unsupported_parameter:data"
+  },
+  {
+   "class": "adapter",
+   "count": 1,
+   "reason": "adapter_unsupported:unsupported_parameter:field"
+  },
+  {
+   "class": "adapter",
+   "count": 1,
+   "reason": "adapter_unsupported:unsupported_parameter:model"
+  },
+  {
+   "class": "adapter",
+   "count": 1,
+   "reason": "adapter_unsupported:unsupported_parameter:node"
+  },
+  {
+   "class": "adapter",
+   "count": 1,
+   "reason": "adapter_unsupported:unsupported_parameter:obj"
+  },
+  {
+   "class": "adapter",
+   "count": 1,
+   "reason": "adapter_unsupported:unsupported_parameter:resource_path"
+  },
+  {
+   "class": "adapter",
+   "count": 1,
+   "reason": "adapter_unsupported:unsupported_parameter:root"
+  },
+  {
+   "class": "policy",
+   "count": 5,
+   "reason": "native_control_failed:sandbox_policy_blocks_ctypes_dlopen"
+  },
+  {
+   "class": "target",
+   "count": 1,
+   "reason": "revision_load_mismatch:adapter_unsupported:unsupported_parameter"
+  },
+  {
+   "class": "target",
+   "count": 1,
+   "reason": "target_terminates_interpreter: target raises SystemExit (no virtual environment inside the sandbox), so every replay process exits without an outcome; identical on both revisions and both repetitions; the v5 harness catches Exception only (frozen)"
+  }
+ ],
+ "fuzzing": false,
+ "inputs": {
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/contract.json": "8b9d90d84566e18d740659ac53d806ce186f886e7b132cfdaf5d5262561294a3",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/eligibility.jsonl": "4f5aa643ed3cd37806aaba76dbab1adac3ab3e82a1b41ddd23aa2c6251175a28",
+  "results/sft_root_cause/v27_confirmation/phase6/native_control.jsonl": "0f11878a04a4e4f0afc88209b988a98f860654fa5f3738fa16cfb61c9c5a3cb0",
+  "results/sft_root_cause/v27_full_suite_receipt_ad9df21.json": "d0d47b75b1ef56197fcfadc9d4420245a9a7187606d1d65750e8b52d07cfb52c",
+  "results/sft_root_cause_v27_confirmation_acquisition_report_r4.json": "2cb23dc5c9b4e6d429b04ff2bc9982d0ab683e5b644e13d08dd01c0049522aa7",
+  "results/sft_root_cause_v27_confirmation_panel_r4.json": "432965c0c0a89c505d76b3852c4b8714b99aae1d247e2c3d1f818cd0984c4317",
+  "results/sft_root_cause_v27_confirmation_phase4_gate_r4.json": "931a03ff61b08271030da9d98762a4a8f16fb2f3c314d1151e5da4526eb409b4"
+ },
+ "model": false,
+ "model_independent": true,
+ "panel_policy": "the frozen panel remains 34 targets; 29 native-runnable and the common subset are model-independent views of it, never redefinitions",
+ "power": {
+  "assumed_discordance": 0.2668,
+  "common_subset": {
+   "mde_pp_80pct_power_alpha_0.01_hist_discordance": null,
+   "mde_pp_80pct_power_alpha_0.05_hist_discordance": null,
+   "n": 5,
+   "significance_attainable_at_0.01_gate": false,
+   "significance_attainable_at_0.05": false,
+   "smallest_attainable_two_sided_p": 0.0625
+  },
+  "discordance_source": "historical locked comparison (114+88)/757",
+  "frozen_panel": {
+   "mde_pp_80pct_power_alpha_0.01_hist_discordance": null,
+   "mde_pp_80pct_power_alpha_0.05_hist_discordance": 24.4,
+   "n": 34,
+   "significance_attainable_at_0.01_gate": true,
+   "significance_attainable_at_0.05": true,
+   "smallest_attainable_two_sided_p": 1.1641532182693481e-10
+  },
+  "native_runnable": {
+   "mde_pp_80pct_power_alpha_0.01_hist_discordance": null,
+   "mde_pp_80pct_power_alpha_0.05_hist_discordance": 26.3,
+   "n": 29,
+   "significance_attainable_at_0.01_gate": true,
+   "significance_attainable_at_0.05": true,
+   "smallest_attainable_two_sided_p": 3.725290298461914e-09
+  },
+  "test": "two-sided exact McNemar on paired per-target kill outcomes"
+ },
+ "schema_version": "oneiros_v27_common_subset_v1",
+ "source_identity": {
+  "full_suite_receipt": {
+   "path": "results/sft_root_cause/v27_full_suite_receipt_ad9df21.json",
+   "sha256": "d0d47b75b1ef56197fcfadc9d4420245a9a7187606d1d65750e8b52d07cfb52c"
+  },
+  "head_at_probe": "ea03fad73319c8b3df7b570de01fe3a8a2d3eadc"
+ },
+ "status": "FROZEN_PROPOSED_COMMON_SUBSET",
+ "targets": [
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "9f672beb93d91bb610c787421f42d0345388e9f7",
+   "complexity": "complex",
+   "defect_family": "boundary_or_comparison",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/boxed__mutmut_385449458ef3d89ba4ac1f50e08e4b088ce9a634.json",
+    "sha256": "c9b7d31647703442cfceb31cc3a936fcd539b2255a2677e5f2ab43d081122b85"
+   },
+   "exclusion_reason": "adapter_unsupported:unsupported_parameter:node:BaseString",
+   "failure_class": "adapter",
+   "fixed_commit": "385449458ef3d89ba4ac1f50e08e4b088ce9a634",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "boxed/mutmut",
+   "target_id": "cand:boxed/mutmut@385449458ef3d89ba4ac1f50e08e4b088ce9a634"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "c3a8f4b402b01873cc788774c0ce15d2a1cebb86",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/boxed__mutmut_4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8.json",
+    "sha256": "dfec5bcf0ac67e2b94aea9b4250b5dc72d2a21d26f7334be7e45501bd36fa48c"
+   },
+   "exclusion_reason": "adapter_unsupported:receiver_constructor:unsupported_parameter:ids:set",
+   "failure_class": "adapter",
+   "fixed_commit": "4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "boxed/mutmut",
+   "target_id": "cand:boxed/mutmut@4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8"
+  },
+  {
+   "atheris_deterministic": true,
+   "atheris_eligible": true,
+   "atheris_status": "eligible",
+   "buggy_commit": "107b5a3b4bc851f5d2bbc98f58845a7b7ccfb9c6",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/boxed__mutmut_5b8721f51479ea909d919ac495af69f6040a64d1.json",
+    "sha256": "a6071461df92e30a116b14c4aa6be6ae6cc29e15220d359554f6c95f8f9eb904"
+   },
+   "exclusion_reason": null,
+   "failure_class": null,
+   "fixed_commit": "5b8721f51479ea909d919ac495af69f6040a64d1",
+   "in_common_subset": true,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "boxed/mutmut",
+   "target_id": "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "01ed58b61bfc99d0219d3b616e3efffc9ddc0d79",
+   "complexity": "complex",
+   "defect_family": "exception_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/boxed__mutmut_dc58270d5234752e22247f814431750eafcf6e5f.json",
+    "sha256": "1e57eaec386c08bb718e0abe8b531a1426ea1689d962a3dbe60151854c62e9f7"
+   },
+   "exclusion_reason": "adapter_unsupported:receiver_constructor:unsupported_parameter:operators:Sequence",
+   "failure_class": "adapter",
+   "fixed_commit": "dc58270d5234752e22247f814431750eafcf6e5f",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "boxed/mutmut",
+   "target_id": "cand:boxed/mutmut@dc58270d5234752e22247f814431750eafcf6e5f"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "90bd5c4b21c4633788eb78b26f91a8de35a6c4e3",
+   "complexity": "complex",
+   "defect_family": "call_or_argument",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/coleifer__peewee_47db8f79337eb7385854649ef3c9267ed508838b.json",
+    "sha256": "6bf71446ff880bc9294fb2204c6baceb6b8cc1a3230f3997bc5d8344e0eb8acc"
+   },
+   "exclusion_reason": "adapter_unsupported:unsupported_parameter:model:None",
+   "failure_class": "adapter",
+   "fixed_commit": "47db8f79337eb7385854649ef3c9267ed508838b",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "coleifer/peewee",
+   "target_id": "cand:coleifer/peewee@47db8f79337eb7385854649ef3c9267ed508838b"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "7edbd3243e68b10abf10d8ded53fb323eb9239dc",
+   "complexity": "simple",
+   "defect_family": "other_logic",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/coleifer__peewee_914f4fc24002fb6f9ad0f2763b148a5ac63545a0.json",
+    "sha256": "3d269adf4d57e25807fa2b482260c16a590b7deb964422299693003eb4e395bc"
+   },
+   "exclusion_reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+   "failure_class": "adapter",
+   "fixed_commit": "914f4fc24002fb6f9ad0f2763b148a5ac63545a0",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "coleifer/peewee",
+   "target_id": "cand:coleifer/peewee@914f4fc24002fb6f9ad0f2763b148a5ac63545a0"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "f8ff6af96cd8b0d3a303a5ec1d514b59837178d6",
+   "complexity": "complex",
+   "defect_family": "call_or_argument",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/coleifer__peewee_c511fb137f7b3d91436aabc5a7963ada217147ec.json",
+    "sha256": "2ce62c0cc6c15acae52b15666d8193ea4f0853484326bfdb112aa7b80222e6e6"
+   },
+   "exclusion_reason": "adapter_unsupported:receiver_constructor:unsupported_parameter:name:None",
+   "failure_class": "adapter",
+   "fixed_commit": "c511fb137f7b3d91436aabc5a7963ada217147ec",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "coleifer/peewee",
+   "target_id": "cand:coleifer/peewee@c511fb137f7b3d91436aabc5a7963ada217147ec"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "c12b753156e36b1cf75606290bb240b4748d55d5",
+   "complexity": "moderate",
+   "defect_family": "other_logic",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/coleifer__peewee_f5e439d3eaa3aecc5621c6f121df854086eec008.json",
+    "sha256": "88174134621668db5cd5cea910c6ce26146a46ae49f72e08c1b600e243ba051e"
+   },
+   "exclusion_reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+   "failure_class": "adapter",
+   "fixed_commit": "f5e439d3eaa3aecc5621c6f121df854086eec008",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "coleifer/peewee",
+   "target_id": "cand:coleifer/peewee@f5e439d3eaa3aecc5621c6f121df854086eec008"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "2818611ab2a197cb3d560d50be09fdb5fbff775d",
+   "complexity": "complex",
+   "defect_family": "call_or_argument",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/fsspec__filesystem_spec_073aac840748ab95bea39468306123268e316184.json",
+    "sha256": "4e40e4eb1c7dfae5d08a656066e5cc2cf163634cc575c694131cb29de2cc776f"
+   },
+   "exclusion_reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+   "failure_class": "adapter",
+   "fixed_commit": "073aac840748ab95bea39468306123268e316184",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "fsspec/filesystem_spec",
+   "target_id": "cand:fsspec/filesystem_spec@073aac840748ab95bea39468306123268e316184"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "669de5e157cd3ce3f9bf71c7bceb7bb31c8c7a55",
+   "complexity": "complex",
+   "defect_family": "boundary_or_comparison",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/fsspec__filesystem_spec_1724d540ee917f926f93b32b6580e637b3777adc.json",
+    "sha256": "c9d1d2d60ba1226310d5984739d9a5e272207e5d4d20e00ce2a3b4a2f29fcd41"
+   },
+   "exclusion_reason": "revision_load_mismatch:adapter_unsupported:unsupported_parameter:starts:list",
+   "failure_class": "target",
+   "fixed_commit": "1724d540ee917f926f93b32b6580e637b3777adc",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "fsspec/filesystem_spec",
+   "target_id": "cand:fsspec/filesystem_spec@1724d540ee917f926f93b32b6580e637b3777adc"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "c0baa49b9c38ee412031ee426121c24a7c2262a9",
+   "complexity": "moderate",
+   "defect_family": "other_logic",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/fsspec__filesystem_spec_1da4c7132a720fe1059d94774b46d6cda625b453.json",
+    "sha256": "8a5d65b27fa74549b8b52e08b8164ce2a8b7050828dd0a97698b32c6296e7d07"
+   },
+   "exclusion_reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+   "failure_class": "adapter",
+   "fixed_commit": "1da4c7132a720fe1059d94774b46d6cda625b453",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "fsspec/filesystem_spec",
+   "target_id": "cand:fsspec/filesystem_spec@1da4c7132a720fe1059d94774b46d6cda625b453"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "86438783f93b1398ef245b92f0e6063b445b611c",
+   "complexity": "complex",
+   "defect_family": "other_logic",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/fsspec__filesystem_spec_5eec9f9353b8d517d296428441a84fa26e9a6438.json",
+    "sha256": "512cf38610319f5b93a5b541da9d53c85810761733c23e3555030705a2ddb42a"
+   },
+   "exclusion_reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+   "failure_class": "adapter",
+   "fixed_commit": "5eec9f9353b8d517d296428441a84fa26e9a6438",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "fsspec/filesystem_spec",
+   "target_id": "cand:fsspec/filesystem_spec@5eec9f9353b8d517d296428441a84fa26e9a6438"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "073aac840748ab95bea39468306123268e316184",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/fsspec__filesystem_spec_652325d9b9459286a5b72c7e6228b061fb29827c.json",
+    "sha256": "dacde8152f50b8da404c07ca28cdae53a826223aa539dfa1f6b3fe885c70db4c"
+   },
+   "exclusion_reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+   "failure_class": "adapter",
+   "fixed_commit": "652325d9b9459286a5b72c7e6228b061fb29827c",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "fsspec/filesystem_spec",
+   "target_id": "cand:fsspec/filesystem_spec@652325d9b9459286a5b72c7e6228b061fb29827c"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "c028e90fd180fef858a2b8d370c5d27efba5c3be",
+   "complexity": "complex",
+   "defect_family": "other_logic",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/fsspec__filesystem_spec_933e992fc8d3247606b6d01abd22673989e5393c.json",
+    "sha256": "19279372f4e7af79864fc81775b410dd1e0ccb908cf824ef03ae1079271ed95b"
+   },
+   "exclusion_reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+   "failure_class": "adapter",
+   "fixed_commit": "933e992fc8d3247606b6d01abd22673989e5393c",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "fsspec/filesystem_spec",
+   "target_id": "cand:fsspec/filesystem_spec@933e992fc8d3247606b6d01abd22673989e5393c"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "not_probed",
+   "buggy_commit": "39cbfb152ecded83b19a6a24ed52f055f5ad8bb8",
+   "complexity": "moderate",
+   "defect_family": "other_logic",
+   "evidence": null,
+   "exclusion_reason": "native_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+   "failure_class": "policy",
+   "fixed_commit": "ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": false,
+   "repository": "fsspec/filesystem_spec",
+   "target_id": "cand:fsspec/filesystem_spec@ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "not_probed",
+   "buggy_commit": "6ae5db8d96f4e47d400c3a2296e24aff08ed469c",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "evidence": null,
+   "exclusion_reason": "native_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+   "failure_class": "policy",
+   "fixed_commit": "ee30764e64dbd338f7494a45b30b1ece1465386f",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": false,
+   "repository": "fsspec/filesystem_spec",
+   "target_id": "cand:fsspec/filesystem_spec@ee30764e64dbd338f7494a45b30b1ece1465386f"
+  },
+  {
+   "atheris_deterministic": true,
+   "atheris_eligible": true,
+   "atheris_status": "eligible",
+   "buggy_commit": "c5c6e848540d64e3e679c78ecf455ffcd9489f76",
+   "complexity": "moderate",
+   "defect_family": "exception_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/hynek__stamina_b09d541fdff686970c166faac27f388b841aeca2.json",
+    "sha256": "c1d33c18ca1c9d009b177d84c2a4d0de9aae3b006c5a118ec535188c9f3e84e3"
+   },
+   "exclusion_reason": null,
+   "failure_class": null,
+   "fixed_commit": "b09d541fdff686970c166faac27f388b841aeca2",
+   "in_common_subset": true,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "hynek/stamina",
+   "target_id": "cand:hynek/stamina@b09d541fdff686970c166faac27f388b841aeca2"
+  },
+  {
+   "atheris_deterministic": true,
+   "atheris_eligible": true,
+   "atheris_status": "eligible",
+   "buggy_commit": "c9d4d5375bf464ef363506fed9eb6e7f33217ab6",
+   "complexity": "moderate",
+   "defect_family": "exception_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/jpadilla__pyjwt_171062d2d734315272a901100aa4b109f2fc3c19.json",
+    "sha256": "a18df6b347fced2eb316ef673290cb7bac2de92f72d7d726d7f711e33c1f5db1"
+   },
+   "exclusion_reason": null,
+   "failure_class": null,
+   "fixed_commit": "171062d2d734315272a901100aa4b109f2fc3c19",
+   "in_common_subset": true,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "jpadilla/pyjwt",
+   "target_id": "cand:jpadilla/pyjwt@171062d2d734315272a901100aa4b109f2fc3c19"
+  },
+  {
+   "atheris_deterministic": true,
+   "atheris_eligible": true,
+   "atheris_status": "eligible",
+   "buggy_commit": "1d41a6478e1562e68ff667fcd703356acf085f68",
+   "complexity": "complex",
+   "defect_family": "exception_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/jpadilla__pyjwt_7bf32526738fe837387bdedd4849a4a525c33a79.json",
+    "sha256": "2c0a46853338cde8a3f183deadd47362c479e1a54f98bc4178c3a266fb19ae08"
+   },
+   "exclusion_reason": null,
+   "failure_class": null,
+   "fixed_commit": "7bf32526738fe837387bdedd4849a4a525c33a79",
+   "in_common_subset": true,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "jpadilla/pyjwt",
+   "target_id": "cand:jpadilla/pyjwt@7bf32526738fe837387bdedd4849a4a525c33a79"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "4041083e9d9aa5d8262fd402ebf223b00d82f372",
+   "complexity": "complex",
+   "defect_family": "boundary_or_comparison",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/kozea__weasyprint_0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2.json",
+    "sha256": "f8047f20250c8eadcd464aa75289a07134057200211f52e798434566ef26d659"
+   },
+   "exclusion_reason": "adapter_unsupported:unsupported_parameter:context:None",
+   "failure_class": "adapter",
+   "fixed_commit": "0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "kozea/weasyprint",
+   "target_id": "cand:kozea/weasyprint@0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "41d4fb63a7f041904d4cf68a790017258998f915",
+   "complexity": "complex",
+   "defect_family": "other_logic",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/kozea__weasyprint_d4d5a2a5a5e99afee8b8302ffab1265013f68cc1.json",
+    "sha256": "150be2ebfe04a0c9f1b429acfe7cd841c3ef8106314b14ab93aa33fdecca0e49"
+   },
+   "exclusion_reason": "adapter_unsupported:unsupported_parameter:box:None",
+   "failure_class": "adapter",
+   "fixed_commit": "d4d5a2a5a5e99afee8b8302ffab1265013f68cc1",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "kozea/weasyprint",
+   "target_id": "cand:kozea/weasyprint@d4d5a2a5a5e99afee8b8302ffab1265013f68cc1"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "af1755fe9c358fbb402b38a9612f3c8fd0daa1ba",
+   "complexity": "complex",
+   "defect_family": "boundary_or_comparison",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/marshmallow-code__apispec_f767e7522fd8c4280f1b21341f61476c7fe7e54e.json",
+    "sha256": "76285f1a04146ebc694247d5388f6ef19d4900c506faf8fbf8c3aed66098c853"
+   },
+   "exclusion_reason": "adapter_unsupported:unsupported_parameter:field:None",
+   "failure_class": "adapter",
+   "fixed_commit": "f767e7522fd8c4280f1b21341f61476c7fe7e54e",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "marshmallow-code/apispec",
+   "target_id": "cand:marshmallow-code/apispec@f767e7522fd8c4280f1b21341f61476c7fe7e54e"
+  },
+  {
+   "atheris_deterministic": true,
+   "atheris_eligible": true,
+   "atheris_status": "eligible",
+   "buggy_commit": "d8adbe9bfcf5f7e95b015d8ab12e2985b9a7822b",
+   "complexity": "moderate",
+   "defect_family": "none_or_empty_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/prompt-toolkit__python-prompt-toolkit_75eca874f8b3abbe7643d075711917504f3e4f6b.json",
+    "sha256": "e5d821776d30e9c060c744b25f370b1861a87d1da0ab7aaf4dd87f822143b6f4"
+   },
+   "exclusion_reason": null,
+   "failure_class": null,
+   "fixed_commit": "75eca874f8b3abbe7643d075711917504f3e4f6b",
+   "in_common_subset": true,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "prompt-toolkit/python-prompt-toolkit",
+   "target_id": "cand:prompt-toolkit/python-prompt-toolkit@75eca874f8b3abbe7643d075711917504f3e4f6b"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "0de7a22bb8b56a2e0860309e1c95ad6cb6053f4f",
+   "complexity": "complex",
+   "defect_family": "boundary_or_comparison",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/pymysql__pymysql_34f267684f8cdfa0923fe6be4a990efa0cfda015.json",
+    "sha256": "dbf2ec1aa18c3cc069f7d13da66764cd80ba724c9e25532f70b5815e11840c51"
+   },
+   "exclusion_reason": "adapter_unsupported:unsupported_parameter:obj:None",
+   "failure_class": "adapter",
+   "fixed_commit": "34f267684f8cdfa0923fe6be4a990efa0cfda015",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "pymysql/pymysql",
+   "target_id": "cand:pymysql/pymysql@34f267684f8cdfa0923fe6be4a990efa0cfda015"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "68940187711937229188b29e2e3f6f1863a07dd1",
+   "complexity": "complex",
+   "defect_family": "exception_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/pypa__pipx_c8b1893db865ad581774a8aa8f467d7926ca1d88.json",
+    "sha256": "fb2babf501838416b2b12d1decd8d8172e8121b2cb8e56cfd0e9abe6c542ce23"
+   },
+   "exclusion_reason": "adapter_unsupported:unsupported_parameter:resource_path:Path",
+   "failure_class": "adapter",
+   "fixed_commit": "c8b1893db865ad581774a8aa8f467d7926ca1d88",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "pypa/pipx",
+   "target_id": "cand:pypa/pipx@c8b1893db865ad581774a8aa8f467d7926ca1d88"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "1a10b605aa731daba20e8c1827542b7145ad3059",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/python-lsp__python-lsp-server_19fc07aa5dd444303cead45d841115a897252cd3.json",
+    "sha256": "0ba0bd0cb315a5882503e8d4ad561a9a08c8fc0dc94992f4d1584b9c684a8311"
+   },
+   "exclusion_reason": "adapter_unsupported:unsupported_parameter:config:Config",
+   "failure_class": "adapter",
+   "fixed_commit": "19fc07aa5dd444303cead45d841115a897252cd3",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "python-lsp/python-lsp-server",
+   "target_id": "cand:python-lsp/python-lsp-server@19fc07aa5dd444303cead45d841115a897252cd3"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "e088ce349bfcc3f7b51bd194c0af52dffa667950",
+   "complexity": "complex",
+   "defect_family": "exception_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/python-lsp__python-lsp-server_1a10b605aa731daba20e8c1827542b7145ad3059.json",
+    "sha256": "2c7b13170e044572340bc66264d1294f87be7f98767736296c5eebb113037860"
+   },
+   "exclusion_reason": "adapter_unsupported:unsupported_parameter:root:None",
+   "failure_class": "adapter",
+   "fixed_commit": "1a10b605aa731daba20e8c1827542b7145ad3059",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "python-lsp/python-lsp-server",
+   "target_id": "cand:python-lsp/python-lsp-server@1a10b605aa731daba20e8c1827542b7145ad3059"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "4d8d103b52e3eaad6dc8e82c829fb98319782406",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/pytransitions__transitions_8f6ca5f4ca268dd154f0a968d3861afada10430b.json",
+    "sha256": "a24cad202901c6cf379a8a51c7f60a2b4464284b610ccbfee40e0a3c7bc7cb80"
+   },
+   "exclusion_reason": "adapter_unsupported:receiver_constructor:unsupported_parameter:func:None",
+   "failure_class": "adapter",
+   "fixed_commit": "8f6ca5f4ca268dd154f0a968d3861afada10430b",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "pytransitions/transitions",
+   "target_id": "cand:pytransitions/transitions@8f6ca5f4ca268dd154f0a968d3861afada10430b"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "018fd5512a2996d4d7cd0bf25e23cffbc8c81736",
+   "complexity": "simple",
+   "defect_family": "call_or_argument",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/pytransitions__transitions_f970687f48f807dd5974f59c4d76abed2bd1e7bd.json",
+    "sha256": "d72b5c43ca072feae39c10c437f91063823fc25dc3c2626132b1b038e0ae0342"
+   },
+   "exclusion_reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+   "failure_class": "adapter",
+   "fixed_commit": "f970687f48f807dd5974f59c4d76abed2bd1e7bd",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "pytransitions/transitions",
+   "target_id": "cand:pytransitions/transitions@f970687f48f807dd5974f59c4d76abed2bd1e7bd"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "not_probed",
+   "buggy_commit": "5cb68204922cac06b18dd3587b92db05163a72be",
+   "complexity": "moderate",
+   "defect_family": "exception_handling",
+   "evidence": null,
+   "exclusion_reason": "native_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+   "failure_class": "policy",
+   "fixed_commit": "507e77ca880fdd34757989df7422e101595818a9",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": false,
+   "repository": "pyvista/pyvista",
+   "target_id": "cand:pyvista/pyvista@507e77ca880fdd34757989df7422e101595818a9"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "not_probed",
+   "buggy_commit": "80266c5baaf5c3d4ba9df9e70e7cf736febd2a67",
+   "complexity": "complex",
+   "defect_family": "boundary_or_comparison",
+   "evidence": null,
+   "exclusion_reason": "native_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+   "failure_class": "policy",
+   "fixed_commit": "631db08ed32f898ec8f59cbffa30cf80e9cbb1a3",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": false,
+   "repository": "pyvista/pyvista",
+   "target_id": "cand:pyvista/pyvista@631db08ed32f898ec8f59cbffa30cf80e9cbb1a3"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "not_probed",
+   "buggy_commit": "96409c4c822388b7238410b2d232f6ec3fceb3e2",
+   "complexity": "complex",
+   "defect_family": "type_or_conversion",
+   "evidence": null,
+   "exclusion_reason": "native_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+   "failure_class": "policy",
+   "fixed_commit": "eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": false,
+   "repository": "pyvista/pyvista",
+   "target_id": "cand:pyvista/pyvista@eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116"
+  },
+  {
+   "atheris_deterministic": false,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "416def8edabffa1de32bcc6e796285d052bcf868",
+   "complexity": "complex",
+   "defect_family": "other_logic",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/tox-dev__pipdeptree_214e9d48069909b7ff0fa6492632084b2fc6080d.json",
+    "sha256": "3d71ba283097cfba0cb27e78b3a5f4f17fb5d7c76a132d89bba7afd65900148f"
+   },
+   "exclusion_reason": "target_terminates_interpreter: target raises SystemExit (no virtual environment inside the sandbox), so every replay process exits without an outcome; identical on both revisions and both repetitions; the v5 harness catches Exception only (frozen)",
+   "failure_class": "target",
+   "fixed_commit": "214e9d48069909b7ff0fa6492632084b2fc6080d",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "tox-dev/pipdeptree",
+   "target_id": "cand:tox-dev/pipdeptree@214e9d48069909b7ff0fa6492632084b2fc6080d"
+  },
+  {
+   "atheris_deterministic": null,
+   "atheris_eligible": false,
+   "atheris_status": "ineligible",
+   "buggy_commit": "6667dc4f78cdf2e08c1f7e2eb95568fcbc370977",
+   "complexity": "complex",
+   "defect_family": "none_or_empty_handling",
+   "evidence": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/evidence/vega__altair_6c0bf289faa3c5f56a3c731cf864edb1d495c957.json",
+    "sha256": "9d018e0a568b4cfc4e28cb8696106699d48952a057b35802d9f00e59561d0549"
+   },
+   "exclusion_reason": "adapter_unsupported:unsupported_parameter:data:DataFrame",
+   "failure_class": "adapter",
+   "fixed_commit": "6c0bf289faa3c5f56a3c731cf864edb1d495c957",
+   "in_common_subset": false,
+   "native_deterministic": true,
+   "native_runnable": true,
+   "repository": "vega/altair",
+   "target_id": "cand:vega/altair@6c0bf289faa3c5f56a3c731cf864edb1d495c957"
+  }
+ ],
+ "waterfall": [
+  {
+   "count": 70,
+   "stage": "frozen repositories (acquired and accounted)"
+  },
+  {
+   "count": 52,
+   "stage": "repositories scanned"
+  },
+  {
+   "count": 804,
+   "stage": "candidates discovered (evaluated)"
+  },
+  {
+   "count": 113,
+   "stage": "candidates admitted (unique)"
+  },
+  {
+   "count": 85,
+   "stage": "admitted with regression test, no overlap"
+  },
+  {
+   "count": 51,
+   "stage": "natively qualified"
+  },
+  {
+   "count": 46,
+   "stage": "requalified 3/3"
+  },
+  {
+   "count": 45,
+   "stage": "target reached on both revisions"
+  },
+  {
+   "count": 36,
+   "stage": "prompt leakage and token fit"
+  },
+  {
+   "count": 34,
+   "stage": "frozen panel targets"
+  },
+  {
+   "count": 29,
+   "stage": "native-runnable (model-free control)"
+  },
+  {
+   "count": 5,
+   "stage": "Atheris-eligible"
+  },
+  {
+   "count": 5,
+   "stage": "proposed common subset"
+  }
+ ]
+}
