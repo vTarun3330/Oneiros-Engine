@@ -1,0 +1,921 @@
+{
+ "config": "docs/repository_native_v27_confirmation_acquisition_v4.json",
+ "journal_sha256": "a5c14cf3eb094aed905c0b88ebfc227c33ef500afb3eecb73f55a4da1083a9cd",
+ "repositories": [
+  {
+   "admitted": 6,
+   "candidates": {
+    "ADMITTED": 6,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:altair/vegalite/v6/api.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:altair/vegalite/v6/display.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:tools/schemapi/schemapi.py": 2,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.github/workflows/build.yml": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.github/workflows/weekly.yml": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:pyproject.toml": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 2,
+    "multiple_functions_changed": 8,
+    "no_existing_function_changed": 2,
+    "no_production_python_file_changed": 4,
+    "patch_near_duplicate_of_known_bug": 1
+   },
+   "commits_scanned": 215,
+   "repository": "altair-viz/altair",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 2,
+   "candidates": {
+    "ADMITTED": 2,
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 1,
+    "no_existing_function_changed": 1,
+    "no_production_python_file_changed": 3
+   },
+   "commits_scanned": 105,
+   "repository": "marshmallow-code/apispec",
+   "scan_failure": null,
+   "selected": 7,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 1,
+   "candidates": {
+    "ADMITTED": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:authlib/integrations/httpx_client/utils.py": 1,
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 14,
+    "multiple_functions_changed": 8,
+    "no_existing_function_changed": 4,
+    "no_production_python_file_changed": 1,
+    "target_file_added_by_fix": 1
+   },
+   "commits_scanned": 160,
+   "repository": "lepture/authlib",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "mahmoud/boltons",
+   "stage": "screen_excluded"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "python-jsonschema/check-jsonschema",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 6,
+   "candidates": {
+    "ADMITTED": 6,
+    "insufficient_isolation_evidence:authentication:auxiliary_evidence_missing:tests/test_cmdline.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:coverage/ctracer/tracer.c": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:coverage/pytracer.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:coverage/tomlconfig.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:CONTRIBUTORS.txt": 4,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:coverage/htmlfiles/index.html": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 4,
+    "multiple_functions_changed": 7,
+    "no_existing_function_changed": 4
+   },
+   "commits_scanned": 919,
+   "repository": "nedbat/coveragepy",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 4,
+   "candidates": {
+    "ADMITTED": 4,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:dask/dataframe/dask_expr/_collection.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:dask/dataframe/dask_expr/_expr.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.gitignore": 1,
+    "multiple_functions_changed": 3,
+    "no_existing_function_changed": 6,
+    "no_production_python_file_changed": 14
+   },
+   "commits_scanned": 460,
+   "repository": "dask/dask",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 3,
+   "candidates": {
+    "ADMITTED": 3,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:dateparser/date.py": 3,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:dateparser/languages/locale.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:dateparser/timezones.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:dateparser/utils/__init__.py": 2,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 4,
+    "multiple_functions_changed": 6,
+    "no_existing_function_changed": 9,
+    "no_production_python_file_changed": 1
+   },
+   "commits_scanned": 120,
+   "repository": "scrapinghub/dateparser",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "dateutil/dateutil",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 13,
+   "candidates": {
+    "ADMITTED": 13,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:fsspec/spec.py": 3,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 4,
+    "multiple_functions_changed": 7,
+    "no_existing_function_changed": 1,
+    "no_production_python_file_changed": 2
+   },
+   "commits_scanned": 264,
+   "repository": "fsspec/filesystem_spec",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "PyCQA/flake8",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 2,
+    "no_production_python_file_changed": 1
+   },
+   "commits_scanned": 14,
+   "repository": "spulec/freezegun",
+   "scan_failure": null,
+   "selected": 3,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "mahmoud/glom",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 0,
+   "candidates": {},
+   "commits_scanned": null,
+   "repository": "graphql-python/graphene",
+   "scan_failure": "git_fetch_failed",
+   "selected": 0,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 2,
+   "candidates": {
+    "ADMITTED": 2,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 1,
+    "multiple_functions_changed": 1,
+    "no_existing_function_changed": 1,
+    "no_production_python_file_changed": 2
+   },
+   "commits_scanned": 318,
+   "repository": "graphql-python/graphql-core",
+   "scan_failure": null,
+   "selected": 7,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "benoitc/gunicorn",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 1,
+   "candidates": {
+    "ADMITTED": 1,
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 1,
+    "multiple_functions_changed": 1,
+    "no_existing_function_changed": 1
+   },
+   "commits_scanned": 52,
+   "repository": "python-hyper/h2",
+   "scan_failure": null,
+   "selected": 4,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:news/compound-vlen-field-write.rst": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:news/page-buf-size-zero.rst": 1,
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 4,
+    "no_production_python_file_changed": 24
+   },
+   "commits_scanned": 244,
+   "repository": "h5py/h5py",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:invoke/runners.py": 1,
+    "multiple_functions_changed": 1
+   },
+   "commits_scanned": 69,
+   "repository": "pyinvoke/invoke",
+   "scan_failure": null,
+   "selected": 2,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:IPython/utils/_process_common.py": 1,
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 3,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 4,
+    "multiple_functions_changed": 9,
+    "no_existing_function_changed": 5,
+    "no_production_python_file_changed": 8
+   },
+   "commits_scanned": 625,
+   "repository": "ipython/ipython",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {},
+   "commits_scanned": 16,
+   "repository": "python-jsonschema/jsonschema",
+   "scan_failure": null,
+   "selected": 0,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 1,
+   "candidates": {
+    "ADMITTED": 1,
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 10,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 1,
+    "multiple_functions_changed": 2,
+    "no_existing_function_changed": 1,
+    "no_production_python_file_changed": 3,
+    "not_found": 1
+   },
+   "commits_scanned": 36,
+   "repository": "lark-parser/lark",
+   "scan_failure": null,
+   "selected": 19,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 1,
+   "candidates": {
+    "ADMITTED": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:markdown_it/rules_block/html_block.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:markdown_it/rules_inline/fragments_join.py": 1,
+    "multiple_functions_changed": 1,
+    "no_existing_function_changed": 6,
+    "no_production_python_file_changed": 9
+   },
+   "commits_scanned": 42,
+   "repository": "executablebooks/markdown-it-py",
+   "scan_failure": null,
+   "selected": 19,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "multiple_functions_changed": 2,
+    "no_existing_function_changed": 1,
+    "no_production_python_file_changed": 12
+   },
+   "commits_scanned": 306,
+   "repository": "squidfunk/mkdocs-material",
+   "scan_failure": null,
+   "selected": 15,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:pymongo/pyopenssl_context.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:pymongo/synchronous/pool.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.evergreen/generated_configs/variants.yml": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 1,
+    "insufficient_isolation_evidence:target_module_missing": 1,
+    "multiple_functions_changed": 6,
+    "no_existing_function_changed": 3,
+    "no_production_python_file_changed": 16
+   },
+   "commits_scanned": 801,
+   "repository": "mongodb/mongo-python-driver",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 8,
+   "candidates": {
+    "ADMITTED": 8,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/mutmut/mutation/trampoline_templates.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:ARCHITECTURE.rst": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:CONTRIBUTING.rst": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 2,
+    "insufficient_isolation_evidence:authentication:target_function_missing_or_ambiguous_in_fixed_file": 2,
+    "multiple_functions_changed": 4,
+    "no_existing_function_changed": 2,
+    "no_production_python_file_changed": 2,
+    "target_file_added_by_fix": 2,
+    "target_file_deleted_by_fix": 1
+   },
+   "commits_scanned": 189,
+   "repository": "boxed/mutmut",
+   "scan_failure": null,
+   "selected": 26,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "python/mypy",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 1,
+   "candidates": {
+    "ADMITTED": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.github/workflows/tests.yml": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.readthedocs.yml": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 1,
+    "multiple_functions_changed": 3,
+    "no_existing_function_changed": 3,
+    "no_production_python_file_changed": 7
+   },
+   "commits_scanned": 55,
+   "repository": "executablebooks/MyST-Parser",
+   "scan_failure": null,
+   "selected": 17,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 1,
+   "candidates": {
+    "ADMITTED": 1,
+    "multiple_functions_changed": 3,
+    "no_existing_function_changed": 2
+   },
+   "commits_scanned": 61,
+   "repository": "jupyter/nbconvert",
+   "scan_failure": null,
+   "selected": 6,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "no_production_python_file_changed": 1
+   },
+   "commits_scanned": 42,
+   "repository": "jupyter/nbformat",
+   "scan_failure": null,
+   "selected": 1,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "networkx/networkx",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 11,
+    "multiple_functions_changed": 8,
+    "no_existing_function_changed": 4,
+    "no_production_python_file_changed": 7
+   },
+   "commits_scanned": 348,
+   "repository": "numba/numba",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "pypa/packaging",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 7,
+   "candidates": {
+    "ADMITTED": 7,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:panel/util/__init__.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:examples/reference/widgets/Tabulator.ipynb": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 1,
+    "multiple_functions_changed": 8,
+    "no_existing_function_changed": 1,
+    "no_production_python_file_changed": 10,
+    "patch_near_duplicate_of_known_bug": 1
+   },
+   "commits_scanned": 876,
+   "repository": "holoviz/panel",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 3,
+    "target_file_added_by_fix": 1,
+    "target_file_deleted_by_fix": 1
+   },
+   "commits_scanned": 19,
+   "repository": "r1chardj0n3s/parse",
+   "scan_failure": null,
+   "selected": 5,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "multiple_functions_changed": 1
+   },
+   "commits_scanned": 3,
+   "repository": "erikrose/parsimonious",
+   "scan_failure": null,
+   "selected": 1,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 11,
+   "candidates": {
+    "ADMITTED": 11,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:playhouse/migrations.py": 1,
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 4,
+    "multiple_functions_changed": 2,
+    "no_existing_function_changed": 4,
+    "no_production_python_file_changed": 5
+   },
+   "commits_scanned": 757,
+   "repository": "coleifer/peewee",
+   "scan_failure": null,
+   "selected": 28,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 1,
+   "candidates": {
+    "ADMITTED": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pipdeptree/_discovery.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pipdeptree/_models/package.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pipdeptree/_render/__init__.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pipdeptree/_render/text.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.pre-commit-config.yaml": 1,
+    "multiple_functions_changed": 4,
+    "no_existing_function_changed": 2,
+    "no_production_python_file_changed": 13
+   },
+   "commits_scanned": 258,
+   "repository": "tox-dev/pipdeptree",
+   "scan_failure": null,
+   "selected": 25,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 3,
+   "candidates": {
+    "ADMITTED": 3,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pipx/commands/uninstall.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pipx/package_specifier.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pipx/venv.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/pipx/venv_inspect.py": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 3,
+    "multiple_functions_changed": 5,
+    "no_existing_function_changed": 3,
+    "no_production_python_file_changed": 9,
+    "patch_near_duplicate_of_known_bug": 2,
+    "target_file_added_by_fix": 1
+   },
+   "commits_scanned": 346,
+   "repository": "pypa/pipx",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:LGPL-3.0"
+   ],
+   "repository": "psycopg/psycopg",
+   "stage": "screen_excluded"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "PyCQA/pycodestyle",
+   "stage": "screen_excluded"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "eliben/pycparser",
+   "stage": "screen_excluded"
+  },
+  {
+   "reason": "not_found",
+   "repository": "pyfakefs/pyfakefs",
+   "stage": "repository_unavailable"
+  },
+  {
+   "admitted": 1,
+   "candidates": {
+    "ADMITTED": 1,
+    "multiple_functions_changed": 2
+   },
+   "commits_scanned": 58,
+   "repository": "PyCQA/pyflakes",
+   "scan_failure": null,
+   "selected": 3,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 4,
+   "candidates": {
+    "ADMITTED": 4,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:jwt/api_jwt.py": 2,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:jwt/jwks_client.py": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 2,
+    "multiple_functions_changed": 5,
+    "no_existing_function_changed": 7,
+    "no_production_python_file_changed": 6
+   },
+   "commits_scanned": 131,
+   "repository": "jpadilla/pyjwt",
+   "scan_failure": null,
+   "selected": 27,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "pymc-devs/pymc",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 3,
+   "candidates": {
+    "ADMITTED": 3,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 1,
+    "multiple_functions_changed": 3,
+    "no_existing_function_changed": 2
+   },
+   "commits_scanned": 64,
+   "repository": "PyMySQL/PyMySQL",
+   "scan_failure": null,
+   "selected": 9,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {},
+   "commits_scanned": 31,
+   "repository": "python-openxml/python-docx",
+   "scan_failure": null,
+   "selected": 0,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 3,
+   "candidates": {
+    "ADMITTED": 3,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.github/workflows/test-linux.yml": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 1,
+    "multiple_functions_changed": 1,
+    "no_existing_function_changed": 2,
+    "no_production_python_file_changed": 5
+   },
+   "commits_scanned": 40,
+   "repository": "python-lsp/python-lsp-server",
+   "scan_failure": null,
+   "selected": 13,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 3,
+   "candidates": {
+    "ADMITTED": 3,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/prompt_toolkit/formatted_text/utils.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:src/prompt_toolkit/shortcuts/dialogs.py": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 2,
+    "multiple_functions_changed": 2,
+    "no_existing_function_changed": 7,
+    "no_production_python_file_changed": 3,
+    "patch_near_duplicate_of_known_bug": 3,
+    "target_file_added_by_fix": 1,
+    "target_file_deleted_by_fix": 1
+   },
+   "commits_scanned": 51,
+   "repository": "prompt-toolkit/python-prompt-toolkit",
+   "scan_failure": null,
+   "selected": 24,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "no_existing_function_changed": 3,
+    "no_production_python_file_changed": 2,
+    "patch_near_duplicate_of_known_bug": 1
+   },
+   "commits_scanned": 30,
+   "repository": "un33k/python-slugify",
+   "scan_failure": null,
+   "selected": 6,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 1,
+   "candidates": {
+    "ADMITTED": 1,
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 3,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 2,
+    "multiple_functions_changed": 1,
+    "no_existing_function_changed": 4,
+    "no_production_python_file_changed": 3,
+    "patch_near_duplicate_of_known_bug": 1
+   },
+   "commits_scanned": 110,
+   "repository": "astanin/python-tabulate",
+   "scan_failure": null,
+   "selected": 15,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 6,
+   "candidates": {
+    "ADMITTED": 6,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:pyvista/core/filters/data_set.py": 3,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:pyvista/core/utilities/features.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:pyvista/core/utilities/transform.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:pyvista/examples/_dataset_loader.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:pyvista/plotting/mapper.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:CONTRIBUTING.rst": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:pyproject.toml": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 3,
+    "multiple_functions_changed": 4,
+    "no_existing_function_changed": 4,
+    "no_production_python_file_changed": 3,
+    "patch_near_duplicate_of_known_bug": 1
+   },
+   "commits_scanned": 1461,
+   "repository": "pyvista/pyvista",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.github/workflows/ci.yaml": 1,
+    "no_production_python_file_changed": 1
+   },
+   "commits_scanned": 2,
+   "repository": "yaml/pyyaml",
+   "scan_failure": null,
+   "selected": 2,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:none"
+   ],
+   "repository": "pyupio/safety",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 0,
+   "candidates": {},
+   "commits_scanned": null,
+   "repository": "dbader/schedule",
+   "scan_failure": "git_fetch_failed",
+   "selected": 0,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 2,
+   "candidates": {
+    "ADMITTED": 2,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.github/CONTRIBUTING.md": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.github/workflows/ci.yml": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.pre-commit-config.yaml": 1,
+    "multiple_functions_changed": 3
+   },
+   "commits_scanned": 104,
+   "repository": "hynek/stamina",
+   "scan_failure": null,
+   "selected": 8,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {},
+   "commits_scanned": 1,
+   "repository": "life4/textdistance",
+   "scan_failure": null,
+   "selected": 0,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 1,
+    "no_production_python_file_changed": 1
+   },
+   "commits_scanned": 39,
+   "repository": "hukkin/tomli",
+   "scan_failure": null,
+   "selected": 2,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "pytoolz/toolz",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 8,
+   "candidates": {
+    "ADMITTED": 8,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:tortoise/backends/base_postgres/executor.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:tortoise/migrations/schema_generator/state.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.pre-commit-config.yaml": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:pyproject.toml": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 3,
+    "insufficient_isolation_evidence:authentication:target_function_missing_or_ambiguous_in_fixed_file": 1,
+    "insufficient_isolation_evidence:target_function_too_short_for_comparison": 1,
+    "multiple_functions_changed": 7,
+    "no_existing_function_changed": 6
+   },
+   "commits_scanned": 195,
+   "repository": "tortoise/tortoise-orm",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 3,
+   "candidates": {
+    "ADMITTED": 3,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:transitions/core.pyi": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:transitions/extensions/asyncio.py": 1,
+    "multiple_functions_changed": 1,
+    "no_production_python_file_changed": 1,
+    "patch_near_duplicate_of_known_bug": 1
+   },
+   "commits_scanned": 30,
+   "repository": "pytransitions/transitions",
+   "scan_failure": null,
+   "selected": 8,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:.github/workflows/main.yml": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:changelog/1240.bugfix.rst": 1,
+    "no_existing_function_changed": 2,
+    "no_production_python_file_changed": 2
+   },
+   "commits_scanned": 79,
+   "repository": "pypa/twine",
+   "scan_failure": null,
+   "selected": 6,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "agronholm/typeguard",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:Makefile": 1
+   },
+   "commits_scanned": 28,
+   "repository": "regebro/tzlocal",
+   "scan_failure": null,
+   "selected": 1,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 2,
+   "candidates": {
+    "ADMITTED": 2,
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 1,
+    "no_existing_function_changed": 4
+   },
+   "commits_scanned": 18,
+   "repository": "python-validators/validators",
+   "scan_failure": null,
+   "selected": 7,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 1,
+   "candidates": {
+    "ADMITTED": 1,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:vcr/serializers/yamlserializer.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:pyproject.toml": 1,
+    "insufficient_isolation_evidence:authentication:production_hunk_outside_target_function": 1,
+    "multiple_functions_changed": 2,
+    "no_production_python_file_changed": 2
+   },
+   "commits_scanned": 61,
+   "repository": "kevin1024/vcrpy",
+   "scan_failure": null,
+   "selected": 8,
+   "stage": "scanned"
+  },
+  {
+   "reason": [
+    "licence_not_admitted_by_d2:NOASSERTION"
+   ],
+   "repository": "Pylons/waitress",
+   "stage": "screen_excluded"
+  },
+  {
+   "admitted": 5,
+   "candidates": {
+    "ADMITTED": 5,
+    "insufficient_isolation_evidence:authentication:changed_production_source_outside_target:weasyprint/pdf/tags.py": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:pyproject.toml": 1,
+    "insufficient_isolation_evidence:authentication:fixed_commit_is_not_a_direct_single_parent_commit": 13,
+    "multiple_functions_changed": 4,
+    "no_existing_function_changed": 3,
+    "no_production_python_file_changed": 3
+   },
+   "commits_scanned": 401,
+   "repository": "Kozea/WeasyPrint",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  },
+  {
+   "admitted": 0,
+   "candidates": {
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:changes/4340.bugfix.md": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:changes/4376.bugfix.md": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:changes/4402.bugfix.md": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:changes/4414.bugfix.md": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:changes/4455.misc.md": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:changes/4464.bugfix.md": 1,
+    "insufficient_isolation_evidence:authentication:changed_runtime_or_config_outside_target:packages/zarr-metadata/changes/4428.bugfix.md": 1,
+    "multiple_functions_changed": 17,
+    "no_existing_function_changed": 4,
+    "target_file_added_by_fix": 2
+   },
+   "commits_scanned": 785,
+   "repository": "zarr-developers/zarr-python",
+   "scan_failure": null,
+   "selected": 30,
+   "stage": "scanned"
+  }
+ ],
+ "schema_version": "oneiros_v27_acquisition_exclusion_ledger_v1"
+}

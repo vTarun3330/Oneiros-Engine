@@ -1,0 +1,8 @@
+{
+ "schema_version": "oneiros_v27_test_evidence_correction_v1",
+ "recorded_utc": "2026-10-06T08:55:00Z",
+ "defect": "a piped test command of the form `pytest ... | tail ...; echo EXIT $?` reports the exit status of `tail`, not pytest; one such invocation printed `EXIT 0` while pytest had reported `1 failed, 7 passed` (tests/test_v27_credential_safety.py::test_watchdog_journals_a_stalled_candidate_and_restarts, against an intermediate uncommitted watchdog edit)",
+ "disposition": "that invocation is NOT passing evidence; the failure was visible in its output, was diagnosed (the watchdog killed a child that had already exited) and fixed in commit 8f5857be9f9375379d0c7fb80b5c78cab62026cf, after which the same file passed with a direct (unpiped-status) run",
+ "rule_from_now_on": "every piped test invocation uses `set -o pipefail` or reports `${PIPESTATUS[0]}`; only pytest's own exit code counts as test evidence",
+ "no_tests_while": "acquisition, native execution, Atheris, GPU work or another heavy task is running"
+}

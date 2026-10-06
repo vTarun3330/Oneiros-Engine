@@ -1,0 +1,183 @@
+{
+ "branch": "experiment/research-eval-ablations",
+ "checks": {
+  "all_frozen_repositories_accounted": {
+   "detail": {
+    "accounted": 70,
+    "frozen": 70,
+    "not_in_frozen_list": [],
+    "unaccounted": []
+   },
+   "pass": true
+  },
+  "every_audit_session_closed": {
+   "detail": {
+    "closed": [
+     "2026-10-06T07:20:43Z:37480"
+    ],
+    "incomplete": [],
+    "started": [
+     "2026-10-06T07:20:43Z:37480"
+    ]
+   },
+   "pass": true
+  },
+  "every_exclusion_has_a_machine_readable_reason": {
+   "detail": {
+    "candidates_without_reason": []
+   },
+   "pass": true
+  },
+  "journal_parses_and_is_append_only_unique": {
+   "detail": {
+    "duplicate_keys": [],
+    "lines": 929,
+    "sha256": "a5c14cf3eb094aed905c0b88ebfc227c33ef500afb3eecb73f55a4da1083a9cd",
+    "unparseable": 0
+   },
+   "pass": true
+  },
+  "no_credential_in_command_arguments": {
+   "detail": {
+    "checked": [
+     "manifest.json",
+     "status.json"
+    ]
+   },
+   "pass": true
+  },
+  "no_credential_material_in_outputs": {
+   "detail": {
+    "files_scanned": 13,
+    "files_with_credential_shaped_material": []
+   },
+   "pass": true
+  },
+  "no_unaudited_interval": {
+   "detail": {
+    "records_without_snapshot": [],
+    "session_scopes": [
+     "2026-10-06T07:20:43Z"
+    ],
+    "snapshot_scopes": [
+     "2026-10-06T07:20:43Z"
+    ]
+   },
+   "pass": true
+  },
+  "report_binds_this_journal": {
+   "detail": {
+    "report_journal_sha256": "a5c14cf3eb094aed905c0b88ebfc227c33ef500afb3eecb73f55a4da1083a9cd"
+   },
+   "pass": true
+  },
+  "report_gate_no_protected_data_access": {
+   "detail": {
+    "gate": {
+     "no_protected_data_access": true
+    }
+   },
+   "pass": true
+  },
+  "report_published_and_valid": {
+   "detail": {
+    "problems": [],
+    "report": "results/sft_root_cause_v27_confirmation_acquisition_report_r4.json",
+    "sha256": "2cb23dc5c9b4e6d429b04ff2bc9982d0ab683e5b644e13d08dd01c0049522aa7"
+   },
+   "pass": true
+  },
+  "repository_list_hash_matches_config": {
+   "detail": {
+    "list": "docs/repository_native_v27_confirmation_repositories_v2.json",
+    "repositories": 70
+   },
+   "pass": true
+  },
+  "source_and_config_match_launch_contract": {
+   "detail": {
+    "files": {
+     "docs/repository_native_v27_confirmation_acquisition_v4.json": {
+      "lf_normalised_sha256": "2486e033db0fcedf84c790d92789edd737f67bc1fd71ed3a0ba2ac78aa63abcd",
+      "matches_launch_commit": true,
+      "sha256": "d52be1343296efe54828e396f136ff4521a1ce41a483feb00a568be5954c20e0"
+     },
+     "harness/acquisition_receipt.py": {
+      "lf_normalised_sha256": "31ed3ac4335cba0dedda28b259f20e93b7444dcd1b34b95b26225fe0fd35b670",
+      "matches_launch_commit": true,
+      "sha256": "31ed3ac4335cba0dedda28b259f20e93b7444dcd1b34b95b26225fe0fd35b670"
+     },
+     "harness/github_acquisition.py": {
+      "lf_normalised_sha256": "3e8e7a421396e6f2d7878e8429d4c678a0965e8cfe5e9a12c9d3d024fbaf0805",
+      "matches_launch_commit": true,
+      "sha256": "3e8e7a421396e6f2d7878e8429d4c678a0965e8cfe5e9a12c9d3d024fbaf0805"
+     },
+     "harness/repository_isolation.py": {
+      "lf_normalised_sha256": "70ca1ab6dd1b6dc2d0e837a8b9490aa56764ac2ad33171130cc495a757ea11ab",
+      "matches_launch_commit": true,
+      "sha256": "70ca1ab6dd1b6dc2d0e837a8b9490aa56764ac2ad33171130cc495a757ea11ab"
+     },
+     "harness/v27_roles.py": {
+      "lf_normalised_sha256": "d54b686265e62c34b4d7cfc7bdab6bb43cc6002f33d1c5c188dc85d05cb5e170",
+      "matches_launch_commit": true,
+      "sha256": "d54b686265e62c34b4d7cfc7bdab6bb43cc6002f33d1c5c188dc85d05cb5e170"
+     },
+     "scripts/run_repository_native_acquisition_pilot.py": {
+      "lf_normalised_sha256": "bc46bc2a0dc515aee1e2e6fd004859ac0b94e70043c817fb5e0e13c6901c5dd7",
+      "matches_launch_commit": true,
+      "sha256": "bc46bc2a0dc515aee1e2e6fd004859ac0b94e70043c817fb5e0e13c6901c5dd7"
+     },
+     "scripts/v27_acquire.py": {
+      "lf_normalised_sha256": "60868ae1496e50239fa95c8c96d973088e11755dbd02a9ea7a5ff2a00240767f",
+      "matches_launch_commit": true,
+      "sha256": "60868ae1496e50239fa95c8c96d973088e11755dbd02a9ea7a5ff2a00240767f"
+     },
+     "scripts/v27_runner.py": {
+      "lf_normalised_sha256": "1c2bf2ad543ef948d5597a5aa397e5e8f2e1ad7c166c452fa0ff3dc5cad41dc3",
+      "matches_launch_commit": true,
+      "sha256": "1c2bf2ad543ef948d5597a5aa397e5e8f2e1ad7c166c452fa0ff3dc5cad41dc3"
+     }
+    },
+    "launch_commit": "8d5b25cd3051da16c27b2304b140007c15c3fea6"
+   },
+   "pass": true
+  },
+  "validation_and_sealed_final_untouched": {
+   "detail": {
+    "basis": "protected-access monitor (oneiros_protected_locations_v2) covers locked validation and sealed-final locations; zero recorded accesses"
+   },
+   "pass": true
+  },
+  "zero_protected_access": {
+   "detail": {
+    "opens_checked_final": [
+     110557
+    ],
+    "protected_accesses": 0,
+    "snapshots": 927
+   },
+   "pass": true
+  }
+ },
+ "config": {
+  "path": "docs/repository_native_v27_confirmation_acquisition_v4.json",
+  "sha256": "d52be1343296efe54828e396f136ff4521a1ce41a483feb00a568be5954c20e0"
+ },
+ "failed_conditions": [],
+ "funnel": {
+  "admitted": 114,
+  "candidates_evaluated": 804,
+  "repositories_with_admitted": 31,
+  "stage:repository_unavailable": 1,
+  "stage:scanned": 52,
+  "stage:screen_excluded": 17
+ },
+ "head": "8d5b25cd3051da16c27b2304b140007c15c3fea6",
+ "ledger": {
+  "path": "results/sft_root_cause_v27_confirmation_exclusion_ledger_r4.json",
+  "sha256": "696df83e3200d0e765906395df1ee95774b0982a4c02900f025cc7d9a06644f6"
+ },
+ "run_id": "20261006-125040-v27_confirmation_acquisition_r4",
+ "schema_version": "oneiros_v27_phase4_gate_v1",
+ "status": "PASS"
+}
