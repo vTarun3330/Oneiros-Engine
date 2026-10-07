@@ -1,0 +1,53 @@
+{
+ "arms": [
+  "base",
+  "sft",
+  "relearn"
+ ],
+ "checks": {
+  "both_pairwise_contrasts_computed": true,
+  "cli_exploratory_suppressed_on_synthetic_evidence": true,
+  "every_row_classified_as_designed": true,
+  "exclusive_lock_single_winner": true,
+  "execution_cells_exact": true,
+  "execution_complete": true,
+  "formal_preparation": true,
+  "grid_complete": true,
+  "job_complete": true,
+  "kills_rerun_and_fixed_valid": true,
+  "pairwise_denominators_explicit": true,
+  "prompts_leakage_clean": true,
+  "target_seed_cells_not_pooled": true
+ },
+ "components_sha256": {
+  "harness/native_generated_test_leakage.py": "6e505343e66857e015d216537ade753941ef02b286d374856460347fa5c1cd1a",
+  "harness/native_generated_test_prompt.py": "b9a95eee7deec9c3888f54ff5c44efaa3d8b551cc616a8d3a4ad811de9c762b9",
+  "harness/native_launch_gate.py": "33eb27ee0c286742dea3f9baebdc71ef4c65de67686fd992135b411a6fcc5383",
+  "scripts/gpu_run.py": "09f39e72d5cc86fab81c570b2424ed5e09a76e509e1ba19aaecc5c2e2184c8c5",
+  "scripts/native_execution_results.py": "816575d44699468f5bf5975b1eaadaa58a05173d2c3c760cd02452246cf40312",
+  "scripts/native_generated_tests_analyse.py": "355e33eb4d7be412b371fda29ac1fbc962280b3593c75d960da1830e2caf0a3d",
+  "scripts/native_generated_tests_execute_wsl.py": "2cd259572cc31227eb4b0f48d3007643e5813e23fd53b839f17d73eaccfab333",
+  "scripts/native_generated_tests_generate.py": "f3e2092afa511177bc194c3c594112ad75b28ce0b5da47c8a6e180c770961da9",
+  "scripts/native_generation_io.py": "87281b9759d0ef323f36ba1afa698d782bbb17d3b1d0f4f5923a66f58db5a56f",
+  "scripts/native_pipeline_synthetic.py": "958c8ca2b6bdea566a79c51211f98ec5c8392d0eccad779068d4abce620a24b0",
+  "scripts/native_rehearsal_prepare_wsl.py": "c0ea053fcee84b0e12e0ea325c8f70b7a6ef14e9cb3e9902e5f7eb3894a34cfb",
+  "scripts/native_sandbox_inner.sh": "ff90215bb4aef3c864a0d3604ad0eb076de68c5a0754ac6053fed15b9ff42b18",
+  "scripts/receipt_sanitize.py": "ccc57690ad9aeafbc5a80666bbc433c8bdb6439c7f4f71a2643995677665d68c"
+ },
+ "exclusive_lock": {
+  "ok": true,
+  "racers": 5,
+  "rounds": 4,
+  "winners": [
+   1,
+   1,
+   1,
+   1
+  ]
+ },
+ "execution_tail": "{\"rows\": 144, \"expected\": 144, \"complete\": true, \"qualified\": 2, \"generation_targets\": 2, \"pre_generation_excluded\": [], \"results_sha256\": \"bc8d55a4a13148aebc2a2f52bf693c8182d84ea8893cecce81314dc590393dfd\"}\n",
+ "mismatches": [],
+ "passed": true,
+ "rows": 144,
+ "schema_version": "oneiros_native_pipeline_synthetic_v1"
+}

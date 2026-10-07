@@ -1,0 +1,210 @@
+{
+ "checks": {
+  "big_file": true,
+  "crash_kill": true,
+  "fabricated_import": true,
+  "fail_both": true,
+  "inverted": true,
+  "memory": true,
+  "mixed_skip": true,
+  "network": true,
+  "no_kill_from_any_probe": true,
+  "not_reached": true,
+  "partly_not_reached": true,
+  "pass_both": true,
+  "policy_code": true,
+  "policy_dis": true,
+  "policy_file": true,
+  "policy_inspect": true,
+  "policy_open": true,
+  "policy_subprocess": true,
+  "policy_sys_modules": true,
+  "probe_file": true,
+  "probe_git": true,
+  "probe_host_paths": true,
+  "probe_spec": true,
+  "probe_sys_modules": true,
+  "probe_tests": true,
+  "ran_as_nobody": true,
+  "semantic_kill": true,
+  "shadow": true,
+  "skip": true,
+  "subprocess": true,
+  "syntax": true,
+  "timeout": true,
+  "uid": true,
+  "write_target": true,
+  "wrong_revision_refused": true,
+  "xfail": true,
+  "zero_tests": true
+ },
+ "design_version": "oneiros_native_generated_tests_execute_v5",
+ "executor_sha256": "2cd259572cc31227eb4b0f48d3007643e5813e23fd53b839f17d73eaccfab333",
+ "inner_sha256": "ff90215bb4aef3c864a0d3604ad0eb076de68c5a0754ac6053fed15b9ff42b18",
+ "limits": {
+  "address_space_bytes": 4294967296,
+  "cpu_seconds": 60,
+  "fsize_bytes": 52428800,
+  "nofile": 256,
+  "nproc": 64,
+  "per_test_seconds": 10,
+  "wall_seconds": 90
+ },
+ "module_limits": {
+  "asserts": 100,
+  "target_calls": 200,
+  "tests": 25
+ },
+ "nondeterminism": "covered by classifier unit tests (fresh filesystem per run)",
+ "passed": true,
+ "prepare_sha256": "c0ea053fcee84b0e12e0ea325c8f70b7a6ef14e9cb3e9902e5f7eb3894a34cfb",
+ "results": {
+  "big_file": {
+   "expected": "fixed_side_failure",
+   "observed": "fixed_side_failure"
+  },
+  "crash_kill": {
+   "expected": "crash_kill",
+   "observed": "crash_kill"
+  },
+  "fabricated_import": {
+   "expected": "fabricated_import",
+   "observed": "fabricated_import"
+  },
+  "fail_both": {
+   "expected": "fixed_side_failure",
+   "observed": "fixed_side_failure"
+  },
+  "inverted": {
+   "expected": "fixed_side_failure",
+   "observed": "fixed_side_failure"
+  },
+  "memory": {
+   "expected": "fixed_side_failure",
+   "observed": "fixed_side_failure"
+  },
+  "mixed_skip": {
+   "expected": "skipped_or_xfail",
+   "observed": "skipped_or_xfail"
+  },
+  "network": {
+   "expected": "fixed_side_failure",
+   "observed": "fixed_side_failure"
+  },
+  "not_reached": {
+   "expected": "target_not_reached",
+   "observed": "target_not_reached"
+  },
+  "partly_not_reached": {
+   "expected": "target_not_reached",
+   "observed": "target_not_reached"
+  },
+  "pass_both": {
+   "expected": "pass_both",
+   "observed": "pass_both"
+  },
+  "policy_code": {
+   "expected": "policy_refused",
+   "observed": "policy_refused"
+  },
+  "policy_dis": {
+   "expected": "policy_refused",
+   "observed": "policy_refused"
+  },
+  "policy_file": {
+   "expected": "policy_refused",
+   "observed": "policy_refused"
+  },
+  "policy_inspect": {
+   "expected": "policy_refused",
+   "observed": "policy_refused"
+  },
+  "policy_open": {
+   "expected": "policy_refused",
+   "observed": "policy_refused"
+  },
+  "policy_subprocess": {
+   "expected": "policy_refused",
+   "observed": "policy_refused"
+  },
+  "policy_sys_modules": {
+   "expected": "policy_refused",
+   "observed": "policy_refused"
+  },
+  "probe_file": {
+   "expected": "pass_both",
+   "observed": "pass_both"
+  },
+  "probe_git": {
+   "expected": "pass_both",
+   "observed": "pass_both"
+  },
+  "probe_host_paths": {
+   "expected": "pass_both",
+   "observed": "pass_both"
+  },
+  "probe_spec": {
+   "expected": "pass_both",
+   "observed": "pass_both"
+  },
+  "probe_sys_modules": {
+   "expected": "pass_both",
+   "observed": "pass_both"
+  },
+  "probe_tests": {
+   "expected": "pass_both",
+   "observed": "pass_both"
+  },
+  "semantic_kill": {
+   "expected": "semantic_kill",
+   "observed": "semantic_kill"
+  },
+  "shadow": {
+   "expected": "fixed_side_failure",
+   "observed": "fixed_side_failure"
+  },
+  "skip": {
+   "expected": "skipped_or_xfail",
+   "observed": "skipped_or_xfail"
+  },
+  "subprocess": {
+   "expected": "fixed_side_failure",
+   "observed": "fixed_side_failure"
+  },
+  "syntax": {
+   "expected": "syntax_failure",
+   "observed": "syntax_failure"
+  },
+  "timeout": {
+   "expected": "timeout",
+   "observed": "timeout"
+  },
+  "uid": {
+   "expected": "fixed_side_failure",
+   "observed": "fixed_side_failure"
+  },
+  "write_target": {
+   "expected": "fixed_side_failure",
+   "observed": "fixed_side_failure"
+  },
+  "xfail": {
+   "expected": "skipped_or_xfail",
+   "observed": "skipped_or_xfail"
+  },
+  "zero_tests": {
+   "expected": "no_tests_collected",
+   "observed": "no_tests_collected"
+  }
+ },
+ "schema_version": "oneiros_native_sandbox_canaries_v2",
+ "view_manifests": {
+  "add": {
+   "buggy": "7145af18663101047ca89f25b6110824eec480c8861920c379c1b9394da6bfca",
+   "fixed": "8a297acff616c3cf39d6396ca97e030ebd8e80bd71991da673b588389a1f4527"
+  },
+  "crash": {
+   "buggy": "7145af18663101047ca89f25b6110824eec480c8861920c379c1b9394da6bfca",
+   "fixed": "8a297acff616c3cf39d6396ca97e030ebd8e80bd71991da673b588389a1f4527"
+  }
+ }
+}
