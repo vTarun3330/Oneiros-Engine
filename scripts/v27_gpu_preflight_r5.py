@@ -57,9 +57,69 @@ def tagged_paths(tag: str) -> dict:
     return {"OUT_ROOT": f"results/sft_root_cause/v27_generations_{tag}",
             "EXEC_OUT": f"results/sft_root_cause/v27_execution_{tag}",
             "ANALYSIS_OUT": f"results/sft_root_cause_v27_analysis_{tag}.json",
-            "AUTH": f"results/sft_root_cause_v27_gpu_authorization_{tag}.json"}
+            "AUTH": f"results/sft_root_cause_v27_gpu_authorization_{tag}.json",
+            "RUN_NAME_PREFIX": f"v27{tag}_generate_",
+            "EXCLUSIVE_KEY": f"v27{tag}_generation"}
 CONDITION = "primary_whole_module"
 REPO_WSL = "/mnt/c/Users/Student2/Desktop/Capstone/oneiros"
+
+
+def stored_commands(tag: str, preflight: str, arms, prep: str) -> dict:
+    """The authoritative commands a preflight stores. Every tagged identifier (output,
+    execution, analysis and authorisation paths, gpu_run run names and exclusive key) is
+    derived from ``tag`` alone, so a successor preflight never carries a predecessor's."""
+    from scripts import native_generated_tests_analyse as analysis
+
+    t = tagged_paths(tag)
+    py = ".venv-gpu/Scripts/python.exe"
+    out = {arm: f"{t['OUT_ROOT']}/{arm}" for arm in arms}
+    generate = {arm: (f"{py} scripts/gpu_run.py start --name {t['RUN_NAME_PREFIX']}{arm} "
+                      f"--exclusive-key {t['EXCLUSIVE_KEY']} -- {py} "
+                      f"scripts/native_generated_tests_generate.py run --job {JOB} --condition "
+                      f"{CONDITION} --arm {arm} --out {out[arm]} --backend hf --preflight "
+                      f"{preflight} --authorization {t['AUTH']}") for arm in arms}
+    gates = {arm: (f"{py} scripts/native_generated_tests_launch_gate.py --preflight {preflight} "
+                   f"--authorization {t['AUTH']} --job {JOB} --arm {arm} --out {out[arm]}")
+             for arm in arms}
+    execute = (f"wsl.exe -u root --cd {REPO_WSL} -- bash scripts/wsl_isolated.sh bash "
+               f"scripts/wsl_native_python.sh scripts/native_generated_tests_execute_wsl.py run "
+               f"--prep {prep} --manifest {MANIFEST} --job {JOB} --generations {t['OUT_ROOT']} "
+               f"--condition {CONDITION} --out {t['EXEC_OUT']}")
+    analyse = (f"{py} {ANALYSER} analyse --manifest {MANIFEST} --job {JOB} --prep "
+               f"{prep} --preflight {preflight} "
+               f"--execution-contract {t['EXEC_OUT']}/execute_contract_{CONDITION}.json --results "
+               f"{t['EXEC_OUT']}/results_{CONDITION}.jsonl --generations {t['OUT_ROOT']} "
+               f"--condition {CONDITION} --study-mode {analysis.EXPLORATORY} "
+               f"--out {t['ANALYSIS_OUT']}")
+    return {"generate": generate, "gates": gates, "execute": execute, "analyse": analyse}
+
+
+TAG_TOKEN = re.compile(r"(?:v27|_)(r\d+)(?![0-9A-Za-z])")
+FROZEN_INPUT_PREFIX = "results/sft_root_cause/v27_confirmation/"
+
+
+def command_tag_problems(tag: str, cmds: dict, preflight: str) -> list:
+    """Empty when every tagged identifier in the stored commands (generation, execution and
+    analysis paths, authorisation, gpu_run run names and exclusive key) names ``tag``. The
+    frozen job, manifest and preparation inputs, and the preflight's own path, are exempt."""
+    t = tagged_paths(tag)
+    frozen = {preflight, JOB, MANIFEST}
+    texts = {**{f"generate.{a}": c for a, c in cmds["generate"].items()},
+             **{f"gate.{a}": c for a, c in cmds["gates"].items()},
+             "execute": cmds["execute"], "analyse": cmds["analyse"]}
+    problems = [f"{where}: {token} is tagged {found}, not {tag}"
+                for where, text in texts.items() for token in text.split()
+                if token not in frozen and not token.startswith(FROZEN_INPUT_PREFIX)
+                for found in TAG_TOKEN.findall(token) if found != tag]
+    for arm, c in cmds["generate"].items():
+        for need in (f"--name {t['RUN_NAME_PREFIX']}{arm} ",
+                     f"--exclusive-key {t['EXCLUSIVE_KEY']} ",
+                     f"--out {t['OUT_ROOT']}/{arm} ", f"--authorization {t['AUTH']}"):
+            if need not in c:
+                problems.append(f"generate.{arm}: missing {need.strip()}")
+    return problems
+
+
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 
 
@@ -288,13 +348,19 @@ def main(argv=None) -> int:
                 "plan_sha256": analysis.analysis_plan_sha256(),
                 "implementation": ANALYSER, "implementation_sha256": sha(ANALYSER)})
 
+    cmds = stored_commands(args.tag, args.out, registry["arms"],
+                           manifest["requalification_records"]["path"])
     outputs = {**{a: f"{OUT_ROOT}/{a}" for a in registry["arms"]}, "execution": EXEC_OUT,
                "analysis": ANALYSIS_OUT}
     checks.add("output_paths_new_unique_and_not_r4",
                not any((ROOT / p).exists() for p in outputs.values())
                and len(set(outputs.values())) == len(outputs)
                and all(f"_{args.tag}" in p for p in outputs.values())
-               and not (ROOT / AUTH).exists(), {**outputs, "authorization": AUTH})
+               and not (ROOT / AUTH).exists()
+               and not command_tag_problems(args.tag, cmds, args.out),
+               {**outputs, "authorization": AUTH, "run_name_prefix": paths["RUN_NAME_PREFIX"],
+                "exclusive_key": paths["EXCLUSIVE_KEY"],
+                "command_tag_problems": command_tag_problems(args.tag, cmds, args.out)})
     mock_rehearsal(checks, cohort)
 
     machine_bound = {manifest["requalification_records"]["path"]: "derived preparation records "
@@ -312,24 +378,8 @@ def main(argv=None) -> int:
                 "opens_checked": evidence.get("opens_checked"),
                 "policy": evidence.get("protection_policy")})
 
-    py = ".venv-gpu/Scripts/python.exe"
-    generate = {arm: (f"{py} scripts/gpu_run.py start --name v27r5_generate_{arm} "
-                      f"--exclusive-key v27r5_generation -- {py} "
-                      f"scripts/native_generated_tests_generate.py run --job {JOB} --condition "
-                      f"{CONDITION} --arm {arm} --out {outputs[arm]} --backend hf --preflight "
-                      f"{args.out} --authorization {AUTH}") for arm in registry["arms"]}
-    gates = {arm: (f"{py} scripts/native_generated_tests_launch_gate.py --preflight {args.out} "
-                   f"--authorization {AUTH} --job {JOB} --arm {arm} --out {outputs[arm]}")
-             for arm in registry["arms"]}
-    execute = (f"wsl.exe -u root --cd {REPO_WSL} -- bash scripts/wsl_isolated.sh bash "
-               f"scripts/wsl_native_python.sh scripts/native_generated_tests_execute_wsl.py run "
-               f"--prep {manifest['requalification_records']['path']} --manifest {MANIFEST} "
-               f"--job {JOB} --generations {OUT_ROOT} --condition {CONDITION} --out {EXEC_OUT}")
-    analyse = (f"{py} {ANALYSER} analyse --manifest {MANIFEST} --job {JOB} --prep "
-               f"{manifest['requalification_records']['path']} --preflight {args.out} "
-               f"--execution-contract {EXEC_OUT}/execute_contract_{CONDITION}.json --results "
-               f"{EXEC_OUT}/results_{CONDITION}.jsonl --generations {OUT_ROOT} --condition "
-               f"{CONDITION} --study-mode {analysis.EXPLORATORY} --out {ANALYSIS_OUT}")
+    generate, gates = cmds["generate"], cmds["gates"]
+    execute, analyse = cmds["execute"], cmds["analyse"]
     ready = not checks.failed
     exp = cohort["expected"]
     receipt = {
