@@ -61,17 +61,16 @@ def test_seed_input_is_fixed():
 
 
 RECEIPT = ROOT / "results/sft_root_cause_v27_common_subset_r4.json"
-LOCAL = ROOT / "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility/contract.json"
 
 
-@pytest.mark.skipif(not LOCAL.is_file(), reason="local (git-ignored) eligibility evidence absent")
-def test_freeze_reproduces_the_committed_subset(tmp_path):
-    out = tmp_path / "subset.json"
-    assert freeze.main(["--out", str(out)]) == 0
-    fresh = json.loads(out.read_text(encoding="utf-8"))
+def test_provisional_v1_receipt_is_internally_consistent():
+    """v1 (PROVISIONAL, superseded by v2) used git-ignored inputs; on any clone its committed
+    receipt must still be self-consistent: the ID hash matches its ID list, membership matches
+    its per-target rows and the panel is never redefined."""
+    import hashlib
     committed = json.loads(RECEIPT.read_text(encoding="utf-8"))
-    assert fresh["common_subset_ids_sha256"] == committed["common_subset_ids_sha256"]
-    assert fresh["common_subset_ids"] == committed["common_subset_ids"]
-    assert all(t["native_runnable"] and t["atheris_eligible"]
-               for t in fresh["targets"] if t["in_common_subset"])
-    assert len(fresh["targets"]) == 34                       # the panel is never redefined
+    ids = committed["common_subset_ids"]
+    assert hashlib.sha256("\n".join(sorted(ids)).encode()).hexdigest() == \
+        committed["common_subset_ids_sha256"]
+    assert sorted(t["target_id"] for t in committed["targets"] if t["in_common_subset"]) == ids
+    assert len(committed["targets"]) == 34

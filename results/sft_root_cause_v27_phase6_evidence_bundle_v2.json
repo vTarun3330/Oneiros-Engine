@@ -1,0 +1,2794 @@
+{
+ "eligibility_contract": {
+  "counts": {
+   "adapter_covered": 6,
+   "cohort": 34,
+   "eligible_for_fuzzing": 3,
+   "sandbox_compatible": 29
+  },
+  "design_version": "oneiros_native_generated_tests_atheris_v5",
+  "fuzzing": false,
+  "harness_script_sha256": "f86080163a3060a7c11a147775fd12fbbd2f5902b34fe3e6862c0c3e540e73a5",
+  "inner_sha256": "ff90215bb4aef3c864a0d3604ad0eb076de68c5a0754ac6053fed15b9ff42b18",
+  "model": false,
+  "probe_script_sha256": "9acfc3e0f0c9269bbb4bec63860a6689d4f6f2c27f8d0005cb50b921c08a6e5e",
+  "schema_version": "oneiros_v27_atheris_eligibility_v2",
+  "seeds_sha256": [
+   "0096f0df6b21209afa623c109beb49841417bb940d63fc96cb37d8036bbf5187",
+   "4ed27eed3dcfc7fd4b2836cd1443ef404529caadf4a73ba52ad640cc6149b9c0",
+   "372b0ce0b3054fab41d7ef6fc6ffb051484f9c599ebae17c4a1ef7e74fca9638",
+   "44f2d83eb7de2ba14fcde8d8effbd421c264d1eaf04e1bae3899e4943e549a14",
+   "b54b0fd0a54c5a4b1ee7fc5591326e833ea86307e702cac5b1d140d269762f67",
+   "a763b955d8a67d95e51b06a0e9d8ee0a7ddc61c07b7b86d540355b8b040dc623",
+   "945a86094e6200e8c767c54de43533a2dbc90f7d2de06f17a3d9a7b6697057e4",
+   "6a9bc6a3c9d567d0d68ceb86b0dbac2984791ef28b20c936fd470bc76875e49c"
+  ]
+ },
+ "panel": {
+  "path": "results/sft_root_cause_v27_confirmation_panel_r4.json",
+  "sha256": "432965c0c0a89c505d76b3852c4b8714b99aae1d247e2c3d1f818cd0984c4317",
+  "targets": 34
+ },
+ "raw_sources_sha256": {
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/contract.json": "87a679e164fa9e66641e4273af26da1f8280d86548e5ab99e1d28a1f9dacc022",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/eligibility.jsonl": "7fe45b3647dd5825b66872db9d808b29bd6caf66ebab08bddb80a1c31fb536f0",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/boxed__mutmut_385449458ef3d89ba4ac1f50e08e4b088ce9a634.json": "8f2efe2618ea03e31536ca0197a0b92dca8f5f9d23b6887f2894e66cd29d5f7b",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/boxed__mutmut_4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8.json": "402802e472137dab0538c43481190f233355b69c922d44281beca0139074aaa2",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/boxed__mutmut_5b8721f51479ea909d919ac495af69f6040a64d1.json": "19ec56227a36ea09b99fd947891ac3948d75cdabf5e4226e479b186b33b7b812",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/boxed__mutmut_dc58270d5234752e22247f814431750eafcf6e5f.json": "19f2488449ee2f0d6406fbf37bf0e74f09e4ef49401ebf093ba90b58a980eed7",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/coleifer__peewee_47db8f79337eb7385854649ef3c9267ed508838b.json": "f3181e2601cb2bd24cbe97a8847bfc998ad6e486da6a762b35b6d2ae2bcda310",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/coleifer__peewee_914f4fc24002fb6f9ad0f2763b148a5ac63545a0.json": "49ef6a58347738aa2953a8c0e2ad3302cb3683d96382cda00aa1d51a96eeeb3a",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/coleifer__peewee_c511fb137f7b3d91436aabc5a7963ada217147ec.json": "c8ebf6d25f6d71f9fa9bf0d7ae99eff1829f7c0548c0d0d4beafbdbee8941f37",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/coleifer__peewee_f5e439d3eaa3aecc5621c6f121df854086eec008.json": "3efaf796db078fcd4098875147cafc82eabec75de0f9e86e3928f7cca23f2820",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/fsspec__filesystem_spec_073aac840748ab95bea39468306123268e316184.json": "294c038084f9be25827d94d3e3fbe9a1d359df1a0239e6346c473cd0c5658b13",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/fsspec__filesystem_spec_1724d540ee917f926f93b32b6580e637b3777adc.json": "5686ed396ca25bed32f8cb013a6018a2eebfbe1361175eba21b6dad76dea26db",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/fsspec__filesystem_spec_1da4c7132a720fe1059d94774b46d6cda625b453.json": "34b0f04b43c3d132f62bf1c9cd53176d14714cdc877eab65e84b6a5e5549e4f9",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/fsspec__filesystem_spec_5eec9f9353b8d517d296428441a84fa26e9a6438.json": "68713ee56ed5289d444b9cdc80a7893a25064f85620fc38269324e13e3f1f07b",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/fsspec__filesystem_spec_652325d9b9459286a5b72c7e6228b061fb29827c.json": "3d679bb8506a0e477bcc4c6d5ffdbff7218070a87fa250cbcdf165177a23015d",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/fsspec__filesystem_spec_933e992fc8d3247606b6d01abd22673989e5393c.json": "85031ac64875279c7095ac8582c216a8dc5472e2c2662119256a69678451b247",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/hynek__stamina_b09d541fdff686970c166faac27f388b841aeca2.json": "61f1eb5fbec9c254f88f5749cf2a4f6d6b8fb3e0911ea21019670163cfcf48f7",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/jpadilla__pyjwt_171062d2d734315272a901100aa4b109f2fc3c19.json": "c38108653bf87e289fc5246fbaa74d47d3b24a7c27be9da86e20478eef874e40",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/jpadilla__pyjwt_7bf32526738fe837387bdedd4849a4a525c33a79.json": "2f5e8ffe974147163ac19528e1573fd6626421ed11c4ed90a9ac6b09f47e1d2e",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/kozea__weasyprint_0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2.json": "833f01e9686e48a98d6aae266bd9423d8fa450936021ea474672d91aa121603e",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/kozea__weasyprint_d4d5a2a5a5e99afee8b8302ffab1265013f68cc1.json": "39eba3dac74dc01370028c0b34ebd3690cc138a9c90d7664334bf5a31a613c7e",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/marshmallow-code__apispec_f767e7522fd8c4280f1b21341f61476c7fe7e54e.json": "87b4785509b2b42714eadac136ed80c1deb6ff46c2cf9ed523b8448339f9580e",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/prompt-toolkit__python-prompt-toolkit_75eca874f8b3abbe7643d075711917504f3e4f6b.json": "e9100c030c3fe699b1e0406026d6ed71c70cc11873ce595840091725a6815fa7",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/pymysql__pymysql_34f267684f8cdfa0923fe6be4a990efa0cfda015.json": "818f8e86cb619ecbd3f075209a3d4368ed84603aabacb840d4575e65f32263ca",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/pypa__pipx_c8b1893db865ad581774a8aa8f467d7926ca1d88.json": "318dfae9479d8f496ad9ca0def155b9c39b2d01893c9fb1a46329dd47894860f",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/python-lsp__python-lsp-server_19fc07aa5dd444303cead45d841115a897252cd3.json": "b2ded53417daf74e30ca06b08818750be512333e10019976c7e9d4e9e73aa218",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/python-lsp__python-lsp-server_1a10b605aa731daba20e8c1827542b7145ad3059.json": "6e3f91c180107c49bd3d9da86569d35e20504ca17d75ecc21e02947fa0306d0d",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/pytransitions__transitions_8f6ca5f4ca268dd154f0a968d3861afada10430b.json": "2857b794cda4c5c7359d01e9c3066d036e984860dc0bb6d00cd2734d8454c09d",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/pytransitions__transitions_f970687f48f807dd5974f59c4d76abed2bd1e7bd.json": "de8da934b437e4d656a28c1d79c6cf3e19aef58bc08ddbab3ccdf7538992be3f",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/tox-dev__pipdeptree_214e9d48069909b7ff0fa6492632084b2fc6080d.json": "b0bd1512e449d9b7614c7b8793d1c7423f67020b0fcf0dc22526b91664e070c1",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_eligibility_v2/evidence/vega__altair_6c0bf289faa3c5f56a3c731cf864edb1d495c957.json": "fe4081b7b86e3ffaa456321d1faa210a62acf10bd9650cd19abc3436eaf858a7",
+  "results/sft_root_cause/v27_confirmation/phase6/native_control.jsonl": "0f11878a04a4e4f0afc88209b988a98f860654fa5f3738fa16cfb61c9c5a3cb0",
+  "results/sft_root_cause/v27_confirmation/r4_native_reach.jsonl": "02b90bfc2849ae1fea8bd76daf84ae8565d465c085f7ef85885458b1529c2320",
+  "results/sft_root_cause_v27_confirmation_panel_r4.json": "432965c0c0a89c505d76b3852c4b8714b99aae1d247e2c3d1f818cd0984c4317"
+ },
+ "redaction": "host paths scrubbed; stderr tails truncated to 200 characters; raw artifacts remain git-ignored and are bound by SHA-256",
+ "schema_version": "oneiros_v27_phase6_evidence_bundle_v2",
+ "targets": [
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:unsupported_parameter:node:BaseString",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "9ba558bdf28204bc462120416ca2a2bded53d6b801ebc1438589fa107f34c272",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "9ba558bdf28204bc462120416ca2a2bded53d6b801ebc1438589fa107f34c272",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "8f2efe2618ea03e31536ca0197a0b92dca8f5f9d23b6887f2894e66cd29d5f7b",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "1f4be256b3f58dc86ef3aea4617f830c15fa2c832796a767d3a60b6e5ec14e11",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:boxed/mutmut@385449458ef3d89ba4ac1f50e08e4b088ce9a634"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:receiver_constructor:unsupported_parameter:ids:set",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "bda0f1eac185eb6fa4f9b316890c65003ac6b5378d835e66f20101132f9a8d01",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "bda0f1eac185eb6fa4f9b316890c65003ac6b5378d835e66f20101132f9a8d01",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "402802e472137dab0538c43481190f233355b69c922d44281beca0139074aaa2",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "fd6e6ac308d284b151d671ab48e361fb98c82d4ca52ab61fc43635d8c06d47cc",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:boxed/mutmut@4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": true,
+    "arguments_built": true,
+    "consumes_fuzz_input": false,
+    "deterministic": true,
+    "eligible_for_fuzzing": false,
+    "failure_class": "zero_input",
+    "per_revision": {
+     "buggy": {
+      "arguments_built": true,
+      "consumes_fuzz_input": false,
+      "outcomes": [
+       "raise"
+      ],
+      "receiver_built": true,
+      "target_invoked": true,
+      "v5_terminating": false
+     },
+     "fixed": {
+      "arguments_built": true,
+      "consumes_fuzz_input": false,
+      "outcomes": [
+       "raise"
+      ],
+      "receiver_built": true,
+      "target_invoked": true,
+      "v5_terminating": false
+     }
+    },
+    "plan": {
+     "method": null,
+     "params": [],
+     "receiver": null
+    },
+    "probed": true,
+    "reason": "zero_input_invocable",
+    "receiver_built": true,
+    "structural_fuzz_inputs": 0,
+    "target_invoked": true,
+    "v5_terminating": false
+   },
+   "atheris_v2_children": {
+    "instrumentation": {
+     "normal_exit": true,
+     "returncode": 0,
+     "signal": null,
+     "stderr_sha256": "04c62f8d5b340e627eafa70eca356ed021d0bf3c04276964784d7d55a313daf5",
+     "stderr_tail": "utmut.mutation.trampoline_templates\nINFO: Instrumenting mutmut.type_checking\nINFO: Instrumenting mutmut.utils\nINFO: Instrumenting mutmut.utils.file_utils\nINFO: Instrumenting mutmut.utils.format_utils\n",
+     "stdout_sha256": "cbb2c542d89cb1f3f460f61eb463d939a995d51f89c3b4481a65fc44081aff48",
+     "timed_out": false
+    },
+    "invocations": {
+     "buggy": [
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "a94a928134d9bc98f5db50ea3b235572c4a914a9a472b749e753c05401294da3",
+       "timed_out": false
+      },
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "a94a928134d9bc98f5db50ea3b235572c4a914a9a472b749e753c05401294da3",
+       "timed_out": false
+      }
+     ],
+     "fixed": [
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "a94a928134d9bc98f5db50ea3b235572c4a914a9a472b749e753c05401294da3",
+       "timed_out": false
+      },
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "a94a928134d9bc98f5db50ea3b235572c4a914a9a472b749e753c05401294da3",
+       "timed_out": false
+      }
+     ]
+    },
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "5e26bf28bcbdfa8c1dcac75dca2b9e370a93376eb753b2b2b3bc89a914e16102",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "5e26bf28bcbdfa8c1dcac75dca2b9e370a93376eb753b2b2b3bc89a914e16102",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "19ec56227a36ea09b99fd947891ac3948d75cdabf5e4226e479b186b33b7b812",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "aa39fd28728b8dc266b8c25f5f10d42aaa0b994a3a5ef52eb1c1805b5c0eee4c",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:receiver_constructor:unsupported_parameter:operators:Sequence",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "1e007b09a576506038c2fb515a08b5b64069e573b3f1dcfa1d0e4f9e528cabcb",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "1e007b09a576506038c2fb515a08b5b64069e573b3f1dcfa1d0e4f9e528cabcb",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "19f2488449ee2f0d6406fbf37bf0e74f09e4ef49401ebf093ba90b58a980eed7",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "4f2d02d2aa3593f360830fe831782b235061a44e5f3b4c2a65c8a33a4eefaa61",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:boxed/mutmut@dc58270d5234752e22247f814431750eafcf6e5f"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:unsupported_parameter:model:None",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c77b1af3f16382eeb24f6b1cb2ff4948ade5ed53ca6f186cb0d26f60398e192e",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c77b1af3f16382eeb24f6b1cb2ff4948ade5ed53ca6f186cb0d26f60398e192e",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "f3181e2601cb2bd24cbe97a8847bfc998ad6e486da6a762b35b6d2ae2bcda310",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "65022c9d55daf10f411006503d115d57f48eab5c7c69033683253697a6782e03",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:coleifer/peewee@47db8f79337eb7385854649ef3c9267ed508838b"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "49ef6a58347738aa2953a8c0e2ad3302cb3683d96382cda00aa1d51a96eeeb3a",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "f7c24cacc03f8872a30d2347f54b0be54d7e85d27e79f2ec51613cad61e6afbd",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:coleifer/peewee@914f4fc24002fb6f9ad0f2763b148a5ac63545a0"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:receiver_constructor:unsupported_parameter:name:None",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "022087b04766482462909f9aa7a1554fa6e11d6a9f8e8d00f89b6d0106dd874a",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "022087b04766482462909f9aa7a1554fa6e11d6a9f8e8d00f89b6d0106dd874a",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "c8ebf6d25f6d71f9fa9bf0d7ae99eff1829f7c0548c0d0d4beafbdbee8941f37",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "c42016b6c4314567c7180284b074a3540c5867e38c8500f2e5ab16a1914d6327",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:coleifer/peewee@c511fb137f7b3d91436aabc5a7963ada217147ec"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "3efaf796db078fcd4098875147cafc82eabec75de0f9e86e3928f7cca23f2820",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "a7577304fba9a89250b36744b534edc22b59bf955ca76e327f5de4edb07419a3",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:coleifer/peewee@f5e439d3eaa3aecc5621c6f121df854086eec008"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "294c038084f9be25827d94d3e3fbe9a1d359df1a0239e6346c473cd0c5658b13",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "84445877b0f53f37f0c9a976c55d6687b730735562a682692a3c12b7824b3470",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:fsspec/filesystem_spec@073aac840748ab95bea39468306123268e316184"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "target",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "revision_load_mismatch:adapter_unsupported:unsupported_parameter:starts:list",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "60c77d07bcea7d173526e40cee20884ad8d58c5752e0407eda96af8da40060c2",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "3c328249148b575052b948c9a3a39e8d15b09d2bc2a4f31fa9fa609127da8024",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "5686ed396ca25bed32f8cb013a6018a2eebfbe1361175eba21b6dad76dea26db",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "bc68808524351b4153c014fdcd3da83eae25f1e521b033bb8a8749904c73fd24",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:fsspec/filesystem_spec@1724d540ee917f926f93b32b6580e637b3777adc"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "34b0f04b43c3d132f62bf1c9cd53176d14714cdc877eab65e84b6a5e5549e4f9",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "526ff03951e8f563247223add4f5217aee41fb207bacfa81aec6739321242157",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:fsspec/filesystem_spec@1da4c7132a720fe1059d94774b46d6cda625b453"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "68713ee56ed5289d444b9cdc80a7893a25064f85620fc38269324e13e3f1f07b",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "a087ea5361c86f068d1b6e3831b0a21d88a7f90d7e3b5ec440bde4e70e3cefc9",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:fsspec/filesystem_spec@5eec9f9353b8d517d296428441a84fa26e9a6438"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "3d679bb8506a0e477bcc4c6d5ffdbff7218070a87fa250cbcdf165177a23015d",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "94e011c81a5b865d71fbb617f4e85cc66ec5d5d843431dd741e608074d31bcde",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:fsspec/filesystem_spec@652325d9b9459286a5b72c7e6228b061fb29827c"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "85031ac64875279c7095ac8582c216a8dc5472e2c2662119256a69678451b247",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "57c9273595cfeafde06d47f4d3dfbd83aa593422199fd2128cd2cdbfff3d7fcb",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:fsspec/filesystem_spec@933e992fc8d3247606b6d01abd22673989e5393c"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "policy",
+    "per_revision": null,
+    "plan": null,
+    "probed": false,
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": null,
+   "atheris_v2_evidence_sha256": null,
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "e4b17ada093d9c2bbbfc3148b7222b21db0f69a3bd535715228fd44ab1884b2b",
+    "passed": false,
+    "repetitions": [
+     false,
+     false
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:fsspec/filesystem_spec@ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "policy",
+    "per_revision": null,
+    "plan": null,
+    "probed": false,
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": null,
+   "atheris_v2_evidence_sha256": null,
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "87a4346b1fb54d95f3f52ede84ca904cec521e03de71cf4c078b756035efd5c6",
+    "passed": false,
+    "repetitions": [
+     false,
+     false
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:fsspec/filesystem_spec@ee30764e64dbd338f7494a45b30b1ece1465386f"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": true,
+    "arguments_built": true,
+    "consumes_fuzz_input": true,
+    "deterministic": false,
+    "eligible_for_fuzzing": false,
+    "failure_class": "target",
+    "per_revision": {
+     "buggy": {
+      "arguments_built": true,
+      "consumes_fuzz_input": true,
+      "outcomes": [
+       "ok",
+       "raise"
+      ],
+      "receiver_built": true,
+      "target_invoked": true,
+      "v5_terminating": false
+     },
+     "fixed": {
+      "arguments_built": true,
+      "consumes_fuzz_input": true,
+      "outcomes": [
+       "ok"
+      ],
+      "receiver_built": true,
+      "target_invoked": true,
+      "v5_terminating": false
+     }
+    },
+    "plan": {
+     "method": null,
+     "params": [
+      {
+       "keyword": false,
+       "name": "num",
+       "spec": {
+        "kind": "prim",
+        "type": "int"
+       }
+      },
+      {
+       "keyword": false,
+       "name": "max_backoff",
+       "spec": {
+        "kind": "prim",
+        "type": "float"
+       }
+      },
+      {
+       "keyword": false,
+       "name": "initial",
+       "spec": {
+        "kind": "prim",
+        "type": "float"
+       }
+      },
+      {
+       "keyword": false,
+       "name": "exp_base",
+       "spec": {
+        "kind": "prim",
+        "type": "float"
+       }
+      },
+      {
+       "keyword": false,
+       "name": "max_jitter",
+       "spec": {
+        "kind": "prim",
+        "type": "float"
+       }
+      }
+     ],
+     "receiver": null
+    },
+    "probed": true,
+    "reason": "nondeterministic_invocation",
+    "receiver_built": true,
+    "structural_fuzz_inputs": 5,
+    "target_invoked": true,
+    "v5_terminating": false
+   },
+   "atheris_v2_children": {
+    "instrumentation": {
+     "normal_exit": true,
+     "returncode": 0,
+     "signal": null,
+     "stderr_sha256": "429d36db39931075c56a8b956cd72614ccfb99c6940f961b15c883be0b6ec07e",
+     "stderr_tail": "umenting tenacity.asyncio\nINFO: Instrumenting tenacity.asyncio.retry\nINFO: Instrumenting sniffio\nINFO: Instrumenting sniffio._version\nINFO: Instrumenting sniffio._impl\nINFO: Instrumenting contextvars\n",
+     "stdout_sha256": "cbb2c542d89cb1f3f460f61eb463d939a995d51f89c3b4481a65fc44081aff48",
+     "timed_out": false
+    },
+    "invocations": {
+     "buggy": [
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "a500ee614aee871afaadcab7ca0437a27ec76b96d579e829eeb3556c98593bc0",
+       "timed_out": false
+      },
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "1fd9ec5bd85b234b85ccf1f16dee649ed7a0617134125dd85ddb3b31b42ace7d",
+       "timed_out": false
+      }
+     ],
+     "fixed": [
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "7bbcc09014f74bacce2018def3c1a77bc01f650f0f33211a3dfe62746eedd78f",
+       "timed_out": false
+      },
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "d1baab21ef02999cbc575d922e22d6b4fc59eb023c291473dd58b2f865b26feb",
+       "timed_out": false
+      }
+     ]
+    },
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "16f45124625873afb8aba2fe59c14cc02731812f039b1f964bc6c49f1e1e4ca0",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "16f45124625873afb8aba2fe59c14cc02731812f039b1f964bc6c49f1e1e4ca0",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "61f1eb5fbec9c254f88f5749cf2a4f6d6b8fb3e0911ea21019670163cfcf48f7",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "91ceb7004bf409e1105f50daffebdd237cba1701f7e773be9538428159c1b75d",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:hynek/stamina@b09d541fdff686970c166faac27f388b841aeca2"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": true,
+    "arguments_built": true,
+    "consumes_fuzz_input": true,
+    "deterministic": true,
+    "eligible_for_fuzzing": true,
+    "failure_class": null,
+    "per_revision": {
+     "buggy": {
+      "arguments_built": true,
+      "consumes_fuzz_input": true,
+      "outcomes": [
+       "ok"
+      ],
+      "receiver_built": true,
+      "target_invoked": true,
+      "v5_terminating": false
+     },
+     "fixed": {
+      "arguments_built": true,
+      "consumes_fuzz_input": true,
+      "outcomes": [
+       "ok"
+      ],
+      "receiver_built": true,
+      "target_invoked": true,
+      "v5_terminating": false
+     }
+    },
+    "plan": {
+     "method": null,
+     "params": [
+      {
+       "keyword": false,
+       "name": "value",
+       "spec": {
+        "kind": "union",
+        "options": [
+         {
+          "kind": "prim",
+          "type": "bytes"
+         },
+         {
+          "kind": "prim",
+          "type": "str"
+         }
+        ]
+       }
+      }
+     ],
+     "receiver": null
+    },
+    "probed": true,
+    "reason": null,
+    "receiver_built": true,
+    "structural_fuzz_inputs": 1,
+    "target_invoked": true,
+    "v5_terminating": false
+   },
+   "atheris_v2_children": {
+    "instrumentation": {
+     "normal_exit": true,
+     "returncode": 0,
+     "signal": null,
+     "stderr_sha256": "d1e5447b8588c1c49b54b031225526102ecf079f4f2c10f7415436f2f4395fa3",
+     "stderr_tail": "FO: Instrumenting email.iterators\nINFO: Instrumenting ssl\nINFO: Instrumenting urllib.request\nINFO: Instrumenting urllib.error\nINFO: Instrumenting urllib.response\nINFO: Instrumenting jwt.jwk_set_cache\n",
+     "stdout_sha256": "cbb2c542d89cb1f3f460f61eb463d939a995d51f89c3b4481a65fc44081aff48",
+     "timed_out": false
+    },
+    "invocations": {
+     "buggy": [
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "2257a80c86922945461f54e056fad885198469b3b94ef800a6bab0b38a89a629",
+       "timed_out": false
+      },
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "2257a80c86922945461f54e056fad885198469b3b94ef800a6bab0b38a89a629",
+       "timed_out": false
+      }
+     ],
+     "fixed": [
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "2257a80c86922945461f54e056fad885198469b3b94ef800a6bab0b38a89a629",
+       "timed_out": false
+      },
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "2257a80c86922945461f54e056fad885198469b3b94ef800a6bab0b38a89a629",
+       "timed_out": false
+      }
+     ]
+    },
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "5b94a51603617f6bc932006b16c7a2cb3063de1421dbb33ac08def160a79cc24",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "5b94a51603617f6bc932006b16c7a2cb3063de1421dbb33ac08def160a79cc24",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "c38108653bf87e289fc5246fbaa74d47d3b24a7c27be9da86e20478eef874e40",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "2739f1a135b9e283c055bbffa31f1b773caa0c62d2d964bf07c4b902b31e8417",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:jpadilla/pyjwt@171062d2d734315272a901100aa4b109f2fc3c19"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": true,
+    "arguments_built": true,
+    "consumes_fuzz_input": true,
+    "deterministic": true,
+    "eligible_for_fuzzing": true,
+    "failure_class": null,
+    "per_revision": {
+     "buggy": {
+      "arguments_built": true,
+      "consumes_fuzz_input": true,
+      "outcomes": [
+       "raise"
+      ],
+      "receiver_built": true,
+      "target_invoked": true,
+      "v5_terminating": false
+     },
+     "fixed": {
+      "arguments_built": true,
+      "consumes_fuzz_input": true,
+      "outcomes": [
+       "raise"
+      ],
+      "receiver_built": true,
+      "target_invoked": true,
+      "v5_terminating": false
+     }
+    },
+    "plan": {
+     "method": null,
+     "params": [
+      {
+       "keyword": false,
+       "name": "segment",
+       "spec": {
+        "kind": "prim",
+        "type": "bytes"
+       }
+      },
+      {
+       "keyword": false,
+       "name": "name",
+       "spec": {
+        "kind": "prim",
+        "type": "str"
+       }
+      }
+     ],
+     "receiver": null
+    },
+    "probed": true,
+    "reason": null,
+    "receiver_built": true,
+    "structural_fuzz_inputs": 2,
+    "target_invoked": true,
+    "v5_terminating": false
+   },
+   "atheris_v2_children": {
+    "instrumentation": {
+     "normal_exit": true,
+     "returncode": 0,
+     "signal": null,
+     "stderr_sha256": "d1e5447b8588c1c49b54b031225526102ecf079f4f2c10f7415436f2f4395fa3",
+     "stderr_tail": "FO: Instrumenting email.iterators\nINFO: Instrumenting ssl\nINFO: Instrumenting urllib.request\nINFO: Instrumenting urllib.error\nINFO: Instrumenting urllib.response\nINFO: Instrumenting jwt.jwk_set_cache\n",
+     "stdout_sha256": "cbb2c542d89cb1f3f460f61eb463d939a995d51f89c3b4481a65fc44081aff48",
+     "timed_out": false
+    },
+    "invocations": {
+     "buggy": [
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "a5325d48e81b8768d2c8bf6cf3c851b15b98a2728fa85fed8f987e50c69331f8",
+       "timed_out": false
+      },
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "a5325d48e81b8768d2c8bf6cf3c851b15b98a2728fa85fed8f987e50c69331f8",
+       "timed_out": false
+      }
+     ],
+     "fixed": [
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "a5325d48e81b8768d2c8bf6cf3c851b15b98a2728fa85fed8f987e50c69331f8",
+       "timed_out": false
+      },
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "a5325d48e81b8768d2c8bf6cf3c851b15b98a2728fa85fed8f987e50c69331f8",
+       "timed_out": false
+      }
+     ]
+    },
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "52bdb4d0b8ef725751d5063df09a873c311d9417e3ceed3e0716cde8b9c1005f",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "52bdb4d0b8ef725751d5063df09a873c311d9417e3ceed3e0716cde8b9c1005f",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "2f5e8ffe974147163ac19528e1573fd6626421ed11c4ed90a9ac6b09f47e1d2e",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "7f7bfe322dc086050dc147b39b3af82f679a1ca1da1aedf6a82337ad9273cb28",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:jpadilla/pyjwt@7bf32526738fe837387bdedd4849a4a525c33a79"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:unsupported_parameter:context:None",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "ca8e28771c1507558b8ba542f1421d31aaca6452f05dec391a962ef0233fdcc0",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "ca8e28771c1507558b8ba542f1421d31aaca6452f05dec391a962ef0233fdcc0",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "833f01e9686e48a98d6aae266bd9423d8fa450936021ea474672d91aa121603e",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "96b573a27c0b9715b865dcdfeaacfaabc1a58ba93241d93a2cce6259c0186182",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:kozea/weasyprint@0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:unsupported_parameter:box:None",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "e9a8cc024b11c99317be1cc113227782135fc750a3088777152a897a0b90a564",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "e9a8cc024b11c99317be1cc113227782135fc750a3088777152a897a0b90a564",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "39eba3dac74dc01370028c0b34ebd3690cc138a9c90d7664334bf5a31a613c7e",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "588728a091331b0cad603685dcc6d9422af521f0ad2dae19eb75481a237c1925",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:kozea/weasyprint@d4d5a2a5a5e99afee8b8302ffab1265013f68cc1"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:unsupported_parameter:field:None",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "6e59ed2684090934b4bc694f8ae4aa229194913bc70e05a165d76121cd4e6bfb",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "6e59ed2684090934b4bc694f8ae4aa229194913bc70e05a165d76121cd4e6bfb",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "87b4785509b2b42714eadac136ed80c1deb6ff46c2cf9ed523b8448339f9580e",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "e78306babf62046ad5330bce160915ffea11388228ca82546f3d856750acd784",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:marshmallow-code/apispec@f767e7522fd8c4280f1b21341f61476c7fe7e54e"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": true,
+    "arguments_built": true,
+    "consumes_fuzz_input": true,
+    "deterministic": true,
+    "eligible_for_fuzzing": true,
+    "failure_class": null,
+    "per_revision": {
+     "buggy": {
+      "arguments_built": true,
+      "consumes_fuzz_input": true,
+      "outcomes": [
+       "ok"
+      ],
+      "receiver_built": true,
+      "target_invoked": true,
+      "v5_terminating": false
+     },
+     "fixed": {
+      "arguments_built": true,
+      "consumes_fuzz_input": true,
+      "outcomes": [
+       "ok"
+      ],
+      "receiver_built": true,
+      "target_invoked": true,
+      "v5_terminating": false
+     }
+    },
+    "plan": {
+     "method": "_is_word_before_cursor_complete",
+     "params": [
+      {
+       "keyword": false,
+       "name": "WORD",
+       "spec": {
+        "kind": "prim",
+        "type": "bool"
+       }
+      }
+     ],
+     "receiver": {
+      "module": "prompt_toolkit.document",
+      "plan": [
+       {
+        "keyword": false,
+        "name": "text",
+        "spec": {
+         "kind": "prim",
+         "type": "str"
+        }
+       },
+       {
+        "keyword": false,
+        "name": "cursor_position",
+        "spec": {
+         "kind": "union",
+         "options": [
+          {
+           "kind": "prim",
+           "type": "int"
+          },
+          {
+           "kind": "none"
+          }
+         ]
+        }
+       }
+      ],
+      "qualname": "Document"
+     }
+    },
+    "probed": true,
+    "reason": null,
+    "receiver_built": true,
+    "structural_fuzz_inputs": 3,
+    "target_invoked": true,
+    "v5_terminating": false
+   },
+   "atheris_v2_children": {
+    "instrumentation": {
+     "normal_exit": true,
+     "returncode": 0,
+     "signal": null,
+     "stderr_sha256": "bc8c8f1956b76b82f5bc46ccf437fe9777686e67ca2f177538f2963736fe2889",
+     "stderr_tail": "suggest\nINFO: Instrumenting prompt_toolkit.key_binding.bindings.open_in_editor\nINFO: Instrumenting prompt_toolkit.shortcuts.utils\nINFO: Instrumenting email.parser\nINFO: Instrumenting email.feedparser\n",
+     "stdout_sha256": "cbb2c542d89cb1f3f460f61eb463d939a995d51f89c3b4481a65fc44081aff48",
+     "timed_out": false
+    },
+    "invocations": {
+     "buggy": [
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "34c7705157c9796d6ad49e198624bef7b5921e0ca284774e0967ff36371748af",
+       "timed_out": false
+      },
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "34c7705157c9796d6ad49e198624bef7b5921e0ca284774e0967ff36371748af",
+       "timed_out": false
+      }
+     ],
+     "fixed": [
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "6a484c097c84713041f62436af8c27d88592a33e5fb9e2d6677bbeffcbf56b81",
+       "timed_out": false
+      },
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+       "stderr_tail": "",
+       "stdout_sha256": "6a484c097c84713041f62436af8c27d88592a33e5fb9e2d6677bbeffcbf56b81",
+       "timed_out": false
+      }
+     ]
+    },
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "57e464fb8fc5065efe44783e46a94fd1f31cb1c52d32ab9650ca8cba8eb86559",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "57e464fb8fc5065efe44783e46a94fd1f31cb1c52d32ab9650ca8cba8eb86559",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "e9100c030c3fe699b1e0406026d6ed71c70cc11873ce595840091725a6815fa7",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "3ff14e9d1c49d2ed269af4a9fb8b6b4d50fe879b9f59b1619423f52bf1b95de2",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:prompt-toolkit/python-prompt-toolkit@75eca874f8b3abbe7643d075711917504f3e4f6b"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:unsupported_parameter:obj:None",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "5f6389865f1486ac72c3daa30594cee61d782c72dad02ad0964c3d56a62e04bb",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "5f6389865f1486ac72c3daa30594cee61d782c72dad02ad0964c3d56a62e04bb",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "818f8e86cb619ecbd3f075209a3d4368ed84603aabacb840d4575e65f32263ca",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "a7aa17c47cc32916aa79b664d067a2f5159059f1c97931f44af838727681f73f",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:pymysql/pymysql@34f267684f8cdfa0923fe6be4a990efa0cfda015"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:unsupported_parameter:resource_path:Path",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "4c4a551a98360166bbb3ace11fbdc3c2003390e68820d88dbfb2c92c85a7b367",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "4c4a551a98360166bbb3ace11fbdc3c2003390e68820d88dbfb2c92c85a7b367",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "318dfae9479d8f496ad9ca0def155b9c39b2d01893c9fb1a46329dd47894860f",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "8a65c4fe2901f905a55870720e6296e93ee4d0515bf404cb94bdbe0932c2cd4c",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:pypa/pipx@c8b1893db865ad581774a8aa8f467d7926ca1d88"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:unsupported_parameter:config:Config",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "4750a477e3578f8466b0d644829f324d6ec352b1ab9b64f624d43a3ac33266fa",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "4750a477e3578f8466b0d644829f324d6ec352b1ab9b64f624d43a3ac33266fa",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "b2ded53417daf74e30ca06b08818750be512333e10019976c7e9d4e9e73aa218",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "a27ab9bac16d9e05c7134077a563e93a5bec1c53c24b0689f78c09c646877994",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:python-lsp/python-lsp-server@19fc07aa5dd444303cead45d841115a897252cd3"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:unsupported_parameter:root:None",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "a55a9a187618d5cce15afe9a899f6d9c56ed823fdc30c10f8a5f66b5201d94f4",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "a55a9a187618d5cce15afe9a899f6d9c56ed823fdc30c10f8a5f66b5201d94f4",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "6e3f91c180107c49bd3d9da86569d35e20504ca17d75ecc21e02947fa0306d0d",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "5d1656425179aa4cd95e375bdf147f17829e74180a6775382dd342bb338e20db",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:python-lsp/python-lsp-server@1a10b605aa731daba20e8c1827542b7145ad3059"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:receiver_constructor:unsupported_parameter:func:None",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "e65893eb1a80c9be75e1eeaa073002e699fb7d7464c43507185e5b87af6f42ee",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "e65893eb1a80c9be75e1eeaa073002e699fb7d7464c43507185e5b87af6f42ee",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "2857b794cda4c5c7359d01e9c3066d036e984860dc0bb6d00cd2734d8454c09d",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "3f8738b8314431e39efb4f386b3bc877fda0a9f65dfd8ff8ef6191d9b3a96017",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:pytransitions/transitions@8f6ca5f4ca268dd154f0a968d3861afada10430b"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:receiver_constructor:variadic_signature",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "c2b644b22541fb4d6f21b4142bd1634bc2b826e8ca1d2bd0f85332983db78fd0",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "de8da934b437e4d656a28c1d79c6cf3e19aef58bc08ddbab3ccdf7538992be3f",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "4a607daba0b18bf4e0e715d5112d1d0972bc9ddb6d7e2096be828a0b9554b8be",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:pytransitions/transitions@f970687f48f807dd5974f59c4d76abed2bd1e7bd"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "policy",
+    "per_revision": null,
+    "plan": null,
+    "probed": false,
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": null,
+   "atheris_v2_evidence_sha256": null,
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 1
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "84fcb7bfd66129ec37dc54a9121d71bd23dec8f5c167658b72015489c330a4cf",
+    "passed": false,
+    "repetitions": [
+     false,
+     false
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:pyvista/pyvista@507e77ca880fdd34757989df7422e101595818a9"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "policy",
+    "per_revision": null,
+    "plan": null,
+    "probed": false,
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": null,
+   "atheris_v2_evidence_sha256": null,
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 1
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "b2be44d1ecf8a91827a650d5daabcb17ef88029b755f979e15933fdf7371b623",
+    "passed": false,
+    "repetitions": [
+     false,
+     false
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:pyvista/pyvista@631db08ed32f898ec8f59cbffa30cf80e9cbb1a3"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "policy",
+    "per_revision": null,
+    "plan": null,
+    "probed": false,
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": null,
+   "atheris_v2_evidence_sha256": null,
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 1
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "ceea3ec0bc84817f65c5296f39586b49330a387954f22f7fbdeb12f647d4ff49",
+    "passed": false,
+    "repetitions": [
+     false,
+     false
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:pyvista/pyvista@eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": true,
+    "arguments_built": true,
+    "consumes_fuzz_input": false,
+    "deterministic": true,
+    "eligible_for_fuzzing": false,
+    "failure_class": "target",
+    "per_revision": {
+     "buggy": {
+      "arguments_built": true,
+      "consumes_fuzz_input": false,
+      "outcomes": [
+       "system_exit"
+      ],
+      "receiver_built": true,
+      "target_invoked": true,
+      "v5_terminating": true
+     },
+     "fixed": {
+      "arguments_built": true,
+      "consumes_fuzz_input": false,
+      "outcomes": [
+       "system_exit"
+      ],
+      "receiver_built": true,
+      "target_invoked": true,
+      "v5_terminating": true
+     }
+    },
+    "plan": {
+     "method": null,
+     "params": [],
+     "receiver": null
+    },
+    "probed": true,
+    "reason": "target_terminates_interpreter:system_exit",
+    "receiver_built": true,
+    "structural_fuzz_inputs": 0,
+    "target_invoked": true,
+    "v5_terminating": true
+   },
+   "atheris_v2_children": {
+    "instrumentation": {
+     "normal_exit": true,
+     "returncode": 0,
+     "signal": null,
+     "stderr_sha256": "d32f5f70b321995d32f6a8dcce2c005d1c3cff55ac57f3fe6383012209c75208",
+     "stderr_tail": "to instrument_imports(), or file an issue on GitHub.\nINFO: Instrumenting signal\nINFO: Instrumenting fcntl\nINFO: Instrumenting _posixsubprocess\nINFO: Instrumenting select\nINFO: Instrumenting selectors\n",
+     "stdout_sha256": "cbb2c542d89cb1f3f460f61eb463d939a995d51f89c3b4481a65fc44081aff48",
+     "timed_out": false
+    },
+    "invocations": {
+     "buggy": [
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "fb083a426ca25aff69b1dda9aa7310ca96b1beff1db1c3ca425d0c6626657f82",
+       "stderr_tail": "ironment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\n",
+       "stdout_sha256": "1fe7c74283cc747b7f40871f27da038642cae7c448524de0417c718163edcdb4",
+       "timed_out": false
+      },
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "fb083a426ca25aff69b1dda9aa7310ca96b1beff1db1c3ca425d0c6626657f82",
+       "stderr_tail": "ironment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\n",
+       "stdout_sha256": "1fe7c74283cc747b7f40871f27da038642cae7c448524de0417c718163edcdb4",
+       "timed_out": false
+      }
+     ],
+     "fixed": [
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "fb083a426ca25aff69b1dda9aa7310ca96b1beff1db1c3ca425d0c6626657f82",
+       "stderr_tail": "ironment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\n",
+       "stdout_sha256": "1fe7c74283cc747b7f40871f27da038642cae7c448524de0417c718163edcdb4",
+       "timed_out": false
+      },
+      {
+       "normal_exit": true,
+       "returncode": 0,
+       "signal": null,
+       "stderr_sha256": "fb083a426ca25aff69b1dda9aa7310ca96b1beff1db1c3ca425d0c6626657f82",
+       "stderr_tail": "ironment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\nUnable to detect virtual environment.\n",
+       "stdout_sha256": "1fe7c74283cc747b7f40871f27da038642cae7c448524de0417c718163edcdb4",
+       "timed_out": false
+      }
+     ]
+    },
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "7b1a07bd7f17e5d969084eb62a78deb7fb1cda29f7b3ffac1ef929df2a995da2",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "7b1a07bd7f17e5d969084eb62a78deb7fb1cda29f7b3ffac1ef929df2a995da2",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "b0bd1512e449d9b7614c7b8793d1c7423f67020b0fcf0dc22526b91664e070c1",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "fbdbc6c881b3ff1f349b67b916b89c4a0ab87d7c9c06541667778cfc80b76407",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:tox-dev/pipdeptree@214e9d48069909b7ff0fa6492632084b2fc6080d"
+  },
+  {
+   "atheris_v2": {
+    "adapter_covered": false,
+    "arguments_built": null,
+    "consumes_fuzz_input": null,
+    "deterministic": null,
+    "eligible_for_fuzzing": false,
+    "failure_class": "adapter",
+    "per_revision": null,
+    "plan": null,
+    "probed": true,
+    "reason": "adapter_unsupported:unsupported_parameter:data:DataFrame",
+    "receiver_built": null,
+    "structural_fuzz_inputs": null,
+    "target_invoked": null,
+    "v5_terminating": null
+   },
+   "atheris_v2_children": {
+    "instrumentation": null,
+    "invocations": null,
+    "probe": {
+     "buggy": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "0111dc6855925e129d4746308914bb8cfda05bb6553dddde5b7f753507be2b73",
+      "timed_out": false
+     },
+     "fixed": {
+      "normal_exit": true,
+      "returncode": 0,
+      "signal": null,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": "",
+      "stdout_sha256": "0111dc6855925e129d4746308914bb8cfda05bb6553dddde5b7f753507be2b73",
+      "timed_out": false
+     }
+    }
+   },
+   "atheris_v2_evidence_sha256": "fe4081b7b86e3ffaa456321d1faa210a62acf10bd9650cd19abc3436eaf858a7",
+   "native_reach": {
+    "entered": {
+     "buggy": true,
+     "fixed": true
+    },
+    "pytest_exit": {
+     "buggy": 1,
+     "fixed": 0
+    },
+    "reach": "reach_verified"
+   },
+   "sandbox_control": {
+    "deterministic": true,
+    "evidence_sha256": "68f84f29129234aaadfa78779733c4bae314ada9ae4d1c6b03c36878d4436bf3",
+    "passed": true,
+    "repetitions": [
+     true,
+     true
+    ],
+    "uids": [
+     65534
+    ]
+   },
+   "target_id": "cand:vega/altair@6c0bf289faa3c5f56a3c731cf864edb1d495c957"
+  }
+ ]
+}
