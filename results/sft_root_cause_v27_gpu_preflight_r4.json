@@ -1,0 +1,442 @@
+{
+ "adapter_manifest_sha256": "82f24fed40316249f307fc6b835f2d1fa9d1b7ada61e72e9892fb397e377f2a0",
+ "analysis_plan": {
+  "atheris": "the 3-target fuzzable subset is a separate descriptive adapter-coverage analysis and never selects or filters the model-evaluation cohort",
+  "claims": "no promotion or generalisation claim from a non-significant result; the predeclared promotion gate (p < 0.01) is not expected to be reachable (80% power unattainable at alpha 0.01 under the assumed discordance)",
+  "excluded": "environment/harness failures are reported, never counted as model failures; the 5 policy exclusions are reported separately",
+  "primary": "paired exploratory comparison on the SAME 29 targets: per-target Kill@8 (a candidate fails on the buggy revision and passes on the fixed revision), base vs A@431 (and base vs relearning when unblocked)",
+  "secondary": "Kill@1/2/4, parse, execution and reference validity per requested/parsed/executed candidate, function-level reference validity, duplicate/diversity, failure taxonomy, complexity/defect-family slices",
+  "statistics": "exact paired counts, two-sided exact McNemar, Wilson 95% intervals; repository-level descriptive summary and a one-target-per-repository sensitivity (14 repositories)"
+ },
+ "arms": {
+  "base": {
+   "adapter": null,
+   "model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+   "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a"
+  },
+  "relearn": {
+   "adapter_dir": "checkpoints/local_sft_relearn_v2_seed42/sft_validation_best/checkpoint-141",
+   "adapter_sha256": "af262f4f8b43bab5426df6bf2556769818ca6f8e5cf8c85412238962ea659e63",
+   "hash_receipt": "results/v4_2_failure_taxonomy_relearning.json",
+   "label": "relearning checkpoint-141",
+   "reason": "the native generator (scripts/native_generated_tests_generate.py) and the execution/IO pipeline accept only arms ('base', 'sft'), with 'sft' pinned to A@431; a relearning run needs a reviewed, tested generator extension (a third arm bound to this adapter hash), a new preflight and its own authorisation",
+   "receipt": "results/v4_2_relearning_receipt.json",
+   "status": "BLOCKED"
+  },
+  "sft": {
+   "adapter_dir": "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter",
+   "adapter_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+   "label": "A@431",
+   "receipt": "results/v4_2_development_selection_receipt.json"
+  }
+ },
+ "authorization_written": false,
+ "checks": {
+  "atheris_not_used_for_selection": {
+   "evidence": {
+    "cohort_definition": "native_executable (reach AND sandbox control); the Atheris fuzzable subset is a separate descriptive view"
+   },
+   "pass": true
+  },
+  "base_model_revision_immutable_and_local": {
+   "evidence": {
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "snapshot_manifest_sha256": "1358a55051e7cf5e8963a2b2e3cd1a2fc6a3768552fb24e8a5e2a5afb8f43364",
+    "tokenizer_manifest_sha256": "bc2ebf6999bee86ccae422d3bcba5c799bd7c29cf6f7e7522db01e37a03979d3"
+   },
+   "pass": true
+  },
+  "checkout_clean_and_synced": {
+   "evidence": {
+    "head": "159716d824614e377fc12187da1765f4050d4e53",
+    "problems": [],
+    "remote_sha": "159716d824614e377fc12187da1765f4050d4e53",
+    "review_materials": "locally excluded, present and untouched"
+   },
+   "pass": true
+  },
+  "cohort_bound_to_frozen_34_target_panel": {
+   "evidence": {
+    "panel_sha256": "432965c0c0a89c505d76b3852c4b8714b99aae1d247e2c3d1f818cd0984c4317",
+    "panel_status": "CONFIRMATION_BUILT_UNDERPOWERED"
+   },
+   "pass": true
+  },
+  "cohort_is_the_29_native_executable_targets": {
+   "evidence": {
+    "ids_sha256": "72047985124f2c7bd6c967c0fa4d75d4db6f5be65036cbbc599f02f6af0fa676",
+    "targets": 29
+   },
+   "pass": true
+  },
+  "five_policy_exclusions_reported_separately": {
+   "evidence": [
+    {
+     "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+     "target_key": "cand:fsspec/filesystem_spec@ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e"
+    },
+    {
+     "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+     "target_key": "cand:fsspec/filesystem_spec@ee30764e64dbd338f7494a45b30b1ece1465386f"
+    },
+    {
+     "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+     "target_key": "cand:pyvista/pyvista@507e77ca880fdd34757989df7422e101595818a9"
+    },
+    {
+     "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+     "target_key": "cand:pyvista/pyvista@631db08ed32f898ec8f59cbffa30cf80e9cbb1a3"
+    },
+    {
+     "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+     "target_key": "cand:pyvista/pyvista@eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116"
+    }
+   ],
+   "pass": true
+  },
+  "gpu_idle_and_resources_sufficient": {
+   "evidence": {
+    "disk_free_gib": 92.5,
+    "memory_total_mib": 24570,
+    "memory_used_mib": 1800,
+    "name": "NVIDIA RTX 4500 Ada Generation",
+    "python_compute_processes": [],
+    "utilization_pct": 0
+   },
+   "pass": true
+  },
+  "identical_evaluator_sandbox_and_timeouts": {
+   "evidence": {
+    "executor_design": "oneiros_native_generated_tests_execute_v5",
+    "executor_sha256": "f1ef59dd80443e745d616fb95905ccf316144cd42dd211460cd4185baa64dcca",
+    "inner_sha256": "ff90215bb4aef3c864a0d3604ad0eb076de68c5a0754ac6053fed15b9ff42b18",
+    "limits": {
+     "address_space_bytes": 4294967296,
+     "cpu_seconds": 60,
+     "fsize_bytes": 52428800,
+     "nofile": 256,
+     "nproc": 64,
+     "per_test_seconds": 10,
+     "wall_seconds": 90
+    },
+    "module_limits": {
+     "asserts": 100,
+     "target_calls": 200,
+     "tests": 25
+    },
+    "sandbox_canaries": "results/sft_root_cause/v27_confirmation/phase6/exec_canaries/canary_receipt_v2.json"
+   },
+   "pass": true
+  },
+  "identical_generation_contract_for_every_arm": {
+   "evidence": {
+    "contract": {
+     "attention_implementation": "sdpa",
+     "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+     "base_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+     "batch_size": 2,
+     "candidates": 8,
+     "do_sample": true,
+     "duplicates": "kept",
+     "extraction": "whole_output_single_fence_strip",
+     "max_new_tokens": 1024,
+     "prompt_token_limit": 2048,
+     "raw_output_retained": true,
+     "reranking": "none",
+     "seeds": [
+      42,
+      43,
+      44
+     ],
+     "sequence_limit": 3072,
+     "sft_adapter": "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter",
+     "temperature": 0.7,
+     "top_p": 0.9
+    },
+    "generator_version": "oneiros_native_generated_tests_generate_v5",
+    "note": "one frozen contract; the arm changes only the adapter"
+   },
+   "pass": true
+  },
+  "job_valid_prompts_frozen_no_leakage_no_truncation": {
+   "evidence": {
+    "builder": {
+     "builder_sha256": {
+      "permitted_view": "b9a95eee7deec9c3888f54ff5c44efaa3d8b551cc616a8d3a4ad811de9c762b9",
+      "v25_pytest_module_v1": "995cf270d2c7836edde29e48286281b30b03708b6bbef102bef422bb2f1e815a"
+     },
+     "builder_version": "oneiros_native_generated_test_prompt_v25_pytest_module_v1",
+     "output_type": "pytest_module_v1",
+     "scanner_version": "oneiros_native_generated_test_leakage_v2"
+    },
+    "items": 29,
+    "leakage_scan": "harness.native_generated_test_leakage via build_item (verifier-only material); zero refusals",
+    "limits": {
+     "completion_tokens": 1024,
+     "prompt_token_limit": 2048,
+     "prompt_tokens": {
+      "cand:boxed/mutmut@385449458ef3d89ba4ac1f50e08e4b088ce9a634": 776,
+      "cand:boxed/mutmut@4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8": 722,
+      "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1": 983,
+      "cand:boxed/mutmut@dc58270d5234752e22247f814431750eafcf6e5f": 1214,
+      "cand:coleifer/peewee@47db8f79337eb7385854649ef3c9267ed508838b": 1532,
+      "cand:coleifer/peewee@914f4fc24002fb6f9ad0f2763b148a5ac63545a0": 557,
+      "cand:coleifer/peewee@c511fb137f7b3d91436aabc5a7963ada217147ec": 971,
+      "cand:coleifer/peewee@f5e439d3eaa3aecc5621c6f121df854086eec008": 673,
+      "cand:fsspec/filesystem_spec@073aac840748ab95bea39468306123268e316184": 915,
+      "cand:fsspec/filesystem_spec@1724d540ee917f926f93b32b6580e637b3777adc": 1265,
+      "cand:fsspec/filesystem_spec@1da4c7132a720fe1059d94774b46d6cda625b453": 681,
+      "cand:fsspec/filesystem_spec@5eec9f9353b8d517d296428441a84fa26e9a6438": 846,
+      "cand:fsspec/filesystem_spec@652325d9b9459286a5b72c7e6228b061fb29827c": 998,
+      "cand:fsspec/filesystem_spec@933e992fc8d3247606b6d01abd22673989e5393c": 686,
+      "cand:hynek/stamina@b09d541fdff686970c166faac27f388b841aeca2": 646,
+      "cand:jpadilla/pyjwt@171062d2d734315272a901100aa4b109f2fc3c19": 527,
+      "cand:jpadilla/pyjwt@7bf32526738fe837387bdedd4849a4a525c33a79": 790,
+      "cand:kozea/weasyprint@0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2": 1403,
+      "cand:kozea/weasyprint@d4d5a2a5a5e99afee8b8302ffab1265013f68cc1": 644,
+      "cand:marshmallow-code/apispec@f767e7522fd8c4280f1b21341f61476c7fe7e54e": 1032,
+      "cand:prompt-toolkit/python-prompt-toolkit@75eca874f8b3abbe7643d075711917504f3e4f6b": 750,
+      "cand:pymysql/pymysql@34f267684f8cdfa0923fe6be4a990efa0cfda015": 611,
+      "cand:pypa/pipx@c8b1893db865ad581774a8aa8f467d7926ca1d88": 768,
+      "cand:python-lsp/python-lsp-server@19fc07aa5dd444303cead45d841115a897252cd3": 887,
+      "cand:python-lsp/python-lsp-server@1a10b605aa731daba20e8c1827542b7145ad3059": 834,
+      "cand:pytransitions/transitions@8f6ca5f4ca268dd154f0a968d3861afada10430b": 708,
+      "cand:pytransitions/transitions@f970687f48f807dd5974f59c4d76abed2bd1e7bd": 769,
+      "cand:tox-dev/pipdeptree@214e9d48069909b7ff0fa6492632084b2fc6080d": 749,
+      "cand:vega/altair@6c0bf289faa3c5f56a3c731cf864edb1d495c957": 885
+     },
+     "sequence_limit": 3072,
+     "truncation": "never"
+    },
+    "prompt_tokens_max": 1532,
+    "prompt_tokens_min": 527,
+    "prompts_equal_frozen_visible_bundle": true,
+    "refused": []
+   },
+   "pass": true
+  },
+  "mock_generation_rehearsal_verified": {
+   "evidence": {
+    "backend": "mock (no model)",
+    "candidates": 696,
+    "expected": {
+     "candidates_per_arm": 696,
+     "candidates_per_row": 8,
+     "candidates_total": 1392,
+     "generation_targets": 29,
+     "rows_per_arm": 87
+    },
+    "returncode": 0,
+    "rows": 87,
+    "stderr_tail": ""
+   },
+   "pass": true
+  },
+  "native_target_reach_bound_for_every_target": {
+   "evidence": {
+    "bundle_sha256": "308bed27f197d296c86b1494c929ec5e89b88b1795dadec7010211b861af1ef9",
+    "reach_verified": 29
+   },
+   "pass": true
+  },
+  "no_validation_or_sealed_final_access": {
+   "evidence": {
+    "opens_checked": 4893,
+    "policy": "oneiros_protected_locations_v2",
+    "protected_accesses": []
+   },
+   "pass": true
+  },
+  "output_paths_new_and_unique": {
+   "evidence": {
+    "base": "results/sft_root_cause/v27_generations_r4/base",
+    "execution": "results/sft_root_cause/v27_execution_r4",
+    "relearn": "results/sft_root_cause/v27_generations_r4/relearn",
+    "sft": "results/sft_root_cause/v27_generations_r4/sft"
+   },
+   "pass": true
+  },
+  "relearn_resolved_unambiguously": {
+   "evidence": {
+    "adapter_base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "adapter_dir": "checkpoints/local_sft_relearn_v2_seed42/sft_validation_best/checkpoint-141",
+    "file_sha256": "af262f4f8b43bab5426df6bf2556769818ca6f8e5cf8c85412238962ea659e63",
+    "hash_receipt": "results/v4_2_failure_taxonomy_relearning.json",
+    "note": "the receipt names one explicit checkpoint; other copies are ignored",
+    "other_adapter_copies_in_run": [
+     "checkpoints/local_sft_relearn_v2_seed42",
+     "checkpoints/local_sft_relearn_v2_seed42/sft_adapter",
+     "checkpoints/local_sft_relearn_v2_seed42/sft_terminal_adapter",
+     "checkpoints/local_sft_relearn_v2_seed42/sft_tmp/checkpoint-100",
+     "checkpoints/local_sft_relearn_v2_seed42/sft_tmp/checkpoint-141"
+    ],
+    "receipt": "results/v4_2_relearning_receipt.json",
+    "receipt_sha256": [
+     "af262f4f8b43bab5426df6bf2556769818ca6f8e5cf8c85412238962ea659e63"
+    ],
+    "selected_step": 141,
+    "selection_rule": "highest mean ablation_dev monitor function kill rate across the trained seeds; ties broken by the earlier step. Locked validation is never used for selection."
+   },
+   "pass": true
+  },
+  "sft_A431_resolved_unambiguously": {
+   "evidence": {
+    "adapter_base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "adapter_config_revision": null,
+    "adapter_path": "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter/adapter_model.safetensors",
+    "decision": "Arm A checkpoint 431",
+    "file_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+    "generator_contract_sft_adapter": "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter",
+    "lora": {
+     "lora_alpha": 32,
+     "r": 16,
+     "target_modules": [
+      "q_proj",
+      "o_proj",
+      "k_proj",
+      "v_proj"
+     ]
+    },
+    "receipt": "results/v4_2_development_selection_receipt.json",
+    "receipt_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7"
+   },
+   "pass": true
+  }
+ },
+ "cohort": {
+  "candidates_per_arm": 696,
+  "ids": [
+   "cand:boxed/mutmut@385449458ef3d89ba4ac1f50e08e4b088ce9a634",
+   "cand:boxed/mutmut@4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8",
+   "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1",
+   "cand:boxed/mutmut@dc58270d5234752e22247f814431750eafcf6e5f",
+   "cand:coleifer/peewee@47db8f79337eb7385854649ef3c9267ed508838b",
+   "cand:coleifer/peewee@914f4fc24002fb6f9ad0f2763b148a5ac63545a0",
+   "cand:coleifer/peewee@c511fb137f7b3d91436aabc5a7963ada217147ec",
+   "cand:coleifer/peewee@f5e439d3eaa3aecc5621c6f121df854086eec008",
+   "cand:fsspec/filesystem_spec@073aac840748ab95bea39468306123268e316184",
+   "cand:fsspec/filesystem_spec@1724d540ee917f926f93b32b6580e637b3777adc",
+   "cand:fsspec/filesystem_spec@1da4c7132a720fe1059d94774b46d6cda625b453",
+   "cand:fsspec/filesystem_spec@5eec9f9353b8d517d296428441a84fa26e9a6438",
+   "cand:fsspec/filesystem_spec@652325d9b9459286a5b72c7e6228b061fb29827c",
+   "cand:fsspec/filesystem_spec@933e992fc8d3247606b6d01abd22673989e5393c",
+   "cand:hynek/stamina@b09d541fdff686970c166faac27f388b841aeca2",
+   "cand:jpadilla/pyjwt@171062d2d734315272a901100aa4b109f2fc3c19",
+   "cand:jpadilla/pyjwt@7bf32526738fe837387bdedd4849a4a525c33a79",
+   "cand:kozea/weasyprint@0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2",
+   "cand:kozea/weasyprint@d4d5a2a5a5e99afee8b8302ffab1265013f68cc1",
+   "cand:marshmallow-code/apispec@f767e7522fd8c4280f1b21341f61476c7fe7e54e",
+   "cand:prompt-toolkit/python-prompt-toolkit@75eca874f8b3abbe7643d075711917504f3e4f6b",
+   "cand:pymysql/pymysql@34f267684f8cdfa0923fe6be4a990efa0cfda015",
+   "cand:pypa/pipx@c8b1893db865ad581774a8aa8f467d7926ca1d88",
+   "cand:python-lsp/python-lsp-server@19fc07aa5dd444303cead45d841115a897252cd3",
+   "cand:python-lsp/python-lsp-server@1a10b605aa731daba20e8c1827542b7145ad3059",
+   "cand:pytransitions/transitions@8f6ca5f4ca268dd154f0a968d3861afada10430b",
+   "cand:pytransitions/transitions@f970687f48f807dd5974f59c4d76abed2bd1e7bd",
+   "cand:tox-dev/pipdeptree@214e9d48069909b7ff0fa6492632084b2fc6080d",
+   "cand:vega/altair@6c0bf289faa3c5f56a3c731cf864edb1d495c957"
+  ],
+  "ids_sha256": "72047985124f2c7bd6c967c0fa4d75d4db6f5be65036cbbc599f02f6af0fa676",
+  "panel_policy_exclusions": [
+   {
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "target_key": "cand:fsspec/filesystem_spec@ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e"
+   },
+   {
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "target_key": "cand:fsspec/filesystem_spec@ee30764e64dbd338f7494a45b30b1ece1465386f"
+   },
+   {
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "target_key": "cand:pyvista/pyvista@507e77ca880fdd34757989df7422e101595818a9"
+   },
+   {
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "target_key": "cand:pyvista/pyvista@631db08ed32f898ec8f59cbffa30cf80e9cbb1a3"
+   },
+   {
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "target_key": "cand:pyvista/pyvista@eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116"
+   }
+  ],
+  "rows_per_arm": 87,
+  "targets": 29
+ },
+ "commands": {
+  "authorization_required": "results/sft_root_cause_v27_gpu_authorization_r4.json",
+  "execute_after_generation": "wsl.exe -u root --cd <repo> -- bash scripts/wsl_isolated.sh bash scripts/wsl_native_python.sh scripts/native_generated_tests_execute_wsl.py run --prep results/sft_root_cause/v27_confirmation/r4_panel/generation_prep_records.jsonl --manifest results/sft_root_cause_v27_generation_manifest_r4.json --job results/sft_root_cause_v27_generation_job_r4.json --base-generations results/sft_root_cause/v27_generations_r4/base --sft-generations results/sft_root_cause/v27_generations_r4/sft --condition primary_whole_module --out results/sft_root_cause/v27_execution_r4",
+  "generate": {
+   "base": ".venv-gpu/Scripts/python.exe scripts/gpu_run.py start --name v27_generate_base --exclusive-key v27_generation -- .venv-gpu/Scripts/python.exe scripts/native_generated_tests_generate.py run --job results/sft_root_cause_v27_generation_job_r4.json --condition primary_whole_module --arm base --out results/sft_root_cause/v27_generations_r4/base --backend hf --preflight results/sft_root_cause_v27_gpu_preflight_r4.json --authorization results/sft_root_cause_v27_gpu_authorization_r4.json",
+   "sft": ".venv-gpu/Scripts/python.exe scripts/gpu_run.py start --name v27_generate_sft --exclusive-key v27_generation -- .venv-gpu/Scripts/python.exe scripts/native_generated_tests_generate.py run --job results/sft_root_cause_v27_generation_job_r4.json --condition primary_whole_module --arm sft --out results/sft_root_cause/v27_generations_r4/sft --backend hf --preflight results/sft_root_cause_v27_gpu_preflight_r4.json --authorization results/sft_root_cause_v27_gpu_authorization_r4.json"
+  },
+  "sequence": "base first; the gate admits sft only after the base arm passes the exact single-arm verifier"
+ },
+ "created_utc": "2026-10-07T08:49:57Z",
+ "estimates": {
+  "basis": "same generator and contract, v2.4 rehearsal: 552 candidates per arm took 1,878 s (base) and 5,838 s (adapter); scaled linearly to 696",
+  "disk": "v2.4 generations for 2 arms used 2.5 MiB; expect < 10 MiB per arm plus execution evidence < 200 MiB",
+  "runtime_minutes": {
+   "base": 39,
+   "relearn_if_unblocked": 123,
+   "sft": 123
+  },
+  "vram": "1.5B parameters in bf16 ~3.1 GiB plus KV cache for batch 2 x 3,072 tokens; well under the 24 GiB card"
+ },
+ "failed_checks": [],
+ "generation_outputs": {
+  "base": "results/sft_root_cause/v27_generations_r4/base",
+  "sft": "results/sft_root_cause/v27_generations_r4/sft"
+ },
+ "inputs": {
+  "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter/adapter_model.safetensors": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+  "checkpoints/local_sft_relearn_v2_seed42/sft_validation_best/checkpoint-141/adapter_model.safetensors": "af262f4f8b43bab5426df6bf2556769818ca6f8e5cf8c85412238962ea659e63",
+  "results/sft_root_cause/v27_confirmation/phase6/exec_canaries/canary_receipt_v2.json": "6a949b02a3558bebfdbbaf1b07c7b8a1feca65492f20c1f11cc2aa05ae238d38",
+  "results/sft_root_cause/v27_confirmation/r4_panel/generation_prep_records.jsonl": "19f6aefaddf1b29457e178d4f13f69049b4d4d64959b207f395178fe7eeee5e5",
+  "results/sft_root_cause/v27_confirmation/r4_panel/model_visible_bundle.json": "ffff6dd91a1646b6682b722e7fdb5dac6b8e053df6044f42291d63999f361873",
+  "results/sft_root_cause_v27_common_subset_r4_v2.json": "a34e4b71e968fa410e632d4b02805a1e59e8ae0c8d1da85e89adbf1bf0b8f749",
+  "results/sft_root_cause_v27_confirmation_panel_r4.json": "432965c0c0a89c505d76b3852c4b8714b99aae1d247e2c3d1f818cd0984c4317",
+  "results/sft_root_cause_v27_generation_job_r4.json": "86ac029402f0816b4968b59deaf20dfb29556d4a52e65a3b70f0f126fde2f2ab",
+  "results/sft_root_cause_v27_generation_manifest_r4.json": "a4505d26e003a2a78caeb0e252a16279ae3158220872591336ec5c5b3fe2be98",
+  "results/sft_root_cause_v27_phase6_evidence_bundle_v2.json": "308bed27f197d296c86b1494c929ec5e89b88b1795dadec7010211b861af1ef9",
+  "results/sft_root_cause_v27_phase6b_stage2_receipt.json": "b6c680cefd0b4cc9464d1176f8865ccf23994d97cb8048fd26fe297b575befb9",
+  "results/v4_2_development_selection_receipt.json": "0188324fe9eb2a51eebef71bbd4cc3ed45584f12393bf0fa6539817a09e58969",
+  "results/v4_2_failure_taxonomy_relearning.json": "92798a06bba4df0f1eb4734b04010e86217987ce845f525e750c2b1b8a77849e",
+  "results/v4_2_relearning_receipt.json": "e9a5379de51d9e7f6bb8efdd8077925c8b2631c50b87905dcadca1a737b52098"
+ },
+ "job": {
+  "file_sha256": "86ac029402f0816b4968b59deaf20dfb29556d4a52e65a3b70f0f126fde2f2ab",
+  "job_sha256": "62c857c2af71a44da675ed3e2a23da905f2cbe7f5ebfb27ccab19e50a0f447d6",
+  "path": "results/sft_root_cause_v27_generation_job_r4.json"
+ },
+ "launched": false,
+ "manifest": {
+  "path": "results/sft_root_cause_v27_generation_manifest_r4.json",
+  "sha256": "a4505d26e003a2a78caeb0e252a16279ae3158220872591336ec5c5b3fe2be98"
+ },
+ "model": {
+  "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+  "snapshot_manifest_sha256": "1358a55051e7cf5e8963a2b2e3cd1a2fc6a3768552fb24e8a5e2a5afb8f43364",
+  "tokenizer_manifest_sha256": "bc2ebf6999bee86ccae422d3bcba5c799bd7c29cf6f7e7522db01e37a03979d3"
+ },
+ "pipeline_ready": true,
+ "schema_version": "oneiros_native_generated_tests_preflight_v2_5",
+ "source": {
+  "commit": "159716d824614e377fc12187da1765f4050d4e53",
+  "executable_tree_sha256": "270d8224df2f487c362baa17e241d944716e672f1ca0fa1d73932ee610d687ad",
+  "protocol_sha256": {
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md": "75131551082876d65be0609db619673417a6728e3c612cc2ebc69e808a1cc5a1",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md": "8d48aa36def2e67d3ce5b876af0317fc4eb7199b5422eadca823980ec27d2901",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md": "b5ebe83b37d184dd785b740267e7efd01a7022fa30df92ecba9f061985228998",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md": "1ffda40c14c48788f21fb569f2888ad8c86988e6177b5de61d56714db3d172f4",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_4.md": "ef2f231321314c25ccb156d9f6cfb9e44ff4823435173c8590623bf17deecd61",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5.md": "c707d8ae9f8b6cce8ab50e87d417175c9e947687c64b4c3de4d67eebe96022f7",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5_ADDENDUM_1.md": "7676aac2c58ef2bf35a435b42ee40b81a4fe6d8143175e21c417b0bcfc2c9149",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5_ADDENDUM_2.md": "e348060a4d06bb11c86d38cd9a0e1f1d781d5e4ec59c41463b42d07dd39510dc"
+  }
+ },
+ "study": "oneiros_v27_repository_native_confirmation_evaluation",
+ "three_arm_study_ready": false,
+ "weights_loaded": false
+}
