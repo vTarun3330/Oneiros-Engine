@@ -1,0 +1,65 @@
+{
+ "artifacts": {
+  "results/sft_root_cause_v27_common_subset_r4.json": "d31e234a145848e5ae1b91114484e3e469f29240a3d63a30a66471ed6c83d91b",
+  "results/sft_root_cause_v27_common_subset_r4_v2.json": "a34e4b71e968fa410e632d4b02805a1e59e8ae0c8d1da85e89adbf1bf0b8f749",
+  "results/sft_root_cause_v27_confirmation_panel_r4.json": "432965c0c0a89c505d76b3852c4b8714b99aae1d247e2c3d1f818cd0984c4317",
+  "results/sft_root_cause_v27_phase6_evidence_bundle_v2.json": "308bed27f197d296c86b1494c929ec5e89b88b1795dadec7010211b861af1ef9"
+ },
+ "clean_clone_reproduction": {
+  "commit": "30fa38d3211812c43b2e5009695f9de356f14dfd",
+  "git_ignored_raw_evidence_present": false,
+  "passed": 26,
+  "pytest_exit": 0,
+  "skipped": 0,
+  "tests": [
+   "tests/test_v27_common_subset_v2.py",
+   "tests/test_v27_common_subset.py"
+  ]
+ },
+ "focused_tests": {
+  "files": [
+   "tests/test_v27_common_subset_v2.py",
+   "tests/test_v27_common_subset.py",
+   "tests/test_atheris_cgroup_mount.py",
+   "tests/test_native_generated_atheris.py",
+   "tests/test_atheris_harness.py",
+   "tests/test_v27_native_reach.py",
+   "tests/test_v27_protocol_freeze.py",
+   "tests/test_v27_roles.py"
+  ],
+  "passed": 84,
+  "pytest_exit": 0
+ },
+ "full_suite": {
+  "errors": 0,
+  "executable_tree_sha256": "1de9a787762b1536e9b3f2e20e42b2f755087584f33389ca3d62601b3fb4c004",
+  "exit": 0,
+  "failed": 0,
+  "passed": 2952,
+  "path": "results/sft_root_cause/v27_full_suite_receipt_30fa38d.json",
+  "run_id": "20261007-135013-v27_full_suite_30fa38d",
+  "sha256": "d758cfa50e0ab4c313d81ee79764cc1416fb60105cdb81b6e65644cc6e4bd7a3",
+  "skipped": 3
+ },
+ "probe_run_id": "20261007-134608-v27_phase6b_atheris_eligibility_v2",
+ "provisional_preserved": {
+  "path": "results/sft_root_cause_v27_common_subset_r4.json",
+  "sha256_unchanged": true
+ },
+ "result": {
+  "adapter_covered": 6,
+  "frozen_panel": 34,
+  "fuzzable_ids_sha256": "ccc32202373a97f86303a70e0e7a11e12c423340978f036789acaa63a03ea2f0",
+  "label": "adapter-covered descriptive subset - NOT representative of repository testing",
+  "meaningfully_fuzzable": 3,
+  "native_executable": 29,
+  "native_executable_ids_sha256": "72047985124f2c7bd6c967c0fa4d75d4db6f5be65036cbbc599f02f6af0fa676",
+  "zero_input_invocable": [
+   "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1"
+  ]
+ },
+ "schema_version": "oneiros_v27_phase6b_stage2_receipt_v1",
+ "source_commit": "30fa38d3211812c43b2e5009695f9de356f14dfd",
+ "status": "PASS",
+ "worktree": "tracked source tree clean; locally excluded review_materials/ remains present and untouched"
+}
