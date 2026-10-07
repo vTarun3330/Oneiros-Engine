@@ -71,19 +71,32 @@ class Checks:
         return [k for k, v in self.items.items() if not v["pass"]]
 
 
-def environment() -> dict:
+def environment(samples: int = 5) -> dict:
+    """Frozen software/hardware identity plus GPU load as the MEDIAN of several samples one
+    second apart (a single instantaneous sample is spiked by desktop compositing: r5 attempt 1
+    sampled 43% with no compute process on the GPU)."""
+    import statistics
+    import time
     from scripts.native_generated_tests_generate import library_versions
     libs = library_versions()
-    driver = subprocess.run(["nvidia-smi", "--query-gpu=name,driver_version,memory.total,"
-                             "memory.used,utilization.gpu", "--format=csv,noheader,nounits"],
-                            capture_output=True, text=True).stdout.strip()
-    name, drv, total, used, util = [x.strip() for x in driver.split(",")]
+    readings = []
+    for i in range(samples):
+        driver = subprocess.run(["nvidia-smi", "--query-gpu=name,driver_version,memory.total,"
+                                 "memory.used,utilization.gpu", "--format=csv,noheader,nounits"],
+                                capture_output=True, text=True).stdout.strip()
+        readings.append([x.strip() for x in driver.split(",")])
+        if i + 1 < samples:
+            time.sleep(1)
+    name, drv, total = readings[-1][:3]
+    used = statistics.median(int(r[3]) for r in readings)
+    util = statistics.median(int(r[4]) for r in readings)
     apps = subprocess.run(["nvidia-smi", "--query-compute-apps=process_name",
                            "--format=csv,noheader"], capture_output=True, text=True).stdout
     return {"python": platform.python_version(), "platform": platform.platform(),
             "libraries": libs, "cuda_runtime": libs.get("cuda"), "driver": drv,
             "device": name, "memory_total_mib": int(total), "memory_used_mib": int(used),
-            "utilization_pct": int(util),
+            "utilization_pct": int(util), "utilization_samples_pct": [int(r[4]) for r in readings],
+            "utilization_rule": f"median of {samples} samples, 1 s apart",
             "python_compute_processes": [l for l in apps.splitlines() if "python" in l.lower()]}
 
 
@@ -208,13 +221,18 @@ def main(argv=None) -> int:
                 "revision": gen.CONTRACT["base_revision"], **model})
     env = environment()
     free_disk = shutil.disk_usage(ROOT).free
-    checks.add("environment_frozen_gpu_idle_resources_sufficient",
-               env["utilization_pct"] < 10 and not env["python_compute_processes"]
+    # Pipeline readiness gates the frozen identity and capacity only; GPU LOAD is a launch-time
+    # condition (recorded here, re-checked immediately before each launch): desktop graphics
+    # can load the GPU without any compute process (r5 attempt 1).
+    checks.add("environment_frozen_and_capacity_sufficient",
+               not env["python_compute_processes"]
                and env["memory_total_mib"] - env["memory_used_mib"] > 10_000
                and free_disk > 20 * 2 ** 30 and all(env["libraries"].get(k) for k in
                                                       ("torch", "transformers", "peft",
                                                        "tokenizers", "accelerate", "cuda")),
-               {**env, "disk_free_gib": round(free_disk / 2 ** 30, 1)})
+               {**env, "disk_free_gib": round(free_disk / 2 ** 30, 1),
+                "gpu_load_policy": "recorded, not gated; re-check that no other compute or "
+                                   "graphics workload is active immediately before launch"})
 
     c = gen.CONTRACT
     checks.add("identical_generation_contract_for_every_arm",
@@ -333,7 +351,11 @@ def main(argv=None) -> int:
             "execute_after_all_three_arms": execute,
             "analyse_after_execution": analyse,
             "shell_note": "run from PowerShell, or prefix MSYS_NO_PATHCONV=1 in Git Bash so "
-                          "/mnt/c paths are not rewritten"},
+                          "/mnt/c paths are not rewritten",
+            "launch_time_check": "nvidia-smi --query-gpu=utilization.gpu,memory.used "
+                                 "--format=csv -l 1 (several seconds): no other compute or "
+                                 "heavy graphics workload; nvidia-smi --query-compute-apps="
+                                 "process_name --format=csv: no python process"},
         "analysis_plan": analysis.ANALYSIS_PLAN_V27,
         "analysis_plan_sha256": analysis.analysis_plan_sha256(),
     }
