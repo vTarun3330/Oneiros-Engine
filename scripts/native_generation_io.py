@@ -115,6 +115,99 @@ def expected_sizes(n_targets: int, arms=ARMS) -> Dict[str, int]:
     return out
 
 
+SUBSET_SCHEMAS = {"oneiros_v27_common_subset_v3": "FROZEN_ADAPTER_COVERED_DESCRIPTIVE_SUBSET"}
+SYNTHETIC_SUBSET_SCHEMAS = {"oneiros_synthetic_subset_v1": "SYNTHETIC_SOURCE_OF_TRUTH"}
+
+
+def subset_binding(manifest: Mapping[str, Any], panel: Mapping[str, Any], qualified: List[str],
+                   exclusions: List[Mapping[str, Any]], root: Path) -> Dict[str, str]:
+    """The authoritative source of the qualified set and the policy-exclusion reasons: the
+    declared subset receipt must exist with its hash, have the expected schema/status, be bound
+    to the SAME frozen panel, list exactly the qualified targets as native-executable, and its
+    policy rows (failure_class == "policy") must equal the manifest's exclusions - IDs and
+    reasons - exactly. A synthetic receipt is accepted only for a synthetic cohort."""
+    declared = manifest.get("subset_receipt")
+    if not isinstance(declared, Mapping) or not declared.get("path") or not declared.get("sha256"):
+        raise CohortRefused("REFUSED: subset receipt missing (the policy exclusions must be "
+                            "bound to their authoritative source)")
+    path = root / str(declared["path"])
+    if not path.is_file() or sha256_file(path) != declared["sha256"]:
+        raise CohortRefused("REFUSED: subset receipt missing or its hash differs from the manifest")
+    subset = json.loads(path.read_text(encoding="utf-8"))
+    schemas = dict(SUBSET_SCHEMAS)
+    if "SYNTHETIC" in str(manifest.get("nature")):
+        schemas.update(SYNTHETIC_SUBSET_SCHEMAS)
+    problems = []
+    if schemas.get(subset.get("schema_version")) != subset.get("status"):
+        problems.append("subset receipt schema/status not accepted")
+    if (subset.get("inputs_sha256") or {}).get(panel["path"]) != panel["sha256"]:
+        problems.append("subset receipt is bound to a different frozen panel")
+    if sorted((subset.get("sets") or {}).get("native_executable") or []) != sorted(qualified):
+        problems.append("subset native-executable set differs from the qualified targets")
+    derived = sorted(({"target_key": r["target_id"], "reason": r["exclusion_reason"]}
+                      for r in subset.get("targets", []) if r.get("failure_class") == "policy"),
+                     key=lambda e: e["target_key"])
+    declared_ex = sorted(({"target_key": e.get("target_key"), "reason": e.get("reason")}
+                          for e in exclusions), key=lambda e: str(e["target_key"]))
+    if derived != declared_ex:
+        problems.append("policy exclusions (IDs or reasons) differ from the subset receipt")
+    if problems:
+        raise CohortRefused(f"REFUSED: subset binding: {problems}")
+    return {"path": declared["path"], "sha256": declared["sha256"],
+            "schema_version": subset["schema_version"]}
+
+
+def panel_accounting(manifest: Mapping[str, Any], qualified: List[str], *, required: bool
+                     ) -> Dict[str, Any]:
+    """v2.7: the frozen panel -> qualified (native-executable) + panel policy exclusions.
+    Required for registry-bound (three-arm) cohorts; validated whenever declared. The panel file
+    must hash to the declared value, its targets must be exactly qualified UNION exclusions
+    (disjoint, unique, every exclusion with an ID and a reason). Policy exclusions are outside
+    every model denominator and are never model failures."""
+    panel = manifest.get("panel")
+    exclusions = manifest.get("panel_policy_exclusions")
+    if panel is None and exclusions is None:
+        if required:
+            raise CohortRefused("REFUSED: panel accounting missing (a registry-bound cohort must "
+                                "declare its frozen panel and policy exclusions)")
+        return {"panel": None, "panel_policy_exclusions": [], "subset_receipt": None}
+    problems = []
+    if not isinstance(panel, Mapping) or not panel.get("path") or not panel.get("sha256") or \
+            not isinstance(exclusions, list):
+        raise CohortRefused("REFUSED: panel metadata incomplete (path, sha256, policy exclusions)")
+    root = Path(__file__).resolve().parent.parent
+    path = root / str(panel["path"])
+    if not path.is_file() or sha256_file(path) != panel["sha256"]:
+        raise CohortRefused("REFUSED: frozen panel missing or its hash differs from the manifest")
+    panel_ids = [t.get("target_id") for t in json.loads(path.read_text(encoding="utf-8"))
+                 .get("targets", [])]
+    if len(panel_ids) != len(set(panel_ids)) or panel.get("targets") != len(panel_ids):
+        problems.append("panel target count differs from the manifest (or duplicates)")
+    ids = [e.get("target_key") for e in exclusions]
+    if any(not e.get("target_key") or not e.get("reason") for e in exclusions):
+        problems.append("a policy exclusion lacks its target ID or reason")
+    if len(ids) != len(set(ids)):
+        problems.append("duplicate policy exclusions")
+    if set(ids) & set(qualified):
+        problems.append("policy exclusions overlap the qualified targets")
+    if set(ids) - set(panel_ids):
+        problems.append("a policy exclusion is outside the frozen panel")
+    if set(ids) | set(qualified) != set(panel_ids) or \
+            len(ids) + len(set(qualified)) != len(panel_ids):
+        problems.append("qualified + policy exclusions do not equal the frozen panel")
+    if problems:
+        raise CohortRefused(f"REFUSED: panel accounting: {problems}")
+    subset = None
+    if required:
+        subset = subset_binding(manifest, panel, qualified, exclusions, root)
+    return {"panel": {"path": panel["path"], "sha256": panel["sha256"],
+                      "targets": len(panel_ids)},
+            "subset_receipt": subset,
+            "panel_policy_exclusions": [{"target_key": e["target_key"], "reason": e["reason"]}
+                                        for e in sorted(exclusions,
+                                                        key=lambda e: e["target_key"])]}
+
+
 def cohort_arms(manifest: Mapping[str, Any]) -> tuple:
     """The declared arms (default base/sft) and the bound registry summary, verified."""
     arms = tuple(manifest.get("arms") or ARMS)
@@ -184,8 +277,9 @@ def resolve_cohort(job_path: Path, manifest_path: Path,
     if problems:
         raise CohortRefused(f"REFUSED: generation cohort inconsistent: {problems}")
     arms, registry = cohort_arms(manifest)
+    panel = panel_accounting(manifest, qualified, required=registry is not None)
     return {"cohort_version": COHORT_VERSION, "condition": condition,
-            "arms": arms, "arm_registry": registry,
+            "arms": arms, "arm_registry": registry, **panel,
             "nature": manifest.get("nature"), "study_mode": manifest.get("study_mode"),
             "requalification_records": manifest.get("requalification_records"),
             "qualified": sorted(qualified), "generation": sorted(keys),

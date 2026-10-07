@@ -192,7 +192,38 @@ def main(argv=None) -> int:
     records = OUT / "records.jsonl"                # v2.4 C: the exact declared preparation
     from harness.native_arm_registry import REGISTRY, registry_sha256, summary
     registry = summary() if three else None
+    panel_meta = {}
+    if three:      # a synthetic frozen panel: the toy targets + one sandbox-policy exclusion
+        excluded = "cand:toy/policy-excluded@0000000000000000000000000000000000000000"
+        panel_file = OUT / "synthetic_panel.json"
+        panel_file.write_bytes((json.dumps({"schema_version": "oneiros_synthetic_panel_v1",
+                                            "targets": [{"target_id": t["key"]} for t in
+                                                        manifest["targets"]] +
+                                            [{"target_id": excluded}]}, indent=1)
+                                + "\n").encode("utf-8"))
+        panel_rel = panel_file.relative_to(ROOT).as_posix()
+        panel_sha = hashlib.sha256(panel_file.read_bytes()).hexdigest()
+        reason = "synthetic sandbox-policy exclusion"
+        # the synthetic source of truth for the qualified set and the exclusion reasons, bound
+        # exactly like the real v3 subset receipt (no synthetic exemption)
+        subset_file = OUT / "synthetic_subset.json"
+        subset_file.write_bytes((json.dumps({
+            "schema_version": "oneiros_synthetic_subset_v1",
+            "status": "SYNTHETIC_SOURCE_OF_TRUTH",
+            "inputs_sha256": {panel_rel: panel_sha},
+            "sets": {"native_executable": sorted(t["key"] for t in manifest["targets"])},
+            "targets": [{"target_id": t["key"], "failure_class": None, "exclusion_reason": None}
+                        for t in manifest["targets"]] +
+                       [{"target_id": excluded, "failure_class": "policy",
+                         "exclusion_reason": reason}]}, indent=1) + "\n").encode("utf-8"))
+        panel_meta = {"panel": {"path": panel_rel, "sha256": panel_sha,
+                                "targets": len(manifest["targets"]) + 1},
+                      "panel_policy_exclusions": [{"target_key": excluded, "reason": reason}],
+                      "subset_receipt": {
+                          "path": subset_file.relative_to(ROOT).as_posix(),
+                          "sha256": hashlib.sha256(subset_file.read_bytes()).hexdigest()}}
     cohort_manifest.write_text(json.dumps({
+        **panel_meta,
         **manifest, **cohort_fields(manifest["targets"], "job.json", job_bytes,
                                     "primary_whole_module", {}, arms),
         "nature": "ENGINEERING SYNTHETIC PIPELINE TEST",
@@ -360,6 +391,23 @@ def three_arm_analysis(checks, rows, job, qual, cohort_manifest, job_file, recor
             c["requested_targets"] == n and c["pair_eligible_targets"] == n
             and set(c["denominators"]) == set(c["pair"]) for c in (sft, rel))
         checks["target_seed_cells_not_pooled"] = direct["unit"].startswith("target")
+        acct = direct["cohort"]
+        checks["panel_accounting_reported"] = (
+            acct["frozen_panel_targets"] == n + 1 and acct["native_executable_targets"] == n
+            and acct["generation_targets"] == n and acct["panel_policy_excluded"] == 1
+            and acct["panel_policy_exclusions"][0]["reason"] == "synthetic sandbox-policy exclusion"
+            and cli["cohort"]["panel_policy_excluded"] == 1
+            and (acct["policy_exclusions_bound_to"] or {}).get("schema_version")
+            == "oneiros_synthetic_subset_v1")
+        checks["holm_family_fixed_at_six"] = (
+            direct["multiplicity"]["holm_family_size"] == 6
+            and all(h["status"] == "computed" for h in direct["multiplicity"]["hypotheses"])
+            and cli["multiplicity"]["holm_family_size"] == 6
+            and all(h["status"] == "suppressed" and h["raw_p"] is None
+                    for h in cli["multiplicity"]["hypotheses"]))
+        checks["no_inferential_claims"] = not any(
+            direct[k] for k in ("generalization_established", "sft_benefit_established",
+                                "relearning_benefit_established"))
     except Exception as exc:
         checks["three_arm_analysis"] = False
         print("three-arm analysis failed:", repr(exc)[:500])

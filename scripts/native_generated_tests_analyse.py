@@ -73,7 +73,8 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-ANALYSIS_VERSION = "oneiros_native_generated_tests_analyse_v4"
+ANALYSIS_VERSION = "oneiros_native_generated_tests_analyse_v5"   # v5: full-precision p-values,
+#   fixed six-hypothesis Holm family, 34 -> 29 + 5 panel accounting in the exploratory result
 ARMS = ("base", "sft")
 SEEDS = (42, 43, 44)
 SLOTS = 8
@@ -147,6 +148,33 @@ ANALYSIS_PLAN_V27 = {
 def analysis_plan_sha256(plan: Mapping[str, Any] = ANALYSIS_PLAN_V27) -> str:
     return hashlib.sha256(json.dumps(plan, sort_keys=True, separators=(",", ":"))
                           .encode("utf-8")).hexdigest()
+
+
+# The FIXED Holm family the frozen plan declares (its contrasts x the three seeds): six
+# hypotheses, whatever is later computed or suppressed. Derived from the plan itself, so the
+# family can never shrink with the data.
+HOLM_FAMILY = tuple(f"{c}:{s}" for c in ANALYSIS_PLAN_V27["contrasts"] for s in SEEDS)
+
+
+def fixed_family_holm(computed: Mapping[str, float]) -> Dict[str, Any]:
+    """Holm over the fixed six-hypothesis family. A suppressed (never computed) hypothesis is
+    entered conservatively as p = 1 for the adjustment; its raw and adjusted p are reported as
+    null, so no inferential value exists for it."""
+    unknown = sorted(set(computed) - set(HOLM_FAMILY))
+    if unknown:
+        raise AnalysisRefused(f"p-values outside the frozen Holm family: {unknown}")
+    adjusted = holm({h: computed.get(h, 1.0) for h in HOLM_FAMILY})
+    return {"holm_family_size": len(HOLM_FAMILY),
+            "suppressed_entered_as": "p = 1 (conservative); reported as null",
+            "hypotheses": [{"label": h,
+                            "status": "computed" if h in computed else "suppressed",
+                            "raw_p": computed[h] if h in computed else None,
+                            "holm_adjusted_p": adjusted[h] if h in computed else None,
+                            "raw_p_display": p_display(computed.get(h)),
+                            "holm_adjusted_p_display":
+                                p_display(adjusted[h] if h in computed else None)}
+                           for h in HOLM_FAMILY],
+            "descriptive_only": True}
 
 
 def index(records: Iterable[Mapping[str, Any]], targets: Sequence[str],
@@ -320,8 +348,13 @@ def holm(pvalues: Mapping[str, float]) -> Dict[str, float]:
     out, running = {}, 0.0
     for i, (k, v) in enumerate(ordered):
         running = max(running, min(1.0, (len(ordered) - i) * v))
-        out[k] = round(running, 6)
+        out[k] = running            # full precision: a tiny exact p must never round to 0
     return out
+
+
+def p_display(p: float | None) -> str | None:
+    """Human-readable companion of a p-value; never replaces the numeric value."""
+    return None if p is None else f"{p:.3e}"
 
 
 def one_per_repository(targets: Sequence[str], repo_of: Mapping[str, str]) -> List[str]:
@@ -384,7 +417,8 @@ def exploratory(grid, targets, repo_of, arms, cohort, evidence_gates,
             pvalues[f"{name}:{s}"] = p
             per_seed[str(s)] = {"gained": gained, "lost": lost,
                                 "tied": len(eligible) - gained - lost,
-                                "mcnemar_exact_two_sided_p": round(p, 6),
+                                "mcnemar_exact_two_sided_p": p,
+                                "mcnemar_exact_two_sided_p_display": p_display(p),
                                 "wilson_kill_at_8": {
                                     "base": wilson(int(sum(kb.values())), len(eligible)),
                                     arm: wilson(int(sum(kx.values())), len(eligible))}}
@@ -403,17 +437,34 @@ def exploratory(grid, targets, repo_of, arms, cohort, evidence_gates,
             {t: validity[arm][t] - validity["base"][t] for t in eligible}, repo_of)
         entry["status"] = "computed (exploratory; no claim)"
         contrasts[name] = entry
-    adjusted = holm(pvalues)
+    multiplicity = fixed_family_holm(pvalues)
+    adjusted = {h["label"]: h["holm_adjusted_p"] for h in multiplicity["hypotheses"]}
     for name, entry in contrasts.items():
         for s, row in (entry.get("per_seed_secondary") or {}).items():
             row["holm_adjusted_p"] = adjusted[f"{name}:{s}"]
+            row["holm_family_size"] = multiplicity["holm_family_size"]
+    panel = (cohort or {}).get("panel")
+    policy = list((cohort or {}).get("panel_policy_exclusions") or [])
     return {"analysis_version": ANALYSIS_VERSION, "study_mode": EXPLORATORY,
             "synthetic_gate_override": dict(synthetic_gate) if synthetic_gate else None,
             "analysis_plan_sha256": analysis_plan_sha256(), "arms": list(arms),
             "unit": "target (seeds averaged; never pooled)",
-            "cohort": {"qualified_targets": qualified_n, "generation_targets": len(targets),
+            "cohort": {"frozen_panel_targets": panel["targets"] if panel else None,
+                       "frozen_panel": panel,
+                       "native_executable_targets": qualified_n,
+                       "qualified_targets": qualified_n, "generation_targets": len(targets),
+                       "panel_policy_excluded": len(policy),
+                       "panel_policy_exclusions": policy,
+                       "policy_exclusions_bound_to": (cohort or {}).get("subset_receipt"),
                        "pre_generation_exclusions":
-                           list(cohort["pre_generation_exclusions"]) if cohort else []},
+                           list(cohort["pre_generation_exclusions"]) if cohort else [],
+                       "post_generation_infrastructure_exclusions": {
+                           name: c["pair_infrastructure_excluded"]
+                           for name, c in contrasts.items()},
+                       "note": "panel policy exclusions (sandbox policy) are outside every "
+                               "model denominator and are never model failures; "
+                               "post-generation infrastructure exclusions are pair-specific"},
+            "multiplicity": multiplicity,
             "grid_cells": len(grid), "global_evidence_gates": global_gates,
             "evidence_problems": evidence_gates.get("problems") or {},
             "generation_telemetry": generation_telemetry(grid, targets, arms),
