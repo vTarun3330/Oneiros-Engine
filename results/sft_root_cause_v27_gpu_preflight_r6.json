@@ -1,0 +1,717 @@
+{
+ "adapter_manifest_sha256": null,
+ "adapters": {
+  "base": null,
+  "relearn": "c1dcea74c9f97b012670114fe33e7695ad478eb30600e77f214f37781be4e133",
+  "sft": "82f24fed40316249f307fc6b835f2d1fa9d1b7ada61e72e9892fb397e377f2a0"
+ },
+ "analysis_plan": {
+  "claims": "exploratory and underpowered: no promotion, no equivalence from a non-significant result, no repository-generalisation claim",
+  "contrasts": [
+   "sft_minus_base",
+   "relearn_minus_base"
+  ],
+  "gates": {
+   "global": [
+    "stage_receipts_gate_passed",
+    "canaries_gate_passed",
+    "artifact_integrity_gate_passed",
+    "unexplained_failures_gate_passed"
+   ],
+   "per_contrast": {
+    "min_fraction_of_qualified": 0.9,
+    "min_repositories": 5
+   }
+  },
+  "infrastructure": "a target with an infrastructure row in either arm of a contrast is excluded from THAT contrast only, and only when its same-environment canary failed; an infrastructure row with a passing canary refuses",
+  "multiplicity": "two contrasts x three seeds are reported without inferential claims",
+  "primary": "per contrast: mean over pair-eligible targets of K8(t, X) - K8(t, base), percentage points",
+  "secondary": [
+   "Kill@1 and Kill@4 contrasts (same estimator, descriptive)",
+   "per-seed paired Kill@8 gained/lost/tied target counts",
+   "per-seed exact two-sided McNemar p (Holm-adjusted over contrasts x seeds; descriptive)",
+   "Wilson 95% intervals of per-arm per-seed Kill@8 over pair-eligible targets",
+   "fixed-valid rate difference (clustered, descriptive)"
+  ],
+  "sensitivity": {
+   "one_target_per_repository": "per repository, the pair-eligible target with the lexicographically smallest sha256(target_key); model-independent and frozen"
+  },
+  "uncertainty": {
+   "bootstrap": {
+    "level": 0.95,
+    "resamples": 10000,
+    "seed": 20260930
+   },
+   "cluster": "repository",
+   "leave_one_repository_out": true
+  },
+  "unit": "target; kill(t,s,m)=1 if any of the first k of the 8 slots of seed s kills; K(t,m)=mean of kill over seeds 42, 43, 44; target x seed cells never pooled",
+  "version": "confirmation_exploratory_v1"
+ },
+ "analysis_plan_sha256": "5be9bf7799e6d3929314de5b56525871462fe194615fe38661591ecbed10dfdf",
+ "arm_registry": {
+  "adapter_manifest_sha256": {
+   "base": null,
+   "relearn": "c1dcea74c9f97b012670114fe33e7695ad478eb30600e77f214f37781be4e133",
+   "sft": "82f24fed40316249f307fc6b835f2d1fa9d1b7ada61e72e9892fb397e377f2a0"
+  },
+  "arms": [
+   "base",
+   "sft",
+   "relearn"
+  ],
+  "name": "oneiros_v27_three_arm_registry_r5",
+  "schema_version": "oneiros_native_arm_registry_v1",
+  "sha256": "98b46227a40f848295fa813fb71d584496c7c93a3108ad51c60c92c52153e1bf"
+ },
+ "authorization_written": false,
+ "checks": {
+  "adapters_resolve_only_through_the_registry": {
+   "evidence": {
+    "base": null,
+    "relearn": "c1dcea74c9f97b012670114fe33e7695ad478eb30600e77f214f37781be4e133",
+    "sft": "82f24fed40316249f307fc6b835f2d1fa9d1b7ada61e72e9892fb397e377f2a0"
+   },
+   "pass": true
+  },
+  "analysis_frozen_before_output": {
+   "evidence": {
+    "implementation": "scripts/native_generated_tests_analyse.py",
+    "implementation_sha256": "70a514b4e78fa0f0d90339c3c2689c883c8f7627bc96cac73c948bf47a731fd5",
+    "plan": {
+     "claims": "exploratory and underpowered: no promotion, no equivalence from a non-significant result, no repository-generalisation claim",
+     "contrasts": [
+      "sft_minus_base",
+      "relearn_minus_base"
+     ],
+     "gates": {
+      "global": [
+       "stage_receipts_gate_passed",
+       "canaries_gate_passed",
+       "artifact_integrity_gate_passed",
+       "unexplained_failures_gate_passed"
+      ],
+      "per_contrast": {
+       "min_fraction_of_qualified": 0.9,
+       "min_repositories": 5
+      }
+     },
+     "infrastructure": "a target with an infrastructure row in either arm of a contrast is excluded from THAT contrast only, and only when its same-environment canary failed; an infrastructure row with a passing canary refuses",
+     "multiplicity": "two contrasts x three seeds are reported without inferential claims",
+     "primary": "per contrast: mean over pair-eligible targets of K8(t, X) - K8(t, base), percentage points",
+     "secondary": [
+      "Kill@1 and Kill@4 contrasts (same estimator, descriptive)",
+      "per-seed paired Kill@8 gained/lost/tied target counts",
+      "per-seed exact two-sided McNemar p (Holm-adjusted over contrasts x seeds; descriptive)",
+      "Wilson 95% intervals of per-arm per-seed Kill@8 over pair-eligible targets",
+      "fixed-valid rate difference (clustered, descriptive)"
+     ],
+     "sensitivity": {
+      "one_target_per_repository": "per repository, the pair-eligible target with the lexicographically smallest sha256(target_key); model-independent and frozen"
+     },
+     "uncertainty": {
+      "bootstrap": {
+       "level": 0.95,
+       "resamples": 10000,
+       "seed": 20260930
+      },
+      "cluster": "repository",
+      "leave_one_repository_out": true
+     },
+     "unit": "target; kill(t,s,m)=1 if any of the first k of the 8 slots of seed s kills; K(t,m)=mean of kill over seeds 42, 43, 44; target x seed cells never pooled",
+     "version": "confirmation_exploratory_v1"
+    },
+    "plan_sha256": "5be9bf7799e6d3929314de5b56525871462fe194615fe38661591ecbed10dfdf"
+   },
+   "pass": true
+  },
+  "arm_registry_frozen_bound_and_verified_on_disk": {
+   "evidence": {
+    "arms": {
+     "base": {
+      "adapter_config_sha256": null,
+      "adapter_dir": null,
+      "adapter_manifest_sha256": null,
+      "adapter_model_sha256": null,
+      "label": "base"
+     },
+     "relearn": {
+      "adapter_config_sha256": "6d47a3e56de5fd27dcbd0d90f7347643a14f40e4a1145dd47b590e2140577e26",
+      "adapter_dir": "checkpoints/local_sft_relearn_v2_seed42/sft_validation_best/checkpoint-141",
+      "adapter_manifest_sha256": "c1dcea74c9f97b012670114fe33e7695ad478eb30600e77f214f37781be4e133",
+      "adapter_model_sha256": "af262f4f8b43bab5426df6bf2556769818ca6f8e5cf8c85412238962ea659e63",
+      "label": "relearning checkpoint-141"
+     },
+     "sft": {
+      "adapter_config_sha256": "4dda431a828e688fa59e8c986981773c5fdcf67de50da5e338aa6a314f00f5a5",
+      "adapter_dir": "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter",
+      "adapter_manifest_sha256": "82f24fed40316249f307fc6b835f2d1fa9d1b7ada61e72e9892fb397e377f2a0",
+      "adapter_model_sha256": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+      "label": "A@431"
+     }
+    },
+    "problems": [],
+    "registry": {
+     "adapter_manifest_sha256": {
+      "base": null,
+      "relearn": "c1dcea74c9f97b012670114fe33e7695ad478eb30600e77f214f37781be4e133",
+      "sft": "82f24fed40316249f307fc6b835f2d1fa9d1b7ada61e72e9892fb397e377f2a0"
+     },
+     "arms": [
+      "base",
+      "sft",
+      "relearn"
+     ],
+     "name": "oneiros_v27_three_arm_registry_r5",
+     "schema_version": "oneiros_native_arm_registry_v1",
+     "sha256": "98b46227a40f848295fa813fb71d584496c7c93a3108ad51c60c92c52153e1bf"
+    }
+   },
+   "pass": true
+  },
+  "base_model_revision_immutable_and_local": {
+   "evidence": {
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+    "revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+    "snapshot_manifest_sha256": "1358a55051e7cf5e8963a2b2e3cd1a2fc6a3768552fb24e8a5e2a5afb8f43364",
+    "tokenizer_manifest_sha256": "bc2ebf6999bee86ccae422d3bcba5c799bd7c29cf6f7e7522db01e37a03979d3"
+   },
+   "pass": true
+  },
+  "checkout_clean_and_synced": {
+   "evidence": {
+    "head": "e206d633d30f929843b79ba8c0f29ffe41ddcf7d",
+    "problems": [],
+    "remote_sha": "e206d633d30f929843b79ba8c0f29ffe41ddcf7d",
+    "review_materials": "locally excluded; present and untouched"
+   },
+   "pass": true
+  },
+  "cohort_bound_to_frozen_34_target_panel": {
+   "evidence": {
+    "panel_sha256": "432965c0c0a89c505d76b3852c4b8714b99aae1d247e2c3d1f818cd0984c4317",
+    "status": "CONFIRMATION_BUILT_UNDERPOWERED"
+   },
+   "pass": true
+  },
+  "cohort_is_the_29_native_executable_targets": {
+   "evidence": {
+    "ids_sha256": "72047985124f2c7bd6c967c0fa4d75d4db6f5be65036cbbc599f02f6af0fa676",
+    "subset_receipt": "results/sft_root_cause_v27_common_subset_r4_v3.json",
+    "targets": 29
+   },
+   "pass": true
+  },
+  "environment_frozen_and_capacity_sufficient": {
+   "evidence": {
+    "cuda_runtime": "12.4",
+    "device": "NVIDIA RTX 4500 Ada Generation",
+    "disk_free_gib": 91.2,
+    "driver": "596.71",
+    "gpu_load_policy": "recorded, not gated; re-check that no other compute or graphics workload is active immediately before launch",
+    "libraries": {
+     "accelerate": "1.2.1",
+     "cuda": "12.4",
+     "peft": "0.14.0",
+     "tokenizers": "0.21.4",
+     "torch": "2.5.1+cu124",
+     "transformers": "4.48.3"
+    },
+    "memory_total_mib": 24570,
+    "memory_used_mib": 1997,
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.14",
+    "python_compute_processes": [],
+    "utilization_pct": 43,
+    "utilization_rule": "median of 5 samples, 1 s apart",
+    "utilization_samples_pct": [
+     38,
+     38,
+     44,
+     48,
+     43
+    ]
+   },
+   "pass": true
+  },
+  "five_policy_exclusions_reported_separately": {
+   "evidence": [
+    {
+     "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+     "target_key": "cand:fsspec/filesystem_spec@ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e"
+    },
+    {
+     "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+     "target_key": "cand:fsspec/filesystem_spec@ee30764e64dbd338f7494a45b30b1ece1465386f"
+    },
+    {
+     "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+     "target_key": "cand:pyvista/pyvista@507e77ca880fdd34757989df7422e101595818a9"
+    },
+    {
+     "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+     "target_key": "cand:pyvista/pyvista@631db08ed32f898ec8f59cbffa30cf80e9cbb1a3"
+    },
+    {
+     "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+     "target_key": "cand:pyvista/pyvista@eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116"
+    }
+   ],
+   "pass": true
+  },
+  "gate_evidence_satisfies_the_analyser": {
+   "evidence": {
+    "gate_evidence": {
+     "quarantine_ledger": {
+      "path": "results/sft_root_cause/v27_quarantine_ledger_r5.json",
+      "sha256": "cf970cb49963ddb969f4de4ea4a61b8947bacacca3f18a7cfb8d58bb0d28b16e"
+     },
+     "receipts": {
+      "atheris_canaries": {
+       "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_canaries/atheris_canary_receipt_v4.json",
+       "sha256": "be29d52ee6346fbf9d327976be40e2cec486fdf2218fb65bab86c2555157170b"
+      },
+      "full_suite": {
+       "path": "results/sft_root_cause/v27_full_suite_native_r6_41c85b3.json",
+       "sha256": "c148f7f5268fc0a66f01d01736a962acb0aaeeec350c7e2482684a95c8c91968"
+      },
+      "sandbox_canaries": {
+       "path": "results/sft_root_cause/v27_r5_canaries/exec/canary_receipt_v2.json",
+       "sha256": "9d8ca78f32ad838703dda68424a4914f37930374b38d4ebc0054d0155368f088"
+      },
+      "synthetic_pipeline": {
+       "path": "results/sft_root_cause/v27_synthetic_pipeline_receipt_r6.json",
+       "sha256": "789cc1f8e2c8a1c5fb5505247b97719c2fec940c95355bef862cae1f8cfdb44d"
+      }
+     }
+    },
+    "problems": {
+     "atheris_canaries": [],
+     "full_suite": [],
+     "quarantine_ledger": [],
+     "sandbox_canaries": [],
+     "synthetic_pipeline": []
+    }
+   },
+   "pass": true
+  },
+  "identical_evaluator_sandbox_and_timeouts": {
+   "evidence": {
+    "executor_design": "oneiros_native_generated_tests_execute_v5",
+    "executor_sha256": "2cd259572cc31227eb4b0f48d3007643e5813e23fd53b839f17d73eaccfab333",
+    "inner_sha256": "ff90215bb4aef3c864a0d3604ad0eb076de68c5a0754ac6053fed15b9ff42b18",
+    "limits": {
+     "address_space_bytes": 4294967296,
+     "cpu_seconds": 60,
+     "fsize_bytes": 52428800,
+     "nofile": 256,
+     "nproc": 64,
+     "per_test_seconds": 10,
+     "wall_seconds": 90
+    },
+    "module_limits": {
+     "asserts": 100,
+     "target_calls": 200,
+     "tests": 25
+    }
+   },
+   "pass": true
+  },
+  "identical_generation_contract_for_every_arm": {
+   "evidence": {
+    "contract": {
+     "attention_implementation": "sdpa",
+     "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+     "base_revision": "2e1fd397ee46e1388853d2af2c993145b0f1098a",
+     "batch_size": 2,
+     "candidates": 8,
+     "do_sample": true,
+     "duplicates": "kept",
+     "extraction": "whole_output_single_fence_strip",
+     "max_new_tokens": 1024,
+     "prompt_token_limit": 2048,
+     "raw_output_retained": true,
+     "reranking": "none",
+     "seeds": [
+      42,
+      43,
+      44
+     ],
+     "sequence_limit": 3072,
+     "sft_adapter": "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter",
+     "temperature": 0.7,
+     "top_p": 0.9
+    },
+    "generator_version": "oneiros_native_generated_tests_generate_v5",
+    "only_difference_between_arms": "the registered adapter"
+   },
+   "pass": true
+  },
+  "job_valid_prompts_frozen_no_leakage_no_truncation": {
+   "evidence": {
+    "builder": {
+     "builder_sha256": {
+      "permitted_view": "b9a95eee7deec9c3888f54ff5c44efaa3d8b551cc616a8d3a4ad811de9c762b9",
+      "v25_pytest_module_v1": "995cf270d2c7836edde29e48286281b30b03708b6bbef102bef422bb2f1e815a"
+     },
+     "builder_version": "oneiros_native_generated_test_prompt_v25_pytest_module_v1",
+     "output_type": "pytest_module_v1",
+     "scanner_version": "oneiros_native_generated_test_leakage_v2"
+    },
+    "items": 29,
+    "limits": {
+     "completion_tokens": 1024,
+     "prompt_token_limit": 2048,
+     "prompt_tokens": {
+      "cand:boxed/mutmut@385449458ef3d89ba4ac1f50e08e4b088ce9a634": 776,
+      "cand:boxed/mutmut@4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8": 722,
+      "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1": 983,
+      "cand:boxed/mutmut@dc58270d5234752e22247f814431750eafcf6e5f": 1214,
+      "cand:coleifer/peewee@47db8f79337eb7385854649ef3c9267ed508838b": 1532,
+      "cand:coleifer/peewee@914f4fc24002fb6f9ad0f2763b148a5ac63545a0": 557,
+      "cand:coleifer/peewee@c511fb137f7b3d91436aabc5a7963ada217147ec": 971,
+      "cand:coleifer/peewee@f5e439d3eaa3aecc5621c6f121df854086eec008": 673,
+      "cand:fsspec/filesystem_spec@073aac840748ab95bea39468306123268e316184": 915,
+      "cand:fsspec/filesystem_spec@1724d540ee917f926f93b32b6580e637b3777adc": 1265,
+      "cand:fsspec/filesystem_spec@1da4c7132a720fe1059d94774b46d6cda625b453": 681,
+      "cand:fsspec/filesystem_spec@5eec9f9353b8d517d296428441a84fa26e9a6438": 846,
+      "cand:fsspec/filesystem_spec@652325d9b9459286a5b72c7e6228b061fb29827c": 998,
+      "cand:fsspec/filesystem_spec@933e992fc8d3247606b6d01abd22673989e5393c": 686,
+      "cand:hynek/stamina@b09d541fdff686970c166faac27f388b841aeca2": 646,
+      "cand:jpadilla/pyjwt@171062d2d734315272a901100aa4b109f2fc3c19": 527,
+      "cand:jpadilla/pyjwt@7bf32526738fe837387bdedd4849a4a525c33a79": 790,
+      "cand:kozea/weasyprint@0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2": 1403,
+      "cand:kozea/weasyprint@d4d5a2a5a5e99afee8b8302ffab1265013f68cc1": 644,
+      "cand:marshmallow-code/apispec@f767e7522fd8c4280f1b21341f61476c7fe7e54e": 1032,
+      "cand:prompt-toolkit/python-prompt-toolkit@75eca874f8b3abbe7643d075711917504f3e4f6b": 750,
+      "cand:pymysql/pymysql@34f267684f8cdfa0923fe6be4a990efa0cfda015": 611,
+      "cand:pypa/pipx@c8b1893db865ad581774a8aa8f467d7926ca1d88": 768,
+      "cand:python-lsp/python-lsp-server@19fc07aa5dd444303cead45d841115a897252cd3": 887,
+      "cand:python-lsp/python-lsp-server@1a10b605aa731daba20e8c1827542b7145ad3059": 834,
+      "cand:pytransitions/transitions@8f6ca5f4ca268dd154f0a968d3861afada10430b": 708,
+      "cand:pytransitions/transitions@f970687f48f807dd5974f59c4d76abed2bd1e7bd": 769,
+      "cand:tox-dev/pipdeptree@214e9d48069909b7ff0fa6492632084b2fc6080d": 749,
+      "cand:vega/altair@6c0bf289faa3c5f56a3c731cf864edb1d495c957": 885
+     },
+     "sequence_limit": 3072,
+     "truncation": "never"
+    },
+    "prompt_tokens_max": 1532
+   },
+   "pass": true
+  },
+  "mock_three_arm_generation_and_authoritative_loading": {
+   "evidence": {
+    "adapter_manifest_sha256": {
+     "base": null,
+     "relearn": "c1dcea74c9f97b012670114fe33e7695ad478eb30600e77f214f37781be4e133",
+     "sft": "82f24fed40316249f307fc6b835f2d1fa9d1b7ada61e72e9892fb397e377f2a0"
+    },
+    "expected": {
+     "arms": [
+      "base",
+      "sft",
+      "relearn"
+     ],
+     "candidates_per_arm": 696,
+     "candidates_per_row": 8,
+     "candidates_total": 2088,
+     "generation_targets": 29,
+     "rows_per_arm": 87,
+     "rows_total": 261
+    },
+    "loaded_candidates": 2088,
+    "loaded_rows": 261,
+    "per_arm": {
+     "base": [
+      87,
+      696
+     ],
+     "relearn": [
+      87,
+      696
+     ],
+     "sft": [
+      87,
+      696
+     ]
+    },
+    "returncodes": {
+     "base": {
+      "returncode": 0,
+      "stderr_tail": ""
+     },
+     "relearn": {
+      "returncode": 0,
+      "stderr_tail": ""
+     },
+     "sft": {
+      "returncode": 0,
+      "stderr_tail": ""
+     }
+    }
+   },
+   "pass": true
+  },
+  "native_target_reach_bound_for_every_target": {
+   "evidence": {
+    "bundle": "results/sft_root_cause_v27_phase6_evidence_bundle_v3.json",
+    "bundle_sha256": "10e0c750adbb612ec2b8ff3b6295d2b345cdad482f09b0d909fb548dc67f513a"
+   },
+   "pass": true
+  },
+  "no_validation_or_sealed_final_access": {
+   "evidence": {
+    "opens_checked": 5655,
+    "policy": "oneiros_protected_locations_v2",
+    "protected_accesses": []
+   },
+   "pass": true
+  },
+  "output_paths_new_unique_and_not_r4": {
+   "evidence": {
+    "analysis": "results/sft_root_cause_v27_analysis_r6.json",
+    "authorization": "results/sft_root_cause_v27_gpu_authorization_r6.json",
+    "base": "results/sft_root_cause/v27_generations_r6/base",
+    "execution": "results/sft_root_cause/v27_execution_r6",
+    "relearn": "results/sft_root_cause/v27_generations_r6/relearn",
+    "sft": "results/sft_root_cause/v27_generations_r6/sft"
+   },
+   "pass": true
+  }
+ },
+ "cohort": {
+  "arms": [
+   "base",
+   "sft",
+   "relearn"
+  ],
+  "expected": {
+   "arms": [
+    "base",
+    "sft",
+    "relearn"
+   ],
+   "candidates_per_arm": 696,
+   "candidates_per_row": 8,
+   "candidates_total": 2088,
+   "generation_targets": 29,
+   "rows_per_arm": 87,
+   "rows_total": 261
+  },
+  "ids": [
+   "cand:boxed/mutmut@385449458ef3d89ba4ac1f50e08e4b088ce9a634",
+   "cand:boxed/mutmut@4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8",
+   "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1",
+   "cand:boxed/mutmut@dc58270d5234752e22247f814431750eafcf6e5f",
+   "cand:coleifer/peewee@47db8f79337eb7385854649ef3c9267ed508838b",
+   "cand:coleifer/peewee@914f4fc24002fb6f9ad0f2763b148a5ac63545a0",
+   "cand:coleifer/peewee@c511fb137f7b3d91436aabc5a7963ada217147ec",
+   "cand:coleifer/peewee@f5e439d3eaa3aecc5621c6f121df854086eec008",
+   "cand:fsspec/filesystem_spec@073aac840748ab95bea39468306123268e316184",
+   "cand:fsspec/filesystem_spec@1724d540ee917f926f93b32b6580e637b3777adc",
+   "cand:fsspec/filesystem_spec@1da4c7132a720fe1059d94774b46d6cda625b453",
+   "cand:fsspec/filesystem_spec@5eec9f9353b8d517d296428441a84fa26e9a6438",
+   "cand:fsspec/filesystem_spec@652325d9b9459286a5b72c7e6228b061fb29827c",
+   "cand:fsspec/filesystem_spec@933e992fc8d3247606b6d01abd22673989e5393c",
+   "cand:hynek/stamina@b09d541fdff686970c166faac27f388b841aeca2",
+   "cand:jpadilla/pyjwt@171062d2d734315272a901100aa4b109f2fc3c19",
+   "cand:jpadilla/pyjwt@7bf32526738fe837387bdedd4849a4a525c33a79",
+   "cand:kozea/weasyprint@0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2",
+   "cand:kozea/weasyprint@d4d5a2a5a5e99afee8b8302ffab1265013f68cc1",
+   "cand:marshmallow-code/apispec@f767e7522fd8c4280f1b21341f61476c7fe7e54e",
+   "cand:prompt-toolkit/python-prompt-toolkit@75eca874f8b3abbe7643d075711917504f3e4f6b",
+   "cand:pymysql/pymysql@34f267684f8cdfa0923fe6be4a990efa0cfda015",
+   "cand:pypa/pipx@c8b1893db865ad581774a8aa8f467d7926ca1d88",
+   "cand:python-lsp/python-lsp-server@19fc07aa5dd444303cead45d841115a897252cd3",
+   "cand:python-lsp/python-lsp-server@1a10b605aa731daba20e8c1827542b7145ad3059",
+   "cand:pytransitions/transitions@8f6ca5f4ca268dd154f0a968d3861afada10430b",
+   "cand:pytransitions/transitions@f970687f48f807dd5974f59c4d76abed2bd1e7bd",
+   "cand:tox-dev/pipdeptree@214e9d48069909b7ff0fa6492632084b2fc6080d",
+   "cand:vega/altair@6c0bf289faa3c5f56a3c731cf864edb1d495c957"
+  ],
+  "ids_sha256": "72047985124f2c7bd6c967c0fa4d75d4db6f5be65036cbbc599f02f6af0fa676",
+  "panel_policy_exclusions": [
+   {
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "target_key": "cand:fsspec/filesystem_spec@ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e"
+   },
+   {
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "target_key": "cand:fsspec/filesystem_spec@ee30764e64dbd338f7494a45b30b1ece1465386f"
+   },
+   {
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "target_key": "cand:pyvista/pyvista@507e77ca880fdd34757989df7422e101595818a9"
+   },
+   {
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "target_key": "cand:pyvista/pyvista@631db08ed32f898ec8f59cbffa30cf80e9cbb1a3"
+   },
+   {
+    "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+    "target_key": "cand:pyvista/pyvista@eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116"
+   }
+  ],
+  "targets": 29
+ },
+ "commands": {
+  "analyse_after_execution": ".venv-gpu/Scripts/python.exe scripts/native_generated_tests_analyse.py analyse --manifest results/sft_root_cause_v27_generation_manifest_r5.json --job results/sft_root_cause_v27_generation_job_r5.json --prep results/sft_root_cause/v27_confirmation/r4_panel/generation_prep_records.jsonl --preflight results/sft_root_cause_v27_gpu_preflight_r6.json --execution-contract results/sft_root_cause/v27_execution_r6/execute_contract_primary_whole_module.json --results results/sft_root_cause/v27_execution_r6/results_primary_whole_module.jsonl --generations results/sft_root_cause/v27_generations_r6 --condition primary_whole_module --study-mode confirmation_exploratory_v1 --out results/sft_root_cause_v27_analysis_r6.json",
+  "authorization_required": "results/sft_root_cause_v27_gpu_authorization_r6.json",
+  "execute_after_all_three_arms": "wsl.exe -u root --cd /mnt/c/Users/Student2/Desktop/Capstone/oneiros -- bash scripts/wsl_isolated.sh bash scripts/wsl_native_python.sh scripts/native_generated_tests_execute_wsl.py run --prep results/sft_root_cause/v27_confirmation/r4_panel/generation_prep_records.jsonl --manifest results/sft_root_cause_v27_generation_manifest_r5.json --job results/sft_root_cause_v27_generation_job_r5.json --generations results/sft_root_cause/v27_generations_r6 --condition primary_whole_module --out results/sft_root_cause/v27_execution_r6",
+  "generate": {
+   "base": ".venv-gpu/Scripts/python.exe scripts/gpu_run.py start --name v27r5_generate_base --exclusive-key v27r5_generation -- .venv-gpu/Scripts/python.exe scripts/native_generated_tests_generate.py run --job results/sft_root_cause_v27_generation_job_r5.json --condition primary_whole_module --arm base --out results/sft_root_cause/v27_generations_r6/base --backend hf --preflight results/sft_root_cause_v27_gpu_preflight_r6.json --authorization results/sft_root_cause_v27_gpu_authorization_r6.json",
+   "relearn": ".venv-gpu/Scripts/python.exe scripts/gpu_run.py start --name v27r5_generate_relearn --exclusive-key v27r5_generation -- .venv-gpu/Scripts/python.exe scripts/native_generated_tests_generate.py run --job results/sft_root_cause_v27_generation_job_r5.json --condition primary_whole_module --arm relearn --out results/sft_root_cause/v27_generations_r6/relearn --backend hf --preflight results/sft_root_cause_v27_gpu_preflight_r6.json --authorization results/sft_root_cause_v27_gpu_authorization_r6.json",
+   "sft": ".venv-gpu/Scripts/python.exe scripts/gpu_run.py start --name v27r5_generate_sft --exclusive-key v27r5_generation -- .venv-gpu/Scripts/python.exe scripts/native_generated_tests_generate.py run --job results/sft_root_cause_v27_generation_job_r5.json --condition primary_whole_module --arm sft --out results/sft_root_cause/v27_generations_r6/sft --backend hf --preflight results/sft_root_cause_v27_gpu_preflight_r6.json --authorization results/sft_root_cause_v27_gpu_authorization_r6.json"
+  },
+  "launch_time_check": "nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv -l 1 (several seconds): no other compute or heavy graphics workload; nvidia-smi --query-compute-apps=process_name --format=csv: no python process",
+  "order": [
+   "base",
+   "sft",
+   "relearn"
+  ],
+  "read_only_gate_before_each_arm": {
+   "base": ".venv-gpu/Scripts/python.exe scripts/native_generated_tests_launch_gate.py --preflight results/sft_root_cause_v27_gpu_preflight_r6.json --authorization results/sft_root_cause_v27_gpu_authorization_r6.json --job results/sft_root_cause_v27_generation_job_r5.json --arm base --out results/sft_root_cause/v27_generations_r6/base",
+   "relearn": ".venv-gpu/Scripts/python.exe scripts/native_generated_tests_launch_gate.py --preflight results/sft_root_cause_v27_gpu_preflight_r6.json --authorization results/sft_root_cause_v27_gpu_authorization_r6.json --job results/sft_root_cause_v27_generation_job_r5.json --arm relearn --out results/sft_root_cause/v27_generations_r6/relearn",
+   "sft": ".venv-gpu/Scripts/python.exe scripts/native_generated_tests_launch_gate.py --preflight results/sft_root_cause_v27_gpu_preflight_r6.json --authorization results/sft_root_cause_v27_gpu_authorization_r6.json --job results/sft_root_cause_v27_generation_job_r5.json --arm sft --out results/sft_root_cause/v27_generations_r6/sft"
+  },
+  "sequential_verification": "each trained arm's gate re-verifies the completed base arm with the exact single-arm verifier before launch",
+  "shell_note": "run from PowerShell, or prefix MSYS_NO_PATHCONV=1 in Git Bash so /mnt/c paths are not rewritten"
+ },
+ "created_utc": "2026-10-07T15:00:40Z",
+ "environment": {
+  "cuda_runtime": "12.4",
+  "device": "NVIDIA RTX 4500 Ada Generation",
+  "driver": "596.71",
+  "libraries": {
+   "accelerate": "1.2.1",
+   "cuda": "12.4",
+   "peft": "0.14.0",
+   "tokenizers": "0.21.4",
+   "torch": "2.5.1+cu124",
+   "transformers": "4.48.3"
+  },
+  "memory_total_mib": 24570,
+  "memory_used_mib": 1997,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.12.14",
+  "python_compute_processes": [],
+  "utilization_pct": 43,
+  "utilization_rule": "median of 5 samples, 1 s apart",
+  "utilization_samples_pct": [
+   38,
+   38,
+   44,
+   48,
+   43
+  ]
+ },
+ "estimates": {
+  "basis": "same generator and contract, v2.4: 552 candidates per arm took 1,878 s (base) and 5,838 s (adapter); scaled to 696",
+  "disk": "< 10 MiB per arm of generations; execution evidence < 300 MiB",
+  "runtime_minutes": {
+   "base": 39,
+   "relearn": 123,
+   "sft": 123,
+   "total": 285
+  },
+  "vram": "1.5B bf16 ~3.1 GiB + KV cache for batch 2 x 3,072 tokens"
+ },
+ "failed_checks": [],
+ "gate_evidence": {
+  "quarantine_ledger": {
+   "path": "results/sft_root_cause/v27_quarantine_ledger_r5.json",
+   "sha256": "cf970cb49963ddb969f4de4ea4a61b8947bacacca3f18a7cfb8d58bb0d28b16e"
+  },
+  "receipts": {
+   "atheris_canaries": {
+    "path": "results/sft_root_cause/v27_confirmation/phase6/atheris_canaries/atheris_canary_receipt_v4.json",
+    "sha256": "be29d52ee6346fbf9d327976be40e2cec486fdf2218fb65bab86c2555157170b"
+   },
+   "full_suite": {
+    "path": "results/sft_root_cause/v27_full_suite_native_r6_41c85b3.json",
+    "sha256": "c148f7f5268fc0a66f01d01736a962acb0aaeeec350c7e2482684a95c8c91968"
+   },
+   "sandbox_canaries": {
+    "path": "results/sft_root_cause/v27_r5_canaries/exec/canary_receipt_v2.json",
+    "sha256": "9d8ca78f32ad838703dda68424a4914f37930374b38d4ebc0054d0155368f088"
+   },
+   "synthetic_pipeline": {
+    "path": "results/sft_root_cause/v27_synthetic_pipeline_receipt_r6.json",
+    "sha256": "789cc1f8e2c8a1c5fb5505247b97719c2fec940c95355bef862cae1f8cfdb44d"
+   }
+  }
+ },
+ "generation_outputs": {
+  "base": "results/sft_root_cause/v27_generations_r6/base",
+  "relearn": "results/sft_root_cause/v27_generations_r6/relearn",
+  "sft": "results/sft_root_cause/v27_generations_r6/sft"
+ },
+ "inputs": {
+  "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter/adapter_model.safetensors": "e67dd599a37cbf2a738791c5cdf889cb4938a2ad53c991dca2fefae503b6f9e7",
+  "checkpoints/local_sft_relearn_v2_seed42/sft_validation_best/checkpoint-141/adapter_model.safetensors": "af262f4f8b43bab5426df6bf2556769818ca6f8e5cf8c85412238962ea659e63",
+  "results/sft_root_cause/v27_confirmation/phase6/atheris_canaries/atheris_canary_receipt_v4.json": "be29d52ee6346fbf9d327976be40e2cec486fdf2218fb65bab86c2555157170b",
+  "results/sft_root_cause/v27_confirmation/r4_panel/generation_prep_records.jsonl": "19f6aefaddf1b29457e178d4f13f69049b4d4d64959b207f395178fe7eeee5e5",
+  "results/sft_root_cause/v27_confirmation/r4_panel/model_visible_bundle.json": "ffff6dd91a1646b6682b722e7fdb5dac6b8e053df6044f42291d63999f361873",
+  "results/sft_root_cause/v27_full_suite_native_r6_41c85b3.json": "c148f7f5268fc0a66f01d01736a962acb0aaeeec350c7e2482684a95c8c91968",
+  "results/sft_root_cause/v27_quarantine_ledger_r5.json": "cf970cb49963ddb969f4de4ea4a61b8947bacacca3f18a7cfb8d58bb0d28b16e",
+  "results/sft_root_cause/v27_r5_canaries/exec/canary_receipt_v2.json": "9d8ca78f32ad838703dda68424a4914f37930374b38d4ebc0054d0155368f088",
+  "results/sft_root_cause/v27_synthetic_pipeline_receipt_r6.json": "789cc1f8e2c8a1c5fb5505247b97719c2fec940c95355bef862cae1f8cfdb44d",
+  "results/sft_root_cause_v27_common_subset_r4_v3.json": "a803df3c07fb4599483adb5ee521b2307c94aa8267ecf7469e498120ba52d4df",
+  "results/sft_root_cause_v27_confirmation_panel_r4.json": "432965c0c0a89c505d76b3852c4b8714b99aae1d247e2c3d1f818cd0984c4317",
+  "results/sft_root_cause_v27_generation_job_r5.json": "1baae813760d27caae7abbbb40f7e23d1a083c455ae0576efe095b88244ad98f",
+  "results/sft_root_cause_v27_generation_manifest_r5.json": "1302acbfeacb3c9389735e46194bc3dc4d108a4c2049be9edb9f13f902f2df43",
+  "results/sft_root_cause_v27_gpu_preflight_r5.json": "be0051fcbf34de6ad1bbb4ef8ce0387e177aafbccdda3d574938b585608a48c2",
+  "results/sft_root_cause_v27_phase6_evidence_bundle_v3.json": "10e0c750adbb612ec2b8ff3b6295d2b345cdad482f09b0d909fb548dc67f513a",
+  "results/v4_2_development_selection_receipt.json": "0188324fe9eb2a51eebef71bbd4cc3ed45584f12393bf0fa6539817a09e58969",
+  "results/v4_2_failure_taxonomy_relearning.json": "92798a06bba4df0f1eb4734b04010e86217987ce845f525e750c2b1b8a77849e",
+  "results/v4_2_relearning_receipt.json": "e9a5379de51d9e7f6bb8efdd8077925c8b2631c50b87905dcadca1a737b52098",
+  "scripts/native_generated_tests_analyse.py": "70a514b4e78fa0f0d90339c3c2689c883c8f7627bc96cac73c948bf47a731fd5"
+ },
+ "job": {
+  "file_sha256": "1baae813760d27caae7abbbb40f7e23d1a083c455ae0576efe095b88244ad98f",
+  "job_sha256": "62c857c2af71a44da675ed3e2a23da905f2cbe7f5ebfb27ccab19e50a0f447d6",
+  "path": "results/sft_root_cause_v27_generation_job_r5.json"
+ },
+ "launched": false,
+ "machine_bound_inputs": {
+  "checkpoints/local_sft_armA_baseline_successor_s42/sft_adapter/adapter_model.safetensors": "sft adapter weights (git-ignored)",
+  "checkpoints/local_sft_relearn_v2_seed42/sft_validation_best/checkpoint-141/adapter_model.safetensors": "relearn adapter weights (git-ignored)",
+  "results/sft_root_cause/v27_confirmation/r4_panel/generation_prep_records.jsonl": "derived preparation records (git-ignored)",
+  "results/sft_root_cause/v27_confirmation/r4_panel/model_visible_bundle.json": "frozen model-visible bundle (git-ignored)"
+ },
+ "manifest": {
+  "path": "results/sft_root_cause_v27_generation_manifest_r5.json",
+  "sha256": "1302acbfeacb3c9389735e46194bc3dc4d108a4c2049be9edb9f13f902f2df43"
+ },
+ "model": {
+  "chat_template_sha256": "cd8e9439f0570856fd70470bf8889ebd8b5d1107207f67a5efb46e342330527f",
+  "snapshot_manifest_sha256": "1358a55051e7cf5e8963a2b2e3cd1a2fc6a3768552fb24e8a5e2a5afb8f43364",
+  "tokenizer_manifest_sha256": "bc2ebf6999bee86ccae422d3bcba5c799bd7c29cf6f7e7522db01e37a03979d3"
+ },
+ "pipeline_ready": true,
+ "schema_version": "oneiros_native_generated_tests_preflight_v2_7",
+ "source": {
+  "commit": "e206d633d30f929843b79ba8c0f29ffe41ddcf7d",
+  "executable_tree_sha256": "e105db5a98a6221934581b52af6ccc9da5cadcb9b13f4e304e2b0e12238d79eb",
+  "protocol_sha256": {
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md": "75131551082876d65be0609db619673417a6728e3c612cc2ebc69e808a1cc5a1",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_1.md": "8d48aa36def2e67d3ce5b876af0317fc4eb7199b5422eadca823980ec27d2901",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_2.md": "b5ebe83b37d184dd785b740267e7efd01a7022fa30df92ecba9f061985228998",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_3.md": "1ffda40c14c48788f21fb569f2888ad8c86988e6177b5de61d56714db3d172f4",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_4.md": "ef2f231321314c25ccb156d9f6cfb9e44ff4823435173c8590623bf17deecd61",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5.md": "c707d8ae9f8b6cce8ab50e87d417175c9e947687c64b4c3de4d67eebe96022f7",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5_ADDENDUM_1.md": "7676aac2c58ef2bf35a435b42ee40b81a4fe6d8143175e21c417b0bcfc2c9149",
+   "docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2_5_ADDENDUM_2.md": "e348060a4d06bb11c86d38cd9a0e1f1d781d5e4ec59c41463b42d07dd39510dc"
+  }
+ },
+ "study": "oneiros_v27_repository_native_three_arm_exploratory_confirmation_r5",
+ "supersedes": {
+  "path": "results/sft_root_cause_v27_gpu_preflight_r5.json",
+  "sha256": "be0051fcbf34de6ad1bbb4ef8ce0387e177aafbccdda3d574938b585608a48c2",
+  "status": "valid three-arm preflight, never authorised; superseded by the corrective pass (34->29+5 accounting bound to the v3 subset receipt, fixed six-test Holm family, full-precision p-values; analyser v5)"
+ },
+ "tag": "r6",
+ "weights_loaded": false
+}
