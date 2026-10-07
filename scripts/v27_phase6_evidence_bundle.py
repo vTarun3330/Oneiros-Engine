@@ -7,6 +7,11 @@ revisions, two repetitions), and the Atheris eligibility v2 probe (adapter plan,
 fuzz-input consumption, determinism, failure class/reason and every child's exit evidence).
 Bulky raw artifacts stay git-ignored; each is bound here by SHA-256. Paths are scrubbed.
 
+v3 (supersedes v2, which is preserved): every invocation child's STRUCTURED per-seed stage record
+is kept (receiver_built, arguments_built, consumed_bytes, target_invoked, outcome kind, a
+bounded outcome detail - e.g. the SystemExit code - and the full outcome's SHA-256), for each
+revision and repetition, so eligibility can be recomputed from committed evidence alone.
+
     python scripts/v27_phase6_evidence_bundle.py --out results/<bundle>.json
 """
 from __future__ import annotations
@@ -27,6 +32,8 @@ REACH = f"{D}/r4_native_reach.jsonl"
 CONTROL = f"{D}/phase6/native_control.jsonl"
 ELIG = f"{D}/phase6/atheris_eligibility_v2"
 TAIL = 200
+DETAIL = 80
+SCHEMA = "oneiros_v27_phase6_evidence_bundle_v3"
 CHILD_FIELDS = ("returncode", "signal", "timed_out", "stdout_sha256", "stderr_sha256")
 
 
@@ -50,6 +57,31 @@ def child(evidence: dict | None) -> dict | None:
     return {**{k: proc.get(k) for k in CHILD_FIELDS},
             "normal_exit": evidence.get("normal_exit"),
             "stderr_tail": receipt_sanitize.scrub(proc.get("stderr_tail") or "")[-TAIL:]}
+
+
+def seed_record(s: dict) -> dict:
+    outcome = s.get("outcome") or ["none"]
+    detail = outcome[1] if len(outcome) > 1 else None
+    return {"receiver_built": s.get("receiver_built"), "arguments_built": s.get("arguments_built"),
+            "consumed_bytes": s.get("consumed_bytes"), "target_invoked": s.get("target_invoked"),
+            "outcome_kind": outcome[0],
+            "outcome_detail": receipt_sanitize.scrub(json.dumps(detail))[:DETAIL],
+            "outcome_sha256": hashlib.sha256(json.dumps(outcome, sort_keys=True)
+                                             .encode()).hexdigest()}
+
+
+def structured_runs(raw: dict | None) -> dict | None:
+    """Per revision, per repetition: normal_exit and the per-seed structured stage records."""
+    if not raw or not raw.get("invocations"):
+        return None
+    out = {}
+    for label, runs in raw["invocations"].items():
+        out[label] = [{"normal_exit": r.get("normal_exit"),
+                       "returncode": (r.get("process") or {}).get("returncode"),
+                       "seeds": [seed_record(s) for s in ((r.get("result") or {}).get("seeds")
+                                                          or [])]
+                       if r.get("normal_exit") else None} for r in runs]
+    return out
 
 
 def main(argv=None) -> int:
@@ -102,10 +134,11 @@ def main(argv=None) -> int:
                 "target_invoked", "consumes_fuzz_input", "deterministic", "v5_terminating",
                 "per_revision")},
             "atheris_v2_children": children,
+            "atheris_v2_structured_runs": structured_runs(raw),
             "atheris_v2_evidence_sha256": (e.get("evidence") or {}).get("sha256"),
         })
     bundle = receipt_sanitize.scrub_json({
-        "schema_version": "oneiros_v27_phase6_evidence_bundle_v2",
+        "schema_version": SCHEMA,
         "panel": {"path": PANEL, "sha256": sha(PANEL), "targets": len(keys)},
         "eligibility_contract": {k: contract[k] for k in (
             "schema_version", "design_version", "harness_script_sha256", "probe_script_sha256",
@@ -114,7 +147,7 @@ def main(argv=None) -> int:
         "redaction": "host paths scrubbed; stderr tails truncated to 200 characters; raw "
                      "artifacts remain git-ignored and are bound by SHA-256",
         "targets": targets})
-    out.write_text(json.dumps(bundle, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    out.write_bytes((json.dumps(bundle, indent=1, sort_keys=True) + "\n").encode("utf-8"))  # LF
     problems = receipt_sanitize.check_file(out)
     if problems:
         out.unlink()

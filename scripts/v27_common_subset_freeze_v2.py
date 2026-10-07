@@ -92,6 +92,8 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", required=True)
     args = ap.parse_args(argv)
+    refuse((ROOT / args.out).exists(), f"{args.out} exists (accepted receipts are never "
+                                       "overwritten)")
     panel, acq, gate4, bundle = load(PANEL), load(ACQ), load(GATE4), load(BUNDLE)
     refuse(bundle["panel"]["sha256"] != sha(PANEL), "evidence bundle binds a different panel")
     refuse(gate4.get("status") != "PASS", "Phase 4 acquisition gate did not pass")
