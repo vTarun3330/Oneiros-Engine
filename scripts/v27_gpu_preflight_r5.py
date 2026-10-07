@@ -19,6 +19,11 @@ byte-exact; tracked JSON is hashed as committed (LF) bytes.
 
     python scripts/v27_gpu_preflight_r5.py --out results/<preflight>.json --full-suite R
         --synthetic R --sandbox-canaries R --atheris-canaries R --ledger R
+        [--tag r5] [--supersedes results/<earlier preflight>.json]
+
+``--tag`` names every output path and the authorisation file (default r5, the first use);
+a successor uses a new tag so its outputs and authorisation never collide with an earlier
+preflight's. ``--supersedes`` names the preflight this one replaces (default r4).
 """
 from __future__ import annotations
 
@@ -46,10 +51,13 @@ MANIFEST = "results/sft_root_cause_v27_generation_manifest_r5.json"
 R4_PREFLIGHT = "results/sft_root_cause_v27_gpu_preflight_r4.json"
 VISIBLE = "results/sft_root_cause/v27_confirmation/r4_panel/model_visible_bundle.json"
 ANALYSER = "scripts/native_generated_tests_analyse.py"
-OUT_ROOT = "results/sft_root_cause/v27_generations_r5"
-EXEC_OUT = "results/sft_root_cause/v27_execution_r5"
-ANALYSIS_OUT = "results/sft_root_cause_v27_analysis_r5.json"
-AUTH = "results/sft_root_cause_v27_gpu_authorization_r5.json"
+def tagged_paths(tag: str) -> dict:
+    if not tag.isalnum():
+        raise SystemExit("REFUSED: --tag must be alphanumeric")
+    return {"OUT_ROOT": f"results/sft_root_cause/v27_generations_{tag}",
+            "EXEC_OUT": f"results/sft_root_cause/v27_execution_{tag}",
+            "ANALYSIS_OUT": f"results/sft_root_cause_v27_analysis_{tag}.json",
+            "AUTH": f"results/sft_root_cause_v27_gpu_authorization_{tag}.json"}
 CONDITION = "primary_whole_module"
 REPO_WSL = "/mnt/c/Users/Student2/Desktop/Capstone/oneiros"
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
@@ -141,9 +149,20 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--tag", default="r5")
+    ap.add_argument("--supersedes", default=R4_PREFLIGHT)
+    ap.add_argument("--supersedes-reason", default=None)
     for name in ("full-suite", "synthetic", "sandbox-canaries", "atheris-canaries", "ledger"):
         ap.add_argument(f"--{name}", required=True)
     args = ap.parse_args(argv)
+    paths = tagged_paths(args.tag)
+    OUT_ROOT, EXEC_OUT = paths["OUT_ROOT"], paths["EXEC_OUT"]
+    ANALYSIS_OUT, AUTH = paths["ANALYSIS_OUT"], paths["AUTH"]
+    supersedes = args.supersedes
+    if not (ROOT / supersedes).is_file():
+        raise SystemExit(f"REFUSED: superseded preflight {supersedes} missing")
+    if supersedes != R4_PREFLIGHT and not args.supersedes_reason:
+        raise SystemExit("REFUSED: --supersedes-reason is required for a non-r4 predecessor")
     out = ROOT / args.out
     if out.exists():
         raise SystemExit(f"REFUSED: {args.out} exists (preflights are written once)")
@@ -274,14 +293,15 @@ def main(argv=None) -> int:
     checks.add("output_paths_new_unique_and_not_r4",
                not any((ROOT / p).exists() for p in outputs.values())
                and len(set(outputs.values())) == len(outputs)
-               and all("_r5" in p for p in outputs.values()), outputs)
+               and all(f"_{args.tag}" in p for p in outputs.values())
+               and not (ROOT / AUTH).exists(), {**outputs, "authorization": AUTH})
     mock_rehearsal(checks, cohort)
 
     machine_bound = {manifest["requalification_records"]["path"]: "derived preparation records "
                      "(git-ignored)", VISIBLE: "frozen model-visible bundle (git-ignored)",
                      **{f"{reg.REGISTRY['arms'][a]['adapter_dir']}/adapter_model.safetensors":
                         f"{a} adapter weights (git-ignored)" for a in ("sft", "relearn")}}
-    inputs = {p: sha(p) for p in (PANEL, SUBSET, BUNDLE, JOB, MANIFEST, R4_PREFLIGHT, ANALYSER,
+    inputs = {p: sha(p) for p in (PANEL, SUBSET, BUNDLE, JOB, MANIFEST, supersedes, ANALYSER,
                                   *receipts.values(), args.ledger, *machine_bound)}
     for rec in (reg.REGISTRY["arms"]["sft"]["receipts"], reg.REGISTRY["arms"]["relearn"]["receipts"]):
         for r in rec.values():
@@ -318,9 +338,11 @@ def main(argv=None) -> int:
         "created_utc": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "pipeline_ready": ready, "launched": False, "weights_loaded": False,
         "authorization_written": False,
-        "supersedes": {"path": R4_PREFLIGHT, "sha256": sha(R4_PREFLIGHT),
-                       "status": "valid two-arm generation preflight, never authorised; "
-                                 "scientifically incomplete for the three-arm study"},
+        "tag": args.tag,
+        "supersedes": {"path": supersedes, "sha256": sha(supersedes),
+                       "status": ("valid two-arm generation preflight, never authorised; "
+                                  "scientifically incomplete for the three-arm study"
+                                  if supersedes == R4_PREFLIGHT else args.supersedes_reason)},
         "source": {"commit": state["head"],
                    "executable_tree_sha256": identity["executable_tree_sha256"],
                    "protocol_sha256": identity["protocol_sha256"]},
