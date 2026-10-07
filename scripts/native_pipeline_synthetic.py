@@ -9,6 +9,17 @@ synthetic backend emits designed candidates per slot, so the expected class of e
 known; the receipt records each check and binds the source hashes of every component.
 
     python scripts/native_pipeline_synthetic.py
+    python scripts/native_pipeline_synthetic.py --arms base,sft,relearn \
+        --out results/sft_root_cause/<dir> --receipt results/sft_root_cause/<receipt>.json
+
+v2.7 three-arm mode (``--arms base,sft,relearn``): the cohort declares the three arms and binds
+the frozen arm registry; each synthetic arm's generation identity carries exactly its registered
+adapter manifest and the registry hash (the toy candidates are designed, not model outputs);
+base never kills, sft kills both toy targets at slot 0, relearn kills only ``add`` - so the two
+contrasts differ by design. The CLI analysis (study mode ``confirmation_exploratory_v1``, the
+frozen plan bound by the manifest) must suppress every contrast on synthetic evidence; a direct
+call with an explicitly labelled synthetic gate must compute both pairwise contrasts. The receipt
+path is explicit and never overwritten.
 """
 from __future__ import annotations
 
@@ -105,6 +116,11 @@ def wsl(*args: str, timeout: int = 1800) -> subprocess.CompletedProcess:
                           capture_output=True, text=True, timeout=timeout)
 
 
+def kills(qualname: str, arm: str) -> bool:
+    """base never kills; sft kills every toy target; relearn kills only ``add`` (v2.7)."""
+    return arm == "sft" or (arm == "relearn" and qualname == "add")
+
+
 def synthetic_backend_for(qualname: str, arm: str):
     form = TARGET_FORMS[qualname]
 
@@ -112,7 +128,7 @@ def synthetic_backend_for(qualname: str, arm: str):
         out = []
         for slot in range(n):
             template, _ = DESIGN[slot]
-            if slot == 0 and arm == "base":          # base never kills; sft kills at slot 0
+            if slot == 0 and not kills(qualname, arm):
                 template = DESIGN[1][0]
             out.append(template.format(name=qualname, **form))
         return out
@@ -121,11 +137,29 @@ def synthetic_backend_for(qualname: str, arm: str):
 
 def expected_class(qualname: str, arm: str, slot: int) -> str:
     if slot == 0:
-        return TARGET_FORMS[qualname]["kill_class"] if arm == "sft" else "pass_both"
+        return TARGET_FORMS[qualname]["kill_class"] if kills(qualname, arm) else "pass_both"
     return DESIGN[slot][1]
 
 
-def main() -> int:
+def main(argv=None) -> int:
+    import argparse
+    global OUT, RECEIPT
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--arms", default="base,sft")
+    ap.add_argument("--out", default=None)
+    ap.add_argument("--receipt", default=None)
+    args = ap.parse_args(argv)
+    arms = tuple(args.arms.split(","))
+    if arms not in (("base", "sft"), ("base", "sft", "relearn")):
+        raise SystemExit("REFUSED: --arms must be base,sft or base,sft,relearn")
+    if args.out:
+        OUT = ROOT / args.out
+    if args.receipt:
+        RECEIPT = ROOT / args.receipt
+        if RECEIPT.exists():
+            raise SystemExit(f"REFUSED: {args.receipt} exists (receipts are never overwritten)")
+    three = arms != ("base", "sft")
     from harness.native_generated_test_leakage import scan
     from harness.native_generated_test_prompt import build_prompt
     from scripts import native_generated_tests_analyse as analysis
@@ -156,11 +190,16 @@ def main() -> int:
     from scripts.native_generation_io import cohort_fields
     cohort_manifest = OUT / "manifest_cohort.json"
     records = OUT / "records.jsonl"                # v2.4 C: the exact declared preparation
+    from harness.native_arm_registry import REGISTRY, registry_sha256, summary
+    registry = summary() if three else None
     cohort_manifest.write_text(json.dumps({
         **manifest, **cohort_fields(manifest["targets"], "job.json", job_bytes,
-                                    "primary_whole_module", {}),
+                                    "primary_whole_module", {}, arms),
         "nature": "ENGINEERING SYNTHETIC PIPELINE TEST",
-        "study_mode": "engineering_dress_rehearsal",
+        "study_mode": analysis.EXPLORATORY if three else "engineering_dress_rehearsal",
+        **({"arms": list(arms), "arm_registry": registry,
+            "analysis_plan": {"version": analysis.EXPLORATORY,
+                              "sha256": analysis.analysis_plan_sha256()}} if three else {}),
         "requalification_records": {"path": records.relative_to(ROOT).as_posix(),
                                     "sha256": hashlib.sha256(records.read_bytes()).hexdigest()}},
         indent=1), encoding="utf-8")
@@ -169,15 +208,18 @@ def main() -> int:
         import shutil
         shutil.rmtree(gen_dir)
     qual = {t["key"]: t["target"] for t in manifest["targets"]}
-    for arm in gen.ARMS:                           # separate arm directories (v2.3 C)
+    for arm in arms:                               # separate arm directories (v2.3 C)
         per_target = {item["target_key"]: synthetic_backend_for(qual[item["target_key"]], arm)
                       for item in job["items"]}
         by_prompt = {item["prompt"]: per_target[item["target_key"]] for item in job["items"]}
+        adapter = None if arm == "base" else (
+            REGISTRY["arms"][arm]["adapter_manifest_sha256"] if three else "synthetic-adapter")
         gen.run(job, arm, "primary_whole_module", gen_dir / arm,
                 {"backend": "synthetic", "arm": arm, "condition": "primary_whole_module",
                  "job_sha256": job["job_sha256"],
                  "job_file_sha256": hashlib.sha256(job_bytes).hexdigest(),
-                 "adapter_manifest_sha256": None if arm == "base" else "synthetic-adapter"},
+                 "adapter_manifest_sha256": adapter,
+                 **({"arm_registry_sha256": registry_sha256()} if three else {})},
                 gen.texts_backend(lambda prompt, n, seed: by_prompt[prompt](prompt, n, seed)))
     results_dir = OUT / "results"
     if results_dir.exists():
@@ -195,7 +237,7 @@ def main() -> int:
                   for r in rows if r["class"] != expected_class(qual[r["target_key"]], r["arm"],
                                                                 r["slot"])]
     checks["every_row_classified_as_designed"] = bool(rows) and not mismatches
-    checks["grid_complete"] = len(rows) == 2 * 3 * 8 * len(job["items"]) and all(
+    checks["grid_complete"] = len(rows) == len(arms) * 3 * 8 * len(job["items"]) and all(
         r.get("generation", {}).get("finish_reason") == "eos" for r in rows)
     checks["kills_rerun_and_fixed_valid"] = all(
         r["classification"].get("rerun_agrees") is True and r["fixed_valid"]
@@ -221,6 +263,9 @@ def main() -> int:
             "sha256": hashlib.sha256(ledger.read_bytes()).hexdigest()}}}, indent=1)
         + "\n").encode("utf-8"))
     artifact = OUT / "analysis.json"
+    if three:
+        return three_arm_analysis(checks, rows, job, qual, cohort_manifest, job_file, records,
+                                  evidence, results_dir, gen_dir, artifact, mismatches, run)
     try:
         analysis.main(["analyse", "--manifest", str(cohort_manifest), "--job", str(job_file),
                        "--prep", str(records), "--preflight", str(evidence),
@@ -265,6 +310,64 @@ def main() -> int:
     checks["exclusive_lock_single_winner"] = lock["ok"]
     return finish(checks, {"mismatches": mismatches[:10], "rows": len(rows),
                            "execution_tail": run.stdout[-500:], "exclusive_lock": lock})
+
+
+def three_arm_analysis(checks, rows, job, qual, cohort_manifest, job_file, records, evidence,
+                       results_dir, gen_dir, artifact, mismatches, run) -> int:
+    """v2.7: CLI exploratory analysis suppressed on synthetic evidence; a direct, explicitly
+    synthetic-gated call computes both pairwise contrasts from the authoritatively loaded rows."""
+    from scripts import native_generated_tests_analyse as analysis
+    from scripts import native_generation_io as gio
+    from scripts.native_execution_results import load_execution
+    try:
+        analysis.main(["analyse", "--manifest", str(cohort_manifest), "--job", str(job_file),
+                       "--prep", str(records), "--preflight", str(evidence),
+                       "--execution-contract",
+                       str(results_dir / "execute_contract_primary_whole_module.json"),
+                       "--results", str(results_dir / "results_primary_whole_module.jsonl"),
+                       "--generations", str(gen_dir), "--condition", "primary_whole_module",
+                       "--study-mode", analysis.EXPLORATORY, "--out", str(artifact)])
+        cli = json.loads(artifact.read_text(encoding="utf-8"))
+        checks["cli_exploratory_suppressed_on_synthetic_evidence"] = (
+            set(cli["contrasts"]) == {"sft_minus_base", "relearn_minus_base"}
+            and all(c["status"].startswith("SUPPRESSED") for c in cli["contrasts"].values())
+            and cli["global_evidence_gates"]["stage_receipts_gate_passed"] is False
+            and cli["analysis_plan_sha256"] == analysis.analysis_plan_sha256())
+        cohort = gio.resolve_cohort(job_file, cohort_manifest)
+        prepared = gio.resolve_prep(records, cohort_manifest, ROOT)
+        gens = gio.load_arm_generations(gio.arm_dirs(gen_dir, {}, cohort["arms"],
+                                                     "primary_whole_module"), cohort)
+        execution = load_execution(results_dir / "results_primary_whole_module.jsonl",
+                                   results_dir / "execute_contract_primary_whole_module.json",
+                                   cohort=cohort, prepared=prepared, generations=gens)
+        checks["execution_cells_exact"] = execution["cells"] == cohort["expected"]["candidates_total"]
+        direct = analysis.exploratory(
+            analysis.index(execution["rows"], cohort["generation"], cohort["arms"]),
+            sorted(cohort["generation"]), cohort["repo_of"], cohort["arms"], cohort,
+            {k: True for k in analysis.EVIDENCE_SUBGATES},
+            synthetic_gate={"min_fraction_of_qualified": 0.9, "min_repositories": 1})
+        sft, rel = direct["contrasts"]["sft_minus_base"], direct["contrasts"]["relearn_minus_base"]
+        n = len(cohort["generation"])
+        add = [t for t in cohort["generation"] if qual[t] == "add"]
+        checks["both_pairwise_contrasts_computed"] = (
+            sft["status"].startswith("computed") and rel["status"].startswith("computed")
+            and sft["primary"]["point"] == 100.0
+            and rel["primary"]["point"] == round(len(add) / n * 100, 3)
+            and sft["per_seed_secondary"]["42"]["gained"] == n
+            and rel["per_seed_secondary"]["42"]["gained"] == len(add)
+            and direct["synthetic_gate_override"] is not None)
+        checks["pairwise_denominators_explicit"] = all(
+            c["requested_targets"] == n and c["pair_eligible_targets"] == n
+            and set(c["denominators"]) == set(c["pair"]) for c in (sft, rel))
+        checks["target_seed_cells_not_pooled"] = direct["unit"].startswith("target")
+    except Exception as exc:
+        checks["three_arm_analysis"] = False
+        print("three-arm analysis failed:", repr(exc)[:500])
+    lock = exclusive_lock_canary()
+    checks["exclusive_lock_single_winner"] = lock["ok"]
+    return finish(checks, {"arms": ["base", "sft", "relearn"], "mismatches": mismatches[:10],
+                           "rows": len(rows), "execution_tail": run.stdout[-500:],
+                           "exclusive_lock": lock})
 
 
 def finish(checks: dict, detail: dict) -> int:

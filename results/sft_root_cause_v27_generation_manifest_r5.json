@@ -1,0 +1,273 @@
+{
+ "analysis_plan": {
+  "implementation": "scripts/native_generated_tests_analyse.py",
+  "sha256": "5be9bf7799e6d3929314de5b56525871462fe194615fe38661591ecbed10dfdf",
+  "version": "confirmation_exploratory_v1"
+ },
+ "arm_registry": {
+  "adapter_manifest_sha256": {
+   "base": null,
+   "relearn": "c1dcea74c9f97b012670114fe33e7695ad478eb30600e77f214f37781be4e133",
+   "sft": "82f24fed40316249f307fc6b835f2d1fa9d1b7ada61e72e9892fb397e377f2a0"
+  },
+  "arms": [
+   "base",
+   "sft",
+   "relearn"
+  ],
+  "name": "oneiros_v27_three_arm_registry_r5",
+  "schema_version": "oneiros_native_arm_registry_v1",
+  "sha256": "98b46227a40f848295fa813fb71d584496c7c93a3108ad51c60c92c52153e1bf"
+ },
+ "arms": [
+  "base",
+  "sft",
+  "relearn"
+ ],
+ "atheris_independent": true,
+ "cohort_version": "oneiros_native_generation_cohort_v1",
+ "expected": {
+  "arms": [
+   "base",
+   "sft",
+   "relearn"
+  ],
+  "candidates_per_arm": 696,
+  "candidates_per_row": 8,
+  "candidates_total": 2088,
+  "generation_targets": 29,
+  "rows_per_arm": 87,
+  "rows_total": 261
+ },
+ "generation_targets": [
+  "cand:boxed/mutmut@385449458ef3d89ba4ac1f50e08e4b088ce9a634",
+  "cand:boxed/mutmut@4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8",
+  "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1",
+  "cand:boxed/mutmut@dc58270d5234752e22247f814431750eafcf6e5f",
+  "cand:coleifer/peewee@47db8f79337eb7385854649ef3c9267ed508838b",
+  "cand:coleifer/peewee@914f4fc24002fb6f9ad0f2763b148a5ac63545a0",
+  "cand:coleifer/peewee@c511fb137f7b3d91436aabc5a7963ada217147ec",
+  "cand:coleifer/peewee@f5e439d3eaa3aecc5621c6f121df854086eec008",
+  "cand:fsspec/filesystem_spec@073aac840748ab95bea39468306123268e316184",
+  "cand:fsspec/filesystem_spec@1724d540ee917f926f93b32b6580e637b3777adc",
+  "cand:fsspec/filesystem_spec@1da4c7132a720fe1059d94774b46d6cda625b453",
+  "cand:fsspec/filesystem_spec@5eec9f9353b8d517d296428441a84fa26e9a6438",
+  "cand:fsspec/filesystem_spec@652325d9b9459286a5b72c7e6228b061fb29827c",
+  "cand:fsspec/filesystem_spec@933e992fc8d3247606b6d01abd22673989e5393c",
+  "cand:hynek/stamina@b09d541fdff686970c166faac27f388b841aeca2",
+  "cand:jpadilla/pyjwt@171062d2d734315272a901100aa4b109f2fc3c19",
+  "cand:jpadilla/pyjwt@7bf32526738fe837387bdedd4849a4a525c33a79",
+  "cand:kozea/weasyprint@0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2",
+  "cand:kozea/weasyprint@d4d5a2a5a5e99afee8b8302ffab1265013f68cc1",
+  "cand:marshmallow-code/apispec@f767e7522fd8c4280f1b21341f61476c7fe7e54e",
+  "cand:prompt-toolkit/python-prompt-toolkit@75eca874f8b3abbe7643d075711917504f3e4f6b",
+  "cand:pymysql/pymysql@34f267684f8cdfa0923fe6be4a990efa0cfda015",
+  "cand:pypa/pipx@c8b1893db865ad581774a8aa8f467d7926ca1d88",
+  "cand:python-lsp/python-lsp-server@19fc07aa5dd444303cead45d841115a897252cd3",
+  "cand:python-lsp/python-lsp-server@1a10b605aa731daba20e8c1827542b7145ad3059",
+  "cand:pytransitions/transitions@8f6ca5f4ca268dd154f0a968d3861afada10430b",
+  "cand:pytransitions/transitions@f970687f48f807dd5974f59c4d76abed2bd1e7bd",
+  "cand:tox-dev/pipdeptree@214e9d48069909b7ff0fa6492632084b2fc6080d",
+  "cand:vega/altair@6c0bf289faa3c5f56a3c731cf864edb1d495c957"
+ ],
+ "job": {
+  "condition": "primary_whole_module",
+  "file_sha256": "1baae813760d27caae7abbbb40f7e23d1a083c455ae0576efe095b88244ad98f",
+  "job_sha256": "62c857c2af71a44da675ed3e2a23da905f2cbe7f5ebfb27ccab19e50a0f447d6",
+  "path": "results/sft_root_cause_v27_generation_job_r5.json"
+ },
+ "nature": "repository-native confirmation evaluation (exploratory, underpowered)",
+ "panel": {
+  "path": "results/sft_root_cause_v27_confirmation_panel_r4.json",
+  "sha256": "432965c0c0a89c505d76b3852c4b8714b99aae1d247e2c3d1f818cd0984c4317",
+  "targets": 34
+ },
+ "panel_policy_exclusions": [
+  {
+   "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+   "target_key": "cand:fsspec/filesystem_spec@ebf3d841ddaa3b92aa98c8ff26d998d17e0d115e"
+  },
+  {
+   "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+   "target_key": "cand:fsspec/filesystem_spec@ee30764e64dbd338f7494a45b30b1ece1465386f"
+  },
+  {
+   "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+   "target_key": "cand:pyvista/pyvista@507e77ca880fdd34757989df7422e101595818a9"
+  },
+  {
+   "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+   "target_key": "cand:pyvista/pyvista@631db08ed32f898ec8f59cbffa30cf80e9cbb1a3"
+  },
+  {
+   "reason": "sandbox_control_failed:sandbox_policy_blocks_ctypes_dlopen",
+   "target_key": "cand:pyvista/pyvista@eda16c3cdd0e510fbbfbf02c4e7a23b3ba553116"
+  }
+ ],
+ "pre_generation_exclusions": [],
+ "qualified_targets": [
+  "cand:boxed/mutmut@385449458ef3d89ba4ac1f50e08e4b088ce9a634",
+  "cand:boxed/mutmut@4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8",
+  "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1",
+  "cand:boxed/mutmut@dc58270d5234752e22247f814431750eafcf6e5f",
+  "cand:coleifer/peewee@47db8f79337eb7385854649ef3c9267ed508838b",
+  "cand:coleifer/peewee@914f4fc24002fb6f9ad0f2763b148a5ac63545a0",
+  "cand:coleifer/peewee@c511fb137f7b3d91436aabc5a7963ada217147ec",
+  "cand:coleifer/peewee@f5e439d3eaa3aecc5621c6f121df854086eec008",
+  "cand:fsspec/filesystem_spec@073aac840748ab95bea39468306123268e316184",
+  "cand:fsspec/filesystem_spec@1724d540ee917f926f93b32b6580e637b3777adc",
+  "cand:fsspec/filesystem_spec@1da4c7132a720fe1059d94774b46d6cda625b453",
+  "cand:fsspec/filesystem_spec@5eec9f9353b8d517d296428441a84fa26e9a6438",
+  "cand:fsspec/filesystem_spec@652325d9b9459286a5b72c7e6228b061fb29827c",
+  "cand:fsspec/filesystem_spec@933e992fc8d3247606b6d01abd22673989e5393c",
+  "cand:hynek/stamina@b09d541fdff686970c166faac27f388b841aeca2",
+  "cand:jpadilla/pyjwt@171062d2d734315272a901100aa4b109f2fc3c19",
+  "cand:jpadilla/pyjwt@7bf32526738fe837387bdedd4849a4a525c33a79",
+  "cand:kozea/weasyprint@0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2",
+  "cand:kozea/weasyprint@d4d5a2a5a5e99afee8b8302ffab1265013f68cc1",
+  "cand:marshmallow-code/apispec@f767e7522fd8c4280f1b21341f61476c7fe7e54e",
+  "cand:prompt-toolkit/python-prompt-toolkit@75eca874f8b3abbe7643d075711917504f3e4f6b",
+  "cand:pymysql/pymysql@34f267684f8cdfa0923fe6be4a990efa0cfda015",
+  "cand:pypa/pipx@c8b1893db865ad581774a8aa8f467d7926ca1d88",
+  "cand:python-lsp/python-lsp-server@19fc07aa5dd444303cead45d841115a897252cd3",
+  "cand:python-lsp/python-lsp-server@1a10b605aa731daba20e8c1827542b7145ad3059",
+  "cand:pytransitions/transitions@8f6ca5f4ca268dd154f0a968d3861afada10430b",
+  "cand:pytransitions/transitions@f970687f48f807dd5974f59c4d76abed2bd1e7bd",
+  "cand:tox-dev/pipdeptree@214e9d48069909b7ff0fa6492632084b2fc6080d",
+  "cand:vega/altair@6c0bf289faa3c5f56a3c731cf864edb1d495c957"
+ ],
+ "requalification_records": {
+  "derived_from": {
+   "path": "results/sft_root_cause/v27_confirmation/r4_prep/records.jsonl",
+   "sha256": "ecb94b7cf45ed688ceb495d07e699b16b8926bbb1b15ec5f77fb75979eef97f2"
+  },
+  "path": "results/sft_root_cause/v27_confirmation/r4_panel/generation_prep_records.jsonl",
+  "sha256": "19f6aefaddf1b29457e178d4f13f69049b4d4d64959b207f395178fe7eeee5e5"
+ },
+ "role": "CONFIRMATION_ONLY",
+ "schema_version": "oneiros_v27_generation_manifest_v1",
+ "study_mode": "confirmation_exploratory_v1",
+ "subset_receipt": {
+  "path": "results/sft_root_cause_v27_common_subset_r4_v3.json",
+  "sha256": "a803df3c07fb4599483adb5ee521b2307c94aa8267ecf7469e498120ba52d4df"
+ },
+ "targets": [
+  {
+   "key": "cand:boxed/mutmut@385449458ef3d89ba4ac1f50e08e4b088ce9a634",
+   "repository": "boxed/mutmut"
+  },
+  {
+   "key": "cand:boxed/mutmut@4ff5d9e9c23c5f75404cc3696ad6fb7c1e4888e8",
+   "repository": "boxed/mutmut"
+  },
+  {
+   "key": "cand:boxed/mutmut@5b8721f51479ea909d919ac495af69f6040a64d1",
+   "repository": "boxed/mutmut"
+  },
+  {
+   "key": "cand:boxed/mutmut@dc58270d5234752e22247f814431750eafcf6e5f",
+   "repository": "boxed/mutmut"
+  },
+  {
+   "key": "cand:coleifer/peewee@47db8f79337eb7385854649ef3c9267ed508838b",
+   "repository": "coleifer/peewee"
+  },
+  {
+   "key": "cand:coleifer/peewee@914f4fc24002fb6f9ad0f2763b148a5ac63545a0",
+   "repository": "coleifer/peewee"
+  },
+  {
+   "key": "cand:coleifer/peewee@c511fb137f7b3d91436aabc5a7963ada217147ec",
+   "repository": "coleifer/peewee"
+  },
+  {
+   "key": "cand:coleifer/peewee@f5e439d3eaa3aecc5621c6f121df854086eec008",
+   "repository": "coleifer/peewee"
+  },
+  {
+   "key": "cand:fsspec/filesystem_spec@073aac840748ab95bea39468306123268e316184",
+   "repository": "fsspec/filesystem_spec"
+  },
+  {
+   "key": "cand:fsspec/filesystem_spec@1724d540ee917f926f93b32b6580e637b3777adc",
+   "repository": "fsspec/filesystem_spec"
+  },
+  {
+   "key": "cand:fsspec/filesystem_spec@1da4c7132a720fe1059d94774b46d6cda625b453",
+   "repository": "fsspec/filesystem_spec"
+  },
+  {
+   "key": "cand:fsspec/filesystem_spec@5eec9f9353b8d517d296428441a84fa26e9a6438",
+   "repository": "fsspec/filesystem_spec"
+  },
+  {
+   "key": "cand:fsspec/filesystem_spec@652325d9b9459286a5b72c7e6228b061fb29827c",
+   "repository": "fsspec/filesystem_spec"
+  },
+  {
+   "key": "cand:fsspec/filesystem_spec@933e992fc8d3247606b6d01abd22673989e5393c",
+   "repository": "fsspec/filesystem_spec"
+  },
+  {
+   "key": "cand:hynek/stamina@b09d541fdff686970c166faac27f388b841aeca2",
+   "repository": "hynek/stamina"
+  },
+  {
+   "key": "cand:jpadilla/pyjwt@171062d2d734315272a901100aa4b109f2fc3c19",
+   "repository": "jpadilla/pyjwt"
+  },
+  {
+   "key": "cand:jpadilla/pyjwt@7bf32526738fe837387bdedd4849a4a525c33a79",
+   "repository": "jpadilla/pyjwt"
+  },
+  {
+   "key": "cand:kozea/weasyprint@0fdd0e6e0bf4b5b03cfe8f4b0fdd4f39dc3e41d2",
+   "repository": "kozea/weasyprint"
+  },
+  {
+   "key": "cand:kozea/weasyprint@d4d5a2a5a5e99afee8b8302ffab1265013f68cc1",
+   "repository": "kozea/weasyprint"
+  },
+  {
+   "key": "cand:marshmallow-code/apispec@f767e7522fd8c4280f1b21341f61476c7fe7e54e",
+   "repository": "marshmallow-code/apispec"
+  },
+  {
+   "key": "cand:prompt-toolkit/python-prompt-toolkit@75eca874f8b3abbe7643d075711917504f3e4f6b",
+   "repository": "prompt-toolkit/python-prompt-toolkit"
+  },
+  {
+   "key": "cand:pymysql/pymysql@34f267684f8cdfa0923fe6be4a990efa0cfda015",
+   "repository": "pymysql/pymysql"
+  },
+  {
+   "key": "cand:pypa/pipx@c8b1893db865ad581774a8aa8f467d7926ca1d88",
+   "repository": "pypa/pipx"
+  },
+  {
+   "key": "cand:python-lsp/python-lsp-server@19fc07aa5dd444303cead45d841115a897252cd3",
+   "repository": "python-lsp/python-lsp-server"
+  },
+  {
+   "key": "cand:python-lsp/python-lsp-server@1a10b605aa731daba20e8c1827542b7145ad3059",
+   "repository": "python-lsp/python-lsp-server"
+  },
+  {
+   "key": "cand:pytransitions/transitions@8f6ca5f4ca268dd154f0a968d3861afada10430b",
+   "repository": "pytransitions/transitions"
+  },
+  {
+   "key": "cand:pytransitions/transitions@f970687f48f807dd5974f59c4d76abed2bd1e7bd",
+   "repository": "pytransitions/transitions"
+  },
+  {
+   "key": "cand:tox-dev/pipdeptree@214e9d48069909b7ff0fa6492632084b2fc6080d",
+   "repository": "tox-dev/pipdeptree"
+  },
+  {
+   "key": "cand:vega/altair@6c0bf289faa3c5f56a3c731cf864edb1d495c957",
+   "repository": "vega/altair"
+  }
+ ],
+ "training_prohibited": true
+}

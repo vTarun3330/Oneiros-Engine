@@ -24,6 +24,11 @@ generator v5 for protocol v2.5: the CLI runs only a job built by
 * One JSONL line per (target, seed) with the identity hash, fsync after each line, strict
   reading on resume (partial, malformed, stale, duplicate or unexpected lines are
   quarantined, never merged). No reranking; duplicates kept; raw outputs retained.
+* v2.7: a job file may bind the frozen arm registry (harness/native_arm_registry.py) as
+  ``arm_registry``; then the named arms ``base``, ``sft`` (A@431) and ``relearn`` resolve their
+  adapters ONLY through that registry (no free adapter path exists), every adapter is verified
+  on disk before loading, and the generation identity binds the registry hash. A job without a
+  registry keeps the historical two arms (base, sft) exactly; ``relearn`` refuses without it.
 """
 from __future__ import annotations
 
@@ -57,7 +62,8 @@ CONTRACT = {
     "reranking": "none", "duplicates": "kept", "raw_output_retained": True,
     "attention_implementation": "sdpa",
 }
-ARMS = ("base", "sft")
+ARMS = ("base", "sft", "relearn")     # relearn only through a registry-bound (v2.7) job
+LEGACY_ARMS = ("base", "sft")
 CONDITIONS = ("primary_whole_module",)
 REMOVED_CONDITIONS = {"secondary_scaffolded_diagnostic": "removed by amendment v2.1 section C"}
 PROTOCOL_FILES = ("docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md",
@@ -222,11 +228,52 @@ def library_versions() -> Dict[str, Optional[str]]:
     return out
 
 
+def job_registry(job_file: Mapping[str, Any]) -> Optional[Dict[str, Any]]:
+    """The registry summary a v2.7 job binds (None for a legacy two-arm job); it must equal the
+    frozen registry exactly."""
+    bound = job_file.get("arm_registry")
+    if bound is None:
+        return None
+    from harness.native_arm_registry import summary
+    if dict(bound) != summary():
+        raise Refused("REFUSED: the job binds an arm registry that differs from the frozen one")
+    return dict(bound)
+
+
+def arm_adapter_dir(arm: str, registry: Optional[Mapping[str, Any]]) -> Optional[Path]:
+    """The ONLY way an adapter path is chosen: base none; sft the frozen contract (legacy) or
+    the registry; relearn only the registry (refused otherwise)."""
+    if arm not in ARMS:
+        raise Refused(f"REFUSED: unknown arm {arm!r}")
+    if registry is None:
+        if arm not in LEGACY_ARMS:
+            raise Refused(f"REFUSED: arm {arm!r} needs a job that binds the frozen arm registry")
+        return None if arm == "base" else ROOT / CONTRACT["sft_adapter"]
+    from harness.native_arm_registry import adapter_dir
+    path = adapter_dir(ROOT, arm)
+    if arm == "sft" and path != ROOT / CONTRACT["sft_adapter"]:
+        raise Refused("REFUSED: the registry's sft adapter differs from the frozen contract")
+    return path
+
+
+def verified_adapter_dir(arm: str, registry: Optional[Mapping[str, Any]]) -> Optional[Path]:
+    path = arm_adapter_dir(arm, registry)
+    if registry is not None:
+        from harness.native_arm_registry import verify_arm
+        problems = verify_arm(ROOT, arm)
+        if problems:
+            raise Refused(f"REFUSED: {arm} adapter fails the registry: {problems}")
+    return path
+
+
 def collect_identity(condition: str, arm: str, job_path: Path, job: Mapping[str, Any],
                      backend: str, preflight: Optional[Path], authorization: Optional[Path],
-                     prior_arm: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
+                     prior_arm: Optional[Mapping[str, Any]] = None,
+                     registry: Optional[Mapping[str, Any]] = None) -> Dict[str, Any]:
     from harness.source_identity import canonical_sha256
-    return {
+    adapter = arm_adapter_dir(arm, registry)
+    extra = {"arm_registry_sha256": registry["sha256"]} if registry is not None else {}
+    return {**extra,
         "backend": backend, "condition": condition, "arm": arm,
         "source_commit": _git("rev-parse", "HEAD"), "source_tree": source_tree_identity(),
         "generator_sha256": canonical_sha256(Path(__file__)),
@@ -238,8 +285,8 @@ def collect_identity(condition: str, arm: str, job_path: Path, job: Mapping[str,
         "protocol_sha256": {p: sha256_file(ROOT / p) for p in PROTOCOL_FILES},
         "job_file_sha256": sha256_file(job_path), "job_sha256": job["job_sha256"],
         "model": model_identity(),
-        "adapter_manifest_sha256": (contract_sha(adapter_manifest(ROOT / CONTRACT["sft_adapter"]))
-                                    if arm == "sft" else None),
+        "adapter_manifest_sha256": (contract_sha(adapter_manifest(adapter))
+                                    if adapter is not None else None),
         "libraries": library_versions(),
         "preflight_sha256": sha256_file(preflight) if preflight else None,
         "authorization_sha256": sha256_file(authorization) if authorization else None,
@@ -250,8 +297,10 @@ def collect_identity(condition: str, arm: str, job_path: Path, job: Mapping[str,
 
 # --- GPU authorisation (amendment v2.2 section D) ---------------------------------------------
 
-def adapter_sha256() -> str:
-    return contract_sha(adapter_manifest(ROOT / CONTRACT["sft_adapter"]))
+def adapter_sha256(arm: str = "sft", registry: Optional[Mapping[str, Any]] = None
+                   ) -> Optional[str]:
+    path = arm_adapter_dir(arm, registry)
+    return contract_sha(adapter_manifest(path)) if path is not None else None
 
 
 def launch_gate(preflight: Optional[Path], authorization: Optional[Path], *, job_path: Path,
@@ -260,9 +309,12 @@ def launch_gate(preflight: Optional[Path], authorization: Optional[Path], *, job
     from harness.native_launch_gate import evaluate
     if preflight is None or authorization is None:
         raise Refused("REFUSED: GPU generation needs --preflight and a GPU authorisation receipt")
+    registry = job_registry(json.loads(Path(job_path).read_text(encoding="utf-8")))
     result = evaluate(ROOT, Path(preflight), Path(authorization), job_path=Path(job_path),
                       condition=condition, arm=arm, out_dir=Path(out_dir),
-                      model_identity=model_identity, adapter_sha256=adapter_sha256,
+                      model_identity=model_identity,
+                      adapter_sha256=(adapter_sha256 if registry is None      # legacy: unchanged
+                                      else (lambda: adapter_sha256(arm, registry))),
                       backend=backend, generation_source=source_tree_identity)
     if not result["launch_ready"]:
         raise Refused("REFUSED: launch gate not ready: " + json.dumps(
@@ -420,6 +472,9 @@ def run(job: Mapping[str, Any], arm: str, condition: str, out_dir: Path,
         crash_after: Optional[int] = None) -> Dict[str, Any]:
     if arm not in ARMS or condition not in CONDITIONS:
         raise Refused(f"REFUSED: unknown arm/condition {arm}/{condition}")
+    if arm not in LEGACY_ARMS and not identity.get("arm_registry_sha256") and \
+            identity.get("backend") == "hf":
+        raise Refused(f"REFUSED: arm {arm!r} needs the frozen arm registry")
     contract = arm_contract(identity)
     ihash = contract_sha(contract)
     gpu = identity.get("backend") == "hf"
@@ -502,8 +557,9 @@ def finish(ids: Sequence[int], stop: set) -> Dict[str, Any]:
     return {"generated_tokens": len(ids), "eos_reached": False, "keep": len(ids)}
 
 
-def hf_backend(arm: str):  # pragma: no cover - GPU path; only reachable with authorisation
-    """Real sampling with the exact base revision (and the verified adapter for sft)."""
+def hf_backend(arm: str, adapter: Optional[Path] = None):  # pragma: no cover - GPU path
+    """Real sampling with the exact base revision and, for a trained arm, exactly the adapter
+    ``verified_adapter_dir`` resolved (registry-verified for v2.7 jobs)."""
     import torch
     import transformers
     from engine.test_generation_prompt import format_chat_prompt
@@ -515,9 +571,11 @@ def hf_backend(arm: str):  # pragma: no cover - GPU path; only reachable with au
         CONTRACT["base_model"], revision=CONTRACT["base_revision"], local_files_only=True,
         torch_dtype=torch.bfloat16,
         attn_implementation=CONTRACT["attention_implementation"]).to("cuda")
-    if arm == "sft":
+    if arm != "base":
+        if adapter is None:
+            raise Refused(f"REFUSED: trained arm {arm!r} without a resolved adapter")
         from peft import PeftModel
-        model = PeftModel.from_pretrained(model, str(ROOT / CONTRACT["sft_adapter"]))
+        model = PeftModel.from_pretrained(model, str(adapter))
     model.eval()
     tokenizer.padding_side = "left"
     torch.cuda.synchronize()
@@ -585,6 +643,8 @@ def main(argv=None) -> int:
     job_file = json.loads(job_path.read_text(encoding="utf-8"))
     validate_job_file(job_file, args.condition, ROOT)
     job = select_condition(job_file, args.condition)
+    registry = job_registry(job_file)
+    adapter = verified_adapter_dir(args.arm, registry)   # refuses relearn without a registry
     out = Path(args.out)
     auth = Path(args.authorization) if args.authorization else None
     preflight = Path(args.preflight) if args.preflight else None
@@ -593,10 +653,10 @@ def main(argv=None) -> int:
         # the same read-only gate for the GPU path and for its mock rehearsal
         gate = launch_gate(preflight, auth, job_path=job_path, condition=args.condition,
                            arm=args.arm, out_dir=out, backend=args.backend)
-    backend = hf_backend(args.arm) if args.backend == "hf" else mock_backend
+    backend = hf_backend(args.arm, adapter) if args.backend == "hf" else mock_backend
     identity = collect_identity(args.condition, args.arm, job_path, job, args.backend,
                                 Path(args.preflight) if args.preflight else None, auth,
-                                (gate or {}).get("base_arm_verification"))
+                                (gate or {}).get("base_arm_verification"), registry)
     print(json.dumps(run(job, args.arm, args.condition, out, identity, backend)))
     return 0
 

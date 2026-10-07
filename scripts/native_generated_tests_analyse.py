@@ -44,6 +44,17 @@ study_mode ``engineering_dress_rehearsal`` reports descriptive pipeline metrics 
 intervals, significance, non-inferiority or promotion decision); ``confirmation`` runs the
 frozen inferential analysis (repository-clustered bootstrap, leave-one-repository-out,
 validity non-inferiority on the lower bound).
+
+v2.7: study_mode ``confirmation_exploratory_v1`` (three named arms from the frozen registry
+cohort) runs the analysis plan frozen in ``ANALYSIS_PLAN_V27`` and bound by the manifest before
+any output exists: separate contrasts sft (A@431) - base and relearn - base; per contrast, the
+target-level estimand mean_t[K8(t, X) - K8(t, base)] with a repository-clustered bootstrap and
+leave-one-repository-out estimates; secondary per-seed paired gained/lost/tied counts, exact
+two-sided McNemar tests (Holm-adjusted, descriptive) and Wilson intervals; a frozen
+one-target-per-repository sensitivity. Infrastructure exclusions and the coverage/repository
+gates are PAIRWISE (an infrastructure failure in one trained arm never changes the other
+contrast's denominator); evidence subgates are global. No promotion, equivalence or
+generalisation claim is ever made in this mode.
 """
 from __future__ import annotations
 
@@ -74,7 +85,8 @@ EXEC_FAIL = COLLECT_FAIL | {"skipped_or_xfail", "timeout"}
 REACH_FAIL = EXEC_FAIL | {"target_not_reached"}
 BOOTSTRAP = {"resamples": 10_000, "seed": 20260930, "level": 0.95}
 VALIDITY_MARGIN = 3.0
-STUDY_MODES = ("engineering_dress_rehearsal", "confirmation")
+EXPLORATORY = "confirmation_exploratory_v1"
+STUDY_MODES = ("engineering_dress_rehearsal", "confirmation", EXPLORATORY)
 GATE = {"min_fraction_of_qualified": 0.90, "min_repositories": 5}
 LEDGER_SCHEMA = "oneiros_native_quarantine_ledger_v1"
 SYNTHETIC_EVIDENCE_SCHEMA = "oneiros_native_synthetic_gate_evidence_v1"
@@ -101,24 +113,61 @@ class AnalysisRefused(ValueError):
     pass
 
 
-def index(records: Iterable[Mapping[str, Any]], targets: Sequence[str]) -> Dict[tuple, dict]:
+ANALYSIS_PLAN_V27 = {
+    "version": EXPLORATORY,
+    "unit": "target; kill(t,s,m)=1 if any of the first k of the 8 slots of seed s kills; "
+            "K(t,m)=mean of kill over seeds 42, 43, 44; target x seed cells never pooled",
+    "contrasts": ["sft_minus_base", "relearn_minus_base"],
+    "primary": "per contrast: mean over pair-eligible targets of K8(t, X) - K8(t, base), "
+               "percentage points",
+    "uncertainty": {"bootstrap": {"resamples": 10_000, "seed": 20260930, "level": 0.95},
+                    "cluster": "repository", "leave_one_repository_out": True},
+    "secondary": ["Kill@1 and Kill@4 contrasts (same estimator, descriptive)",
+                  "per-seed paired Kill@8 gained/lost/tied target counts",
+                  "per-seed exact two-sided McNemar p (Holm-adjusted over contrasts x seeds; "
+                  "descriptive)",
+                  "Wilson 95% intervals of per-arm per-seed Kill@8 over pair-eligible targets",
+                  "fixed-valid rate difference (clustered, descriptive)"],
+    "sensitivity": {"one_target_per_repository":
+                    "per repository, the pair-eligible target with the lexicographically "
+                    "smallest sha256(target_key); model-independent and frozen"},
+    "infrastructure": "a target with an infrastructure row in either arm of a contrast is "
+                      "excluded from THAT contrast only, and only when its same-environment "
+                      "canary failed; an infrastructure row with a passing canary refuses",
+    "gates": {"per_contrast": {"min_fraction_of_qualified": 0.90, "min_repositories": 5},
+              "global": list(("stage_receipts_gate_passed", "canaries_gate_passed",
+                              "artifact_integrity_gate_passed",
+                              "unexplained_failures_gate_passed"))},
+    "multiplicity": "two contrasts x three seeds are reported without inferential claims",
+    "claims": "exploratory and underpowered: no promotion, no equivalence from a "
+              "non-significant result, no repository-generalisation claim",
+}
+
+
+def analysis_plan_sha256(plan: Mapping[str, Any] = ANALYSIS_PLAN_V27) -> str:
+    return hashlib.sha256(json.dumps(plan, sort_keys=True, separators=(",", ":"))
+                          .encode("utf-8")).hexdigest()
+
+
+def index(records: Iterable[Mapping[str, Any]], targets: Sequence[str],
+          arms: Sequence[str] = ARMS) -> Dict[tuple, dict]:
     grid: Dict[tuple, dict] = {}
     for r in records:
         key = (r["arm"], int(r["seed"]), r["target_key"], int(r["slot"]))
         if key in grid:
             raise AnalysisRefused(f"duplicate record {key}")
         grid[key] = dict(r)
-    expected = {(a, s, t, k) for a in ARMS for s in SEEDS for t in targets for k in range(SLOTS)}
+    expected = {(a, s, t, k) for a in arms for s in SEEDS for t in targets for k in range(SLOTS)}
     if set(grid) != expected:
         missing, extra = expected - set(grid), set(grid) - expected
         raise AnalysisRefused(f"incomplete grid: {len(missing)} missing, {len(extra)} extra")
     return grid
 
 
-def infrastructure_exclusions(grid, targets) -> Dict[str, Any]:
+def infrastructure_exclusions(grid, targets, arms: Sequence[str] = ARMS) -> Dict[str, Any]:
     excluded, refusals = [], []
     for t in targets:
-        rows = [grid[(a, s, t, k)] for a in ARMS for s in SEEDS for k in range(SLOTS)]
+        rows = [grid[(a, s, t, k)] for a in arms for s in SEEDS for k in range(SLOTS)]
         infra = [r for r in rows if r["class"] in INFRA]
         if not infra:
             continue
@@ -150,10 +199,10 @@ def _quantiles(values: Sequence[float], qs: Sequence[int]) -> Dict[str, float]:
     return {f"p{q}": round(float(np.percentile(arr, q)), 3) for q in qs} if len(arr) else {}
 
 
-def generation_telemetry(grid, targets) -> Dict[str, Any]:
+def generation_telemetry(grid, targets, arms: Sequence[str] = ARMS) -> Dict[str, Any]:
     """Completion and latency evidence per arm over every generated candidate (v2.3 B/D)."""
     out = {}
-    for arm in ARMS:
+    for arm in arms:
         cells = [grid[(arm, s, t, i)] for s in SEEDS for t in targets for i in range(SLOTS)]
         for c in cells:
             g = c.get("generation")
@@ -206,9 +255,10 @@ def generation_telemetry(grid, targets) -> Dict[str, Any]:
     return out
 
 
-def denominators(grid, requested, eligible) -> Dict[str, Dict[str, int]]:
+def denominators(grid, requested, eligible, arms: Sequence[str] = ARMS
+                 ) -> Dict[str, Dict[str, int]]:
     out = {}
-    for arm in ARMS:
+    for arm in arms:
         req = [grid[(arm, s, t, i)] for s in SEEDS for t in requested for i in range(SLOTS)]
         cells = [grid[(arm, s, t, i)] for s in SEEDS for t in eligible for i in range(SLOTS)]
         classes = [c["class"] for c in cells]
@@ -246,6 +296,133 @@ def clustered(diffs: Mapping[str, float], repo_of: Mapping[str, str]) -> Dict[st
     return {"point": round(point, 3), "low": round(float(low), 3), "high": round(float(high), 3),
             "targets": int(counts.sum()), "repositories": len(repos),
             "leave_one_repository_out": loo}
+
+
+def mcnemar_exact(b: int, c: int) -> float:
+    n = b + c
+    if n == 0:
+        return 1.0
+    return min(1.0, 2 * sum(math.comb(n, i) for i in range(min(b, c) + 1)) / 2 ** n)
+
+
+def wilson(k: int, n: int, z: float = 1.959963984540054) -> Dict[str, Any]:
+    if n == 0:
+        return {"k": k, "n": n, "low": None, "high": None}
+    p = k / n
+    centre = (p + z * z / (2 * n)) / (1 + z * z / n)
+    half = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / (1 + z * z / n)
+    return {"k": k, "n": n, "rate": round(p * 100, 3), "low": round((centre - half) * 100, 3),
+            "high": round((centre + half) * 100, 3)}
+
+
+def holm(pvalues: Mapping[str, float]) -> Dict[str, float]:
+    ordered = sorted(pvalues.items(), key=lambda kv: kv[1])
+    out, running = {}, 0.0
+    for i, (k, v) in enumerate(ordered):
+        running = max(running, min(1.0, (len(ordered) - i) * v))
+        out[k] = round(running, 6)
+    return out
+
+
+def one_per_repository(targets: Sequence[str], repo_of: Mapping[str, str]) -> List[str]:
+    chosen: Dict[str, str] = {}
+    for t in sorted(targets, key=lambda t: hashlib.sha256(t.encode()).hexdigest()):
+        chosen.setdefault(repo_of[t], t)
+    return sorted(chosen.values())
+
+
+def exploratory(grid, targets, repo_of, arms, cohort, evidence_gates,
+                synthetic_gate: Mapping[str, Any] | None = None) -> Dict[str, Any]:
+    """The frozen v2.7 exploratory confirmation analysis (ANALYSIS_PLAN_V27).
+    ``synthetic_gate`` exists ONLY for the toy synthetic pipeline (one repository); the CLI never
+    passes it and any result computed with it is labelled synthetic."""
+    if tuple(arms[:1]) != ("base",) or len(arms) < 2:
+        raise AnalysisRefused("the exploratory analysis needs base plus trained arms")
+    infrastructure_exclusions(grid, targets, arms)      # refuses unexplained infrastructure rows
+    evidence_gates = dict(evidence_gates or {})
+    global_gates = {k: evidence_gates.get(k) is True for k in EVIDENCE_SUBGATES}
+    qualified_n = len(cohort["qualified"]) if cohort else len(targets)
+    plan_gate = dict(synthetic_gate) if synthetic_gate else ANALYSIS_PLAN_V27["gates"]["per_contrast"]
+    need = math.ceil(plan_gate["min_fraction_of_qualified"] * qualified_n - 1e-9)
+    contrasts, pvalues = {}, {}
+    for arm in arms[1:]:
+        pair = ("base", arm)
+        infra = infrastructure_exclusions(grid, targets, pair)
+        eligible = [t for t in targets if t not in infra["excluded_targets"]]
+        repos = sorted({repo_of[t] for t in eligible})
+        gates = {"coverage_gate_passed": len(eligible) >= need,
+                 "repository_gate_passed": len(repos) >= plan_gate["min_repositories"],
+                 **global_gates}
+        name = f"{arm}_minus_base"
+        entry: Dict[str, Any] = {
+            "pair": list(pair), "requested_targets": len(targets),
+            "pair_eligible_targets": len(eligible), "pair_infrastructure_excluded":
+                infra["excluded_targets"], "repositories": len(repos),
+            "required_eligible": need, "gates": gates,
+            "denominators": denominators(grid, targets, eligible, pair)}
+        if not all(gates.values()):
+            entry["status"] = "SUPPRESSED: " + ", ".join(k for k, v in gates.items() if not v)
+            contrasts[name] = entry
+            continue
+        for k in (1, 4, 8):
+            scores = {a: {t: float(np.mean([kill_at(grid, a, s, t, k) for s in SEEDS]))
+                          for t in eligible} for a in pair}
+            entry[f"kill_at_{k}"] = {
+                a: round(float(np.mean(list(scores[a].values()))) * 100, 3) for a in pair}
+            entry[f"kill_at_{k}"]["difference_points"] = clustered(
+                {t: scores[arm][t] - scores["base"][t] for t in eligible}, repo_of)
+        k8 = {a: {t: float(np.mean([kill_at(grid, a, s, t, SLOTS) for s in SEEDS]))
+                  for t in eligible} for a in pair}
+        entry["primary"] = entry["kill_at_8"]["difference_points"]
+        per_seed = {}
+        for s in SEEDS:
+            kb = {t: kill_at(grid, "base", s, t, SLOTS) for t in eligible}
+            kx = {t: kill_at(grid, arm, s, t, SLOTS) for t in eligible}
+            gained = sum(1 for t in eligible if kx[t] and not kb[t])
+            lost = sum(1 for t in eligible if kb[t] and not kx[t])
+            p = mcnemar_exact(gained, lost)
+            pvalues[f"{name}:{s}"] = p
+            per_seed[str(s)] = {"gained": gained, "lost": lost,
+                                "tied": len(eligible) - gained - lost,
+                                "mcnemar_exact_two_sided_p": round(p, 6),
+                                "wilson_kill_at_8": {
+                                    "base": wilson(int(sum(kb.values())), len(eligible)),
+                                    arm: wilson(int(sum(kx.values())), len(eligible))}}
+        entry["per_seed_secondary"] = per_seed
+        chosen = one_per_repository(eligible, repo_of)
+        entry["one_target_per_repository"] = {
+            "targets": chosen, "n": len(chosen),
+            "difference_points": round(float(np.mean([k8[arm][t] - k8["base"][t]
+                                                       for t in chosen])) * 100, 3)}
+        validity = {a: {t: float(np.mean([fixed_valid(grid[(a, s, t, i)]) for s in SEEDS
+                                          for i in range(SLOTS)])) for t in eligible}
+                    for a in pair}
+        entry["fixed_valid_rate"] = {a: round(float(np.mean(list(validity[a].values()))) * 100, 3)
+                                     for a in pair}
+        entry["fixed_valid_difference_points"] = clustered(
+            {t: validity[arm][t] - validity["base"][t] for t in eligible}, repo_of)
+        entry["status"] = "computed (exploratory; no claim)"
+        contrasts[name] = entry
+    adjusted = holm(pvalues)
+    for name, entry in contrasts.items():
+        for s, row in (entry.get("per_seed_secondary") or {}).items():
+            row["holm_adjusted_p"] = adjusted[f"{name}:{s}"]
+    return {"analysis_version": ANALYSIS_VERSION, "study_mode": EXPLORATORY,
+            "synthetic_gate_override": dict(synthetic_gate) if synthetic_gate else None,
+            "analysis_plan_sha256": analysis_plan_sha256(), "arms": list(arms),
+            "unit": "target (seeds averaged; never pooled)",
+            "cohort": {"qualified_targets": qualified_n, "generation_targets": len(targets),
+                       "pre_generation_exclusions":
+                           list(cohort["pre_generation_exclusions"]) if cohort else []},
+            "grid_cells": len(grid), "global_evidence_gates": global_gates,
+            "evidence_problems": evidence_gates.get("problems") or {},
+            "generation_telemetry": generation_telemetry(grid, targets, arms),
+            "requested_denominators": denominators(grid, targets, targets, arms),
+            "contrasts": contrasts,
+            "claims": ANALYSIS_PLAN_V27["claims"],
+            "root_cause_established": False, "generalization_established": False,
+            "sft_benefit_established": False, "relearning_benefit_established": False,
+            "atheris_superiority_established": False}
 
 
 def join_atheris(validated: Mapping[str, Any], grid, targets, eligible, qualified
@@ -406,7 +583,7 @@ def evaluate_evidence(preflight_path: Path, artifact_root: Path, *, job_path: Pa
     except (OSError, ValueError):
         pre = {}
         problems["preflight"].append("preflight missing or malformed")
-    real = pre.get("schema_version") == gate.PREFLIGHT_SCHEMA
+    real = pre.get("schema_version") in gate.PREFLIGHT_SCHEMAS
     if real:
         if pre.get("pipeline_ready") is not True:
             problems["preflight"].append("preflight not pipeline_ready")
@@ -465,13 +642,18 @@ def analyse(records: Iterable[Mapping[str, Any]], targets: Sequence[str],
     exactly the job's generation targets and the report carries the 24/23/1 breakdown."""
     if study_mode not in STUDY_MODES:
         raise AnalysisRefused(f"unknown study mode {study_mode!r}")
+    arms = tuple(cohort["arms"]) if cohort and cohort.get("arms") else ARMS
     targets = sorted(targets)
     if cohort is not None and targets != sorted(cohort["generation"]):
         raise AnalysisRefused("analysed targets differ from the job's generation cohort")
     unmapped = [t for t in targets if t not in repo_of]
     if unmapped:
         raise AnalysisRefused(f"repository mapping missing for generated targets {unmapped[:3]}")
-    grid = index(records, targets)
+    grid = index(records, targets, arms)
+    if study_mode == EXPLORATORY:
+        return exploratory(grid, targets, repo_of, arms, cohort, evidence_gates)
+    if arms != ARMS:
+        raise AnalysisRefused(f"study mode {study_mode!r} supports only the base/sft pair")
     infra = infrastructure_exclusions(grid, targets)
     eligible = [t for t in targets if t not in infra["excluded_targets"]]
     if not eligible:
@@ -583,6 +765,7 @@ def main(argv=None, root: Path | None = None) -> int:
     parser.add_argument("--generations", default=None, help="root containing base/ and sft/")
     parser.add_argument("--base-generations", default=None)
     parser.add_argument("--sft-generations", default=None)
+    parser.add_argument("--arm-generations", action="append", default=[], metavar="ARM=DIR")
     parser.add_argument("--condition", required=True, choices=("primary_whole_module",))
     parser.add_argument("--study-mode", required=True, choices=STUDY_MODES)
     parser.add_argument("--out", required=True)
@@ -598,6 +781,12 @@ def main(argv=None, root: Path | None = None) -> int:
     if declared not in STUDY_MODES or args.study_mode != declared:
         raise AnalysisRefused(f"study mode {args.study_mode!r} refused: the manifest declares "
                               f"{declared!r} ({cohort.get('nature')!r})")
+    if args.study_mode == EXPLORATORY:
+        bound = manifest.get("analysis_plan") or {}
+        if bound.get("version") != EXPLORATORY or \
+                bound.get("sha256") != analysis_plan_sha256():
+            raise AnalysisRefused("the manifest does not bind this frozen exploratory analysis "
+                                  "plan (changed after freezing?)")
     if args.study_mode == "confirmation":
         freeze = manifest.get("confirmation_authorization") or {}
         path = Path(args.manifest).parent / str(freeze.get("path", ""))
@@ -608,8 +797,13 @@ def main(argv=None, root: Path | None = None) -> int:
     opt = lambda value: Path(value) if value else None  # noqa: E731
     try:                                  # every artifact through its authoritative loader
         prepared = gio.resolve_prep(Path(args.prep), Path(args.manifest), artifact_root)
-        arm_paths = gio.arm_paths(opt(args.generations), opt(args.base_generations),
-                                  opt(args.sft_generations), args.condition)
+        if args.base_generations or args.sft_generations:
+            arm_paths = gio.arm_paths(opt(args.generations), opt(args.base_generations),
+                                      opt(args.sft_generations), args.condition)
+        else:
+            explicit = dict(spec.split("=", 1) for spec in args.arm_generations)
+            arm_paths = gio.arm_dirs(opt(args.generations), explicit, cohort["arms"],
+                                     args.condition)
         generations = gio.load_arm_generations(arm_paths, cohort)
         execution = load_execution(Path(args.results), Path(args.execution_contract),
                                    cohort=cohort, prepared=prepared, generations=generations)
@@ -633,8 +827,7 @@ def main(argv=None, root: Path | None = None) -> int:
         except SystemExit as exc:
             raise AnalysisRefused(str(exc)) from None
     quarantined = quarantined_artifacts(
-        artifact_root, [arm_paths["base"]["dir"], arm_paths["sft"]["dir"],
-                        Path(args.results).parent])
+        artifact_root, [p["dir"] for p in arm_paths.values()] + [Path(args.results).parent])
     evidence = evaluate_evidence(Path(args.preflight), artifact_root, job_path=Path(args.job),
                                  manifest_path=Path(args.manifest),
                                  synthetic_allowed="SYNTHETIC" in str(cohort.get("nature")),
@@ -656,6 +849,11 @@ def main(argv=None, root: Path | None = None) -> int:
     result["condition"] = args.condition
     publish_file_atomically(Path(args.out), (json.dumps(result, indent=1, sort_keys=True)
                                              + "\n").encode("utf-8"))
+    if args.study_mode == EXPLORATORY:
+        print(json.dumps({"out": args.out, "study_mode": args.study_mode,
+                          "global_evidence_gates": result["global_evidence_gates"],
+                          "contrasts": {k: v["status"] for k, v in result["contrasts"].items()}}))
+        return 0
     print(json.dumps({"out": args.out, "eligible_targets": result["eligible_targets"],
                       "engineering_gate_passed": result["engineering_gate_passed"],
                       "subgates": result["engineering_gate"]["subgates"],

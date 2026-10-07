@@ -62,8 +62,8 @@ def load_execution(results_path: Path, contract_path: Path, *, cohort: Mapping[s
     data = results_path.read_bytes()
     if data and not data.endswith(b"\n"):
         raise ExecutionRefused("REFUSED: execution results end with a partial line")
-    cells = {f"{arm}::{t}::{s}::{k}" for arm in ex.ARMS for t in cohort["generation"]
-             for s in ex.SEEDS for k in range(ex.SLOTS)}
+    cells = {f"{arm}::{t}::{s}::{k}" for arm in cohort["arms"] for t in cohort["generation"]
+             for s in ex.SEEDS for k in range(ex.SLOTS)}   # v2.7: exactly the declared arms
     names = {k: prepared["rows"][k]["qualname"].split(".")[-1] for k in cohort["generation"]}
     rows: Dict[str, Dict[str, Any]] = {}
     for number, line in enumerate(data.decode("utf-8").splitlines(), 1):

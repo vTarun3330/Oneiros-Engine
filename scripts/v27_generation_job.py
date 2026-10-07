@@ -12,6 +12,14 @@ prompt builder, permitted view, leakage scan against the verifier-only material,
 token fit) and must reproduce the frozen panel's model-visible prompt hash exactly.
 
     python scripts/v27_generation_job.py --job results/<job>.json --manifest results/<m>.json
+        [--three-arm]
+
+``--three-arm`` (r5): the job file binds the frozen arm registry (base, sft = A@431, relearn =
+relearning checkpoint-141); the manifest declares those arms, the registry, the frozen
+exploratory analysis plan (scripts/native_generated_tests_analyse.py: ANALYSIS_PLAN_V27) and
+study mode ``confirmation_exploratory_v1``; the cohort comes from the hardened v3 subset
+receipt. Files are written as LF bytes; the derived preparation records are never rewritten
+with different bytes.
 """
 from __future__ import annotations
 
@@ -32,6 +40,7 @@ from scripts.native_generation_io import cohort_fields  # noqa: E402
 D = "results/sft_root_cause/v27_confirmation"
 PANEL = "results/sft_root_cause_v27_confirmation_panel_r4.json"
 SUBSET = "results/sft_root_cause_v27_common_subset_r4_v2.json"
+SUBSET_V3 = "results/sft_root_cause_v27_common_subset_r4_v3.json"
 VISIBLE = f"{D}/r4_panel/model_visible_bundle.json"
 PREP = f"{D}/r4_prep/records.jsonl"
 GEN_PREP = f"{D}/r4_panel/generation_prep_records.jsonl"
@@ -50,11 +59,13 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--job", required=True)
     ap.add_argument("--manifest", required=True)
+    ap.add_argument("--three-arm", action="store_true")
     args = ap.parse_args(argv)
+    subset_rel = SUBSET_V3 if args.three_arm else SUBSET
     for rel in (args.job, args.manifest):
         refuse((ROOT / rel).exists(), f"{rel} exists (never overwritten)")
     panel = json.loads((ROOT / PANEL).read_text(encoding="utf-8"))
-    subset = json.loads((ROOT / SUBSET).read_text(encoding="utf-8"))
+    subset = json.loads((ROOT / subset_rel).read_text(encoding="utf-8"))
     refuse(subset["inputs_sha256"][PANEL] != sha(PANEL), "subset receipt binds another panel")
     cohort = subset["sets"]["native_executable"]
     refuse(len(cohort) != 29, f"expected 29 native-executable targets, found {len(cohort)}")
@@ -85,13 +96,28 @@ def main(argv=None) -> int:
         refuse(item["prompt_sha256"] != visible[item["target_key"]]["prompt_sha256"],
                f"prompt for {item['target_key']} differs from the frozen visible bundle")
     jobs.validate_job_file(job_file, jobs.CONDITION, ROOT)
+    arms, extra = ("base", "sft"), {}
+    if args.three_arm:
+        from harness.native_arm_registry import summary, verify
+        from scripts import native_generated_tests_analyse as analysis
+        problems = verify(ROOT)
+        refuse(bool(problems), f"arm registry does not verify: {problems}")
+        job_file["arm_registry"] = summary()
+        arms = tuple(summary()["arms"])
+        extra = {"arms": list(arms), "arm_registry": summary(),
+                 "analysis_plan": {"version": analysis.EXPLORATORY,
+                                   "sha256": analysis.analysis_plan_sha256(),
+                                   "implementation": "scripts/native_generated_tests_analyse.py"},
+                 "study_mode": analysis.EXPLORATORY}
     job_bytes = (json.dumps(job_file, indent=1, sort_keys=True) + "\n").encode("utf-8")
-    (ROOT / args.job).write_bytes(job_bytes)
     # requalification records: byte-identical lines of exactly the cohort (resolve_prep rule)
-    (ROOT / GEN_PREP).write_bytes(("\n".join(prep_lines[k] for k in sorted(cohort)) + "\n")
-                                  .encode("utf-8"))
+    new_prep = ("\n".join(prep_lines[k] for k in sorted(cohort)) + "\n").encode("utf-8")
+    refuse((ROOT / GEN_PREP).exists() and (ROOT / GEN_PREP).read_bytes() != new_prep,
+           "derived preparation records exist with different bytes")
+    (ROOT / args.job).write_bytes(job_bytes)
+    (ROOT / GEN_PREP).write_bytes(new_prep)
     qualified = [{"key": k, "repository": panel_targets[k]["repository"]} for k in sorted(cohort)]
-    fields = cohort_fields(qualified, args.job, job_bytes, jobs.CONDITION, {})
+    fields = cohort_fields(qualified, args.job, job_bytes, jobs.CONDITION, {}, arms)
     excluded = sorted(set(panel_targets) - set(cohort))
     manifest = {
         "schema_version": "oneiros_v27_generation_manifest_v1",
@@ -103,14 +129,15 @@ def main(argv=None) -> int:
         "requalification_records": {"path": GEN_PREP, "sha256": sha(GEN_PREP),
                                     "derived_from": {"path": PREP, "sha256": sha(PREP)}},
         "panel": {"path": PANEL, "sha256": sha(PANEL), "targets": len(panel_targets)},
-        "subset_receipt": {"path": SUBSET, "sha256": sha(SUBSET)},
+        "subset_receipt": {"path": subset_rel, "sha256": sha(subset_rel)},
         "panel_policy_exclusions": [
             {"target_key": k, "reason": next(r["exclusion_reason"] for r in subset["targets"]
                                              if r["target_id"] == k)} for k in excluded],
         "atheris_independent": True,
+        **extra,
     }
-    (ROOT / args.manifest).write_text(json.dumps(manifest, indent=1, sort_keys=True) + "\n",
-                                      encoding="utf-8")
+    (ROOT / args.manifest).write_bytes((json.dumps(manifest, indent=1, sort_keys=True) + "\n")
+                                       .encode("utf-8"))
     print(json.dumps({"items": len(job["items"]), "refused": len(job["refused"]),
                       "job_sha256": job["job_sha256"], "job_file_sha256": sha(args.job),
                       "manifest_sha256": sha(args.manifest), "expected": fields["expected"],

@@ -17,6 +17,12 @@ the sandbox executor (WSL, CPython 3.13) and the analysis.
 * ``load_arm_generations`` loads base/ and sft/ arm directories (or explicit per-arm paths),
   hashing every file and contract and refusing swapped arms, mismatched identities, and
   missing, duplicated, extra, stale or malformed rows.
+
+v2.7 (three named arms): a cohort manifest may declare ``arms`` (default ``("base", "sft")``,
+unchanged for every earlier cohort) and the frozen ``arm_registry`` summary
+(harness/native_arm_registry.py). Any arm beyond base/sft requires the registry; a declared
+registry must equal the frozen one; every non-base contract must carry exactly its registered
+adapter manifest and the registry hash; expected sizes count the declared arms.
 """
 from __future__ import annotations
 
@@ -28,7 +34,8 @@ from typing import Any, Dict, List, Mapping, Optional
 
 COHORT_VERSION = "oneiros_native_generation_cohort_v1"
 TELEMETRY_SCHEMA = "oneiros_native_generation_telemetry_v2"
-ARMS = ("base", "sft")
+ARMS = ("base", "sft")                     # the historical default pair
+KNOWN_ARMS = ("base", "sft", "relearn")    # every arm any cohort may declare (v2.7)
 SEEDS = (42, 43, 44)
 CANDIDATES = 8
 BATCH_SIZE = 2
@@ -73,8 +80,8 @@ def extract(raw: str) -> Dict[str, Any]:
 # --- cohort -----------------------------------------------------------------------------------
 
 def cohort_fields(qualified: List[Mapping[str, Any]], job_rel: str, job_bytes: bytes,
-                  condition: str, exclusion_detail: Mapping[str, Mapping[str, Any]]
-                  ) -> Dict[str, Any]:
+                  condition: str, exclusion_detail: Mapping[str, Mapping[str, Any]],
+                  arms=ARMS) -> Dict[str, Any]:
     """Manifest fields that make the cohort explicit (used by the v2.3 rebuild and by the
     synthetic pipeline). ``qualified``: target dicts with ``key`` and ``repository``."""
     job = json.loads(job_bytes.decode("utf-8"))[condition]
@@ -95,14 +102,44 @@ def cohort_fields(qualified: List[Mapping[str, Any]], job_rel: str, job_bytes: b
             "pre_generation_exclusions": exclusions,
             "job": {"path": job_rel, "file_sha256": sha256_bytes(job_bytes),
                     "job_sha256": job["job_sha256"], "condition": condition},
-            "expected": expected_sizes(len(generation))}
+            "expected": expected_sizes(len(generation), arms)}
 
 
-def expected_sizes(n_targets: int) -> Dict[str, int]:
-    return {"generation_targets": n_targets, "rows_per_arm": n_targets * len(SEEDS),
-            "candidates_per_row": CANDIDATES,
-            "candidates_per_arm": n_targets * len(SEEDS) * CANDIDATES,
-            "candidates_total": n_targets * len(SEEDS) * CANDIDATES * len(ARMS)}
+def expected_sizes(n_targets: int, arms=ARMS) -> Dict[str, int]:
+    out = {"generation_targets": n_targets, "rows_per_arm": n_targets * len(SEEDS),
+           "candidates_per_row": CANDIDATES,
+           "candidates_per_arm": n_targets * len(SEEDS) * CANDIDATES,
+           "candidates_total": n_targets * len(SEEDS) * CANDIDATES * len(arms)}
+    if tuple(arms) != ARMS:                       # earlier cohorts keep their exact shape
+        out.update(arms=list(arms), rows_total=n_targets * len(SEEDS) * len(arms))
+    return out
+
+
+def cohort_arms(manifest: Mapping[str, Any]) -> tuple:
+    """The declared arms (default base/sft) and the bound registry summary, verified."""
+    arms = tuple(manifest.get("arms") or ARMS)
+    registry = manifest.get("arm_registry")
+    problems = []
+    if not arms or arms[0] != "base" or len(set(arms)) != len(arms) or \
+            any(a not in KNOWN_ARMS for a in arms):
+        problems.append(f"arms {arms!r} invalid (base first, unique, known)")
+    if registry is not None or set(arms) - set(ARMS):
+        if registry is None:
+            problems.append("arms beyond base/sft require the frozen arm registry")
+        else:
+            import sys
+            root = str(Path(__file__).resolve().parent.parent)   # WSL executor: scripts/ only
+            if root not in sys.path:
+                sys.path.insert(0, root)
+            from harness.native_arm_registry import summary
+            frozen = summary()
+            if dict(registry) != frozen:
+                problems.append("declared arm registry differs from the frozen registry")
+            elif list(arms) != frozen["arms"]:
+                problems.append("declared arms differ from the registry arms")
+    if problems:
+        raise CohortRefused(f"REFUSED: cohort arms: {problems}")
+    return arms, (dict(registry) if registry is not None else None)
 
 
 def resolve_cohort(job_path: Path, manifest_path: Path,
@@ -146,7 +183,9 @@ def resolve_cohort(job_path: Path, manifest_path: Path,
         problems.append("repository mapping missing for a qualified target")
     if problems:
         raise CohortRefused(f"REFUSED: generation cohort inconsistent: {problems}")
+    arms, registry = cohort_arms(manifest)
     return {"cohort_version": COHORT_VERSION, "condition": condition,
+            "arms": arms, "arm_registry": registry,
             "nature": manifest.get("nature"), "study_mode": manifest.get("study_mode"),
             "requalification_records": manifest.get("requalification_records"),
             "qualified": sorted(qualified), "generation": sorted(keys),
@@ -154,7 +193,7 @@ def resolve_cohort(job_path: Path, manifest_path: Path,
             "repo_of": repo_of, "items": {i["target_key"]: i for i in job["items"]},
             "job_file_sha256": sha256_bytes(job_bytes), "job_sha256": job["job_sha256"],
             "manifest_sha256": sha256_file(manifest_path),
-            "expected": expected_sizes(len(keys))}
+            "expected": expected_sizes(len(keys), arms)}
 
 
 # --- preparation binding (amendment v2.4 section C) ----------------------------------------------
@@ -343,6 +382,23 @@ def row_problems(row: Mapping[str, Any], *, identity_sha256: str, arm: str, cond
 
 # --- per-arm loading ----------------------------------------------------------------------------
 
+def arm_dirs(root: Optional[Path], explicit: Mapping[str, Path], arms, condition: str
+             ) -> Dict[str, Dict[str, Path]]:
+    """v2.7: a generation root containing one directory per declared arm, or explicit
+    per-arm directories for EXACTLY the declared arms; never the same directory twice."""
+    arms = tuple(arms)
+    if (root is not None) == bool(explicit):
+        raise CohortRefused("REFUSED: give a generation root or explicit per-arm directories")
+    if explicit and set(explicit) != set(arms):
+        raise CohortRefused(f"REFUSED: arm directories {sorted(explicit)} differ from the "
+                            f"declared arms {list(arms)}")
+    dirs = {a: (Path(root) / a if root is not None else Path(explicit[a])) for a in arms}
+    if len({d.resolve() for d in dirs.values()}) != len(dirs):
+        raise CohortRefused("REFUSED: two arms share a generation directory")
+    return {arm: {"dir": d, "rows": d / f"generations_{condition}_{arm}.jsonl",
+                  "contract": d / f"contract_{condition}_{arm}.json"} for arm, d in dirs.items()}
+
+
 def arm_paths(root: Optional[Path], base: Optional[Path], sft: Optional[Path],
               condition: str) -> Dict[str, Dict[str, Path]]:
     """Either a generation root containing base/ and sft/, or explicit per-arm directories."""
@@ -376,6 +432,15 @@ def _arm_contract(p: Mapping[str, Path], arm: str, cohort: Mapping[str, Any]) ->
     adapter = identity.get("adapter_manifest_sha256")
     if (arm == "base") != (adapter is None):
         problems.append("adapter identity inconsistent with the arm")
+    if arm not in cohort.get("arms", ARMS):
+        problems.append(f"arm {arm!r} is not declared by the cohort")
+    registry = cohort.get("arm_registry")
+    if registry is not None:
+        if identity.get("arm_registry_sha256") != registry["sha256"]:
+            problems.append("generation contract binds a different arm registry")
+        if arm != "base" and adapter != registry["adapter_manifest_sha256"].get(arm):
+            problems.append("adapter differs from the registered adapter of this arm "
+                            "(swapped or modified)")
     if problems:
         raise CohortRefused(f"REFUSED: {arm} generation contract: {problems}")
     return contract
@@ -429,23 +494,31 @@ def verify_single_arm(arm_dir: Path, arm: str, cohort: Mapping[str, Any]) -> Dic
 
 def load_arm_generations(paths: Mapping[str, Mapping[str, Path]], cohort: Mapping[str, Any]
                          ) -> Dict[str, Any]:
-    contracts = {arm: _arm_contract(paths[arm], arm, cohort) for arm in ARMS}
+    arms = tuple(cohort.get("arms", ARMS))
+    if set(paths) != set(arms):
+        raise CohortRefused(f"REFUSED: generation arms {sorted(paths)} differ from the declared "
+                            f"arms {list(arms)}")
+    contracts = {arm: _arm_contract(paths[arm], arm, cohort) for arm in arms}
     out = {"rows": {}, "files_sha256": {}, "contracts_sha256": {}}
-    comparable = [{**{k: v for k, v in c.items() if k != "identity"},
-                   "identity": {k: v for k, v in c["identity"].items() if k not in ARM_SPECIFIC}}
-                  for c in (contracts["base"], contracts["sft"])]
-    if comparable[0] != comparable[1]:
-        diff = sorted(k for k in set(comparable[0]["identity"]) | set(comparable[1]["identity"])
-                      if comparable[0]["identity"].get(k) != comparable[1]["identity"].get(k))
-        raise CohortRefused(f"REFUSED: base and sft generation contracts differ beyond the arm: "
-                            f"{diff or 'generator/contract'}")
+
+    def comparable(c):
+        return {**{k: v for k, v in c.items() if k != "identity"},
+                "identity": {k: v for k, v in c["identity"].items() if k not in ARM_SPECIFIC}}
+    for arm in arms[1:]:
+        a, b = comparable(contracts["base"]), comparable(contracts[arm])
+        if a != b:
+            diff = sorted(k for k in set(a["identity"]) | set(b["identity"])
+                          if a["identity"].get(k) != b["identity"].get(k))
+            label = "sft" if arm == "sft" else arm
+            raise CohortRefused(f"REFUSED: base and {label} generation contracts differ beyond "
+                                f"the arm: {diff or 'generator/contract'}")
     gpu = contracts["base"]["identity"].get("backend") == "hf"
-    for arm in ARMS:
+    for arm in arms:
         seen = _arm_rows(paths[arm], arm, contracts[arm], cohort, gpu)
         for row in seen.values():
             out["rows"][(arm, row["target_key"], int(row["seed"]))] = row
         out["files_sha256"][arm] = sha256_file(paths[arm]["rows"])
         out["contracts_sha256"][arm] = sha256_file(paths[arm]["contract"])
-    out["identity_sha256"] = {arm: contract_sha(contracts[arm]) for arm in ARMS}
+    out["identity_sha256"] = {arm: contract_sha(contracts[arm]) for arm in arms}
     out["gpu_evidence_required"] = gpu
     return out

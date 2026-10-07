@@ -23,6 +23,13 @@ Three distinct states, evaluated WITHOUT writing anything:
 
 The preflight is never rewritten or re-timestamped here, so an authorisation that names its
 hash stays valid for as long as the source, cohort and model are unchanged.
+
+v2.7 (three named arms): a preflight of schema ``oneiros_native_generated_tests_preflight_v2_7``
+binds the frozen arm registry (harness/native_arm_registry.py) and every registered adapter
+manifest; it is authorised only by ``oneiros_native_gpu_authorization_v4``, which binds the same
+registry hash, adapters, arms and per-arm output directories. A v2.5 preflight or a v3
+authorisation never authorises a v2.7 launch (and vice versa). Every trained arm (sft, relearn)
+launches strictly after the verified base arm; adapters are re-verified on disk at launch.
 """
 from __future__ import annotations
 
@@ -44,6 +51,10 @@ PROTOCOL_FILES = ("docs/SFT_ROOT_CAUSE_NATIVE_GENERATED_TEST_PROTOCOL_V2.md",
 RECEIPT_ONLY_PREFIX = "results/"
 PREFLIGHT_SCHEMA = "oneiros_native_generated_tests_preflight_v2_5"   # v2.4 preflights retired
 AUTH_SCHEMA = "oneiros_native_gpu_authorization_v3"   # v2.5: a v2.4 (v2) authorisation never matches
+PREFLIGHT_SCHEMA_V27 = "oneiros_native_generated_tests_preflight_v2_7"   # three-arm registry
+AUTH_SCHEMA_V27 = "oneiros_native_gpu_authorization_v4"
+PREFLIGHT_SCHEMAS = (PREFLIGHT_SCHEMA, PREFLIGHT_SCHEMA_V27)
+AUTH_FOR = {PREFLIGHT_SCHEMA: AUTH_SCHEMA, PREFLIGHT_SCHEMA_V27: AUTH_SCHEMA_V27}
 BRANCH = "experiment/research-eval-ablations"
 
 
@@ -181,7 +192,7 @@ def pipeline_problems(root: Path, preflight_path: Path, *, job_path: Path,
     if pre is None:
         return ["preflight missing or malformed"]
     problems = []
-    if pre.get("schema_version") != PREFLIGHT_SCHEMA:
+    if pre.get("schema_version") not in PREFLIGHT_SCHEMAS:
         problems.append("preflight schema")
     if pre.get("pipeline_ready") is not True:
         problems.append("preflight not pipeline_ready")
@@ -205,8 +216,34 @@ def pipeline_problems(root: Path, preflight_path: Path, *, job_path: Path,
         problems.append("job path differs from the preflight")
     if (pre.get("model") or {}) != dict(model_identity()):
         problems.append("model snapshot/tokenizer/chat template differs from the preflight")
-    if arm == "sft" and pre.get("adapter_manifest_sha256") != adapter_sha256():
+    if pre.get("schema_version") == PREFLIGHT_SCHEMA_V27:
+        problems += registry_problems(root, pre, arm, adapter_sha256)
+    elif arm == "sft" and pre.get("adapter_manifest_sha256") != adapter_sha256():
         problems.append("adapter differs from the preflight")
+    elif arm not in ("base", "sft"):
+        problems.append(f"arm {arm!r} needs a v2.7 registry-bound preflight")
+    return problems
+
+
+def registry_problems(root: Path, pre: Mapping[str, Any], arm: str,
+                      adapter_sha256: Callable[[], Optional[str]]) -> List[str]:
+    """v2.7: the preflight binds exactly the frozen registry; the launched arm is registered,
+    its adapter verifies on disk and equals the preflight's; the job binds the same registry."""
+    from harness.native_arm_registry import summary, verify_arm
+    frozen = summary()
+    problems = []
+    if pre.get("arm_registry") != frozen:
+        problems.append("preflight binds a different arm registry")
+    if arm not in frozen["arms"]:
+        return problems + [f"arm {arm!r} is not registered"]
+    adapters = pre.get("adapters") or {}
+    if adapters != frozen["adapter_manifest_sha256"]:
+        problems.append("preflight adapters differ from the registry")
+    problems += verify_arm(root, arm)
+    if arm != "base" and adapter_sha256() != frozen["adapter_manifest_sha256"].get(arm):
+        problems.append("adapter on disk differs from the registered adapter (swapped/modified)")
+    if arm == "base" and adapter_sha256() is not None:
+        problems.append("base arm resolved an adapter")
     return problems
 
 
@@ -221,8 +258,13 @@ def authorization_problems(root: Path, auth_path: Optional[Path], preflight_path
     pre_bytes = Path(preflight_path).read_bytes() if Path(preflight_path).is_file() else b""
     pre = _load(preflight_path) or {}
     problems = []
-    if auth.get("schema_version") != AUTH_SCHEMA:
-        problems.append("authorisation schema")
+    if auth.get("schema_version") != AUTH_FOR.get(pre.get("schema_version")):
+        problems.append("authorisation schema (must match the preflight version)")
+    if pre.get("schema_version") == PREFLIGHT_SCHEMA_V27:
+        registry = pre.get("arm_registry") or {}
+        if auth.get("arm_registry_sha256") != registry.get("sha256") or \
+                auth.get("adapters") != pre.get("adapters"):
+            problems.append("authorisation binds a different arm registry or adapters")
     if not auth.get("approved_by_user") is True or not auth.get("created_utc"):
         problems.append("authorisation lacks explicit approval or timestamp")
     if (Path(root) / str(auth.get("preflight_path", ""))).resolve() != Path(preflight_path).resolve():
@@ -311,7 +353,7 @@ def evaluate(root: Path, preflight_path: Path, auth_path: Optional[Path], *, job
                                   job_path=Path(job_path), condition=condition, arm=arm,
                                   out_dir=Path(out_dir))
     base_verification = None
-    if arm == "sft":                                   # v2.4 I.2: strictly after a verified base
+    if arm != "base":              # v2.4 I.2 / v2.7: every trained arm strictly after the base
         base, base_verification = base_arm_problems(root, Path(preflight_path), auth_path,
                                                     backend=backend,
                                                     generation_source=generation_source)

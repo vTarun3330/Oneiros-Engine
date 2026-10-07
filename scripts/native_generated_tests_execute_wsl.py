@@ -14,9 +14,13 @@ by the harness OUTSIDE the sandbox.
 
     python native_generated_tests_execute_wsl.py canaries <out_dir>
     python native_generated_tests_execute_wsl.py run --prep <records.jsonl> --manifest <m.json>
-        --job <job.json> (--generations <root with base/ and sft/> |
-        --base-generations <dir> --sft-generations <dir>)
+        --job <job.json> (--generations <root with one directory per declared arm> |
+        --base-generations <dir> --sft-generations <dir> |
+        --arm-generations ARM=DIR [--arm-generations ARM=DIR ...])
         --condition primary_whole_module --out <dir>
+
+v2.7: the execution grid covers exactly the cohort's DECLARED arms (default base/sft; the
+three-arm registry cohort adds relearn); identical candidate bytes run on both revisions.
 
 Amendment v2.3: only the generation cohort resolved from the exact job artifact is executed
 (never all kept/qualified targets); both arm directories and their generation contracts are
@@ -669,8 +673,9 @@ def run(prep_path: Path, manifest_path: Path, job_path: Path, arms: dict, condit
         contract_file.write_text(json.dumps(contract, indent=1, sort_keys=True) + "\n",
                                  encoding="utf-8")
     results = out / f"results_{condition}.jsonl"
-    expected = {f"{arm}::{t['target_key']}::{s}::{slot}" for arm in ARMS for t in targets
-                for s in SEEDS for slot in range(SLOTS)}
+    arms_declared = tuple(cohort["arms"])
+    expected = {f"{arm}::{t['target_key']}::{s}::{slot}" for arm in arms_declared
+                for t in targets for s in SEEDS for slot in range(SLOTS)}
     if len(expected) != cohort["expected"]["candidates_total"]:
         raise SystemExit("REFUSED: execution grid differs from the frozen cohort size")
     done, problems = {}, []
@@ -707,7 +712,7 @@ def run(prep_path: Path, manifest_path: Path, job_path: Path, arms: dict, condit
             for t in targets:
                 canary = canary_check(t, scratch_root / t["target_key"].replace("/", "_"))
                 env_ok = canary["ok"]
-                for arm in ARMS:
+                for arm in arms_declared:
                     for seed in SEEDS:
                         grow = gens["rows"][(arm, t["target_key"], seed)]
                         for slot, cand in enumerate(grow["candidates"]):
@@ -963,6 +968,25 @@ def canaries(out_dir: Path) -> int:
     return 0 if receipt["passed"] else 1
 
 
+def resolve_arm_dirs(job: Path, manifest: Path, condition: str, root, base, sft,
+                     explicit_specs) -> dict:
+    """Per-arm generation directories for EXACTLY the cohort's declared arms."""
+    cohort = gio.resolve_cohort(job, manifest, condition)
+    declared = tuple(cohort["arms"])
+    explicit = {}
+    for spec in explicit_specs or []:
+        arm, _, d = spec.partition("=")
+        if not d or arm in explicit:
+            raise SystemExit(f"REFUSED: bad or repeated --arm-generations {spec!r}")
+        explicit[arm] = Path(d)
+    if base or sft:
+        if explicit or declared != gio.ARMS:
+            raise SystemExit("REFUSED: --base/--sft-generations apply only to a base/sft cohort")
+        return gio.arm_paths(None, Path(base) if base else None, Path(sft) if sft else None,
+                             condition)
+    return gio.arm_dirs(Path(root) if root else None, explicit, declared, condition)
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -978,6 +1002,8 @@ def main(argv=None) -> int:
     r.add_argument("--generations", default=None, help="root containing base/ and sft/")
     r.add_argument("--base-generations", default=None)
     r.add_argument("--sft-generations", default=None)
+    r.add_argument("--arm-generations", action="append", default=[], metavar="ARM=DIR",
+                   help="explicit directory for one declared arm (repeat for every arm)")
     r.add_argument("--condition", required=True, choices=("primary_whole_module",))
     r.add_argument("--out", required=True)
     args = parser.parse_args(argv)
@@ -985,9 +1011,9 @@ def main(argv=None) -> int:
         return canaries(Path(args.out_dir))
     if args.command == "synthetic-prepare":
         return synthetic_prepare(Path(args.out_dir))
-    opt = lambda value: Path(value) if value else None  # noqa: E731
-    arms = gio.arm_paths(opt(args.generations), opt(args.base_generations),
-                         opt(args.sft_generations), args.condition)
+    arms = resolve_arm_dirs(Path(args.job), Path(args.manifest), args.condition,
+                            args.generations, args.base_generations, args.sft_generations,
+                            args.arm_generations)
     return run(Path(args.prep), Path(args.manifest), Path(args.job), arms, args.condition,
                Path(args.out))
 
