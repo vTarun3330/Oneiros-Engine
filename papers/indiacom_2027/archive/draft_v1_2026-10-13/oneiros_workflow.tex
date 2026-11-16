@@ -1,0 +1,43 @@
+% Fig. 1 -- Oneiros workflow (vector, TikZ). Input from main.tex inside figure*.
+% Every label names a stage that exists in the repository; numbers used here
+% (8 candidates) are recorded in EVIDENCE_LEDGER.md.
+\begin{tikzpicture}[
+  font=\footnotesize,
+  stage/.style={draw, rounded corners=1.5pt, align=center, minimum height=10.5mm,
+                text width=27mm, inner sep=2pt, fill=black!4},
+  gate/.style={draw, thick, align=center, minimum height=10.5mm, text width=27mm,
+               inner sep=2pt, fill=black!12},
+  arr/.style={-{Stealth[length=1.6mm]}, semithick},
+  lane/.style={font=\scriptsize\itshape, anchor=west, text=black!70},
+  node distance=4.2mm and 4.2mm]
+
+% Row 1: data and training
+\node[stage] (pairs) {Verified buggy/fixed\\program pairs\\(benchmarks + repos)};
+\node[stage, right=of pairs] (split) {Normalise, deduplicate;\\lineage-grouped split;\\leakage audit};
+\node[stage, right=of split] (prompt) {Prompt: specification\\+ code under test;\\token-budget check};
+\node[stage, right=of prompt] (sft) {Completion-only\\QLoRA fine-tuning\\(base model frozen)};
+\node[stage, right=of sft] (ckpt) {Checkpoint chosen on\\development split only};
+
+% Row 2: evaluation
+\node[stage, below=7mm of pairs] (gen) {Generate 8 ordered\\candidates per target\\(no reranking)};
+\node[stage, right=of gen] (parse) {Whole-output parse;\\safety policy;\\raw output hashed};
+\node[stage, right=of parse] (exec) {Run the \emph{same} test\\on fixed and on buggy\\code (sandboxed)};
+\node[stage, right=of exec] (cls) {Classify: valid kill,\\wrong oracle, non-disc.\\input, parse/exec fail, dup.};
+\node[gate, right=of cls] (gate) {Multi-gate promotion:\\kill gain, significance,\\validity, integrity};
+
+\draw[arr] (pairs) -- (split);
+\draw[arr] (split) -- (prompt);
+\draw[arr] (prompt) -- (sft);
+\draw[arr] (sft) -- (ckpt);
+\draw[arr] (ckpt.south) -- ++(0,-2.6mm) -| (gen.north);
+\draw[arr] (gen) -- (parse);
+\draw[arr] (parse) -- (exec);
+\draw[arr] (exec) -- (cls);
+\draw[arr] (cls) -- (gate);
+
+% Receipts band
+\node[draw, dashed, rounded corners=1.5pt, below=3mm of exec, text width=148mm,
+      align=center, font=\scriptsize, inner sep=2pt] (rcpt)
+      {Hash-bound receipts at every stage: corpus and splits, prompts, model revision,
+       adapter, evaluation protocol, raw outputs, metrics and the promotion decision};
+\end{tikzpicture}

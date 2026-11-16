@@ -25,7 +25,7 @@
 
 \begin{document}
 
-\title{A Development Gain That Did Not Survive Locking:\\
+\title{A Development Gain That Did Not Pass a Locked Gate:\\
 Negative and Inconclusive Results from an\\
 LLM-Based Mutation Test Generation Pipeline}
 
@@ -42,10 +42,11 @@ $0.605166$ to $0.695572$. On the locked split the paired difference was
 $+3.4346$ percentage points (450/757 to 476/757) with an exact two-sided
 McNemar $p = 0.0783$, against a predeclared requirement of $p < 0.01$. Under
 the rule frozen before either arm ran, the untrained base model was retained.
-Over the same locked comparison, the fraction of reference-valid candidates
-fell by $11.8726$ points while parse and execution validity did not degrade:
-the tuned model wrote more mutant-killing tests that more often failed against
-the correct implementation. We report these results as negative and
+Over the same locked comparison, the fraction of reference-valid candidate
+slots fell by $11.8726$ points while parse and execution validity did not
+degrade. Thus, more targets had at least one valid kill within eight attempts,
+but a smaller share of the generated candidate pool passed the correct
+implementation. We report these results as negative and
 inconclusive evidence respectively, and we are explicit that a non-significant
 difference is not evidence of no difference. We also report an evaluation-
 integrity failure. A one-time final measurement was authorized and consumed
@@ -82,9 +83,10 @@ fixed in advance, so the predeclared rule retained the untrained base model.
 The same comparison shows a substantial regression in candidate
 \emph{reference validity} --- whether a generated test passes against the
 correct implementation --- with no accompanying regression in parsing or
-execution. A tuned model that kills more mutants while more often failing the
-reference is not obviously a better test generator, and a pipeline that reports
-only \killk{k} would not have seen it.
+execution. The model increased target-level \killk{8}, while the candidate pool
+contained a smaller share of tests that passed the reference implementation.
+A pipeline that reports only the binary top-$k$ aggregate would not reveal that
+loss in candidate-pool reliability.
 
 The methodological result is an evaluation-integrity failure and its repair. A
 one-time final measurement, protected by a single-use authorization and a
@@ -138,9 +140,30 @@ least one of the first $k$ generated candidates, in raw generation order, kills
 the mutant. We also report \emph{parse validity} (the candidate is extractable
 and syntactically usable), \emph{execution validity} (it runs without
 infrastructure error), and \emph{reference validity} (it passes against the
-correct implementation). Reference validity is the quality signal most easily
-lost when only \killk{k} is reported, because a test that fails everything kills
-every mutant.
+correct implementation). A candidate is counted as a kill only when it passes
+the reference and fails the mutant. However, target-level \killk{k} records only
+whether at least one of the first $k$ slots succeeds; it does not show how many
+remaining slots are usable. We therefore report candidate-level reference
+validity alongside \killk{k}.
+
+\subsection{Training data and fitting}
+
+The selected training view contained $2{,}400$ pair records, not $2{,}400$
+unique functions: $2{,}194$ were synthetic-function pairs and $206$ were
+repository-derived pairs. By upstream source, the view contained $1{,}776$
+MBPP, $413$ HumanEval, $132$ SWE-bench Verified, $74$ BugsInPy and $5$
+manually curated pairs. Complexity was computed from buggy-side source only and
+used for sampling rather than exposed as a prompt label. Among the selected
+synthetic pairs, $1{,}317$ were complex, $610$ moderate and $267$ simple, giving
+a complex-pair fraction of $0.600273$; repository pairs were a separate bucket
+and are not in that denominator.
+
+Bounded replay produced $6{,}852$ effective examples with a repository-example
+fraction of $0.200088$. The adapter was fitted for one epoch with completion-only
+QLoRA, learning rate $10^{-5}$, per-device batch size one and gradient
+accumulation over $16$ examples. Prompt and padding tokens were masked from the
+loss, so supervision was applied only to the verified test completion. These
+counts and settings were frozen in the preflight receipt before training.
 
 \subsection{Splits and their roles}
 
@@ -289,13 +312,15 @@ Panel & Arm & Parse & Exec. & \textbf{Reference} \\
 \end{tabular}
 \end{table}
 
-The direction is consistent across all four development arms, so it is a
-property of this supervision family rather than of one checkpoint. The
-mechanism we can evidence is structural rather than semantic: a test that fails
-against every implementation kills every mutant it is scored against, so
-\killk{k} rewards aggressiveness that reference validity penalises. Because
-parse and execution validity did not fall, the regression is not explained by
-the tuned model emitting more malformed or non-running code.
+The direction is consistent across all four development arms, so it is an
+observed property of this supervision family rather than of one checkpoint.
+The two metrics answer different questions. \killk{8} is a target-level binary
+coverage measure: one reference-valid kill among eight slots is sufficient.
+Reference validity is a candidate-level yield measure across all slots. The
+former can therefore rise while the latter falls, even though an
+invalid-on-reference candidate can never count as a kill. Because parse and
+execution validity did not fall, the regression is not explained by the tuned
+model emitting more malformed or non-running code.
 
 We are careful about the strength of this claim. We observed the trade-off; we
 did not manipulate it. Whether a different supervision recipe, a
@@ -531,9 +556,9 @@ fail.
 \label{sec:threats}
 
 \paragraph{Construct validity}
-\killk{k} rewards any candidate that distinguishes mutant from reference,
-including a test that fails universally --- which is exactly why we report
-reference validity beside it. Mutants are a proxy for real faults, and the
+\killk{k} is a target-level success indicator and does not measure the usable
+yield of all $k$ candidate slots. We therefore report candidate-level reference
+validity beside it. Mutants are also a proxy for real faults, and the
 relationship is imperfect \cite{just2014mutants,papadakis2018mutationscores}.
 
 \paragraph{Internal validity}
@@ -617,15 +642,17 @@ is the one we learned by not having it.
 
 \section*{Data Availability}
 
-An anonymized replication package accompanies this submission. It contains the
-frozen protocol and decision-rule receipts, the development and locked-validation
-result receipts, the rehearsal receipt and its sanitised execution receipt, the
-per-figure data files with the digest of their source receipt, and the exact
-commands to re-derive every table. Every numeric value in this paper is
-traceable to one of those receipts by digest. Raw generated outputs are retained
-but excluded from the package because they contain model completions in volume;
-their digests are published so any retained output can be verified. No material
-from the consumed split is included, and none exists.
+The repository contains a manifest and verification plan for an anonymized
+replication package. Before submission, that package will be assembled and
+archived at an anonymous, persistent location. The planned package contains the
+frozen protocol and decision-rule receipts, the development and
+locked-validation result receipts, the rehearsal receipt and its sanitised
+execution receipt, per-figure data files carrying their source-receipt digests,
+and commands that re-derive the tables. Every numeric value in this draft is
+traceable to a committed receipt by digest. Raw generated outputs are retained
+locally but are excluded from the planned package; their digests permit retained
+outputs to be verified. No material from the consumed split is included, and
+none exists.
 
 \bibliographystyle{IEEEtran}
 \bibliography{references}

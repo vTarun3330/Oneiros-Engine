@@ -2,7 +2,7 @@
 
 **Full paper. 10 pages + 2 reference-only pages. Double-anonymous.**
 
-*A Development Gain That Did Not Survive Locking: Negative and Inconclusive
+*A Development Gain That Did Not Pass a Locked Gate: Negative and Inconclusive
 Results from an LLM-Based Mutation Test Generation Pipeline*
 
 ## Positioning
@@ -38,11 +38,9 @@ appears anywhere.
 
 ## Building
 
-No LaTeX toolchain was available on the machine where these drafts were written,
-so **none of them has been compiled**. The sources were validated structurally
-instead (balanced environments, every `\cite` key resolving to an entry in
-`references.bib`, no identity-revealing strings, no prohibited claims). Compile
-before trusting anything about length:
+The current PDF has been compiled and visually inspected. It is six pages,
+including references, and therefore remains below the track's 10-page body plus
+2-page reference allowance. Rebuild after every substantive change:
 
 ```
 pdflatex main
@@ -51,8 +49,7 @@ pdflatex main
 pdflatex main
 ```
 
-Then **count the pages in the produced PDF**. The page-budget figures in
-`submission_checklist.md` are estimates, not measurements.
+Then **count the pages in the produced PDF** and inspect every rendered page.
 
 ## Evidence discipline
 

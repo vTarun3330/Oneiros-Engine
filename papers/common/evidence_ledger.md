@@ -26,6 +26,7 @@ Repository state at the time of writing: commit
 |-----|------|---------|
 | `DEV-FROZEN` | `results/v4_2_frozen_development_evaluation_receipt.json` | `062774028693cfcbf5346eafeed232027748720940af7a47b5ac1a591055c4fe` |
 | `DEV-SEL` | `results/v4_2_development_selection_receipt.json` | `0188324fe9eb2a51eebef71bbd4cc3ed45584f12393bf0fa6539817a09e58969` |
+| `ARM-A-PRE` | `results/v4_2_armA_clean_preflight.json` | `cb1d1f0d3649e0f97c73d6b2726f9961bcc79f2fffd7ccc5806edb74492752c6` |
 | `LV-PRE` | `results/v4_2_locked_validation_preflight.json` | `97be6855d41b1186a5c8a59a8a89efa71e1f40f5e1c7f29ab387402b7598912c` |
 | `LV-RES` | `results/v4_2_locked_validation_result_receipt.json` | `f7cdf84df8e65c51bd22410759c6fd54952ace3bfa80c6ab620674b53e288af9` |
 | `REH-RCPT` | `results/v4_2_rehearsal_receipt.json` | `bae9510218641b67cb07f065d6f1e5b01e3340d333618f0e1f52b36641414f4f` |
@@ -63,6 +64,28 @@ come from `REH-EXEC`, which is the sanitised committed receipt of that run.
 | Reranking | `none` | `DEV-SEL` › `protocol.reranking` |
 | Cross-arm contract digest | `6a87294cf72e28679ab711af677151e331772d5db45c85d631eb0673f256cdef` | `DEV-SEL` › `cross_arm_contract_identity` |
 | Evaluation scope digest (`ablation_dev`) | `d37f75d6f44e7f25f8ec0b38ef1be46efd77c85c31cda115e81f7a77fb91f6ca` | `DEV-SEL`, `REH-EXEC` (identical) |
+
+## B1. Training selection and recipe
+
+Source for every value in this section: **`ARM-A-PRE`**.
+
+| Claim | Value | Receipt field |
+|---|---|---|
+| Selected pair records | 2,400 | `selection.retained_pairs` |
+| Synthetic / repository pairs | 2,194 / 206 | `selection.synthetic_pairs`, `selection.repository_pairs` |
+| Source counts | MBPP 1,776; HumanEval 413; SWE-bench Verified 132; BugsInPy 74; manual 5 | `selection.dataset_counts` |
+| Synthetic complexity tiers | complex 1,317; moderate 610; simple 267 | `selection.complexity_tier_counts` (the separate `repository` bucket is excluded) |
+| Complex fraction denominator | selected synthetic pairs only | Derived from `selection.complex_function_pairs / selection.synthetic_pairs` |
+| Complex-pair fraction | 0.600273 | `selection.complex_function_fraction` |
+| Effective examples | 6,852 | `sampling.effective_total_examples` |
+| Effective repository fraction | 0.200088 | `sampling.actual_real_fraction` |
+| Epochs / batch / gradient accumulation | 1 / 1 / 16 | `training`, `training.optimizer_schedule` |
+| Learning rate | 0.00001 | `training.learning_rate` |
+
+The receipt existed at the paper's frozen source commit and is unchanged in the
+current tree. Counts are pair records unless stated otherwise; they are not
+claims about unique functions. The `0.600273` denominator excludes the 206
+repository pairs.
 
 ---
 
@@ -235,8 +258,6 @@ reproduced in any paper. The failure is described in terms of the *mechanism*
 
 | Item | Why excluded |
 |---|---|
-| `TODO — UNVERIFIED` Training hyperparameters (LoRA rank, learning rate, epochs, optimizer) | Not present in any committed receipt listed in §A. Papers describe the arms by checkpoint identity only. |
-| `TODO — UNVERIFIED` Corpus construction provenance and per-source counts | Not drawn from a receipt in §A; the drafts state only split sizes that appear in §C–§E. |
 | `TODO — UNVERIFIED` Hardware/GPU model for the training runs | Only the rehearsal's runtime is receipted; no training hardware claim is made. |
 | `TODO — UNVERIFIED` Wall-clock cost of the four development arms | Not in `DEV-SEL`. |
 | `TODO — UNVERIFIED` Reproducibility of the base measurement across seeds | Only seed 42 is receipted; no cross-seed variance claim is made. |

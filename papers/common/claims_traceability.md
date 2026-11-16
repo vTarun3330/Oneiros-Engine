@@ -35,6 +35,8 @@ A claim not in this table does not appear in any draft.
 | E18 | The sealed final attempt reached `failed_after_authorization`, generating 0 candidates and producing 0 reportable metrics; the split may never be rerun. | `INCIDENT` | all |
 | E19 | The failure cause was a record-admission rule applied to every record *before* scope filtering, where the established evaluator filters scope first. | `INCIDENT` | all |
 | E20 | Repository-mode records are excluded from every reported kill rate (38 on the development panel, 24 on the locked panel, 52 under the post-incident rehearsal rule). | `DEV-SEL`, `LV-RES`, `REH-EXEC` | RENE, ICST |
+| E21 | The A@431 training view selected 2,400 pair records: 2,194 synthetic and 206 repository-derived, with source counts MBPP 1,776, HumanEval 413, SWE-bench Verified 132, BugsInPy 74 and manual 5. | `ARM-A-PRE` | RENE |
+| E22 | Among selected synthetic pairs, 1,317 were complex, 610 moderate and 267 simple (complex fraction 0.600273). Bounded replay produced 6,852 effective examples with repository fraction 0.200088. The receipt records one epoch, batch size one, gradient accumulation 16 and learning rate 0.00001. | `ARM-A-PRE` | RENE |
 
 ## Inconclusive (I)
 
